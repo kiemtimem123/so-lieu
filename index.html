@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Dữ liệu kinh tế Việt Nam, thị trường hàng hóa và báo cáo tài chính doanh nghiệp từ nguồn có thể kiểm chứng.">
+  <title>Dữ Liệu Kinh Tế Việt Nam</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js" defer></script>
+  <script src="assets/app.js" defer></script>
+</head>
+<body>
+  <aside class="site-sidebar" id="siteSidebar">
+    <a class="brand" href="#tong-quan" aria-label="Trang chủ">
+      <span class="brand-mark"><span>⌁</span></span>
+      <span><strong>Dữ Liệu Kinh Tế</strong></span>
+    </a>
+    <label class="header-search"><span class="search-symbol">⌕</span><input id="siteSearch" type="search" placeholder="Tìm kiếm số liệu..."><kbd>AI</kbd><kbd>⌘ K</kbd></label>
+    <nav id="mainNav" aria-label="Danh mục dữ liệu">
+      <a href="#van-tai"><span class="nav-icon">♧</span><span>Vận tải</span><i>›</i></a>
+      <a href="#tien-te"><span class="nav-icon">▣</span><span>Tiền tệ</span><em>11</em></a>
+      <a href="#bat-dong-san"><span class="nav-icon">⌂</span><span>Bất động sản</span><em>7</em></a>
+      <a href="#hang-hoa"><span class="nav-icon">⬡</span><span>Hàng hóa</span><em>9</em></a>
+      <a href="#co-phieu"><span class="nav-icon">▥</span><span>Chứng Khoán</span><em>1</em></a>
+      <a href="#nong-nghiep"><span class="nav-icon">♧</span><span>Nông nghiệp</span><em>4</em></a>
+      <a href="#cang-vu"><span class="nav-icon">⚓</span><span>Cảng vụ</span><em>1</em></a>
+      <a href="#trai-phieu" class="nav-parent active"><span class="nav-icon">▤</span><span>Trái phiếu</span><em>2</em></a>
+      <div class="nav-children"><a href="#trai-phieu">Lợi suất Trái phiếu Chính phủ</a><a href="#trai-phieu">Thị trường Trái phiếu</a></div>
+      <a href="#lao-dong"><span class="nav-icon">♙</span><span>Lao động</span><em>1</em></a>
+      <div class="sidebar-divider"></div>
+      <a href="#vi-mo"><span class="nav-icon">▦</span><span>Kinh tế vĩ mô</span></a>
+      <a href="#xuat-nhap-khau"><span class="nav-icon">⇄</span><span>Xuất nhập khẩu</span></a>
+      <a href="#nguon"><span class="nav-icon">ⓘ</span><span>Nguồn số liệu</span></a>
+    </nav>
+    <div class="sidebar-footer"><span class="sidebar-status-dot"></span> Dữ liệu có nguồn kiểm chứng</div>
+    <button class="mobile-menu" id="mobileMenu" aria-label="Mở menu">☰</button>
+  </aside>
+
+  <main>
+    <section class="dashboard-top" id="tong-quan">
+      <div class="overview-intro">
+        <p class="eyebrow">DỮ LIỆU KINH TẾ · VIỆT NAM</p>
+        <h1>Số liệu kinh tế vĩ<br class="desktop-break"> mô Việt Nam</h1>
+        <p class="overview-description">Toàn cảnh nền kinh tế trong một trang: GDP, lạm phát, thương mại, đầu tư và doanh nghiệp — tổng hợp từ Tổng cục Thống kê, Hải quan và Ngân hàng Nhà nước, kèm biểu đồ tương tác và khả năng so sánh nhiều chỉ tiêu. Hoàn toàn miễn phí.</p>
+        <div class="overview-stats"><span><strong>97+</strong> bảng số liệu</span><span><strong>15</strong> nhóm chỉ tiêu</span><span><strong>Hàng tháng</strong> cập nhật</span></div>
+      </div>
+      <div class="overview-rule"></div>
+      <div class="latest-heading"><h2>Toàn cảnh — số liệu mới nhất</h2><p>Giá trị và xu hướng gần nhất của các chỉ tiêu chủ chốt. Bấm vào thẻ để xem chuỗi đầy đủ.</p></div>
+      <div class="overview-kpis" id="overviewKpis">
+        <article class="overview-kpi kpi-gdp"><span>GDP (giá hiện hành)</span><strong>Chưa có dữ liệu</strong><small>Đơn vị và kỳ báo cáo sẽ hiển thị theo nguồn.</small><div class="kpi-spark empty-spark">Chưa có chuỗi dữ liệu</div></article>
+        <article class="overview-kpi"><span>Lạm phát (CPI)</span><strong>Chưa có dữ liệu</strong><small>Chưa có kỳ cập nhật xác minh</small><div class="kpi-spark empty-spark">Chưa có chuỗi dữ liệu</div></article>
+        <article class="overview-kpi"><span>Bán lẻ HH & DV</span><strong>Chưa có dữ liệu</strong><small>Chưa có kỳ cập nhật xác minh</small><div class="kpi-spark empty-spark">Chưa có chuỗi dữ liệu</div></article>
+      </div>
+      <div class="home-categories">
+        <h2>Danh mục dữ liệu</h2>
+        <div class="category-grid">
+          <a class="category-card" href="#vi-mo"><span class="cat-icon blue">▥</span><b>Kinh tế vĩ mô</b><small>GDP, CPI, bán lẻ, sản xuất, lao động, dân số...</small><em>→</em></a>
+          <a class="category-card" href="#xuat-nhap-khau"><span class="cat-icon purple">⇄</span><b>Xuất nhập khẩu</b><small>Kim ngạch, cán cân thương mại, thị trường...</small><em>→</em></a>
+          <a class="category-card" href="#hang-hoa"><span class="cat-icon orange">⚖</span><b>Hàng hóa</b><small>Dầu thô, Brent, phân bón, hóa chất, đồng, bạc...</small><em>→</em></a>
+          <a class="category-card" href="#co-phieu"><span class="cat-icon green">▤</span><b>Tài chính doanh nghiệp</b><small>Báo cáo quý, tài sản, nợ, lợi nhuận, ROA, ROE...</small><em>→</em></a>
+          <a class="category-card" href="#tien-te"><span class="cat-icon teal">◉</span><b>Tiền tệ & Ngân sách</b><small>Lãi suất, tỷ giá, tín dụng, thu chi ngân sách...</small><em>→</em></a>
+          <a class="category-card" href="#bat-dong-san"><span class="cat-icon red">⌂</span><b>Bất động sản</b><small>Thị trường, giá cả và các chỉ tiêu liên quan...</small><em>→</em></a>
+          <a class="category-card" href="#vi-mo"><span class="cat-icon indigo">⌁</span><b>Số liệu khác</b><small>PMI, FDI, lao động và các chỉ số bổ sung...</small><em>→</em></a>
+          <a class="category-card" href="#nguon"><span class="cat-icon blue">▣</span><b>Nguồn số liệu & Phương pháp</b><small>Nguồn gốc, phạm vi, đơn vị và cách tổng hợp...</small><em>→</em></a>
+        </div>
+      </div>
+    </section>
+
+    <div class="anchor-target" id="van-tai"></div><div class="anchor-target" id="nong-nghiep"></div><div class="anchor-target" id="cang-vu"></div><div class="anchor-target" id="trai-phieu"></div><div class="anchor-target" id="lao-dong"></div>
+
+    <section class="section market-section" id="hang-hoa">
+      <div class="section-heading">
+        <div><p class="eyebrow">THỊ TRƯỜNG TOÀN CẦU</p><h2>Giá hàng hóa</h2><p class="muted">Chọn mặt hàng để xem lịch sử gần nhất, đơn vị, nguồn và thời điểm dữ liệu.</p></div>
+        <span class="section-index">01 / MARKET</span>
+      </div>
+      <div class="toolbar">
+        <label class="search-box"><span>⌕</span><input id="commoditySearch" type="search" placeholder="Tìm dầu Brent, đồng, bạc…"></label>
+        <select id="commodityGroup" aria-label="Lọc nhóm hàng hóa"><option value="all">Tất cả nhóm</option><option value="energy">Năng lượng</option><option value="metals">Kim loại</option><option value="agriculture">Nông sản</option><option value="chemicals">Phân bón & hóa chất</option></select>
+      </div>
+      <div class="commodity-layout">
+        <div class="commodity-list" id="commodityList"><div class="loading-card">Đang tải danh mục…</div></div>
+        <article class="detail-card" id="commodityDetail">
+          <div class="detail-top"><div><p class="eyebrow">CHI TIẾT MẶT HÀNG</p><h3>Chọn một mặt hàng</h3></div><span class="status-pill neutral">Chưa chọn</span></div>
+          <p class="muted">Giá chỉ xuất hiện khi API nguồn trả về dữ liệu thực tế và được xác thực.</p>
+          <div class="metric-grid">
+            <div class="metric"><span>Giá mở cửa</span><strong>—</strong></div><div class="metric"><span>Giá đóng cửa gần nhất</span><strong>—</strong></div>
+            <div class="metric"><span>Cao nhất phiên</span><strong>—</strong></div><div class="metric"><span>Thấp nhất phiên</span><strong>—</strong></div>
+          </div>
+          <div class="chart-wrap"><canvas id="commodityChart" aria-label="Biểu đồ lịch sử giá hàng hóa"></canvas><div class="chart-empty" id="chartEmpty">Chưa có lịch sử giá được xác minh.</div></div>
+          <div class="detail-foot"><span id="commoditySource">Nguồn: chưa cấu hình</span><span id="commodityTimestamp">Thời điểm: —</span></div>
+        </article>
+      </div>
+      <p class="notice"><strong>Lưu ý:</strong> giá hợp đồng tương lai, giá giao ngay và giá bán nội địa có thể khác nhau. Mỗi mặt hàng phải được gắn đúng mã, loại giá, tiền tệ và đơn vị trước khi so sánh.</p>
+    </section>
+
+    <section class="section alt-section" id="co-phieu">
+      <div class="section-heading">
+        <div><p class="eyebrow">DOANH NGHIỆP NIÊM YẾT</p><h2>Báo cáo tài chính theo quý</h2><p class="muted">Theo dõi tài sản, nợ, lợi nhuận và chỉ số sinh lời từ năm 2022.</p></div>
+        <span class="section-index">02 / COMPANY</span>
+      </div>
+      <div class="stock-controls">
+        <label>Mã chứng khoán<select id="stockSymbol"><option value="MBB">MBB</option><option value="ACB">ACB</option><option value="FPT">FPT</option><option value="SHB">SHB</option><option value="TCX">TCX</option><option value="HCM">HCM</option><option value="VND">VND</option><option value="SHS">SHS</option><option value="NLG">NLG</option><option value="BSR">BSR</option><option value="TCB">TCB</option><option value="VHM">VHM</option></select></label>
+        <label>Năm từ<select id="stockYear"><option>2022</option><option>2023</option><option>2024</option><option>2025</option><option selected>2026</option></select></label>
+        <button class="button primary" id="loadStock">Tải báo cáo</button>
+      </div>
+      <div class="empty-state" id="stockState"><div class="empty-icon">▤</div><h3>Chưa có báo cáo được đồng bộ</h3><p>Hãy cấu hình nhà cung cấp dữ liệu hoặc nạp báo cáo chính thức vào hệ thống. Website sẽ không tự tạo số liệu để lấp chỗ trống.</p></div>
+      <div class="table-scroll hidden" id="stockTableWrap"><table><thead><tr><th>Kỳ</th><th>Tổng tài sản</th><th>Nợ phải trả</th><th>Vốn chủ sở hữu</th><th>LNTT</th><th>LNST</th><th>ROA</th><th>ROE</th></tr></thead><tbody id="stockTableBody"></tbody></table></div>
+      <p class="small muted">P/E, P/B và tỷ suất sinh lời cổ đông cần thêm giá cổ phiếu theo ngày, số cổ phiếu lưu hành, cổ tức và quy ước tính thống nhất. Chúng chỉ được hiển thị khi đủ dữ liệu đầu vào.</p>
+    </section>
+
+    <section class="section" id="vi-mo">
+      <div class="section-heading">
+        <div><p class="eyebrow">CHỈ TIÊU QUỐC GIA</p><h2>Kinh tế vĩ mô Việt Nam</h2><p class="muted">Dữ liệu theo tháng, quý hoặc năm từ cơ quan công bố chính thức.</p></div>
+        <span class="section-index">03 / MACRO</span>
+      </div>
+      <div class="macro-grid" id="macroGrid">
+        <article class="macro-card"><span>GDP</span><strong>Chưa có dữ liệu</strong><small>Nguồn: NSO</small></article>
+        <article class="macro-card"><span>CPI</span><strong>Chưa có dữ liệu</strong><small>Nguồn: NSO</small></article>
+        <article class="macro-card"><span>Xuất nhập khẩu</span><strong>Chưa có dữ liệu</strong><small>Nguồn: Hải quan</small></article>
+        <article class="macro-card"><span>Lãi suất & tỷ giá</span><strong>Chưa có dữ liệu</strong><small>Nguồn: NHNN</small></article>
+      </div>
+      <div class="economic-chart-panel" style="margin-top:18px;background:#fff;border:1px solid #e8e2da;border-radius:12px;padding:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px"><div><h3 style="margin:0;font-size:18px">Biểu đồ chuỗi thời gian kinh tế</h3><p class="muted" style="margin:3px 0 0;font-size:12px">Chỉ vẽ dữ liệu đã đồng bộ từ API; không có dữ liệu thì để trống.</p></div><label for="economicSeriesSelect" style="font-size:12px">Chỉ tiêu <select id="economicSeriesSelect" style="margin-left:6px;max-width:100%;padding:8px;border:1px solid #e8e2da;border-radius:8px;background:#fff"><option value="gdp_quarterly">GDP theo quý</option><option value="cpi">CPI</option><option value="retail">Bán lẻ</option><option value="exchange_rate">Tỷ giá</option><option value="interest_rate">Lãi suất</option></select></label></div>
+        <div style="height:270px;position:relative"><canvas id="economicChart" aria-label="Biểu đồ chỉ tiêu kinh tế"></canvas><div id="economicChartEmpty" class="chart-empty" style="display:grid">Chưa có chuỗi dữ liệu đã xác minh. Cần cấu hình series ID từ API.</div></div>
+        <p id="economicChartSource" class="muted" style="font-size:11px;margin:8px 0 0">Nguồn: dulieukinhte.com API · Chưa đồng bộ</p>
+      </div>
+    </section>
+
+    <section class="section source-section" id="nguon">
+      <div class="section-heading"><div><p class="eyebrow">MINH BẠCH VÀ KIỂM CHỨNG</p><h2>Nguồn số liệu & phương pháp</h2><p class="muted">Mỗi chỉ tiêu cần nguồn gốc, phạm vi, đơn vị, tần suất và ngày cập nhật rõ ràng.</p></div><span class="section-index">04 / SOURCES</span></div>
+      <div class="source-grid">
+        <article><span class="source-number">01</span><h3>Cục Thống kê (NSO)</h3><p>GDP, CPI, bán lẻ, vận tải, dân số, lao động và sản xuất công nghiệp.</p><a href="https://www.nso.gov.vn/" target="_blank" rel="noopener">Truy cập nguồn ↗</a></article>
+        <article><span class="source-number">02</span><h3>Tổng cục Hải quan</h3><p>Xuất khẩu, nhập khẩu, cán cân thương mại theo mặt hàng và thị trường.</p><a href="https://www.customs.gov.vn/" target="_blank" rel="noopener">Truy cập nguồn ↗</a></article>
+        <article><span class="source-number">03</span><h3>Ngân hàng Nhà nước</h3><p>Tiền tệ, tín dụng, lãi suất và tỷ giá theo phạm vi công bố.</p><a href="https://www.sbv.gov.vn/" target="_blank" rel="noopener">Truy cập nguồn ↗</a></article>
+        <article><span class="source-number">04</span><h3>Bộ Tài chính</h3><p>Thu chi ngân sách, bội chi, nợ công và trái phiếu chính phủ.</p><a href="https://mof.gov.vn/" target="_blank" rel="noopener">Truy cập nguồn ↗</a></article>
+        <article><span class="source-number">05</span><h3>S&P Global</h3><p>Chỉ số PMI sản xuất Việt Nam; lưu ý điều kiện cấp phép và quyền sử dụng.</p><a href="https://www.spglobal.com/marketintelligence/" target="_blank" rel="noopener">Truy cập nguồn ↗</a></article>
+        <article><span class="source-number">06</span><h3>Yahoo Finance</h3><p>Nguồn tham khảo lịch sử thị trường; tính sẵn có và điều kiện sử dụng cần được xác minh.</p><a href="https://finance.yahoo.com/" target="_blank" rel="noopener">Truy cập nguồn ↗</a></article>
+      </div>
+      <div class="method-box"><h3>Nguyên tắc tổng hợp</h3><ol><li>Thu thập từ API được phép, dữ liệu mở hoặc báo cáo công bố chính thức.</li><li>Chuẩn hóa tên chỉ tiêu, đơn vị, tần suất và mốc thời gian; giữ lại giá trị gốc.</li><li>Không nội suy hoặc tự điền dữ liệu thiếu. Nếu nguồn lỗi, giữ trạng thái thiếu và báo lỗi.</li><li>Lưu thời gian lấy dữ liệu, thời gian nguồn công bố và phiên bản/điều chỉnh nếu có.</li><li>Các chỉ số dẫn xuất phải công khai công thức và các trường dữ liệu đầu vào.</li></ol></div>
+    </section>
+    <section class="highlight-strip" aria-label="Dữ liệu nổi bật">
+      <div class="highlight-heading"><b>Dữ liệu nổi bật gần đây</b><span>Chỉ hiển thị khi có dữ liệu được xác minh</span></div>
+      <div class="highlight-grid"><article><span class="highlight-icon blue">▥</span><div><small>GDP Việt Nam</small><strong>Chưa có dữ liệu</strong><em>Nguồn: NSO</em></div></article><article><span class="highlight-icon green">▤</span><div><small>CPI</small><strong>Chưa có dữ liệu</strong><em>Nguồn: NSO</em></div></article><article><span class="highlight-icon purple">⇄</span><div><small>Xuất nhập khẩu</small><strong>Chưa có dữ liệu</strong><em>Nguồn: Hải quan</em></div></article><article><span class="highlight-icon orange">◉</span><div><small>Dầu Brent</small><strong>Chưa có dữ liệu</strong><em>Nguồn: chưa xác minh</em></div></article></div>
+    </section>
+  </main>
+  <div id="xuat-nhap-khau" class="anchor-target" aria-hidden="true"></div><div id="tien-te" class="anchor-target" aria-hidden="true"></div><div id="bat-dong-san" class="anchor-target" aria-hidden="true"></div>
+  <footer><div class="footer-brand">DỮ LIỆU KINH TẾ</div><p>Thông tin tham khảo, không phải khuyến nghị đầu tư. Luôn kiểm tra tài liệu gốc trước khi sử dụng.</p><span id="footerBuild">Phiên bản khởi tạo mới · Không dùng dữ liệu mẫu</span></footer>
+</body>
+</html>
