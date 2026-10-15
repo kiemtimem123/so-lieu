@@ -1,0 +1,56 @@
+
+name: Check DulieuKinhte API connection
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check-api:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check API health
+        run: |
+          set -eu
+          curl --fail --silent --show-error \
+            --max-time 15 \
+            https://api.dulieukinhte.com/v1/health
+          echo
+          echo "API health endpoint responded successfully."
+
+      - name: Verify API key and quota
+        env:
+          DLKT_API_KEY: ${{ secrets.DLKT_API_KEY }}
+        run: |
+          set -eu
+
+          if [ -z "$DLKT_API_KEY" ]; then
+            echo "ERROR: Missing DLKT_API_KEY secret."
+            exit 1
+          fi
+
+          HTTP_CODE=$(curl --silent --show-error \
+            --output /tmp/dlkt-response.json \
+            --write-out "%{http_code}" \
+            --max-time 20 \
+            --header "Authorization: Bearer ${DLKT_API_KEY}" \
+            https://api.dulieukinhte.com/v1/me)
+
+          echo "HTTP status: $HTTP_CODE"
+
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "API authentication or account check failed."
+            cat /tmp/dlkt-response.json
+            exit 1
+          fi
+
+          echo "API authentication succeeded."
+          python -c '
+          import json
+          with open("/tmp/dlkt-response.json", encoding="utf-8") as f:
+              d = json.load(f)
+          print("Response received as valid JSON.")
+          print("Top-level fields:", ", ".join(sorted(d.keys())))
+          '
