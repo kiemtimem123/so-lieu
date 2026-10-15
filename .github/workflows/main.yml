@@ -1,0 +1,20 @@
+
+name: Check DulieuKinhte API
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check-api:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check API secret exists
+        env:
+          DLKT_API_KEY: ${{ secrets.DLKT_API_KEY }}
+        run: |
+          if [ -z "$DLKT_API_KEY" ]; then
+            echo "ERROR: Chua cau hinh DLKT_API_KEY"
+            exit 1
+          fi
+          echo "OK: API key da duoc cau hinh"
+
