@@ -1,0 +1,57 @@
+
+name: Discover DulieuKinhte datasets
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Search for crude oil datasets
+        env:
+          DLKT_API_KEY: ${{ secrets.DLKT_API_KEY }}
+        run: |
+          set -eu
+
+          if [ -z "$DLKT_API_KEY" ]; then
+            echo "ERROR: Missing DLKT_API_KEY secret."
+            exit 1
+          fi
+
+          curl --fail --silent --show-error \
+            --max-time 20 \
+            --get \
+            --header "Authorization: Bearer ${DLKT_API_KEY}" \
+            --data-urlencode "q=giá dầu thô" \
+            --data-urlencode "type=dataset" \
+            --data-urlencode "economy=US" \
+            "https://api.dulieukinhte.com/v1/search" \
+            --output datasets.json
+
+          python - <<'PY'
+          import json
+
+          with open("datasets.json", encoding="utf-8") as f:
+              result = json.load(f)
+
+          if "error" in result:
+              error = result["error"]
+              print("API returned an error:", error.get("code", "unknown"))
+              raise SystemExit(1)
+
+          datasets = result.get("data", [])
+          if not datasets:
+              print("No matching datasets returned. No data was invented.")
+          else:
+              for item in datasets:
+                  print(
+                      "Type:", item.get("type"),
+                      "| ID:", item.get("id"),
+                      "| Name:", item.get("name"),
+                      "| Frequency:", item.get("frequency")
+                  )
+          PY
