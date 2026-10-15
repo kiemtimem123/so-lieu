@@ -1,0 +1,90 @@
+
+name: Fetch market prices
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch five market series in one request
+        env:
+          DLKT_API_KEY: ${{ secrets.DLKT_API_KEY }}
+        run: |
+          set -eu
+
+          if [ -z "$DLKT_API_KEY" ]; then
+            echo "Missing DLKT_API_KEY secret."
+            exit 1
+          fi
+
+          HTTP_CODE=$(curl --silent --show-error \
+            --output response.json \
+            --write-out "%{http_code}" \
+            --max-time 30 \
+            --get \
+            --header "Authorization: Bearer ${DLKT_API_KEY}" \
+            --data-urlencode "ids=37826,37827,37694,37828,37695" \
+            --data-urlencode "from=2026-10-01" \
+            --data-urlencode "limit=50" \
+            "https://api.dulieukinhte.com/v1/series/observations")
+
+          echo "HTTP status: $HTTP_CODE"
+
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "API request failed. Response body omitted for safety."
+            python - <<'PY'
+          import json
+          try:
+              d = json.load(open("response.json", encoding="utf-8"))
+              e = d.get("error", {})
+              print("Error code:", e.get("code", "unknown"))
+              print("Message:", e.get("message", "No message"))
+          except Exception:
+              print("Response was not valid JSON.")
+          PY
+            exit 1
+          fi
+
+          python - <<'PY'
+          import json
+
+          with open("response.json", encoding="utf-8") as f:
+              result = json.load(f)
+
+          names = {
+              37826: "WTI",
+              37827: "Brent",
+              37694: "Xăng thường",
+              37828: "Diesel",
+              37695: "Khí tự nhiên Henry Hub",
+          }
+
+          for s in result.get("data", []):
+              sid = s.get("id")
+              print("\nSeries:", names.get(sid, str(sid)))
+              print("ID:", sid)
+              print("Unit:", s.get("unit"))
+              print("Skipped:", s.get("skipped", False))
+
+              if s.get("skipped"):
+                  print("Reason:", s.get("reason", "Not provided"))
+                  continue
+
+              observations = s.get("observations", [])
+              print("Observations returned:", len(observations))
+
+              if observations:
+                  latest = max(observations, key=lambda x: x.get("date", ""))
+                  print("Latest date:", latest.get("date"))
+                  print("Latest value:", latest.get("value"))
+              else:
+                  print("No observations in the requested date range.")
+
+          meta = result.get("meta", {})
+          print("\nMissing series IDs:", meta.get("missing", []))
+          PY
