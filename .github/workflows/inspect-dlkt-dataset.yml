@@ -11,7 +11,7 @@ jobs:
   inspect:
     runs-on: ubuntu-latest
     steps:
-      - name: Get dataset 458 metadata and child series
+      - name: List series in dataset 458
         env:
           DLKT_API_KEY: ${{ secrets.DLKT_API_KEY }}
         run: |
@@ -33,5 +33,21 @@ jobs:
               print("API error:", result["error"].get("code", "unknown"))
               raise SystemExit(1)
 
-          print(json.dumps(result, ensure_ascii=False, indent=2))
+          data = result.get("data", {})
+          print("Dataset:", data.get("name"))
+          print("Frequency:", data.get("frequency"))
+          print("Unit:", data.get("unit"))
+          print("Series count:", data.get("seriesCount"))
+
+          series = data.get("series", [])
+          if not series:
+              print("No series returned. Inspect the API response structure.")
+          else:
+              for s in series:
+                  print(
+                      "ID:", s.get("id"),
+                      "| Name:", s.get("name"),
+                      "| Parent:", s.get("parentId"),
+                      "| Level:", s.get("level")
+                  )
           PY
