@@ -1,4 +1,4 @@
-name: Sync Market Prices
+name: Sync Market and Currency Data
 
 on:
   workflow_dispatch:
@@ -21,54 +21,49 @@ jobs:
           DLKT_API_KEY: ${{ secrets.DLKT_API_KEY }}
         run: |
           set -eu
-
           if [ -z "${DLKT_API_KEY:-}" ]; then
             echo "ERROR: Missing DLKT_API_KEY secret."
             exit 1
           fi
-
           FROM_DATE="$(date -u -d '30 days ago' +%F)"
-
           STATUS="$(curl --silent --show-error --max-time 30 --get \
             --header "Authorization: Bearer ${DLKT_API_KEY}" \
             --data-urlencode "ids=37826,37827,37694,37828,37695" \
             --data-urlencode "from=${FROM_DATE}" \
             --data-urlencode "limit=200" \
-            --output response.json \
-            --write-out "%{http_code}" \
+            --output response.json --write-out "%{http_code}" \
             "https://api.dulieukinhte.com/v1/series/observations")"
+          echo "Market API HTTP status: ${STATUS}"
+          case "${STATUS}" in 2*) ;; *) cat response.json; exit 1 ;; esac
 
-          echo "API HTTP status: ${STATUS}"
+      - name: Fetch currency reference rates
+        shell: bash
+        run: |
+          set -eu
+          STATUS="$(curl --silent --show-error --max-time 30 \
+            --output currency-response.json --write-out "%{http_code}" \
+            "https://open.er-api.com/v6/latest/USD")"
+          echo "Currency API HTTP status: ${STATUS}"
+          case "${STATUS}" in 2*) ;; *) cat currency-response.json; exit 1 ;; esac
 
-          case "$STATUS" in
-            2*) ;;
-            *)
-              echo "ERROR: API request failed. Response body:"
-              cat response.json
-              exit 1
-              ;;
-          esac
-
-      - name: Validate and save JSON
+      - name: Validate and save snapshots
         shell: bash
         run: |
           set -eu
           node .github/scripts/sync-market-prices.cjs
+          node .github/scripts/sync-currency-rates.cjs
 
       - name: Commit updated data
         shell: bash
         run: |
           set -eu
-          rm -f response.json
-
+          rm -f response.json currency-response.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add data/market-prices.json
-
+          git add data/market-prices.json data/currency-rates.json
           if git diff --cached --quiet; then
-            echo "No market data changes."
+            echo "No data changes."
           else
-            git commit -m "Update market prices data"
+            git commit -m "Update market and currency data"
             git push
           fi
