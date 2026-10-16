@@ -277,7 +277,7 @@
         if (!table) continue;
         const item = snapshot.data.find(row => row.category === category);
         const observations = (item?.observations || []).filter(point =>
-          point && /^\\d{4}-\\d{2}-\\d{2}$/.test(point.date) &&
+          point && /^\d{4}-\d{2}-\d{2}$/.test(point.date) &&
           Number.isFinite(Number(point.value)) && point.date <= new Date().toISOString().slice(0, 10)
         ).sort((a, b) => a.date.localeCompare(b.date));
         if (!item || !observations.length) {
