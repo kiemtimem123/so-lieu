@@ -255,13 +255,14 @@
     }
   }
 
+  const categoryCharts = {};
   async function loadCategoryData() {
     const targets = {
-      transport: { table: '#transportDataTable', updated: '#transportUpdated' },
-      agriculture: { table: '#agricultureDataTable', updated: '#agricultureUpdated' },
-      ports: { table: '#portsDataTable', updated: '#portsUpdated' },
-      property: { table: '#propertyDataTable', updated: '#propertyUpdated' },
-      labor: { table: '#laborDataTable', updated: '#laborUpdated' }
+      transport: { table: '#transportDataTable', updated: '#transportUpdated', canvas: '#transportHistoryChart', note: '#transportChartNote' },
+      agriculture: { table: '#agricultureDataTable', updated: '#agricultureUpdated', canvas: '#agricultureHistoryChart', note: '#agricultureChartNote' },
+      ports: { table: '#portsDataTable', updated: '#portsUpdated', canvas: '#portsHistoryChart', note: '#portsChartNote' },
+      property: { table: '#propertyDataTable', updated: '#propertyUpdated', canvas: '#propertyHistoryChart', note: '#propertyChartNote' },
+      labor: { table: '#laborDataTable', updated: '#laborUpdated', canvas: '#laborHistoryChart', note: '#laborChartNote' }
     };
     try {
       const response = await fetch('data/category-data.json', { cache: 'no-store' });
@@ -271,19 +272,61 @@
       for (const [category, target] of Object.entries(targets)) {
         const table = $(target.table);
         const updated = $(target.updated);
+        const canvas = $(target.canvas);
+        const note = $(target.note);
         if (!table) continue;
         const item = snapshot.data.find(row => row.category === category);
-        if (!item || !Array.isArray(item.observations) || !item.observations.length) {
-          table.innerHTML = '<div class="empty-state"><h3>Chưa có dữ liệu</h3><p>Nguồn chưa trả về chuỗi hợp lệ cho danh mục này.</p></div>';
+        const observations = (item?.observations || []).filter(point =>
+          point && /^\\d{4}-\\d{2}-\\d{2}$/.test(point.date) &&
+          Number.isFinite(Number(point.value)) && point.date <= new Date().toISOString().slice(0, 10)
+        ).sort((a, b) => a.date.localeCompare(b.date));
+        if (!item || !observations.length) {
+          table.innerHTML = '<div class="empty-state"><h3>Chưa có dữ liệu hợp lệ</h3><p>Nguồn chưa trả về quan sát đã xác minh cho danh mục này.</p></div>';
           if (updated) { updated.textContent = 'Chưa có dữ liệu'; updated.className = 'status-pill neutral'; }
+          if (note) note.textContent = 'Chưa có quan sát lịch sử hợp lệ để vẽ biểu đồ.';
           continue;
         }
-        const rows = item.observations.slice(-24).reverse();
+        const latest = observations[observations.length - 1];
+        const rows = observations.slice(-24).reverse();
         table.innerHTML = `<table><thead><tr><th>Chỉ tiêu</th><th>Giá trị</th><th>Đơn vị</th><th>Kỳ dữ liệu</th><th>Nguồn</th></tr></thead><tbody>${rows.map(point => `
           <tr><td><strong>${escapeHtml(item.name)}</strong></td><td>${fmt(point.value, 3)}</td><td>${escapeHtml(item.unit || '—')}</td><td>${escapeHtml(dateFmt(point.date))}</td><td><a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.source)}</a></td></tr>`).join('')}</tbody></table>`;
         if (updated) {
-          updated.textContent = 'Kỳ mới nhất: ' + dateFmt(item.date);
+          updated.textContent = 'Kỳ mới nhất: ' + dateFmt(latest.date);
           updated.className = 'status-pill positive';
+        }
+        if (canvas && window.Chart) {
+          if (categoryCharts[category]) categoryCharts[category].destroy();
+          categoryCharts[category] = new Chart(canvas, {
+            type: 'line',
+            data: {
+              labels: observations.map(point => dateFmt(point.date)),
+              datasets: [{
+                label: item.name,
+                data: observations.map(point => Number(point.value)),
+                borderWidth: 2,
+                pointRadius: observations.length > 48 ? 0 : 2,
+                pointHoverRadius: 4,
+                tension: 0.15,
+                fill: false
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              interaction: { mode: 'index', intersect: false },
+              plugins: {
+                legend: { display: false },
+                tooltip: { callbacks: { label: context => fmt(context.parsed.y, 3) + ' ' + (item.unit || '') } }
+              },
+              scales: {
+                x: { ticks: { maxTicksLimit: 8, maxRotation: 0 }, grid: { display: false } },
+                y: { beginAtZero: false, ticks: { callback: value => fmt(value, 2) } }
+              }
+            }
+          });
+          if (note) note.textContent = 'Nguồn: ' + item.source + ' · Đơn vị: ' + (item.unit || 'theo nguồn') + ' · ' + observations.length + ' quan sát. Các kỳ tương lai bị loại khỏi hiển thị.';
+        } else if (note) {
+          note.textContent = 'Không tải được thư viện Chart.js; bảng số liệu vẫn hoạt động.';
         }
       }
     } catch (error) {
