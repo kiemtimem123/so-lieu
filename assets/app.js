@@ -121,6 +121,41 @@
     }
   }
 
+
+  async function loadCurrencyRates() {
+    const table = $('#currencyRatesTable');
+    const updated = $('#currencyUpdated');
+    const status = $('#currencySourceStatus');
+    if (!table) return;
+    try {
+      const response = await fetch('data/currency-rates.json', { cache: 'no-store' });
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      const snapshot = await response.json();
+      if (!Array.isArray(snapshot.data) || !snapshot.data.length || !snapshot.lastUpdatedUtc) {
+        throw new Error('Snapshot tỷ giá không hợp lệ');
+      }
+      const rows = snapshot.data.filter(item =>
+        item && item.code && item.name && Number.isFinite(Number(item.vndPerUnit)) && Number(item.vndPerUnit) > 0
+      );
+      if (!rows.length) throw new Error('Không có tỷ giá hợp lệ');
+      table.innerHTML = `<table><thead><tr><th>Mã</th><th>Tên ngoại tệ</th><th>VND / 1 đơn vị</th><th>Phương pháp</th></tr></thead><tbody>${rows.map(item => `
+        <tr><td><strong>${escapeHtml(item.code)}</strong></td><td>${escapeHtml(item.name)}</td>
+        <td>${fmt(item.vndPerUnit, 4)}</td><td>${item.method === 'direct' ? 'Nguồn trực tiếp' : 'Tỷ giá chéo tính toán'}</td></tr>`).join('')}</tbody></table>`;
+      if (updated) {
+        updated.textContent = 'Cập nhật nguồn: ' + dateFmt(snapshot.lastUpdatedUtc);
+        updated.className = 'status-pill positive';
+      }
+      if (status) status.textContent = 'Nguồn: ExchangeRate-API Open Access · tỷ giá tham khảo';
+      const disclaimer = $('#currencyDisclaimer');
+      if (disclaimer) disclaimer.textContent = (snapshot.rateType || 'Tỷ giá tham khảo') + '. Dữ liệu nguồn cập nhật: ' + snapshot.lastUpdatedUtc + '. Tỷ giá chéo được tính từ các tỷ giá cùng nguồn; không dùng thay tỷ giá giao dịch ngân hàng.';
+    } catch (error) {
+      table.innerHTML = '<div class="empty-state"><h3>Chưa tải được tỷ giá</h3><p>Kiểm tra file data/currency-rates.json và GitHub Actions đã chạy thành công chưa.</p></div>';
+      if (updated) { updated.textContent = 'Chưa có dữ liệu'; updated.className = 'status-pill neutral'; }
+      if (status) status.textContent = 'Chưa đồng bộ được tỷ giá';
+      console.error('[currency-rates]', error);
+    }
+  }
+
   function setupNavigation() {
     const sidebar = $('#siteSidebar');
     $('#mobileMenu')?.addEventListener('click', () => sidebar?.classList.toggle('sidebar-open'));
@@ -207,5 +242,6 @@
     setupEmptyEconomicChart();
     setupSearchShortcut();
     loadMarketSnapshot();
+    loadCurrencyRates();
   });
 })();
