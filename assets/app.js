@@ -156,6 +156,28 @@
     }
   }
 
+  async function loadCreditGrowth() {
+    const content = $('#creditGrowthContent');
+    const updated = $('#creditGrowthUpdated');
+    if (!content) return;
+    try {
+      const response = await fetch('data/credit-growth.json', { cache: 'no-store' });
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      const snapshot = await response.json();
+      if (!Array.isArray(snapshot.data) || !snapshot.data.length || !snapshot.sourceUrl || !snapshot.observationDate) {
+        throw new Error('Snapshot tăng trưởng tín dụng không hợp lệ');
+      }
+      const rows = snapshot.data.filter(item => item && item.name && item.unit && Number.isFinite(Number(item.value)));
+      if (!rows.length) throw new Error('Không có chỉ tiêu hợp lệ');
+      content.innerHTML = `<table><thead><tr><th>Chỉ tiêu</th><th>Giá trị</th><th>Đơn vị</th><th>Ngày dữ liệu</th></tr></thead><tbody>${rows.map(item => `<tr><td><strong>${escapeHtml(item.name)}</strong></td><td>${fmt(item.value, 2)}</td><td>${escapeHtml(item.unit)}</td><td>${escapeHtml(dateFmt(snapshot.observationDate))}</td></tr>`).join('')}</tbody></table><p class="muted">Công bố ngày ${escapeHtml(dateFmt(snapshot.publishedDate))}. <a href="${escapeHtml(snapshot.sourceUrl)}" target="_blank" rel="noopener noreferrer">Xem nguồn gốc</a></p>`;
+      if (updated) { updated.textContent = 'Ngày dữ liệu: ' + dateFmt(snapshot.observationDate); updated.className = 'status-pill neutral'; }
+    } catch (error) {
+      content.innerHTML = '<div class="empty-state"><h3>Chưa tải được dữ liệu</h3><p>Snapshot thiếu hoặc không hợp lệ; không hiển thị số liệu thay thế.</p></div>';
+      if (updated) { updated.textContent = 'Chưa có dữ liệu'; updated.className = 'status-pill neutral'; }
+      console.error('[credit-growth]', error);
+    }
+  }
+
   async function loadUsdVndReference() {
     const content = $('#usdVndReferenceContent');
     const updated = $('#usdVndReferenceUpdated');
@@ -501,6 +523,7 @@
     loadMarketSnapshot();
     loadCurrencyRates();
     loadUsdVndReference();
+    loadCreditGrowth();
     loadFinancialRates();
     loadCategoryData();
   });
