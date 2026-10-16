@@ -264,7 +264,11 @@
       property: { table: '#propertyDataTable', updated: '#propertyUpdated', canvas: '#propertyHistoryChart', note: '#propertyChartNote' },
       labor: { table: '#laborDataTable', updated: '#laborUpdated', canvas: '#laborHistoryChart', note: '#laborChartNote' },
       passengers: { table: '#passengersDataTable', updated: '#passengersUpdated', canvas: '#passengersHistoryChart', note: '#passengersChartNote' },
-      'agri-price': { table: '#agriPriceDataTable', updated: '#agriPriceUpdated', canvas: '#agriPriceHistoryChart', note: '#agriPriceChartNote' }
+      'agri-price': { table: '#agriPriceDataTable', updated: '#agriPriceUpdated', canvas: '#agriPriceHistoryChart', note: '#agriPriceChartNote' },
+      retail: { table: '#retailDataTable', updated: '#retailUpdated', canvas: '#retailHistoryChart', note: '#retailChartNote' },
+      exports: { table: '#exportsDataTable', updated: '#exportsUpdated', canvas: '#exportsHistoryChart', note: '#exportsChartNote' },
+      imports: { table: '#importsDataTable', updated: '#importsUpdated', canvas: '#importsHistoryChart', note: '#importsChartNote' },
+      cpi: { table: '#cpiDataTable', updated: '#cpiUpdated', canvas: '#cpiHistoryChart', note: '#cpiChartNote' }
     };
     try {
       const response = await fetch('data/category-data.json', { cache: 'no-store' });
@@ -399,13 +403,42 @@
     const select = $('#economicSeriesSelect');
     const empty = $('#economicChartEmpty');
     const source = $('#economicChartSource');
-    select?.addEventListener('change', () => {
-      if (empty) {
-        empty.style.display = 'grid';
-        empty.textContent = 'Chưa có chuỗi dữ liệu đã xác minh cho chỉ tiêu này.';
+    const chart = $('#economicChart');
+    const choices = {
+      cpi: { category: 'cpi', label: 'CPI' },
+      retail: { category: 'retail', label: 'Bán lẻ' },
+      exchange_rate: { category: null, label: 'Tỷ giá' },
+      interest_rate: { category: null, label: 'Lãi suất' },
+      gdp_quarterly: { category: null, label: 'GDP theo quý' }
+    };
+    async function drawSelected() {
+      const choice = choices[select?.value] || choices.gdp_quarterly;
+      try {
+        const response = await fetch('data/category-data.json', { cache: 'no-store' });
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        const snapshot = await response.json();
+        const item = snapshot.data?.find(row => row.category === choice.category);
+        const points = (item?.observations || []).filter(p => p.date <= new Date().toISOString().slice(0,10) && Number.isFinite(Number(p.value)));
+        if (!item || !points.length || !chart || !window.Chart) {
+          if (empty) { empty.style.display = 'grid'; empty.textContent = 'Chưa có chuỗi dữ liệu đã xác minh cho ' + choice.label + '.'; }
+          if (source) source.textContent = 'Nguồn: dulieukinhte.com API · Chỉ hiển thị dữ liệu đã đồng bộ.';
+          return;
+        }
+        if (empty) empty.style.display = 'none';
+        if (window.economicChartInstance) window.economicChartInstance.destroy();
+        window.economicChartInstance = new Chart(chart, {
+          type: 'line',
+          data: { labels: points.map(p => dateFmt(p.date)), datasets: [{ label: item.name, data: points.map(p => Number(p.value)), borderWidth: 2, tension: 0.15, pointRadius: points.length > 48 ? 0 : 2 }] },
+          options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, plugins: { legend: { display: false } }, scales: { x: { ticks: { maxTicksLimit: 8 } }, y: { beginAtZero: false } } }
+        });
+        if (source) source.textContent = 'Nguồn: ' + item.source + ' · Đơn vị: ' + item.unit + ' · Kỳ mới nhất: ' + dateFmt(points[points.length - 1].date);
+      } catch (error) {
+        if (empty) { empty.style.display = 'grid'; empty.textContent = 'Không tải được snapshot kinh tế.'; }
+        if (source) source.textContent = 'Không tải được data/category-data.json';
       }
-      if (source) source.textContent = 'Nguồn: dulieukinhte.com API · Chưa có snapshot cho chỉ tiêu đã chọn';
-    });
+    }
+    select?.addEventListener('change', drawSelected);
+    drawSelected();
   }
 
   function setupSearchShortcut() {
