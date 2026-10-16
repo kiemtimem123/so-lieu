@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Dữ liệu kinh tế Việt Nam, thị trường hàng hóa và báo cáo tài chính doanh nghiệp từ nguồn có thể kiểm chứng.">
   <title>Dữ Liệu Kinh Tế Việt Nam</title>
-  <link rel="stylesheet" href="assets/styles.css?v=20261016-rates">
+  <link rel="stylesheet" href="assets/styles.css?v=20261016-charts">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js" defer></script>
-  <script src="assets/app.js?v=20261016-rates" defer></script>
+  <script src="assets/app.js?v=20261016-charts" defer></script>
 </head>
 <body>
   <aside class="site-sidebar" id="siteSidebar">
@@ -87,6 +87,11 @@
       <div class="currency-panel">
         <div class="currency-panel-heading"><div><h3>Lãi suất liên ngân hàng</h3><p class="muted">Đơn vị %/năm; đây không phải lãi suất tiền gửi hoặc lãi suất cho vay khách hàng.</p></div><span id="interestRatesUpdated" class="status-pill neutral">Đang tải…</span></div>
         <div id="interestRatesTable" class="table-scroll"><div class="empty-state"><h3>Đang tải lãi suất</h3><p>Dữ liệu lấy từ snapshot đã đồng bộ.</p></div></div>
+        <div class="chart-panel">
+          <div class="currency-panel-heading"><div><h3>Biến động lãi suất liên ngân hàng</h3><p class="muted">Đường biểu diễn các quan sát lịch sử có trong nguồn dữ liệu.</p></div><label class="chart-range-label">Khoảng thời gian <select id="interestChartRange" aria-label="Khoảng thời gian lãi suất"><option value="7">7 ngày</option><option value="30" selected>30 ngày</option></select></label></div>
+          <div class="chart-canvas-wrap"><canvas id="interestRatesChart" aria-label="Biểu đồ đường lãi suất liên ngân hàng" role="img"></canvas></div>
+          <p class="muted" id="interestChartNote">Biểu đồ dựa trên các quan sát lịch sử được API trả về.</p>
+        </div>
       </div>
       <div class="currency-panel">
         <div class="currency-panel-heading"><div><h3>Tỷ giá tham khảo quy đổi sang VND</h3><p class="muted">Giá trị cho 1 đơn vị ngoại tệ, dùng để tham khảo và so sánh.</p></div><span id="currencyUpdated" class="status-pill neutral">Đang tải…</span></div>
@@ -135,6 +140,11 @@
       <div class="currency-panel">
         <div class="currency-panel-heading"><div><h3>Lợi suất trái phiếu Chính phủ — thị trường thứ cấp</h3><p class="muted">Đơn vị %/năm; lợi suất không đồng nghĩa với lãi coupon của một trái phiếu cụ thể.</p></div><span id="bondYieldsUpdated" class="status-pill neutral">Đang tải…</span></div>
         <div id="bondYieldsTable" class="table-scroll"><div class="empty-state"><h3>Đang tải lợi suất</h3><p>Dữ liệu lấy từ snapshot đã đồng bộ.</p></div></div>
+        <div class="chart-panel">
+          <div class="currency-panel-heading"><div><h3>Biến động lợi suất trái phiếu Chính phủ</h3><p class="muted">So sánh lợi suất theo kỳ hạn, đơn vị %/năm.</p></div><label class="chart-range-label">Khoảng thời gian <select id="bondChartRange" aria-label="Khoảng thời gian lợi suất trái phiếu"><option value="7">7 ngày</option><option value="30" selected>30 ngày</option></select></label></div>
+          <div class="chart-canvas-wrap"><canvas id="bondYieldsChart" aria-label="Biểu đồ đường lợi suất trái phiếu Chính phủ" role="img"></canvas></div>
+          <p class="muted" id="bondChartNote">Biểu đồ dựa trên các quan sát lịch sử được API trả về.</p>
+        </div>
       </div>
       <p class="notice">Nguồn dữ liệu: HNX qua Dữ Liệu Kinh Tế. Phát hành trái phiếu doanh nghiệp và số liệu đấu thầu chưa được kết nối.</p>
     </section>
