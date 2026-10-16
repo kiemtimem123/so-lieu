@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Fetch market data
         shell: bash
@@ -33,7 +33,7 @@ jobs:
             --header "Authorization: Bearer ${DLKT_API_KEY}" \
             --data-urlencode "ids=37826,37827,37694,37828,37695" \
             --data-urlencode "from=${FROM_DATE}" \
-            --data-urlencode "limit=500" \
+            --data-urlencode "limit=200" \
             --output response.json \
             --write-out "%{http_code}" \
             "https://api.dulieukinhte.com/v1/series/observations")"
