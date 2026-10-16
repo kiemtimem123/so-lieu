@@ -12,7 +12,12 @@ const definitions = [
   { id: 18709, category: "retail", name: "Tổng mức bán lẻ hàng hóa và dịch vụ", unit: "Tỷ đồng", source: "Cục Thống kê (NSO)", url: "https://dulieukinhte.com/du-lieu-dong/tong-muc-ban-le-hang-hoa-va-dich-vu-18709" },
   { id: 22603, category: "exports", name: "Tổng kim ngạch xuất khẩu", unit: "Triệu USD", source: "Tổng cục Hải quan", url: "https://dulieukinhte.com/du-lieu-dong/tong-kim-ngach-xuat-khau-22603" },
   { id: 22606, category: "imports", name: "Tổng kim ngạch nhập khẩu", unit: "Triệu USD", source: "Tổng cục Hải quan", url: "https://dulieukinhte.com/du-lieu-dong/tong-kim-ngach-nhap-khau-22606" },
-  { id: 24655, category: "cpi", name: "Chỉ số giá tiêu dùng CPI lũy kế từ đầu năm", unit: "%", source: "Cục Thống kê (NSO)", url: "https://dulieukinhte.com/du-lieu-dong/chi-so-gia-tieu-dung-cpi-luy-ke-tu-dau-nam-24655" }
+  { id: 24655, category: "cpi", name: "Chỉ số giá tiêu dùng CPI lũy kế từ đầu năm", unit: "%", source: "Cục Thống kê (NSO)", url: "https://dulieukinhte.com/du-lieu-dong/chi-so-gia-tieu-dung-cpi-luy-ke-tu-dau-nam-24655" },
+  { id: 22865, category: "logistics-index", name: "Chỉ số vận tải kho bãi so quý trước", unit: "%", source: "Cục Thống kê (NSO)", url: "https://dulieukinhte.com/du-lieu-dong/chi-so-van-tai-kho-bai-so-quy-truoc-22865" },
+  { id: 22613, category: "sea-freight", name: "Luân chuyển hàng hóa đường biển", unit: "Triệu tấn/Km", source: "Cục Thống kê (NSO)", url: "https://dulieukinhte.com/du-lieu-dong/luan-chuyen-hang-hoa-duong-bien-22613" },
+  { id: 36762, category: "corporate-bonds-property", name: "Phát hành trái phiếu doanh nghiệp ngành bất động sản", unit: "Tỷ đồng", source: "Hiệp hội Thị trường Trái phiếu Việt Nam (VBMA)", url: "https://dulieukinhte.com/du-lieu-dong/phat-hanh-tpdn-nganh-bat-dong-san-36762" },
+  { id: 33392, category: "agri-exports-rubber", name: "Giá xuất khẩu bình quân cao su", unit: "USD/tấn", source: "Tổng cục Hải quan", url: "https://dulieukinhte.com/du-lieu-dong/gia-xuat-khau-binh-quan-cao-su-33392" },
+  { id: 33408, category: "agri-imports-rubber", name: "Giá nhập khẩu bình quân cao su", unit: "USD/tấn", source: "Tổng cục Hải quan", url: "https://dulieukinhte.com/du-lieu-dong/gia-nhap-khau-binh-quan-cao-su-33408" }
 ];
 function fail(message) { console.error("ERROR:", message); process.exit(1); }
 let response;
