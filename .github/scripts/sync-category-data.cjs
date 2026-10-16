@@ -25,7 +25,9 @@ const definitions = [
   { id: 66457, category: "global-rubber", name: "Giá cao su TSR20 thế giới", unit: "Theo nguồn", source: "Dữ Liệu Kinh Tế (nguồn tổng hợp)", url: "https://dulieukinhte.com/du-lieu-dong/gia-cao-su-tsr20-ine-the-gioi-66457" },
   { id: 29380, category: "global-steel", name: "Giá thép thanh thế giới", unit: "Theo nguồn", source: "Dữ Liệu Kinh Tế (nguồn tổng hợp)", url: "https://dulieukinhte.com/du-lieu-dong/gia-thep-thanh-the-gioi-29380" },
   { id: 18699, category: "housing-cpi", name: "Chỉ số giá tiêu dùng nhà ở và vật liệu xây dựng", unit: "Điểm", source: "Cục Thống kê (NSO)", url: "https://dulieukinhte.com/du-lieu-dong/chi-so-gia-tieu-dung-nha-o-va-vat-lieu-xay-dung-18699" },
-  { id: 22870, category: "coastal-shipping-index", name: "Chỉ số vận tải đường ven biển và viễn dương so quý trước", unit: "%", source: "Cục Thống kê (NSO)", url: "https://dulieukinhte.com/du-lieu-dong/chi-so-van-tai-duong-ven-bien-va-vien-duong-so-quy-truoc-22870" }
+  { id: 22870, category: "coastal-shipping-index", name: "Chỉ số vận tải đường ven biển và viễn dương so quý trước", unit: "%", source: "Cục Thống kê (NSO)", url: "https://dulieukinhte.com/du-lieu-dong/chi-so-van-tai-duong-ven-bien-va-vien-duong-so-quy-truoc-22870" },
+  { id: 27690, category: "omo-buy-total", name: "Tổng khối lượng trúng thầu mua (bơm tiền) nghiệp vụ thị trường mở OMO", unit: "Tỷ đồng", source: "Ngân hàng Nhà nước Việt Nam (NHNN), qua Dữ Liệu Kinh Tế", url: "https://dulieukinhte.com/du-lieu-dong/tong-mua-bom-tien-nghiep-vu-thi-truong-mo-omo-27690" },
+  { id: 53631, category: "omo-net-outstanding", name: "Chênh lệch lưu hành OMO và tín phiếu NHNN", unit: "Tỷ đồng", source: "Ngân hàng Nhà nước Việt Nam (NHNN), qua Dữ Liệu Kinh Tế", url: "https://dulieukinhte.com/du-lieu-dong/chenh-lech-luu-hanh-omo-va-tin-phieu-nhnn-53631" }
 ];
 function fail(message) { console.error("ERROR:", message); process.exit(1); }
 let response;
