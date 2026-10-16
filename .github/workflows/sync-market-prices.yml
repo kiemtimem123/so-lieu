@@ -47,11 +47,16 @@ jobs:
           with open("response.json", encoding="utf-8") as f:
               result = json.load(f)
 
-          if "error" in result:
-              e = result["error"]
-              raise SystemExit(
-                  f"API error: {e.get('code', 'unknown')}"
-              )
+         if "error" in result:
+    e = result["error"]
+    raise SystemExit(
+        "API error: "
+        + str(e.get("code", "unknown"))
+        + " | message: "
+        + str(e.get("message", "Không có thông báo"))
+        + " | requestId: "
+        + str(e.get("requestId", "không có"))
+    )
 
           labels = {
               37826: "WTI",
