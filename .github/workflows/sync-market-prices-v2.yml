@@ -1,11 +1,116 @@
-name: Test Workflow
+name: Sync Market Prices V2
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "15 23 * * *"
+
+permissions:
+  contents: write
 
 jobs:
-  test:
+  sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Test
-        run: echo "YAML OK"
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Fetch market data
+        shell: bash
+        env:
+          DLKT_API_KEY: ${{ secrets.DLKT_API_KEY }}
+        run: |
+          set -eu
+
+          if [ -z "${DLKT_API_KEY:-}" ]; then
+            echo "ERROR: Missing DLKT_API_KEY secret"
+            exit 1
+          fi
+
+          FROM_DATE="$(date -u -d '30 days ago' +%F)"
+
+          STATUS=$(curl -sS --max-time 30 -G \
+            -H "Authorization: Bearer ${DLKT_API_KEY}" \
+            --data-urlencode "ids=37826,37827,37694,37828,37695" \
+            --data-urlencode "from=${FROM_DATE}" \
+            --data-urlencode "limit=500" \
+            -o response.json \
+            -w "%{http_code}" \
+            "https://api.dulieukinhte.com/v1/series/observations")
+
+          echo "API HTTP status: ${STATUS}"
+
+          case "$STATUS" in
+            2*) ;;
+            *)
+              echo "ERROR: API request failed. Response:"
+              cat response.json
+              exit 1
+              ;;
+          esac
+
+          node -e '
+          const fs = require("fs");
+          const response = JSON.parse(fs.readFileSync("response.json", "utf8"));
+          if (!response || typeof response !== "object" || response.error || !Array.isArray(response.data)) {
+            console.error("Invalid API response:", response && response.error ? response.error : "missing data array");
+            process.exit(1);
+          }
+
+          const labels = {
+            37826: "WTI",
+            37827: "Brent",
+            37694: "Xăng thường tại Mỹ",
+            37828: "Dầu diesel tại Mỹ",
+            37695: "Khí tự nhiên Henry Hub"
+          };
+          const ids = Object.keys(labels).map(Number);
+          const outputData = ids.map(id => {
+            const series = response.data.find(item => Number(item.id) === id);
+            if (!series || series.skipped) throw new Error("Missing or skipped series ID " + id);
+            if (!Array.isArray(series.observations) || series.observations.length === 0) {
+              throw new Error("No observations for series ID " + id);
+            }
+            const observations = series.observations
+              .filter(item => item && item.date && item.value !== null && item.value !== undefined)
+              .sort((a, b) => String(a.date).localeCompare(String(b.date)));
+            const latest = observations[observations.length - 1];
+            if (!latest) throw new Error("No valid dated value for series ID " + id);
+            return {
+              id,
+              name: labels[id],
+              value: latest.value,
+              unit: series.unit || null,
+              date: latest.date
+            };
+          });
+
+          const output = {
+            source: "DulieuKinhte API",
+            fetchedAt: new Date().toISOString(),
+            data: outputData
+          };
+          fs.mkdirSync("data", { recursive: true });
+          fs.writeFileSync("data/market-prices.json.tmp", JSON.stringify(output, null, 2) + "\\n", "utf8");
+          fs.renameSync("data/market-prices.json.tmp", "data/market-prices.json");
+          console.log("Saved all five market series:");
+          output.data.forEach(item => console.log(item.name + " | " + item.value + " " + (item.unit || "") + " | " + item.date));
+          '
+
+      - name: Commit updated data
+        shell: bash
+        run: |
+          set -eu
+          rm -f response.json
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add data/market-prices.json
+
+          if git diff --cached --quiet; then
+            echo "No market data changes."
+          else
+            git commit -m "Update market prices data"
+            git push
+          fi
