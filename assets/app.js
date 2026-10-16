@@ -262,7 +262,9 @@
       agriculture: { table: '#agricultureDataTable', updated: '#agricultureUpdated', canvas: '#agricultureHistoryChart', note: '#agricultureChartNote' },
       ports: { table: '#portsDataTable', updated: '#portsUpdated', canvas: '#portsHistoryChart', note: '#portsChartNote' },
       property: { table: '#propertyDataTable', updated: '#propertyUpdated', canvas: '#propertyHistoryChart', note: '#propertyChartNote' },
-      labor: { table: '#laborDataTable', updated: '#laborUpdated', canvas: '#laborHistoryChart', note: '#laborChartNote' }
+      labor: { table: '#laborDataTable', updated: '#laborUpdated', canvas: '#laborHistoryChart', note: '#laborChartNote' },
+      passengers: { table: '#passengersDataTable', updated: '#passengersUpdated', canvas: '#passengersHistoryChart', note: '#passengersChartNote' },
+      'agri-price': { table: '#agriPriceDataTable', updated: '#agriPriceUpdated', canvas: '#agriPriceHistoryChart', note: '#agriPriceChartNote' }
     };
     try {
       const response = await fetch('data/category-data.json', { cache: 'no-store' });
