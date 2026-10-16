@@ -183,6 +183,68 @@
       const updatedText = 'Snapshot: ' + dateFmt(snapshot.fetchedAt);
       if (bondUpdated) { bondUpdated.textContent = updatedText; bondUpdated.className = 'status-pill positive'; }
       if (interestUpdated) { interestUpdated.textContent = updatedText; interestUpdated.className = 'status-pill positive'; }
+
+      const chartState = { bond: null, interest: null };
+      const renderHistoryChart = (category, rows, canvasId, rangeId, noteId) => {
+        const canvas = document.getElementById(canvasId);
+        const rangeControl = document.getElementById(rangeId);
+        const note = document.getElementById(noteId);
+        if (!canvas || !rangeControl) return;
+        const draw = () => {
+          if (chartState[category]) { chartState[category].destroy(); chartState[category] = null; }
+          if (typeof Chart === 'undefined') {
+            if (note) note.textContent = 'Không tải được thư viện biểu đồ Chart.js.';
+            return;
+          }
+          const days = Number(rangeControl.value) || 30;
+          const cutoff = new Date();
+          cutoff.setDate(cutoff.getDate() - days);
+          const series = rows.map(item => ({
+            label: item.name,
+            points: (Array.isArray(item.observations) ? item.observations : [])
+              .filter(point => point && point.date && Number.isFinite(Number(point.value)) && new Date(point.date + 'T00:00:00') >= cutoff)
+              .sort((a, b) => a.date.localeCompare(b.date))
+          })).filter(item => item.points.length);
+          const dates = [...new Set(series.flatMap(item => item.points.map(point => point.date)))].sort();
+          if (!dates.length) {
+            if (note) note.textContent = 'Nguồn hiện chưa cung cấp quan sát lịch sử trong khoảng này. Hãy chạy lại workflow để lấy chuỗi lịch sử; không tạo dữ liệu giả.';
+            return;
+          }
+          chartState[category] = new Chart(canvas, {
+            type: 'line',
+            data: {
+              labels: dates.map(dateFmt),
+              datasets: series.map((item, index) => {
+                const values = new Map(item.points.map(point => [point.date, Number(point.value)]));
+                return {
+                  label: item.label,
+                  data: dates.map(date => values.has(date) ? values.get(date) : null),
+                  spanGaps: false,
+                  tension: 0.2,
+                  pointRadius: 2,
+                  pointHoverRadius: 5,
+                  borderWidth: 2
+                };
+              })
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              interaction: { mode: 'nearest', intersect: false },
+              plugins: { legend: { display: true, position: 'bottom' } },
+              scales: {
+                x: { title: { display: true, text: 'Ngày dữ liệu' } },
+                y: { title: { display: true, text: '%/năm' }, beginAtZero: false }
+              }
+            }
+          });
+          if (note) note.textContent = 'Hiển thị ' + dates.length + ' ngày có quan sát trong ' + days + ' ngày gần nhất. Các ngày thiếu dữ liệu được để trống, không nội suy.';
+        };
+        rangeControl.addEventListener('change', draw);
+        draw();
+      };
+      renderHistoryChart('interest', rates, 'interestRatesChart', 'interestChartRange', 'interestChartNote');
+      renderHistoryChart('bond', bonds, 'bondYieldsChart', 'bondChartRange', 'bondChartNote');
     } catch (error) {
       const message = '<div class="empty-state"><h3>Chưa tải được dữ liệu</h3><p>Kiểm tra data/financial-rates.json và trạng thái workflow GitHub Actions.</p></div>';
       if (bondTable) bondTable.innerHTML = message;
