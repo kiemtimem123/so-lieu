@@ -29,8 +29,16 @@ const definitions = [
 ];
 function fail(message) { console.error("ERROR:", message); process.exit(1); }
 let response;
-try { response = JSON.parse(fs.readFileSync("category-response.json", "utf8")); }
-catch (error) { fail("Không đọc được phản hồi API: " + error.message); }
+try {
+  const first = JSON.parse(fs.readFileSync("category-response-1.json", "utf8"));
+  const second = JSON.parse(fs.readFileSync("category-response-2.json", "utf8"));
+  if (!first || !Array.isArray(first.data) || !second || !Array.isArray(second.data)) {
+    fail("Một trong các lô API không trả về mảng data hợp lệ.");
+  }
+  response = { data: [...first.data, ...second.data] };
+} catch (error) {
+  fail("Không đọc được phản hồi API theo lô: " + error.message);
+}
 if (!response || !Array.isArray(response.data)) fail("API không trả về mảng data.");
 const outputData = [];
 for (const def of definitions) {
