@@ -8,7 +8,11 @@ const definitions = [
   { id: 31248, category: "property", name: "Số dự án nhà ở thương mại được chấp thuận chủ trương đầu tư", unit: "Dự án", source: "Bộ Xây dựng", url: "https://dulieukinhte.com/du-lieu-dong/so-du-an-nha-o-thuong-mai-duoc-chap-thuan-chu-truong-dau-tu-31248" },
   { id: 34763, category: "labor", name: "Lao động có việc làm", unit: "Nghìn người", source: "Cục Thống kê (NSO)", url: "https://dulieukinhte.com/du-lieu-dong/lao-dong-co-viec-lam-34763" },
   { id: 22659, category: "passengers", name: "Tổng số khối lượng vận chuyển hành khách", unit: "Nghìn người", source: "Cục Thống kê (NSO)", url: "https://dulieukinhte.com/du-lieu-dong/tong-so-khoi-luong-van-chuyen-hanh-khach-22659" },
-  { id: 22905, category: "agri-price", name: "Chỉ số giá sản xuất nông, lâm nghiệp và thủy sản so cùng kỳ", unit: "%", source: "Cục Thống kê (NSO)", url: "https://dulieukinhte.com/du-lieu-dong/chi-so-gia-san-xuat-nong-lam-nghiep-va-thuy-san-so-cung-ky-22905" }
+  { id: 22905, category: "agri-price", name: "Chỉ số giá sản xuất nông, lâm nghiệp và thủy sản so cùng kỳ", unit: "%", source: "Cục Thống kê (NSO)", url: "https://dulieukinhte.com/du-lieu-dong/chi-so-gia-san-xuat-nong-lam-nghiep-va-thuy-san-so-cung-ky-22905" },
+  { id: 18709, category: "retail", name: "Tổng mức bán lẻ hàng hóa và dịch vụ", unit: "Tỷ đồng", source: "Cục Thống kê (NSO)", url: "https://dulieukinhte.com/du-lieu-dong/tong-muc-ban-le-hang-hoa-va-dich-vu-18709" },
+  { id: 22603, category: "exports", name: "Tổng kim ngạch xuất khẩu", unit: "Triệu USD", source: "Tổng cục Hải quan", url: "https://dulieukinhte.com/du-lieu-dong/tong-kim-ngach-xuat-khau-22603" },
+  { id: 22606, category: "imports", name: "Tổng kim ngạch nhập khẩu", unit: "Triệu USD", source: "Tổng cục Hải quan", url: "https://dulieukinhte.com/du-lieu-dong/tong-kim-ngach-nhap-khau-22606" },
+  { id: 24655, category: "cpi", name: "Chỉ số giá tiêu dùng CPI lũy kế từ đầu năm", unit: "%", source: "Cục Thống kê (NSO)", url: "https://dulieukinhte.com/du-lieu-dong/chi-so-gia-tieu-dung-cpi-luy-ke-tu-dau-nam-24655" }
 ];
 function fail(message) { console.error("ERROR:", message); process.exit(1); }
 let response;
