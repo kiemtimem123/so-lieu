@@ -28,7 +28,7 @@ jobs:
           FROM_DATE="$(date -u -d '30 days ago' +%F)"
           STATUS="$(curl --silent --show-error --max-time 30 --get \
             --header "Authorization: Bearer ${DLKT_API_KEY}" \
-            --data-urlencode "ids=37826,37827,37694,37828,37695" \
+            --data-urlencode "ids=37826,37827,37694,37828,37695,36708,36711,36714,36710,34248,34249,34251" \
             --data-urlencode "from=${FROM_DATE}" \
             --data-urlencode "limit=200" \
             --output response.json --write-out "%{http_code}" \
@@ -52,6 +52,7 @@ jobs:
           set -eu
           node .github/scripts/sync-market-prices.cjs
           node .github/scripts/sync-currency-rates.cjs
+          node .github/scripts/sync-financial-rates.cjs
 
       - name: Commit updated data
         shell: bash
@@ -64,11 +65,13 @@ jobs:
           # before committing to avoid non-fast-forward push failures.
           cp data/market-prices.json /tmp/market-prices.json
           cp data/currency-rates.json /tmp/currency-rates.json
+          cp data/financial-rates.json /tmp/financial-rates.json
           git fetch origin main
           git reset --hard origin/main
           cp /tmp/market-prices.json data/market-prices.json
           cp /tmp/currency-rates.json data/currency-rates.json
-          git add data/market-prices.json data/currency-rates.json
+          cp /tmp/financial-rates.json data/financial-rates.json
+          git add data/market-prices.json data/currency-rates.json data/financial-rates.json
           if git diff --cached --quiet; then
             echo "No data changes."
           else
