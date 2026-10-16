@@ -2,6 +2,11 @@ name: Sync Core Economic Indicators
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/scripts/sync-category-data.cjs'
+      - '.github/workflows/sync-category-data.yml'
   schedule:
     - cron: "30 23 * * 0"
 
