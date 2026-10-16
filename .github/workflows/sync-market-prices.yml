@@ -1,9 +1,9 @@
+
 name: Sync market prices
 
 on:
   workflow_dispatch:
   schedule:
-    # Chạy hằng ngày lúc 23:15 UTC (06:15 sáng hôm sau giờ Việt Nam)
     - cron: "15 23 * * *"
 
 permissions:
@@ -18,9 +18,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Fetch and save market prices
+        shell: bash
         env:
           DLKT_API_KEY: ${{ secrets.DLKT_API_KEY }}
-        shell: bash
         run: |
           set -euo pipefail
 
@@ -47,23 +47,8 @@ jobs:
           echo "API HTTP status: ${HTTP_CODE}"
 
           if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
-            echo "ERROR: API request failed."
-            python - <<'PY'
-          import json
-
-          try:
-              with open("response.json", encoding="utf-8") as f:
-                  result = json.load(f)
-              error = result.get("error", result)
-              if isinstance(error, dict):
-                  print("API error code:", error.get("code", "unknown"))
-                  print("API error message:", error.get("message", "Không có thông báo"))
-                  print("Request ID:", error.get("requestId", "không có"))
-              else:
-                  print("API response:", str(error)[:1000])
-          except Exception:
-              print("API returned a non-JSON response.")
-          PY
+            echo "ERROR: API request failed. Response:"
+            cat response.json
             exit 1
           fi
 
@@ -79,14 +64,12 @@ jobs:
               raise SystemExit("ERROR: API response is not a JSON object.")
 
           if "error" in result:
-              e = result["error"]
+              error = result["error"]
               raise SystemExit(
                   "API error: "
-                  + str(e.get("code", "unknown"))
-                  + " | message: "
-                  + str(e.get("message", "Không có thông báo"))
-                  + " | requestId: "
-                  + str(e.get("requestId", "không có"))
+                  + str(error.get("code", "unknown"))
+                  + " | "
+                  + str(error.get("message", "Không có thông báo"))
               )
 
           labels = {
@@ -108,7 +91,7 @@ jobs:
 
               if item.get("skipped"):
                   raise SystemExit(
-                      f"Series {sid} was skipped; previous data will be preserved."
+                      f"Series {sid} skipped; previous data preserved."
                   )
 
               observations = item.get("observations", [])
@@ -116,17 +99,18 @@ jobs:
               if not observations:
                   raise SystemExit(
                       f"No observations for series {sid}; "
-                      "previous data will be preserved."
+                      "previous data preserved."
                   )
 
               latest = max(
                   observations,
-                  key=lambda x: x.get("date") or ""
+                  key=lambda observation: observation.get("date") or ""
               )
 
               value = latest.get("value")
+              date = latest.get("date")
 
-              if value is None or not latest.get("date"):
+              if value is None or not date:
                   raise SystemExit(
                       f"Missing value or date for series {sid}."
                   )
@@ -136,14 +120,15 @@ jobs:
                   "name": labels[sid],
                   "value": value,
                   "unit": item.get("unit"),
-                  "date": latest["date"],
+                  "date": date,
               }
 
-          if set(found) != expected:
-              missing = sorted(expected - set(found))
+          missing = sorted(expected - set(found))
+
+          if missing:
               raise SystemExit(
                   f"Missing series IDs: {missing}; "
-                  "previous data will be preserved."
+                  "previous data preserved."
               )
 
           output = {
@@ -193,3 +178,4 @@ jobs:
             git commit -m "Update market prices data"
             git push
           fi
+
