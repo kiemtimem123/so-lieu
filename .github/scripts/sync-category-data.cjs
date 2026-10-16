@@ -6,7 +6,9 @@ const definitions = [
   { id: 30221, category: "agriculture", name: "Diện tích sản lượng lúa mùa miền Nam", unit: "Nghìn ha", source: "Cục Thống kê (NSO)", url: "https://dulieukinhte.com/du-lieu-dong/dien-tich-san-luong-lua-mua-mien-nam-30221" },
   { id: 32542, category: "ports", name: "Tổng DWT tàu vào cảng biển Cảng vụ TP. Hồ Chí Minh", unit: "DWT", source: "Cục Hàng hải Việt Nam (các Cảng vụ Hàng hải)", url: "https://dulieukinhte.com/du-lieu-dong/tong-dwt-tau-vao-cang-bien-cang-vu-tp-ho-chi-minh-32542" },
   { id: 31248, category: "property", name: "Số dự án nhà ở thương mại được chấp thuận chủ trương đầu tư", unit: "Dự án", source: "Bộ Xây dựng", url: "https://dulieukinhte.com/du-lieu-dong/so-du-an-nha-o-thuong-mai-duoc-chap-thuan-chu-truong-dau-tu-31248" },
-  { id: 34763, category: "labor", name: "Lao động có việc làm", unit: "Nghìn người", source: "Cục Thống kê (NSO)", url: "https://dulieukinhte.com/du-lieu-dong/lao-dong-co-viec-lam-34763" }
+  { id: 34763, category: "labor", name: "Lao động có việc làm", unit: "Nghìn người", source: "Cục Thống kê (NSO)", url: "https://dulieukinhte.com/du-lieu-dong/lao-dong-co-viec-lam-34763" },
+  { id: 22659, category: "passengers", name: "Tổng số khối lượng vận chuyển hành khách", unit: "Nghìn người", source: "Cục Thống kê (NSO)", url: "https://dulieukinhte.com/du-lieu-dong/tong-so-khoi-luong-van-chuyen-hanh-khach-22659" },
+  { id: 22905, category: "agri-price", name: "Chỉ số giá sản xuất nông, lâm nghiệp và thủy sản so cùng kỳ", unit: "%", source: "Cục Thống kê (NSO)", url: "https://dulieukinhte.com/du-lieu-dong/chi-so-gia-san-xuat-nong-lam-nghiep-va-thuy-san-so-cung-ky-22905" }
 ];
 function fail(message) { console.error("ERROR:", message); process.exit(1); }
 let response;
