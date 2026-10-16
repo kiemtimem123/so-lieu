@@ -268,7 +268,21 @@
       retail: { table: '#retailDataTable', updated: '#retailUpdated', canvas: '#retailHistoryChart', note: '#retailChartNote' },
       exports: { table: '#exportsDataTable', updated: '#exportsUpdated', canvas: '#exportsHistoryChart', note: '#exportsChartNote' },
       imports: { table: '#importsDataTable', updated: '#importsUpdated', canvas: '#importsHistoryChart', note: '#importsChartNote' },
-      cpi: { table: '#cpiDataTable', updated: '#cpiUpdated', canvas: '#cpiHistoryChart', note: '#cpiChartNote' }
+      cpi: { table: '#cpiDataTable', updated: '#cpiUpdated', canvas: '#cpiHistoryChart', note: '#cpiChartNote' },
+      'logistics-index': { table: '#logisticsIndexTable', updated: '#logisticsIndexUpdated', canvas: '#logisticsIndexChart', note: '#logisticsIndexNote' },
+      'sea-freight': { table: '#seaFreightTable', updated: '#seaFreightUpdated', canvas: '#seaFreightChart', note: '#seaFreightNote' },
+      'corporate-bonds-property': { table: '#propertyBondsTable', updated: '#propertyBondsUpdated', canvas: '#propertyBondsChart', note: '#propertyBondsNote' },
+      'agri-exports-rubber': { table: '#rubberExportsTable', updated: '#rubberExportsUpdated', canvas: '#rubberExportsChart', note: '#rubberExportsNote' },
+      'agri-imports-rubber': { table: '#rubberImportsTable', updated: '#rubberImportsUpdated', canvas: '#rubberImportsChart', note: '#rubberImportsNote' },
+      'credit-balance': { table: '#creditBalanceTable', updated: '#creditBalanceUpdated', canvas: '#creditBalanceChart', note: '#creditBalanceNote' },
+      'credit-growth': { table: '#creditGrowthTable', updated: '#creditGrowthUpdated', canvas: '#creditGrowthChart', note: '#creditGrowthNote' },
+      'labor-force': { table: '#laborForceTable', updated: '#laborForceUpdated', canvas: '#laborForceChart', note: '#laborForceNote' },
+      'global-rice': { table: '#globalRiceTable', updated: '#globalRiceUpdated', canvas: '#globalRiceChart', note: '#globalRiceNote' },
+      'global-rubber': { table: '#globalRubberTable', updated: '#globalRubberUpdated', canvas: '#globalRubberChart', note: '#globalRubberNote' },
+      'global-steel': { table: '#globalSteelTable', updated: '#globalSteelUpdated', canvas: '#globalSteelChart', note: '#globalSteelNote' },
+      'housing-cpi': { table: '#housingCpiTable', updated: '#housingCpiUpdated', canvas: '#housingCpiChart', note: '#housingCpiNote' },
+      'coastal-shipping-index': { table: '#coastalShippingTable', updated: '#coastalShippingUpdated', canvas: '#coastalShippingChart', note: '#coastalShippingNote' }
+
     };
     try {
       const response = await fetch('data/category-data.json', { cache: 'no-store' });
