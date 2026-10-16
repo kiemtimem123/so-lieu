@@ -1,0 +1,74 @@
+name: Sync Market Prices
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "15 23 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Fetch market data
+        shell: bash
+        env:
+          DLKT_API_KEY: ${{ secrets.DLKT_API_KEY }}
+        run: |
+          set -eu
+
+          if [ -z "${DLKT_API_KEY:-}" ]; then
+            echo "ERROR: Missing DLKT_API_KEY secret."
+            exit 1
+          fi
+
+          FROM_DATE="$(date -u -d '30 days ago' +%F)"
+
+          STATUS="$(curl --silent --show-error --max-time 30 --get \
+            --header "Authorization: Bearer ${DLKT_API_KEY}" \
+            --data-urlencode "ids=37826,37827,37694,37828,37695" \
+            --data-urlencode "from=${FROM_DATE}" \
+            --data-urlencode "limit=500" \
+            --output response.json \
+            --write-out "%{http_code}" \
+            "https://api.dulieukinhte.com/v1/series/observations")"
+
+          echo "API HTTP status: ${STATUS}"
+
+          case "$STATUS" in
+            2*) ;;
+            *)
+              echo "ERROR: API request failed. Response body:"
+              cat response.json
+              exit 1
+              ;;
+          esac
+
+      - name: Validate and save JSON
+        shell: bash
+        run: |
+          set -eu
+          node .github/scripts/sync-market-prices.cjs
+
+      - name: Commit updated data
+        shell: bash
+        run: |
+          set -eu
+          rm -f response.json
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add data/market-prices.json
+
+          if git diff --cached --quiet; then
+            echo "No market data changes."
+          else
+            git commit -m "Update market prices data"
+            git push
+          fi
