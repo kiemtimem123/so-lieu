@@ -33,16 +33,18 @@ for (const [id, meta] of Object.entries(labels)) {
   if (!series || series.skipped || !Array.isArray(series.observations)) {
     fail("Thiếu chuỗi dữ liệu tài chính: " + id);
   }
-  const valid = series.observations
+  const observations = series.observations
     .filter(item => item && item.date && item.value !== null && item.value !== undefined && Number.isFinite(Number(item.value)))
-    .sort((a, b) => String(a.date).localeCompare(String(b.date)));
-  const latest = valid[valid.length - 1];
+    .map(item => ({ date: String(item.date), value: Number(item.value) }))
+    .sort((a, b) => a.date.localeCompare(b.date));
+  const latest = observations[observations.length - 1];
   if (!latest) fail("Không có quan sát hợp lệ cho chuỗi: " + id);
   data.push({
     id: Number(id),
     ...meta,
-    value: Number(latest.value),
-    date: latest.date
+    value: latest.value,
+    date: latest.date,
+    observations
   });
 }
 
