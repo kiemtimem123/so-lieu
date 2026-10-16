@@ -1,0 +1,63 @@
+name: Validate Site and Data
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Check JavaScript syntax
+        run: |
+          node --check assets/app.js
+          node --check .github/scripts/sync-category-data.cjs
+          node --check .github/scripts/sync-market-prices.cjs
+          node --check .github/scripts/sync-currency-rates.cjs
+          node --check .github/scripts/sync-financial-rates.cjs
+
+      - name: Validate JSON snapshots
+        run: |
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const files = [
+            'data/category-data.json',
+            'data/market-prices.json',
+            'data/currency-rates.json',
+            'data/financial-rates.json',
+            'data/policy-rates.json',
+            'data/credit-growth.json'
+          ];
+          for (const file of files) {
+            const value = JSON.parse(fs.readFileSync(file, 'utf8'));
+            if (!value || typeof value !== 'object') throw new Error('Invalid JSON root: ' + file);
+            console.log('JSON OK:', file);
+          }
+          NODE
+
+      - name: Check OMO wiring and source definitions
+        run: |
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const app = fs.readFileSync('assets/app.js', 'utf8');
+          const html = fs.readFileSync('index.html', 'utf8');
+          const script = fs.readFileSync('.github/scripts/sync-category-data.cjs', 'utf8');
+          const workflow = fs.readFileSync('.github/workflows/sync-category-data.yml', 'utf8');
+          const checks = [
+            [app.includes('async function loadOmoData()') && app.includes('loadOmoData();'), 'OMO loader and initialization'],
+            [html.includes('id="omoDataContent"') && html.includes('id="omoDataUpdated"'), 'OMO panel targets'],
+            [script.includes('id: 27690') && script.includes('id: 53631'), 'OMO series definitions'],
+            [workflow.includes('27690,53631'), 'OMO API IDs in sync batch']
+          ];
+          for (const [ok, label] of checks) {
+            if (!ok) throw new Error('Validation failed: ' + label);
+            console.log('OK:', label);
+          }
+          NODE
