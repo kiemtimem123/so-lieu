@@ -91,7 +91,7 @@ jobs:
             data: outputData
           };
           fs.mkdirSync("data", { recursive: true });
-          fs.writeFileSync("data/market-prices.json.tmp", JSON.stringify(output, null, 2) + "\\n", "utf8");
+          fs.writeFileSync("data/market-prices.json.tmp", JSON.stringify(output, null, 2) + "\n", "utf8");
           fs.renameSync("data/market-prices.json.tmp", "data/market-prices.json");
           console.log("Saved all five market series:");
           output.data.forEach(item => console.log(item.name + " | " + item.value + " " + (item.unit || "") + " | " + item.date));
