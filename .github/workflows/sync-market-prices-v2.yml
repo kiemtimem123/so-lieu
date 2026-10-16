@@ -1,5 +1,5 @@
-```yaml
-name: Sync Market Prices V2
+
+name: Sync market prices
 
 on:
   workflow_dispatch:
@@ -17,121 +17,153 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Fetch market data
+      - name: Fetch and save market prices
         shell: bash
         env:
           DLKT_API_KEY: ${{ secrets.DLKT_API_KEY }}
         run: |
-          set -eu
+          set -euo pipefail
 
           if [ -z "${DLKT_API_KEY:-}" ]; then
-            echo "ERROR: Missing DLKT_API_KEY secret"
+            echo "ERROR: Missing DLKT_API_KEY secret."
             exit 1
           fi
 
-          FROM_DATE="$(date -u -d '30 days ago' +%F)"
+          FROM_DATE=$(date -u -d "30 days ago" +%F)
 
-          STATUS=$(curl -sS --max-time 30 -G \
-            -H "Authorization: Bearer ${DLKT_API_KEY}" \
+          HTTP_CODE=$(curl \
+            --silent \
+            --show-error \
+            --max-time 30 \
+            --get \
+            --header "Authorization: Bearer ${DLKT_API_KEY}" \
             --data-urlencode "ids=37826,37827,37694,37828,37695" \
             --data-urlencode "from=${FROM_DATE}" \
             --data-urlencode "limit=500" \
-            -o response.json \
-            -w "%{http_code}" \
+            --output response.json \
+            --write-out "%{http_code}" \
             "https://api.dulieukinhte.com/v1/series/observations")
 
-          echo "API HTTP status: ${STATUS}"
+          echo "API HTTP status: ${HTTP_CODE}"
 
-          case "$STATUS" in
-            2*)
-              ;;
-            *)
-              echo "ERROR: API request failed. Response:"
-              cat response.json
-              exit 1
-              ;;
-          esac
-
-          if ! jq -e 'type == "object" and has("data") and (has("error") | not)' response.json > /dev/null; then
-            echo "ERROR: API response is invalid or contains an error."
-            jq -r '.error.message // .message // "Unknown API response"' response.json || true
+          if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
+            echo "ERROR: API request failed. Response:"
+            cat response.json
             exit 1
           fi
 
-      - name: Build market prices JSON
-        shell: bash
-        run: |
-          set -eu
+          python - <<'PY'
+          import json
+          import os
+          from datetime import datetime, timezone
 
-          mkdir -p data
+          with open("response.json", encoding="utf-8") as f:
+              result = json.load(f)
 
-          FETCHED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          if not isinstance(result, dict):
+              raise SystemExit("ERROR: API response is not a JSON object.")
 
-          jq -e --arg fetchedAt "$FETCHED_AT" '
-            {
-              "37826": "WTI",
-              "37827": "Brent",
-              "37694": "Xăng thường tại Mỹ",
-              "37828": "Dầu diesel tại Mỹ",
-              "37695": "Khí tự nhiên Henry Hub"
-            } as $labels
-            |
-            [37826, 37827, 37694, 37828, 37695] as $ids
-            |
-            . as $response
-            |
-            [
-              $ids[] as $id
-              |
-              (
-                ($response.data // [])
-                | map(select((.id | tostring) == ($id | tostring)))
-                | first
-              ) as $series
-              |
-              if $series == null then
-                error("Missing series ID " + ($id | tostring))
-              elif ($series.skipped // false) then
-                error("Series skipped: " + ($id | tostring))
-              elif (($series.observations // []) | length) == 0 then
-                error("No observations for series " + ($id | tostring))
-              else
-                (
-                  $series.observations
-                  | sort_by(.date // "")
-                  | last
-                ) as $latest
-                |
-                if ($latest.value == null or $latest.date == null) then
-                  error("Missing value or date for series " + ($id | tostring))
-                else
-                  {
-                    "id": $id,
-                    "name": $labels[($id | tostring)],
-                    "value": $latest.value,
-                    "unit": $series.unit,
-                    "date": $latest.date
-                  }
-                end
-              end
-            ] as $marketData
-            |
-            {
+          if "error" in result:
+              error = result["error"]
+              raise SystemExit(
+                  "API error: "
+                  + str(error.get("code", "unknown"))
+                  + " | "
+                  + str(error.get("message", "Không có thông báo"))
+              )
+
+          labels = {
+              37826: "WTI",
+              37827: "Brent",
+              37694: "Xăng thường tại Mỹ",
+              37828: "Dầu diesel tại Mỹ",
+              37695: "Khí tự nhiên Henry Hub",
+          }
+
+          expected = set(labels)
+          found = {}
+
+          for item in result.get("data", []):
+              sid = item.get("id")
+
+              if sid not in expected:
+                  continue
+
+              if item.get("skipped"):
+                  raise SystemExit(
+                      f"Series {sid} skipped; previous data preserved."
+                  )
+
+              observations = item.get("observations", [])
+
+              if not observations:
+                  raise SystemExit(
+                      f"No observations for series {sid}; "
+                      "previous data preserved."
+                  )
+
+              latest = max(
+                  observations,
+                  key=lambda observation: observation.get("date") or ""
+              )
+
+              value = latest.get("value")
+              date = latest.get("date")
+
+              if value is None or not date:
+                  raise SystemExit(
+                      f"Missing value or date for series {sid}."
+                  )
+
+              found[sid] = {
+                  "id": sid,
+                  "name": labels[sid],
+                  "value": value,
+                  "unit": item.get("unit"),
+                  "date": date,
+              }
+
+          missing = sorted(expected - set(found))
+
+          if missing:
+              raise SystemExit(
+                  f"Missing series IDs: {missing}; "
+                  "previous data preserved."
+              )
+
+          output = {
               "source": "DulieuKinhte API",
-              "fetchedAt": $fetchedAt,
-              "data": $marketData
-            }
-          ' response.json > data/market-prices.json.tmp
+              "fetchedAt": datetime.now(timezone.utc).isoformat(),
+              "data": [found[sid] for sid in labels],
+          }
 
-          mv data/market-prices.json.tmp data/market-prices.json
+          os.makedirs("data", exist_ok=True)
 
-          echo "Market prices JSON created successfully."
-          jq -r '.data[] | [.name, .value, (.unit // "unknown"), .date] | @tsv' data/market-prices.json
+          with open(
+              "data/market-prices.json",
+              "w",
+              encoding="utf-8"
+          ) as f:
+              json.dump(output, f, ensure_ascii=False, indent=2)
+              f.write("\n")
+
+          print("Saved all five market series.")
+
+          for item in output["data"]:
+              print(
+                  item["name"],
+                  "|",
+                  item["value"],
+                  item["unit"],
+                  "|",
+                  item["date"]
+              )
+          PY
 
       - name: Commit updated data
         shell: bash
         run: |
-          set -eu
+          set -euo pipefail
 
           rm -f response.json
 
@@ -146,4 +178,3 @@ jobs:
             git commit -m "Update market prices data"
             git push
           fi
-```
