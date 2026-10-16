@@ -255,6 +255,48 @@
     }
   }
 
+  async function loadCategoryData() {
+    const targets = {
+      transport: { table: '#transportDataTable', updated: '#transportUpdated' },
+      agriculture: { table: '#agricultureDataTable', updated: '#agricultureUpdated' },
+      ports: { table: '#portsDataTable', updated: '#portsUpdated' },
+      property: { table: '#propertyDataTable', updated: '#propertyUpdated' },
+      labor: { table: '#laborDataTable', updated: '#laborUpdated' }
+    };
+    try {
+      const response = await fetch('data/category-data.json', { cache: 'no-store' });
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      const snapshot = await response.json();
+      if (!Array.isArray(snapshot.data)) throw new Error('Snapshot không có mảng data');
+      for (const [category, target] of Object.entries(targets)) {
+        const table = $(target.table);
+        const updated = $(target.updated);
+        if (!table) continue;
+        const item = snapshot.data.find(row => row.category === category);
+        if (!item || !Array.isArray(item.observations) || !item.observations.length) {
+          table.innerHTML = '<div class="empty-state"><h3>Chưa có dữ liệu</h3><p>Nguồn chưa trả về chuỗi hợp lệ cho danh mục này.</p></div>';
+          if (updated) { updated.textContent = 'Chưa có dữ liệu'; updated.className = 'status-pill neutral'; }
+          continue;
+        }
+        const rows = item.observations.slice(-24).reverse();
+        table.innerHTML = `<table><thead><tr><th>Chỉ tiêu</th><th>Giá trị</th><th>Đơn vị</th><th>Kỳ dữ liệu</th><th>Nguồn</th></tr></thead><tbody>${rows.map(point => `
+          <tr><td><strong>${escapeHtml(item.name)}</strong></td><td>${fmt(point.value, 3)}</td><td>${escapeHtml(item.unit || '—')}</td><td>${escapeHtml(dateFmt(point.date))}</td><td><a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.source)}</a></td></tr>`).join('')}</tbody></table>`;
+        if (updated) {
+          updated.textContent = 'Kỳ mới nhất: ' + dateFmt(item.date);
+          updated.className = 'status-pill positive';
+        }
+      }
+    } catch (error) {
+      for (const target of Object.values(targets)) {
+        const table = $(target.table);
+        const updated = $(target.updated);
+        if (table) table.innerHTML = '<div class="empty-state"><h3>Chưa tải được dữ liệu</h3><p>Kiểm tra data/category-data.json và workflow đồng bộ danh mục.</p></div>';
+        if (updated) { updated.textContent = 'Chưa đồng bộ'; updated.className = 'status-pill neutral'; }
+      }
+      console.error('[category-data]', error);
+    }
+  }
+
   function setupNavigation() {
     const sidebar = $('#siteSidebar');
     $('#mobileMenu')?.addEventListener('click', () => sidebar?.classList.toggle('sidebar-open'));
@@ -343,5 +385,6 @@
     loadMarketSnapshot();
     loadCurrencyRates();
     loadFinancialRates();
+    loadCategoryData();
   });
 })();
