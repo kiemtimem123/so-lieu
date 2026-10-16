@@ -60,10 +60,18 @@ jobs:
           rm -f response.json currency-response.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Preserve generated snapshots, then synchronize with the latest main
+          # before committing to avoid non-fast-forward push failures.
+          cp data/market-prices.json /tmp/market-prices.json
+          cp data/currency-rates.json /tmp/currency-rates.json
+          git fetch origin main
+          git reset --hard origin/main
+          cp /tmp/market-prices.json data/market-prices.json
+          cp /tmp/currency-rates.json data/currency-rates.json
           git add data/market-prices.json data/currency-rates.json
           if git diff --cached --quiet; then
             echo "No data changes."
           else
             git commit -m "Update market and currency data"
-            git push
+            git push origin HEAD:main
           fi
