@@ -21,7 +21,7 @@ for (const def of definitions) {
   }
   const today = new Date().toISOString().slice(0, 10);
   const observations = series.observations
-    .filter(item => item && /^\\d{4}-\\d{2}-\\d{2}$/.test(String(item.date)) && String(item.date) <= today && item.value !== null && item.value !== undefined && Number.isFinite(Number(item.value)))
+    .filter(item => item && /^\d{4}-\d{2}-\d{2}$/.test(String(item.date)) && String(item.date) <= today && item.value !== null && item.value !== undefined && Number.isFinite(Number(item.value)))
     .map(item => ({ date: String(item.date), value: Number(item.value) }))
     .sort((a, b) => a.date.localeCompare(b.date));
   if (!observations.length) fail("Không có quan sát hợp lệ đến ngày hiện tại cho " + def.id);
