@@ -156,6 +156,28 @@
     }
   }
 
+  async function loadPolicyRates() {
+    const content = $('#policyRatesContent');
+    const updated = $('#policyRatesUpdated');
+    if (!content) return;
+    try {
+      const response = await fetch('data/policy-rates.json', { cache: 'no-store' });
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      const snapshot = await response.json();
+      if (!Array.isArray(snapshot.data) || !snapshot.data.length || !snapshot.sourceUrl || !snapshot.confirmedThrough) {
+        throw new Error('Snapshot lãi suất điều hành không hợp lệ');
+      }
+      const rows = snapshot.data.filter(item => item.name && Number.isFinite(Number(item.value)) && item.unit === '%/năm' && item.effectiveDate);
+      if (!rows.length) throw new Error('Không có mức lãi suất hợp lệ');
+      content.innerHTML = `<table><thead><tr><th>Chỉ tiêu</th><th>Mức lãi suất</th><th>Đơn vị</th><th>Ngày hiệu lực</th></tr></thead><tbody>${rows.map(item => `<tr><td><strong>${escapeHtml(item.name)}</strong></td><td>${fmt(item.value, 2)}</td><td>${escapeHtml(item.unit)}</td><td>${escapeHtml(dateFmt(item.effectiveDate))}</td></tr>`).join('')}</tbody></table><p class="muted">Đối chiếu trạng thái đến ${escapeHtml(dateFmt(snapshot.confirmedThrough))}. <a href="${escapeHtml(snapshot.sourceUrl)}" target="_blank" rel="noopener noreferrer">Xem nguồn chính</a></p>`;
+      if (updated) { updated.textContent = 'Xác minh đến ' + dateFmt(snapshot.confirmedThrough); updated.className = 'status-pill neutral'; }
+    } catch (error) {
+      content.innerHTML = '<div class="empty-state"><h3>Chưa tải được lãi suất điều hành</h3><p>Không có snapshot hợp lệ; không hiển thị giá trị thay thế.</p></div>';
+      if (updated) { updated.textContent = 'Chưa có dữ liệu'; updated.className = 'status-pill neutral'; }
+      console.error('[policy-rates]', error);
+    }
+  }
+
   async function loadCreditGrowth() {
     const content = $('#creditGrowthContent');
     const updated = $('#creditGrowthUpdated');
@@ -524,6 +546,7 @@
     loadCurrencyRates();
     loadUsdVndReference();
     loadCreditGrowth();
+    loadPolicyRates();
     loadFinancialRates();
     loadCategoryData();
   });
