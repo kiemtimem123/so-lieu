@@ -17,7 +17,15 @@ const definitions = [
   { id: 22613, category: "sea-freight", name: "Luân chuyển hàng hóa đường biển", unit: "Triệu tấn/Km", source: "Cục Thống kê (NSO)", url: "https://dulieukinhte.com/du-lieu-dong/luan-chuyen-hang-hoa-duong-bien-22613" },
   { id: 36762, category: "corporate-bonds-property", name: "Phát hành trái phiếu doanh nghiệp ngành bất động sản", unit: "Tỷ đồng", source: "Hiệp hội Thị trường Trái phiếu Việt Nam (VBMA)", url: "https://dulieukinhte.com/du-lieu-dong/phat-hanh-tpdn-nganh-bat-dong-san-36762" },
   { id: 33392, category: "agri-exports-rubber", name: "Giá xuất khẩu bình quân cao su", unit: "USD/tấn", source: "Tổng cục Hải quan", url: "https://dulieukinhte.com/du-lieu-dong/gia-xuat-khau-binh-quan-cao-su-33392" },
-  { id: 33408, category: "agri-imports-rubber", name: "Giá nhập khẩu bình quân cao su", unit: "USD/tấn", source: "Tổng cục Hải quan", url: "https://dulieukinhte.com/du-lieu-dong/gia-nhap-khau-binh-quan-cao-su-33408" }
+  { id: 33408, category: "agri-imports-rubber", name: "Giá nhập khẩu bình quân cao su", unit: "USD/tấn", source: "Tổng cục Hải quan", url: "https://dulieukinhte.com/du-lieu-dong/gia-nhap-khau-binh-quan-cao-su-33408" },
+  { id: 33265, category: "credit-balance", name: "Tổng dư nợ tín dụng đối với nền kinh tế", unit: "Tỷ đồng", source: "Ngân hàng Nhà nước Việt Nam (NHNN)", url: "https://dulieukinhte.com/du-lieu-dong/tong-du-no-tin-dung-doi-voi-nen-kinh-te-33265" },
+  { id: 29926, category: "credit-growth", name: "Tăng trưởng tín dụng so đầu năm", unit: "%", source: "Ngân hàng Nhà nước Việt Nam (NHNN)", url: "https://dulieukinhte.com/du-lieu-dong/tang-truong-tin-dung-so-dau-nam-29926" },
+  { id: 34758, category: "labor-force", name: "Lực lượng lao động", unit: "Nghìn người", source: "Cục Thống kê (NSO)", url: "https://dulieukinhte.com/du-lieu-dong/luc-luong-lao-dong-34758" },
+  { id: 29406, category: "global-rice", name: "Giá gạo thế giới", unit: "Theo nguồn", source: "Dữ Liệu Kinh Tế (nguồn tổng hợp)", url: "https://dulieukinhte.com/du-lieu-dong/gia-gao-the-gioi-29406" },
+  { id: 66457, category: "global-rubber", name: "Giá cao su TSR20 thế giới", unit: "Theo nguồn", source: "Dữ Liệu Kinh Tế (nguồn tổng hợp)", url: "https://dulieukinhte.com/du-lieu-dong/gia-cao-su-tsr20-ine-the-gioi-66457" },
+  { id: 29380, category: "global-steel", name: "Giá thép thanh thế giới", unit: "Theo nguồn", source: "Dữ Liệu Kinh Tế (nguồn tổng hợp)", url: "https://dulieukinhte.com/du-lieu-dong/gia-thep-thanh-the-gioi-29380" },
+  { id: 18699, category: "housing-cpi", name: "Chỉ số giá tiêu dùng nhà ở và vật liệu xây dựng", unit: "Điểm", source: "Cục Thống kê (NSO)", url: "https://dulieukinhte.com/du-lieu-dong/chi-so-gia-tieu-dung-nha-o-va-vat-lieu-xay-dung-18699" },
+  { id: 22870, category: "coastal-shipping-index", name: "Chỉ số vận tải đường ven biển và viễn dương so quý trước", unit: "%", source: "Cục Thống kê (NSO)", url: "https://dulieukinhte.com/du-lieu-dong/chi-so-van-tai-duong-ven-bien-va-vien-duong-so-quy-truoc-22870" }
 ];
 function fail(message) { console.error("ERROR:", message); process.exit(1); }
 let response;
