@@ -156,6 +156,30 @@
     }
   }
 
+  async function loadUsdVndReference() {
+    const content = $('#usdVndReferenceContent');
+    const updated = $('#usdVndReferenceUpdated');
+    if (!content) return;
+    try {
+      const response = await fetch('data/currency-rates.json', { cache: 'no-store' });
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      const snapshot = await response.json();
+      const usd = snapshot.data?.find(item => item.code === 'USD');
+      if (!usd || !Number.isFinite(Number(usd.vndPerUnit)) || Number(usd.vndPerUnit) <= 0 || !snapshot.lastUpdatedUtc) {
+        throw new Error('Snapshot không có tỷ giá USD/VND tham khảo hợp lệ');
+      }
+      content.innerHTML = `<table><thead><tr><th>Chỉ tiêu</th><th>Giá trị</th><th>Đơn vị</th><th>Thời điểm nguồn cập nhật</th></tr></thead><tbody><tr><td><strong>USD/VND tham khảo</strong></td><td>${fmt(usd.vndPerUnit, 2)}</td><td>VND / 1 USD</td><td>${escapeHtml(dateFmt(snapshot.lastUpdatedUtc))}</td></tr></tbody></table>`;
+      if (updated) {
+        updated.textContent = 'Nguồn cập nhật: ' + dateFmt(snapshot.lastUpdatedUtc);
+        updated.className = 'status-pill positive';
+      }
+    } catch (error) {
+      content.innerHTML = '<div class="empty-state"><h3>Chưa tải được tỷ giá tham khảo</h3><p>Không có dữ liệu hợp lệ trong snapshot. Vui lòng thử lại sau khi đồng bộ nguồn.</p></div>';
+      if (updated) { updated.textContent = 'Chưa có dữ liệu'; updated.className = 'status-pill neutral'; }
+      console.error('[usd-vnd-reference]', error);
+    }
+  }
+
   async function loadFinancialRates() {
     const bondTable = $('#bondYieldsTable');
     const interestTable = $('#interestRatesTable');
@@ -476,6 +500,7 @@
     setupSearchShortcut();
     loadMarketSnapshot();
     loadCurrencyRates();
+    loadUsdVndReference();
     loadFinancialRates();
     loadCategoryData();
   });
