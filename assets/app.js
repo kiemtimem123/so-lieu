@@ -156,6 +156,43 @@
     }
   }
 
+  async function loadFinancialRates() {
+    const bondTable = $('#bondYieldsTable');
+    const interestTable = $('#interestRatesTable');
+    const bondUpdated = $('#bondYieldsUpdated');
+    const interestUpdated = $('#interestRatesUpdated');
+    try {
+      const response = await fetch('data/financial-rates.json', { cache: 'no-store' });
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      const snapshot = await response.json();
+      if (!Array.isArray(snapshot.data) || !snapshot.data.length) throw new Error('Snapshot lãi suất không hợp lệ');
+      const valid = snapshot.data.filter(item =>
+        item && item.name && item.date && Number.isFinite(Number(item.value)) && item.unit === '%/năm'
+      );
+      if (!valid.length) throw new Error('Không có dữ liệu lãi suất hợp lệ');
+
+      const renderTable = rows => rows.length
+        ? `<table><thead><tr><th>Chỉ tiêu</th><th>Giá trị mới nhất</th><th>Đơn vị</th><th>Ngày dữ liệu</th><th>Nguồn</th></tr></thead><tbody>${rows.map(item => `
+          <tr><td><strong>${escapeHtml(item.name)}</strong></td><td>${fmt(item.value, 4)}</td><td>${escapeHtml(item.unit)}</td><td>${escapeHtml(dateFmt(item.date))}</td><td>${escapeHtml(item.source)}</td></tr>`).join('')}</tbody></table>`
+        : '<div class="empty-state"><h3>Chưa có dữ liệu</h3><p>Snapshot không có chuỗi phù hợp cho danh mục này.</p></div>';
+
+      const bonds = valid.filter(item => item.category === 'bond').sort((a, b) => a.id - b.id);
+      const rates = valid.filter(item => item.category === 'interest').sort((a, b) => a.id - b.id);
+      if (bondTable) bondTable.innerHTML = renderTable(bonds);
+      if (interestTable) interestTable.innerHTML = renderTable(rates);
+      const updatedText = 'Snapshot: ' + dateFmt(snapshot.fetchedAt);
+      if (bondUpdated) { bondUpdated.textContent = updatedText; bondUpdated.className = 'status-pill positive'; }
+      if (interestUpdated) { interestUpdated.textContent = updatedText; interestUpdated.className = 'status-pill positive'; }
+    } catch (error) {
+      const message = '<div class="empty-state"><h3>Chưa tải được dữ liệu</h3><p>Kiểm tra data/financial-rates.json và trạng thái workflow GitHub Actions.</p></div>';
+      if (bondTable) bondTable.innerHTML = message;
+      if (interestTable) interestTable.innerHTML = message;
+      if (bondUpdated) { bondUpdated.textContent = 'Chưa có dữ liệu'; bondUpdated.className = 'status-pill neutral'; }
+      if (interestUpdated) { interestUpdated.textContent = 'Chưa có dữ liệu'; interestUpdated.className = 'status-pill neutral'; }
+      console.error('[financial-rates]', error);
+    }
+  }
+
   function setupNavigation() {
     const sidebar = $('#siteSidebar');
     $('#mobileMenu')?.addEventListener('click', () => sidebar?.classList.toggle('sidebar-open'));
@@ -243,5 +280,6 @@
     setupSearchShortcut();
     loadMarketSnapshot();
     loadCurrencyRates();
+    loadFinancialRates();
   });
 })();
