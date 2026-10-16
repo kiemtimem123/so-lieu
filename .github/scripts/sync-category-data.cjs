@@ -19,11 +19,12 @@ for (const def of definitions) {
   if (!series || series.skipped || !Array.isArray(series.observations)) {
     fail("Thiếu chuỗi dữ liệu " + def.id + ". Không cập nhật snapshot để tránh ghi dữ liệu thiếu.");
   }
+  const today = new Date().toISOString().slice(0, 10);
   const observations = series.observations
-    .filter(item => item && item.date && item.value !== null && item.value !== undefined && Number.isFinite(Number(item.value)))
+    .filter(item => item && /^\\d{4}-\\d{2}-\\d{2}$/.test(String(item.date)) && String(item.date) <= today && item.value !== null && item.value !== undefined && Number.isFinite(Number(item.value)))
     .map(item => ({ date: String(item.date), value: Number(item.value) }))
     .sort((a, b) => a.date.localeCompare(b.date));
-  if (!observations.length) fail("Không có quan sát hợp lệ cho " + def.id);
+  if (!observations.length) fail("Không có quan sát hợp lệ đến ngày hiện tại cho " + def.id);
   const latest = observations[observations.length - 1];
   outputData.push({ ...def, value: latest.value, date: latest.date, unit: series.unit || def.unit, observations });
 }
