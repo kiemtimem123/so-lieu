@@ -1,0 +1,55 @@
+name: Sync Transport, Agriculture, Ports, Property and Labor Data
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 23 * * 0"
+
+permissions:
+  contents: write
+
+jobs:
+  sync-categories:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+      - name: Fetch category series
+        shell: bash
+        env:
+          DLKT_API_KEY: ${{ secrets.DLKT_API_KEY }}
+        run: |
+          set -eu
+          if [ -z "${DLKT_API_KEY:-}" ]; then
+            echo "ERROR: Missing DLKT_API_KEY secret."
+            exit 1
+          fi
+          STATUS="$(curl --silent --show-error --max-time 30 --get \
+            --header "Authorization: Bearer ${DLKT_API_KEY}" \
+            --data-urlencode "ids=22675,30221,32542,31248,34763" \
+            --data-urlencode "from=2022-01-01" \
+            --data-urlencode "limit=80" \
+            --output category-response.json --write-out "%{http_code}" \
+            "https://api.dulieukinhte.com/v1/series/observations")"
+          echo "Category API HTTP status: ${STATUS}"
+          case "${STATUS}" in 2*) ;; *) cat category-response.json; exit 1 ;; esac
+      - name: Validate and save category snapshot
+        run: node .github/scripts/sync-category-data.cjs
+      - name: Commit category snapshot
+        shell: bash
+        run: |
+          set -eu
+          rm -f category-response.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          cp data/category-data.json /tmp/category-data.json
+          git fetch origin main
+          git reset --hard origin/main
+          cp /tmp/category-data.json data/category-data.json
+          git add data/category-data.json
+          if git diff --cached --quiet; then
+            echo "No category data changes."
+          else
+            git commit -m "Update transport agriculture ports property and labor data"
+            git push origin HEAD:main
+          fi
