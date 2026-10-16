@@ -1,8 +1,10 @@
+```yaml
 name: Sync market prices
 
 on:
   workflow_dispatch:
   schedule:
+    # Chạy hằng ngày lúc 23:15 UTC (06:15 sáng hôm sau giờ Việt Nam)
     - cron: "15 23 * * *"
 
 permissions:
@@ -11,40 +13,71 @@ permissions:
 jobs:
   sync:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Fetch and save market prices
         env:
           DLKT_API_KEY: ${{ secrets.DLKT_API_KEY }}
+        shell: bash
         run: |
-          set -eu
+          set -euo pipefail
 
-          if [ -z "$DLKT_API_KEY" ]; then
-            echo "Missing DLKT_API_KEY secret."
+          if [ -z "${DLKT_API_KEY:-}" ]; then
+            echo "ERROR: Missing DLKT_API_KEY secret."
             exit 1
           fi
 
           FROM_DATE=$(date -u -d "30 days ago" +%F)
 
-          curl --silent --show-error \
+          HTTP_CODE=$(curl \
+            --silent \
+            --show-error \
             --max-time 30 \
             --get \
             --header "Authorization: Bearer ${DLKT_API_KEY}" \
             --data-urlencode "ids=37826,37827,37694,37828,37695" \
             --data-urlencode "from=${FROM_DATE}" \
             --data-urlencode "limit=500" \
-            "https://api.dulieukinhte.com/v1/series/observations" \
-            --output response.json
+            --output response.json \
+            --write-out "%{http_code}" \
+            "https://api.dulieukinhte.com/v1/series/observations")
+
+          echo "API HTTP status: ${HTTP_CODE}"
+
+          if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
+            echo "ERROR: API request failed."
+            python - <<'PY'
+          import json
+
+          try:
+              with open("response.json", encoding="utf-8") as f:
+                  result = json.load(f)
+              error = result.get("error", result)
+              if isinstance(error, dict):
+                  print("API error code:", error.get("code", "unknown"))
+                  print("API error message:", error.get("message", "Không có thông báo"))
+                  print("Request ID:", error.get("requestId", "không có"))
+              else:
+                  print("API response:", str(error)[:1000])
+          except Exception:
+              print("API returned a non-JSON response.")
+          PY
+            exit 1
+          fi
 
           python - <<'PY'
           import json
           import os
           from datetime import datetime, timezone
 
-         
           with open("response.json", encoding="utf-8") as f:
               result = json.load(f)
+
+          if not isinstance(result, dict):
+              raise SystemExit("ERROR: API response is not a JSON object.")
 
           if "error" in result:
               e = result["error"]
@@ -57,7 +90,6 @@ jobs:
                   + str(e.get("requestId", "không có"))
               )
 
-
           labels = {
               37826: "WTI",
               37827: "Brent",
@@ -68,30 +100,36 @@ jobs:
 
           expected = set(labels)
           found = {}
+
           for item in result.get("data", []):
               sid = item.get("id")
+
               if sid not in expected:
                   continue
+
               if item.get("skipped"):
                   raise SystemExit(
-                      f"Series {sid} skipped; keeping previous data."
+                      f"Series {sid} was skipped; previous data will be preserved."
                   )
 
               observations = item.get("observations", [])
+
               if not observations:
                   raise SystemExit(
                       f"No observations for series {sid}; "
-                      "keeping previous data."
+                      "previous data will be preserved."
                   )
 
               latest = max(
                   observations,
-                  key=lambda x: x.get("date", "")
+                  key=lambda x: x.get("date") or ""
               )
+
               value = latest.get("value")
-              if value is None:
+
+              if value is None or not latest.get("date"):
                   raise SystemExit(
-                      f"Missing value for series {sid}."
+                      f"Missing value or date for series {sid}."
                   )
 
               found[sid] = {
@@ -99,14 +137,14 @@ jobs:
                   "name": labels[sid],
                   "value": value,
                   "unit": item.get("unit"),
-                  "date": latest.get("date"),
+                  "date": latest["date"],
               }
 
           if set(found) != expected:
               missing = sorted(expected - set(found))
               raise SystemExit(
                   f"Missing series IDs: {missing}; "
-                  "keeping previous data."
+                  "previous data will be preserved."
               )
 
           output = {
@@ -116,24 +154,33 @@ jobs:
           }
 
           os.makedirs("data", exist_ok=True)
+
           with open(
-              "data/market-prices.json", "w", encoding="utf-8"
+              "data/market-prices.json",
+              "w",
+              encoding="utf-8"
           ) as f:
               json.dump(output, f, ensure_ascii=False, indent=2)
               f.write("\n")
 
           print("Saved all five market series.")
+
           for item in output["data"]:
               print(
-                  item["name"], "|",
-                  item["value"], item["unit"], "|",
+                  item["name"],
+                  "|",
+                  item["value"],
+                  item["unit"],
+                  "|",
                   item["date"]
               )
           PY
 
       - name: Commit updated data
+        shell: bash
         run: |
-          set -eu
+          set -euo pipefail
+
           rm -f response.json
 
           git config user.name "github-actions[bot]"
@@ -147,3 +194,4 @@ jobs:
             git commit -m "Update market prices data"
             git push
           fi
+```
