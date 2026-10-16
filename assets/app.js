@@ -156,6 +156,28 @@
     }
   }
 
+
+  async function loadOmoData() {
+    const content = $('#omoDataContent');
+    const updated = $('#omoDataUpdated');
+    if (!content) return;
+    try {
+      const response = await fetch('data/category-data.json', { cache: 'no-store' });
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      const snapshot = await response.json();
+      if (!Array.isArray(snapshot.data)) throw new Error('Snapshot danh mục không hợp lệ');
+      const wanted = snapshot.data.filter(item => ['omo-buy-total', 'omo-net-outstanding'].includes(item.category));
+      const rows = wanted.filter(item => Number.isFinite(Number(item.value)) && item.date && item.name && item.url && item.unit);
+      if (!rows.length) throw new Error('Chưa có chỉ tiêu OMO hợp lệ');
+      content.innerHTML = `<table><thead><tr><th>Chỉ tiêu</th><th>Giá trị mới nhất</th><th>Đơn vị</th><th>Ngày dữ liệu</th><th>Nguồn</th></tr></thead><tbody>${rows.map(item => `<tr><td><strong>${escapeHtml(item.name)}</strong></td><td>${fmt(item.value, 2)}</td><td>${escapeHtml(item.unit)}</td><td>${escapeHtml(dateFmt(item.date))}</td><td><a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">Xem nguồn</a></td></tr>`).join('')}</tbody></table><p class="muted">Snapshot đồng bộ lúc ${escapeHtml(dateFmt(snapshot.fetchedAt))}. Khối lượng trúng thầu mua là dòng giao dịch trong ngày; chênh lệch lưu hành OMO và tín phiếu là chỉ tiêu tồn lưu, không phải bơm/hút ròng trong ngày.</p>`;
+      if (updated) { updated.textContent = 'Ngày dữ liệu: ' + rows.map(item => dateFmt(item.date)).sort().reverse()[0]; updated.className = 'status-pill neutral'; }
+    } catch (error) {
+      content.innerHTML = '<div class="empty-state"><h3>Chưa tải được dữ liệu OMO</h3><p>Không có chuỗi OMO hợp lệ trong snapshot; không hiển thị giá trị thay thế.</p></div>';
+      if (updated) { updated.textContent = 'Chưa có dữ liệu'; updated.className = 'status-pill neutral'; }
+      console.error('[omo-data]', error);
+    }
+  }
+
   async function loadPolicyRates() {
     const content = $('#policyRatesContent');
     const updated = $('#policyRatesUpdated');
@@ -546,7 +568,8 @@
     loadCurrencyRates();
     loadUsdVndReference();
     loadCreditGrowth();
-    loadPolicyRates();
+    loadOmoData();
+  loadPolicyRates();
     loadFinancialRates();
     loadCategoryData();
   });
