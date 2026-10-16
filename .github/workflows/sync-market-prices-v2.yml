@@ -1,3 +1,4 @@
+```yaml
 name: Sync Market Prices V2
 
 on:
@@ -11,6 +12,7 @@ permissions:
 jobs:
   sync:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -41,7 +43,8 @@ jobs:
           echo "API HTTP status: ${STATUS}"
 
           case "$STATUS" in
-            2*) ;;
+            2*)
+              ;;
             *)
               echo "ERROR: API request failed. Response:"
               cat response.json
@@ -49,58 +52,87 @@ jobs:
               ;;
           esac
 
-          node -e '
-          const fs = require("fs");
-          const response = JSON.parse(fs.readFileSync("response.json", "utf8"));
-          if (!response || typeof response !== "object" || response.error || !Array.isArray(response.data)) {
-            console.error("Invalid API response:", response && response.error ? response.error : "missing data array");
-            process.exit(1);
-          }
+          if ! jq -e 'type == "object" and has("data") and (has("error") | not)' response.json > /dev/null; then
+            echo "ERROR: API response is invalid or contains an error."
+            jq -r '.error.message // .message // "Unknown API response"' response.json || true
+            exit 1
+          fi
 
-          const labels = {
-            37826: "WTI",
-            37827: "Brent",
-            37694: "Xăng thường tại Mỹ",
-            37828: "Dầu diesel tại Mỹ",
-            37695: "Khí tự nhiên Henry Hub"
-          };
-          const ids = Object.keys(labels).map(Number);
-          const outputData = ids.map(id => {
-            const series = response.data.find(item => Number(item.id) === id);
-            if (!series || series.skipped) throw new Error("Missing or skipped series ID " + id);
-            if (!Array.isArray(series.observations) || series.observations.length === 0) {
-              throw new Error("No observations for series ID " + id);
+      - name: Build market prices JSON
+        shell: bash
+        run: |
+          set -eu
+
+          mkdir -p data
+
+          FETCHED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+          jq -e --arg fetchedAt "$FETCHED_AT" '
+            {
+              "37826": "WTI",
+              "37827": "Brent",
+              "37694": "Xăng thường tại Mỹ",
+              "37828": "Dầu diesel tại Mỹ",
+              "37695": "Khí tự nhiên Henry Hub"
+            } as $labels
+            |
+            [37826, 37827, 37694, 37828, 37695] as $ids
+            |
+            . as $response
+            |
+            [
+              $ids[] as $id
+              |
+              (
+                ($response.data // [])
+                | map(select((.id | tostring) == ($id | tostring)))
+                | first
+              ) as $series
+              |
+              if $series == null then
+                error("Missing series ID " + ($id | tostring))
+              elif ($series.skipped // false) then
+                error("Series skipped: " + ($id | tostring))
+              elif (($series.observations // []) | length) == 0 then
+                error("No observations for series " + ($id | tostring))
+              else
+                (
+                  $series.observations
+                  | sort_by(.date // "")
+                  | last
+                ) as $latest
+                |
+                if ($latest.value == null or $latest.date == null) then
+                  error("Missing value or date for series " + ($id | tostring))
+                else
+                  {
+                    "id": $id,
+                    "name": $labels[($id | tostring)],
+                    "value": $latest.value,
+                    "unit": $series.unit,
+                    "date": $latest.date
+                  }
+                end
+              end
+            ] as $marketData
+            |
+            {
+              "source": "DulieuKinhte API",
+              "fetchedAt": $fetchedAt,
+              "data": $marketData
             }
-            const observations = series.observations
-              .filter(item => item && item.date && item.value !== null && item.value !== undefined)
-              .sort((a, b) => String(a.date).localeCompare(String(b.date)));
-            const latest = observations[observations.length - 1];
-            if (!latest) throw new Error("No valid dated value for series ID " + id);
-            return {
-              id,
-              name: labels[id],
-              value: latest.value,
-              unit: series.unit || null,
-              date: latest.date
-            };
-          });
+          ' response.json > data/market-prices.json.tmp
 
-          const output = {
-            source: "DulieuKinhte API",
-            fetchedAt: new Date().toISOString(),
-            data: outputData
-          };
-          fs.mkdirSync("data", { recursive: true });
-          fs.writeFileSync("data/market-prices.json.tmp", JSON.stringify(output, null, 2) + "\n", "utf8");
-          fs.renameSync("data/market-prices.json.tmp", "data/market-prices.json");
-          console.log("Saved all five market series:");
-          output.data.forEach(item => console.log(item.name + " | " + item.value + " " + (item.unit || "") + " | " + item.date));
-          '
+          mv data/market-prices.json.tmp data/market-prices.json
+
+          echo "Market prices JSON created successfully."
+          jq -r '.data[] | [.name, .value, (.unit // "unknown"), .date] | @tsv' data/market-prices.json
 
       - name: Commit updated data
         shell: bash
         run: |
           set -eu
+
           rm -f response.json
 
           git config user.name "github-actions[bot]"
@@ -114,3 +146,4 @@ jobs:
             git commit -m "Update market prices data"
             git push
           fi
+```
