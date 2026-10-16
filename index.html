@@ -81,8 +81,12 @@
       <div class="section-heading"><div><p class="eyebrow">TIỀN TỆ & NGÂN SÁCH</p><h2>Tiền tệ, lãi suất và ngân sách</h2><p class="muted">Theo dõi tỷ giá, lãi suất, tín dụng và các chỉ tiêu ngân sách khi có nguồn xác thực.</p></div><span class="section-index">06 / MONEY</span></div>
       <div class="data-card-grid">
         <article class="data-info-card"><span class="cat-icon teal">⇄</span><h3>Tỷ giá tham khảo</h3><p>Giá trị quy đổi tham khảo theo nguồn tỷ giá quốc tế; không phải tỷ giá mua/bán tại ngân hàng.</p><small id="currencySourceStatus">Đang chờ tải dữ liệu tỷ giá</small></article>
-        <article class="data-info-card"><span class="cat-icon blue">％</span><h3>Lãi suất</h3><p>Lãi suất điều hành, liên ngân hàng và lãi suất huy động/cho vay là các chuỗi khác nhau.</p><small>Nguồn dự kiến: NHNN và tổ chức công bố · Chưa kết nối</small></article>
+        <article class="data-info-card"><span class="cat-icon blue">％</span><h3>Lãi suất liên ngân hàng</h3><p>Các kỳ hạn qua đêm, 1 tuần và 1 tháng từ chuỗi công bố của NHNN.</p><small>Nguồn: NHNN · Cập nhật theo dữ liệu nguồn</small></article>
         <article class="data-info-card"><span class="cat-icon orange">▤</span><h3>Ngân sách & tín dụng</h3><p>Thu chi ngân sách, bội chi, tăng trưởng tín dụng chỉ được hiển thị khi có kỳ và đơn vị thống nhất.</p><small>Nguồn dự kiến: Bộ Tài chính, NHNN · Chưa kết nối</small></article>
+      </div>
+      <div class="currency-panel">
+        <div class="currency-panel-heading"><div><h3>Lãi suất liên ngân hàng</h3><p class="muted">Đơn vị %/năm; đây không phải lãi suất tiền gửi hoặc lãi suất cho vay khách hàng.</p></div><span id="interestRatesUpdated" class="status-pill neutral">Đang tải…</span></div>
+        <div id="interestRatesTable" class="table-scroll"><div class="empty-state"><h3>Đang tải lãi suất</h3><p>Dữ liệu lấy từ snapshot đã đồng bộ.</p></div></div>
       </div>
       <div class="currency-panel">
         <div class="currency-panel-heading"><div><h3>Tỷ giá tham khảo quy đổi sang VND</h3><p class="muted">Giá trị cho 1 đơn vị ngoại tệ, dùng để tham khảo và so sánh.</p></div><span id="currencyUpdated" class="status-pill neutral">Đang tải…</span></div>
@@ -124,11 +128,15 @@
     <section class="section alt-section category-data-section" id="trai-phieu">
       <div class="section-heading"><div><p class="eyebrow">THỊ TRƯỜNG VỐN NỢ</p><h2>Trái phiếu</h2><p class="muted">Lợi suất trái phiếu Chính phủ, phát hành, giao dịch và dư nợ theo nguồn công bố.</p></div><span class="section-index">10 / BONDS</span></div>
       <div class="data-card-grid">
-        <article class="data-info-card"><span class="cat-icon blue">％</span><h3>Lợi suất Trái phiếu Chính phủ</h3><p>Lợi suất theo kỳ hạn cần có ngày quan sát, kỳ hạn còn lại và phương pháp tính rõ ràng.</p><small>Nguồn dự kiến: Kho bạc Nhà nước, HNX</small></article>
-        <article class="data-info-card"><span class="cat-icon purple">▤</span><h3>Phát hành trái phiếu</h3><p>Khối lượng gọi thầu, trúng thầu, lãi suất trúng thầu và kỳ hạn phát hành.</p><small>Nguồn dự kiến: HNX, Bộ Tài chính</small></article>
-        <article class="data-info-card"><span class="cat-icon orange">⇄</span><h3>Thị trường trái phiếu doanh nghiệp</h3><p>Phát hành và đáo hạn phải được phân loại theo loại trái phiếu và nguồn báo cáo.</p><small>Trạng thái: Chưa đồng bộ</small></article>
+        <article class="data-info-card"><span class="cat-icon blue">％</span><h3>Lợi suất Trái phiếu Chính phủ</h3><p>Lợi suất thị trường thứ cấp theo kỳ hạn 1, 2, 10 và 20 năm.</p><small>Nguồn: Sở Giao dịch Chứng khoán Hà Nội (HNX)</small></article>
+        <article class="data-info-card"><span class="cat-icon purple">▤</span><h3>Phát hành trái phiếu</h3><p>Khối lượng gọi thầu, trúng thầu, lãi suất trúng thầu và kỳ hạn phát hành.</p><small>Nguồn dự kiến: HNX, Bộ Tài chính · Chưa kết nối</small></article>
+        <article class="data-info-card"><span class="cat-icon orange">⇄</span><h3>Thị trường trái phiếu doanh nghiệp</h3><p>Phát hành và đáo hạn phải được phân loại theo loại trái phiếu và nguồn báo cáo.</p><small>Chưa đồng bộ dữ liệu</small></article>
       </div>
-      <p class="notice">Chưa có chuỗi trái phiếu được tải vào hệ thống. Không suy diễn lợi suất hoặc khối lượng phát hành từ tin tức không có dữ liệu gốc.</p>
+      <div class="currency-panel">
+        <div class="currency-panel-heading"><div><h3>Lợi suất trái phiếu Chính phủ — thị trường thứ cấp</h3><p class="muted">Đơn vị %/năm; lợi suất không đồng nghĩa với lãi coupon của một trái phiếu cụ thể.</p></div><span id="bondYieldsUpdated" class="status-pill neutral">Đang tải…</span></div>
+        <div id="bondYieldsTable" class="table-scroll"><div class="empty-state"><h3>Đang tải lợi suất</h3><p>Dữ liệu lấy từ snapshot đã đồng bộ.</p></div></div>
+      </div>
+      <p class="notice">Nguồn dữ liệu: HNX qua Dữ Liệu Kinh Tế. Phát hành trái phiếu doanh nghiệp và số liệu đấu thầu chưa được kết nối.</p>
     </section>
 
     <section class="section category-data-section" id="lao-dong">
