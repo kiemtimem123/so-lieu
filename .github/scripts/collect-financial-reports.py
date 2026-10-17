@@ -89,16 +89,77 @@ def safe_name(url, content_type):
         suffix = ".pdf" if "pdf" in content_type.lower() else ".xlsx" if "spreadsheetml" in content_type.lower() else ".bin"
     return suffix
 
+def is_official_statement_title(title, symbol):
+    """Reject analyst/research material; accept only issuer filing notices for actual statements."""
+    t = (title or "").lower()
+    sym = re.escape(symbol.lower())
+    if not re.search(rf"\\b{sym}\\b", t):
+        return False
+    reject = [
+        "phân tích", "bao cao phan tich", "báo cáo phân tích", "cập nhật kqkd",
+        "khuyến nghị", "định giá", "price target", "analyst", "earning report",
+        "investment thesis", "forecast", "dự phóng", "triển vọng", "update kqkd",
+        "mua", "bán", "nắm giữ", "brokerage"
+    ]
+    if any(word in t for word in reject):
+        return False
+    return any(word in t for word in [
+        "báo cáo tài chính", "bao cao tai chinh", "financial statements",
+        "financial statement", "consolidated financial statements"
+    ])
+
+def expand_vietstock_filing_page(candidate, symbol):
+    """Vietstock is used only as an index of issuer disclosure notices, not as an analyst source."""
+    url = candidate.get("url", "")
+    host = (urlparse(url).hostname or "").lower()
+    if host not in {"vietstock.vn", "www.vietstock.vn", "en.vietstock.vn"}:
+        return []
+    page_title = candidate.get("title", "")
+    if not is_official_statement_title(page_title, symbol):
+        return []
+    try:
+        response = SESSION.get(url, timeout=25, allow_redirects=True)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, "html.parser")
+        heading = soup.find(["h1", "title"])
+        verified_title = heading.get_text(" ", strip=True) if heading else page_title
+        if not is_official_statement_title(verified_title, symbol):
+            return []
+        attachments = []
+        for a in soup.find_all("a", href=True):
+            href = a["href"]
+            label = a.get_text(" ", strip=True)
+            absolute = requests.compat.urljoin(response.url, href)
+            path = urlparse(absolute).path.lower()
+            if not path.endswith((".pdf", ".xlsx", ".xls")):
+                continue
+            if not domain_allowed(absolute, ["static1.vietstock.vn", "vietstock.vn"]):
+                continue
+            evidence = (label + " " + path).lower()
+            if any(x in evidence for x in ["explanation", "giai-trinh", "giai_trinh", "forecast", "phan-tich", "analyst"]):
+                continue
+            if not any(x in evidence for x in ["baocao", "bao-cao", "financial", "bctc", "statement", "tai-chinh"]):
+                continue
+            attachments.append({
+                "url": absolute, "title": label or verified_title,
+                "host": (urlparse(absolute).hostname or "").lower(),
+                "allowlisted": True, "official_filing_page": True,
+                "filing_page": response.url, "filing_page_title": verified_title
+            })
+        return attachments
+    except Exception:
+        return []
+
 def discover_for_job(job, allowed_domains):
     symbol = job["symbol"]
     start = int(job.get("startYear", 2024))
     report_type = job.get("reportType", "consolidated")
     report_words = "báo cáo tài chính quý" if report_type != "both" else "báo cáo tài chính quý hợp nhất riêng lẻ"
     queries = [
-        f'"{symbol}" {report_words} {start} filetype:pdf',
-        f'"{symbol}" báo cáo tài chính {datetime.now().year} filetype:pdf',
-        f'site:hsx.vn "{symbol}" báo cáo tài chính filetype:pdf',
-        f'site:hnx.vn "{symbol}" báo cáo tài chính filetype:pdf',
+        f'"{symbol}" "báo cáo tài chính quý" {start}..{datetime.now().year}',
+        f'"{symbol}" "báo cáo tài chính" "quý" site:vietstock.vn',
+        f'"{symbol}" "financial statements" "quarter" site:vietstock.vn',
+        f'"{symbol}" báo cáo tài chính site:hsx.vn OR site:hnx.vn',
     ]
     candidates, seen = [], set()
     for q in queries:
@@ -110,19 +171,32 @@ def discover_for_job(job, allowed_domains):
             seen.add(url)
             host = (urlparse(url).hostname or "").lower()
             item.update({"query":q,"host":host,"allowlisted":domain_allowed(url,allowed_domains)})
-            candidates.append(item)
+            if host in {"vietstock.vn", "www.vietstock.vn", "en.vietstock.vn"}:
+                if is_official_statement_title(item.get("title", ""), symbol):
+                    candidates.extend(expand_vietstock_filing_page(item, symbol))
+            elif item["allowlisted"] and is_official_statement_title(item.get("title", ""), symbol):
+                candidates.append(item)
         time.sleep(1.0)
-    return candidates
+    deduped, urls = [], set()
+    for item in candidates:
+        if item.get("url") not in urls:
+            urls.add(item.get("url"))
+            deduped.append(item)
+    return deduped
 
 def download_candidate(candidate, job_dir):
     url = candidate["url"]
-    if not candidate.get("allowlisted"):
-        return {"url":url,"title":candidate.get("title"),"status":"blocked_untrusted_domain","host":candidate.get("host")}
+    host = (urlparse(url).hostname or "").lower()
+    approved_attachment = candidate.get("official_filing_page") is True and host in {"static1.vietstock.vn", "vietstock.vn"}
+    if not candidate.get("allowlisted") or (not domain_allowed(url, ALLOWED_DOMAINS) and not approved_attachment):
+        return {"url":url,"title":candidate.get("title"),"status":"blocked_untrusted_domain","host":host}
     try:
         with SESSION.get(url, timeout=40, stream=True, allow_redirects=True) as response:
             response.raise_for_status()
             final_url = response.url
-            if not domain_allowed(final_url, ALLOWED_DOMAINS):
+            final_host = (urlparse(final_url).hostname or "").lower()
+            redirect_is_filing_attachment = candidate.get("official_filing_page") is True and final_host in {"static1.vietstock.vn", "vietstock.vn"}
+            if not domain_allowed(final_url, ALLOWED_DOMAINS) and not redirect_is_filing_attachment:
                 return {"url":url,"status":"blocked_redirect_outside_allowlist","final_url":final_url}
             ctype = response.headers.get("Content-Type","")
             if not ("pdf" in ctype.lower() or "spreadsheet" in ctype.lower() or urlparse(final_url).path.lower().endswith((".pdf",".xlsx",".xls"))):
@@ -144,7 +218,7 @@ def download_candidate(candidate, job_dir):
             extracted = extract_file(path, ctype)
             extracted_path = path.with_suffix(path.suffix + ".extracted.json")
             save(extracted_path, extracted)
-            return {"url":url,"final_url":final_url,"title":candidate.get("title"),"host":urlparse(final_url).hostname,"status":"downloaded_needs_review","file":str(path.relative_to(ROOT)),"extracted_file":str(extracted_path.relative_to(ROOT)),"sha256":digest,"bytes":len(data),"content_type":ctype,"extraction":extracted.get("extraction"),"pages":extracted.get("page_count"),"downloaded_at":NOW}
+            return {"url":url,"final_url":final_url,"title":candidate.get("title"),"host":urlparse(final_url).hostname,"status":"downloaded_needs_review","file":str(path.relative_to(ROOT)),"extracted_file":str(extracted_path.relative_to(ROOT)),"sha256":digest,"bytes":len(data),"content_type":ctype,"extraction":extracted.get("extraction"),"pages":extracted.get("page_count"),"downloaded_at":NOW,"official_filing_page":candidate.get("filing_page"),"filing_page_title":candidate.get("filing_page_title")}
     except Exception as exc:
         return {"url":url,"title":candidate.get("title"),"status":"download_error","error":str(exc)[:1000]}
 
