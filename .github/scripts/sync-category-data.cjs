@@ -57,13 +57,24 @@ for (const def of definitions) {
     fail("Thiếu chuỗi dữ liệu " + def.id + ". Không cập nhật snapshot để tránh ghi dữ liệu thiếu.");
   }
   const today = new Date().toISOString().slice(0, 10);
-  const observations = series.observations
+  const fetchedObservations = series.observations
     .filter(item => item && /^\d{4}-\d{2}-\d{2}$/.test(String(item.date)) && String(item.date) <= today && item.value !== null && item.value !== undefined && Number.isFinite(Number(item.value)))
-    .map(item => ({ date: String(item.date), value: Number(item.value) }))
-    .sort((a, b) => a.date.localeCompare(b.date));
+    .map(item => ({ date: String(item.date), value: Number(item.value) }));
+  const previous = previousById.get(String(def.id));
+  const merged = new Map();
+  for (const item of [...(Array.isArray(previous?.observations) ? previous.observations : []), ...fetchedObservations]) {
+    if (item && /^\d{4}-\d{2}-\d{2}$/.test(String(item.date)) && String(item.date) <= today && item.value !== null && item.value !== undefined && Number.isFinite(Number(item.value))) {
+      merged.set(String(item.date), { date: String(item.date), value: Number(item.value) });
+    }
+  }
+  const observations = [...merged.values()].sort((a, b) => a.date.localeCompare(b.date)).slice(-50);
   if (!observations.length) fail("Không có quan sát hợp lệ đến ngày hiện tại cho " + def.id);
   const latest = observations[observations.length - 1];
-  outputData.push({ ...def, value: latest.value, date: latest.date, unit: series.unit || def.unit, observations });
+  if (previous?.date && latest.date < previous.date) fail("Ngăn ghi đè bằng dữ liệu cũ cho " + def.category);
+  if (previous?.date && latest.date === previous.date && !fetchedObservations.some(item => item.date > previous.date)) {
+    console.warn("CẢNH BÁO: API không có quan sát mới hơn snapshot hiện tại cho " + def.category + " (" + previous.date + "); giữ nguyên dữ liệu mới nhất đã lưu.");
+  }
+  outputData.push({ ...def, value: latest.value, date: latest.date, unit: series.unit || previous?.unit || def.unit, observations });
 }
 const output = { source: "DulieuKinhte API", fetchedAt: new Date().toISOString(), data: outputData };
 fs.mkdirSync(path.dirname(outputPath), { recursive: true });
