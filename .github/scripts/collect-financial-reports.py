@@ -155,12 +155,20 @@ def discover_for_job(job, allowed_domains):
     start = int(job.get("startYear", 2024))
     report_type = job.get("reportType", "consolidated")
     report_words = "báo cáo tài chính quý" if report_type != "both" else "báo cáo tài chính quý hợp nhất riêng lẻ"
+    source_registry = load(SOURCES_PATH, {"allowedDomains": [], "issuerDomainsBySymbol": {}})
+    issuer_domains = source_registry.get("issuerDomainsBySymbol", {}).get(symbol, [])
     queries = [
         f'"{symbol}" "báo cáo tài chính quý" {start}..{datetime.now().year}',
         f'"{symbol}" "báo cáo tài chính" "quý" site:vietstock.vn',
         f'"{symbol}" "financial statements" "quarter" site:vietstock.vn',
         f'"{symbol}" báo cáo tài chính site:hsx.vn OR site:hnx.vn',
     ]
+    # Search issuer/IR domains directly; a domain match alone is not enough:
+    # the title still must pass the strict official-statement filter below.
+    for issuer_domain in issuer_domains:
+        if re.fullmatch(r"[a-zA-Z0-9.-]+", str(issuer_domain)):
+            queries.append(f'"{symbol}" "báo cáo tài chính" quý site:{issuer_domain}')
+            queries.append(f'"{symbol}" "financial statements" quarterly site:{issuer_domain}')
     candidates, seen = [], set()
     for q in queries:
         results = search_web(q)
