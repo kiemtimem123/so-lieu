@@ -28,16 +28,26 @@ const definitions = [
   { id: 22870, category: "coastal-shipping-index", name: "Chỉ số vận tải đường ven biển và viễn dương so quý trước", unit: "%", source: "Cục Thống kê (NSO)", url: "https://dulieukinhte.com/du-lieu-dong/chi-so-van-tai-duong-ven-bien-va-vien-duong-so-quy-truoc-22870" },
   { id: 27690, category: "omo-buy-total", name: "Tổng khối lượng trúng thầu mua (bơm tiền) nghiệp vụ thị trường mở OMO", unit: "Tỷ đồng", source: "Ngân hàng Nhà nước Việt Nam (NHNN), qua Dữ Liệu Kinh Tế", url: "https://dulieukinhte.com/du-lieu-dong/tong-mua-bom-tien-nghiep-vu-thi-truong-mo-omo-27690" },
   { id: 53631, category: "omo-net-outstanding", name: "Chênh lệch lưu hành OMO và tín phiếu NHNN", unit: "Tỷ đồng", source: "Ngân hàng Nhà nước Việt Nam (NHNN), qua Dữ Liệu Kinh Tế", url: "https://dulieukinhte.com/du-lieu-dong/chenh-lech-luu-hanh-omo-va-tin-phieu-nhnn-53631" }
+
+  { id: 33445, category: "m2", name: "Tổng phương tiện thanh toán M2", unit: "Tỷ đồng", source: "Ngân hàng Nhà nước Việt Nam (NHNN)", url: "https://dulieukinhte.com/du-lieu-dong/tong-phuong-tien-thanh-toan-m2-33445" },
+  { id: 33446, category: "household-deposits", name: "Tiền gửi của dân cư trong cung tiền M2", unit: "Tỷ đồng", source: "Ngân hàng Nhà nước Việt Nam (NHNN)", url: "https://dulieukinhte.com/du-lieu-dong/tien-gui-cua-dan-cu-trong-cung-tien-m2-33446" },
+  { id: 33447, category: "corporate-deposits", name: "Tiền gửi của các TCKT trong cung tiền M2", unit: "Tỷ đồng", source: "Ngân hàng Nhà nước Việt Nam (NHNN)", url: "https://dulieukinhte.com/du-lieu-dong/tien-gui-cua-cac-tckt-trong-cung-tien-m2-33447" },
+  { id: 37096, category: "gold-doji-buy", name: "Giá vàng DOJI Sài Gòn mua vào", unit: "Triệu đồng/lượng", source: "Dữ Liệu Kinh Tế (nguồn tổng hợp)", url: "https://dulieukinhte.com/du-lieu-dong/gia-vang-doji-sai-gon-mua-vao-37096" },
+  { id: 37105, category: "gold-btmc-buy", name: "Giá vàng Bảo Tín Minh Châu mua vào", unit: "Triệu đồng/lượng", source: "Dữ Liệu Kinh Tế (nguồn tổng hợp)", url: "https://dulieukinhte.com/du-lieu-dong/gia-vang-bao-tin-minh-chau-mua-vao-37105" },
+  { id: 37106, category: "gold-btmc-sell", name: "Giá vàng Bảo Tín Minh Châu bán ra", unit: "Triệu đồng/lượng", source: "Dữ Liệu Kinh Tế (nguồn tổng hợp)", url: "https://dulieukinhte.com/du-lieu-dong/gia-vang-bao-tin-minh-chau-ban-ra-37106" },
+  { id: 33340, category: "deposit-mb-12m", name: "Lãi suất tiết kiệm khách hàng cá nhân MB 12 tháng", unit: "%/năm", source: "Dữ Liệu Kinh Tế (chuỗi lịch sử biểu lãi suất MB)", url: "https://dulieukinhte.com/du-lieu-dong/lai-suat-tiet-kiem-khach-hang-ca-nhan-mb-12-thang-33340" }
+
 ];
 function fail(message) { console.error("ERROR:", message); process.exit(1); }
 let response;
 try {
   const first = JSON.parse(fs.readFileSync("category-response-1.json", "utf8"));
   const second = JSON.parse(fs.readFileSync("category-response-2.json", "utf8"));
-  if (!first || !Array.isArray(first.data) || !second || !Array.isArray(second.data)) {
+  const third = JSON.parse(fs.readFileSync("category-response-3.json", "utf8"));
+  if (!first || !Array.isArray(first.data) || !second || !Array.isArray(second.data) || !third || !Array.isArray(third.data)) {
     fail("Một trong các lô API không trả về mảng data hợp lệ.");
   }
-  response = { data: [...first.data, ...second.data] };
+  response = { data: [...first.data, ...second.data, ...third.data] };
 } catch (error) {
   fail("Không đọc được phản hồi API theo lô: " + error.message);
 }
