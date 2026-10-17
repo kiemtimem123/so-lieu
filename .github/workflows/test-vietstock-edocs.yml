@@ -1,0 +1,65 @@
+name: Test Vietstock eDocuments Crawler
+
+on:
+  workflow_dispatch:
+    inputs:
+      symbol:
+        description: Stock ticker to test
+        required: true
+        default: MBB
+        type: string
+      max_pages:
+        description: Maximum public pages to inspect
+        required: true
+        default: "35"
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: vietstock-edocs-test
+  cancel-in-progress: false
+
+jobs:
+  test-edocs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r .github/scripts/requirements-report-worker.txt
+      - name: Crawl public Vietstock eDocuments and validate PDF
+        env:
+          REPORT_TEST_SYMBOL: ${{ inputs.symbol }}
+          EDOCS_MAX_PAGES: ${{ inputs.max_pages }}
+          ALLOW_BROKER_PDF_ARCHIVE: "false"
+        run: python .github/scripts/collect-vietstock-edocs.py
+      - name: Commit updated catalog
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/analysis/analysis-reports.json data/analysis-reports.json
+          if git diff --cached --quiet; then
+            echo "No catalog changes."
+          else
+            git commit -m "Test Vietstock eDocuments report discovery"
+            git push
+          fi
+      - name: Upload catalog and run logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vietstock-edocs-test-${{ inputs.symbol }}
+          path: |
+            reports/analysis/analysis-reports.json
+            data/analysis-reports.json
+          if-no-files-found: warn
+          retention-days: 14
