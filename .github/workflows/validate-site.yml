@@ -35,12 +35,34 @@ jobs:
             'data/currency-rates.json',
             'data/financial-rates.json',
             'data/policy-rates.json',
-            'data/credit-growth.json'
+            'data/credit-growth.json',
+            'data/financials-MBB.json',
+            'data/financials-ACB.json',
+            'data/financials-FPT.json',
+            'data/financials-SHB.json',
+            'data/financials-TCX.json',
+            'data/financials-HCM.json',
+            'data/financials-VND.json',
+            'data/financials-SHS.json',
+            'data/financials-NLG.json',
+            'data/financials-BSR.json',
+            'data/financials-TCB.json',
+            'data/financials-VHM.json',
           ];
           for (const file of files) {
             const value = JSON.parse(fs.readFileSync(file, 'utf8'));
             if (!value || typeof value !== 'object') throw new Error('Invalid JSON root: ' + file);
             console.log('JSON OK:', file);
+          }
+          for (const symbol of ['MBB','ACB','FPT','SHB','TCX','HCM','VND','SHS','NLG','BSR','TCB','VHM']) {
+            const file = 'data/financials-' + symbol + '.json';
+            const snapshot = JSON.parse(fs.readFileSync(file, 'utf8'));
+            if (snapshot.symbol !== symbol || !Array.isArray(snapshot.items)) throw new Error('Invalid financial snapshot schema: ' + file);
+            for (const row of snapshot.items) {
+              if (!/^\\d{4}-Q[1-4]$/.test(String(row.period || ''))) throw new Error('Invalid quarter period in ' + file);
+              if (!row.source_url || !/^https?:\\/\\//i.test(row.source_url)) throw new Error('Financial row missing source URL in ' + file);
+            }
+            console.log('Financial schema OK:', file, 'rows=' + snapshot.items.length);
           }
           NODE
 
