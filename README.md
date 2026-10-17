@@ -70,3 +70,30 @@ Trang chủ đã được điều chỉnh theo các ảnh tham chiếu do ngư�
 Thay vì scrape HTML cho GDP/CPI/bán lẻ/tỷ giá/lãi suất, cấu hình API chính thức theo `docs/DLKT-API-SETUP.md`. API key chỉ được lưu trong GitHub Actions Secret `DLKT_API_KEY`. Workflow đồng bộ một lần/ngày 09:00 giờ Việt Nam, gộp tối đa 20 series mỗi lượt và commit các JSON snapshot vào GitHub để Hostinger Git Deployment tự triển khai (cần bật Auto-deployment cho đúng branch). Không cần FTP secrets.
 
 **Cần hoàn tất thủ công trước lần đồng bộ đầu tiên:** đăng ký key, khám phá `series_id` thật từ từng dataset, rồi điền `config/api_series.json`. Dataset ID trong cấu hình không phải series ID. Chưa có key/series IDs thì dashboard không hiển thị số liệu giả; biểu đồ báo chưa có dữ liệu.
+
+
+## 7. Đồng bộ báo cáo phân tích PDF vào MySQL (hàng tuần)
+
+Pipeline mới được tách khỏi luồng dữ liệu tài chính chính thức để không làm thay đổi các bảng/biểu đồ đang chạy:
+
+1. GitHub Actions chạy mỗi Chủ nhật lúc 02:30 UTC (09:30 giờ Việt Nam), đọc danh mục `data/analysis-reports.json`.
+2. Worker chỉ tải PDF từ liên kết HTTPS thuộc danh sách miền cho phép, xử lý trong bộ nhớ tạm, không lưu file PDF hoặc toàn văn trích xuất vào repository.
+3. Worker tạo tóm tắt trích xuất ngắn và các ứng viên chỉ tiêu tài chính; mọi chỉ tiêu tự trích xuất được lưu trạng thái `needs_review`, không được coi là số liệu đã xác minh.
+4. Payload được gửi qua HTTPS tới `/api/analysis-reports.php`. Giao diện thư viện báo cáo ưu tiên API DB; nếu DB chưa cấu hình hoặc API lỗi, giao diện tự quay lại snapshot JSON hiện tại.
+
+### Thiết lập một lần trên Hostinger
+
+- Tạo cơ sở dữ liệu MySQL và user riêng chỉ có quyền cần thiết trên cơ sở dữ liệu đó.
+- Chạy file `database/analysis-reports.sql` trong phpMyAdmin.
+- Cấu hình các biến môi trường phía máy chủ PHP: `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `REPORT_SYNC_TOKEN`. Tạo token ngẫu nhiên dài; không ghi giá trị thật vào GitHub hay mã nguồn.
+- Nếu Hostinger không hỗ trợ biến môi trường PHP trực tiếp, đặt cấu hình trong file riêng **ngoài public_html** và nạp từ cấu hình máy chủ; không tạo file thông tin đăng nhập có thể tải công khai.
+- Trong GitHub repository Settings → Secrets and variables → Actions, thêm variable `REPORT_SYNC_URL` bằng URL HTTPS đầy đủ tới API và secret `REPORT_SYNC_TOKEN` có cùng giá trị token trên máy chủ.
+- Triển khai các file mới lên Hostinger. Trước lần đồng bộ đầu tiên, kiểm tra `GET /api/analysis-reports.php` trả về JSON (nếu DB chưa cấu hình, endpoint trả HTTP 503 nhưng giao diện vẫn dùng JSON dự phòng). Sau đó chạy workflow thủ công để kiểm tra kết nối.
+
+### Giới hạn và quyền sử dụng
+
+- Đây là danh mục và phần tóm tắt ngắn, không phải bản sao lưu PDF. Không xuất bản PDF/toàn văn hoặc nội dung trích xuất đầy đủ.
+- Tóm tắt do thuật toán trích xuất tạo ra cần rà soát biên tập trước khi xem là khuyến nghị đầu tư.
+- Số liệu nhận dạng tự động là **ứng viên cần kiểm tra**; đối chiếu tài liệu gốc, kỳ báo cáo, đơn vị và ngữ cảnh trước khi duyệt. Không tự động ghi đè dữ liệu báo cáo tài chính chính thức.
+- Nếu nguồn chặn truy cập, không phải PDF, yêu cầu đăng nhập hoặc trả lỗi, worker giữ liên kết và ghi trạng thái tương ứng; không vượt qua cơ chế truy cập.
+- Việc đồng bộ vào cơ sở dữ liệu thật chỉ hoạt động sau khi người quản trị cấu hình database và Actions variable/secret ở trên. Repository không chứa thông tin đăng nhập.
