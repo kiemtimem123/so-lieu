@@ -855,7 +855,7 @@
       if (value === null || value === undefined || value === '' || !Number.isFinite(Number(value))) return '—';
       return fmt(value, 2);
     };
-    const validPeriod = value => /^\\d{4}-Q[1-4]$/.test(String(value || ''));
+    const validPeriod = value => /^\d{4}-Q[1-4]$/.test(String(value || ''));
     const setEmpty = (title, message) => {
       if (wrap) wrap.classList.add('hidden');
       if (stateBox) {
@@ -870,7 +870,7 @@
     async function load() {
       const ticker = String(symbol?.value || '').trim().toUpperCase();
       const selectedYear = String(year?.value || '');
-      if (!/^[A-Z0-9]{2,6}$/.test(ticker) || !/^20\\d{2}$/.test(selectedYear)) {
+      if (!/^[A-Z0-9]{2,6}$/.test(ticker) || !/^20\d{2}$/.test(selectedYear)) {
         setEmpty('Thông tin lọc không hợp lệ', 'Vui lòng chọn mã cổ phiếu và năm báo cáo hợp lệ.');
         return;
       }
@@ -894,7 +894,7 @@
           return;
         }
         if (body) body.innerHTML = rows.map(item => {
-          const sourceUrl = typeof item.source_url === 'string' && /^https?:\\/\\//i.test(item.source_url) ? item.source_url : '';
+          const sourceUrl = typeof item.source_url === 'string' && /^https?:\/\//i.test(item.source_url) ? item.source_url : '';
           const periodLabel = item.period.replace('-Q', ' · Quý ');
           return '<tr>' +
             '<td><strong>' + escapeHtml(periodLabel) + '</strong></td>' +
