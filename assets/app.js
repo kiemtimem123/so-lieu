@@ -875,6 +875,60 @@
     });
   }
 
+
+  async function loadAdditionalMoneySeries() {
+    const definitions = [
+      { category: 'lending-rate', panel: '#lai-suat-cho-vay', title: 'Lãi suất cho vay bình quân', unit: '%/năm', staleDays: 100 },
+      { category: 'black-market-usd-buy', panel: '#ty-gia-cho-den', title: 'Tỷ giá USD chợ đen mua vào', unit: 'VND/USD', staleDays: 5 },
+      { category: 'remittance-hcm', panel: '#kieu-hoi', title: 'Tổng kiều hối về TP. Hồ Chí Minh', unit: 'Triệu USD', staleDays: 150 }
+    ];
+    for (const def of definitions) {
+      const panel = $(def.panel);
+      if (!panel) continue;
+      try {
+        const response = await fetch('data/category-data.json', { cache: 'no-store' });
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        const snapshot = await response.json();
+        const item = (snapshot.data || []).find(row => row.category === def.category);
+        const points = (item?.observations || []).filter(p => p && /^\d{4}-\d{2}-\d{2}$/.test(p.date) && p.date <= new Date().toISOString().slice(0,10) && Number.isFinite(Number(p.value))).sort((x,y)=>x.date.localeCompare(y.date));
+        const heading = panel.querySelector('.currency-panel-heading');
+        let status = heading?.querySelector('.status-pill');
+        if (!status && heading) { status = document.createElement('span'); status.className = 'status-pill neutral'; heading.appendChild(status); }
+        if (!item || !points.length) {
+          if (status) status.textContent = 'Chưa có dữ liệu';
+          const old = panel.querySelector('.empty-state');
+          if (old) old.innerHTML = '<h3>Chưa có dữ liệu đồng bộ</h3><p>Workflow cần chạy thành công và nguồn phải trả về quan sát hợp lệ. Không tự tạo số liệu.</p>';
+          continue;
+        }
+        const latest = points[points.length - 1];
+        const tableId = 'extra-' + def.category + '-table';
+        const chartId = 'extra-' + def.category + '-chart';
+        const old = panel.querySelector('.empty-state');
+        if (old) old.remove();
+        let area = panel.querySelector('.extra-money-series');
+        if (!area) { area = document.createElement('div'); area.className = 'extra-money-series'; panel.appendChild(area); }
+        area.innerHTML = '<div class="data-view-toolbar"><div class="view-switch" role="group" aria-label="Cách hiển thị dữ liệu"><button type="button" data-view="chart" class="is-active">Biểu đồ</button><button type="button" data-view="table">Bảng số liệu</button></div><label class="chart-type-label">Kiểu biểu đồ <select class="extra-chart-type"><option value="line">Đường</option><option value="bar">Cột</option></select></label></div><div class="chart-canvas-wrap"><canvas id="' + chartId + '" role="img" aria-label="' + escapeHtml(def.title) + '"></canvas></div><p class="muted extra-chart-note"></p><div id="' + tableId + '" class="table-scroll" hidden><table><thead><tr><th>Ngày/kỳ</th><th>Chỉ tiêu</th><th>Giá trị</th><th>Đơn vị</th><th>Nguồn</th></tr></thead><tbody>' + points.slice().reverse().map(p=>'<tr><td>'+escapeHtml(dateFmt(p.date))+'</td><td>'+escapeHtml(item.name)+'</td><td>'+fmt(p.value,3)+'</td><td>'+escapeHtml(item.unit||def.unit)+'</td><td><a href="'+escapeHtml(item.url)+'" target="_blank" rel="noopener noreferrer">'+escapeHtml(item.source||'Dữ Liệu Kinh Tế')+'</a></td></tr>').join('') + '</tbody></table></div>';
+        if (status) { status.textContent = 'Kỳ mới nhất: ' + dateFmt(latest.date); status.className = 'status-pill ' + ((Date.now()-new Date(latest.date+'T00:00:00').getTime())/86400000 > def.staleDays ? 'warning' : 'positive'); }
+        const canvas = area.querySelector('canvas'), note = area.querySelector('.extra-chart-note'), table = area.querySelector('#'+tableId), chartWrap = area.querySelector('.chart-canvas-wrap'), toolbar = area.querySelector('.data-view-toolbar');
+        let chart = null;
+        const draw = () => {
+          if (chart) chart.destroy();
+          if (!window.Chart) { note.textContent = 'Không tải được Chart.js; bảng số liệu vẫn dùng được.'; return; }
+          chart = new Chart(canvas, { type: area.querySelector('.extra-chart-type').value, data: { labels: points.map(p=>dateFmt(p.date)), datasets: [{ label: item.name, data: points.map(p=>Number(p.value)), borderWidth:2, tension:.18, pointRadius: points.length>40?0:2 }] }, options: { responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{legend:{display:true,position:'bottom'}}, scales:{x:{ticks:{maxTicksLimit:8,maxRotation:0},grid:{display:false}},y:{beginAtZero:false}} } });
+          note.textContent = 'Nguồn: ' + (item.source || 'Dữ Liệu Kinh Tế') + ' · ' + points.length + ' kỳ dữ liệu · đơn vị ' + (item.unit || def.unit) + '. Khoảng trống không được nội suy.';
+        };
+        toolbar.querySelectorAll('[data-view]').forEach(button=>button.addEventListener('click',()=>{
+          toolbar.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('is-active',b===button));
+          const showChart=button.dataset.view==='chart'; chartWrap.hidden=!showChart; table.hidden=showChart;
+        }));
+        area.querySelector('.extra-chart-type').addEventListener('change',draw);
+        draw();
+      } catch (error) {
+        console.error('[money-series '+def.category+']',error);
+      }
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     setupNavigation();
     loadOverviewKpis();
