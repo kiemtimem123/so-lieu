@@ -23,7 +23,7 @@ function safe_date($v): ?string {
 }
 function source_ok(string $url): bool {
   $h=strtolower((string)parse_url($url,PHP_URL_HOST));
-  foreach (['vietstock.vn','cafef.vn','vietcap.com.vn','shs.com.vn','dsc.com.vn','bsc.com.vn','acbs.com.vn','mbs.com.vn','fpts.com.vn','hsc.com.vn','vndirect.com.vn','ssi.com.vn','kbsec.com.vn','yuanta.com.vn','masvn.com','vcbs.com.vn'] as $d)
+  foreach (['vietstock.vn','edocs.vietstock.vn','static1.vietstock.vn','cafef.vn','vietcap.com.vn','shs.com.vn','dsc.com.vn','bsc.com.vn','acbs.com.vn','mbs.com.vn','fpts.com.vn','hsc.com.vn','vndirect.com.vn','ssi.com.vn','kbsec.com.vn','yuanta.com.vn','masvn.com','vcbs.com.vn'] as $d)
     if ($h===$d||str_ends_with($h,'.'.$d)) return true;
   return false;
 }
