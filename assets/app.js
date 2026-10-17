@@ -967,6 +967,47 @@
     }
   }
 
+
+  async function loadBondMarketSeries() {
+    const section = $('#trai-phieu');
+    if (!section) return;
+    const defs = [
+      { category:'bond-yield-1y', label:'TPCP 1 năm', unit:'%/năm' },
+      { category:'bond-yield-2y', label:'TPCP 2 năm', unit:'%/năm' },
+      { category:'bond-yield-10y', label:'TPCP 10 năm', unit:'%/năm' },
+      { category:'bond-yield-20y', label:'TPCP 20 năm', unit:'%/năm' },
+      { category:'corporate-bonds-total', label:'Tổng phát hành TPDN', unit:'Tỷ đồng' }
+    ];
+    try {
+      const response = await fetch('data/category-data.json', {cache:'no-store'});
+      if (!response.ok) throw new Error('HTTP '+response.status);
+      const snapshot = await response.json();
+      let host = $('#bondSeriesCharts');
+      if (!host) {
+        host = document.createElement('div');
+        host.id = 'bondSeriesCharts';
+        host.className = 'data-card-grid';
+        const cards = section.querySelector('.data-card-grid');
+        if (cards) cards.insertAdjacentElement('afterend', host);
+        else section.appendChild(host);
+      }
+      host.innerHTML = defs.map((d,i)=>'<article class="currency-panel"><div class="currency-panel-heading"><div><h3>'+escapeHtml(d.label)+'</h3><p class="muted">'+escapeHtml(d.unit)+' · dữ liệu lịch sử theo nguồn</p></div><span class="status-pill neutral" id="bond-extra-status-'+i+'">Đang tải</span></div><div class="data-view-toolbar"><div class="view-switch" role="group"><button type="button" data-view="chart" class="is-active">Biểu đồ</button><button type="button" data-view="table">Bảng số liệu</button></div><label class="chart-type-label">Kiểu biểu đồ <select><option value="line">Đường</option><option value="bar">Cột</option></select></label></div><div class="chart-canvas-wrap"><canvas id="bond-extra-canvas-'+i+'"></canvas></div><div class="table-scroll" hidden id="bond-extra-table-'+i+'"></div><p class="muted" id="bond-extra-note-'+i+'"></p></article>').join('');
+      defs.forEach((def,i)=>{
+        const item=(snapshot.data||[]).find(x=>x.category===def.category);
+        const points=(item?.observations||[]).filter(p=>p?.date&&Number.isFinite(Number(p.value))).sort((a,b)=>a.date.localeCompare(b.date));
+        const status=$('#bond-extra-status-'+i), canvas=$('#bond-extra-canvas-'+i), table=$('#bond-extra-table-'+i), note=$('#bond-extra-note-'+i), card=canvas.closest('.currency-panel');
+        if (!points.length) { status.textContent='Chưa có dữ liệu'; note.textContent='Chưa có quan sát hợp lệ trong snapshot. Không tạo số liệu giả.'; canvas.parentElement.hidden=true; return; }
+        status.textContent='Kỳ mới nhất: '+dateFmt(points[points.length-1].date); status.className='status-pill positive';
+        table.innerHTML='<table><thead><tr><th>Ngày/kỳ</th><th>Giá trị</th><th>Đơn vị</th><th>Nguồn</th></tr></thead><tbody>'+points.slice().reverse().map(p=>'<tr><td>'+escapeHtml(dateFmt(p.date))+'</td><td>'+fmt(p.value,4)+'</td><td>'+escapeHtml(item.unit||def.unit)+'</td><td><a href="'+escapeHtml(item.url||'#')+'" target="_blank" rel="noopener noreferrer">'+escapeHtml(item.source||'Nguồn dữ liệu')+'</a></td></tr>').join('')+'</tbody></table>';
+        let chart=null;
+        const draw=()=>{if(chart)chart.destroy();if(!window.Chart){note.textContent='Không tải được Chart.js.';return;}chart=new Chart(canvas,{type:card.querySelector('select').value,data:{labels:points.map(p=>dateFmt(p.date)),datasets:[{label:item.name||def.label,data:points.map(p=>Number(p.value)),borderWidth:2,tension:.2,pointRadius:points.length>40?0:2}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:true,position:'bottom'}},scales:{x:{ticks:{maxTicksLimit:8,maxRotation:0},grid:{display:false}},y:{beginAtZero:false}}}});note.textContent='Nguồn: '+(item.source||'')+' · '+points.length+' quan sát · Không nội suy khoảng trống.';};
+        card.querySelector('select').addEventListener('change',draw);
+        card.querySelectorAll('[data-view]').forEach(btn=>btn.addEventListener('click',()=>{card.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('is-active',b===btn));const show=btn.dataset.view==='chart';canvas.parentElement.hidden=!show;table.hidden=show;}));
+        draw();
+      });
+    } catch(error) { console.error('[bond-series]',error); }
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     setupNavigation();
     loadOverviewKpis();
@@ -983,6 +1024,7 @@
     loadOmoData();
   loadPolicyRates();
     loadFinancialRates();
+    loadBondMarketSeries();
     loadCategoryData();
     loadDLKTEconomicPanels();
   });
