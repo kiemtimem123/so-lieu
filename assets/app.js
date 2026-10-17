@@ -243,7 +243,7 @@
       const wanted = ['omo-buy-total', 'omo-net-outstanding'];
       const rows = snapshot.data.filter(item =>
         wanted.includes(item.category) && item.name && item.date && item.url && item.unit &&
-        Number.isFinite(Number(item.value)) && /^\\d{4}-\\d{2}-\\d{2}$/.test(item.date)
+        Number.isFinite(Number(item.value)) && /^\d{4}-\d{2}-\d{2}$/.test(item.date)
       );
       if (rows.length !== 2) throw new Error('Snapshot phải có đủ hai chỉ tiêu OMO hợp lệ');
       const now = Date.now();
