@@ -979,7 +979,7 @@
       const table = $('#stockCompareTable');
       if (table) {
         table.innerHTML = values.length
-          ? '<table><thead><tr><th>Mã</th><th>Kỳ</th><th>'+escapeHtml(meta.label)+'</th><th>Đơn vị</th></tr></thead><tbody>'+values.map(item=>'<tr><td><strong>'+item.ticker+'</strong></td><td>'+escapeHtml(periodLabel(period))+'</td><td>'+numberOrDash(item.value)+'</td><td>'+escapeHtml(rowsFor(item.ticker).find(row=>row.period===period)?.unit || meta.unit)+'</td></tr>').join('')+'</tbody></table>'
+          ? '<table><thead><tr><th>Mã</th><th>Kỳ</th><th>'+escapeHtml(meta.label)+'</th><th>Đơn vị</th></tr></thead><tbody>'+values.map(item=>'<tr><td><strong>'+item.ticker+'</strong></td><td>'+escapeHtml(periodLabel(period))+'</td><td>'+numberOrDash(item.value)+'</td><td>'+escapeHtml((metric==='roa'||metric==='roe')?'%':(rowsFor(item.ticker).find(row=>row.period===period)?.unit || meta.unit))+'</td></tr>').join('')+'</tbody></table>'
           : '<div class="empty-state"><h3>Chưa có dữ liệu để so sánh</h3><p>Chỉ những giá trị có nguồn kiểm chứng mới được hiển thị.</p></div>';
       }
     }
