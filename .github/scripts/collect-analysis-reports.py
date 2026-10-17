@@ -16,6 +16,7 @@ from bs4 import BeautifulSoup
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "reports" / "analysis"
 CATALOG = OUT / "analysis-reports.json"
+DATA_CATALOG = ROOT / "data" / "analysis-reports.json"
 SEC_PATH = ROOT / "config" / "securities.json"
 NOW = datetime.now(timezone.utc).isoformat()
 UA = "solieutaichinh-research-catalog/1.0 (public report index)"
@@ -111,8 +112,11 @@ def main():
                   "brokerage_research":"reports/analysis/analysis-reports.json",
                   "auto_publish_numbers":False}
     }
-    CATALOG.write_text(json.dumps(payload,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-    print(json.dumps({"symbols":len(symbols),"research_reports_catalogued":len(reports),"errors":len(errors),"catalog":str(CATALOG.relative_to(ROOT))},ensure_ascii=False))
+    serialized = json.dumps(payload,ensure_ascii=False,indent=2)+"\n"
+    CATALOG.write_text(serialized,encoding="utf-8")
+    DATA_CATALOG.parent.mkdir(parents=True, exist_ok=True)
+    DATA_CATALOG.write_text(serialized,encoding="utf-8")
+    print(json.dumps({"symbols":len(symbols),"research_reports_catalogued":len(reports),"errors":len(errors),"catalog":str(CATALOG.relative_to(ROOT)),"website_snapshot":str(DATA_CATALOG.relative_to(ROOT))},ensure_ascii=False))
 
 if __name__ == "__main__":
     main()
