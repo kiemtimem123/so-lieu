@@ -38,6 +38,8 @@ jobs:
         env:
           MAX_DOWNLOADS_PER_JOB: ${{ github.event.inputs.max_downloads_per_job || '4' }}
         run: python .github/scripts/collect-financial-reports.py
+      - name: Collect brokerage analysis and forecast report catalog (separate from official statements)
+        run: python .github/scripts/collect-analysis-reports.py
       - name: Validate queue after run
         run: node .github/scripts/validate-report-queue.cjs
       - name: Commit report archive and queue log
