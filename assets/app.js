@@ -478,6 +478,47 @@
   }
 
 
+  function drawEconomicPanelChart(panel, items, chartType) {
+    const canvas = panel.querySelector('.data-chart-view canvas');
+    const note = panel.querySelector('.data-chart-note');
+    if (!canvas || !window.Chart || !items.length) return;
+    const existing = canvas._economicChart;
+    if (existing) existing.destroy();
+    const allDates = [...new Set(items.flatMap(item => (item.observations || [])
+      .filter(point => point && /^\\d{4}-\\d{2}-\\d{2}$/.test(point.date) &&
+        Number.isFinite(Number(point.value)) && point.date <= new Date().toISOString().slice(0, 10))
+      .map(point => point.date)))].sort();
+    const datasets = items.map((item, index) => {
+      const values = new Map((item.observations || []).map(point => [point.date, Number(point.value)]));
+      return {
+        label: item.name,
+        data: allDates.map(date => values.has(date) ? values.get(date) : null),
+        borderWidth: 2,
+        pointRadius: allDates.length > 48 ? 0 : 2,
+        tension: 0.18,
+        spanGaps: false
+      };
+    });
+    canvas._economicChart = new Chart(canvas, {
+      type: chartType || 'line',
+      data: { labels: allDates.map(dateFmt), datasets },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: items.length > 1, position: 'bottom' },
+          tooltip: { callbacks: { label: context => context.dataset.label + ': ' + fmt(context.parsed.y, 3) + ' ' + (items[context.datasetIndex]?.unit || '') } }
+        },
+        scales: {
+          x: { ticks: { maxTicksLimit: 8, maxRotation: 0 }, grid: { display: false } },
+          y: { beginAtZero: false, ticks: { callback: value => fmt(value, 2) } }
+        }
+      }
+    });
+    if (note) note.textContent = 'Nguồn: Dữ Liệu Kinh Tế · ' + allDates.length + ' kỳ có dữ liệu. Khoảng trống được giữ nguyên, không nội suy.';
+  }
+
   async function loadDLKTEconomicPanels() {
     const groups = {
       m2: { content: '#m2DataContent', updated: '#m2DataUpdated', categories: ['m2', 'household-deposits', 'corporate-deposits'], staleDays: 75 },
@@ -504,6 +545,31 @@
         target.innerHTML = '<table><thead><tr><th>Chỉ tiêu</th><th>Giá trị mới nhất</th><th>Đơn vị</th><th>Kỳ dữ liệu</th><th>Nguồn</th></tr></thead><tbody>' +
           items.map(item => '<tr><td><strong>' + escapeHtml(item.name) + '</strong></td><td>' + fmt(item.value, 3) + '</td><td>' + escapeHtml(item.unit || '—') + '</td><td>' + escapeHtml(dateFmt(item.date)) + '</td><td><a href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(item.source || 'Dữ Liệu Kinh Tế') + '</a></td></tr>').join('') +
           '</tbody></table>';
+        const panel = target.closest('.currency-panel');
+        if (panel && window.Chart) {
+          let toolbar = panel.querySelector('.data-view-toolbar');
+          if (!toolbar) {
+            toolbar = document.createElement('div');
+            toolbar.className = 'data-view-toolbar';
+            toolbar.innerHTML = '<div class="view-switch" role="group" aria-label="Cách hiển thị dữ liệu"><button type="button" data-view="chart" class="is-active">Biểu đồ</button><button type="button" data-view="table">Bảng số liệu</button></div><label class="chart-type-label">Kiểu biểu đồ <select class="data-chart-type" aria-label="Kiểu biểu đồ"><option value="line">Đường</option><option value="bar">Cột</option></select></label>';
+            target.parentNode.insertBefore(toolbar, target);
+            const chartPanel = document.createElement('div');
+            chartPanel.className = 'data-chart-view';
+            chartPanel.innerHTML = '<div class="chart-canvas-wrap"><canvas role="img" aria-label="Biểu đồ chuỗi dữ liệu"></canvas></div><p class="muted data-chart-note"></p>';
+            target.insertAdjacentElement('afterend', chartPanel);
+            toolbar.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => {
+              toolbar.querySelectorAll('[data-view]').forEach(b => b.classList.toggle('is-active', b === button));
+              const showChart = button.dataset.view === 'chart';
+              target.hidden = showChart;
+              chartPanel.hidden = !showChart;
+            }));
+            toolbar.querySelector('.data-chart-type').addEventListener('change', () => drawEconomicPanelChart(panel, items, toolbar.querySelector('.data-chart-type').value));
+          }
+          target.hidden = true;
+          const chartPanel = panel.querySelector('.data-chart-view');
+          if (chartPanel) chartPanel.hidden = false;
+          drawEconomicPanelChart(panel, items, toolbar.querySelector('.data-chart-type').value);
+        }
         const latest = items.map(item => item.date).sort().pop();
         const latestTime = new Date(latest.length === 10 ? latest + 'T00:00:00' : latest).getTime();
         const ageDays = Number.isFinite(latestTime) ? Math.floor((Date.now() - latestTime) / 86400000) : Infinity;
