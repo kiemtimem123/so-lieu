@@ -97,3 +97,21 @@ Pipeline mới được tách khỏi luồng dữ liệu tài chính chính th�
 - Số liệu nhận dạng tự động là **ứng viên cần kiểm tra**; đối chiếu tài liệu gốc, kỳ báo cáo, đơn vị và ngữ cảnh trước khi duyệt. Không tự động ghi đè dữ liệu báo cáo tài chính chính thức.
 - Nếu nguồn chặn truy cập, không phải PDF, yêu cầu đăng nhập hoặc trả lỗi, worker giữ liên kết và ghi trạng thái tương ứng; không vượt qua cơ chế truy cập.
 - Việc đồng bộ vào cơ sở dữ liệu thật chỉ hoạt động sau khi người quản trị cấu hình database và Actions variable/secret ở trên. Repository không chứa thông tin đăng nhập.
+
+
+### Duyệt nội dung trước khi hiển thị công khai
+
+API công khai chỉ trả về phần tóm tắt có `summary_status='approved'` và chỉ tiêu có `review_status='approved'`. Worker mới tạo tóm tắt trạng thái `needs_review`; các ứng viên số liệu cũng mặc định `needs_review`. Sau khi đối chiếu từng báo cáo gốc, người quản trị có thể duyệt thủ công trong phpMyAdmin:
+
+```sql
+-- Chỉ chạy sau khi đã kiểm tra nội dung và đơn vị với PDF gốc:
+UPDATE analysis_reports
+SET summary_status = 'approved'
+WHERE id = 'research-...';
+
+UPDATE analysis_report_metrics
+SET review_status = 'approved'
+WHERE id = 123;
+```
+
+Không duyệt hàng loạt theo mặc định. Endpoint POST yêu cầu token; endpoint GET không bao giờ trả về tóm tắt hoặc chỉ tiêu chưa duyệt.
