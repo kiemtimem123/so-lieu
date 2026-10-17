@@ -68,7 +68,7 @@ jobs:
           sleep 8
           STATUS_4="$(curl --silent --show-error --max-time 30 --get \
             --header "Authorization: Bearer ${DLKT_API_KEY}" \
-            --data-urlencode "ids=37096,37105,37106" \
+            --data-urlencode "ids=37096,37105,37106,30768,30769,30802" \
             --data-urlencode "from=2026-09-01" \
             --data-urlencode "limit=50" \
             --output category-response-4.json --write-out "%{http_code}" \
@@ -94,6 +94,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No category data changes."
           else
-            git commit -m "Update transport agriculture ports property and labor data"
+            git commit -m "Update macroeconomic and balance of payments data"
             git push origin HEAD:main
           fi
