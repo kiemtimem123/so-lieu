@@ -60,8 +60,8 @@ try {
   if($method!=='GET'){header('Allow: GET, POST');out(405,['ok'=>false,'error'=>'Method not allowed']);}
   $db=pdo_db();$limit=max(1,min(100,(int)($_GET['limit']??50)));$sym=strtoupper(trim((string)($_GET['symbol']??'')));
   $where='';$params=[];if($sym!==''){$where='WHERE symbol=:symbol';$params[':symbol']=$sym;}
-  $q=$db->prepare("SELECT id,symbol,title,publisher,report_date,category,source_name,source_url,access_type,pdf_pages,pdf_bytes,pdf_status,summary,summary_status,extracted_at,updated_at FROM analysis_reports $where ORDER BY report_date DESC,title ASC LIMIT $limit");
-  $q->execute($params);$rows=$q->fetchAll();$mq=$db->prepare("SELECT metric_name AS name,metric_value AS value,unit,period_label AS period,source_excerpt AS excerpt,review_status FROM analysis_report_metrics WHERE report_id=:id ORDER BY metric_name");
+  $q=$db->prepare("SELECT id,symbol,title,publisher,report_date,category,source_name,source_url,access_type,pdf_pages,pdf_bytes,pdf_status,CASE WHEN summary_status='approved' THEN summary ELSE NULL END AS summary,summary_status,extracted_at,updated_at FROM analysis_reports $where ORDER BY report_date DESC,title ASC LIMIT $limit");
+  $q->execute($params);$rows=$q->fetchAll();$mq=$db->prepare("SELECT metric_name AS name,metric_value AS value,unit,period_label AS period,source_excerpt AS excerpt,review_status FROM analysis_report_metrics WHERE report_id=:id AND review_status='approved' ORDER BY metric_name");
   foreach($rows as &$row){$mq->execute([':id'=>$row['id']]);$row['metrics']=$mq->fetchAll();}unset($row);
   out(200,['ok'=>true,'updated_at'=>gmdate('c'),'reports'=>$rows]);
 } catch(Throwable $e) {
