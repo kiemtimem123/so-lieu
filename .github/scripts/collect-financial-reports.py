@@ -4,7 +4,7 @@ from __future__ import annotations
 import hashlib, json, os, re, sys, time
 from datetime import datetime, timezone
 from pathlib import Path
-from urllib.parse import urlparse, unquote
+from urllib.parse import urlparse, unquote, parse_qs
 import requests
 from bs4 import BeautifulSoup
 
@@ -42,6 +42,11 @@ def search_web(query):
         for a in soup.select("a.result__a"):
             href = a.get("href", "")
             title = a.get_text(" ", strip=True)
+            parsed = urlparse(href)
+            if "duckduckgo.com" in (parsed.hostname or ""):
+                target = parse_qs(parsed.query).get("uddg", [""])[0]
+                if target.startswith("http"):
+                    href = target
             if href.startswith("http"):
                 found.append({"url": href, "title": title})
         return found
