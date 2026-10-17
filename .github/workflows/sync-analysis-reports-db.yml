@@ -1,0 +1,76 @@
+name: Weekly Analyst PDF to Website Database Sync
+
+on:
+  schedule:
+    - cron: '30 2 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: analyst-pdf-database-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Install PDF parser
+        run: pip install 'requests>=2.31,<3' 'pypdf>=5,<7'
+      - name: Validate catalog and prepare safe database payload
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('data/analysis-reports.json')
+          data=json.loads(p.read_text(encoding='utf-8'))
+          assert isinstance(data.get('reports'), list), 'reports must be an array'
+          print('Catalog reports:', len(data['reports']))
+          PY
+          python .github/scripts/prepare-analysis-db-payload.py
+      - name: Send payload to website database API
+        if: ${{ vars.REPORT_SYNC_URL != '' && secrets.REPORT_SYNC_TOKEN != '' }}
+        env:
+          REPORT_SYNC_URL: ${{ vars.REPORT_SYNC_URL }}
+          REPORT_SYNC_TOKEN: ${{ secrets.REPORT_SYNC_TOKEN }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os, urllib.request
+          from pathlib import Path
+          url=os.environ['REPORT_SYNC_URL'].strip()
+          if not url.startswith('https://'):
+              raise SystemExit('REPORT_SYNC_URL must use HTTPS')
+          payload=Path('reports/analysis/db-sync-payload.json').read_bytes()
+          req=urllib.request.Request(url,data=payload,method='POST',headers={
+              'Content-Type':'application/json',
+              'X-Report-Sync-Token':os.environ['REPORT_SYNC_TOKEN'],
+              'User-Agent':'solieutaichinh-weekly-sync/1.0'
+          })
+          with urllib.request.urlopen(req,timeout=60) as response:
+              body=response.read().decode('utf-8','replace')
+              print('Website API status:',response.status)
+              print(body[:3000])
+              if response.status < 200 or response.status >= 300:
+                  raise SystemExit('Website API returned non-success status')
+          PY
+      - name: Explain skipped DB delivery when secrets are not configured
+        if: ${{ vars.REPORT_SYNC_URL == '' || secrets.REPORT_SYNC_TOKEN == '' }}
+        run: |
+          echo 'DB delivery skipped: configure Actions variable REPORT_SYNC_URL and secret REPORT_SYNC_TOKEN.'
+          echo 'No credentials were read from repository files.'
+      - name: Upload redacted sync summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: analyst-db-sync-summary
+          path: reports/analysis/db-sync-payload.json
+          retention-days: 7
