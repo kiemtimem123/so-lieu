@@ -44,10 +44,11 @@ try {
   const first = JSON.parse(fs.readFileSync("category-response-1.json", "utf8"));
   const second = JSON.parse(fs.readFileSync("category-response-2.json", "utf8"));
   const third = JSON.parse(fs.readFileSync("category-response-3.json", "utf8"));
-  if (!first || !Array.isArray(first.data) || !second || !Array.isArray(second.data) || !third || !Array.isArray(third.data)) {
+  const fourth = JSON.parse(fs.readFileSync("category-response-4.json", "utf8"));
+  if (!first || !Array.isArray(first.data) || !second || !Array.isArray(second.data) || !third || !Array.isArray(third.data) || !fourth || !Array.isArray(fourth.data)) {
     fail("Một trong các lô API không trả về mảng data hợp lệ.");
   }
-  response = { data: [...first.data, ...second.data, ...third.data] };
+  response = { data: [...first.data, ...second.data, ...third.data, ...fourth.data] };
 } catch (error) {
   fail("Không đọc được phản hồi API theo lô: " + error.message);
 }
