@@ -9,12 +9,12 @@ on:
   workflow_dispatch:
     inputs:
       symbol:
-        description: Stock ticker to test
+        description: Stock ticker to test (ALL runs all configured tickers)
         required: true
-        default: MBB
+        default: ALL
         type: string
       max_pages:
-        description: Maximum public pages to inspect
+        description: Maximum public pages to inspect per ticker
         required: true
         default: "35"
         type: string
@@ -29,7 +29,7 @@ concurrency:
 jobs:
   test-edocs:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -41,12 +41,22 @@ jobs:
           python-version: "3.12"
       - name: Install dependencies
         run: pip install -r .github/scripts/requirements-report-worker.txt
-      - name: Crawl public Vietstock eDocuments and validate PDF
+      - name: Crawl and validate public reports for selected tickers
         env:
-          REPORT_TEST_SYMBOL: ${{ inputs.symbol || 'MBB' }}
+          REQUESTED_SYMBOL: ${{ inputs.symbol || 'ALL' }}
           EDOCS_MAX_PAGES: ${{ inputs.max_pages || '35' }}
           ALLOW_BROKER_PDF_ARCHIVE: "false"
-        run: python .github/scripts/collect-vietstock-edocs.py
+        run: |
+          set -euo pipefail
+          if [ "$REQUESTED_SYMBOL" = "ALL" ]; then
+            SYMBOLS="MBB ACB FPT SHB TCX HCM VND SHS NLG BSR TCB VHM"
+          else
+            SYMBOLS="$REQUESTED_SYMBOL"
+          fi
+          for symbol in $SYMBOLS; do
+            echo "===== Testing ticker: $symbol ====="
+            REPORT_TEST_SYMBOL="$symbol" python .github/scripts/collect-vietstock-edocs.py
+          done
       - name: Commit updated catalog
         run: |
           git config user.name "github-actions[bot]"
@@ -55,14 +65,14 @@ jobs:
           if git diff --cached --quiet; then
             echo "No catalog changes."
           else
-            git commit -m "Test Vietstock eDocuments report discovery"
+            git commit -m "Test Vietstock eDocuments discovery for requested tickers"
             git push
           fi
       - name: Upload catalog and run logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: vietstock-edocs-test-${{ inputs.symbol || 'MBB' }}
+          name: vietstock-edocs-test-${{ inputs.symbol || 'ALL' }}
           path: |
             reports/analysis/analysis-reports.json
             data/analysis-reports.json
