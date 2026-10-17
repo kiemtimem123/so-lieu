@@ -20,9 +20,32 @@ if (!response || response.result !== "success" || response.base_code !== "USD" |
 }
 
 const names = {
-  USD: "Đô la Mỹ", EUR: "Euro", GBP: "Bảng Anh", JPY: "Yên Nhật",
-  CNY: "Nhân dân tệ", AUD: "Đô la Úc", CAD: "Đô la Canada",
-  SGD: "Đô la Singapore", THB: "Baht Thái", KRW: "Won Hàn Quốc"
+  USD: "Đô la Mỹ",
+  EUR: "Euro",
+  GBP: "Bảng Anh",
+  JPY: "Yên Nhật",
+  CNY: "Nhân dân tệ",
+  AUD: "Đô la Úc",
+  CAD: "Đô la Canada",
+  SGD: "Đô la Singapore",
+  THB: "Baht Thái",
+  KRW: "Won Hàn Quốc",
+  CHF: "Franc Thụy Sĩ",
+  HKD: "Đô la Hồng Kông",
+  NZD: "Đô la New Zealand",
+  INR: "Rupee Ấn Độ",
+  IDR: "Rupiah Indonesia",
+  MYR: "Ringgit Malaysia",
+  PHP: "Peso Philippines",
+  TWD: "Đô la Đài Loan mới",
+  AED: "Dirham UAE",
+  SAR: "Riyal Ả Rập Xê Út",
+  SEK: "Krona Thụy Điển",
+  NOK: "Krone Na Uy",
+  DKK: "Krone Đan Mạch",
+  ZAR: "Rand Nam Phi",
+  MXN: "Peso Mexico",
+  BRL: "Real Brazil"
 };
 const codes = Object.keys(names);
 const usdVnd = Number(response.rates.VND);
