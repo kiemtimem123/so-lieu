@@ -43,6 +43,14 @@ try {
 }
 if (!response || !Array.isArray(response.data)) fail("API không trả về mảng data.");
 const outputData = [];
+const outputPath = path.join("data", "category-data.json");
+let previousById = new Map();
+try {
+  const previous = JSON.parse(fs.readFileSync(outputPath, "utf8"));
+  if (Array.isArray(previous.data)) previousById = new Map(previous.data.map(item => [String(item.id), item]));
+} catch (_) {
+  console.log("Chưa có snapshot trước đó hợp lệ; sẽ tạo snapshot mới.");
+}
 for (const def of definitions) {
   const series = response.data.find(item => String(item.id) === String(def.id));
   if (!series || series.skipped || !Array.isArray(series.observations)) {
@@ -58,7 +66,6 @@ for (const def of definitions) {
   outputData.push({ ...def, value: latest.value, date: latest.date, unit: series.unit || def.unit, observations });
 }
 const output = { source: "DulieuKinhte API", fetchedAt: new Date().toISOString(), data: outputData };
-const outputPath = path.join("data", "category-data.json");
 fs.mkdirSync(path.dirname(outputPath), { recursive: true });
 const tempPath = outputPath + ".tmp";
 fs.writeFileSync(tempPath, JSON.stringify(output, null, 2) + "\n", "utf8");
