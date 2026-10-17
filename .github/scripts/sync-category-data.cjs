@@ -32,9 +32,9 @@ const definitions = [
   { id: 33445, category: "m2", name: "Tổng phương tiện thanh toán M2", unit: "Tỷ đồng", source: "Ngân hàng Nhà nước Việt Nam (NHNN)", url: "https://dulieukinhte.com/du-lieu-dong/tong-phuong-tien-thanh-toan-m2-33445" },
   { id: 33446, category: "household-deposits", name: "Tiền gửi của dân cư trong cung tiền M2", unit: "Tỷ đồng", source: "Ngân hàng Nhà nước Việt Nam (NHNN)", url: "https://dulieukinhte.com/du-lieu-dong/tien-gui-cua-dan-cu-trong-cung-tien-m2-33446" },
   { id: 33447, category: "corporate-deposits", name: "Tiền gửi của các TCKT trong cung tiền M2", unit: "Tỷ đồng", source: "Ngân hàng Nhà nước Việt Nam (NHNN)", url: "https://dulieukinhte.com/du-lieu-dong/tien-gui-cua-cac-tckt-trong-cung-tien-m2-33447" },
-  { id: 37096, category: "gold-doji-buy", name: "Giá vàng DOJI Sài Gòn mua vào", unit: "Triệu đồng/lượng", source: "Dữ Liệu Kinh Tế (nguồn tổng hợp)", url: "https://dulieukinhte.com/du-lieu-dong/gia-vang-doji-sai-gon-mua-vao-37096" },
-  { id: 37105, category: "gold-btmc-buy", name: "Giá vàng Bảo Tín Minh Châu mua vào", unit: "Triệu đồng/lượng", source: "Dữ Liệu Kinh Tế (nguồn tổng hợp)", url: "https://dulieukinhte.com/du-lieu-dong/gia-vang-bao-tin-minh-chau-mua-vao-37105" },
-  { id: 37106, category: "gold-btmc-sell", name: "Giá vàng Bảo Tín Minh Châu bán ra", unit: "Triệu đồng/lượng", source: "Dữ Liệu Kinh Tế (nguồn tổng hợp)", url: "https://dulieukinhte.com/du-lieu-dong/gia-vang-bao-tin-minh-chau-ban-ra-37106" },
+  { id: 37096, category: "gold-doji-buy", name: "Giá vàng DOJI Sài Gòn mua vào", unit: "Triệu đồng/lượng", source: "Dữ Liệu Kinh Tế (nguồn tổng hợp)", url: "https://dulieukinhte.com/du-lieu-dong/gia-vang-doji-sai-gon-mua-vao-37096", optional: true },
+  { id: 37105, category: "gold-btmc-buy", name: "Giá vàng Bảo Tín Minh Châu mua vào", unit: "Triệu đồng/lượng", source: "Dữ Liệu Kinh Tế (nguồn tổng hợp)", url: "https://dulieukinhte.com/du-lieu-dong/gia-vang-bao-tin-minh-chau-mua-vao-37105", optional: true },
+  { id: 37106, category: "gold-btmc-sell", name: "Giá vàng Bảo Tín Minh Châu bán ra", unit: "Triệu đồng/lượng", source: "Dữ Liệu Kinh Tế (nguồn tổng hợp)", url: "https://dulieukinhte.com/du-lieu-dong/gia-vang-bao-tin-minh-chau-ban-ra-37106", optional: true },
   { id: 33340, category: "deposit-mb-12m", name: "Lãi suất tiết kiệm khách hàng cá nhân MB 12 tháng", unit: "%/năm", source: "Dữ Liệu Kinh Tế (chuỗi lịch sử biểu lãi suất MB)", url: "https://dulieukinhte.com/du-lieu-dong/lai-suat-tiet-kiem-khach-hang-ca-nhan-mb-12-thang-33340" }
 
 ];
@@ -65,6 +65,12 @@ try {
 for (const def of definitions) {
   const series = response.data.find(item => String(item.id) === String(def.id));
   if (!series || series.skipped || !Array.isArray(series.observations)) {
+    if (def.optional) {
+      console.warn("CẢNH BÁO: API chưa trả về chuỗi tùy chọn " + def.id + " (" + def.category + "); không tự tạo dữ liệu.");
+      const previous = previousById.get(String(def.id));
+      if (previous) outputData.push(previous);
+      continue;
+    }
     fail("Thiếu chuỗi dữ liệu " + def.id + ". Không cập nhật snapshot để tránh ghi dữ liệu thiếu.");
   }
   const today = new Date().toISOString().slice(0, 10);
@@ -79,7 +85,14 @@ for (const def of definitions) {
     }
   }
   const observations = [...merged.values()].sort((a, b) => a.date.localeCompare(b.date)).slice(-50);
-  if (!observations.length) fail("Không có quan sát hợp lệ đến ngày hiện tại cho " + def.id);
+  if (!observations.length) {
+    if (def.optional) {
+      console.warn("CẢNH BÁO: Không có quan sát hợp lệ cho chuỗi tùy chọn " + def.id + "; không tự tạo dữ liệu.");
+      if (previous) outputData.push(previous);
+      continue;
+    }
+    fail("Không có quan sát hợp lệ đến ngày hiện tại cho " + def.id);
+  }
   const latest = observations[observations.length - 1];
   if (previous?.date && latest.date < previous.date) fail("Ngăn ghi đè bằng dữ liệu cũ cho " + def.category);
   if (previous?.date && latest.date === previous.date && !fetchedObservations.some(item => item.date > previous.date)) {
