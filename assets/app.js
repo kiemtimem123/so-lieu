@@ -631,7 +631,7 @@
     const existing = canvas._economicChart;
     if (existing) existing.destroy();
     const allDates = [...new Set(items.flatMap(item => (item.observations || [])
-      .filter(point => point && /^\\d{4}-\\d{2}-\\d{2}$/.test(point.date) &&
+      .filter(point => point && /^\d{4}-\d{2}-\d{2}$/.test(point.date) &&
         Number.isFinite(Number(point.value)) && point.date <= new Date().toISOString().slice(0, 10))
       .map(point => point.date)))].sort();
     const datasets = items.map((item, index) => {
@@ -845,7 +845,7 @@
       const snapshot = await response.json();
       container.innerHTML = definitions.map(def => {
         const item = (snapshot.data || []).find(row => row.category === def.category && Array.isArray(row.observations));
-        const points = (item?.observations || []).filter(p => p && /^\\d{4}-\\d{2}-\\d{2}$/.test(p.date) && p.date <= new Date().toISOString().slice(0, 10) && Number.isFinite(Number(p.value))).sort((a,b) => a.date.localeCompare(b.date));
+        const points = (item?.observations || []).filter(p => p && /^\d{4}-\d{2}-\d{2}$/.test(p.date) && p.date <= new Date().toISOString().slice(0, 10) && Number.isFinite(Number(p.value))).sort((a,b) => a.date.localeCompare(b.date));
         if (!item || !points.length) {
           return '<a class="overview-kpi ' + (def.category === 'gdp' ? 'kpi-gdp' : '') + '" href="' + def.target + '"><span>' + escapeHtml(def.title) + '</span><strong>Chưa có dữ liệu</strong><small>' + escapeHtml(def.note) + '</small><div class="kpi-spark empty-spark">Chưa có chuỗi dữ liệu đã xác minh</div></a>';
         }
