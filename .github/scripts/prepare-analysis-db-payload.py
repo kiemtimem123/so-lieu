@@ -6,7 +6,7 @@ Automatically extracted numeric candidates remain unreviewed and must not be tre
 as verified financial facts.
 """
 from __future__ import annotations
-import io, json, os, re, sys
+import hashlib, io, json, os, re, sys
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlparse
@@ -73,7 +73,7 @@ def main():
  for item in catalog.get('reports',[]):
   url=str(item.get('downloadUrl') or item.get('url') or item.get('landingUrl') or '')
   if not url or not host_ok(url): continue
-  row={'id':str(item.get('id') or re.sub(r'[^a-zA-Z0-9_-]','-',url)[-180:]),'symbol':item.get('symbol'),'title':item.get('title') or 'Báo cáo phân tích','publisher':item.get('publisher'),'report_date':item.get('reportDate'),'category':item.get('category') or 'brokerage_research','source_name':item.get('source') or 'Nguồn công khai','source_url':url,'pdf_status':'link_only','summary':'','summary_status':'pending','metrics':[],'extracted_at':NOW}
+  row={'id':'research-'+hashlib.sha256(url.encode('utf-8')).hexdigest()[:40],'symbol':item.get('symbol'),'title':item.get('title') or 'Báo cáo phân tích','publisher':item.get('publisher'),'report_date':item.get('reportDate'),'category':item.get('category') or 'brokerage_research','source_name':item.get('source') or 'Nguồn công khai','source_url':url,'pdf_status':'link_only','summary':'','summary_status':'pending','metrics':[],'extracted_at':NOW}
   try:
    with session.get(url,timeout=TIMEOUT,stream=True,allow_redirects=True) as res:
     res.raise_for_status()
