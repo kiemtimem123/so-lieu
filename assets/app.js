@@ -839,6 +839,50 @@
     $('#commodityGroup')?.addEventListener('change', renderCommodities);
   }
 
+
+  function setupReportQueue() {
+    const form = $('#reportQueueForm');
+    const body = $('#reportQueueBody');
+    const summary = $('#queueSummary');
+    const notice = $('#queueNotice');
+    const jobs = [];
+    const existingSymbols = new Set(['MBB','ACB','FPT','SHB','TCX','HCM','VND','SHS','NLG','BSR','TCB','VHM']);
+    const reportLabel = value => ({consolidated:'Hợp nhất',separate:'Riêng lẻ',both:'Cả hai'}[value] || value);
+    const render = () => {
+      if (summary) summary.textContent = jobs.length + ' yêu cầu mới trong phiên';
+      if (!body) return;
+      if (!jobs.length) { body.innerHTML = '<tr><td colspan="4">Chưa có yêu cầu mới trong phiên này. Danh sách chính thức nằm trong config/report-queue.json.</td></tr>'; return; }
+      body.innerHTML = jobs.map(job => '<tr><td><strong>'+escapeHtml(job.symbol)+'</strong>'+(job.company?'<br><small>'+escapeHtml(job.company)+'</small>':'')+'</td><td>Từ '+job.startYear+' · '+escapeHtml(reportLabel(job.reportType))+'</td><td><span class="status-pill neutral">queued · chờ đưa vào repository</span></td><td>'+escapeHtml(dateFmt(job.createdAt))+'</td></tr>').join('');
+    };
+    form?.addEventListener('submit', event => {
+      event.preventDefault();
+      const symbol = ($('#queueSymbol')?.value || '').trim().toUpperCase();
+      const company = ($('#queueCompany')?.value || '').trim();
+      const startYear = Number($('#queueStartYear')?.value || 2024);
+      const reportType = $('#queueReportType')?.value || 'consolidated';
+      if (!/^[A-Z0-9]{3,10}$/.test(symbol)) { if(notice) notice.textContent = 'Mã không hợp lệ. Dùng 3–10 chữ cái hoặc chữ số.'; return; }
+      if (jobs.some(job => job.symbol === symbol && job.startYear === startYear && job.reportType === reportType)) { if(notice) notice.textContent = 'Yêu cầu tương tự đã có trong danh sách phiên này.'; return; }
+      const now = new Date().toISOString();
+      jobs.push({id:'fin-'+symbol.toLowerCase()+'-'+Date.now(),symbol,company,startYear,reportType,status:'queued',createdAt:now,attempts:0,lastError:null,sourceCandidates:[],downloadedFiles:[],verifiedPeriods:[]});
+      existingSymbols.add(symbol);
+      render();
+      if(notice) notice.textContent = 'Đã tạo yêu cầu trong trình duyệt. Tải JSON rồi ghép vào config/report-queue.json để đưa vào hàng chờ tự động.';
+      form.reset();
+      if ($('#queueStartYear')) $('#queueStartYear').value = '2024';
+    });
+    $('#downloadQueue')?.addEventListener('click', () => {
+      if (!jobs.length) { if(notice) notice.textContent = 'Chưa có yêu cầu mới để xuất.'; return; }
+      const payload = {schemaVersion:1,updatedAt:new Date().toISOString(),jobs};
+      const blob = new Blob([JSON.stringify(payload,null,2)+'\\n'],{type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url; link.download = 'report-queue-additions.json'; link.click();
+      URL.revokeObjectURL(url);
+      if(notice) notice.textContent = 'Đã xuất tệp JSON. Ghép các mục jobs vào config/report-queue.json rồi commit lên GitHub.';
+    });
+    render();
+  }
+
   function setupFinancials() {
     const symbolSelect = $('#stockSymbol');
     const yearSelect = $('#stockYear');
@@ -1243,6 +1287,7 @@
     loadOverviewKpis();
     setupCommodityFilters();
     setupFinancials();
+    setupReportQueue();
     setupEmptyEconomicChart();
     setupSearchShortcut();
     loadMarketSnapshot();
