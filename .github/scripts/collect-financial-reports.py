@@ -13,8 +13,8 @@ QUEUE_PATH = ROOT / "config/report-queue.json"
 SEC_PATH = ROOT / "config/securities.json"
 SOURCES_PATH = ROOT / "config/source-registry.json"
 OUT = ROOT / "reports/raw"
-MAX_BYTES = int(os.getenv("MAX_REPORT_BYTES", str(20 * 1024 * 1024)))
-MAX_PER_JOB = int(os.getenv("MAX_DOWNLOADS_PER_JOB", "4"))
+MAX_BYTES = int(os.getenv("MAX_REPORT_BYTES", str(12 * 1024 * 1024)))
+MAX_PER_JOB = int(os.getenv("MAX_DOWNLOADS_PER_JOB", "2"))
 USER_AGENT = "solieutaichinh-report-collector/1.0 (public financial report archive)"
 SESSION = requests.Session()
 SESSION.headers.update({"User-Agent": USER_AGENT, "Accept": "text/html,application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,*/*;q=0.8"})
@@ -184,8 +184,9 @@ def main():
             if result.get("status")=="downloaded_needs_review": summary["downloaded"] += 1
             if result.get("status")=="download_error": summary["errors"] += 1
         job["downloadedFiles"] = results
-        job["status"]="needs_review" if results else "failed"
-        job["lastError"] = None if results else "Không tải được tài liệu từ miền đã cho phép; kiểm tra sourceCandidates và cấu hình allowlist."
+        downloaded_any = any(r.get("status") == "downloaded_needs_review" for r in results)
+        job["status"]="needs_review" if downloaded_any else "failed"
+        job["lastError"] = None if downloaded_any else "Không tải được tài liệu từ miền đã cho phép; kiểm tra sourceCandidates và cấu hình allowlist."
         job["processedAt"]=NOW
         summary["jobs_processed"] += 1
         if job["status"]=="needs_review": summary["needs_review"] += 1
