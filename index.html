@@ -228,6 +228,19 @@
       <div class="currency-panel stock-chart-panel"><div class="currency-panel-heading"><div><h3>ROA và ROE theo quý</h3><p class="muted">Tỷ số chỉ hiển thị nếu có trong snapshot và có cơ sở tính được kiểm chứng.</p></div></div><div class="chart-canvas-wrap"><canvas id="stockRatiosChart" role="img" aria-label="Biểu đồ ROA và ROE"></canvas></div><p class="muted data-chart-note" id="stockRatiosNote">Đang kiểm tra dữ liệu offline.</p></div>
       <div class="currency-panel stock-chart-panel"><div class="currency-panel-heading"><div><h3>So sánh các mã cổ phiếu</h3><p class="muted">So sánh cùng kỳ và cùng chỉ tiêu; mã không có dữ liệu sẽ không được tự điền.</p></div></div><div class="stock-controls stock-compare-controls"><label>Chỉ tiêu<select id="stockCompareMetric"><option value="net_profit">Lợi nhuận sau thuế</option><option value="pretax_profit">Lợi nhuận trước thuế</option><option value="revenue">Doanh thu</option><option value="total_assets">Tổng tài sản</option><option value="total_liabilities">Nợ phải trả</option><option value="equity">Vốn chủ sở hữu</option><option value="roa">ROA (%)</option><option value="roe">ROE (%)</option></select></label><label>Kỳ so sánh<select id="stockComparePeriod"><option value="">Đang tìm kỳ có dữ liệu…</option></select></label></div><div class="chart-canvas-wrap"><canvas id="stockCompareChart" role="img" aria-label="Biểu đồ so sánh các mã cổ phiếu"></canvas></div><p class="muted data-chart-note" id="stockCompareNote">Đang kiểm tra dữ liệu offline.</p><div id="stockCompareTable" class="table-scroll"></div></div>
       <p class="small muted">Lưu ý: doanh thu có thể chưa có trong snapshot hiện tại. P/E, P/B và tỷ suất sinh lời cổ đông cần thêm giá cổ phiếu theo ngày, số cổ phiếu lưu hành, cổ tức và quy ước tính thống nhất. Không hiển thị tỷ số khi thiếu dữ liệu đầu vào.</p>
+      <div class="currency-panel report-queue-panel" id="reportQueuePanel">
+        <div class="currency-panel-heading"><div><h3>Kho báo cáo &amp; hàng chờ</h3><p class="muted">Thêm mã chứng khoán và tạo yêu cầu thu thập báo cáo. Tệp hàng chờ cần được đưa vào repository để GitHub Actions xử lý.</p></div><span class="status-pill neutral" id="queueSummary">Đang tải hàng chờ…</span></div>
+        <form id="reportQueueForm" class="queue-form">
+          <label>Mã chứng khoán<input id="queueSymbol" name="symbol" required maxlength="10" pattern="[A-Za-z0-9]{3,10}" placeholder="Ví dụ: VNM"></label>
+          <label>Tên doanh nghiệp (tùy chọn)<input id="queueCompany" name="company" maxlength="120" placeholder="Tên công ty"></label>
+          <label>Tìm báo cáo từ năm<select id="queueStartYear" name="startYear"><option value="2022">2022</option><option value="2023">2023</option><option value="2024" selected>2024</option></select></label>
+          <label>Loại báo cáo<select id="queueReportType" name="reportType"><option value="consolidated">Hợp nhất</option><option value="separate">Riêng lẻ</option><option value="both">Cả hai</option></select></label>
+          <button class="button primary" type="submit">Tạo yêu cầu hàng chờ</button>
+        </form>
+        <div class="queue-actions"><button class="button" id="downloadQueue" type="button">Tải tệp hàng chờ JSON</button><span class="small muted" id="queueNotice">Chưa có yêu cầu mới trong phiên này.</span></div>
+        <div class="table-scroll"><table><thead><tr><th>Mã</th><th>Phạm vi</th><th>Trạng thái</th><th>Ngày tạo</th></tr></thead><tbody id="reportQueueBody"><tr><td colspan="4">Đang đọc danh sách…</td></tr></tbody></table></div>
+        <p class="small muted">Bảo mật: website tĩnh không lưu trực tiếp vào GitHub vì không được phép đặt GitHub token trong trình duyệt. Hãy tải JSON và commit vào <code>config/report-queue.json</code>; không có báo cáo nào được coi là đã tải hoặc xác minh chỉ vì đã tạo yêu cầu.</p>
+      </div>
     </section>
 
     <section class="section" id="vi-mo">
