@@ -170,6 +170,14 @@
     const rangeSelect = $('#omoChartRange');
     const toolbar = $('#omoDataContent .data-view-toolbar');
     if (!canvas || !window.Chart || !toolbar) return;
+    let seriesPicker = $('#omoChartSeriesPicker');
+    if (!seriesPicker) {
+      seriesPicker = document.createElement('div');
+      seriesPicker.id = 'omoChartSeriesPicker';
+      seriesPicker.className = 'chart-series-picker';
+      seriesPicker.setAttribute('aria-label', 'Chọn các chỉ tiêu đưa vào biểu đồ');
+      toolbar.insertAdjacentElement('afterend', seriesPicker);
+    }
     toolbar.querySelectorAll('[data-omo-view]').forEach(button => button.addEventListener('click', () => {
       toolbar.querySelectorAll('[data-omo-view]').forEach(b => b.classList.toggle('is-active', b === button));
       const showChart = button.dataset.omoView === 'chart';
@@ -182,13 +190,21 @@
       const snapshot = await response.json();
       const keys = ['omo-buy-total', 'omo-net-outstanding'];
       const items = (snapshot.data || []).filter(item => keys.includes(item.category) && Array.isArray(item.observations));
+      seriesPicker.innerHTML = items.map((item, index) => '<label><input type="checkbox" data-series-index="' + index + '" checked> ' + escapeHtml(item.name) + '</label>').join('');
+      seriesPicker.querySelectorAll('input[type="checkbox"]').forEach(input => input.addEventListener('change', () => draw()));
       const draw = () => {
+        const selectedIndexes = [...seriesPicker.querySelectorAll('input[type="checkbox"]:checked')].map(input => Number(input.dataset.seriesIndex));
         const days = rangeSelect.value === 'all' ? Infinity : Number(rangeSelect.value);
         const cutoff = Number.isFinite(days) ? new Date(Date.now() - days * 86400000).toISOString().slice(0,10) : '0000-01-01';
-        const points = items.map(item => ({
+        const points = items.filter((item, index) => selectedIndexes.includes(index)).map(item => ({
           ...item,
           observations: item.observations.filter(p => p && /^\d{4}-\d{2}-\d{2}$/.test(p.date) && p.date <= new Date().toISOString().slice(0,10) && p.date >= cutoff && Number.isFinite(Number(p.value))).sort((a,b)=>a.date.localeCompare(b.date))
         })).filter(item => item.observations.length);
+        if (!points.length) {
+          if (omoHistoryChartInstance) { omoHistoryChartInstance.destroy(); omoHistoryChartInstance = null; }
+          if (note) note.textContent = 'Hãy tick chọn ít nhất một chỉ tiêu có dữ liệu trong khoảng thời gian đã chọn.';
+          return;
+        }
         const dates = [...new Set(points.flatMap(item => item.observations.map(p=>p.date)))].sort();
         if (!dates.length) {
           if (note) note.textContent = 'Chưa có chuỗi lịch sử OMO hợp lệ để vẽ; dữ liệu không được tự tạo.';
