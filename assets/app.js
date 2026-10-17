@@ -18,6 +18,29 @@
     return new Intl.NumberFormat('vi-VN', { maximumFractionDigits }).format(Number(value));
   };
 
+  const DATA_FALLBACK_BASE = 'https://raw.githubusercontent.com/kiemtimem123/so-lieu/main/data/';
+
+  // Hostinger can occasionally serve a stale deployment or its index.html for a
+  // missing JSON path. Prefer same-origin snapshots, then fall back to the
+  // current public snapshot committed in this repository.
+  async function fetchDataFile(filename) {
+    const localUrl = 'data/' + filename;
+    try {
+      const local = await fetch(localUrl, { cache: 'no-store' });
+      const contentType = (local.headers.get('content-type') || '').toLowerCase();
+      if (local.ok && (!contentType || contentType.includes('json'))) return local;
+      console.warn('[data-fallback]', filename, 'Local snapshot unavailable; trying repository copy.', local.status, contentType);
+    } catch (error) {
+      console.warn('[data-fallback]', filename, 'Local snapshot request failed; trying repository copy.', error);
+    }
+
+    const remote = await fetch(DATA_FALLBACK_BASE + encodeURIComponent(filename), { cache: 'no-store' });
+    if (!remote.ok) throw new Error('HTTP ' + remote.status + ' loading ' + filename + ' from repository fallback');
+    const remoteType = (remote.headers.get('content-type') || '').toLowerCase();
+    if (remoteType.includes('text/html')) throw new Error('Repository fallback returned HTML instead of JSON for ' + filename);
+    return remote;
+  }
+
   const dateFmt = value => {
     if (!value) return '—';
     const d = new Date(value.length === 10 ? value + 'T00:00:00' : value);
@@ -31,7 +54,7 @@
   async function loadMarketSnapshot() {
     const list = $('#commodityList');
     try {
-      const response = await fetch('data/market-prices.json', { cache: 'no-store' });
+      const response = await fetchDataFile('market-prices.json');
       if (!response.ok) throw new Error('HTTP ' + response.status);
       const snapshot = await response.json();
       if (!Array.isArray(snapshot.data)) throw new Error('Cấu trúc dữ liệu không hợp lệ');
@@ -138,7 +161,7 @@
     const status = $('#currencySourceStatus');
     if (!table) return;
     try {
-      const response = await fetch('data/currency-rates.json', { cache: 'no-store' });
+      const response = await fetchDataFile('currency-rates.json');
       if (!response.ok) throw new Error('HTTP ' + response.status);
       const snapshot = await response.json();
       if (!Array.isArray(snapshot.data) || !snapshot.data.length || !snapshot.lastUpdatedUtc) {
@@ -195,7 +218,7 @@
       if (table) table.hidden = showChart;
     }));
     try {
-      const response = await fetch('data/category-data.json', { cache: 'no-store' });
+      const response = await fetchDataFile('category-data.json');
       if (!response.ok) throw new Error('HTTP ' + response.status);
       const snapshot = await response.json();
       const keys = ['omo-buy-total', 'omo-net-outstanding', 'omo-buy-63d', 'omo-buy-91d'];
@@ -246,7 +269,7 @@
     const updated = $('#omoDataUpdated');
     if (!content) return;
     try {
-      const response = await fetch('data/omo-latest.json', { cache: 'no-store' });
+      const response = await fetchDataFile('omo-latest.json');
       if (!response.ok) throw new Error('HTTP ' + response.status);
       const snapshot = await response.json();
       if (!Array.isArray(snapshot.data) || !snapshot.fetchedAt) throw new Error('Snapshot OMO không hợp lệ');
@@ -282,7 +305,7 @@
     const updated = $('#policyRatesUpdated');
     if (!content) return;
     try {
-      const response = await fetch('data/policy-rates.json', { cache: 'no-store' });
+      const response = await fetchDataFile('policy-rates.json');
       if (!response.ok) throw new Error('HTTP ' + response.status);
       const snapshot = await response.json();
       if (!Array.isArray(snapshot.data) || !snapshot.data.length || !snapshot.sourceUrl || !snapshot.confirmedThrough) {
@@ -323,7 +346,7 @@
     const updated = $('#creditGrowthUpdated');
     if (!content) return;
     try {
-      const response = await fetch('data/credit-growth.json', { cache: 'no-store' });
+      const response = await fetchDataFile('credit-growth.json');
       if (!response.ok) throw new Error('HTTP ' + response.status);
       const snapshot = await response.json();
       if (!Array.isArray(snapshot.data) || !snapshot.data.length || !snapshot.sourceUrl || !snapshot.observationDate) {
@@ -345,7 +368,7 @@
     const note = $('#creditGrowthHistoryNote');
     if (!canvas || !window.Chart) return;
     try {
-      const response = await fetch('data/category-data.json', { cache: 'no-store' });
+      const response = await fetchDataFile('category-data.json');
       if (!response.ok) throw new Error('HTTP ' + response.status);
       const snapshot = await response.json();
       const series = (snapshot.data || []).find(item => item.category === 'credit-growth' && Array.isArray(item.observations));
@@ -363,7 +386,7 @@
     const note = $('#bopChartNote');
     if (!content) return;
     try {
-      const response = await fetch('data/category-data.json', { cache: 'no-store' });
+      const response = await fetchDataFile('category-data.json');
       if (!response.ok) throw new Error('HTTP ' + response.status);
       const snapshot = await response.json();
       const keys = ['bop-current-capital','bop-financial','bop-overall'];
@@ -397,7 +420,7 @@
     const updated = $('#usdVndReferenceUpdated');
     if (!content) return;
     try {
-      const response = await fetch('data/currency-rates.json', { cache: 'no-store' });
+      const response = await fetchDataFile('currency-rates.json');
       if (!response.ok) throw new Error('HTTP ' + response.status);
       const snapshot = await response.json();
       const usd = snapshot.data?.find(item => item.code === 'USD');
@@ -441,7 +464,7 @@
     const bondUpdated = $('#bondYieldsUpdated');
     const interestUpdated = $('#interestRatesUpdated');
     try {
-      const response = await fetch('data/financial-rates.json', { cache: 'no-store' });
+      const response = await fetchDataFile('financial-rates.json');
       if (!response.ok) throw new Error('HTTP ' + response.status);
       const snapshot = await response.json();
       if (!Array.isArray(snapshot.data) || !snapshot.data.length) throw new Error('Snapshot lãi suất không hợp lệ');
@@ -564,7 +587,7 @@
 
     };
     try {
-      const response = await fetch('data/category-data.json', { cache: 'no-store' });
+      const response = await fetchDataFile('category-data.json');
       if (!response.ok) throw new Error('HTTP ' + response.status);
       const snapshot = await response.json();
       if (!Array.isArray(snapshot.data)) throw new Error('Snapshot không có mảng data');
@@ -720,7 +743,7 @@
       gold: { content: '#goldDataContent', updated: '#goldDataUpdated', categories: ['gold-doji-buy', 'gold-btmc-buy', 'gold-btmc-sell'], staleDays: 14 }
     };
     try {
-      const response = await fetch('data/category-data.json', { cache: 'no-store' });
+      const response = await fetchDataFile('category-data.json');
       if (!response.ok) throw new Error('HTTP ' + response.status);
       const snapshot = await response.json();
       if (!Array.isArray(snapshot.data)) throw new Error('Snapshot không có mảng data');
@@ -852,7 +875,7 @@
     async function drawSelected() {
       const choice = choices[select?.value] || choices.gdp_quarterly;
       try {
-        const response = await fetch('data/category-data.json', { cache: 'no-store' });
+        const response = await fetchDataFile('category-data.json');
         if (!response.ok) throw new Error('HTTP ' + response.status);
         const snapshot = await response.json();
         const item = snapshot.data?.find(row => row.category === choice.category);
@@ -888,7 +911,7 @@
       { category: 'retail', title: 'Bán lẻ HH & DV', note: 'Tổng mức bán lẻ hàng hóa và doanh thu dịch vụ tiêu dùng.', target: '#vi-mo' }
     ];
     try {
-      const response = await fetch('data/category-data.json', { cache: 'no-store' });
+      const response = await fetchDataFile('category-data.json');
       if (!response.ok) throw new Error('HTTP ' + response.status);
       const snapshot = await response.json();
       container.innerHTML = definitions.map(def => {
@@ -934,7 +957,7 @@
       const panel = $(def.panel);
       if (!panel) continue;
       try {
-        const response = await fetch('data/category-data.json', { cache: 'no-store' });
+        const response = await fetchDataFile('category-data.json');
         if (!response.ok) throw new Error('HTTP ' + response.status);
         const snapshot = await response.json();
         const item = (snapshot.data || []).find(row => row.category === def.category);
@@ -989,7 +1012,7 @@
       { category:'corporate-bonds-total', label:'Tổng phát hành TPDN', unit:'Tỷ đồng' }
     ];
     try {
-      const response = await fetch('data/category-data.json', {cache:'no-store'});
+      const response = await fetchDataFile('category-data.json');
       if (!response.ok) throw new Error('HTTP '+response.status);
       const snapshot = await response.json();
       let host = $('#bondSeriesCharts');
