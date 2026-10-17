@@ -37,7 +37,7 @@
       if (!Array.isArray(snapshot.data)) throw new Error('Cấu trúc dữ liệu không hợp lệ');
       state.commodities = snapshot.data
         .filter(item => Number.isFinite(Number(item.value)) && item.date && item.name)
-        .map(item => ({ ...item, group: GROUPS[item.id] || 'other' }))
+        .map(item => ({ ...item, group: item.group || GROUPS[item.id] || 'other' }))
         .sort((a, b) => a.name.localeCompare(b.name, 'vi'));
       renderCommodities();
       updateMarketSource(snapshot);
@@ -97,11 +97,21 @@
     if (source) source.textContent = 'Nguồn: DulieuKinhte API · Giá trị gần nhất được đồng bộ';
     if (timestamp) timestamp.textContent = 'Ngày dữ liệu: ' + dateFmt(item.date);
     const empty = $('#chartEmpty');
-    if (empty) {
-      empty.style.display = 'grid';
-      empty.textContent = 'Snapshot hiện lưu giá trị gần nhất, chưa có chuỗi lịch sử để vẽ biểu đồ.';
-    }
+    const history = (item.observations || []).filter(p => p && p.date && Number.isFinite(Number(p.value))).sort((a,b)=>a.date.localeCompare(b.date));
     if (state.chart) { state.chart.destroy(); state.chart = null; }
+    const canvas = $('#commodityChart');
+    if (history.length && canvas && window.Chart) {
+      if (empty) empty.style.display = 'none';
+      state.chart = new Chart(canvas, {
+        type: 'line',
+        data: { labels: history.map(p => dateFmt(p.date)), datasets: [{ label: item.name, data: history.map(p => Number(p.value)), borderWidth: 2, tension: .18, pointRadius: history.length > 40 ? 0 : 2 }] },
+        options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, plugins: { legend: { display: true, position: 'bottom' } }, scales: { x: { ticks: { maxTicksLimit: 8, maxRotation: 0 }, grid: { display: false } }, y: { beginAtZero: false } } }
+      });
+      if (source) source.textContent = 'Nguồn: Dữ Liệu Kinh Tế API · ' + history.length + ' quan sát';
+    } else if (empty) {
+      empty.style.display = 'grid';
+      empty.textContent = 'Chưa có đủ chuỗi lịch sử hợp lệ để vẽ biểu đồ. Chỉ giá mới nhất được hiển thị.';
+    }
   }
 
   function updateMarketSource(snapshot) {
