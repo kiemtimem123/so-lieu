@@ -477,6 +477,46 @@
     }
   }
 
+
+  async function loadDLKTEconomicPanels() {
+    const groups = {
+      m2: { content: '#m2DataContent', updated: '#m2DataUpdated', categories: ['m2', 'household-deposits', 'corporate-deposits'] },
+      deposits: { content: '#depositRatesContent', updated: '#depositRatesUpdated', categories: ['deposit-mb-12m'] },
+      gold: { content: '#goldDataContent', updated: '#goldDataUpdated', categories: ['gold-doji-buy', 'gold-btmc-buy', 'gold-btmc-sell'] }
+    };
+    try {
+      const response = await fetch('data/category-data.json', { cache: 'no-store' });
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      const snapshot = await response.json();
+      if (!Array.isArray(snapshot.data)) throw new Error('Snapshot không có mảng data');
+      for (const group of Object.values(groups)) {
+        const target = $(group.content);
+        const updated = $(group.updated);
+        if (!target) continue;
+        const items = snapshot.data.filter(item => group.categories.includes(item.category) &&
+          Array.isArray(item.observations) && item.observations.length &&
+          Number.isFinite(Number(item.value)) && item.date);
+        if (!items.length) {
+          target.innerHTML = '<div class="empty-state"><h3>Chưa có dữ liệu hợp lệ</h3><p>Workflow đồng bộ chưa trả về các chuỗi cần thiết; không hiển thị số liệu tự tạo.</p></div>';
+          if (updated) { updated.textContent = 'Chưa có dữ liệu'; updated.className = 'status-pill neutral'; }
+          continue;
+        }
+        target.innerHTML = '<table><thead><tr><th>Chỉ tiêu</th><th>Giá trị mới nhất</th><th>Đơn vị</th><th>Kỳ dữ liệu</th><th>Nguồn</th></tr></thead><tbody>' +
+          items.map(item => '<tr><td><strong>' + escapeHtml(item.name) + '</strong></td><td>' + fmt(item.value, 3) + '</td><td>' + escapeHtml(item.unit || '—') + '</td><td>' + escapeHtml(dateFmt(item.date)) + '</td><td><a href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(item.source || 'Dữ Liệu Kinh Tế') + '</a></td></tr>').join('') +
+          '</tbody></table>';
+        const latest = items.map(item => item.date).sort().pop();
+        if (updated) { updated.textContent = 'Kỳ mới nhất: ' + dateFmt(latest); updated.className = 'status-pill positive'; }
+      }
+    } catch (error) {
+      console.error('[DLKT economic panels]', error);
+      for (const group of Object.values(groups)) {
+        const target = $(group.content), updated = $(group.updated);
+        if (target) target.innerHTML = '<div class="empty-state"><h3>Chưa tải được dữ liệu</h3><p>Kiểm tra snapshot và workflow đồng bộ danh mục.</p></div>';
+        if (updated) { updated.textContent = 'Chưa đồng bộ'; updated.className = 'status-pill neutral'; }
+      }
+    }
+  }
+
   function setupNavigation() {
     const sidebar = $('#siteSidebar');
     $('#mobileMenu')?.addEventListener('click', () => sidebar?.classList.toggle('sidebar-open'));
@@ -599,5 +639,6 @@
   loadPolicyRates();
     loadFinancialRates();
     loadCategoryData();
+    loadDLKTEconomicPanels();
   });
 })();
