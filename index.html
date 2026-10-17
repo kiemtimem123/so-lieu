@@ -7,7 +7,7 @@
   <title>Dữ Liệu Kinh Tế Việt Nam</title>
   <link rel="stylesheet" href="assets/styles.css?v=20261017-credit-bop-charts-2">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js" defer></script>
-  <script src="assets/app.js?v=20261018-financial-reports-2" defer></script>
+  <script src="assets/app.js?v=20261018-financial-dashboard-1" defer></script>
 </head>
 <body>
   <aside class="site-sidebar" id="siteSidebar">
@@ -222,8 +222,12 @@
         <button class="button primary" id="loadStock">Tải báo cáo</button>
       </div>
       <div class="empty-state" id="stockState"><div class="empty-icon">▤</div><h3>Chưa có báo cáo được đồng bộ</h3><p>Hãy cấu hình nhà cung cấp dữ liệu hoặc nạp báo cáo chính thức vào hệ thống. Website sẽ không tự tạo số liệu để lấp chỗ trống.</p></div>
-      <div class="table-scroll hidden" id="stockTableWrap"><table><thead><tr><th>Kỳ</th><th>Tổng tài sản</th><th>Nợ phải trả</th><th>Vốn chủ sở hữu</th><th>LNTT</th><th>LNST</th><th>ROA</th><th>ROE</th><th>Nguồn</th></tr></thead><tbody id="stockTableBody"></tbody></table></div>
-      <p class="small muted">P/E, P/B và tỷ suất sinh lời cổ đông cần thêm giá cổ phiếu theo ngày, số cổ phiếu lưu hành, cổ tức và quy ước tính thống nhất. Chúng chỉ được hiển thị khi đủ dữ liệu đầu vào.</p>
+      <div class="table-scroll hidden" id="stockTableWrap"><table><thead><tr><th>Kỳ</th><th>Doanh thu</th><th>Tổng tài sản</th><th>Nợ phải trả</th><th>Vốn chủ sở hữu</th><th>LNTT</th><th>LNST</th><th>ROA</th><th>ROE</th><th>Nguồn</th></tr></thead><tbody id="stockTableBody"></tbody></table></div>
+      <div class="currency-panel stock-chart-panel"><div class="currency-panel-heading"><div><h3>Doanh thu và lợi nhuận theo quý</h3><p class="muted">Chuỗi quý từ 2022; chỉ vẽ trường số liệu có trong snapshot đã xác minh.</p></div></div><div class="chart-canvas-wrap"><canvas id="stockProfitChart" role="img" aria-label="Biểu đồ doanh thu và lợi nhuận theo quý"></canvas></div><p class="muted data-chart-note" id="stockProfitNote">Đang kiểm tra dữ liệu offline.</p></div>
+      <div class="currency-panel stock-chart-panel"><div class="currency-panel-heading"><div><h3>Tài sản, nợ và vốn chủ sở hữu</h3><p class="muted">Theo dõi quy mô và cơ cấu nguồn vốn theo từng quý.</p></div></div><div class="chart-canvas-wrap"><canvas id="stockBalanceChart" role="img" aria-label="Biểu đồ tài sản, nợ và vốn chủ sở hữu"></canvas></div><p class="muted data-chart-note" id="stockBalanceNote">Đang kiểm tra dữ liệu offline.</p></div>
+      <div class="currency-panel stock-chart-panel"><div class="currency-panel-heading"><div><h3>ROA và ROE theo quý</h3><p class="muted">Tỷ số chỉ hiển thị nếu có trong snapshot và có cơ sở tính được kiểm chứng.</p></div></div><div class="chart-canvas-wrap"><canvas id="stockRatiosChart" role="img" aria-label="Biểu đồ ROA và ROE"></canvas></div><p class="muted data-chart-note" id="stockRatiosNote">Đang kiểm tra dữ liệu offline.</p></div>
+      <div class="currency-panel stock-chart-panel"><div class="currency-panel-heading"><div><h3>So sánh các mã cổ phiếu</h3><p class="muted">So sánh cùng kỳ và cùng chỉ tiêu; mã không có dữ liệu sẽ không được tự điền.</p></div></div><div class="stock-controls stock-compare-controls"><label>Chỉ tiêu<select id="stockCompareMetric"><option value="net_profit">Lợi nhuận sau thuế</option><option value="pretax_profit">Lợi nhuận trước thuế</option><option value="revenue">Doanh thu</option><option value="total_assets">Tổng tài sản</option><option value="total_liabilities">Nợ phải trả</option><option value="equity">Vốn chủ sở hữu</option><option value="roa">ROA (%)</option><option value="roe">ROE (%)</option></select></label><label>Kỳ so sánh<select id="stockComparePeriod"><option value="">Đang tìm kỳ có dữ liệu…</option></select></label></div><div class="chart-canvas-wrap"><canvas id="stockCompareChart" role="img" aria-label="Biểu đồ so sánh các mã cổ phiếu"></canvas></div><p class="muted data-chart-note" id="stockCompareNote">Đang kiểm tra dữ liệu offline.</p><div id="stockCompareTable" class="table-scroll"></div></div>
+      <p class="small muted">Lưu ý: doanh thu có thể chưa có trong snapshot hiện tại. P/E, P/B và tỷ suất sinh lời cổ đông cần thêm giá cổ phiếu theo ngày, số cổ phiếu lưu hành, cổ tức và quy ước tính thống nhất. Không hiển thị tỷ số khi thiếu dữ liệu đầu vào.</p>
     </section>
 
     <section class="section" id="vi-mo">
