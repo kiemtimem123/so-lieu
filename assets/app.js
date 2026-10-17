@@ -281,6 +281,25 @@
       const rows = snapshot.data.filter(item => item.name && Number.isFinite(Number(item.value)) && item.unit === '%/năm' && item.effectiveDate);
       if (!rows.length) throw new Error('Không có mức lãi suất hợp lệ');
       content.innerHTML = `<table><thead><tr><th>Chỉ tiêu</th><th>Mức lãi suất</th><th>Đơn vị</th><th>Ngày hiệu lực</th></tr></thead><tbody>${rows.map(item => `<tr><td><strong>${escapeHtml(item.name)}</strong></td><td>${fmt(item.value, 2)}</td><td>${escapeHtml(item.unit)}</td><td>${escapeHtml(dateFmt(item.effectiveDate))}</td></tr>`).join('')}</tbody></table><p class="muted">Đối chiếu trạng thái đến ${escapeHtml(dateFmt(snapshot.confirmedThrough))}. <a href="${escapeHtml(snapshot.sourceUrl)}" target="_blank" rel="noopener noreferrer">Xem nguồn chính</a></p>`;
+      const policyChartBox = document.createElement('div');
+      policyChartBox.className = 'extra-money-series';
+      policyChartBox.innerHTML = '<div class="data-view-toolbar"><div class="view-switch"><button type="button" data-view="chart" class="is-active">Biểu đồ</button><button type="button" data-view="table">Bảng số liệu</button></div><label class="chart-type-label">Kiểu biểu đồ <select class="extra-chart-type"><option value="line">Đường</option><option value="bar">Cột</option></select></label></div><div class="chart-canvas-wrap"><canvas role="img" aria-label="Biểu đồ lãi suất điều hành NHNN"></canvas></div><p class="muted extra-chart-note">Mức lãi suất hiện hành; không phải chuỗi lịch sử theo ngày.</p>';
+      content.insertAdjacentElement('afterend', policyChartBox);
+      const policyCanvas = policyChartBox.querySelector('canvas');
+      let policyChart = null;
+      const drawPolicyChart = () => {
+        if (policyChart) policyChart.destroy();
+        if (!window.Chart) return;
+        policyChart = new Chart(policyCanvas, { type: policyChartBox.querySelector('.extra-chart-type').value, data: { labels: rows.map(item => item.name), datasets: [{ label: 'Lãi suất (%/năm)', data: rows.map(item => Number(item.value)), borderWidth: 2 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { maxRotation: 0 } }, y: { beginAtZero: true } } } });
+      };
+      policyChartBox.querySelector('.extra-chart-type').addEventListener('change', drawPolicyChart);
+      policyChartBox.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => {
+        policyChartBox.querySelectorAll('[data-view]').forEach(b => b.classList.toggle('is-active', b === button));
+        const showChart = button.dataset.view === 'chart';
+        policyChartBox.querySelector('.chart-canvas-wrap').hidden = !showChart;
+        content.hidden = showChart;
+      }));
+      drawPolicyChart();
       if (updated) { updated.textContent = 'Xác minh đến ' + dateFmt(snapshot.confirmedThrough); updated.className = 'status-pill neutral'; }
     } catch (error) {
       content.innerHTML = '<div class="empty-state"><h3>Chưa tải được lãi suất điều hành</h3><p>Không có snapshot hợp lệ; không hiển thị giá trị thay thế.</p></div>';
@@ -376,6 +395,25 @@
         throw new Error('Snapshot không có tỷ giá USD/VND tham khảo hợp lệ');
       }
       content.innerHTML = `<table><thead><tr><th>Chỉ tiêu</th><th>Giá trị</th><th>Đơn vị</th><th>Thời điểm nguồn cập nhật</th></tr></thead><tbody><tr><td><strong>USD/VND tham khảo</strong></td><td>${fmt(usd.vndPerUnit, 2)}</td><td>VND / 1 USD</td><td>${escapeHtml(dateFmt(snapshot.lastUpdatedUtc))}</td></tr></tbody></table>`;
+      const usdChartBox = document.createElement('div');
+      usdChartBox.className = 'extra-money-series';
+      usdChartBox.innerHTML = '<div class="data-view-toolbar"><div class="view-switch"><button type="button" data-view="chart" class="is-active">Biểu đồ</button><button type="button" data-view="table">Bảng số liệu</button></div><label class="chart-type-label">Kiểu biểu đồ <select class="extra-chart-type"><option value="line">Đường</option><option value="bar">Cột</option></select></label></div><div class="chart-canvas-wrap"><canvas role="img" aria-label="Tỷ giá USD/VND tham khảo"></canvas></div><p class="muted extra-chart-note">Snapshot hiện chỉ có một mốc tỷ giá; cần tích lũy lịch sử qua các lần đồng bộ để thể hiện xu hướng theo thời gian.</p>';
+      content.insertAdjacentElement('afterend', usdChartBox);
+      const usdCanvas = usdChartBox.querySelector('canvas');
+      let usdChart = null;
+      const drawUsdChart = () => {
+        if (usdChart) usdChart.destroy();
+        if (!window.Chart) return;
+        usdChart = new Chart(usdCanvas, { type: usdChartBox.querySelector('.extra-chart-type').value, data: { labels: [dateFmt(snapshot.lastUpdatedUtc)], datasets: [{ label: 'VND / 1 USD', data: [Number(usd.vndPerUnit)], borderWidth: 2 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { beginAtZero: false } } } });
+      };
+      usdChartBox.querySelector('.extra-chart-type').addEventListener('change', drawUsdChart);
+      usdChartBox.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => {
+        usdChartBox.querySelectorAll('[data-view]').forEach(b => b.classList.toggle('is-active', b === button));
+        const showChart = button.dataset.view === 'chart';
+        usdChartBox.querySelector('.chart-canvas-wrap').hidden = !showChart;
+        content.hidden = showChart;
+      }));
+      drawUsdChart();
       if (updated) {
         updated.textContent = 'Nguồn cập nhật: ' + dateFmt(snapshot.lastUpdatedUtc);
         updated.className = 'status-pill positive';
