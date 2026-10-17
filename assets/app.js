@@ -188,7 +188,7 @@
       const response = await fetch('data/category-data.json', { cache: 'no-store' });
       if (!response.ok) throw new Error('HTTP ' + response.status);
       const snapshot = await response.json();
-      const keys = ['omo-buy-total', 'omo-net-outstanding'];
+      const keys = ['omo-buy-total', 'omo-net-outstanding', 'omo-buy-63d', 'omo-buy-91d'];
       const items = (snapshot.data || []).filter(item => keys.includes(item.category) && Array.isArray(item.observations));
       seriesPicker.innerHTML = items.map((item, index) => '<label><input type="checkbox" data-series-index="' + index + '" checked> ' + escapeHtml(item.name) + '</label>').join('');
       seriesPicker.querySelectorAll('input[type="checkbox"]').forEach(input => input.addEventListener('change', () => draw()));
