@@ -9,7 +9,7 @@ from __future__ import annotations
 import hashlib, io, json, os, re, sys
 from datetime import datetime, timezone
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 import requests
 from pypdf import PdfReader
 
@@ -33,6 +33,18 @@ METRIC_PATTERNS=[
 def host_ok(url):
  h=(urlparse(url).hostname or '').lower()
  return urlparse(url).scheme=='https' and any(h==d or h.endswith('.'+d) for d in ALLOWED)
+def safe_get(session, url):
+ for _ in range(6):
+  if not host_ok(url): raise ValueError('URL or redirect host is not allowlisted HTTPS')
+  response=session.get(url,timeout=TIMEOUT,stream=True,allow_redirects=False)
+  if response.status_code in (301,302,303,307,308):
+   location=response.headers.get('Location','')
+   response.close()
+   if not location: raise ValueError('Redirect missing Location')
+   url=urljoin(url,location)
+   continue
+  return response
+ raise ValueError('Too many redirects')
 def compact(text):
  text=re.sub(r'\s+',' ',text or '').strip()
  return text
@@ -75,7 +87,7 @@ def main():
   if not url or not host_ok(url): continue
   row={'id':'research-'+hashlib.sha256(url.encode('utf-8')).hexdigest()[:40],'symbol':item.get('symbol'),'title':item.get('title') or 'Báo cáo phân tích','publisher':item.get('publisher'),'report_date':item.get('reportDate'),'category':item.get('category') or 'brokerage_research','source_name':item.get('source') or 'Nguồn công khai','source_url':url,'pdf_status':'link_only','summary':'','summary_status':'pending','metrics':[],'extracted_at':NOW}
   try:
-   with session.get(url,timeout=TIMEOUT,stream=True,allow_redirects=True) as res:
+   with safe_get(session,url) as res:
     res.raise_for_status()
     ctype=(res.headers.get('Content-Type') or '').lower()
     buf=bytearray()
