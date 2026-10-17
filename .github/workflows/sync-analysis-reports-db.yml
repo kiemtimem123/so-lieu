@@ -37,7 +37,6 @@ jobs:
           PY
           python .github/scripts/prepare-analysis-db-payload.py
       - name: Send payload to website database API
-        if: ${{ vars.REPORT_SYNC_URL != '' && secrets.REPORT_SYNC_TOKEN != '' }}
         env:
           REPORT_SYNC_URL: ${{ vars.REPORT_SYNC_URL }}
           REPORT_SYNC_TOKEN: ${{ secrets.REPORT_SYNC_TOKEN }}
@@ -46,13 +45,17 @@ jobs:
           python - <<'PY'
           import os, urllib.request
           from pathlib import Path
-          url=os.environ['REPORT_SYNC_URL'].strip()
+          url=os.environ.get('REPORT_SYNC_URL','').strip()
+          token=os.environ.get('REPORT_SYNC_TOKEN','').strip()
+          if not url or not token:
+              print('DB delivery skipped: configure Actions variable REPORT_SYNC_URL and secret REPORT_SYNC_TOKEN.')
+              raise SystemExit(0)
           if not url.startswith('https://'):
               raise SystemExit('REPORT_SYNC_URL must use HTTPS')
           payload=Path('reports/analysis/db-sync-payload.json').read_bytes()
           req=urllib.request.Request(url,data=payload,method='POST',headers={
               'Content-Type':'application/json',
-              'X-Report-Sync-Token':os.environ['REPORT_SYNC_TOKEN'],
+              'X-Report-Sync-Token':token,
               'User-Agent':'solieutaichinh-weekly-sync/1.0'
           })
           with urllib.request.urlopen(req,timeout=60) as response:
