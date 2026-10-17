@@ -159,7 +159,7 @@ def main():
     jobs = queue.setdefault("jobs", [])
     known = {j.get("id") for j in jobs}
     # Create discovery jobs for enabled securities that have no active job.
-    active_symbols = {j.get("symbol") for j in jobs if j.get("status") in {"queued","searching","downloaded","extracting","verifying","needs_review"}}
+    active_symbols = {j.get("symbol") for j in jobs}
     for sec in securities.get("securities",[]):
         symbol = str(sec.get("symbol","")).upper()
         if sec.get("enabled",True) and symbol and symbol not in active_symbols:
@@ -170,6 +170,8 @@ def main():
     summary = {"started_at":NOW,"jobs_processed":0,"downloaded":0,"needs_review":0,"errors":0,"allowlisted_domains":ALLOWED_DOMAINS}
     for job in jobs:
         if job.get("status") not in {"queued","failed"}: continue
+        if job.get("status") == "failed" and int(job.get("attempts", 0)) >= 3:
+            continue
         job["status"]="searching"; job["updatedAt"]=NOW; job["attempts"]=int(job.get("attempts",0))+1
         candidates = discover_for_job(job, ALLOWED_DOMAINS)
         job["sourceCandidates"] = candidates[:80]
