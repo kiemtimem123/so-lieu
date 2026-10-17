@@ -59,7 +59,7 @@ jobs:
             [html.includes('id="omoDataContent"') && html.includes('id="omoDataUpdated"'), 'OMO panel targets'],
             [script.includes('id: 27690') && script.includes('id: 53631'), 'OMO series definitions'],
             [workflow.includes('27690,53631'), 'OMO API IDs in legacy sync batch'],
-            [app.includes("fetch('data/omo-latest.json'") && app.includes('Snapshot OMO riêng chưa có'), 'OMO UI uses fresh snapshot only'],
+            [(app.includes("fetchDataFile('omo-latest.json'") || app.includes("fetch('data/omo-latest.json'")) && app.includes('Snapshot OMO riêng chưa có'), 'OMO UI uses fresh snapshot only'],
             [omoScript.includes('readLatest') && omoScript.includes('omo-latest.json'), 'OMO parser and output snapshot'],
             [omoWorkflow.includes('sync-omo-latest.cjs') && omoWorkflow.includes('curl --fail'), 'OMO automated source sync workflow']
           ];
