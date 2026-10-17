@@ -1,0 +1,61 @@
+name: Collect Financial Reports
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_downloads_per_job:
+        description: Maximum reports to download for each queued security
+        required: false
+        default: "4"
+  schedule:
+    - cron: '17 1 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: financial-report-collector
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Install collector dependencies
+        run: pip install -r .github/scripts/requirements-report-worker.txt
+      - name: Validate queue and registry before run
+        run: node .github/scripts/validate-report-queue.cjs
+      - name: Run report discovery, download and extraction worker
+        env:
+          MAX_DOWNLOADS_PER_JOB: ${{ github.event.inputs.max_downloads_per_job || '4' }}
+        run: python .github/scripts/collect-financial-reports.py
+      - name: Validate queue after run
+        run: node .github/scripts/validate-report-queue.cjs
+      - name: Commit report archive and queue log
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add config/report-queue.json reports/
+          if git diff --cached --quiet; then
+            echo "No report queue/archive changes to commit."
+          else
+            git commit -m "Collect public financial report candidates"
+            git push
+          fi
+      - name: Upload worker summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: financial-report-worker-summary
+          path: reports/worker-last-run.json
+          if-no-files-found: ignore
+          retention-days: 30
