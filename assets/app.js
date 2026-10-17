@@ -480,9 +480,9 @@
 
   async function loadDLKTEconomicPanels() {
     const groups = {
-      m2: { content: '#m2DataContent', updated: '#m2DataUpdated', categories: ['m2', 'household-deposits', 'corporate-deposits'] },
-      deposits: { content: '#depositRatesContent', updated: '#depositRatesUpdated', categories: ['deposit-mb-12m'] },
-      gold: { content: '#goldDataContent', updated: '#goldDataUpdated', categories: ['gold-doji-buy', 'gold-btmc-buy', 'gold-btmc-sell'] }
+      m2: { content: '#m2DataContent', updated: '#m2DataUpdated', categories: ['m2', 'household-deposits', 'corporate-deposits'], staleDays: 75 },
+      deposits: { content: '#depositRatesContent', updated: '#depositRatesUpdated', categories: ['deposit-mb-12m'], staleDays: 45 },
+      gold: { content: '#goldDataContent', updated: '#goldDataUpdated', categories: ['gold-doji-buy', 'gold-btmc-buy', 'gold-btmc-sell'], staleDays: 14 }
     };
     try {
       const response = await fetch('data/category-data.json', { cache: 'no-store' });
@@ -505,7 +505,14 @@
           items.map(item => '<tr><td><strong>' + escapeHtml(item.name) + '</strong></td><td>' + fmt(item.value, 3) + '</td><td>' + escapeHtml(item.unit || '—') + '</td><td>' + escapeHtml(dateFmt(item.date)) + '</td><td><a href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(item.source || 'Dữ Liệu Kinh Tế') + '</a></td></tr>').join('') +
           '</tbody></table>';
         const latest = items.map(item => item.date).sort().pop();
-        if (updated) { updated.textContent = 'Kỳ mới nhất: ' + dateFmt(latest); updated.className = 'status-pill positive'; }
+        const latestTime = new Date(latest.length === 10 ? latest + 'T00:00:00' : latest).getTime();
+        const ageDays = Number.isFinite(latestTime) ? Math.floor((Date.now() - latestTime) / 86400000) : Infinity;
+        const stale = ageDays > group.staleDays;
+        if (updated) {
+          updated.textContent = (stale ? 'Dữ liệu cũ · ' : 'Kỳ mới nhất: ') + dateFmt(latest);
+          updated.className = 'status-pill ' + (stale ? 'neutral' : 'positive');
+          updated.title = stale ? 'Dữ liệu đã quá ' + group.staleDays + ' ngày; kiểm tra nguồn trước khi sử dụng.' : 'Ngày quan sát mới nhất trong snapshot.';
+        }
       }
     } catch (error) {
       console.error('[DLKT economic panels]', error);
