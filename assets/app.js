@@ -856,7 +856,7 @@
       if (value === null || value === undefined || value === '' || !Number.isFinite(Number(value))) return '—';
       return fmt(value, 2);
     };
-    const validPeriod = value => /^\\d{4}-Q[1-4]$/.test(String(value || ''));
+    const validPeriod = value => /^\d{4}-Q[1-4]$/.test(String(value || ''));
     const validNumber = value => value !== null && value !== undefined && value !== '' && Number.isFinite(Number(value));
     const periodLabel = value => String(value || '').replace('-Q', ' · Quý ');
     const fieldMeta = {
@@ -994,7 +994,7 @@
         if (status) status.textContent=(snapshot?.sourceName?'Nguồn khai báo: '+snapshot.sourceName+'. ':'')+'Số quý hợp lệ trong năm được chọn: 0.';
       } else {
         if (tableBody) tableBody.innerHTML=rows.map(item=>{
-          const sourceUrl=typeof item.source_url==='string'&&/^https?:\\/\\//i.test(item.source_url)?item.source_url:'';
+          const sourceUrl=typeof item.source_url==='string'&&/^https?:\/\///i.test(item.source_url)?item.source_url:'';
           return '<tr><td><strong>'+escapeHtml(periodLabel(item.period))+'</strong></td>'+
             '<td>'+numberOrDash(item.revenue)+'</td><td>'+numberOrDash(item.total_assets)+'</td>'+
             '<td>'+numberOrDash(item.total_liabilities)+'</td><td>'+numberOrDash(item.equity)+'</td>'+
@@ -1031,7 +1031,7 @@
           if(!response.ok)throw new Error('HTTP '+response.status);
           const snapshot=await response.json();
           if(!snapshot||snapshot.symbol!==ticker||!Array.isArray(snapshot.items))throw new Error('Snapshot không đúng schema');
-          const items=snapshot.items.filter(item=>item&&validPeriod(item.period)&&item.source_url&&/^https?:\\/\\//i.test(item.source_url));
+          const items=snapshot.items.filter(item=>item&&validPeriod(item.period)&&item.source_url&&/^https?:\/\///i.test(item.source_url));
           snapshots.set(ticker,{...snapshot,items});
           return {ticker,ok:true,count:items.length};
         }catch(error){
