@@ -1282,12 +1282,59 @@
     } catch(error) { console.error('[bond-series]',error); }
   }
 
+
+  async function setupResearchLibrary() {
+    const panel = $('#stockResearchPanel');
+    if (!panel) return;
+    const status = $('#researchStatus');
+    const list = $('#researchReportList');
+    const symbol = $('#researchSymbol');
+    const category = $('#researchCategory');
+    const search = $('#researchSearch');
+    let reports = [];
+    const esc = (value) => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+    const labels = {
+      stock_analysis: 'Báo cáo phân tích cổ phiếu',
+      forecast_earnings: 'Dự phóng kết quả kinh doanh',
+      recommendation_valuation: 'Khuyến nghị và định giá',
+      industry_report: 'Báo cáo phân tích ngành',
+      market_strategy: 'Chiến lược thị trường và vĩ mô',
+      brokerage_research: 'Báo cáo nghiên cứu khác'
+    };
+    const render = () => {
+      const q = (search.value || '').trim().toLocaleLowerCase('vi');
+      const filtered = reports.filter(item =>
+        (!symbol.value || item.symbol === symbol.value) &&
+        (!category.value || item.category === category.value) &&
+        (!q || [item.title, item.symbol, item.source, item.broker, item.company, item.url].some(v => String(v || '').toLocaleLowerCase('vi').includes(q)))
+      );
+      if (!filtered.length) {
+        list.innerHTML = '<div class="empty-state"><h3>Chưa tìm thấy báo cáo phù hợp</h3><p>Thử đổi mã chứng khoán, danh mục hoặc từ khóa. Danh sách không tự tạo báo cáo khi nguồn chưa có kết quả.</p></div>';
+        return;
+      }
+      list.innerHTML = filtered.map(item => '<article class="research-report-card"><div class="research-report-meta"><span class="status-pill neutral">'+esc(item.symbol || 'Nhiều mã')+'</span><span>'+esc(labels[item.category] || labels.brokerage_research)+'</span></div><h4><a href="'+esc(item.url)+'" target="_blank" rel="noopener noreferrer">'+esc(item.title || 'Báo cáo phân tích')+'</a></h4><p>'+esc(item.broker || item.source || item.host || 'Nguồn công khai')+'</p><div class="research-report-foot"><span>'+esc(item.publishedAt || item.publication_date || 'Chưa xác định ngày phát hành')+'</span><a href="'+esc(item.url)+'" target="_blank" rel="noopener noreferrer">Mở tài liệu ↗</a></div><p class="small muted">Báo cáo phân tích / nghiên cứu; không phải số liệu BCTC thực tế.</p></article>').join('');
+    };
+    [symbol, category, search].forEach(el => el?.addEventListener('input', render));
+    try {
+      const res = await fetchDataFile('analysis-reports.json');
+      const payload = res && typeof res === 'object' ? res : {};
+      reports = Array.isArray(payload.reports) ? payload.reports : [];
+      status.textContent = reports.length ? reports.length + ' tài liệu trong danh mục' : 'Chưa có tài liệu';
+      render();
+    } catch (error) {
+      console.warn('[research-library]', error);
+      status.textContent = 'Chưa đồng bộ được';
+      list.innerHTML = '<div class="empty-state"><h3>Chưa tải được danh mục báo cáo</h3><p>Worker chưa tạo snapshot công khai hoặc nguồn tạm thời không truy cập được.</p></div>';
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     setupNavigation();
     loadOverviewKpis();
     setupCommodityFilters();
     setupFinancials();
     setupReportQueue();
+    setupResearchLibrary();
     setupEmptyEconomicChart();
     setupSearchShortcut();
     loadMarketSnapshot();
