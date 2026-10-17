@@ -498,7 +498,7 @@
             toolbar.querySelectorAll('[data-mode]').forEach(button => button.addEventListener('click', () => {
               toolbar.querySelectorAll('[data-mode]').forEach(b => b.classList.toggle('is-active', b === button));
               const chartMode = button.dataset.mode === 'chart';
-              const chartWrap = panel.querySelector(target.canvas)?.closest('.data-chart-view');
+              const chartWrap = panel.querySelector(target.canvas)?.closest('.chart-panel, .data-chart-view');
               if (chartWrap) chartWrap.hidden = !chartMode;
               table.hidden = chartMode;
             }));
@@ -536,7 +536,7 @@
             });
           };
           table.hidden = true;
-          const chartWrap = canvas.closest('.data-chart-view');
+          const chartWrap = canvas.closest('.chart-panel, .data-chart-view');
           if (chartWrap) chartWrap.hidden = false;
           drawCategoryChart(toolbar.querySelector('.category-chart-type').value);
           if (note) note.textContent = 'Nguồn: ' + item.source + ' · Đơn vị: ' + (item.unit || 'theo nguồn') + ' · ' + observations.length + ' quan sát. ' + (stale ? 'Cảnh báo: kỳ mới nhất đã cũ ' + ageDays + ' ngày.' : 'Các kỳ tương lai bị loại khỏi hiển thị.');
