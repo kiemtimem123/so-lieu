@@ -49,6 +49,16 @@ jobs:
           echo "Category API batch 2 HTTP status: ${STATUS_2}"
           case "${STATUS_2}" in 2*) ;; *) cat category-response-2.json; exit 1 ;; esac
 
+          STATUS_3="$(curl --silent --show-error --max-time 30 --get \
+            --header "Authorization: Bearer ${DLKT_API_KEY}" \
+            --data-urlencode "ids=33445,33446,33447,37096,37105,37106,33340" \
+            --data-urlencode "from=2022-01-01" \
+            --data-urlencode "limit=50" \
+            --output category-response-3.json --write-out "%{http_code}" \
+            "https://api.dulieukinhte.com/v1/series/observations")"
+          echo "Category API batch 3 HTTP status: ${STATUS_3}"
+          case "${STATUS_3}" in 2*) ;; *) cat category-response-3.json; exit 1 ;; esac
+
       - name: Validate and save category snapshot
         run: node .github/scripts/sync-category-data.cjs
 
@@ -56,7 +66,7 @@ jobs:
         shell: bash
         run: |
           set -eu
-          rm -f category-response-1.json category-response-2.json
+          rm -f category-response-1.json category-response-2.json category-response-3.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           cp data/category-data.json /tmp/category-data.json
