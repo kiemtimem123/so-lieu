@@ -17,6 +17,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
+      - name: Setup PHP for API syntax check
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Lint isolated report database API
+        run: php -l api/analysis-reports.php
+
       - name: Setup Python for report worker syntax check
         uses: actions/setup-python@v6
         with:
