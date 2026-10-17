@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-18T00:00:00+07:00",
-  "description": "Danh mục thử nghiệm báo cáo phân tích của bên thứ ba. Bản ghi mẫu được xác minh qua trang PDF công khai; chưa phải kết quả crawl tự động bằng tài khoản VietstockFinance.",
+  "updatedAt": "2026-10-17T20:56:27.513721+00:00",
+  "description": "Danh mục riêng cho báo cáo phân tích/dự phóng của công ty chứng khoán. Không dùng số liệu dự báo làm số liệu thực tế; không trộn với báo cáo tài chính công bố chính thức.",
   "categories": [
     {
       "id": "stock_analysis",
@@ -28,33 +28,21 @@
       "label": "Báo cáo nghiên cứu khác"
     }
   ],
-  "reports": [
-    {
-      "id": "vietstock-mbb-bsc-2026-02-06",
-      "symbol": "MBB",
-      "title": "MBB: Báo cáo cập nhật",
-      "publisher": "BSC Research",
-      "reportDate": "2026-02-06",
-      "category": "recommendation_valuation",
-      "source": "VietstockFinance / BSC Research",
-      "landingUrl": "https://finance.vietstock.vn/downloadedoc/18921",
-      "downloadUrl": "https://finance.vietstock.vn/downloadedoc/18921",
-      "fileType": "application/pdf",
-      "access": "public_link",
-      "downloadTest": {
-        "status": "pdf_opened_and_content_verified",
-        "method": "Đã mở và kiểm tra nội dung PDF công khai; chưa kiểm thử lưu file qua GitHub Actions",
-        "checkedAt": "2026-10-18"
-      },
-      "notes": "Báo cáo phân tích/dự phóng của BSC; không phải báo cáo tài chính công bố chính thức. Các dự báo thuộc thời điểm phát hành.",
-      "disclaimer": "Chỉ lưu trữ hoặc phân phối lại file nếu điều khoản và quyền sử dụng cho phép."
-    }
-  ],
+  "reports": [],
   "errors": [],
   "policy": {
     "official_financial_statements": "reports/raw + config/report-queue.json",
     "brokerage_research": "reports/analysis/analysis-reports.json",
-    "auto_publish_numbers": false,
-    "pdf_mirroring": "disabled_until_license_and_download_permissions_are_confirmed"
+    "auto_publish_numbers": false
+  },
+  "crawl": {
+    "source": "Vietstock eDocuments public pages",
+    "testSymbol": "MBB",
+    "pagesVisited": 35,
+    "candidatesFound": 0,
+    "validPdfs": 0,
+    "runAt": "2026-10-17T20:56:27.513721+00:00",
+    "pdfArchivingEnabled": false,
+    "note": "If validPdfs is zero, inspect workflow logs for script_route_hints; do not treat zero as proof no reports exist."
   }
 }
