@@ -488,35 +488,57 @@
           updated.className = 'status-pill ' + (stale ? 'warning' : 'positive');
         }
         if (canvas && window.Chart) {
-          if (categoryCharts[category]) categoryCharts[category].destroy();
-          categoryCharts[category] = new Chart(canvas, {
-            type: 'line',
-            data: {
-              labels: observations.map(point => dateFmt(point.date)),
-              datasets: [{
-                label: item.name,
-                data: observations.map(point => Number(point.value)),
-                borderWidth: 2,
-                pointRadius: observations.length > 48 ? 0 : 2,
-                pointHoverRadius: 4,
-                tension: 0.15,
-                fill: false
-              }]
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              interaction: { mode: 'index', intersect: false },
-              plugins: {
-                legend: { display: false },
-                tooltip: { callbacks: { label: context => fmt(context.parsed.y, 3) + ' ' + (item.unit || '') } }
+          const panel = table.closest('.currency-panel') || table.parentElement;
+          let toolbar = panel.querySelector('.category-chart-toolbar');
+          if (!toolbar) {
+            toolbar = document.createElement('div');
+            toolbar.className = 'data-view-toolbar category-chart-toolbar';
+            toolbar.innerHTML = '<div class="view-switch" role="group" aria-label="Chế độ dữ liệu"><button type="button" data-mode="chart" class="is-active">Biểu đồ</button><button type="button" data-mode="table">Bảng số liệu</button></div><label class="chart-type-label">Kiểu biểu đồ <select class="category-chart-type"><option value="line">Đường</option><option value="bar">Cột</option></select></label>';
+            table.parentNode.insertBefore(toolbar, table);
+            toolbar.querySelectorAll('[data-mode]').forEach(button => button.addEventListener('click', () => {
+              toolbar.querySelectorAll('[data-mode]').forEach(b => b.classList.toggle('is-active', b === button));
+              const chartMode = button.dataset.mode === 'chart';
+              const chartWrap = panel.querySelector(target.canvas)?.closest('.data-chart-view');
+              if (chartWrap) chartWrap.hidden = !chartMode;
+              table.hidden = chartMode;
+            }));
+            toolbar.querySelector('.category-chart-type').addEventListener('change', () => drawCategoryChart(toolbar.querySelector('.category-chart-type').value));
+          }
+          const drawCategoryChart = type => {
+            if (categoryCharts[category]) categoryCharts[category].destroy();
+            categoryCharts[category] = new Chart(canvas, {
+              type: type || 'line',
+              data: {
+                labels: observations.map(point => dateFmt(point.date)),
+                datasets: [{
+                  label: item.name,
+                  data: observations.map(point => Number(point.value)),
+                  borderWidth: 2,
+                  pointRadius: observations.length > 48 ? 0 : 2,
+                  pointHoverRadius: 4,
+                  tension: 0.15,
+                  fill: false
+                }]
               },
-              scales: {
-                x: { ticks: { maxTicksLimit: 8, maxRotation: 0 }, grid: { display: false } },
-                y: { beginAtZero: false, ticks: { callback: value => fmt(value, 2) } }
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: { callbacks: { label: context => fmt(context.parsed.y, 3) + ' ' + (item.unit || '') } }
+                },
+                scales: {
+                  x: { ticks: { maxTicksLimit: 8, maxRotation: 0 }, grid: { display: false } },
+                  y: { beginAtZero: false, ticks: { callback: value => fmt(value, 2) } }
+                }
               }
-            }
-          });
+            });
+          };
+          table.hidden = true;
+          const chartWrap = canvas.closest('.data-chart-view');
+          if (chartWrap) chartWrap.hidden = false;
+          drawCategoryChart(toolbar.querySelector('.category-chart-type').value);
           if (note) note.textContent = 'Nguồn: ' + item.source + ' · Đơn vị: ' + (item.unit || 'theo nguồn') + ' · ' + observations.length + ' quan sát. ' + (stale ? 'Cảnh báo: kỳ mới nhất đã cũ ' + ageDays + ' ngày.' : 'Các kỳ tương lai bị loại khỏi hiển thị.');
         } else if (note) {
           note.textContent = 'Không tải được thư viện Chart.js; bảng số liệu vẫn hoạt động.';
