@@ -885,7 +885,9 @@
     loadMarketSnapshot();
     loadCurrencyRates();
     loadUsdVndReference();
-    loadCreditGrowth();\n    loadCreditGrowthHistoryChart();\n    loadBalanceOfPayments();
+    loadCreditGrowth();
+    loadCreditGrowthHistoryChart();
+    loadBalanceOfPayments();
     loadOmoData();
   loadPolicyRates();
     loadFinancialRates();
