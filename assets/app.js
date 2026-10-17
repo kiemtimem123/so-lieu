@@ -779,6 +779,37 @@
     drawSelected();
   }
 
+  async function loadOverviewKpis() {
+    const container = $('#overviewKpis');
+    if (!container) return;
+    const definitions = [
+      { category: 'gdp', title: 'GDP (giá hiện hành)', note: 'Tổng sản phẩm trong nước theo giá hiện hành.', target: '#vi-mo' },
+      { category: 'cpi', title: 'Lạm phát (CPI)', note: 'Chỉ số CPI theo chuỗi nguồn; không đồng nhất với lạm phát so cùng kỳ.', target: '#vi-mo' },
+      { category: 'retail', title: 'Bán lẻ HH & DV', note: 'Tổng mức bán lẻ hàng hóa và doanh thu dịch vụ tiêu dùng.', target: '#vi-mo' }
+    ];
+    try {
+      const response = await fetch('data/category-data.json', { cache: 'no-store' });
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      const snapshot = await response.json();
+      container.innerHTML = definitions.map(def => {
+        const item = (snapshot.data || []).find(row => row.category === def.category && Array.isArray(row.observations));
+        const points = (item?.observations || []).filter(p => p && /^\\d{4}-\\d{2}-\\d{2}$/.test(p.date) && p.date <= new Date().toISOString().slice(0, 10) && Number.isFinite(Number(p.value))).sort((a,b) => a.date.localeCompare(b.date));
+        if (!item || !points.length) {
+          return '<a class="overview-kpi ' + (def.category === 'gdp' ? 'kpi-gdp' : '') + '" href="' + def.target + '"><span>' + escapeHtml(def.title) + '</span><strong>Chưa có dữ liệu</strong><small>' + escapeHtml(def.note) + '</small><div class="kpi-spark empty-spark">Chưa có chuỗi dữ liệu đã xác minh</div></a>';
+        }
+        const latest = points[points.length - 1];
+        const values = points.slice(-12).map(p => Number(p.value));
+        const min = Math.min(...values), max = Math.max(...values), spread = max - min || 1;
+        const coords = values.map((v,i) => (i/(Math.max(values.length-1,1))*100).toFixed(2)+','+(25-((v-min)/spread*21)).toFixed(2)).join(' ');
+        const spark = '<svg viewBox="0 0 100 28" preserveAspectRatio="none" aria-label="Xu hướng 12 quan sát gần nhất"><polyline points="' + coords + '" fill="none" stroke="currentColor" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>';
+        return '<a class="overview-kpi ' + (def.category === 'gdp' ? 'kpi-gdp' : '') + '" href="' + def.target + '"><span>' + escapeHtml(def.title) + '</span><strong>' + fmt(latest.value, 2) + ' ' + escapeHtml(item.unit || '') + '</strong><small>Kỳ gần nhất: ' + dateFmt(latest.date) + ' · ' + escapeHtml(item.source || 'Nguồn dữ liệu') + '</small><div class="kpi-spark">' + spark + '<span>' + points.length + ' kỳ dữ liệu</span></div></a>';
+      }).join('');
+    } catch (error) {
+      console.error('[overview-kpis]', error);
+      container.querySelectorAll('.overview-kpi small').forEach(el => { el.textContent = 'Chưa tải được snapshot dữ liệu'; });
+    }
+  }
+
   function setupSearchShortcut() {
     document.addEventListener('keydown', event => {
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
@@ -794,6 +825,7 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     setupNavigation();
+    loadOverviewKpis();
     setupCommodityFilters();
     setupFinancials();
     setupEmptyEconomicChart();
