@@ -9,7 +9,21 @@ const labels = {
   "37827": "Brent",
   "37694": "Xăng thường tại Mỹ",
   "37828": "Dầu diesel tại Mỹ",
-  "37695": "Khí tự nhiên Henry Hub"
+  "37695": "Khí tự nhiên Henry Hub",
+  "29387": "Bạc thế giới",
+  "29388": "Đồng thế giới",
+  "29380": "Thép thanh thế giới",
+  "29406": "Giá gạo thế giới",
+  "66457": "Cao su TSR20 thế giới",
+  "33392": "Giá xuất khẩu bình quân cao su",
+  "33408": "Giá nhập khẩu bình quân cao su",
+  "33414": "Giá nhập khẩu bình quân kim loại thường khác"
+};
+
+const groups = {
+  "37826":"energy","37827":"energy","37694":"energy","37828":"energy","37695":"energy",
+  "29387":"metals","29388":"metals","29380":"metals","33414":"metals",
+  "29406":"agriculture","66457":"agriculture","33392":"agriculture","33408":"agriculture"
 };
 
 function fail(message) {
@@ -63,7 +77,9 @@ for (const id of ids) {
     name: labels[id],
     value: latest.value,
     unit: series.unit || null,
-    date: latest.date
+    group: groups[id] || "other",
+    date: latest.date,
+    observations: valid.map(point => ({ date: point.date, value: point.value }))
   });
 }
 
@@ -82,7 +98,7 @@ const tempPath = outputPath + ".tmp";
 fs.writeFileSync(tempPath, JSON.stringify(output, null, 2) + "\n", "utf8");
 fs.renameSync(tempPath, outputPath);
 
-console.log("Đã lưu đủ 5 chuỗi dữ liệu vào " + outputPath);
+console.log("Đã lưu đủ " + data.length + " chuỗi dữ liệu vào " + outputPath);
 for (const item of data) {
   console.log(item.name + " | " + item.value + " " + (item.unit || "") + " | " + item.date);
 }
