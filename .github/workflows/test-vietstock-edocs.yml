@@ -43,8 +43,8 @@ jobs:
         run: pip install -r .github/scripts/requirements-report-worker.txt
       - name: Crawl public Vietstock eDocuments and validate PDF
         env:
-          REPORT_TEST_SYMBOL: ${{ inputs.symbol }}
-          EDOCS_MAX_PAGES: ${{ inputs.max_pages }}
+          REPORT_TEST_SYMBOL: ${{ inputs.symbol || 'MBB' }}
+          EDOCS_MAX_PAGES: ${{ inputs.max_pages || '35' }}
           ALLOW_BROKER_PDF_ARCHIVE: "false"
         run: python .github/scripts/collect-vietstock-edocs.py
       - name: Commit updated catalog
@@ -62,7 +62,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: vietstock-edocs-test-${{ inputs.symbol }}
+          name: vietstock-edocs-test-${{ inputs.symbol || 'MBB' }}
           path: |
             reports/analysis/analysis-reports.json
             data/analysis-reports.json
