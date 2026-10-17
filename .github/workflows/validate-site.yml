@@ -17,6 +17,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
+      - name: Setup Python for report worker syntax check
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Check report worker syntax
+        run: python -m py_compile .github/scripts/collect-financial-reports.py
+
       - name: Check JavaScript syntax
         run: |
           node --check assets/app.js
