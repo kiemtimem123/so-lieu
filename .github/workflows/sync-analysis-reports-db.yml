@@ -65,11 +65,6 @@ jobs:
               if response.status < 200 or response.status >= 300:
                   raise SystemExit('Website API returned non-success status')
           PY
-      - name: Explain skipped DB delivery when secrets are not configured
-        if: ${{ vars.REPORT_SYNC_URL == '' || secrets.REPORT_SYNC_TOKEN == '' }}
-        run: |
-          echo 'DB delivery skipped: configure Actions variable REPORT_SYNC_URL and secret REPORT_SYNC_TOKEN.'
-          echo 'No credentials were read from repository files.'
       - name: Upload redacted sync summary
         if: always()
         uses: actions/upload-artifact@v4
