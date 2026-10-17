@@ -160,6 +160,61 @@
   }
 
 
+  let omoHistoryChartInstance = null;
+  async function setupOmoChartControls() {
+    const canvas = $('#omoHistoryChart');
+    const note = $('#omoHistoryChartNote');
+    const table = $('#omoLatestTable');
+    const chartWrap = $('#omoHistoryChartWrap');
+    const typeSelect = $('#omoChartType');
+    const rangeSelect = $('#omoChartRange');
+    const toolbar = $('#omoDataContent .data-view-toolbar');
+    if (!canvas || !window.Chart || !toolbar) return;
+    toolbar.querySelectorAll('[data-omo-view]').forEach(button => button.addEventListener('click', () => {
+      toolbar.querySelectorAll('[data-omo-view]').forEach(b => b.classList.toggle('is-active', b === button));
+      const showChart = button.dataset.omoView === 'chart';
+      if (chartWrap) chartWrap.hidden = !showChart;
+      if (table) table.hidden = showChart;
+    }));
+    try {
+      const response = await fetch('data/category-data.json', { cache: 'no-store' });
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      const snapshot = await response.json();
+      const keys = ['omo-buy-total', 'omo-net-outstanding'];
+      const items = (snapshot.data || []).filter(item => keys.includes(item.category) && Array.isArray(item.observations));
+      const draw = () => {
+        const days = rangeSelect.value === 'all' ? Infinity : Number(rangeSelect.value);
+        const cutoff = Number.isFinite(days) ? new Date(Date.now() - days * 86400000).toISOString().slice(0,10) : '0000-01-01';
+        const points = items.map(item => ({
+          ...item,
+          observations: item.observations.filter(p => p && /^\d{4}-\d{2}-\d{2}$/.test(p.date) && p.date <= new Date().toISOString().slice(0,10) && p.date >= cutoff && Number.isFinite(Number(p.value))).sort((a,b)=>a.date.localeCompare(b.date))
+        })).filter(item => item.observations.length);
+        const dates = [...new Set(points.flatMap(item => item.observations.map(p=>p.date)))].sort();
+        if (!dates.length) {
+          if (note) note.textContent = 'Chưa có chuỗi lịch sử OMO hợp lệ để vẽ; dữ liệu không được tự tạo.';
+          return;
+        }
+        if (omoHistoryChartInstance) omoHistoryChartInstance.destroy();
+        const combo = typeSelect.value === 'combo';
+        omoHistoryChartInstance = new Chart(canvas, {
+          type: combo ? 'bar' : typeSelect.value,
+          data: { labels: dates.map(dateFmt), datasets: points.map((item,index) => {
+            const values = new Map(item.observations.map(p=>[p.date,Number(p.value)]));
+            return { type: combo ? (index === 0 ? 'bar' : 'line') : typeSelect.value, label:item.name, data:dates.map(d=>values.has(d)?values.get(d):null), borderWidth:2, pointRadius:dates.length>48?0:2, tension:0.15, spanGaps:false, yAxisID:'y' };
+          })},
+          options: { responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{legend:{display:true,position:'bottom'},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': '+fmt(ctx.parsed.y,2)+' '+(points[ctx.datasetIndex]?.unit||'')}}}, scales:{x:{ticks:{maxTicksLimit:9,maxRotation:0},grid:{display:false}},y:{beginAtZero:false,ticks:{callback:v=>fmt(v,2)},title:{display:true,text:'Giá trị theo đơn vị nguồn'}}}}
+        });
+        if (note) note.textContent = 'Nguồn: Dữ Liệu Kinh Tế · ' + dates.length + ' ngày có quan sát. Các ngày thiếu dữ liệu không được nội suy. Chọn “Kết hợp cột + đường” để phân biệt hai chỉ tiêu.';
+      };
+      typeSelect.addEventListener('change',draw);
+      rangeSelect.addEventListener('change',draw);
+      draw();
+    } catch(error) {
+      if(note) note.textContent='Không tải được chuỗi lịch sử OMO từ snapshot.';
+      console.error('[omo-history-chart]',error);
+    }
+  }
+
   async function loadOmoData() {
     const content = $('#omoDataContent');
     const updated = $('#omoDataUpdated');
@@ -182,8 +237,9 @@
       };
       const newest = rows.reduce((latest, item) => item.date > latest ? item.date : latest, rows[0].date);
       const anyStale = rows.some(isStale);
-      content.innerHTML = `<table><thead><tr><th>Chỉ tiêu</th><th>Giá trị</th><th>Đơn vị</th><th>Ngày dữ liệu</th><th>Trạng thái</th><th>Nguồn</th></tr></thead><tbody>${rows.map(item => `
-        <tr><td><strong>${escapeHtml(item.name)}</strong></td><td>${fmt(item.value, 2)}</td><td>${escapeHtml(item.unit)}</td><td>${escapeHtml(dateFmt(item.date))}</td><td>${isStale(item) ? '<span class="status-pill warning">Dữ liệu cũ</span>' : '<span class="status-pill neutral">Mới</span>'}</td><td><a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">Xem nguồn</a></td></tr>`).join('')}</tbody></table><p class="muted">Snapshot đồng bộ lúc ${escapeHtml(dateFmt(snapshot.fetchedAt))}. Khối lượng mua OMO là tổng giao dịch mua trúng thầu trong ngày; chênh lệch lưu hành OMO − tín phiếu là chỉ tiêu tồn lượng. Hai chỉ tiêu này không thay thế cho bơm/hút ròng trong ngày. Cảnh báo dữ liệu cũ nếu kỳ quan sát quá 5 ngày.</p>`;
+      content.innerHTML = `<div class="data-view-toolbar"><div class="view-switch" role="group" aria-label="Chế độ hiển thị OMO"><button type="button" data-omo-view="chart" class="is-active">Biểu đồ</button><button type="button" data-omo-view="table">Bảng số liệu</button></div><label class="chart-type-label">Kiểu biểu đồ <select id="omoChartType" aria-label="Kiểu biểu đồ OMO"><option value="line">Đường</option><option value="bar">Cột</option><option value="combo">Kết hợp cột + đường</option></select></label><label class="chart-type-label">Khoảng thời gian <select id="omoChartRange" aria-label="Khoảng thời gian OMO"><option value="90">90 ngày</option><option value="365" selected>1 năm</option><option value="all">Tất cả</option></select></label></div><div id="omoHistoryChartWrap" class="data-chart-view"><div class="chart-canvas-wrap"><canvas id="omoHistoryChart" role="img" aria-label="Biểu đồ lịch sử hoạt động OMO"></canvas></div><p class="muted data-chart-note" id="omoHistoryChartNote">Đang tải chuỗi lịch sử OMO.</p></div><div id="omoLatestTable" hidden><table><thead><tr><th>Chỉ tiêu</th><th>Giá trị</th><th>Đơn vị</th><th>Ngày dữ liệu</th><th>Trạng thái</th><th>Nguồn</th></tr></thead><tbody>${rows.map(item => `
+        <tr><td><strong>${escapeHtml(item.name)}</strong></td><td>${fmt(item.value, 2)}</td><td>${escapeHtml(item.unit)}</td><td>${escapeHtml(dateFmt(item.date))}</td><td>${isStale(item) ? '<span class="status-pill warning">Dữ liệu cũ</span>' : '<span class="status-pill neutral">Mới</span>'}</td><td><a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">Xem nguồn</a></td></tr>`).join('')}</tbody></table></div><p class="muted">Snapshot đồng bộ lúc ${escapeHtml(dateFmt(snapshot.fetchedAt))}. Khối lượng mua OMO là tổng giao dịch mua trúng thầu trong ngày; chênh lệch lưu hành OMO − tín phiếu là chỉ tiêu tồn lượng. Hai chỉ tiêu này không thay thế cho bơm/hút ròng trong ngày. Cảnh báo dữ liệu cũ nếu kỳ quan sát quá 5 ngày.</p>`;
+      setupOmoChartControls();
       if (updated) {
         updated.textContent = anyStale ? 'Cảnh báo: dữ liệu OMO cũ' : 'Ngày mới nhất: ' + dateFmt(newest);
         updated.className = anyStale ? 'status-pill warning' : 'status-pill positive';
