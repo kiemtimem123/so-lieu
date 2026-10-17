@@ -845,19 +845,90 @@
     const button = $('#loadStock');
     const stateBox = $('#stockState');
     const wrap = $('#stockTableWrap');
-    async function load() {
+    const body = $('#stockTableBody');
+    const status = document.createElement('p');
+    status.className = 'small muted';
+    status.id = 'stockSourceStatus';
+    if (wrap && !$('#stockSourceStatus')) wrap.insertAdjacentElement('afterend', status);
+
+    const numberOrDash = value => {
+      if (value === null || value === undefined || value === '' || !Number.isFinite(Number(value))) return '—';
+      return fmt(value, 2);
+    };
+    const validPeriod = value => /^\\d{4}-Q[1-4]$/.test(String(value || ''));
+    const setEmpty = (title, message) => {
       if (wrap) wrap.classList.add('hidden');
       if (stateBox) {
         stateBox.classList.remove('hidden');
-        const title = $('h3', stateBox);
-        const p = $('p', stateBox);
-        if (title) title.textContent = 'Chưa có báo cáo được đồng bộ';
-        if (p) p.textContent = 'Chưa có dữ liệu tài chính đã xác minh cho ' + (symbol?.value || '') + ' từ năm ' + (year?.value || '') + '. Website không tự tạo số liệu để lấp chỗ trống.';
+        const heading = $('h3', stateBox);
+        const paragraph = $('p', stateBox);
+        if (heading) heading.textContent = title;
+        if (paragraph) paragraph.textContent = message;
+      }
+      if (body) body.innerHTML = '';
+    };
+    async function load() {
+      const ticker = String(symbol?.value || '').trim().toUpperCase();
+      const selectedYear = String(year?.value || '');
+      if (!/^[A-Z0-9]{2,6}$/.test(ticker) || !/^20\\d{2}$/.test(selectedYear)) {
+        setEmpty('Thông tin lọc không hợp lệ', 'Vui lòng chọn mã cổ phiếu và năm báo cáo hợp lệ.');
+        return;
+      }
+      if (button) { button.disabled = true; button.textContent = 'Đang tải…'; }
+      if (status) status.textContent = 'Đang tìm snapshot báo cáo tài chính của ' + ticker + '…';
+      setEmpty('Đang tải báo cáo', 'Đang đọc dữ liệu theo mã cổ phiếu và năm đã chọn.');
+      try {
+        const response = await fetchDataFile('financials-' + ticker + '.json');
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        const snapshot = await response.json();
+        if (!snapshot || !Array.isArray(snapshot.items)) throw new Error('Cấu trúc snapshot không hợp lệ');
+        const rows = snapshot.items
+          .filter(item => item && validPeriod(item.period) && item.period.startsWith(selectedYear + '-Q'))
+          .sort((a, b) => a.period.localeCompare(b.period));
+        if (!rows.length) {
+          setEmpty('Chưa có báo cáo đã xác minh', 'Chưa có dữ liệu quý đã được kiểm chứng cho ' + ticker + ' năm ' + selectedYear + '. Hệ thống không nội suy hoặc tự tạo số liệu. Có thể bổ sung snapshot theo schema data/financials-' + ticker + '.json.');
+          if (status) {
+            const source = snapshot.sourceName ? 'Nguồn khai báo: ' + snapshot.sourceName + '. ' : '';
+            status.textContent = source + 'Số quý hợp lệ trong năm được chọn: 0.';
+          }
+          return;
+        }
+        if (body) body.innerHTML = rows.map(item => {
+          const sourceUrl = typeof item.source_url === 'string' && /^https?:\\/\\//i.test(item.source_url) ? item.source_url : '';
+          const periodLabel = item.period.replace('-Q', ' · Quý ');
+          return '<tr>' +
+            '<td><strong>' + escapeHtml(periodLabel) + '</strong></td>' +
+            '<td>' + numberOrDash(item.total_assets) + '</td>' +
+            '<td>' + numberOrDash(item.total_liabilities) + '</td>' +
+            '<td>' + numberOrDash(item.equity) + '</td>' +
+            '<td>' + numberOrDash(item.pretax_profit) + '</td>' +
+            '<td>' + numberOrDash(item.net_profit) + '</td>' +
+            '<td>' + (item.roa === null || item.roa === undefined ? '—' : numberOrDash(item.roa) + '%') + '</td>' +
+            '<td>' + (item.roe === null || item.roe === undefined ? '—' : numberOrDash(item.roe) + '%') + '</td>' +
+            '<td>' + (sourceUrl ? '<a href="' + escapeHtml(sourceUrl) + '" target="_blank" rel="noopener noreferrer">Báo cáo gốc</a>' : '—') + '</td>' +
+            '</tr>';
+        }).join('');
+        if (stateBox) stateBox.classList.add('hidden');
+        if (wrap) wrap.classList.remove('hidden');
+        if (status) {
+          const sourceName = snapshot.sourceName || snapshot.source || 'Nguồn chưa ghi rõ';
+          const fetchedAt = snapshot.fetchedAt ? ' · Đồng bộ: ' + escapeHtml(dateFmt(snapshot.fetchedAt)) : '';
+          status.innerHTML = 'Nguồn: ' + escapeHtml(sourceName) + ' · ' + rows.length + '/4 quý có dữ liệu' + fetchedAt +
+            ' · Đơn vị số tiền: ' + escapeHtml(rows.find(item => item.unit)?.unit || 'theo snapshot') +
+            '. Chỉ số ROA/ROE chỉ hiển thị khi nguồn cung cấp hoặc dữ liệu tính toán đã được xác minh.';
+        }
+      } catch (error) {
+        setEmpty('Chưa tải được báo cáo tài chính', 'Không đọc được snapshot data/financials-' + ticker + '.json hoặc tệp chưa tồn tại. Cần nạp dữ liệu có nguồn, ngày công bố và đường dẫn báo cáo gốc trước khi hiển thị.');
+        if (status) status.textContent = 'Lỗi tải báo cáo: ' + error.message;
+        console.error('[financials-' + ticker + ']', error);
+      } finally {
+        if (button) { button.disabled = false; button.textContent = 'Tải báo cáo'; }
       }
     }
     button?.addEventListener('click', load);
     symbol?.addEventListener('change', load);
     year?.addEventListener('change', load);
+    load();
   }
 
   function setupEmptyEconomicChart() {
