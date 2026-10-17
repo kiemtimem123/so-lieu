@@ -311,6 +311,58 @@
     }
   }
 
+  async function loadCreditGrowthHistoryChart() {
+    const canvas = $('#creditGrowthHistoryChart');
+    const note = $('#creditGrowthHistoryNote');
+    if (!canvas || !window.Chart) return;
+    try {
+      const response = await fetch('data/category-data.json', { cache: 'no-store' });
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      const snapshot = await response.json();
+      const series = (snapshot.data || []).find(item => item.category === 'credit-growth' && Array.isArray(item.observations));
+      const points = (series?.observations || []).filter(p => p && /^\d{4}-\d{2}-\d{2}$/.test(p.date) && Number.isFinite(Number(p.value))).sort((a,b)=>a.date.localeCompare(b.date));
+      if (!points.length) throw new Error('Không có chuỗi lịch sử tăng trưởng tín dụng');
+      new Chart(canvas, { type:'line', data:{labels:points.map(p=>dateFmt(p.date)),datasets:[{label:series.name || 'Tăng trưởng tín dụng so đầu năm',data:points.map(p=>Number(p.value)),borderWidth:2,tension:.2,pointRadius:2,spanGaps:false}]}, options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:true,position:'bottom'}},scales:{x:{ticks:{maxTicksLimit:8,maxRotation:0},grid:{display:false}},y:{title:{display:true,text:'%'},beginAtZero:false}}}});
+      if(note) note.textContent = 'Nguồn: NHNN qua Dữ Liệu Kinh Tế · Cập nhật đến ' + dateFmt(points[points.length-1].date) + '. Đây là chuỗi tăng trưởng lũy kế từ đầu năm, khác với số tăng so cùng kỳ trong bảng trên.';
+    } catch(error) { if(note) note.textContent='Chưa có chuỗi lịch sử biểu đồ; bảng số liệu công bố vẫn được giữ riêng.'; console.error('[credit-growth-chart]',error); }
+  }
+
+  async function loadBalanceOfPayments() {
+    const content = $('#bopContent');
+    const updated = $('#bopUpdated');
+    const canvas = $('#bopChart');
+    const note = $('#bopChartNote');
+    if (!content) return;
+    try {
+      const response = await fetch('data/category-data.json', { cache: 'no-store' });
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      const snapshot = await response.json();
+      const keys = ['bop-current-capital','bop-financial','bop-overall'];
+      const series = (snapshot.data || []).filter(item => keys.includes(item.category) && Array.isArray(item.observations));
+      const labels = { 'bop-current-capital':'Cán cân vãng lai + vốn','bop-financial':'Cán cân tài chính','bop-overall':'Cán cân tổng thể' };
+      if (!series.length) throw new Error('Snapshot chưa có chuỗi cán cân thanh toán');
+      const rows = series.map(item => {
+        const p = [...item.observations].filter(x=>x && /^\d{4}-\d{2}-\d{2}$/.test(x.date) && Number.isFinite(Number(x.value))).sort((a,b)=>a.date.localeCompare(b.date)).slice(-1)[0];
+        return p ? { ...item, latest:p } : null;
+      }).filter(Boolean);
+      content.innerHTML = '<div class="table-scroll"><table><thead><tr><th>Chỉ tiêu</th><th>Giá trị mới nhất</th><th>Đơn vị</th><th>Kỳ dữ liệu</th><th>Nguồn</th></tr></thead><tbody>' + rows.map(item=>'<tr><td><strong>'+escapeHtml(item.name)+'</strong></td><td>'+fmt(item.latest.value,2)+'</td><td>'+escapeHtml(item.unit)+'</td><td>'+escapeHtml(dateFmt(item.latest.date))+'</td><td><a href="'+escapeHtml(item.url)+'" target="_blank" rel="noopener noreferrer">Xem nguồn</a></td></tr>').join('') + '</tbody></table></div>';
+      if (canvas && window.Chart) {
+        const quarters = [...new Set(series.flatMap(item=>item.observations.map(p=>p.date)))].sort();
+        const datasets = series.map(item=>{ const map=new Map(item.observations.map(p=>[p.date,Number(p.value)])); return {label:labels[item.category] || item.name,data:quarters.map(q=>map.has(q)?map.get(q):null),borderWidth:2,tension:.15,pointRadius:3,spanGaps:false};});
+        if(canvas._bopChart) canvas._bopChart.destroy();
+        canvas._bopChart = new Chart(canvas,{type:'line',data:{labels:quarters.map(dateFmt),datasets},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:true,position:'bottom'}},scales:{x:{ticks:{maxTicksLimit:8,maxRotation:0},grid:{display:false}},y:{title:{display:true,text:'Tỷ theo nguồn'}}}}});
+      }
+      const newest = rows.map(x=>x.latest.date).sort().pop();
+      if(updated){updated.textContent='Kỳ mới nhất: '+dateFmt(newest);updated.className='status-pill positive';}
+      if(note) note.textContent='Nguồn: NHNN qua Dữ Liệu Kinh Tế. Chuỗi theo quý; các kỳ thiếu không được nội suy. Giá trị có thể được nguồn điều chỉnh.';
+    } catch(error) {
+      content.innerHTML='<div class="empty-state"><h3>Chưa có dữ liệu cán cân thanh toán</h3><p>Chưa đồng bộ được các chuỗi quý có nguồn xác minh. Không tự tạo hoặc ước tính số liệu.</p></div>';
+      if(updated){updated.textContent='Chưa có dữ liệu';updated.className='status-pill neutral';}
+      if(note) note.textContent='Biểu đồ sẽ hiển thị sau khi API đồng bộ thành công.';
+      console.error('[balance-of-payments]',error);
+    }
+  }
+
   async function loadUsdVndReference() {
     const content = $('#usdVndReferenceContent');
     const updated = $('#usdVndReferenceUpdated');
@@ -833,7 +885,7 @@
     loadMarketSnapshot();
     loadCurrencyRates();
     loadUsdVndReference();
-    loadCreditGrowth();
+    loadCreditGrowth();\n    loadCreditGrowthHistoryChart();\n    loadBalanceOfPayments();
     loadOmoData();
   loadPolicyRates();
     loadFinancialRates();
