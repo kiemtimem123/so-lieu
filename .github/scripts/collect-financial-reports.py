@@ -158,12 +158,25 @@ def main():
     securities = load(SEC_PATH, {"securities":[]})
     jobs = queue.setdefault("jobs", [])
     known = {j.get("id") for j in jobs}
-    # Create discovery jobs for enabled securities that have no active job.
-    active_symbols = {j.get("symbol") for j in jobs}
+    # Refresh discovery weekly for every enabled security; avoid creating a new job every day.
+    last_processed = {}
+    for existing in jobs:
+        symbol = existing.get("symbol")
+        stamp = existing.get("processedAt") or existing.get("createdAt")
+        if symbol and stamp and (symbol not in last_processed or stamp > last_processed[symbol]):
+            last_processed[symbol] = stamp
     for sec in securities.get("securities",[]):
         symbol = str(sec.get("symbol","")).upper()
-        if sec.get("enabled",True) and symbol and symbol not in active_symbols:
-            job_id = f"auto-{symbol.lower()}-{datetime.now(timezone.utc).strftime('%Y%m%d')}"
+        last_stamp = last_processed.get(symbol)
+        refresh_due = not last_stamp
+        if last_stamp:
+            try:
+                age = datetime.now(timezone.utc) - datetime.fromisoformat(last_stamp.replace("Z","+00:00"))
+                refresh_due = age.days >= 7
+            except Exception:
+                refresh_due = True
+        if sec.get("enabled",True) and symbol and refresh_due:
+            job_id = "auto-" + symbol.lower() + "-" + datetime.now(timezone.utc).strftime("%Y%m%d")
             if job_id not in known:
                 jobs.append({"id":job_id,"symbol":symbol,"startYear":int(securities.get("defaultStartYear",2024)),"reportType":"both" if len(sec.get("reportTypes",[]))>1 else (sec.get("reportTypes") or ["consolidated"])[0],"status":"queued","createdAt":NOW,"attempts":0,"sourceCandidates":[],"downloadedFiles":[],"verifiedPeriods":[],"origin":"scheduled_registry"})
                 known.add(job_id)
