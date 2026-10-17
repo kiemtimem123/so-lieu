@@ -25,9 +25,6 @@ DATA_OUT = ROOT / "data" / "analysis-reports.json"
 REPORT_DIR = ROOT / "reports" / "analysis" / "pdf"
 BASES = [
     "https://edocs.vietstock.vn/",
-    "https://edocs.vietstock.vn/bao-cao-phan-tich",
-    "https://edocs.vietstock.vn/bao-cao-phan-tich/phan-tich-doanh-nghiep",
-    "https://edocs.vietstock.vn/bao-cao-phan-tich/phan-tich-nganh",
     "https://finance.vietstock.vn/",
 ]
 ALLOWED = {"edocs.vietstock.vn", "finance.vietstock.vn", "static1.vietstock.vn", "vietstock.vn", "www.vietstock.vn"}
@@ -186,6 +183,74 @@ def main():
                               "links":len(soup.select("a[href]")),"script_route_hints":api_markers[:25]}, ensure_ascii=False))
         time.sleep(0.15)
 
+
+    # eDocuments renders much of its report list through AJAX. Crawl the public
+    # paging routes advertised by its own JavaScript instead of guessing category URLs.
+    ajax_routes = [
+        ("/Home/Report_ReportAll_Paging", {"xml": "", "pageIndex": 1, "pageSize": 50, "type": ""}),
+        ("/Home/Report_GetTopDownload_Paging", {"xml": "", "pageIndex": 1, "pageSize": 50, "type": ""}),
+    ]
+    home = get_page("https://edocs.vietstock.vn/")
+    if home:
+        hsoup = BeautifulSoup(home.text, "html.parser")
+        script_urls = [urljoin(home.url, s.get("src", "")) for s in hsoup.select("script[src]")]
+        for script_url in script_urls[:30]:
+            if not allowed_url(script_url):
+                continue
+            sr = get_page(script_url)
+            if not sr:
+                continue
+            js = sr.text
+            for route in re.findall(r"""['"](/Home/(?:Report_[A-Za-z0-9_]+|DownloadReportPost))['"]""", js):
+                if any(x in route for x in ("Report_ReportAll_Paging", "Report_GetTopDownload_Paging")):
+                    continue
+                if "Report_GetAllByStockCode_Paging" in route:
+                    ajax_routes.append((route, {"xml": "", "pageIndex": 1, "pageSize": 50}))
+                elif "ReportType_GetAll" in route:
+                    ajax_routes.append((route, {}))
+            if len(ajax_routes) > 12:
+                break
+
+    for route, params in ajax_routes:
+        endpoint = urljoin("https://edocs.vietstock.vn/", route.lstrip("/"))
+        try:
+            response = SESSION.get(endpoint, params=params, headers={
+                "X-Requested-With": "XMLHttpRequest",
+                "Referer": "https://edocs.vietstock.vn/",
+                "Accept": "application/json, text/html, */*",
+            }, timeout=25)
+            response.raise_for_status()
+            body = response.text
+            # AJAX payloads may be JSON containing an HTML fragment; parse both forms.
+            fragments = [body]
+            try:
+                payload = response.json()
+                fragments.extend(str(v) for v in payload.values() if isinstance(v, (str, list, dict)))
+                if isinstance(payload, list):
+                    fragments.extend(str(v) for v in payload)
+            except Exception:
+                pass
+            found = 0
+            for fragment in fragments:
+                fsoup = BeautifulSoup(fragment, "html.parser")
+                for a in fsoup.select("a[href]"):
+                    href = clean_url(urljoin(response.url, a.get("href", "")))
+                    title = re.sub(r"\\s+", " ", a.get_text(" ", strip=True)).strip()
+                    combined = (title + " " + href + " " + fsoup.get_text(" ", strip=True)[:1200]).upper()
+                    if allowed_url(href) and TICKER_RE.search(combined):
+                        if any(x in (title + " " + href).lower() for x in ("download", "bao-cao", "report", ".pdf", "edoc", "cập nhật", "khuyến nghị")):
+                            candidates[href] = {"title": title or href.rsplit("/", 1)[-1], "url": href, "page_url": response.url}
+                            found += 1
+                # Preserve candidate URLs embedded in JSON/text response.
+                for href in re.findall(r"""https?://[^"'\\s<>]+|/[^"'\\s<>]+""", fragment):
+                    href = clean_url(urljoin(response.url, href))
+                    if allowed_url(href) and TICKER_RE.search(href.upper()) and any(x in href.lower() for x in ("downloadedoc", ".pdf", "report", "download")):
+                        candidates[href] = {"title": href.rsplit("/", 1)[-1], "url": href, "page_url": response.url}
+                        found += 1
+            print(json.dumps({"event":"edocs_ajax_inspected","route":route,"status":response.status_code,"bytes":len(body),"tickerCandidates":found}, ensure_ascii=False))
+        except Exception as exc:
+            print(json.dumps({"event":"edocs_ajax_failed","route":route,"error":str(exc)}, ensure_ascii=False))
+
     discovered = []
     for url, item in list(candidates.items()):
         # Open detail pages and extract direct PDF links when available.
@@ -241,7 +306,7 @@ def main():
             "disclaimer": "Báo cáo phân tích của bên thứ ba; không phải báo cáo tài chính công bố chính thức. Chỉ lưu trữ hoặc phân phối lại PDF nếu quyền sử dụng cho phép."
         }
         discovered.append(record)
-        print(json.dumps({"event":"valid_mbb_pdf","title":title,"landingUrl":final_url,"downloadUrl":check["url"],"pages":check["pages"],"bytes":check["bytes"]},ensure_ascii=False))
+        print(json.dumps({"event":"valid_edocs_pdf","title":title,"landingUrl":final_url,"downloadUrl":check["url"],"pages":check["pages"],"bytes":check["bytes"]},ensure_ascii=False))
         # Intentionally no persistent PDF copy by default.
         if ALLOW_ARCHIVE:
             REPORT_DIR.mkdir(parents=True, exist_ok=True)
@@ -259,7 +324,7 @@ def main():
         "validPdfs":len(discovered),
         "runAt":NOW,
         "pdfArchivingEnabled":False,
-        "note":"If validPdfs is zero, inspect workflow logs for script_route_hints; do not treat zero as proof no reports exist."
+        "note":"Crawler inspects public AJAX paging routes and validates direct PDF links; zero results may indicate changed endpoints or access restrictions."
     }
     for path in (OUT, DATA_OUT):
         path.parent.mkdir(parents=True, exist_ok=True)
