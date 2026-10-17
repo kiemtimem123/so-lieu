@@ -1,0 +1,56 @@
+name: Sync Latest OMO Data
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/scripts/sync-omo-latest.cjs'
+      - '.github/workflows/sync-omo-latest.yml'
+  schedule:
+    - cron: "20 22 * * 1-6"
+
+permissions:
+  contents: write
+
+jobs:
+  sync-omo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Fetch public source pages
+        shell: bash
+        run: |
+          set -eu
+          curl --fail --silent --show-error --location --max-time 30 \
+            'https://dulieukinhte.com/du-lieu-dong/tong-mua-bom-tien-nghiep-vu-thi-truong-mo-omo-27690' \
+            --output omo-buy.html
+          curl --fail --silent --show-error --location --max-time 30 \
+            'https://dulieukinhte.com/du-lieu-dong/chenh-lech-luu-hanh-omo-va-tin-phieu-nhnn-53631' \
+            --output omo-outstanding.html
+          test -s omo-buy.html
+          test -s omo-outstanding.html
+
+      - name: Parse and validate OMO data
+        run: node .github/scripts/sync-omo-latest.cjs
+
+      - name: Commit OMO snapshot
+        shell: bash
+        run: |
+          set -eu
+          rm -f omo-buy.html omo-outstanding.html
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          cp data/omo-latest.json /tmp/omo-latest.json
+          git fetch origin main
+          git reset --hard origin/main
+          cp /tmp/omo-latest.json data/omo-latest.json
+          git add data/omo-latest.json
+          if git diff --cached --quiet; then
+            echo "No OMO data changes."
+          else
+            git commit -m "Update latest OMO observations"
+            git push origin HEAD:main
+          fi
