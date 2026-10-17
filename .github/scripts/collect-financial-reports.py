@@ -93,7 +93,7 @@ def is_official_statement_title(title, symbol):
     """Reject analyst/research material; accept only issuer filing notices for actual statements."""
     t = (title or "").lower()
     sym = re.escape(symbol.lower())
-    if not re.search(rf"\\b{sym}\\b", t):
+    if not re.search(rf"\b{sym}\b", t):
         return False
     reject = [
         "phân tích", "bao cao phan tich", "báo cáo phân tích", "cập nhật kqkd",
