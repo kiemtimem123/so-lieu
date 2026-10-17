@@ -141,13 +141,16 @@
       table.innerHTML = `<table><thead><tr><th>Mã</th><th>Tên ngoại tệ</th><th>VND / 1 đơn vị</th><th>Phương pháp</th></tr></thead><tbody>${rows.map(item => `
         <tr><td><strong>${escapeHtml(item.code)}</strong></td><td>${escapeHtml(item.name)}</td>
         <td>${fmt(item.vndPerUnit, 4)}</td><td>${item.method === 'direct' ? 'Nguồn trực tiếp' : 'Tỷ giá chéo tính toán'}</td></tr>`).join('')}</tbody></table>`;
+      const sourceUpdated = Date.parse(snapshot.lastUpdatedUtc);
+      const ageDays = Number.isFinite(sourceUpdated) ? Math.max(0, Math.floor((Date.now() - sourceUpdated) / 86400000)) : Infinity;
+      const stale = ageDays > 3;
       if (updated) {
-        updated.textContent = 'Cập nhật nguồn: ' + dateFmt(snapshot.lastUpdatedUtc);
-        updated.className = 'status-pill positive';
+        updated.textContent = (stale ? 'Cảnh báo tỷ giá cũ · ' : 'Nguồn cập nhật: ') + dateFmt(snapshot.lastUpdatedUtc);
+        updated.className = 'status-pill ' + (stale ? 'warning' : 'positive');
       }
-      if (status) status.textContent = 'Nguồn: ExchangeRate-API Open Access · tỷ giá tham khảo';
+      if (status) status.innerHTML = 'Nguồn: <a href="https://www.exchangerate-api.com" target="_blank" rel="noopener noreferrer">ExchangeRate-API Open Access</a> · tỷ giá tham khảo, cập nhật khoảng mỗi 24 giờ';
       const disclaimer = $('#currencyDisclaimer');
-      if (disclaimer) disclaimer.textContent = (snapshot.rateType || 'Tỷ giá tham khảo') + '. Dữ liệu nguồn cập nhật: ' + snapshot.lastUpdatedUtc + '. Tỷ giá chéo được tính từ các tỷ giá cùng nguồn; không dùng thay tỷ giá giao dịch ngân hàng.';
+      if (disclaimer) disclaimer.textContent = (snapshot.rateType || 'Tỷ giá tham khảo') + '. Thời điểm cập nhật theo nhà cung cấp: ' + snapshot.lastUpdatedUtc + '. Tỷ giá ngoài USD được tính chéo từ cùng nguồn. ' + (stale ? 'CẢNH BÁO: dữ liệu đã cũ ' + ageDays + ' ngày.' : '') + ' Không dùng thay tỷ giá mua/bán ngân hàng hoặc tỷ giá trung tâm NHNN.';
     } catch (error) {
       table.innerHTML = '<div class="empty-state"><h3>Chưa tải được tỷ giá</h3><p>Kiểm tra file data/currency-rates.json và GitHub Actions đã chạy thành công chưa.</p></div>';
       if (updated) { updated.textContent = 'Chưa có dữ liệu'; updated.className = 'status-pill neutral'; }
