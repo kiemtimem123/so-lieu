@@ -414,9 +414,19 @@
         const rows = observations.slice(-24).reverse();
         table.innerHTML = `<table><thead><tr><th>Chỉ tiêu</th><th>Giá trị</th><th>Đơn vị</th><th>Kỳ dữ liệu</th><th>Nguồn</th></tr></thead><tbody>${rows.map(point => `
           <tr><td><strong>${escapeHtml(item.name)}</strong></td><td>${fmt(point.value, 3)}</td><td>${escapeHtml(item.unit || '—')}</td><td>${escapeHtml(dateFmt(point.date))}</td><td><a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.source)}</a></td></tr>`).join('')}</tbody></table>`;
+        const ageDays = Math.max(0, Math.floor((Date.now() - new Date(latest.date + 'T00:00:00Z').getTime()) / 86400000));
+        const staleAfterDays = ({
+          'global-rice': 14, 'global-rubber': 14, 'global-steel': 14,
+          'omo-buy-total': 5, 'omo-net-outstanding': 5,
+          'logistics-index': 150, 'coastal-shipping-index': 150,
+          'agri-price': 120, 'cpi': 120, 'housing-cpi': 120,
+          'credit-balance': 90, 'credit-growth': 90,
+          'property': 180, 'corporate-bonds-property': 90
+        })[category] || 75;
+        const stale = ageDays > staleAfterDays;
         if (updated) {
-          updated.textContent = 'Kỳ mới nhất: ' + dateFmt(latest.date);
-          updated.className = 'status-pill positive';
+          updated.textContent = (stale ? 'Cảnh báo dữ liệu cũ · ' : 'Kỳ mới nhất: ') + dateFmt(latest.date);
+          updated.className = 'status-pill ' + (stale ? 'warning' : 'positive');
         }
         if (canvas && window.Chart) {
           if (categoryCharts[category]) categoryCharts[category].destroy();
@@ -448,7 +458,7 @@
               }
             }
           });
-          if (note) note.textContent = 'Nguồn: ' + item.source + ' · Đơn vị: ' + (item.unit || 'theo nguồn') + ' · ' + observations.length + ' quan sát. Các kỳ tương lai bị loại khỏi hiển thị.';
+          if (note) note.textContent = 'Nguồn: ' + item.source + ' · Đơn vị: ' + (item.unit || 'theo nguồn') + ' · ' + observations.length + ' quan sát. ' + (stale ? 'Cảnh báo: kỳ mới nhất đã cũ ' + ageDays + ' ngày.' : 'Các kỳ tương lai bị loại khỏi hiển thị.');
         } else if (note) {
           note.textContent = 'Không tải được thư viện Chart.js; bảng số liệu vẫn hoạt động.';
         }
