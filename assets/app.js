@@ -1316,8 +1316,32 @@
     };
     [symbol, category, search].forEach(el => el?.addEventListener('input', render));
     try {
-      const res = await fetchDataFile('analysis-reports.json');
-      const payload = res && typeof res === 'object' ? res : {};
+      // Prefer the website database when configured; keep the existing JSON snapshot as a safe fallback.
+      let payload = null;
+      try {
+        const dbResponse = await fetch('/api/analysis-reports.php?limit=100', { cache: 'no-store', headers: { 'Accept': 'application/json' } });
+        if (dbResponse.ok) {
+          const dbPayload = await dbResponse.json();
+          if (dbPayload && dbPayload.ok && Array.isArray(dbPayload.reports)) {
+            payload = {
+              reports: dbPayload.reports.map(item => ({
+                ...item,
+                url: item.source_url || item.url,
+                source: item.publisher || item.source_name || item.source,
+                publishedAt: item.report_date || item.publishedAt,
+                summary: item.summary || '',
+                metrics: Array.isArray(item.metrics) ? item.metrics : []
+              }))
+            };
+          }
+        }
+      } catch (dbError) {
+        console.info('[research-library] Database API unavailable; using static snapshot.');
+      }
+      if (!payload) {
+        const res = await fetchDataFile('analysis-reports.json');
+        payload = res && typeof res === 'object' ? res : {};
+      }
       reports = Array.isArray(payload.reports) ? payload.reports : [];
       status.textContent = reports.length ? reports.length + ' tài liệu trong danh mục' : 'Chưa có tài liệu';
       render();
