@@ -25,6 +25,7 @@ jobs:
           node --check .github/scripts/sync-market-prices.cjs
           node --check .github/scripts/sync-currency-rates.cjs
           node --check .github/scripts/sync-financial-rates.cjs
+          node --check .github/scripts/validate-report-queue.cjs
 
       - name: Validate JSON snapshots
         run: |
@@ -51,6 +52,8 @@ jobs:
             'data/financials-TCB.json',
             'data/financials-VHM.json',
           ];
+          JSON.parse(fs.readFileSync('config/securities.json', 'utf8'));
+          JSON.parse(fs.readFileSync('config/report-queue.json', 'utf8'));
           for (const file of files) {
             const value = JSON.parse(fs.readFileSync(file, 'utf8'));
             if (!value || typeof value !== 'object') throw new Error('Invalid JSON root: ' + file);
