@@ -2,6 +2,11 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const definitions = [
+  { id: 36708, category: "bond-yield-1y", name: "Lợi suất TPCP kỳ hạn 1 năm", unit: "%/năm", source: "HNX, qua Dữ Liệu Kinh Tế", url: "https://dulieukinhte.com/du-lieu-dong/duong-cong-loi-suat-trai-phieu-chinh-phu-thi-truong-thu-cap-ky-han-1-nam-36708" },
+  { id: 36711, category: "bond-yield-2y", name: "Lợi suất TPCP kỳ hạn 2 năm", unit: "%/năm", source: "HNX, qua Dữ Liệu Kinh Tế", url: "https://dulieukinhte.com/du-lieu-dong/duong-cong-loi-suat-trai-phieu-chinh-phu-thi-truong-thu-cap-ky-han-2-nam-36711" },
+  { id: 36714, category: "bond-yield-10y", name: "Lợi suất TPCP kỳ hạn 10 năm", unit: "%/năm", source: "HNX, qua Dữ Liệu Kinh Tế", url: "https://dulieukinhte.com/du-lieu-dong/duong-cong-loi-suat-trai-phieu-chinh-phu-thi-truong-thu-cap-ky-han-10-nam-36714" },
+  { id: 36710, category: "bond-yield-20y", name: "Lợi suất TPCP kỳ hạn 20 năm", unit: "%/năm", source: "HNX, qua Dữ Liệu Kinh Tế", url: "https://dulieukinhte.com/du-lieu-dong/duong-cong-loi-suat-trai-phieu-chinh-phu-thi-truong-thu-cap-ky-han-20-nam-36710" },
+  { id: 36754, category: "corporate-bonds-total", name: "Tổng giá trị phát hành trái phiếu doanh nghiệp", unit: "Tỷ đồng", source: "VBMA, qua Dữ Liệu Kinh Tế", url: "https://dulieukinhte.com/du-lieu-dong/tong-gia-tri-phat-hanh-tpdn-36754" },
   { id: 22675, category: "transport", name: "Tổng khối lượng vận chuyển hàng hóa", unit: "Nghìn tấn", source: "Cục Thống kê (NSO)", url: "https://dulieukinhte.com/du-lieu-dong/tong-khoi-luong-van-chuyen-hang-hoa-22675" },
   { id: 30221, category: "agriculture", name: "Diện tích sản lượng lúa mùa miền Nam", unit: "Nghìn ha", source: "Cục Thống kê (NSO)", url: "https://dulieukinhte.com/du-lieu-dong/dien-tich-san-luong-lua-mua-mien-nam-30221" },
   { id: 32542, category: "ports", name: "Tổng DWT tàu vào cảng biển Cảng vụ TP. Hồ Chí Minh", unit: "DWT", source: "Cục Hàng hải Việt Nam (các Cảng vụ Hàng hải)", url: "https://dulieukinhte.com/du-lieu-dong/tong-dwt-tau-vao-cang-bien-cang-vu-tp-ho-chi-minh-32542" },
