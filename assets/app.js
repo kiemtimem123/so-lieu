@@ -169,8 +169,18 @@
       const wanted = snapshot.data.filter(item => ['omo-buy-total', 'omo-net-outstanding'].includes(item.category));
       const rows = wanted.filter(item => Number.isFinite(Number(item.value)) && item.date && item.name && item.url && item.unit);
       if (!rows.length) throw new Error('Chưa có chỉ tiêu OMO hợp lệ');
-      content.innerHTML = `<table><thead><tr><th>Chỉ tiêu</th><th>Giá trị mới nhất</th><th>Đơn vị</th><th>Ngày dữ liệu</th><th>Nguồn</th></tr></thead><tbody>${rows.map(item => `<tr><td><strong>${escapeHtml(item.name)}</strong></td><td>${fmt(item.value, 2)}</td><td>${escapeHtml(item.unit)}</td><td>${escapeHtml(dateFmt(item.date))}</td><td><a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">Xem nguồn</a></td></tr>`).join('')}</tbody></table><p class="muted">Snapshot đồng bộ lúc ${escapeHtml(dateFmt(snapshot.fetchedAt))}. Khối lượng trúng thầu mua là dòng giao dịch trong ngày; chênh lệch lưu hành OMO và tín phiếu là chỉ tiêu tồn lưu, không phải bơm/hút ròng trong ngày.</p>`;
-      if (updated) { updated.textContent = 'Ngày dữ liệu: ' + rows.map(item => dateFmt(item.date)).sort().reverse()[0]; updated.className = 'status-pill neutral'; }
+      const now = Date.now();
+      const isStale = item => {
+        const date = new Date(item.date + 'T00:00:00Z').getTime();
+        return !Number.isFinite(date) || now - date > 45 * 24 * 60 * 60 * 1000;
+      };
+      const newest = rows.reduce((latest, item) => item.date > latest ? item.date : latest, rows[0].date);
+      const anyStale = rows.some(isStale);
+      content.innerHTML = `<table><thead><tr><th>Chỉ tiêu</th><th>Giá trị</th><th>Đơn vị</th><th>Ngày dữ liệu</th><th>Trạng thái</th><th>Nguồn</th></tr></thead><tbody>${rows.map(item => `<tr><td><strong>${escapeHtml(item.name)}</strong></td><td>${fmt(item.value, 2)}</td><td>${escapeHtml(item.unit)}</td><td>${escapeHtml(dateFmt(item.date))}</td><td>${isStale(item) ? '<span class="status-pill warning">Dữ liệu cũ</span>' : '<span class="status-pill neutral">Trong 45 ngày</span>'}</td><td><a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">Xem nguồn</a></td></tr>`).join('')}</tbody></table><p class="muted">Snapshot đồng bộ lúc ${escapeHtml(dateFmt(snapshot.fetchedAt))}. Khối lượng mua OMO là dòng giao dịch, còn chênh lệch lưu hành OMO − tín phiếu là chỉ tiêu tồn lưu, không phải bơm/hút ròng trong ngày. Ngưỡng cảnh báo dữ liệu cũ: quá 45 ngày.</p>`;
+      if (updated) {
+        updated.textContent = anyStale ? 'Cảnh báo: dữ liệu OMO cũ' : 'Ngày mới nhất: ' + dateFmt(newest);
+        updated.className = anyStale ? 'status-pill warning' : 'status-pill neutral';
+      }
     } catch (error) {
       content.innerHTML = '<div class="empty-state"><h3>Chưa tải được dữ liệu OMO</h3><p>Không có chuỗi OMO hợp lệ trong snapshot; không hiển thị giá trị thay thế.</p></div>';
       if (updated) { updated.textContent = 'Chưa có dữ liệu'; updated.className = 'status-pill neutral'; }
