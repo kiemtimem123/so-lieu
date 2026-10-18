@@ -368,11 +368,36 @@ def discover_for_job(job, allowed_domains):
                               "endpoint":path,"error":str(exc)[:600]},ensure_ascii=False))
             return None
 
-    # Same three calls the public Vietstock page makes when the document tab loads.
+    # Same endpoints as the public page, but request only years in the user's scope.
     call_json("/data/getdocumenttype", "GET")
-    call_json("/data/getyearreport", "POST", {"code":symbol})
-    first_page = call_json("/data/getdocument", "POST",
-                           {"code":symbol,"page":1,"type":doctype})
+    year_response = call_json("/data/getyearreport", "POST", {"code":symbol})
+
+    def years_from_response(value):
+        found = set()
+        def walk(node):
+            if isinstance(node, dict):
+                for key, item in node.items():
+                    if str(key).casefold() in {"year","reportyear","value","id"}:
+                        if isinstance(item, (int,float)) or (isinstance(item,str) and re.fullmatch(r"20\d{2}",item.strip())):
+                            y = int(item)
+                            if start_year <= y <= datetime.now(timezone.utc).year + 1:
+                                found.add(y)
+                    walk(item)
+            elif isinstance(node, list):
+                for item in node:
+                    walk(item)
+            elif isinstance(node, (int,float)) or (isinstance(node,str) and re.fullmatch(r"20\d{2}",node.strip())):
+                y = int(node)
+                if start_year <= y <= datetime.now(timezone.utc).year + 1:
+                    found.add(y)
+        walk(value)
+        return found
+
+    # The endpoint usually returns the years available on this symbol's Vietstock
+    # index. Add each calendar year through the current year as a safe fallback.
+    years_to_query = set(range(start_year, datetime.now(timezone.utc).year + 1))
+    years_to_query.update(years_from_response(year_response))
+    years_to_query = sorted(years_to_query)
     def rows_from_json(value):
         if isinstance(value, list):
             return value
@@ -383,9 +408,9 @@ def discover_for_job(job, allowed_domains):
                     return sub
         return []
 
-    rows = rows_from_json(first_page)
     seen_rows = set()
     all_rows = []
+    total_rows_by_year = {}
     def add_rows(items):
         for row in items:
             if not isinstance(row, dict):
@@ -394,32 +419,33 @@ def discover_for_job(job, allowed_domains):
             if ident and ident not in seen_rows:
                 seen_rows.add(ident)
                 all_rows.append(row)
-    add_rows(rows)
-    total_rows = 0
-    if rows:
-        try:
-            total_rows = int(rows[0].get("TotalRow") or rows[0].get("totalRow") or 0)
-        except (TypeError, ValueError):
-            total_rows = 0
-    # The site's default page size is 20. Follow its page parameter to get the
-    # complete index, bounded to avoid infinite paging if its response is unusual.
-    if total_rows:
-        pages = min(max((total_rows + 19) // 20, 1), 100)
-    else:
-        pages = 1 if len(rows) < 20 else 100
-    for page in range(2, pages + 1):
-        result = call_json("/data/getdocument", "POST",
-                           {"code":symbol,"page":page,"type":doctype})
-        page_rows = rows_from_json(result)
-        if not page_rows:
-            break
-        before = len(all_rows)
-        add_rows(page_rows)
-        if len(all_rows) == before:
-            break
-        if len(page_rows) < 20:
-            break
 
+    for report_year in years_to_query:
+        first_page = call_json("/data/getdocument", "POST",
+                               {"code":symbol,"page":1,"type":doctype,"year":report_year})
+        rows = rows_from_json(first_page)
+        add_rows(rows)
+        total_rows = 0
+        if rows:
+            try:
+                total_rows = int(rows[0].get("TotalRow") or rows[0].get("totalRow") or 0)
+            except (TypeError, ValueError):
+                total_rows = 0
+        total_rows_by_year[str(report_year)] = total_rows or len(rows)
+        if total_rows:
+            pages = min(max((total_rows + 19) // 20, 1), 30)
+        else:
+            pages = 1 if len(rows) < 20 else 30
+        for page in range(2, pages + 1):
+            result = call_json("/data/getdocument", "POST",
+                               {"code":symbol,"page":page,"type":doctype,"year":report_year})
+            page_rows = rows_from_json(result)
+            if not page_rows:
+                break
+            before = len(all_rows)
+            add_rows(page_rows)
+            if len(all_rows) == before or len(page_rows) < 20:
+                break
     candidates = []
     for row in all_rows:
         title = str(row.get("FullName") or row.get("Title") or row.get("FileName") or "").strip()
