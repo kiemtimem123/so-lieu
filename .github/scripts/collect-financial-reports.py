@@ -594,6 +594,24 @@ def main():
             continue
         job["status"]="searching"; job["updatedAt"]=NOW; job["attempts"]=int(job.get("attempts",0))+1
         candidates = discover_for_job(job, ALLOWED_DOMAINS)
+        # Avoid re-downloading the same Vietstock URL when a follow-up job for
+        # this ticker is used to collect the remaining statements.
+        already_downloaded_urls = set()
+        for previous_job in jobs:
+            if previous_job is job or str(previous_job.get("symbol","")).upper() != str(job.get("symbol","")).upper():
+                continue
+            for previous_file in previous_job.get("downloadedFiles", []) or []:
+                if previous_file.get("status") != "downloaded_needs_review":
+                    continue
+                for key in ("url", "final_url"):
+                    previous_url = previous_file.get(key)
+                    if previous_url:
+                        already_downloaded_urls.add(str(previous_url))
+        before_dedup = len(candidates)
+        candidates = [c for c in candidates if str(c.get("url","")) not in already_downloaded_urls]
+        print(json.dumps({"event":"deduplicate_previous_downloads","symbol":job.get("symbol"),
+                          "candidate_count_before":before_dedup,"already_downloaded_urls":len(already_downloaded_urls),
+                          "candidate_count_after":len(candidates)},ensure_ascii=False))
         job["sourceCandidates"] = candidates[:80]
         job_dir = OUT / job["symbol"] / job["id"]
         results = []
