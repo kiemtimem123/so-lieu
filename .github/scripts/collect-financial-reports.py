@@ -349,7 +349,7 @@ def discover_for_job(job, allowed_domains):
                 js, re.I
             )))
             snippets = []
-            for term in ("Documents_All", "Documents_Period", "Documents_Year", "Tab_Documents"):
+            for term in ("Documents_All", "Documents_Period", "Documents_Year", "Tab_Documents", "/data/getdocument", "/data/getdocumenttype", "/data/getyearreport", "/Data/ViewDocument", "FileInfoID", "pageIndex", "doctype"):
                 at = js.casefold().find(term.casefold())
                 if at >= 0:
                     snippets.append({"term":term,"text":js[max(0,at-700):min(len(js),at+1600)]})
