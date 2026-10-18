@@ -52,6 +52,7 @@ def search_web(query):
                 found.append({"url": href, "title": title})
         return found
     except Exception as exc:
+        print(json.dumps({"event":"search_failed","query":query,"error":str(exc)[:500]}, ensure_ascii=False))
         return [{"error": str(exc), "query": query}]
 
 def extract_file(path, content_type):
@@ -191,6 +192,7 @@ def discover_for_job(job, allowed_domains):
         if item.get("url") not in urls:
             urls.add(item.get("url"))
             deduped.append(item)
+    print(json.dumps({"event":"discovery_summary","symbol":symbol,"queries":len(queries),"candidates":len(deduped)}, ensure_ascii=False))
     return deduped
 
 def download_candidate(candidate, job_dir):
