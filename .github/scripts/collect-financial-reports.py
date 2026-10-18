@@ -36,7 +36,7 @@ def domain_allowed(url, allowed):
 def search_web(query):
     url = "https://html.duckduckgo.com/html/"
     try:
-        response = SESSION.post(url, data={"q": query}, timeout=25)
+        response = SESSION.post(url, data={"q": query}, timeout=12)
         response.raise_for_status()
         soup = BeautifulSoup(response.text, "html.parser")
         found = []
@@ -162,15 +162,12 @@ def discover_for_job(job, allowed_domains):
     queries = [
         f'"{symbol}" "báo cáo tài chính quý" {start}..{datetime.now().year}',
         f'"{symbol}" "báo cáo tài chính" "quý" site:vietstock.vn',
-        f'"{symbol}" "financial statements" "quarter" site:vietstock.vn',
-        f'"{symbol}" báo cáo tài chính site:hsx.vn OR site:hnx.vn',
     ]
     # Search issuer/IR domains directly; a domain match alone is not enough:
     # the title still must pass the strict official-statement filter below.
     for issuer_domain in issuer_domains:
         if re.fullmatch(r"[a-zA-Z0-9.-]+", str(issuer_domain)):
             queries.append(f'"{symbol}" "báo cáo tài chính" quý site:{issuer_domain}')
-            queries.append(f'"{symbol}" "financial statements" quarterly site:{issuer_domain}')
     candidates, seen = [], set()
     for q in queries:
         results = search_web(q)
@@ -191,7 +188,7 @@ def discover_for_job(job, allowed_domains):
                 # On the issuer's own allowlisted domain, official filing titles may omit
                 # the ticker. Keep financial-statement wording and analyst-material exclusions.
                 candidates.append(item)
-        time.sleep(1.0)
+        time.sleep(0.2)
     deduped, urls = [], set()
     for item in candidates:
         if item.get("url") not in urls:
