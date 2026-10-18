@@ -303,175 +303,184 @@ def _urls_from_document_page(url, symbol, row_text, index_url):
         return []
 
 def discover_for_job(job, allowed_domains):
-    """Discover issuer financial statements from the single Vietstock document index.
-
-    This intentionally does not search individual issuer websites or generic web results.
-    The index link and any direct report attachment URL are kept in the candidate metadata.
-    """
+    """Use only VietstockFinance's own AJAX-backed per-symbol document list."""
     symbol = str(job["symbol"]).upper()
-    start = int(job.get("startYear", 2024))
+    start_year = int(job.get("startYear", 2024))
     index_url = vietstock_document_index_url(symbol)
+    base_url = "https://finance.vietstock.vn"
+    requested_type = str(job.get("reportType", "both")).casefold()
     try:
-        response = SESSION.get(index_url, timeout=35, allow_redirects=True)
-        response.raise_for_status()
+        page_response = SESSION.get(index_url, timeout=35, allow_redirects=True)
+        page_response.raise_for_status()
     except Exception as exc:
         print(json.dumps({"event":"vietstock_index_fetch_failed","symbol":symbol,
                           "url":index_url,"error":str(exc)[:800]},ensure_ascii=False))
         return []
 
-    soup = BeautifulSoup(response.text, "html.parser")
+    soup = BeautifulSoup(page_response.text, "html.parser")
     page_title = soup.title.get_text(" ",strip=True) if soup.title else ""
-    # The visible document grid can be populated by page JavaScript. Log the
-    # scripts and likely document-list routes so the index API can be wired in
-    # without reverting to issuer-site searching.
-    script_srcs = [requests.compat.urljoin(response.url, s.get("src", "")) for s in soup.select("script[src]")]
-    inline_js = "\\n".join(s.get_text(" ",strip=True) for s in soup.select("script"))
-    route_hints = sorted(set(re.findall(
-        r"""['"]([^'"]*(?:/data/|/home/|document|document|tai-lieu|report|attachment|download)[^'"]*)['"]""",
-        inline_js, re.I
-    )))
-    # Fetch the relevant first-party scripts once and inspect only route strings
-    # surrounding the document tab names. The public page loads its document grid
-    # asynchronously, so anchor scraping alone misses the actual rows.
-    script_diagnostics = []
-    for script_url in script_srcs:
-        if not any(part in script_url.casefold() for part in (
-            "/bundles/company/document/jsx", "/bundles/company/jsx",
-            "/bundles/company/jsnew"
-        )):
-            continue
-        try:
-            js_response = SESSION.get(script_url, timeout=25)
-            js_response.raise_for_status()
-            js = js_response.text
-            routes = sorted(set(re.findall(
-                r"""['"]([^'"]{1,220}(?:/Home/|/data/|Document|document|tai-lieu|download|Report|report)[^'"]{0,120})['"]""",
-                js, re.I
-            )))
-            snippets = []
-            for term in ("Documents_All", "Documents_Period", "Documents_Year", "Tab_Documents", "/data/getdocument", "/data/getdocumenttype", "/data/getyearreport", "/Data/ViewDocument", "FileInfoID", "pageIndex", "doctype", "key:\"loadData\",value:function"):
-                at = js.casefold().find(term.casefold())
-                if at >= 0:
-                    span = 7000 if "key:\"loadData\",value:function" in term else (10000 if term == "loadData" else 2200)
-                    snippets.append({"term":term,"text":js[max(0,at-900):min(len(js),at+span)]})
-            script_diagnostics.append({
-                "url":script_url,"status":js_response.status_code,"bytes":len(js),
-                "route_hints":routes[:150],"snippets":snippets[:12]
-            })
-        except Exception as exc:
-            script_diagnostics.append({"url":script_url,"error":str(exc)[:400]})
-    print(json.dumps({"event":"vietstock_index_js_diagnostic","symbol":symbol,
-                      "script_count":len(script_srcs),"script_srcs":script_srcs[:50],
-                      "inline_route_hints":route_hints[:100],
-                      "first_party_script_diagnostics":script_diagnostics},ensure_ascii=False))
-    candidates = []
-    seen = set()
+    # Match the site's own request token: hidden input first, then JS assignment.
+    token = ""
+    token_input = soup.find("input", attrs={"name":"__RequestVerificationToken"})
+    if token_input:
+        token = str(token_input.get("value") or "")
+    if not token:
+        match = re.search(r"""(?:_tokenString|__RequestVerificationToken)\s*[:=]\s*['"]([^'"]+)['"]""",
+                          page_response.text, re.I)
+        if match:
+            token = match.group(1)
+    try:
+        doctype = int(parse_qs(urlparse(index_url).query).get("doctype", ["1"])[0] or 1)
+    except (TypeError, ValueError):
+        doctype = 1
+    headers = {
+        "Referer": page_response.url,
+        "Origin": base_url,
+        "X-Requested-With": "XMLHttpRequest",
+        "Accept": "application/json, text/javascript, */*; q=0.01",
+    }
 
-    def add_candidate(url, title, context_text):
-        url = requests.compat.urljoin(response.url, url)
-        parsed = urlparse(url)
-        host = (parsed.hostname or "").lower()
-        if parsed.scheme not in ("http","https") or not (
-            host == "finance.vietstock.vn" or host.endswith(".vietstock.vn") or host == "vietstock.vn"
-        ):
-            return
-        evidence = " ".join([str(title or ""), str(context_text or ""), url])
-        year, published_at = _extract_report_year_and_date(evidence)
+    def call_json(path, method="GET", payload=None):
+        url = requests.compat.urljoin(base_url, path)
+        try:
+            if method == "POST":
+                data = dict(payload or {})
+                if token:
+                    data["__RequestVerificationToken"] = token
+                resp = SESSION.post(url, data=data, headers=headers, timeout=30)
+            else:
+                resp = SESSION.get(url, headers=headers, timeout=30)
+            ctype = resp.headers.get("Content-Type","")
+            try:
+                parsed = resp.json()
+            except Exception:
+                parsed = None
+            print(json.dumps({
+                "event":"vietstock_api_probe","symbol":symbol,"endpoint":path,
+                "status":resp.status_code,"content_type":ctype,
+                "bytes":len(resp.content),"json_type":type(parsed).__name__ if parsed is not None else None,
+                "json_preview":str(parsed)[:700] if parsed is not None else resp.text[:500]
+            },ensure_ascii=False))
+            resp.raise_for_status()
+            return parsed
+        except Exception as exc:
+            print(json.dumps({"event":"vietstock_api_failed","symbol":symbol,
+                              "endpoint":path,"error":str(exc)[:600]},ensure_ascii=False))
+            return None
+
+    # Same three calls the public Vietstock page makes when the document tab loads.
+    call_json("/data/getdocumenttype", "GET")
+    call_json("/data/getyearreport", "POST", {"code":symbol})
+    first_page = call_json("/data/getdocument", "POST",
+                           {"code":symbol,"page":1,"type":doctype})
+    def rows_from_json(value):
+        if isinstance(value, list):
+            return value
+        if isinstance(value, dict):
+            for key in ("data","Data","items","Items","result","Result","rows","Rows"):
+                sub = value.get(key)
+                if isinstance(sub, list):
+                    return sub
+        return []
+
+    rows = rows_from_json(first_page)
+    seen_rows = set()
+    all_rows = []
+    def add_rows(items):
+        for row in items:
+            if not isinstance(row, dict):
+                continue
+            ident = str(row.get("Id") or row.get("FileInfoID") or row.get("Url") or row.get("FullName") or row.get("Title") or "")
+            if ident and ident not in seen_rows:
+                seen_rows.add(ident)
+                all_rows.append(row)
+    add_rows(rows)
+    total_rows = 0
+    if rows:
+        try:
+            total_rows = int(rows[0].get("TotalRow") or rows[0].get("totalRow") or 0)
+        except (TypeError, ValueError):
+            total_rows = 0
+    # The site's default page size is 20. Follow its page parameter to get the
+    # complete index, bounded to avoid infinite paging if its response is unusual.
+    if total_rows:
+        pages = min(max((total_rows + 19) // 20, 1), 100)
+    else:
+        pages = 1 if len(rows) < 20 else 100
+    for page in range(2, pages + 1):
+        result = call_json("/data/getdocument", "POST",
+                           {"code":symbol,"page":page,"type":doctype})
+        page_rows = rows_from_json(result)
+        if not page_rows:
+            break
+        before = len(all_rows)
+        add_rows(page_rows)
+        if len(all_rows) == before:
+            break
+        if len(page_rows) < 20:
+            break
+
+    candidates = []
+    for row in all_rows:
+        title = str(row.get("FullName") or row.get("Title") or row.get("FileName") or "").strip()
+        # Some rows use separate Title/FullName/Url labels; combine metadata for filtering.
+        name = str(row.get("Title") or "")
+        full_name = str(row.get("FullName") or "")
+        file_url = str(row.get("Url") or row.get("FileUrl") or row.get("DownloadUrl") or "").strip()
+        updated = str(row.get("LastUpdate") or row.get("PublishDate") or row.get("PublishedAt") or "")
+        evidence = " ".join([title,name,full_name,file_url,updated])
+        if not is_financial_statement_document(evidence):
+            continue
+        if any(word in evidence.casefold() for word in [
+            "báo cáo phân tích","bao cao phan tich","khuyến nghị","định giá",
+            "dự phóng","forecast","equity research","brokerage","triển vọng",
+            "khóa học","khoa hoc","đào tạo","dao tao","training","webinar","seminar"
+        ]):
+            continue
         period = _period_from_report_text(evidence)
+        year, published_at = _extract_report_year_and_date(evidence)
         period_year = re.match(r"(20\d{2})-", period or "")
         if period_year:
             year = int(period_year.group(1))
-        # The page itself is pre-filtered by doctype=1 (financial documents).
-        # Still explicitly reject research/recommendation items and limit the scope.
-        if not is_financial_statement_document(evidence):
-            return
-        if any(word in evidence.casefold() for word in [
-            "báo cáo phân tích","bao cao phan tich","khuyến nghị","định giá",
-            "dự phóng","forecast","equity research","brokerage","triển vọng"
-        ]):
-            return
-        requested_type = str(job.get("reportType","consolidated")).casefold()
-        if requested_type == "consolidated" and re.search(r"riêng\s*lẻ|rieng\s*le|separate financial", evidence, re.I):
-            return
-        if requested_type == "separate" and re.search(r"hợp\s*nhất|hop\s*nhat|consolidated", evidence, re.I):
-            return
-        if year is not None and year < start:
-            return
+        if year is not None and year < start_year:
+            continue
         if year is None:
-            # Do not assume old dates are in scope. Keep only rows with a discoverable
-            # year, except a direct BCTC PDF with a year in its filename.
-            return
-        if url in seen:
-            return
-        seen.add(url)
+            continue
+        if requested_type == "consolidated" and re.search(r"riêng\s*lẻ|rieng\s*le|separate financial", evidence, re.I):
+            continue
+        if requested_type == "separate" and re.search(r"hợp\s*nhất|hop\s*nhat|consolidated", evidence, re.I):
+            continue
+        if not file_url:
+            continue
+        absolute = requests.compat.urljoin(base_url, file_url)
+        host = (urlparse(absolute).hostname or "").lower()
+        if not host.endswith("vietstock.vn") and host != "vietstock.vn":
+            continue
         candidates.append({
-            "url":url,"title":str(title or context_text or url)[:500],
-            "host":host,"allowlisted":domain_allowed(url,allowed_domains),
-            "symbol":symbol,"query":"Vietstock per-symbol document index",
-            "page_url":response.url,"document_index":index_url,
-            "report_year":year,"published_at":published_at,
-            "period":period,
-            "report_type":job.get("reportType","consolidated")
+            "url":absolute,"title":title or name or full_name or absolute,
+            "host":host,"allowlisted":domain_allowed(absolute,allowed_domains),
+            "symbol":symbol,"query":"VietstockFinance /data/getdocument",
+            "page_url":index_url,"document_index":index_url,
+            "document_id":row.get("FileInfoID") or row.get("Id"),
+            "report_year":year,"published_at":published_at or updated[:10],
+            "period":period,"report_type":job.get("reportType","both"),
+            "vietstock_title":name,"full_name":full_name,
+            "file_ext":row.get("FileExt"),"last_update":updated,
+            "total_rows":total_rows
         })
-
-    # First pass: table rows/cards so titles, period and publication date remain attached.
-    for a in soup.find_all("a", href=True):
-        href = a.get("href","").strip()
-        label = re.sub(r"\s+"," ",a.get_text(" ",strip=True)).strip()
-        context = _document_context(a)
-        context_text = re.sub(r"\s+"," ",context.get_text(" ",strip=True)).strip()
-        evidence = " ".join([label,context_text,href])
-        # Do not treat navigation links as documents; require a BCTC label in the item.
-        if not is_financial_statement_document(evidence):
-            continue
-        if not re.search(r"(?:/downloadedoc/|\.pdf(?:\?|$)|\.xlsx?(?:\?|$)|download|attachment|/files?/)",href,re.I):
-            continue
-        display_title = label if is_financial_statement_document(label) else context_text
-        add_candidate(href, display_title or label, context_text)
-
-    # Second pass: pick up direct attachment URLs embedded in HTML/JSON/scripts.
-    embedded = re.findall(
-        r"""(?:https?:)?//[^"'\s<>]+?\.(?:pdf|xlsx?)(?:\?[^"'\s<>]*)?|(?:https?:)?//static[12]\.vietstock\.vn/[^"'\s<>]+""",
-        response.text, re.I
-    )
-    for href in embedded:
-        href = href.rstrip("),;")
-        absolute = requests.compat.urljoin(response.url, href)
-        filename = unquote(urlparse(absolute).path).rsplit("/",1)[-1]
-        evidence = " ".join([page_title,filename,absolute])
-        if not re.search(r"\b"+re.escape(symbol)+r"\b",evidence,re.I):
-            # Document list pages can omit ticker in a direct filename, but must have
-            # a financial-statement filename and be linked from this symbol's index.
-            if not re.search(r"(?:bao.?cao.?tai.?chinh|bctc|financial.?statement)",filename,re.I):
-                continue
-        add_candidate(absolute, filename or page_title, evidence)
-
-    print(json.dumps({"event":"vietstock_index_discovery","symbol":symbol,
-                      "index_url":index_url,"http_status":response.status_code,
-                      "page_title":page_title,"html_bytes":len(response.text),
-                      "anchors":len(soup.find_all("a",href=True)),
-                      "candidates":len(candidates)},ensure_ascii=False))
-
-    expanded = []
-    for item in candidates:
-        attachments = _urls_from_document_page(item["url"],symbol,item["title"],index_url)
-        for attachment in attachments:
-            for key in ("report_year","published_at","period","report_type","query","document_index","page_url"):
-                if attachment.get(key) is None and item.get(key) is not None:
-                    attachment[key] = item[key]
-            # Keep the row title/context from the per-symbol list for auditability.
-            attachment["index_title"] = item.get("title")
-        expanded.extend(attachments)
-        time.sleep(0.15)
-    deduped = []
-    urls = set()
-    for item in expanded:
-        if item.get("url") and item["url"] not in urls:
-            urls.add(item["url"])
-            item["allowlisted"] = domain_allowed(item["url"], allowed_domains)
-            deduped.append(item)
-    print(json.dumps({"event":"vietstock_index_attachment_summary","symbol":symbol,
-                      "index_url":index_url,"attachments":len(deduped)},ensure_ascii=False))
+    print(json.dumps({
+        "event":"vietstock_index_discovery","symbol":symbol,"index_url":index_url,
+        "http_status":page_response.status_code,"page_title":page_title,
+        "ajax_rows":len(all_rows),"total_rows":total_rows,
+        "candidate_count":len(candidates),
+        "sample_rows":[{k:r.get(k) for k in ("Title","FullName","Url","FileExt","LastUpdate","TotalRow")} for r in all_rows[:5]]
+    },ensure_ascii=False))
+    deduped=[]
+    seen_urls=set()
+    for candidate in candidates:
+        if candidate["url"] not in seen_urls:
+            seen_urls.add(candidate["url"])
+            deduped.append(candidate)
     return deduped
 
 def download_candidate(candidate, job_dir):
