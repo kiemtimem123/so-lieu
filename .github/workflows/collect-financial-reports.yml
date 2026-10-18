@@ -6,7 +6,7 @@ on:
       max_downloads_per_job:
         description: Maximum reports to download for each queued security
         required: false
-        default: "4"
+        default: "12"
   schedule:
     - cron: '17 1 * * *'
 
@@ -36,7 +36,7 @@ jobs:
         run: node .github/scripts/validate-report-queue.cjs
       - name: Run report discovery, download and extraction worker
         env:
-          MAX_DOWNLOADS_PER_JOB: ${{ github.event.inputs.max_downloads_per_job || '4' }}
+          MAX_DOWNLOADS_PER_JOB: ${{ github.event.inputs.max_downloads_per_job || '12' }}
         run: python .github/scripts/collect-financial-reports.py
       - name: Crawl Vietstock eDocuments directly and validate MBB PDF (no persistent PDF archive)
         env:
