@@ -264,6 +264,9 @@ def main():
                 jobs.append({"id":job_id,"symbol":symbol,"startYear":int(securities.get("defaultStartYear",2024)),"reportType":"both" if len(sec.get("reportTypes",[]))>1 else (sec.get("reportTypes") or ["consolidated"])[0],"status":"queued","createdAt":NOW,"attempts":0,"sourceCandidates":[],"downloadedFiles":[],"verifiedPeriods":[],"origin":"scheduled_registry"})
                 known.add(job_id)
     summary = {"started_at":NOW,"jobs_processed":0,"downloaded":0,"needs_review":0,"errors":0,"allowlisted_domains":ALLOWED_DOMAINS}
+    # Do not let a few repeatedly failing early jobs starve the rest of the ticker queue.
+    # Process never-attempted queued jobs first; retry failed jobs only after queued coverage.
+    jobs.sort(key=lambda job: (0 if job.get("status") == "queued" else 1, job.get("createdAt", "")))
     for job in jobs:
         if summary["jobs_processed"] >= MAX_JOBS_PER_RUN:
             break
