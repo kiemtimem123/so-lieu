@@ -14,7 +14,8 @@ SEC_PATH = ROOT / "config/securities.json"
 SOURCES_PATH = ROOT / "config/source-registry.json"
 OUT = ROOT / "reports/raw"
 MAX_BYTES = int(os.getenv("MAX_REPORT_BYTES", str(12 * 1024 * 1024)))
-MAX_PER_JOB = int(os.getenv("MAX_DOWNLOADS_PER_JOB", "12"))
+MAX_PER_JOB = int(os.getenv("MAX_DOWNLOADS_PER_JOB", "2"))
+MAX_JOBS_PER_RUN = int(os.getenv("MAX_JOBS_PER_RUN", "3"))
 USER_AGENT = "solieutaichinh-report-collector/1.0 (public financial report archive)"
 SESSION = requests.Session()
 SESSION.headers.update({"User-Agent": USER_AGENT, "Accept": "text/html,application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,*/*;q=0.8"})
@@ -264,6 +265,8 @@ def main():
                 known.add(job_id)
     summary = {"started_at":NOW,"jobs_processed":0,"downloaded":0,"needs_review":0,"errors":0,"allowlisted_domains":ALLOWED_DOMAINS}
     for job in jobs:
+        if summary["jobs_processed"] >= MAX_JOBS_PER_RUN:
+            break
         if job.get("status") not in {"queued","failed"}: continue
         if job.get("status") == "failed" and int(job.get("attempts", 0)) >= 3:
             continue
