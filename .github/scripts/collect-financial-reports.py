@@ -135,7 +135,7 @@ def expand_vietstock_filing_page(candidate, symbol):
             path = urlparse(absolute).path.lower()
             if not path.endswith((".pdf", ".xlsx", ".xls")):
                 continue
-            if not domain_allowed(absolute, ["static1.vietstock.vn", "vietstock.vn"]):
+            if not domain_allowed(absolute, ["static1.vietstock.vn", "static2.vietstock.vn", "vietstock.vn"]):
                 continue
             evidence = (label + " " + path).lower()
             if any(x in evidence for x in ["explanation", "giai-trinh", "giai_trinh", "forecast", "phan-tich", "analyst"]):
@@ -162,6 +162,7 @@ def discover_for_job(job, allowed_domains):
     queries = [
         f'"{symbol}" "báo cáo tài chính quý" {start}..{datetime.now().year}',
         f'"{symbol}" "báo cáo tài chính" "quý" site:vietstock.vn',
+        f'"{symbol}" site:static2.vietstock.vn/data/HOSE/{datetime.now().year}/BCTC/VN/',
     ]
     # Search issuer/IR domains directly; a domain match alone is not enough:
     # the title still must pass the strict official-statement filter below.
@@ -200,7 +201,7 @@ def discover_for_job(job, allowed_domains):
 def download_candidate(candidate, job_dir):
     url = candidate["url"]
     host = (urlparse(url).hostname or "").lower()
-    approved_attachment = candidate.get("official_filing_page") is True and host in {"static1.vietstock.vn", "vietstock.vn"}
+    approved_attachment = candidate.get("official_filing_page") is True and host in {"static1.vietstock.vn", "static2.vietstock.vn", "vietstock.vn"}
     if not candidate.get("allowlisted") or (not domain_allowed(url, ALLOWED_DOMAINS) and not approved_attachment):
         return {"url":url,"title":candidate.get("title"),"status":"blocked_untrusted_domain","host":host}
     try:
