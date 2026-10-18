@@ -1,6 +1,11 @@
 name: Collect Financial Reports
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/scripts/collect-financial-reports.py"
+      - "config/report-queue.json"
   workflow_dispatch:
     inputs:
       max_downloads_per_job:
@@ -39,6 +44,8 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: '3.12'
+      - name: Compile collector before run
+        run: python -m py_compile .github/scripts/collect-financial-reports.py
       - name: Install collector dependencies
         run: pip install -r .github/scripts/requirements-report-worker.txt
       - name: Validate queue and registry before run
