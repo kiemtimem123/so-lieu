@@ -1,7 +1,8 @@
 {
   "schemaVersion": 1,
-  "description": "Chỉ tải BCTC đã công bố trong thông báo phát hành chính thức. Vietstock chỉ dùng để tìm trang công bố BCTC theo mã cổ phiếu; không tải báo cáo phân tích/khuyến nghị/dự phóng.",
+  "description": "Nguồn chỉ mục chính: trang Tải tài liệu VietstockFinance theo từng mã chứng khoán (?doctype=1). Không tìm kiếm website IR của từng doanh nghiệp hoặc nguồn web chung.",
   "allowedDomains": [
+    "finance.vietstock.vn",
     "hsx.vn",
     "hose.vn",
     "hnx.vn",
@@ -24,50 +25,10 @@
     "static2.vietstock.vn"
   ],
   "notes": [
-    "Worker chỉ chấp nhận trang công bố có tiêu đề chứa mã cổ phiếu và cụm Báo cáo tài chính/Financial Statements.",
-    "Loại trừ báo cáo phân tích, cập nhật KQKD, khuyến nghị, định giá, forecast/dự phóng và tài liệu giải trình.",
-    "Vietstock là chỉ mục tra cứu thông báo công bố; tệp đính kèm chỉ được tải khi tìm thấy từ trang BCTC đã kiểm tra tiêu đề.",
-    "Worker không tự phê duyệt số liệu trích xuất; tài liệu tải về vẫn ở trạng thái needs_review trước khi đưa lên website.",
-    "Worker tìm thêm trên website doanh nghiệp phát hành/quan hệ nhà đầu tư theo issuerDomainsBySymbol; miền này chỉ là nguồn tìm kiếm, tiêu đề tài liệu vẫn phải qua bộ lọc BCTC chính thức.",
-    "2026-10-18 fix: allowlist issuer IR domains listed in issuerDomainsBySymbol so official issuer report candidates are not discarded before download.",
-    "2026-10-19 fix: include static2.vietstock.vn, where official quarterly PDF attachments are hosted."
-  ],
-  "issuerDomainsBySymbol": {
-    "MBB": [
-      "mbbank.com.vn"
-    ],
-    "ACB": [
-      "acb.com.vn"
-    ],
-    "FPT": [
-      "fpt.com"
-    ],
-    "SHB": [
-      "shb.com.vn"
-    ],
-    "TCX": [
-      "tcbs.com.vn"
-    ],
-    "HCM": [
-      "hsc.com.vn"
-    ],
-    "VND": [
-      "vndirect.com.vn"
-    ],
-    "SHS": [
-      "shs.com.vn"
-    ],
-    "NLG": [
-      "namlongvn.com"
-    ],
-    "BSR": [
-      "bsr.com.vn"
-    ],
-    "TCB": [
-      "techcombank.com.vn"
-    ],
-    "VHM": [
-      "vingroup.net"
-    ]
-  }
+    "BCTC được khám phá qua https://finance.vietstock.vn/{SYMBOL}/tai-tai-lieu.htm?doctype=1.",
+    "Không tìm kiếm các website IR riêng lẻ; trang danh mục Vietstock là điểm vào duy nhất cho việc tìm tài liệu.",
+    "Chỉ chấp nhận tài liệu có tiêu đề/ngữ cảnh xác định được là báo cáo tài chính; loại báo cáo phân tích, khuyến nghị, định giá và dự phóng.",
+    "Các tệp tải về được giữ ở trạng thái needs_review; không tự động phê duyệt số liệu trích xuất.",
+    "Giữ lại liên kết danh mục, liên kết chi tiết/tệp đính kèm, tên tài liệu, kỳ báo cáo, ngày công bố và mã cổ phiếu làm metadata kiểm toán."
+  ]
 }
