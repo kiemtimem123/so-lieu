@@ -346,6 +346,11 @@ def discover_for_job(job, allowed_domains):
             "dự phóng","forecast","equity research","brokerage","triển vọng"
         ]):
             return
+        requested_type = str(job.get("reportType","consolidated")).casefold()
+        if requested_type == "consolidated" and re.search(r"riêng\s*lẻ|rieng\s*le|separate financial", evidence, re.I):
+            return
+        if requested_type == "separate" and re.search(r"hợp\s*nhất|hop\s*nhat|consolidated", evidence, re.I):
+            return
         if year is not None and year < start:
             return
         if year is None:
@@ -405,7 +410,14 @@ def discover_for_job(job, allowed_domains):
 
     expanded = []
     for item in candidates:
-        expanded.extend(_urls_from_document_page(item["url"],symbol,item["title"],index_url))
+        attachments = _urls_from_document_page(item["url"],symbol,item["title"],index_url)
+        for attachment in attachments:
+            for key in ("report_year","published_at","period","report_type","query","document_index","page_url"):
+                if attachment.get(key) is None and item.get(key) is not None:
+                    attachment[key] = item[key]
+            # Keep the row title/context from the per-symbol list for auditability.
+            attachment["index_title"] = item.get("title")
+        expanded.extend(attachments)
         time.sleep(0.15)
     deduped = []
     urls = set()
@@ -455,7 +467,7 @@ def download_candidate(candidate, job_dir):
             extracted = extract_file(path, ctype)
             extracted_path = path.with_suffix(path.suffix + ".extracted.json")
             save(extracted_path, extracted)
-            return {"url":url,"final_url":final_url,"title":candidate.get("title"),"host":urlparse(final_url).hostname,"status":"downloaded_needs_review","file":str(path.relative_to(ROOT)),"extracted_file":str(extracted_path.relative_to(ROOT)),"sha256":digest,"bytes":len(data),"content_type":ctype,"extraction":extracted.get("extraction"),"pages":extracted.get("page_count"),"downloaded_at":NOW,"official_filing_page":candidate.get("filing_page"),"filing_page_title":candidate.get("filing_page_title")}
+            return {"url":url,"final_url":final_url,"title":candidate.get("title"),"host":urlparse(final_url).hostname,"status":"downloaded_needs_review","file":str(path.relative_to(ROOT)),"extracted_file":str(extracted_path.relative_to(ROOT)),"sha256":digest,"bytes":len(data),"content_type":ctype,"extraction":extracted.get("extraction"),"pages":extracted.get("page_count"),"downloaded_at":NOW,"source":"VietstockFinance document index","document_index":candidate.get("document_index"),"index_title":candidate.get("index_title") or candidate.get("title"),"period":candidate.get("period"),"report_year":candidate.get("report_year"),"published_at":candidate.get("published_at"),"report_type":candidate.get("report_type"),"official_filing_page":candidate.get("filing_page"),"filing_page_title":candidate.get("filing_page_title")}
     except Exception as exc:
         return {"url":url,"title":candidate.get("title"),"status":"download_error","error":str(exc)[:1000]}
 
