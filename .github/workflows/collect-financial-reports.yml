@@ -57,6 +57,9 @@ jobs:
             echo "No report queue/archive changes to commit."
           else
             git commit -m "Collect public financial report candidates"
+            # Other workflows may update main while this job is running.
+            # Rebase the collector commit on the latest remote head before pushing.
+            git pull --rebase origin main
             git push
           fi
       - name: Upload worker summary
