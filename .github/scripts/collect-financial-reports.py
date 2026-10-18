@@ -330,9 +330,39 @@ def discover_for_job(job, allowed_domains):
         r"""['"]([^'"]*(?:/data/|/home/|document|document|tai-lieu|report|attachment|download)[^'"]*)['"]""",
         inline_js, re.I
     )))
+    # Fetch the relevant first-party scripts once and inspect only route strings
+    # surrounding the document tab names. The public page loads its document grid
+    # asynchronously, so anchor scraping alone misses the actual rows.
+    script_diagnostics = []
+    for script_url in script_srcs:
+        if not any(part in script_url.casefold() for part in (
+            "/bundles/company/document/jsx", "/bundles/company/jsx",
+            "/bundles/company/jsnew"
+        )):
+            continue
+        try:
+            js_response = SESSION.get(script_url, timeout=25)
+            js_response.raise_for_status()
+            js = js_response.text
+            routes = sorted(set(re.findall(
+                r"""['"]([^'"]{1,220}(?:/Home/|/data/|Document|document|tai-lieu|download|Report|report)[^'"]{0,120})['"]""",
+                js, re.I
+            )))
+            snippets = []
+            for term in ("Documents_All", "Documents_Period", "Documents_Year", "Tab_Documents"):
+                at = js.casefold().find(term.casefold())
+                if at >= 0:
+                    snippets.append({"term":term,"text":js[max(0,at-700):min(len(js),at+1600)]})
+            script_diagnostics.append({
+                "url":script_url,"status":js_response.status_code,"bytes":len(js),
+                "route_hints":routes[:150],"snippets":snippets[:12]
+            })
+        except Exception as exc:
+            script_diagnostics.append({"url":script_url,"error":str(exc)[:400]})
     print(json.dumps({"event":"vietstock_index_js_diagnostic","symbol":symbol,
                       "script_count":len(script_srcs),"script_srcs":script_srcs[:50],
-                      "inline_route_hints":route_hints[:100]},ensure_ascii=False))
+                      "inline_route_hints":route_hints[:100],
+                      "first_party_script_diagnostics":script_diagnostics},ensure_ascii=False))
     candidates = []
     seen = set()
 
