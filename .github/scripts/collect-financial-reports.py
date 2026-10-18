@@ -91,11 +91,11 @@ def safe_name(url, content_type):
         suffix = ".pdf" if "pdf" in content_type.lower() else ".xlsx" if "spreadsheetml" in content_type.lower() else ".bin"
     return suffix
 
-def is_official_statement_title(title, symbol):
+def is_official_statement_title(title, symbol, require_symbol=True):
     """Reject analyst/research material; accept only issuer filing notices for actual statements."""
     t = (title or "").lower()
     sym = re.escape(symbol.lower())
-    if not re.search(rf"\b{sym}\b", t):
+    if require_symbol and not re.search(rf"\b{sym}\b", t):
         return False
     reject = [
         "phân tích", "bao cao phan tich", "báo cáo phân tích", "cập nhật kqkd",
@@ -184,7 +184,12 @@ def discover_for_job(job, allowed_domains):
             if host in {"vietstock.vn", "www.vietstock.vn", "en.vietstock.vn"}:
                 if is_official_statement_title(item.get("title", ""), symbol):
                     candidates.extend(expand_vietstock_filing_page(item, symbol))
-            elif item["allowlisted"] and is_official_statement_title(item.get("title", ""), symbol):
+            elif item["allowlisted"] and is_official_statement_title(
+                item.get("title", ""), symbol,
+                require_symbol=host not in issuer_domains
+            ):
+                # On the issuer's own allowlisted domain, official filing titles may omit
+                # the ticker. Keep financial-statement wording and analyst-material exclusions.
                 candidates.append(item)
         time.sleep(1.0)
     deduped, urls = [], set()
