@@ -334,7 +334,7 @@ def discover_for_job(job, allowed_domains):
         evidence = " ".join([str(title or ""), str(context_text or ""), url])
         year, published_at = _extract_report_year_and_date(evidence)
         period = _period_from_report_text(evidence)
-        period_year = re.match(r"(20\\d{2})-", period or "")
+        period_year = re.match(r"(20\d{2})-", period or "")
         if period_year:
             year = int(period_year.group(1))
         # The page itself is pre-filtered by doctype=1 (financial documents).
