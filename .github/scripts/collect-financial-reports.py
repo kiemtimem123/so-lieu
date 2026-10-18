@@ -278,7 +278,7 @@ def _urls_from_document_page(url, symbol, row_text, index_url):
                                   "host":ap.hostname.lower(),"page_url":response.url,
                                   "document_index":index_url,"document_detail_url":response.url})
         # Some detail pages embed attachment URLs inside script/json instead of <a> elements.
-        for href in re.findall(r"""https?://[^"'\\s<>]+?\.(?:pdf|xlsx?)(?:\?[^"'\\s<>]*)?""", response.text, re.I):
+        for href in re.findall(r"""https?://[^"'\s<>]+?\.(?:pdf|xlsx?)(?:\?[^"'\s<>]*)?""", response.text, re.I):
             ap = urlparse(href)
             evidence = (row_text + " " + href).casefold()
             if ap.hostname and ap.hostname.lower().endswith("vietstock.vn") and (
@@ -333,6 +333,10 @@ def discover_for_job(job, allowed_domains):
             return
         evidence = " ".join([str(title or ""), str(context_text or ""), url])
         year, published_at = _extract_report_year_and_date(evidence)
+        period = _period_from_report_text(evidence)
+        period_year = re.match(r"(20\\d{2})-", period or "")
+        if period_year:
+            year = int(period_year.group(1))
         # The page itself is pre-filtered by doctype=1 (financial documents).
         # Still explicitly reject research/recommendation items and limit the scope.
         if not is_financial_statement_document(evidence):
@@ -357,7 +361,7 @@ def discover_for_job(job, allowed_domains):
             "symbol":symbol,"query":"Vietstock per-symbol document index",
             "page_url":response.url,"document_index":index_url,
             "report_year":year,"published_at":published_at,
-            "period":_period_from_report_text(evidence),
+            "period":period,
             "report_type":job.get("reportType","consolidated")
         })
 
@@ -373,11 +377,12 @@ def discover_for_job(job, allowed_domains):
             continue
         if not re.search(r"(?:/downloadedoc/|\.pdf(?:\?|$)|\.xlsx?(?:\?|$)|download|tai-lieu|bctc|bao-cao-tai-chinh|financial)",href,re.I):
             continue
-        add_candidate(href, label or context_text, context_text)
+        display_title = label if is_financial_statement_document(label) else context_text
+        add_candidate(href, display_title or label, context_text)
 
     # Second pass: pick up direct attachment URLs embedded in HTML/JSON/scripts.
     embedded = re.findall(
-        r"""(?:https?:)?//[^"'\\s<>]+?\\.(?:pdf|xlsx?)(?:\\?[^"'\\s<>]*)?|(?:https?:)?//static[12]\\.vietstock\\.vn/[^"'\\s<>]+""",
+        r"""(?:https?:)?//[^"'\s<>]+?\.(?:pdf|xlsx?)(?:\?[^"'\s<>]*)?|(?:https?:)?//static[12]\.vietstock\.vn/[^"'\s<>]+""",
         response.text, re.I
     )
     for href in embedded:
