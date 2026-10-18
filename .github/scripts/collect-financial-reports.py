@@ -178,7 +178,8 @@ def is_financial_statement_document(text):
         "báo cáo phân tích", "bao cao phan tich", "phân tích cổ phiếu",
         "khuyến nghị", "định giá", "giá mục tiêu", "dự phóng", "du phong",
         "forecast", "triển vọng", "cập nhật kqkd", "equity research",
-        "analyst", "brokerage", "mua", "bán", "nắm giữ", "annual report"
+        "analyst", "brokerage", "mua", "bán", "nắm giữ", "annual report",
+        "khóa học", "khoa hoc", "đào tạo", "dao tao", "training", "đọc hiểu", "doc hieu", "webinar", "seminar"
     ]
     if any(term in t for term in reject):
         return False
@@ -320,6 +321,18 @@ def discover_for_job(job, allowed_domains):
 
     soup = BeautifulSoup(response.text, "html.parser")
     page_title = soup.title.get_text(" ",strip=True) if soup.title else ""
+    # The visible document grid can be populated by page JavaScript. Log the
+    # scripts and likely document-list routes so the index API can be wired in
+    # without reverting to issuer-site searching.
+    script_srcs = [requests.compat.urljoin(response.url, s.get("src", "")) for s in soup.select("script[src]")]
+    inline_js = "\\n".join(s.get_text(" ",strip=True) for s in soup.select("script"))
+    route_hints = sorted(set(re.findall(
+        r"""['"]([^'"]*(?:/data/|/home/|document|document|tai-lieu|report|attachment|download)[^'"]*)['"]""",
+        inline_js, re.I
+    )))
+    print(json.dumps({"event":"vietstock_index_js_diagnostic","symbol":symbol,
+                      "script_count":len(script_srcs),"script_srcs":script_srcs[:50],
+                      "inline_route_hints":route_hints[:100]},ensure_ascii=False))
     candidates = []
     seen = set()
 
@@ -380,7 +393,7 @@ def discover_for_job(job, allowed_domains):
         # Do not treat navigation links as documents; require a BCTC label in the item.
         if not is_financial_statement_document(evidence):
             continue
-        if not re.search(r"(?:/downloadedoc/|\.pdf(?:\?|$)|\.xlsx?(?:\?|$)|download|tai-lieu|bctc|bao-cao-tai-chinh|financial)",href,re.I):
+        if not re.search(r"(?:/downloadedoc/|\.pdf(?:\?|$)|\.xlsx?(?:\?|$)|download|attachment|/files?/)",href,re.I):
             continue
         display_title = label if is_financial_statement_document(label) else context_text
         add_candidate(href, display_title or label, context_text)
