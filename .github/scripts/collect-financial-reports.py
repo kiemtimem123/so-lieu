@@ -110,6 +110,21 @@ def is_official_statement_title(title, symbol, require_symbol=True):
         "financial statement", "consolidated financial statements"
     ])
 
+def is_vietstock_statement_pdf(url, symbol):
+    """Recognize direct Vietstock BCTC PDFs by their URL path, even if search metadata is poor."""
+    parsed = urlparse(url)
+    host = (parsed.hostname or "").lower()
+    path = unquote(parsed.path).lower()
+    if host not in {"static1.vietstock.vn", "static2.vietstock.vn"}:
+        return False
+    if not path.endswith(".pdf") or "/bctc/" not in path or "/vn/" not in path:
+        return False
+    # Typical filename: MBB_Baocaotaichinh_6T_2026_Soatxet_Hopnhat.pdf
+    filename = Path(path).name
+    if not re.match(rf"^{re.escape(symbol.lower())}[_-]", filename):
+        return False
+    return any(token in filename for token in ("baocaotaichinh", "bao-cao-tai-chinh", "bctc", "financialstatement", "financial-statement"))
+
 def expand_vietstock_filing_page(candidate, symbol):
     """Vietstock is used only as an index of issuer disclosure notices, not as an analyst source."""
     url = candidate.get("url", "")
@@ -159,10 +174,17 @@ def discover_for_job(job, allowed_domains):
     report_words = "báo cáo tài chính quý" if report_type != "both" else "báo cáo tài chính quý hợp nhất riêng lẻ"
     source_registry = load(SOURCES_PATH, {"allowedDomains": [], "issuerDomainsBySymbol": {}})
     issuer_domains = source_registry.get("issuerDomainsBySymbol", {}).get(symbol, [])
+    current_year = datetime.now().year
     queries = [
-        f'"{symbol}" "báo cáo tài chính quý" {start}..{datetime.now().year}',
+        f'"{symbol}" "báo cáo tài chính quý" {start}..{current_year}',
         f'"{symbol}" "báo cáo tài chính" "quý" site:vietstock.vn',
-        f'"{symbol}" site:static2.vietstock.vn/data/HOSE/{datetime.now().year}/BCTC/VN/',
+        # Vietstock stores direct PDF attachments under static1/static2 and different exchange folders.
+        # Search each year instead of hard-coding only the current-year HOSE folder.
+        *[
+            f'"{symbol}" site:static2.vietstock.vn/data/ {year} BCTC PDF',
+            f'"{symbol}" site:static1.vietstock.vn/data/ {year} BCTC PDF',
+        ]
+        for year in range(start, current_year + 1)
     ]
     # Search issuer/IR domains directly; a domain match alone is not enough:
     # the title still must pass the strict official-statement filter below.
@@ -178,13 +200,16 @@ def discover_for_job(job, allowed_domains):
             if url in seen: continue
             seen.add(url)
             host = (urlparse(url).hostname or "").lower()
-            item.update({"query":q,"host":host,"allowlisted":domain_allowed(url,allowed_domains)})
+            item.update({"query":q,"host":host,"allowlisted":domain_allowed(url,allowed_domains),"symbol":symbol})
             if host in {"vietstock.vn", "www.vietstock.vn", "en.vietstock.vn"}:
                 if is_official_statement_title(item.get("title", ""), symbol):
                     candidates.extend(expand_vietstock_filing_page(item, symbol))
-            elif item["allowlisted"] and is_official_statement_title(
-                item.get("title", ""), symbol,
-                require_symbol=host not in issuer_domains
+            elif item["allowlisted"] and (
+                is_vietstock_statement_pdf(url, symbol)
+                or is_official_statement_title(
+                    item.get("title", ""), symbol,
+                    require_symbol=host not in issuer_domains
+                )
             ):
                 # On the issuer's own allowlisted domain, official filing titles may omit
                 # the ticker. Keep financial-statement wording and analyst-material exclusions.
@@ -209,7 +234,10 @@ def download_candidate(candidate, job_dir):
             response.raise_for_status()
             final_url = response.url
             final_host = (urlparse(final_url).hostname or "").lower()
-            redirect_is_filing_attachment = candidate.get("official_filing_page") is True and final_host in {"static1.vietstock.vn", "vietstock.vn"}
+            redirect_is_filing_attachment = (
+                (candidate.get("official_filing_page") is True and final_host in {"static1.vietstock.vn", "static2.vietstock.vn", "vietstock.vn"})
+                or is_vietstock_statement_pdf(final_url, candidate.get("symbol", ""))
+            )
             if not domain_allowed(final_url, ALLOWED_DOMAINS) and not redirect_is_filing_attachment:
                 return {"url":url,"status":"blocked_redirect_outside_allowlist","final_url":final_url}
             ctype = response.headers.get("Content-Type","")
