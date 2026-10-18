@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Collect and audit quarterly financial statements from VietstockFinance per-symbol document indexes."""
 from __future__ import annotations
-import hashlib, json, os, re, sys, time
+import hashlib, json, os, re, sys, time, io, zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlparse, unquote, parse_qs
@@ -68,6 +68,43 @@ def extract_file(path, content_type):
             return {"kind":"pdf", "pages":pages, "page_count":len(reader.pages), "extraction":"text", "note":None if pages else "PDF không có lớp văn bản; có thể là bản scan cần OCR thủ công."}
         except Exception as exc:
             return {"kind":"pdf", "pages":[], "extraction":"failed", "note":str(exc)}
+    if suffix == ".zip" or "zip" in content_type.lower():
+        try:
+            from pypdf import PdfReader
+            entries = []
+            with zipfile.ZipFile(path, "r") as archive:
+                for member in archive.infolist():
+                    if member.is_dir():
+                        continue
+                    name = member.filename.replace("\\", "/")
+                    # Ignore path traversal, nested archives and non-report payloads.
+                    if name.startswith("/") or any(part == ".." for part in name.split("/")):
+                        continue
+                    if not name.lower().endswith((".pdf", ".xlsx", ".xls")) or member.file_size > MAX_BYTES:
+                        continue
+                    raw = archive.read(member)
+                    if name.lower().endswith(".pdf"):
+                        try:
+                            reader = PdfReader(io.BytesIO(raw))
+                            pages = []
+                            for i, page in enumerate(reader.pages[:100]):
+                                page_text = page.extract_text() or ""
+                                if page_text.strip():
+                                    pages.append({"page":i+1,"text":page_text[:25000]})
+                            entries.append({"name":name,"kind":"pdf","bytes":len(raw),
+                                            "pages":pages,"page_count":len(reader.pages),
+                                            "extraction":"text",
+                                            "note":None if pages else "PDF trong ZIP không có lớp văn bản; cần xem thủ công."})
+                        except Exception as exc:
+                            entries.append({"name":name,"kind":"pdf","bytes":len(raw),
+                                            "pages":[],"extraction":"failed","note":str(exc)[:500]})
+                    else:
+                        entries.append({"name":name,"kind":"spreadsheet","bytes":len(raw),
+                                        "extraction":"archive_member_not_parsed"})
+            return {"kind":"zip","members":entries,"member_count":len(entries),
+                    "extraction":"archive_members","note":None if entries else "ZIP không có PDF/Excel báo cáo hỗ trợ."}
+        except Exception as exc:
+            return {"kind":"zip","members":[],"extraction":"failed","note":str(exc)[:1000]}
     if suffix == ".xlsx" or "spreadsheetml" in content_type.lower():
         try:
             from openpyxl import load_workbook
@@ -87,8 +124,8 @@ def extract_file(path, content_type):
 def safe_name(url, content_type):
     path = unquote(urlparse(url).path)
     suffix = Path(path).suffix.lower()
-    if suffix not in {".pdf",".xlsx",".xls"}:
-        suffix = ".pdf" if "pdf" in content_type.lower() else ".xlsx" if "spreadsheetml" in content_type.lower() else ".bin"
+    if suffix not in {".pdf",".xlsx",".xls",".zip"}:
+        suffix = ".pdf" if "pdf" in content_type.lower() else ".xlsx" if "spreadsheetml" in content_type.lower() else ".zip" if "zip" in content_type.lower() else ".bin"
     return suffix
 
 def is_official_statement_title(title, symbol, require_symbol=True):
@@ -527,7 +564,7 @@ def download_candidate(candidate, job_dir):
             if not domain_allowed(final_url, ALLOWED_DOMAINS) and not redirect_is_filing_attachment:
                 return {"url":url,"status":"blocked_redirect_outside_allowlist","final_url":final_url}
             ctype = response.headers.get("Content-Type","")
-            if not ("pdf" in ctype.lower() or "spreadsheet" in ctype.lower() or urlparse(final_url).path.lower().endswith((".pdf",".xlsx",".xls"))):
+            if not ("pdf" in ctype.lower() or "spreadsheet" in ctype.lower() or "zip" in ctype.lower() or urlparse(final_url).path.lower().endswith((".pdf",".xlsx",".xls",".zip"))):
                 return {"url":url,"status":"skipped_not_document","content_type":ctype}
             declared = int(response.headers.get("Content-Length","0") or 0)
             if declared > MAX_BYTES: return {"url":url,"status":"skipped_too_large","bytes":declared}
