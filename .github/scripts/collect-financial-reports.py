@@ -178,14 +178,14 @@ def discover_for_job(job, allowed_domains):
     queries = [
         f'"{symbol}" "báo cáo tài chính quý" {start}..{current_year}',
         f'"{symbol}" "báo cáo tài chính" "quý" site:vietstock.vn',
-        # Vietstock stores direct PDF attachments under static1/static2 and different exchange folders.
-        # Search each year instead of hard-coding only the current-year HOSE folder.
-        *[
+    ]
+    # Vietstock stores direct PDF attachments under static1/static2 and different exchange folders.
+    # Search each year instead of hard-coding only the current-year HOSE folder.
+    for year in range(start, current_year + 1):
+        queries.extend([
             f'"{symbol}" site:static2.vietstock.vn/data/ {year} BCTC PDF',
             f'"{symbol}" site:static1.vietstock.vn/data/ {year} BCTC PDF',
-        ]
-        for year in range(start, current_year + 1)
-    ]
+        ])
     # Search issuer/IR domains directly; a domain match alone is not enough:
     # the title still must pass the strict official-statement filter below.
     for issuer_domain in issuer_domains:
