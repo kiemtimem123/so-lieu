@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Collect financial statements from VietstockFinance per-symbol document indexes; never auto-publish extracted figures."""
+"""Collect and audit quarterly financial statements from VietstockFinance per-symbol document indexes."""
 from __future__ import annotations
 import hashlib, json, os, re, sys, time
 from datetime import datetime, timezone
