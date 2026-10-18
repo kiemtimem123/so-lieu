@@ -1075,7 +1075,7 @@
           if(!response.ok)throw new Error('HTTP '+response.status);
           const snapshot=await response.json();
           if(!snapshot||snapshot.symbol!==ticker||!Array.isArray(snapshot.items))throw new Error('Snapshot không đúng schema');
-          const items=snapshot.items.filter(item=>item&&validPeriod(item.period)&&item.source_url&&/^https?:\/\///i.test(item.source_url));
+          const items = snapshot.items.filter(function (record) { return Boolean(record && validPeriod(record.period) && typeof record.source_url === 'string' && /^https?:\/\//i.test(record.source_url)); });
           snapshots.set(ticker,{...snapshot,items});
           return {ticker,ok:true,count:items.length};
         }catch(error){
