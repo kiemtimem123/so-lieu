@@ -167,60 +167,250 @@ def expand_vietstock_filing_page(candidate, symbol):
     except Exception:
         return []
 
-def discover_for_job(job, allowed_domains):
-    symbol = job["symbol"]
-    start = int(job.get("startYear", 2024))
-    report_type = job.get("reportType", "consolidated")
-    report_words = "báo cáo tài chính quý" if report_type != "both" else "báo cáo tài chính quý hợp nhất riêng lẻ"
-    source_registry = load(SOURCES_PATH, {"allowedDomains": [], "issuerDomainsBySymbol": {}})
-    issuer_domains = source_registry.get("issuerDomainsBySymbol", {}).get(symbol, [])
-    current_year = datetime.now().year
-    queries = [
-        f'"{symbol}" "báo cáo tài chính quý" {start}..{current_year}',
-        f'"{symbol}" "báo cáo tài chính" "quý" site:vietstock.vn',
+def vietstock_document_index_url(symbol):
+    """The per-symbol Vietstock document index is the primary discovery source."""
+    return f"https://finance.vietstock.vn/{symbol}/tai-tai-lieu.htm?doctype=1"
+
+def is_financial_statement_document(text):
+    """Keep BCTC documents and reject analyst research, estimates and recommendations."""
+    t = (text or "").casefold()
+    reject = [
+        "báo cáo phân tích", "bao cao phan tich", "phân tích cổ phiếu",
+        "khuyến nghị", "định giá", "giá mục tiêu", "dự phóng", "du phong",
+        "forecast", "triển vọng", "cập nhật kqkd", "equity research",
+        "analyst", "brokerage", "mua", "bán", "nắm giữ", "annual report"
     ]
-    # Vietstock stores direct PDF attachments under static1/static2 and different exchange folders.
-    # Search each year instead of hard-coding only the current-year HOSE folder.
-    for year in range(start, current_year + 1):
-        queries.extend([
-            f'"{symbol}" site:static2.vietstock.vn/data/ {year} BCTC PDF',
-            f'"{symbol}" site:static1.vietstock.vn/data/ {year} BCTC PDF',
-        ])
-    # Search issuer/IR domains directly; a domain match alone is not enough:
-    # the title still must pass the strict official-statement filter below.
-    for issuer_domain in issuer_domains:
-        if re.fullmatch(r"[a-zA-Z0-9.-]+", str(issuer_domain)):
-            queries.append(f'"{symbol}" "báo cáo tài chính" quý site:{issuer_domain}')
-    candidates, seen = [], set()
-    for q in queries:
-        results = search_web(q)
-        for item in results:
-            if "url" not in item: continue
-            url = item["url"]
-            if url in seen: continue
-            seen.add(url)
-            host = (urlparse(url).hostname or "").lower()
-            item.update({"query":q,"host":host,"allowlisted":domain_allowed(url,allowed_domains),"symbol":symbol})
-            if host in {"vietstock.vn", "www.vietstock.vn", "en.vietstock.vn"}:
-                if is_official_statement_title(item.get("title", ""), symbol):
-                    candidates.extend(expand_vietstock_filing_page(item, symbol))
-            elif item["allowlisted"] and (
-                is_vietstock_statement_pdf(url, symbol)
-                or is_official_statement_title(
-                    item.get("title", ""), symbol,
-                    require_symbol=host not in issuer_domains
-                )
+    if any(term in t for term in reject):
+        return False
+    return any(term in t for term in [
+        "báo cáo tài chính", "bao cao tai chinh", "bctc",
+        "financial statement", "financial statements"
+    ])
+
+def _document_context(anchor):
+    """Get the closest useful row/card around a document link."""
+    for tag in ("tr", "li", "article"):
+        node = anchor.find_parent(tag)
+        if node and len(node.get_text(" ", strip=True)) > 20:
+            return node
+    node = anchor.parent
+    for _ in range(3):
+        if not node:
+            break
+        text = node.get_text(" ", strip=True)
+        if len(text) > 20:
+            return node
+        node = node.parent
+    return anchor
+
+def _extract_report_year_and_date(text):
+    text = text or ""
+    year_matches = [int(x) for x in re.findall(r"\b(20\d{2})\b", text)]
+    year = max(year_matches) if year_matches else None
+    date = None
+    m = re.search(r"\b(20\d{2})[-/.](\d{1,2})[-/.](\d{1,2})\b", text)
+    if m:
+        try:
+            date = datetime(int(m.group(1)), int(m.group(2)), int(m.group(3))).date().isoformat()
+        except ValueError:
+            pass
+    if not date:
+        m = re.search(r"\b(\d{1,2})[-/.](\d{1,2})[-/.](20\d{2})\b", text)
+        if m:
+            try:
+                date = datetime(int(m.group(3)), int(m.group(2)), int(m.group(1))).date().isoformat()
+            except ValueError:
+                pass
+    return year, date
+
+def _period_from_report_text(text):
+    t = (text or "").casefold()
+    m = re.search(r"\b(?:quý|q)\s*([1-4i]{1,2})\D{0,16}(20\d{2})", t)
+    if m:
+        q = m.group(1).upper()
+        q = {"I":"1","II":"2","III":"3","IV":"4"}.get(q, q)
+        if q.isdigit() and int(q) in range(1,5):
+            return f"{m.group(2)}-Q{q}"
+    m = re.search(r"\b(20\d{2})\D{0,12}(?:quý|q)\s*([1-4])\b", t)
+    if m:
+        return f"{m.group(1)}-Q{m.group(2)}"
+    m = re.search(r"\b(?:6 tháng|bán niên|6m|6t)\D{0,12}(20\d{2})", t)
+    if m:
+        return f"{m.group(1)}-H1"
+    m = re.search(r"\b(?:9 tháng|9m|9t)\D{0,12}(20\d{2})", t)
+    if m:
+        return f"{m.group(1)}-9M"
+    m = re.search(r"\b(?:năm|year)\D{0,8}(20\d{2})", t)
+    if m:
+        return f"{m.group(1)}-FY"
+    return None
+
+def _urls_from_document_page(url, symbol, row_text, index_url):
+    """Expand a Vietstock document detail page to its direct PDF/XLS attachments."""
+    host = (urlparse(url).hostname or "").lower()
+    path = urlparse(url).path.lower()
+    if not (host == "finance.vietstock.vn" and path.startswith("/downloadedoc/")):
+        return [{"url":url, "title":row_text[:300], "symbol":symbol, "allowlisted":True,
+                 "query":"Vietstock document index", "host":host, "page_url":index_url,
+                 "document_index":index_url}]
+    try:
+        response = SESSION.get(url, timeout=30, allow_redirects=True)
+        response.raise_for_status()
+        ctype = (response.headers.get("Content-Type") or "").lower()
+        if "pdf" in ctype or response.content[:5] == b"%PDF-":
+            return [{"url":response.url, "title":row_text[:300], "symbol":symbol,
+                     "allowlisted":True, "query":"Vietstock document index", "host":urlparse(response.url).hostname,
+                     "page_url":index_url, "document_index":index_url}]
+        soup = BeautifulSoup(response.text, "html.parser")
+        found = []
+        for a in soup.find_all("a", href=True):
+            href = requests.compat.urljoin(response.url, a["href"])
+            ap = urlparse(href)
+            label = a.get_text(" ", strip=True)
+            evidence = (row_text + " " + label + " " + href).casefold()
+            if ap.hostname and (ap.hostname.lower().endswith("vietstock.vn")) and (
+                ap.path.lower().endswith((".pdf", ".xlsx", ".xls")) or
+                (ap.hostname.lower() in {"static1.vietstock.vn","static2.vietstock.vn"} and ".pdf" in ap.path.lower())
             ):
-                # On the issuer's own allowlisted domain, official filing titles may omit
-                # the ticker. Keep financial-statement wording and analyst-material exclusions.
-                candidates.append(item)
-        time.sleep(0.2)
-    deduped, urls = [], set()
+                if is_financial_statement_document(evidence) or is_financial_statement_document(row_text):
+                    found.append({"url":href,"title":label or row_text[:300],"symbol":symbol,
+                                  "allowlisted":True,"query":"Vietstock document index",
+                                  "host":ap.hostname.lower(),"page_url":response.url,
+                                  "document_index":index_url,"document_detail_url":response.url})
+        # Some detail pages embed attachment URLs inside script/json instead of <a> elements.
+        for href in re.findall(r"""https?://[^"'\\s<>]+?\.(?:pdf|xlsx?)(?:\?[^"'\\s<>]*)?""", response.text, re.I):
+            ap = urlparse(href)
+            evidence = (row_text + " " + href).casefold()
+            if ap.hostname and ap.hostname.lower().endswith("vietstock.vn") and (
+                is_financial_statement_document(evidence) or is_financial_statement_document(row_text)
+            ):
+                found.append({"url":href,"title":row_text[:300],"symbol":symbol,
+                              "allowlisted":True,"query":"Vietstock document index",
+                              "host":ap.hostname.lower(),"page_url":response.url,
+                              "document_index":index_url,"document_detail_url":response.url})
+        # If Vietstock serves the BCTC directly at /downloadedoc/{id}, let the
+        # normal downloader validate Content-Type and PDF signature rather than guessing.
+        if not found and is_financial_statement_document(row_text):
+            found.append({"url":response.url,"title":row_text[:300],"symbol":symbol,
+                          "allowlisted":True,"query":"Vietstock document index",
+                          "host":urlparse(response.url).hostname,"page_url":response.url,
+                          "document_index":index_url})
+        return found
+    except Exception as exc:
+        print(json.dumps({"event":"vietstock_document_detail_failed","symbol":symbol,
+                          "url":url,"error":str(exc)[:500]},ensure_ascii=False))
+        return []
+
+def discover_for_job(job, allowed_domains):
+    """Discover issuer financial statements from the single Vietstock document index.
+
+    This intentionally does not search individual issuer websites or generic web results.
+    The index link and any direct report attachment URL are kept in the candidate metadata.
+    """
+    symbol = str(job["symbol"]).upper()
+    start = int(job.get("startYear", 2024))
+    index_url = vietstock_document_index_url(symbol)
+    try:
+        response = SESSION.get(index_url, timeout=35, allow_redirects=True)
+        response.raise_for_status()
+    except Exception as exc:
+        print(json.dumps({"event":"vietstock_index_fetch_failed","symbol":symbol,
+                          "url":index_url,"error":str(exc)[:800]},ensure_ascii=False))
+        return []
+
+    soup = BeautifulSoup(response.text, "html.parser")
+    page_title = soup.title.get_text(" ",strip=True) if soup.title else ""
+    candidates = []
+    seen = set()
+
+    def add_candidate(url, title, context_text):
+        url = requests.compat.urljoin(response.url, url)
+        parsed = urlparse(url)
+        host = (parsed.hostname or "").lower()
+        if parsed.scheme not in ("http","https") or not (
+            host == "finance.vietstock.vn" or host.endswith(".vietstock.vn") or host == "vietstock.vn"
+        ):
+            return
+        evidence = " ".join([str(title or ""), str(context_text or ""), url])
+        year, published_at = _extract_report_year_and_date(evidence)
+        # The page itself is pre-filtered by doctype=1 (financial documents).
+        # Still explicitly reject research/recommendation items and limit the scope.
+        if not is_financial_statement_document(evidence):
+            return
+        if any(word in evidence.casefold() for word in [
+            "báo cáo phân tích","bao cao phan tich","khuyến nghị","định giá",
+            "dự phóng","forecast","equity research","brokerage","triển vọng"
+        ]):
+            return
+        if year is not None and year < start:
+            return
+        if year is None:
+            # Do not assume old dates are in scope. Keep only rows with a discoverable
+            # year, except a direct BCTC PDF with a year in its filename.
+            return
+        if url in seen:
+            return
+        seen.add(url)
+        candidates.append({
+            "url":url,"title":str(title or context_text or url)[:500],
+            "host":host,"allowlisted":domain_allowed(url,allowed_domains),
+            "symbol":symbol,"query":"Vietstock per-symbol document index",
+            "page_url":response.url,"document_index":index_url,
+            "report_year":year,"published_at":published_at,
+            "period":_period_from_report_text(evidence),
+            "report_type":job.get("reportType","consolidated")
+        })
+
+    # First pass: table rows/cards so titles, period and publication date remain attached.
+    for a in soup.find_all("a", href=True):
+        href = a.get("href","").strip()
+        label = re.sub(r"\s+"," ",a.get_text(" ",strip=True)).strip()
+        context = _document_context(a)
+        context_text = re.sub(r"\s+"," ",context.get_text(" ",strip=True)).strip()
+        evidence = " ".join([label,context_text,href])
+        # Do not treat navigation links as documents; require a BCTC label in the item.
+        if not is_financial_statement_document(evidence):
+            continue
+        if not re.search(r"(?:/downloadedoc/|\.pdf(?:\?|$)|\.xlsx?(?:\?|$)|download|tai-lieu|bctc|bao-cao-tai-chinh|financial)",href,re.I):
+            continue
+        add_candidate(href, label or context_text, context_text)
+
+    # Second pass: pick up direct attachment URLs embedded in HTML/JSON/scripts.
+    embedded = re.findall(
+        r"""(?:https?:)?//[^"'\\s<>]+?\\.(?:pdf|xlsx?)(?:\\?[^"'\\s<>]*)?|(?:https?:)?//static[12]\\.vietstock\\.vn/[^"'\\s<>]+""",
+        response.text, re.I
+    )
+    for href in embedded:
+        href = href.rstrip("),;")
+        absolute = requests.compat.urljoin(response.url, href)
+        filename = unquote(urlparse(absolute).path).rsplit("/",1)[-1]
+        evidence = " ".join([page_title,filename,absolute])
+        if not re.search(r"\b"+re.escape(symbol)+r"\b",evidence,re.I):
+            # Document list pages can omit ticker in a direct filename, but must have
+            # a financial-statement filename and be linked from this symbol's index.
+            if not re.search(r"(?:bao.?cao.?tai.?chinh|bctc|financial.?statement)",filename,re.I):
+                continue
+        add_candidate(absolute, filename or page_title, evidence)
+
+    print(json.dumps({"event":"vietstock_index_discovery","symbol":symbol,
+                      "index_url":index_url,"http_status":response.status_code,
+                      "page_title":page_title,"html_bytes":len(response.text),
+                      "anchors":len(soup.find_all("a",href=True)),
+                      "candidates":len(candidates)},ensure_ascii=False))
+
+    expanded = []
     for item in candidates:
-        if item.get("url") not in urls:
-            urls.add(item.get("url"))
+        expanded.extend(_urls_from_document_page(item["url"],symbol,item["title"],index_url))
+        time.sleep(0.15)
+    deduped = []
+    urls = set()
+    for item in expanded:
+        if item.get("url") and item["url"] not in urls:
+            urls.add(item["url"])
+            item["allowlisted"] = domain_allowed(item["url"], allowed_domains)
             deduped.append(item)
-    print(json.dumps({"event":"discovery_summary","symbol":symbol,"queries":len(queries),"candidates":len(deduped)}, ensure_ascii=False))
+    print(json.dumps({"event":"vietstock_index_attachment_summary","symbol":symbol,
+                      "index_url":index_url,"attachments":len(deduped)},ensure_ascii=False))
     return deduped
 
 def download_candidate(candidate, job_dir):
