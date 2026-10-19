@@ -1,0 +1,83 @@
+name: OCR Financial Report Archive
+
+on:
+  workflow_run:
+    workflows: ["Collect Financial Reports"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      symbol:
+        description: Ticker to OCR; blank selects the latest processed ticker in the queue
+        required: false
+        default: ""
+      max_pages:
+        description: Pages per report to OCR
+        required: false
+        default: "12"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: financial-report-ocr
+  cancel-in-progress: false
+
+jobs:
+  ocr:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Install OCR system tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils tesseract-ocr tesseract-ocr-vie tesseract-ocr-eng
+
+      - name: Install extraction dependencies
+        run: pip install -r .github/scripts/requirements-report-worker.txt
+
+      - name: Validate queue before OCR
+        run: node .github/scripts/validate-report-queue.cjs
+
+      - name: OCR stored report archive
+        env:
+          REPORT_OCR_SYMBOL: ${{ github.event.inputs.symbol || '' }}
+          REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || '12' }}
+          REPORT_OCR_DPI: '180'
+        run: python .github/scripts/ocr-stored-reports.py
+
+      - name: Validate queue after OCR
+        run: node .github/scripts/validate-report-queue.cjs
+
+      - name: Commit OCR text only
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/raw
+          if git diff --cached --quiet; then
+            echo "No OCR extraction changes."
+          else
+            git commit -m "OCR scanned financial statement pages"
+            git pull --rebase origin main
+            git push
+          fi
+
+      - name: Upload OCR summary
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: financial-report-ocr-summary
+          path: reports/raw/**/*.extracted.json
+          if-no-files-found: ignore
+          retention-days: 30
