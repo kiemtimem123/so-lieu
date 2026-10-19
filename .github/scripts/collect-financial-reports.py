@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Collect and audit quarterly financial statements from VietstockFinance per-symbol document indexes."""
+"""Collect and archive VietstockFinance statements first; OCR is handled by the separate post-archive workflow."""
 from __future__ import annotations
 import hashlib, json, os, re, sys, time, io, zipfile
 from datetime import datetime, timezone
