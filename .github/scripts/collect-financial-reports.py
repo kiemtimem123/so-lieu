@@ -62,7 +62,7 @@ def extract_file(path, content_type):
             from pypdf import PdfReader
             reader = PdfReader(str(path))
             pages = []
-            for i, page in enumerate(reader.pages[:100]):
+            for i, page in enumerate(reader.pages[:20]):
                 text = page.extract_text() or ""
                 if text.strip(): pages.append({"page": i + 1, "text": text[:25000]})
             return {"kind":"pdf", "pages":pages, "page_count":len(reader.pages), "extraction":"text", "note":None if pages else "PDF không có lớp văn bản; có thể là bản scan cần OCR thủ công."}
