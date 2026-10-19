@@ -23,6 +23,10 @@ REPORTS = ROOT / "reports/raw"
 QUEUE_PATH = ROOT / "config/report-queue.json"
 MAX_PAGES = int(os.getenv("REPORT_OCR_MAX_PAGES", "12"))
 DPI = int(os.getenv("REPORT_OCR_DPI", "180"))
+FORCE_RESCAN_PAGES = {
+    int(value.strip()) for value in os.getenv("REPORT_OCR_RESCAN_PAGES", "9,10,11").split(",")
+    if value.strip().isdigit() and int(value.strip()) > 0
+}
 
 
 def load_json(path: Path):
@@ -138,7 +142,8 @@ def process_pdf(pdf_path: Path):
     target_count = min(page_count, MAX_PAGES)
     existing_pages = [p for p in extracted.get("pages", []) if isinstance(p, dict)]
     existing_numbers = {int(p.get("page")) for p in existing_pages if str(p.get("page", "")).isdigit()}
-    missing_numbers = set(range(1, target_count + 1)) - existing_numbers
+    force_numbers = {n for n in FORCE_RESCAN_PAGES if 1 <= n <= target_count}
+    missing_numbers = (set(range(1, target_count + 1)) - existing_numbers) | force_numbers
     if not missing_numbers:
         return {"path": str(pdf_path.relative_to(ROOT)), "status": "already_has_target_pages",
                 "pages_retained": len(existing_pages), "target_pages": target_count}
@@ -150,13 +155,24 @@ def process_pdf(pdf_path: Path):
         return {"path": str(pdf_path.relative_to(ROOT)), "status": "no_missing_page_text",
                 "pages_retained": len(existing_pages), "target_pages": target_count, "note": note}
     merged_by_number = {}
-    for page in existing_pages + new_pages:
+    rescanned_page_numbers = {int(p.get("page")) for p in new_pages if str(p.get("page", "")).isdigit()}
+    for page in existing_pages:
         try:
             page_number = int(page.get("page"))
         except (TypeError, ValueError):
             continue
-        # Existing text-layer/OCR pages are retained; newly OCRed pages fill gaps.
-        merged_by_number.setdefault(page_number, page)
+        if page_number not in force_numbers:
+            merged_by_number.setdefault(page_number, page)
+    for page in new_pages:
+        try:
+            page_number = int(page.get("page"))
+        except (TypeError, ValueError):
+            continue
+        # A forced rescan deliberately replaces low-quality text from a prior OCR pass.
+        if page_number in force_numbers and page_number in rescanned_page_numbers:
+            merged_by_number[page_number] = page
+        else:
+            merged_by_number.setdefault(page_number, page)
     extracted["pages"] = [merged_by_number[n] for n in sorted(merged_by_number)]
     extracted["page_count"] = page_count
     extracted["extraction"] = "text+ocr" if existing_pages else "ocr"
@@ -166,6 +182,7 @@ def process_pdf(pdf_path: Path):
     save_json(extraction_path, extracted)
     return {"path": str(pdf_path.relative_to(ROOT)), "status": "ocr_done",
             "new_pages": sorted(int(p["page"]) for p in new_pages),
+            "rescanned_pages": sorted(force_numbers.intersection(rescanned_page_numbers)),
             "pages_retained": len(extracted["pages"]), "target_pages": target_count}
 
 
@@ -195,7 +212,8 @@ def process_zip(zip_path: Path):
                         inner_pdf.write_bytes(raw)
                         page_count = len(PdfReader(str(inner_pdf)).pages)
                         target_count = min(page_count, MAX_PAGES)
-                        missing_numbers = set(range(1, target_count + 1)) - old_numbers
+                        force_numbers = {n for n in FORCE_RESCAN_PAGES if 1 <= n <= target_count}
+                        missing_numbers = (set(range(1, target_count + 1)) - old_numbers) | force_numbers
                         if not missing_numbers:
                             continue
                         pages, note = ocr_pdf(inner_pdf, max_pages=MAX_PAGES)
@@ -205,12 +223,23 @@ def process_zip(zip_path: Path):
                 new_pages = [p for p in pages if int(p.get("page", 0)) in missing_numbers]
                 if new_pages:
                     merged_by_number = {}
-                    for page in old_pages + new_pages:
+                    rescanned_numbers = {int(p.get("page")) for p in new_pages if str(p.get("page", "")).isdigit()}
+                    for page in old_pages:
                         try:
                             number = int(page.get("page"))
                         except (TypeError, ValueError):
                             continue
-                        merged_by_number.setdefault(number, page)
+                        if number not in force_numbers:
+                            merged_by_number.setdefault(number, page)
+                    for page in new_pages:
+                        try:
+                            number = int(page.get("page"))
+                        except (TypeError, ValueError):
+                            continue
+                        if number in force_numbers and number in rescanned_numbers:
+                            merged_by_number[number] = page
+                        else:
+                            merged_by_number.setdefault(number, page)
                     member["pages"] = [merged_by_number[n] for n in sorted(merged_by_number)]
                     member["page_count"] = page_count
                     member["extraction"] = "text+ocr" if old_pages else "ocr"
@@ -220,6 +249,7 @@ def process_zip(zip_path: Path):
                     changes += 1
                     outcomes.append({"member": name, "status": "ocr_done",
                                      "new_pages": sorted(int(p["page"]) for p in new_pages),
+                                     "rescanned_pages": sorted(force_numbers.intersection(rescanned_numbers)),
                                      "pages_retained": len(member["pages"])})
                 else:
                     outcomes.append({"member": name, "status": "ocr_empty", "note": note})
