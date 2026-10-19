@@ -384,9 +384,9 @@ def discover_for_job(job, allowed_domains):
                 data = dict(payload or {})
                 if token:
                     data["__RequestVerificationToken"] = token
-                resp = SESSION.post(url, data=data, headers=headers, timeout=30)
+                resp = SESSION.post(url, data=data, headers=headers, timeout=20)
             else:
-                resp = SESSION.get(url, headers=headers, timeout=30)
+                resp = SESSION.get(url, headers=headers, timeout=20)
             ctype = resp.headers.get("Content-Type","")
             try:
                 parsed = resp.json()
@@ -553,7 +553,7 @@ def download_candidate(candidate, job_dir):
     if not candidate.get("allowlisted") or (not domain_allowed(url, ALLOWED_DOMAINS) and not approved_attachment):
         return {"url":url,"title":candidate.get("title"),"status":"blocked_untrusted_domain","host":host}
     try:
-        with SESSION.get(url, timeout=40, stream=True, allow_redirects=True) as response:
+        with SESSION.get(url, timeout=18, stream=True, allow_redirects=True) as response:
             response.raise_for_status()
             final_url = response.url
             final_host = (urlparse(final_url).hostname or "").lower()
