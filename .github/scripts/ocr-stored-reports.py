@@ -149,7 +149,7 @@ def ocr_pdf(path: Path, max_pages: int = MAX_PAGES, page_numbers=None):
             return [], f"pdftoppm failed: {render.stderr[-800:]}"
         images = sorted(tmp.glob("page-*.png"))
         for image_path in images:
-            match = re.search(r"-(\\d+)\\.png$", image_path.name, re.I)
+            match = re.search(r"-(\d+)\.png$", image_path.name, re.I)
             if not match:
                 continue
             page_number = int(match.group(1))
