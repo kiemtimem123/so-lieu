@@ -22,6 +22,7 @@ ROOT = Path(__file__).resolve().parents[2]
 REPORTS = ROOT / "reports/raw"
 QUEUE_PATH = ROOT / "config/report-queue.json"
 MAX_PAGES = int(os.getenv("REPORT_OCR_MAX_PAGES", "12"))
+MAX_REPORTS = int(os.getenv("REPORT_OCR_MAX_REPORTS", "4"))
 DPI = int(os.getenv("REPORT_OCR_DPI", "180"))
 FORCE_RESCAN_PAGES = {
     int(value.strip()) for value in os.getenv("REPORT_OCR_RESCAN_PAGES", "10,11").split(",")
@@ -328,23 +329,34 @@ def main():
         print(json.dumps({"event": "ocr_skip", "symbol": symbol, "reason": "No archive folder exists yet."}, ensure_ascii=False))
         return
     files = sorted(folder.rglob("*"))
-    summary = {"event": "ocr_stored_report_archive", "symbol": symbol, "max_pages": MAX_PAGES, "results": []}
+    summary = {"event": "ocr_stored_report_archive", "symbol": symbol, "max_pages": MAX_PAGES,
+               "max_reports": MAX_REPORTS, "work_units": 0, "results": []}
+    # Bound each runner invocation; completed files are skipped so later runs
+    # continue with the next reports instead of repeatedly scanning the archive.
     for path in files:
         if not path.is_file():
             continue
         lower = path.name.lower()
+        result = None
         if lower.endswith(".pdf") and not lower.endswith(".pdf.extracted.json"):
             ext = Path(str(path) + ".extracted.json")
             if ext.exists():
                 result = process_pdf(path)
-                if result.get("status") != "already_has_text":
+                if result.get("status") != "already_has_target_pages":
                     summary["results"].append(result)
         elif lower.endswith(".zip") and not lower.endswith(".zip.extracted.json"):
             ext = Path(str(path) + ".extracted.json")
             if ext.exists():
                 result = process_zip(path)
-                if result.get("members_changed") or result.get("status") not in {"no_ocr_changes"}:
+                if result.get("members_changed") or result.get("status") != "no_ocr_changes":
                     summary["results"].append(result)
+        if result and result.get("status") not in {
+            "already_has_target_pages", "no_ocr_changes", "skipped_no_zip_extraction",
+            "skipped_not_pdf_extraction"
+        }:
+            summary["work_units"] += 1
+            if summary["work_units"] >= MAX_REPORTS:
+                break
     print(json.dumps(summary, ensure_ascii=False))
 
 
