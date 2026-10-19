@@ -622,7 +622,7 @@ def main():
     summary = {"started_at":NOW,"jobs_processed":0,"downloaded":0,"needs_review":0,"errors":0,"allowlisted_domains":ALLOWED_DOMAINS}
     # Do not let a few repeatedly failing early jobs starve the rest of the ticker queue.
     # Process never-attempted queued jobs first; retry failed jobs only after queued coverage.
-    jobs.sort(key=lambda job: (0 if str(job.get("symbol", "")).upper() == "MBB" else 1, 0 if job.get("status") == "queued" else 1, job.get("createdAt", "")))
+    jobs.sort(key=lambda job: (0 if job.get("status") == "queued" else 1, int(job.get("priority", 50)), 0 if str(job.get("symbol", "")).upper() == "MBB" else 1, job.get("createdAt", "")))
     for job in jobs:
         if summary["jobs_processed"] >= MAX_JOBS_PER_RUN:
             break
