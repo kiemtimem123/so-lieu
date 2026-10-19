@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""OCR only missing or stamp-only financial-statement pages from Vietstock PDFs.
+"""Bounded, targeted OCR for financial-statement pages from Vietstock PDFs.
 
 This is a review aid for the report archive: originals remain unchanged and OCR text is stored only in
 the companion extraction JSON. Figures are not published automatically.
