@@ -20,7 +20,7 @@ from pypdf import PdfReader
 ROOT = Path(__file__).resolve().parents[2]
 REPORTS = ROOT / "reports/raw"
 QUEUE_PATH = ROOT / "config/report-queue.json"
-MAX_PAGES = int(os.getenv("REPORT_OCR_MAX_PAGES", "6"))
+MAX_PAGES = int(os.getenv("REPORT_OCR_MAX_PAGES", "12"))
 DPI = int(os.getenv("REPORT_OCR_DPI", "180"))
 
 
@@ -102,18 +102,42 @@ def process_pdf(pdf_path: Path):
     extracted = load_json(extraction_path) or {}
     if extracted.get("kind") != "pdf":
         return {"path": str(pdf_path.relative_to(ROOT)), "status": "skipped_not_pdf_extraction"}
-    if page_has_text(extracted.get("pages")):
-        return {"path": str(pdf_path.relative_to(ROOT)), "status": "already_has_text"}
-    pages, note = ocr_pdf(pdf_path)
+    try:
+        page_count = len(PdfReader(str(pdf_path)).pages)
+    except Exception as exc:
+        return {"path": str(pdf_path.relative_to(ROOT)), "status": "pdf_read_failed", "error": str(exc)[:500]}
+    target_count = min(page_count, MAX_PAGES)
+    existing_pages = [p for p in extracted.get("pages", []) if isinstance(p, dict)]
+    existing_numbers = {int(p.get("page")) for p in existing_pages if str(p.get("page", "")).isdigit()}
+    missing_numbers = set(range(1, target_count + 1)) - existing_numbers
+    if not missing_numbers:
+        return {"path": str(pdf_path.relative_to(ROOT)), "status": "already_has_target_pages",
+                "pages_retained": len(existing_pages), "target_pages": target_count}
+    pages, note = ocr_pdf(pdf_path, max_pages=MAX_PAGES)
     if not pages:
         return {"path": str(pdf_path.relative_to(ROOT)), "status": "ocr_empty", "note": note}
-    extracted["pages"] = pages
-    extracted["extraction"] = "ocr"
-    extracted["ocr_pages"] = len(pages)
+    new_pages = [p for p in pages if int(p.get("page", 0)) in missing_numbers]
+    if not new_pages:
+        return {"path": str(pdf_path.relative_to(ROOT)), "status": "no_missing_page_text",
+                "pages_retained": len(existing_pages), "target_pages": target_count, "note": note}
+    merged_by_number = {}
+    for page in existing_pages + new_pages:
+        try:
+            page_number = int(page.get("page"))
+        except (TypeError, ValueError):
+            continue
+        # Existing text-layer/OCR pages are retained; newly OCRed pages fill gaps.
+        merged_by_number.setdefault(page_number, page)
+    extracted["pages"] = [merged_by_number[n] for n in sorted(merged_by_number)]
+    extracted["page_count"] = page_count
+    extracted["extraction"] = "text+ocr" if existing_pages else "ocr"
+    extracted["ocr_pages"] = sum(1 for p in extracted["pages"] if p.get("ocr"))
     extracted["ocr_completed_at"] = datetime.now(timezone.utc).isoformat()
-    extracted["note"] = "OCR on first pages to aid review; manually verify values before publication."
+    extracted["note"] = "OCR extended to first 12 pages for review; manually verify values before publication."
     save_json(extraction_path, extracted)
-    return {"path": str(pdf_path.relative_to(ROOT)), "status": "ocr_done", "pages": len(pages)}
+    return {"path": str(pdf_path.relative_to(ROOT)), "status": "ocr_done",
+            "new_pages": sorted(int(p["page"]) for p in new_pages),
+            "pages_retained": len(extracted["pages"]), "target_pages": target_count}
 
 
 def process_zip(zip_path: Path):
@@ -127,25 +151,47 @@ def process_zip(zip_path: Path):
         with zipfile.ZipFile(zip_path, "r") as archive:
             available = set(archive.namelist())
             for member in extracted["members"]:
-                if member.get("kind") != "pdf" or page_has_text(member.get("pages")):
+                if member.get("kind") != "pdf":
                     continue
                 name = member.get("name")
                 if not name or name not in available:
                     outcomes.append({"member": name, "status": "member_missing_from_archive"})
                     continue
-                raw = archive.read(name)
-                with tempfile.TemporaryDirectory(prefix="solie-zip-pdf-") as td:
-                    inner_pdf = Path(td) / "member.pdf"
-                    inner_pdf.write_bytes(raw)
-                    pages, note = ocr_pdf(inner_pdf)
-                if pages:
-                    member["pages"] = pages
-                    member["extraction"] = "ocr"
-                    member["ocr_pages"] = len(pages)
+                old_pages = [p for p in member.get("pages", []) if isinstance(p, dict)]
+                old_numbers = {int(p.get("page")) for p in old_pages if str(p.get("page", "")).isdigit()}
+                try:
+                    raw = archive.read(name)
+                    with tempfile.TemporaryDirectory(prefix="solie-zip-pdf-") as td:
+                        inner_pdf = Path(td) / "member.pdf"
+                        inner_pdf.write_bytes(raw)
+                        page_count = len(PdfReader(str(inner_pdf)).pages)
+                        target_count = min(page_count, MAX_PAGES)
+                        missing_numbers = set(range(1, target_count + 1)) - old_numbers
+                        if not missing_numbers:
+                            continue
+                        pages, note = ocr_pdf(inner_pdf, max_pages=MAX_PAGES)
+                except Exception as exc:
+                    outcomes.append({"member": name, "status": "ocr_failed", "error": str(exc)[:400]})
+                    continue
+                new_pages = [p for p in pages if int(p.get("page", 0)) in missing_numbers]
+                if new_pages:
+                    merged_by_number = {}
+                    for page in old_pages + new_pages:
+                        try:
+                            number = int(page.get("page"))
+                        except (TypeError, ValueError):
+                            continue
+                        merged_by_number.setdefault(number, page)
+                    member["pages"] = [merged_by_number[n] for n in sorted(merged_by_number)]
+                    member["page_count"] = page_count
+                    member["extraction"] = "text+ocr" if old_pages else "ocr"
+                    member["ocr_pages"] = sum(1 for p in member["pages"] if p.get("ocr"))
                     member["ocr_engine"] = "tesseract-vie+eng"
-                    member["note"] = "OCR on first pages to aid review; manually verify values before publication."
+                    member["note"] = "OCR extended to first 12 pages for review; manually verify values before publishing."
                     changes += 1
-                    outcomes.append({"member": name, "status": "ocr_done", "pages": len(pages)})
+                    outcomes.append({"member": name, "status": "ocr_done",
+                                     "new_pages": sorted(int(p["page"]) for p in new_pages),
+                                     "pages_retained": len(member["pages"])})
                 else:
                     outcomes.append({"member": name, "status": "ocr_empty", "note": note})
     except Exception as exc:
@@ -153,9 +199,10 @@ def process_zip(zip_path: Path):
     if changes:
         extracted["extraction"] = "archive_members_with_ocr"
         extracted["ocr_completed_at"] = datetime.now(timezone.utc).isoformat()
-        extracted["note"] = "Image-only PDFs in the ZIP were OCRed on their first pages; manually verify before publishing."
+        extracted["note"] = "Image-only PDFs in ZIP have OCR extended to the first 12 pages; manually verify before publishing."
         save_json(extraction_path, extracted)
-    return {"path": str(zip_path.relative_to(ROOT)), "status": "ocr_done" if changes else "no_ocr_changes", "members_changed": changes, "members": outcomes}
+    return {"path": str(zip_path.relative_to(ROOT)), "status": "ocr_done" if changes else "no_ocr_changes",
+            "members_changed": changes, "members": outcomes}
 
 
 def main():
