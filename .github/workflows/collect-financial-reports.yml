@@ -11,7 +11,7 @@ on:
       max_downloads_per_job:
         description: Maximum reports to download for each queued security
         required: false
-        default: "8"
+        default: "20"
       max_jobs_per_run:
         description: Maximum securities processed in one run
         required: false
@@ -52,7 +52,7 @@ jobs:
         run: node .github/scripts/validate-report-queue.cjs
       - name: Run report discovery, download and extraction worker
         env:
-          MAX_DOWNLOADS_PER_JOB: ${{ github.event.inputs.max_downloads_per_job || '8' }}
+          MAX_DOWNLOADS_PER_JOB: ${{ github.event.inputs.max_downloads_per_job || '20' }}
           MAX_JOBS_PER_RUN: ${{ github.event.inputs.max_jobs_per_run || '1' }}
         run: python .github/scripts/collect-financial-reports.py
       - name: Install OCR tools for image-only financial statements
@@ -72,7 +72,7 @@ jobs:
           ALLOW_BROKER_PDF_ARCHIVE: 'false'
         run: python .github/scripts/collect-vietstock-edocs.py
       - name: Collect brokerage analysis and forecast report catalog (optional, slower)
-        if: ${{ github.event_name == 'schedule' || github.event.inputs.run_supplementary_crawlers == 'true' }}
+        if: ${{ github.event.inputs.run_supplementary_crawlers == 'true' }}
         run: python .github/scripts/collect-analysis-reports.py
       - name: Validate queue after run
         run: node .github/scripts/validate-report-queue.cjs
