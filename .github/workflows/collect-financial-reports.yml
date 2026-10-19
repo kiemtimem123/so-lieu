@@ -59,7 +59,10 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y poppler-utils tesseract-ocr tesseract-ocr-vie
-      - name: OCR first statement pages when source PDFs have no text layer
+      - name: OCR statement pages when source PDFs have no text layer
+        env:
+          REPORT_OCR_MAX_PAGES: '12'
+          REPORT_OCR_DPI: '180'
         run: python .github/scripts/ocr-stored-reports.py
       - name: Crawl Vietstock eDocuments directly and validate MBB PDF (optional, slower)
         if: ${{ github.event.inputs.run_supplementary_crawlers == 'true' }}
