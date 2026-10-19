@@ -113,23 +113,32 @@ def _ocr_quality(text: str) -> float:
     return (4.0 * len(words) + 2.0 * len(numbers)) / max(len(value), 1)
 
 
-def ocr_pdf(path: Path, max_pages: int = MAX_PAGES):
+def ocr_pdf(path: Path, max_pages: int = MAX_PAGES, page_numbers=None):
     if not shutil.which("pdftoppm") or not shutil.which("tesseract"):
         return [], "OCR tools are unavailable on this runner."
     try:
         page_count = len(PdfReader(str(path)).pages)
     except Exception as exc:
         return [], f"Cannot read PDF page count: {exc}"
-    count = min(max(page_count, 0), max_pages)
-    if count < 1:
+    page_limit = min(max(page_count, 0), max_pages)
+    if page_limit < 1:
         return [], "PDF contains no pages."
+    if page_numbers is None:
+        targets = list(range(1, page_limit + 1))
+    else:
+        targets = sorted({int(p) for p in page_numbers if str(p).isdigit() and 1 <= int(p) <= page_limit})
+    if not targets:
+        return [], "No selected pages need OCR."
     results = []
     with tempfile.TemporaryDirectory(prefix="solie-ocr-") as temp_dir:
         tmp = Path(temp_dir)
         prefix = tmp / "page"
+        first_page, last_page = min(targets), max(targets)
         try:
+            # Render only the needed contiguous range; OCR is subsequently
+            # restricted to target page numbers, avoiding work on already good pages.
             render = subprocess.run(
-                ["pdftoppm", "-f", "1", "-l", str(count), "-r", str(DPI),
+                ["pdftoppm", "-f", str(first_page), "-l", str(last_page), "-r", str(DPI),
                  "-gray", "-png", str(path), str(prefix)],
                 stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True,
                 timeout=180, check=False,
@@ -139,7 +148,13 @@ def ocr_pdf(path: Path, max_pages: int = MAX_PAGES):
         if render.returncode != 0:
             return [], f"pdftoppm failed: {render.stderr[-800:]}"
         images = sorted(tmp.glob("page-*.png"))
-        for page_number, image_path in enumerate(images[:count], start=1):
+        for image_path in images:
+            match = re.search(r"-(\\d+)\\.png$", image_path.name, re.I)
+            if not match:
+                continue
+            page_number = int(match.group(1))
+            if page_number not in targets:
+                continue
             try:
                 result = subprocess.run(
                     ["tesseract", str(image_path), "stdout", "-l", "vie+eng", "--psm", "6"],
@@ -148,9 +163,8 @@ def ocr_pdf(path: Path, max_pages: int = MAX_PAGES):
                 )
                 text = (result.stdout or "").strip()
                 engine = "tesseract-vie+eng-psm6"
-                # Income-statement pages are table-heavy. If the first layout pass
-                # reads mostly symbols/noisy fragments, retry the same image with
-                # Tesseract's single-column layout mode and keep the better result.
+                # Financial statement pages may have dense tables and two-column
+                # labels. Retry in single-column mode only for targeted pages.
                 if 8 <= page_number <= 14:
                     try:
                         alternate = subprocess.run(
@@ -159,9 +173,6 @@ def ocr_pdf(path: Path, max_pages: int = MAX_PAGES):
                             timeout=45, check=False,
                         )
                         alternate_text = (alternate.stdout or "").strip()
-                        # Try both multi-block and single-column layouts for the
-                        # dense numeric tables, retaining whichever extraction
-                        # scores better on letters plus numeric cells.
                         if _ocr_quality(alternate_text) > _ocr_quality(text):
                             text = alternate_text
                             engine = "tesseract-vie+eng-psm4"
@@ -177,8 +188,7 @@ def ocr_pdf(path: Path, max_pages: int = MAX_PAGES):
                     })
             except Exception:
                 continue
-    return results, None if results else "OCR produced no text on the first pages."
-
+    return results, None if results else "OCR produced no text on the selected pages."
 
 def process_pdf(pdf_path: Path):
     extraction_path = Path(str(pdf_path) + ".extracted.json")
@@ -203,7 +213,7 @@ def process_pdf(pdf_path: Path):
     if not missing_numbers:
         return {"path": str(pdf_path.relative_to(ROOT)), "status": "already_has_target_pages",
                 "pages_retained": len(existing_pages), "target_pages": target_count}
-    pages, note = ocr_pdf(pdf_path, max_pages=MAX_PAGES)
+    pages, note = ocr_pdf(pdf_path, max_pages=MAX_PAGES, page_numbers=missing_numbers)
     if not pages:
         return {"path": str(pdf_path.relative_to(ROOT)), "status": "ocr_empty", "note": note}
     new_pages = [p for p in pages if int(p.get("page", 0)) in missing_numbers]
@@ -283,7 +293,7 @@ def process_zip(zip_path: Path):
                         missing_numbers = (set(range(1, target_count + 1)) - old_numbers) | forced_rescan
                         if not missing_numbers:
                             continue
-                        pages, note = ocr_pdf(inner_pdf, max_pages=MAX_PAGES)
+                        pages, note = ocr_pdf(inner_pdf, max_pages=MAX_PAGES, page_numbers=missing_numbers)
                 except Exception as exc:
                     outcomes.append({"member": name, "status": "ocr_failed", "error": str(exc)[:400]})
                     continue
