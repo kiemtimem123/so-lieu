@@ -13,11 +13,11 @@ on:
       max_pages:
         description: Pages per report to OCR
         required: false
-        default: "12"
+        default: "14"
       rescan_pages:
         description: Comma-separated page numbers to re-OCR even if text is already present
         required: false
-        default: "9,10,11"
+        default: "11,12,13,14"
 
 permissions:
   contents: write
@@ -57,9 +57,9 @@ jobs:
       - name: OCR stored report archive
         env:
           REPORT_OCR_SYMBOL: ${{ github.event.inputs.symbol || '' }}
-          REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || '12' }}
+          REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || '14' }}
           REPORT_OCR_DPI: '180'
-          REPORT_OCR_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || '9,10,11' }}
+          REPORT_OCR_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || '11,12,13,14' }}
         run: python .github/scripts/ocr-stored-reports.py
 
       - name: Validate queue after OCR
