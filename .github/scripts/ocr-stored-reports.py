@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
 import subprocess
 import tempfile
@@ -51,6 +52,16 @@ def page_has_text(pages) -> bool:
     return any(isinstance(p, dict) and len(str(p.get("text") or "").strip()) > 20 for p in pages or [])
 
 
+def _ocr_quality(text: str) -> float:
+    """Quick text-layer quality estimate for financial tables (words + numeric cells)."""
+    value = (text or "").strip()
+    if not value:
+        return 0.0
+    words = re.findall(r"[A-Za-zÀ-ỹĐđ]{3,}", value)
+    numbers = re.findall(r"(?<![A-Za-z])\(?-?\d[\d.,]{1,}\)?(?![A-Za-z])", value)
+    return (4.0 * len(words) + 2.0 * len(numbers)) / max(len(value), 1)
+
+
 def ocr_pdf(path: Path, max_pages: int = MAX_PAGES):
     if not shutil.which("pdftoppm") or not shutil.which("tesseract"):
         return [], "OCR tools are unavailable on this runner."
@@ -85,12 +96,30 @@ def ocr_pdf(path: Path, max_pages: int = MAX_PAGES):
                     timeout=45, check=False,
                 )
                 text = (result.stdout or "").strip()
+                engine = "tesseract-vie+eng-psm6"
+                # Income-statement pages are table-heavy. If the first layout pass
+                # reads mostly symbols/noisy fragments, retry the same image with
+                # Tesseract's single-column layout mode and keep the better result.
+                if 8 <= page_number <= 11 and _ocr_quality(text) < 0.14:
+                    try:
+                        alternate = subprocess.run(
+                            ["tesseract", str(image_path), "stdout", "-l", "vie+eng", "--psm", "4"],
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+                            timeout=45, check=False,
+                        )
+                        alternate_text = (alternate.stdout or "").strip()
+                        if _ocr_quality(alternate_text) > _ocr_quality(text):
+                            text = alternate_text
+                            engine = "tesseract-vie+eng-psm4"
+                    except Exception:
+                        pass
                 if text:
                     results.append({
                         "page": page_number,
                         "text": text[:25000],
                         "ocr": True,
-                        "ocr_engine": "tesseract-vie+eng",
+                        "ocr_engine": engine,
+                        "ocr_quality_score": round(_ocr_quality(text), 4),
                     })
             except Exception:
                 continue
