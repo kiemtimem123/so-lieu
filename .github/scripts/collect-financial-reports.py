@@ -261,6 +261,17 @@ def _extract_report_year_and_date(text):
                 pass
     return year, date
 
+def _vietstock_epoch_date(value):
+    """Convert Vietstock /Date(milliseconds)/ metadata into a stable ISO date."""
+    match = re.search(r"/Date\((-?\d+)\)/", str(value or ""))
+    if not match:
+        return None
+    try:
+        stamp = int(match.group(1)) / 1000.0
+        return datetime.fromtimestamp(stamp, tz=timezone.utc).date().isoformat()
+    except (OverflowError, OSError, ValueError):
+        return None
+
 def _period_from_report_text(text):
     t = (text or "").casefold()
     m = re.search(r"\b(?:quý|q)\s*([1-4i]{1,2})\D{0,16}(20\d{2})", t)
@@ -525,7 +536,7 @@ def discover_for_job(job, allowed_domains):
             "symbol":symbol,"query":"VietstockFinance /data/getdocument",
             "page_url":index_url,"document_index":index_url,
             "document_id":row.get("FileInfoID") or row.get("Id"),
-            "report_year":year,"published_at":published_at or updated[:10],
+            "report_year":year,"published_at":published_at or _vietstock_epoch_date(updated),
             "period":period,"report_type":job.get("reportType","both"),
             "vietstock_title":name,"full_name":full_name,
             "file_ext":row.get("FileExt"),"last_update":updated,
@@ -583,7 +594,7 @@ def download_candidate(candidate, job_dir):
             extracted = extract_file(path, ctype)
             extracted_path = path.with_suffix(path.suffix + ".extracted.json")
             save(extracted_path, extracted)
-            return {"url":url,"final_url":final_url,"title":candidate.get("title"),"host":urlparse(final_url).hostname,"status":"downloaded_needs_review","file":str(path.relative_to(ROOT)),"extracted_file":str(extracted_path.relative_to(ROOT)),"sha256":digest,"bytes":len(data),"content_type":ctype,"extraction":extracted.get("extraction"),"pages":extracted.get("page_count"),"downloaded_at":NOW,"source":"VietstockFinance document index","document_index":candidate.get("document_index"),"index_title":candidate.get("index_title") or candidate.get("title"),"period":candidate.get("period"),"report_year":candidate.get("report_year"),"published_at":candidate.get("published_at"),"report_type":candidate.get("report_type"),"official_filing_page":candidate.get("filing_page"),"filing_page_title":candidate.get("filing_page_title")}
+            return {"url":url,"final_url":final_url,"title":candidate.get("title"),"host":urlparse(final_url).hostname,"status":"downloaded_needs_review","file":str(path.relative_to(ROOT)),"extracted_file":str(extracted_path.relative_to(ROOT)),"sha256":digest,"bytes":len(data),"content_type":ctype,"extraction":extracted.get("extraction"),"pages":extracted.get("page_count"),"downloaded_at":NOW,"source":"VietstockFinance document index","document_index":candidate.get("document_index"),"index_title":candidate.get("index_title") or candidate.get("title"),"period":candidate.get("period"),"report_year":candidate.get("report_year"),"published_at":candidate.get("published_at"),"last_update":candidate.get("last_update"),"file_ext":candidate.get("file_ext"),"document_id":candidate.get("document_id"),"report_type":candidate.get("report_type"),"official_filing_page":candidate.get("filing_page"),"filing_page_title":candidate.get("filing_page_title")}
     except Exception as exc:
         return {"url":url,"title":candidate.get("title"),"status":"download_error","error":str(exc)[:1000]}
 
