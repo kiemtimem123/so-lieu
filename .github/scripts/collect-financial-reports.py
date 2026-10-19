@@ -520,7 +520,7 @@ def discover_for_job(job, allowed_domains):
             continue
         if year is None:
             continue
-        if requested_type == "consolidated" and re.search(r"riêng\s*lẻ|rieng\s*le|separate financial", evidence, re.I):
+        if requested_type == "consolidated" and re.search(r"riêng\s*lẻ|rieng\s*le|separate financial|công ty\s*mẹ|cong ty\s*me|parent company", evidence, re.I):
             continue
         if requested_type == "separate" and re.search(r"hợp\s*nhất|hop\s*nhat|consolidated", evidence, re.I):
             continue
