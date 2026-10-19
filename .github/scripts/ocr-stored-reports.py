@@ -24,7 +24,7 @@ QUEUE_PATH = ROOT / "config/report-queue.json"
 MAX_PAGES = int(os.getenv("REPORT_OCR_MAX_PAGES", "8"))
 DPI = int(os.getenv("REPORT_OCR_DPI", "180"))
 FORCE_RESCAN_PAGES = {
-    int(value.strip()) for value in os.getenv("REPORT_OCR_RESCAN_PAGES", "1,2,3,4,5,6,7,8").split(",")
+    int(value.strip()) for value in os.getenv("REPORT_OCR_RESCAN_PAGES", "10,11").split(",")
     if value.strip().isdigit() and int(value.strip()) > 0
 }
 
@@ -44,6 +44,26 @@ def select_symbol() -> str | None:
     override = os.getenv("REPORT_OCR_SYMBOL", "").strip().upper()
     if override:
         return override
+
+    # Work through symbols in the agreed priority order. Prefer an existing
+    # symbol whose quarter snapshots still have unverified periods, rather than
+    # arbitrarily OCR-ing whichever queue job happened to run last.
+    priority = ["TCX", "HCM", "SHS", "NLG", "BSR", "TCB", "VHM"]
+    for symbol in priority:
+        snapshot = load_json(ROOT / f"data/financials-{symbol}.json") or {}
+        items = snapshot.get("items") or []
+        if not items:
+            return symbol
+        verified_count = sum(
+            1 for item in items
+            if "verified" in str(item.get("verification_status") or "").casefold()
+            or item.get("verification_status") == "manual_visual_reconciliation"
+        )
+        if verified_count < len(items):
+            return symbol
+
+    # If all prioritized ticker snapshots are verified, retain the original
+    # fallback for newly queued symbols and newly added report batches.
     queue = load_json(QUEUE_PATH) or {}
     jobs = [j for j in queue.get("jobs", []) if j.get("processedAt")]
     if not jobs:
@@ -57,8 +77,17 @@ def page_has_text(pages) -> bool:
 
 
 def needs_ocr_rescan(page: dict) -> bool:
-    """Rescan only blank/stamp-only pages; preserve good native PDF text."""
+    """Rescan targeted table pages when requested; preserve other good native PDF text."""
     value = str(page.get("text") or "").strip()
+    try:
+        page_number = int(page.get("page", 0))
+    except (TypeError, ValueError):
+        page_number = 0
+    # The workflow's explicit rescan_pages input must actually rescan those
+    # pages. Previously it only rescanned pages that also looked blank, which
+    # prevented users from improving a noisy OCR layer on statement tables.
+    if page_number in FORCE_RESCAN_PAGES:
+        return True
     if len(value) < 250:
         return True
     return "văn bản được tải lên hệ thống eoffice.bsr.com.vn" in value.casefold()
@@ -112,7 +141,7 @@ def ocr_pdf(path: Path, max_pages: int = MAX_PAGES):
                 # Income-statement pages are table-heavy. If the first layout pass
                 # reads mostly symbols/noisy fragments, retry the same image with
                 # Tesseract's single-column layout mode and keep the better result.
-                if 8 <= page_number <= 11 and _ocr_quality(text) < 0.14:
+                if 8 <= page_number <= 12:
                     try:
                         alternate = subprocess.run(
                             ["tesseract", str(image_path), "stdout", "-l", "vie+eng", "--psm", "4"],
@@ -120,6 +149,9 @@ def ocr_pdf(path: Path, max_pages: int = MAX_PAGES):
                             timeout=45, check=False,
                         )
                         alternate_text = (alternate.stdout or "").strip()
+                        # Try both multi-block and single-column layouts for the
+                        # dense numeric tables, retaining whichever extraction
+                        # scores better on letters plus numeric cells.
                         if _ocr_quality(alternate_text) > _ocr_quality(text):
                             text = alternate_text
                             engine = "tesseract-vie+eng-psm4"
@@ -192,7 +224,7 @@ def process_pdf(pdf_path: Path):
     extracted["extraction"] = "text+ocr" if existing_pages else "ocr"
     extracted["ocr_pages"] = sum(1 for p in extracted["pages"] if p.get("ocr"))
     extracted["ocr_completed_at"] = datetime.now(timezone.utc).isoformat()
-    extracted["note"] = "OCR targeted blank/stamp-only pages in the first 8 pages; verify OCR figures before publication."
+    extracted["note"] = "OCR targeted financial-result table pages 10–11 within the first 12 pages; verify OCR figures before publication."
     save_json(extraction_path, extracted)
     return {"path": str(pdf_path.relative_to(ROOT)), "status": "ocr_done",
             "new_pages": sorted(int(p["page"]) for p in new_pages),
