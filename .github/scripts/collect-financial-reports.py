@@ -87,7 +87,7 @@ def extract_file(path, content_type):
                         try:
                             reader = PdfReader(io.BytesIO(raw))
                             pages = []
-                            for i, page in enumerate(reader.pages[:100]):
+                            for i, page in enumerate(reader.pages[:20]):
                                 page_text = page.extract_text() or ""
                                 if page_text.strip():
                                     pages.append({"page":i+1,"text":page_text[:25000]})
