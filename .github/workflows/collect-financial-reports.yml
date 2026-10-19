@@ -59,7 +59,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y poppler-utils tesseract-ocr tesseract-ocr-vie
-      - name: OCR statement pages when source PDFs have no text layer
+      - name: OCR statement pages when source PDFs have no text layer (optional; separate workflow runs after archive commit)
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.run_supplementary_crawlers == 'true' }}
         env:
           REPORT_OCR_MAX_PAGES: '12'
           REPORT_OCR_DPI: '180'
