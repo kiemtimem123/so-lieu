@@ -97,7 +97,7 @@ def needs_ocr_rescan(page: dict) -> bool:
             attempts = int(page.get("forced_rescan_count") or 1)
         except (TypeError, ValueError):
             score, attempts = 0.0, 1
-        return score < 0.30 and attempts < 2
+        return score < 0.34 and attempts < 2
     if len(value) < 250:
         return True
     return "văn bản được tải lên hệ thống eoffice.bsr.com.vn" in value.casefold()
