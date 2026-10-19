@@ -21,7 +21,7 @@ from pypdf import PdfReader
 ROOT = Path(__file__).resolve().parents[2]
 REPORTS = ROOT / "reports/raw"
 QUEUE_PATH = ROOT / "config/report-queue.json"
-MAX_PAGES = int(os.getenv("REPORT_OCR_MAX_PAGES", "8"))
+MAX_PAGES = int(os.getenv("REPORT_OCR_MAX_PAGES", "12"))
 DPI = int(os.getenv("REPORT_OCR_DPI", "180"))
 FORCE_RESCAN_PAGES = {
     int(value.strip()) for value in os.getenv("REPORT_OCR_RESCAN_PAGES", "10,11").split(",")
@@ -87,7 +87,7 @@ def needs_ocr_rescan(page: dict) -> bool:
     # pages. Previously it only rescanned pages that also looked blank, which
     # prevented users from improving a noisy OCR layer on statement tables.
     if page_number in FORCE_RESCAN_PAGES:
-        return True
+        return not bool(page.get("forced_rescan_completed"))
     if len(value) < 250:
         return True
     return "văn bản được tải lên hệ thống eoffice.bsr.com.vn" in value.casefold()
@@ -214,6 +214,8 @@ def process_pdf(pdf_path: Path):
             page_number = int(page.get("page"))
         except (TypeError, ValueError):
             continue
+        if page_number in force_numbers:
+            page["forced_rescan_completed"] = True
         # A forced rescan deliberately replaces low-quality text from a prior OCR pass.
         if page_number in forced_rescan and page_number in rescanned_page_numbers:
             merged_by_number[page_number] = page
@@ -286,6 +288,8 @@ def process_zip(zip_path: Path):
                             number = int(page.get("page"))
                         except (TypeError, ValueError):
                             continue
+                        if number in force_numbers:
+                            page["forced_rescan_completed"] = True
                         if number in forced_rescan and number in rescanned_numbers:
                             merged_by_number[number] = page
                         else:
@@ -295,7 +299,7 @@ def process_zip(zip_path: Path):
                     member["extraction"] = "text+ocr" if old_pages else "ocr"
                     member["ocr_pages"] = sum(1 for p in member["pages"] if p.get("ocr"))
                     member["ocr_engine"] = "tesseract-vie+eng"
-                    member["note"] = "OCR targeted blank/stamp-only pages in the first 8 pages; verify OCR figures before publishing."
+                    member["note"] = "OCR targeted financial-result pages 10–11 within the first 12 pages; verify OCR figures before publishing."
                     changes += 1
                     outcomes.append({"member": name, "status": "ocr_done",
                                      "new_pages": sorted(int(p["page"]) for p in new_pages),
@@ -308,7 +312,7 @@ def process_zip(zip_path: Path):
     if changes:
         extracted["extraction"] = "archive_members_with_ocr"
         extracted["ocr_completed_at"] = datetime.now(timezone.utc).isoformat()
-        extracted["note"] = "Image-only PDFs in ZIP were OCRed on blank/stamp-only pages in the first 8 pages; verify before publishing."
+        extracted["note"] = "Image-only PDFs in ZIP had selected financial-result pages OCRed within the first 12 pages; verify before publishing."
         save_json(extraction_path, extracted)
     return {"path": str(zip_path.relative_to(ROOT)), "status": "ocr_done" if changes else "no_ocr_changes",
             "members_changed": changes, "members": outcomes}
