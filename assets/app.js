@@ -926,6 +926,9 @@
     const status = $('#stockSourceStatus');
     const loadSummary = $('#stockSyncSummary');
     const symbols = ['MBB','ACB','FPT','SHB','TCX','HCM','VND','SHS','NLG','BSR','TCB','VHM'];
+    const industryBySymbol = { MBB:'banking', ACB:'banking', SHB:'banking', TCB:'banking', FPT:'technology', HCM:'securities', VND:'securities', SHS:'securities', TCX:'securities', NLG:'real_estate', VHM:'real_estate', BSR:'energy' };
+    const industryLabels = { banking:'Ngân hàng', securities:'Chứng khoán', real_estate:'Bất động sản', technology:'Công nghệ', energy:'Dầu khí & năng lượng' };
+    const industryFor = ticker => industryBySymbol[ticker] || 'other';
     const snapshots = new Map();
     const charts = {};
     let isLoading = false;
@@ -939,6 +942,7 @@
     const periodLabel = value => String(value || '').replace('-Q', ' · Quý ');
     const fieldMeta = {
       revenue: { label: 'Doanh thu', unit: 'theo snapshot' },
+      pb: { label: 'P/B', unit: 'lần' },
       pretax_profit: { label: 'Lợi nhuận trước thuế', unit: 'theo snapshot' },
       net_profit: { label: 'Lợi nhuận sau thuế', unit: 'theo snapshot' },
       total_assets: { label: 'Tổng tài sản', unit: 'theo snapshot' },
@@ -962,7 +966,7 @@
       const snapshot = snapshots.get(ticker);
       return (snapshot?.items || []).filter(item => item && validPeriod(item.period)).slice().sort((a,b)=>a.period.localeCompare(b.period));
     };
-    const hasNumericFinancialData = item => ['revenue','pretax_profit','net_profit','total_assets','total_liabilities','equity','roa','roe'].some(field => validNumber(item?.[field]));
+    const hasNumericFinancialData = item => ['revenue','pretax_profit','net_profit','total_assets','total_liabilities','equity','roa','roe','pb'].some(field => validNumber(item?.[field]));
     const verificationBadge = item => {
       const raw = String(item?.verification_status || '').toLowerCase();
       if (raw === 'auto_pending_extraction') return { label: 'Chờ trích xuất', kind: 'pending' };
@@ -1100,13 +1104,16 @@
       const metric = $('#stockCompareMetric')?.value || 'net_profit';
       const period = $('#stockComparePeriod')?.value || '';
       const meta = fieldMeta[metric] || fieldMeta.net_profit;
-      const values = symbols.map(ticker => {
+      const compareIndustry = $('#stockCompareIndustry')?.value || 'all';
+      const selectedIndustry = industryFor(String(symbolSelect?.value || 'MBB').toUpperCase());
+      const compareSymbols = symbols.filter(ticker => compareIndustry === 'all' || industryFor(ticker) === selectedIndustry);
+      const values = compareSymbols.map(ticker => {
         const row = rowsFor(ticker).find(item=>item.period===period);
         return {ticker, value:row && validNumber(row[metric]) ? Number(row[metric]) : null};
       }).filter(item=>item.value!==null);
       drawChart('compare','stockCompareChart','stockCompareNote',{
         type:'bar', labels:values.map(item=>item.ticker), points:values.map(item=>item.value),
-        datasets:values.length?[{label:meta.label+(meta.unit==='%'?' (%)':''),data:values.map(item=>item.value),borderWidth:1}]:[],
+        datasets:values.length?[{label:meta.label+((meta.unit==='%'?' (%)':meta.unit==='lần'?' (lần)':'')),data:values.map(item=>item.value),borderWidth:1}]:[],
         beginAtZero:true,
         note:values.length?'Kỳ '+periodLabel(period)+' · '+meta.label+'. Chỉ so sánh các mã có dữ liệu, cùng đơn vị và cùng cơ sở báo cáo.':'',
         emptyMessage:'Chưa có dữ liệu đã xác minh cho chỉ tiêu và kỳ so sánh đã chọn.'
@@ -1114,7 +1121,7 @@
       const table = $('#stockCompareTable');
       if (table) {
         table.innerHTML = values.length
-          ? '<table><thead><tr><th>Mã</th><th>Kỳ</th><th>'+escapeHtml(meta.label)+'</th><th>Đơn vị</th></tr></thead><tbody>'+values.map(item=>'<tr><td><strong>'+item.ticker+'</strong></td><td>'+escapeHtml(periodLabel(period))+'</td><td>'+numberOrDash(item.value)+'</td><td>'+escapeHtml((metric==='roa'||metric==='roe')?'%':(rowsFor(item.ticker).find(row=>row.period===period)?.unit || meta.unit))+'</td></tr>').join('')+'</tbody></table>'
+          ? '<table><thead><tr><th>Mã</th><th>Kỳ</th><th>'+escapeHtml(meta.label)+'</th><th>Đơn vị</th></tr></thead><tbody>'+values.map(item=>'<tr><td><strong>'+item.ticker+'</strong></td><td>'+escapeHtml(periodLabel(period))+'</td><td>'+numberOrDash(item.value)+'</td><td>'+escapeHtml((metric==='roa'||metric==='roe')?'%' : metric==='pb'?'lần':(rowsFor(item.ticker).find(row=>row.period===period)?.unit || meta.unit))+'</td></tr>').join('')+'</tbody></table>'
           : '<div class="empty-state"><h3>Chưa có dữ liệu để so sánh</h3><p>Chỉ những giá trị có nguồn kiểm chứng mới được hiển thị.</p></div>';
       }
     }
@@ -1175,6 +1182,7 @@
         { label: 'TỶ SUẤT SINH LỜI', type: 'section' },
         { label: 'ROA (%)', key: 'roa', ratio: true, level: 1 },
         { label: 'ROE (%)', key: 'roe', ratio: true, level: 1 },
+        { label: 'P/B (lần)', key: 'pb', ratio: true, level: 1 },
         { label: 'Cơ sở tính ROA', key: 'roa_formula', text: true },
         { label: 'Cơ sở tính ROE', key: 'roe_formula', text: true },
         { label: 'Đơn vị tỷ số', key: 'ratio_unit', text: true }
@@ -1217,7 +1225,7 @@
           cashflow: 'Chưa có các trường lưu chuyển tiền tệ trong snapshot hiện tại. Các ô không có dữ liệu được giữ trống, không nội suy.',
           notes: 'Thông tin nguồn, kỳ công bố và trạng thái kiểm chứng lấy từ bản ghi báo cáo; mở PDF để xem chi tiết gốc.',
           ratios: 'ROA/ROE lấy từ snapshot hiện có; không tự tính tỷ số khi thiếu đầu vào hoặc công thức nguồn.',
-          peers: 'Đối chiếu các mã đã cấu hình theo cùng kỳ và cùng chỉ tiêu. Chưa có phân loại ngành đã xác minh nên không khẳng định các mã thuộc cùng ngành.'
+          peers: 'So sánh các mã cùng nhóm ngành đã cấu hình, cùng kỳ và cùng chỉ tiêu. P/B chỉ hiển thị khi snapshot có dữ liệu được cung cấp; không tự suy đoán giá thị trường.'
         };
         statementHint.textContent = hints[activeStatement] + ' Đơn vị tiền tệ đang chọn: ' + unitName + '.';
       }
@@ -1247,12 +1255,15 @@
       } else if (activeStatement === 'peers') {
         const metric = tableCompareMetric?.value || 'net_profit';
         const meta = fieldMeta[metric] || fieldMeta.net_profit;
-        body = symbols.map(symbol => {
-          const items = rowsFor(symbol);
+        const industryMode = $('#stockPeerIndustry')?.value || 'same';
+        const selectedIndustry = industryFor(String(symbolSelect?.value || 'MBB').toUpperCase());
+        const peerSymbols = symbols.filter(symbol => industryMode === 'all' || industryFor(symbol) === selectedIndustry);
+        body = peerSymbols.map(symbol => {
+          const items = rowsForBasis(symbol);
           return '<tr><td class="statement-row-label"><strong>' + escapeHtml(symbol) + '</strong><small>' + escapeHtml(meta.label) + '</small></td>' +
             periods.map(period => {
               const item = items.find(row => row.period === period);
-              const value = item && validNumber(item[metric]) ? statementNumber(item[metric], item, metric === 'roa' || metric === 'roe') + ((metric === 'roa' || metric === 'roe') ? '%' : '') : '—';
+              const value = item && validNumber(item[metric]) ? statementNumber(item[metric], item, ['roa','roe','pb'].includes(metric)) + ((metric === 'roa' || metric === 'roe') ? '%' : '') : '—';
               return '<td>' + value + '</td>';
             }).join('') + '</tr>';
         }).join('');
@@ -1368,6 +1379,8 @@
     basisSelect?.addEventListener('change', () => { periodOffset = 0; renderSelected(); });
     unitSelect?.addEventListener('change',renderSelected);
     tableCompareMetric?.addEventListener('change',renderSelected);
+    $('#stockPeerIndustry')?.addEventListener('change',renderSelected);
+    $('#stockCompareIndustry')?.addEventListener('change',drawComparison);
     $('#stockPeriodFirst')?.addEventListener('click', () => { periodOffset = 0; renderSelected(); });
     $('#stockPeriodPrev')?.addEventListener('click', () => { periodOffset = Math.max(0, periodOffset - statementPageSize); renderSelected(); });
     $('#stockPeriodNext')?.addEventListener('click', () => { periodOffset += statementPageSize; renderSelected(); });
