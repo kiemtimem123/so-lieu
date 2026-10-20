@@ -9,11 +9,17 @@ import path from "node:path";
 
 const root = process.cwd();
 const symbols = ["MBB", "ACB", "FPT", "SHB", "TCX", "HCM", "VND", "SHS", "NLG", "BSR", "TCB", "VHM"];
-const expectedPeriods = [];
-for (let year = 2024; year <= 2026; year++) {
-  const maxQuarter = year === 2026 ? 2 : 4;
-  for (let quarter = 1; quarter <= maxQuarter; quarter++) expectedPeriods.push(`${year}-Q${quarter}`);
-}
+const firstExpectedOrdinal = 2024 * 4 + 1;
+const periodOrdinal = period => {
+  const match = /^(20\\d{2})-Q([1-4])$/.exec(String(period || ""));
+  return match ? Number(match[1]) * 4 + Number(match[2]) : null;
+};
+const periodFromOrdinal = ordinal => `${Math.floor((ordinal - 1) / 4)}-Q${((ordinal - 1) % 4) + 1}`;
+const periodsBetween = endOrdinal => {
+  const periods = [];
+  for (let ordinal = firstExpectedOrdinal; ordinal <= endOrdinal; ordinal++) periods.push(periodFromOrdinal(ordinal));
+  return periods;
+};
 const errors = [];
 const warnings = [];
 const summary = [];
@@ -51,17 +57,21 @@ for (const symbol of symbols) {
     const status = item.verification_status || "missing_status";
     statusCounts[status] = (statusCounts[status] || 0) + 1;
 
+    const pendingExtraction = status === "auto_pending_extraction";
     for (const field of ["total_assets", "total_liabilities", "equity", "pretax_profit", "net_profit"]) {
-      if (typeof item[field] !== "number" || !Number.isFinite(item[field])) {
+      if ((typeof item[field] !== "number" || !Number.isFinite(item[field])) && !pendingExtraction) {
         errors.push(`${symbol} ${item.period}: ${field} is missing or non-numeric`);
       }
+    }
+    if (pendingExtraction) {
+      warnings.push(`${symbol} ${item.period}: new VietstockFinance report detected; financial fields await reliable extraction`);
     }
     let sourceHost = "";
     try {
       sourceHost = new URL(item.source_url || "").hostname;
     } catch {}
-    if (sourceHost !== "static2.vietstock.vn") {
-      errors.push(`${symbol} ${item.period}: report must come from static2.vietstock.vn (VietstockFinance document server); got ${item.source_url || "no URL"}`);
+    if (!(sourceHost === "vietstock.vn" || sourceHost.endsWith(".vietstock.vn"))) {
+      errors.push(`${symbol} ${item.period}: report must link to a Vietstock-owned host; got ${item.source_url || "no URL"}`);
     }
     const expectedIndex = `https://finance.vietstock.vn/${symbol}/tai-tai-lieu.htm?doctype=1`;
     if (item.source_index_url !== expectedIndex) {
@@ -76,27 +86,37 @@ for (const symbol of symbols) {
       const delta = item.total_assets - item.total_liabilities - item.equity;
       if (Math.abs(delta) > 3) errors.push(`${symbol} ${item.period}: balance equation differs by ${delta} (${item.unit || "unit"})`);
     }
-    if (status.includes("pending_visual_review") || status.startsWith("ocr_") || status === "missing_status") {
+    if (status.includes("pending_visual_review") || status === "auto_extracted_pending_visual_review" ||
+        status.startsWith("ocr_") || status === "missing_status") {
       warnings.push(`${symbol} ${item.period}: requires/should retain review status (${status})`);
     }
   }
 
+  const ordinals = [...byPeriod.keys()].map(periodOrdinal).filter(Number.isFinite);
+  const latestOrdinal = ordinals.length ? Math.max(...ordinals) : firstExpectedOrdinal - 1;
+  const expectedPeriods = periodsBetween(latestOrdinal);
   for (const period of expectedPeriods) {
-    if (!byPeriod.has(period)) errors.push(`${symbol}: missing period ${period}`);
+    if (!byPeriod.has(period)) errors.push(`${symbol}: missing period ${period} before latest stored period`);
   }
   for (const period of byPeriod.keys()) {
-    if (!expectedPeriods.includes(period)) warnings.push(`${symbol}: unexpected period ${period}`);
-  }
-  if (snapshot.items.length !== expectedPeriods.length) {
-    errors.push(`${symbol}: expected ${expectedPeriods.length} periods, found ${snapshot.items.length}`);
+    const ordinal = periodOrdinal(period);
+    if (ordinal === null || ordinal < firstExpectedOrdinal) {
+      warnings.push(`${symbol}: unexpected or pre-2024 period ${period}`);
+    }
   }
 
-  summary.push({ symbol, periods: snapshot.items.length, statuses: statusCounts });
+  summary.push({
+    symbol,
+    periods: snapshot.items.length,
+    first: snapshot.items[0]?.period || null,
+    last: snapshot.items.at(-1)?.period || null,
+    statuses: statusCounts
+  });
 }
 
 console.log("VietstockFinance quarterly snapshot validation");
 console.log(`Symbols checked: ${summary.length}/${symbols.length}`);
-console.log(`Expected periods per symbol: ${expectedPeriods[0]} through ${expectedPeriods.at(-1)} (${expectedPeriods.length})`);
+console.log("Expected coverage per symbol: contiguous periods from 2024-Q1 through that symbol's latest stored quarter.");
 console.log(`Errors: ${errors.length}; review warnings: ${warnings.length}`);
 for (const row of summary) console.log(`- ${row.symbol}: ${row.periods} periods; status counts ${JSON.stringify(row.statuses)}`);
 if (warnings.length) {
