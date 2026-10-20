@@ -95,7 +95,9 @@ for (const id of ids) {
     unit: series.unit || null,
     group: groups[id] || "other",
     date: latest.date,
-    observations: valid.map(point => ({ date: point.date, value: point.value })),\n    source: sources[id]?.name || "Dữ Liệu Kinh Tế API",\n    ...(sources[id]?.url ? { sourceUrl: sources[id].url } : {})
+    observations: valid.map(point => ({ date: point.date, value: point.value })),
+    source: sources[id]?.name || "Dữ Liệu Kinh Tế API",
+    ...(sources[id]?.url ? { sourceUrl: sources[id].url } : {})
   });
 }
 
