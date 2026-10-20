@@ -56,11 +56,19 @@ for (const symbol of symbols) {
         errors.push(`${symbol} ${item.period}: ${field} is missing or non-numeric`);
       }
     }
-    if (!item.source_url || !/^https:\/\//i.test(item.source_url)) {
-      errors.push(`${symbol} ${item.period}: source_url missing or not HTTPS`);
+    let sourceHost = "";
+    try {
+      sourceHost = new URL(item.source_url || "").hostname;
+    } catch {}
+    if (sourceHost !== "static2.vietstock.vn") {
+      errors.push(`${symbol} ${item.period}: report must come from static2.vietstock.vn (VietstockFinance document server); got ${item.source_url || "no URL"}`);
     }
-    if (!item.source_index_url || !item.source_index_url.startsWith("https://finance.vietstock.vn/")) {
-      errors.push(`${symbol} ${item.period}: VietstockFinance source_index_url missing`);
+    const expectedIndex = `https://finance.vietstock.vn/${symbol}/tai-tai-lieu.htm?doctype=1`;
+    if (item.source_index_url !== expectedIndex) {
+      errors.push(`${symbol} ${item.period}: source_index_url must be the VietstockFinance document catalog ${expectedIndex}`);
+    }
+    if (!String(item.report_type || "").toLocaleLowerCase("vi").includes("bctc")) {
+      errors.push(`${symbol} ${item.period}: report_type should identify a financial statement (BCTC), not a research report`);
     }
     if (!item.unit) errors.push(`${symbol} ${item.period}: unit missing`);
 
