@@ -46,10 +46,23 @@ def select_symbol() -> str | None:
     if override:
         return override
 
+    # An open review job takes precedence over snapshot flags: a few already
+    # published quarters do not mean the whole ticker's archive is complete.
+    queue = load_json(QUEUE_PATH) or {}
+    priority = ["TCB", "TCX", "HCM", "SHS", "NLG", "BSR", "VHM"]
+    for symbol in priority:
+        open_jobs = [
+            job for job in queue.get("jobs", [])
+            if str(job.get("symbol") or "").upper() == symbol
+            and job.get("status") in {"needs_review", "queued", "pending", "downloaded", "extracted"}
+            and job.get("sourceCandidates")
+        ]
+        if open_jobs:
+            return symbol
+
     # Work through symbols in the agreed priority order. Prefer an existing
     # symbol whose quarter snapshots still have unverified periods, rather than
     # arbitrarily OCR-ing whichever queue job happened to run last.
-    priority = ["TCB", "TCX", "HCM", "SHS", "NLG", "BSR", "VHM"]
     for symbol in priority:
         snapshot = load_json(ROOT / f"data/financials-{symbol}.json") or {}
         items = snapshot.get("items") or []
