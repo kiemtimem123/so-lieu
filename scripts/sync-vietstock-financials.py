@@ -299,9 +299,11 @@ def desired_consolidated(items: list[dict]) -> bool:
         and "hop nhat" not in label
         for label in labels
     )
-    if consolidated == 0 and separate == 0:
-        return True
-    return consolidated >= separate
+    if consolidated > 0 or separate > 0:
+        return consolidated >= separate
+    # If Vietstock's labels do not say "hợp nhất", preserve the scope already
+    # represented by the existing source URLs rather than forcing consolidated.
+    return any("hopnhat" in norm(x.get("source_url", "")) for x in items)
 
 
 def candidate_score(record: dict, explicit: bool, cumulative: bool) -> tuple[int, int, int]:
