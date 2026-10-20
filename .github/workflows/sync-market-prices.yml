@@ -7,6 +7,7 @@ on:
     paths:
       - ".github/scripts/sync-currency-rates.cjs"
       - ".github/scripts/sync-market-prices.cjs"
+      - ".github/scripts/sync-trending-commodities.cjs"
       - ".github/workflows/sync-market-prices.yml"
   schedule:
     - cron: "15 23 * * *"
@@ -56,6 +57,7 @@ jobs:
         shell: bash
         run: |
           set -eu
+          node .github/scripts/sync-trending-commodities.cjs
           node .github/scripts/sync-market-prices.cjs
           node .github/scripts/sync-currency-rates.cjs
           node .github/scripts/sync-financial-rates.cjs
@@ -69,15 +71,17 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           # Preserve generated snapshots, then synchronize with the latest main
           # before committing to avoid non-fast-forward push failures.
+          cp data/trending-commodities.json /tmp/trending-commodities.json
           cp data/market-prices.json /tmp/market-prices.json
           cp data/currency-rates.json /tmp/currency-rates.json
           cp data/financial-rates.json /tmp/financial-rates.json
           git fetch origin main
           git reset --hard origin/main
+          cp /tmp/trending-commodities.json data/trending-commodities.json
           cp /tmp/market-prices.json data/market-prices.json
           cp /tmp/currency-rates.json data/currency-rates.json
           cp /tmp/financial-rates.json data/financial-rates.json
-          git add data/market-prices.json data/currency-rates.json data/financial-rates.json
+          git add data/trending-commodities.json data/market-prices.json data/currency-rates.json data/financial-rates.json
           if git diff --cached --quiet; then
             echo "No data changes."
           else
