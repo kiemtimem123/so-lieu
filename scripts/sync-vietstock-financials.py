@@ -32,6 +32,8 @@ DOC_TYPE = 1
 MAX_PAGES_PER_YEAR = 20
 MAX_DOWNLOAD_BYTES = 80 * 1024 * 1024
 MAX_PDF_PAGES = 40
+MAX_OCR_PAGES = 20
+OCR_DPI = 180
 SLEEP_BETWEEN_CALLS = 0.18
 USER_AGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
@@ -482,17 +484,63 @@ def extract_pdf_bytes(url: str, session: requests.Session) -> tuple[bytes, str]:
     raise ValueError(f"Liên kết không trả PDF/ZIP trực tiếp (Content-Type={response.headers.get('Content-Type', '')}).")
 
 
-def extract_statement(pdf_bytes: bytes, previous_item: dict | None, cumulative: bool = False) -> dict:
+def ocr_pdf_text(pdf_bytes: bytes) -> str:
+    """OCR scanned PDFs locally in the GitHub runner; never calls another data source."""
+    try:
+        from pdf2image import convert_from_bytes
+        import pytesseract
+    except ImportError as exc:
+        raise RuntimeError(
+            "Thiếu gói OCR (pdf2image/pytesseract); báo cáo được giữ dạng chờ trích xuất."
+        ) from exc
+
+    reader = PdfReader(io.BytesIO(pdf_bytes), strict=False)
+    page_count = min(len(reader.pages), MAX_OCR_PAGES)
+    if page_count < 1:
+        raise ValueError("PDF không có trang để OCR.")
+    images = convert_from_bytes(
+        pdf_bytes,
+        dpi=OCR_DPI,
+        first_page=1,
+        last_page=page_count,
+        fmt="png",
+        thread_count=1,
+    )
+    chunks = []
+    for page_number, image in enumerate(images, start=1):
+        try:
+            extracted = pytesseract.image_to_string(
+                image, lang="vie+eng", config="--oem 1 --psm 6"
+            )
+        except Exception:
+            # PSM 4 can work better for tables with separate text blocks.
+            extracted = pytesseract.image_to_string(
+                image, lang="vie+eng", config="--oem 1 --psm 4"
+            )
+        chunks.append(f"\n[OCR PAGE {page_number}]\n{extracted or ''}")
+    return "\n".join(chunks)
+
+
+def extract_statement(
+    pdf_bytes: bytes,
+    previous_item: dict | None,
+    cumulative: bool = False,
+    force_ocr: bool = False,
+) -> dict:
     reader = PdfReader(io.BytesIO(pdf_bytes), strict=False)
     texts = []
-    for page in reader.pages[:MAX_PDF_PAGES]:
-        try:
-            texts.append(page.extract_text() or "")
-        except Exception:
-            texts.append("")
+    if not force_ocr:
+        for page in reader.pages[:MAX_PDF_PAGES]:
+            try:
+                texts.append(page.extract_text() or "")
+            except Exception:
+                texts.append("")
     text = "\n".join(texts)
+    if force_ocr or len(text.strip()) < 300:
+        print("    Văn bản PDF thiếu; thử OCR các trang đầu bằng Tesseract.")
+        text = ocr_pdf_text(pdf_bytes)
     if len(text.strip()) < 300:
-        raise ValueError("PDF không có đủ văn bản để trích xuất; cần OCR/kiểm tra trực quan.")
+        raise ValueError("PDF không có đủ văn bản sau thử OCR; giữ liên kết chờ xử lý.")
     lines = [line.strip() for line in text.splitlines() if line.strip()]
 
     asset_series = row_numbers(lines, ASSET_LABELS)
@@ -773,7 +821,13 @@ def process_symbol(
         try:
             pdf_bytes, final_url = extract_pdf_bytes(url, session)
             previous = choose_previous_item(items, period)
-            values = extract_statement(pdf_bytes, previous, cumulative=cumulative)
+            try:
+                values = extract_statement(pdf_bytes, previous, cumulative=cumulative)
+            except ValueError as text_error:
+                print(f"    Trích xuất văn bản chưa đạt ({text_error}); chuyển sang OCR.")
+                values = extract_statement(
+                    pdf_bytes, previous, cumulative=cumulative, force_ocr=True
+                )
             new_item = make_extracted_item(symbol, period, record, url, values, items, cumulative)
             new_item["source_extract_review"]["final_download_url"] = final_url
             if period in existing:
