@@ -120,7 +120,18 @@ Không duyệt hàng loạt theo mặc định. Endpoint POST yêu cầu token; 
 
 - Chạy cục bộ bằng Node.js 20+: `node scripts/validate-financials.mjs`.
 - GitHub Actions tự chạy khi các tệp `data/financials-*.json`, script kiểm tra hoặc workflow thay đổi; cũng có thể chạy thủ công từ tab **Actions**.
-- Bộ kiểm tra yêu cầu đủ 12 mã đã cấu hình, đủ 10 kỳ từ Q1/2024 đến Q2/2026, không trùng kỳ, có URL báo cáo và trang danh mục VietstockFinance, có đơn vị và các trường tài chính dạng số; đồng thời kiểm tra phương trình tổng tài sản = nợ phải trả + vốn chủ sở hữu (dung sai 3 triệu VND do làm tròn).
-- Những kỳ có trạng thái OCR hoặc `pending_visual_review` được hiển thị thành cảnh báo để tiếp tục rà soát trực quan; cảnh báo không được hiểu là đã xác minh bằng mắt. Kiểm tra tự động không thay thế việc mở PDF/ZIP gốc và đối chiếu từng dòng lợi nhuận.
+- Bộ kiểm tra yêu cầu 12 mã đã cấu hình, chuỗi kỳ liên tục từ Q1/2024 đến kỳ mới nhất trong từng tệp, không trùng kỳ, có URL báo cáo và đường dẫn danh mục VietstockFinance, có đơn vị và các trường tài chính dạng số khi trích xuất thành công; đồng thời kiểm tra phương trình tổng tài sản = nợ phải trả + vốn chủ sở hữu (dung sai 3 triệu VND do làm tròn).
+- Báo cáo mới chưa trích xuất được có thể giữ các trường số là `null` với trạng thái `auto_pending_extraction`; đây là cảnh báo cần xử lý, không phải số liệu 0. Các kỳ OCR hoặc `pending_visual_review` phải tiếp tục rà soát trực quan; kiểm tra tự động không thay thế việc mở PDF/ZIP gốc và đối chiếu từng dòng lợi nhuận.
 
-**Chính sách nguồn cho báo cáo tài chính:** chỉ dùng tài liệu BCTC lấy từ danh mục VietstockFinance của từng mã, theo mẫu `https://finance.vietstock.vn/MÃ/tai-tai-lieu.htm?doctype=1`. Liên kết tệp báo cáo phải trỏ đến máy chủ tài liệu `static2.vietstock.vn`; không lấy số từ website IR của doanh nghiệp, bài phân tích môi giới hoặc dự báo lợi nhuận. Nếu một kỳ chỉ đọc được bằng OCR hoặc phải suy ra từ số lũy kế, giữ rõ trạng thái đó và không gắn nhãn đã đối chiếu trực quan.
+**Chính sách nguồn cho báo cáo tài chính:** chỉ dùng danh mục VietstockFinance của từng mã theo mẫu `https://finance.vietstock.vn/MÃ/tai-tai-lieu.htm?doctype=1` cùng PDF/ZIP được chính danh mục đó liên kết. Không lấy số từ website IR riêng lẻ, nguồn dữ liệu khác, bài phân tích môi giới hoặc dự báo lợi nhuận.
+
+## 9. Tự động phát hiện và bổ sung báo cáo quý mới
+
+Workflow `.github/workflows/sync-vietstock-financials.yml` chạy hằng ngày lúc **09:17 giờ Việt Nam** và có thể chạy thủ công tại GitHub Actions. Worker `scripts/sync-vietstock-financials.py`:
+1. Gọi danh mục tài liệu VietstockFinance (doctype=1) cho 12 mã đang cấu hình; chỉ chấp nhận URL trên các miền Vietstock và dùng đúng catalog URL cho từng mã.
+2. So sánh kỳ được công bố mới nhất với snapshot trong `data/financials-<MÃ>.json`; chỉ nối kỳ liên tiếp tiếp theo, không lặp kỳ đã có và không nhảy qua kỳ còn thiếu.
+3. Thử trích xuất PDF/ZIP trong bộ nhớ tạm. Chỉ ghi số khi trích xuất đủ trường chính và phương trình cân đối khớp; số tự trích xuất mang trạng thái `auto_extracted_pending_visual_review`.
+4. Nếu PDF/ZIP không đọc được hoặc số chưa chắc chắn, thêm bản ghi nguồn với các trường số `null`, trạng thái `auto_pending_extraction`, rồi thử lại ở lần chạy sau. Báo cáo 6/9 tháng không được dùng trực tiếp số lũy kế thay cho lợi nhuận riêng của quý.
+5. Chạy bộ kiểm tra dữ liệu trước khi commit. Nếu snapshot thay đổi, GitHub Actions sẽ commit tự động lên nhánh đang được cấu hình; nếu không có kỳ mới, repo không tạo commit rỗng.
+
+**Lưu ý vận hành:** việc commit dữ liệu lên GitHub không tự đảm bảo website Hostinger cập nhật ngay. Hosting cần được cấu hình Git deployment/Auto-deployment từ đúng nhánh để phát hành các JSON mới. Workflow không tự điền số suy đoán và không gắn trạng thái đã kiểm tra trực quan cho báo cáo chưa được người rà soát.
