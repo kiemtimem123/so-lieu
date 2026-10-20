@@ -1224,7 +1224,7 @@
           income: 'Báo cáo thu nhập: doanh thu và thuế chỉ hiển thị ở kỳ có trường dữ liệu được trích xuất.',
           cashflow: 'Chưa có các trường lưu chuyển tiền tệ trong snapshot hiện tại. Các ô không có dữ liệu được giữ trống, không nội suy.',
           notes: 'Thông tin nguồn, kỳ công bố và trạng thái kiểm chứng lấy từ bản ghi báo cáo; mở PDF để xem chi tiết gốc.',
-          ratios: 'ROA/ROE lấy từ snapshot hiện có; không tự tính tỷ số khi thiếu đầu vào hoặc công thức nguồn.',
+          ratios: 'ROA/ROE và P/B chỉ lấy từ trường dữ liệu đã có trong snapshot; không tự tính P/B khi thiếu giá thị trường và giá trị sổ sách trên mỗi cổ phiếu.',
           peers: 'So sánh các mã cùng nhóm ngành đã cấu hình, cùng kỳ và cùng chỉ tiêu. P/B chỉ hiển thị khi snapshot có dữ liệu được cung cấp; không tự suy đoán giá thị trường.'
         };
         statementHint.textContent = hints[activeStatement] + ' Đơn vị tiền tệ đang chọn: ' + unitName + '.';
@@ -1292,7 +1292,7 @@
             }
             if (def.text) return '<td class="statement-text-cell">' + escapeHtml(value || '—') + '</td>';
             const displayed = statementNumber(value, item, Boolean(def.ratio));
-            return '<td>' + (displayed !== '—' && def.ratio ? displayed + '%' : displayed) + '</td>';
+            return '<td>' + (displayed !== '—' && def.ratio ? displayed + (def.key === 'pb' ? ' lần' : '%') : displayed) + '</td>';
           }).join('');
           return '<tr class="' + rowClass + '">' + label + cells + '</tr>';
         }).join('');
