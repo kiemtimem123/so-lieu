@@ -1,0 +1,30 @@
+name: Validate quarterly financial data
+
+on:
+  push:
+    paths:
+      - "data/financials-*.json"
+      - "scripts/validate-financials.mjs"
+      - ".github/workflows/validate-financials.yml"
+  pull_request:
+    paths:
+      - "data/financials-*.json"
+      - "scripts/validate-financials.mjs"
+      - ".github/workflows/validate-financials.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Validate quarterly financial snapshots
+        run: node scripts/validate-financials.mjs
