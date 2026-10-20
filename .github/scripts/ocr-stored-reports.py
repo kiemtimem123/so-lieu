@@ -60,7 +60,7 @@ def select_symbol() -> str | None:
         if open_jobs:
             return symbol
 
-    # Work through symbols in the agreed priority order. Prefer an existing
+    # Work through symbols in the agreed priority order. TCB batch size is configured in workflow. Prefer an existing
     # symbol whose quarter snapshots still have unverified periods, rather than
     # arbitrarily OCR-ing whichever queue job happened to run last.
     for symbol in priority:
