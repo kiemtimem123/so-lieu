@@ -6,6 +6,14 @@
   const state = { commodities: [], selectedId: null, chart: null, stockChart: null };
 
   const GROUPS = {
+    29387: 'metals',
+    29388: 'metals',
+    29380: 'metals',
+    33414: 'metals',
+    29406: 'agriculture',
+    66457: 'agriculture',
+    33392: 'agriculture',
+    33408: 'agriculture',
     37694: 'energy',
     37695: 'energy',
     37826: 'energy',
