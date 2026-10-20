@@ -115,3 +115,10 @@ WHERE id = 123;
 ```
 
 Không duyệt hàng loạt theo mặc định. Endpoint POST yêu cầu token; endpoint GET không bao giờ trả về tóm tắt hoặc chỉ tiêu chưa duyệt.
+
+## 8. Kiểm tra tính toàn vẹn báo cáo tài chính theo quý
+
+- Chạy cục bộ bằng Node.js 20+: `node scripts/validate-financials.mjs`.
+- GitHub Actions tự chạy khi các tệp `data/financials-*.json`, script kiểm tra hoặc workflow thay đổi; cũng có thể chạy thủ công từ tab **Actions**.
+- Bộ kiểm tra yêu cầu đủ 12 mã đã cấu hình, đủ 10 kỳ từ Q1/2024 đến Q2/2026, không trùng kỳ, có URL báo cáo và trang danh mục VietstockFinance, có đơn vị và các trường tài chính dạng số; đồng thời kiểm tra phương trình tổng tài sản = nợ phải trả + vốn chủ sở hữu (dung sai 3 triệu VND do làm tròn).
+- Những kỳ có trạng thái OCR hoặc `pending_visual_review` được hiển thị thành cảnh báo để tiếp tục rà soát trực quan; cảnh báo không được hiểu là đã xác minh bằng mắt. Kiểm tra tự động không thay thế việc mở PDF/ZIP gốc và đối chiếu từng dòng lợi nhuận.
