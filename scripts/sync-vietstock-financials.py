@@ -366,6 +366,13 @@ def row_numbers(lines: list[str], labels: list[str], limit: int = 5) -> list[flo
             start = clean_line.find(term)
             if start < 0:
                 continue
+            suffix = clean_line[start + len(term):start + len(term) + 36]
+            if term == "tổng cộng tài sản" and any(word in suffix for word in ("ngan han", "dai han")):
+                continue
+            if term == "nợ phải trả" and any(word in suffix for word in ("ngan han", "dai han")):
+                continue
+            if term == "vốn chủ sở hữu" and "khac" in suffix:
+                continue
             raw_line = lines[index]
             tail = raw_line[min(len(raw_line), start + len(term)):]
             values = []
@@ -475,7 +482,7 @@ def extract_pdf_bytes(url: str, session: requests.Session) -> tuple[bytes, str]:
     raise ValueError(f"Liên kết không trả PDF/ZIP trực tiếp (Content-Type={response.headers.get('Content-Type', '')}).")
 
 
-def extract_statement(pdf_bytes: bytes, previous_item: dict | None) -> dict:
+def extract_statement(pdf_bytes: bytes, previous_item: dict | None, cumulative: bool = False) -> dict:
     reader = PdfReader(io.BytesIO(pdf_bytes), strict=False)
     texts = []
     for page in reader.pages[:MAX_PDF_PAGES]:
@@ -536,6 +543,11 @@ def extract_statement(pdf_bytes: bytes, previous_item: dict | None) -> dict:
     net_profit_series = row_numbers(lines, NET_PROFIT_LABELS)
     if not pretax_series or not net_profit_series:
         raise ValueError("Không tìm đủ dòng lợi nhuận trước thuế và sau thuế.")
+    if cumulative and (len(pretax_series) < 3 or len(net_profit_series) < 3):
+        raise ValueError(
+            "Báo cáo 6/9 tháng không có đủ cột để xác nhận số quý riêng; "
+            "không lấy số lũy kế làm lợi nhuận quý."
+        )
     pretax_profit = million(pretax_series[0])
     net_profit = million(net_profit_series[0])
 
@@ -761,7 +773,7 @@ def process_symbol(
         try:
             pdf_bytes, final_url = extract_pdf_bytes(url, session)
             previous = choose_previous_item(items, period)
-            values = extract_statement(pdf_bytes, previous)
+            values = extract_statement(pdf_bytes, previous, cumulative=cumulative)
             new_item = make_extracted_item(symbol, period, record, url, values, items, cumulative)
             new_item["source_extract_review"]["final_download_url"] = final_url
             if period in existing:
