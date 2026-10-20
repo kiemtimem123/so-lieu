@@ -55,5 +55,22 @@ jobs:
             echo "No new quarters or successful pending extractions; repository is unchanged."
           else
             git commit -m "Auto-sync quarterly BCTC from VietstockFinance"
-            git push
+          pushed=false
+          for attempt in 1 2 3 4 5; do
+            echo "Push attempt ${attempt}/5"
+            git fetch origin "${GITHUB_REF_NAME}"
+            if ! git rebase "origin/${GITHUB_REF_NAME}"; then
+              echo "::error::Rebase conflict while syncing snapshots. No force push will be attempted."
+              git rebase --abort || true
+              exit 1
+            fi
+            if git push origin "HEAD:${GITHUB_REF_NAME}"; then
+              pushed=true
+              break
+            fi
+            sleep $((attempt * 2))
+          done
+          if [ "${pushed}" != "true" ]; then
+            echo "::error::Could not push financial snapshots after five safe push attempts."
+            exit 1
           fi
