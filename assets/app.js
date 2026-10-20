@@ -59,6 +59,31 @@
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
   })[char]);
 
+  async function loadTrendingCommodities() {
+    const root = $('#trendingCommodityCards');
+    const status = $('#trendingCommodityStatus');
+    if (!root) return;
+    try {
+      const response = await fetchDataFile('trending-commodities.json');
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      const snapshot = await response.json();
+      if (!Array.isArray(snapshot.data) || !snapshot.data.length) throw new Error('Snapshot chưa có mặt hàng hợp lệ');
+      root.innerHTML = snapshot.data.slice(0, 10).map(item => {
+        const change = Number(item.changePct);
+        const trend = change > 0 ? 'up' : change < 0 ? 'down' : 'flat';
+        const pct = Number.isFinite(change) ? (change > 0 ? '+' : '') + fmt(change, 2) + '%' : '—';
+        return '<a class="trending-commodity-card ' + trend + '" href="' + escapeHtml(item.url || 'https://www.thitruonghanghoa.com/') + '" target="_blank" rel="noopener noreferrer">' +
+          '<span class="trending-card-top"><small>' + escapeHtml(item.category || 'HÀNG HÓA') + '</small><span class="trending-trend-icon">' + (trend === 'up' ? '↗' : trend === 'down' ? '↘' : '→') + '</span></span>' +
+          '<strong class="trending-card-name">' + escapeHtml(item.name) + '</strong><span class="trending-card-en">' + escapeHtml(item.label || '') + '</span>' +
+          '<span class="trending-card-bottom"><b class="trending-change">' + escapeHtml(pct) + '</b><b class="trending-price">' + escapeHtml(fmt(item.price, 3)) + (item.unit ? ' <small>' + escapeHtml(item.unit) + '</small>' : '') + '</b></span></a>';
+      }).join('');
+      if (status) status.innerHTML = 'Nguồn duy nhất: <a href="https://www.thitruonghanghoa.com/" target="_blank" rel="noopener noreferrer">Thị Trường Hàng Hóa</a> · cập nhật snapshot ' + escapeHtml(dateFmt(snapshot.fetchedAt || '')) + '.';
+    } catch (error) {
+      root.innerHTML = '<div class="empty-state"><h3>Chưa tải được biến động giá</h3><p>Chưa có snapshot hợp lệ từ Thị Trường Hàng Hóa. Không thay thế bằng nguồn khác.</p><a href="https://www.thitruonghanghoa.com/" target="_blank" rel="noopener noreferrer">Mở trang nguồn ↗</a></div>';
+      console.error('[trending-commodities]', error);
+    }
+  }
+
   async function loadMarketSnapshot() {
     const list = $('#commodityList');
     try {
@@ -1649,6 +1674,7 @@
     setupEmptyEconomicChart();
     setupSearchShortcut();
     loadMarketSnapshot();
+    loadTrendingCommodities();
     loadCurrencyRates();
     loadUsdVndReference();
     loadCreditGrowth();
