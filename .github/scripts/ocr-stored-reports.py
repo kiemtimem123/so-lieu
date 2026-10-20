@@ -22,11 +22,11 @@ ROOT = Path(__file__).resolve().parents[2]
 REPORTS = ROOT / "reports/raw"
 QUEUE_PATH = ROOT / "config/report-queue.json"
 # Include statement continuation pages in long consolidated reports.
-MAX_PAGES = int(os.getenv("REPORT_OCR_MAX_PAGES", "18"))
+MAX_PAGES = int(os.getenv("REPORT_OCR_MAX_PAGES", "14"))
 MAX_REPORTS = int(os.getenv("REPORT_OCR_MAX_REPORTS", "20"))
 DPI = int(os.getenv("REPORT_OCR_DPI", "240"))
 FORCE_RESCAN_PAGES = {
-    int(value.strip()) for value in os.getenv("REPORT_OCR_RESCAN_PAGES", "10,11,12,13,14,15,16,17,18").split(",")
+    int(value.strip()) for value in os.getenv("REPORT_OCR_RESCAN_PAGES", "8,9,10,11,12,13,14").split(",")
     if value.strip().isdigit() and int(value.strip()) > 0
 }
 
