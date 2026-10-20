@@ -115,7 +115,7 @@ def needs_ocr_rescan(page: dict) -> bool:
             attempts = int(page.get("forced_rescan_count") or 1)
         except (TypeError, ValueError):
             score, attempts = 0.0, 1
-        return score < 0.34 and attempts < 2
+        return score < 0.34 and attempts < 3
     if len(value) < 250:
         return True
     return "văn bản được tải lên hệ thống eoffice.bsr.com.vn" in value.casefold()
@@ -181,21 +181,22 @@ def ocr_pdf(path: Path, max_pages: int = MAX_PAGES, page_numbers=None):
                 )
                 text = (result.stdout or "").strip()
                 engine = "tesseract-vie+eng-psm6"
-                # Financial statement pages may have dense tables and two-column
-                # labels. Retry in single-column mode only for targeted pages.
+                # Financial statement tables often have multi-column number cells.
+                # Compare several Tesseract layouts and keep the best quality score.
                 if 8 <= page_number <= 14:
-                    try:
-                        alternate = subprocess.run(
-                            ["tesseract", str(image_path), "stdout", "-l", "vie+eng", "--psm", "4"],
-                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
-                            timeout=45, check=False,
-                        )
-                        alternate_text = (alternate.stdout or "").strip()
-                        if _ocr_quality(alternate_text) > _ocr_quality(text):
-                            text = alternate_text
-                            engine = "tesseract-vie+eng-psm4"
-                    except Exception:
-                        pass
+                    for psm in ("4", "11", "12"):
+                        try:
+                            alternate = subprocess.run(
+                                ["tesseract", str(image_path), "stdout", "-l", "vie+eng", "--psm", psm],
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+                                timeout=60, check=False,
+                            )
+                            alternate_text = (alternate.stdout or "").strip()
+                            if _ocr_quality(alternate_text) > _ocr_quality(text):
+                                text = alternate_text
+                                engine = f"tesseract-vie+eng-psm{psm}"
+                        except Exception:
+                            pass
                 if text:
                     results.append({
                         "page": page_number,
