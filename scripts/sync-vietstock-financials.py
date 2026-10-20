@@ -761,7 +761,7 @@ def process_symbol(
             previous = choose_previous_item(items, period)
             values = extract_statement(pdf_bytes, previous)
             new_item = make_extracted_item(symbol, period, record, url, values, items, cumulative)
-            new_item["source_validation"]["final_download_url"] = final_url
+            new_item["source_extract_review"]["final_download_url"] = final_url
             if period in existing:
                 idx = next(i for i, item in enumerate(items) if item.get("period") == period)
                 items[idx] = new_item
