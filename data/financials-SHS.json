@@ -30,7 +30,7 @@
       "roe_formula": "Lợi nhuận sau thuế quý / bình quân vốn chủ sở hữu đầu và cuối quý × 4 × 100",
       "average_total_assets": 11691239,
       "average_equity": 10462165.5,
-      "verification_status": "verified_ocr_reconciled",
+      "verification_status": "ocr_reconciled_pending_visual_review",
       "reconciliation": {
         "assets_minus_liabilities_equity_vnd": 0,
         "assets_minus_liabilities_equity": 0,
@@ -80,6 +80,60 @@
           "stored_roe_matches": true
         },
         "note": "Q1 LNTT/LNST lấy từ cột phát sinh riêng trong báo cáo VietstockFinance. Dòng tổng tài sản OCR lệch 560.000 VND so với nợ + vốn chủ; dữ liệu tổng tài sản lưu dùng nợ + vốn chủ để giữ phương trình cân đối ở VND gốc."
+      },
+      "source_validation": {
+        "reviewed_at": "2026-10-20",
+        "single_source_policy": "VietstockFinance document catalog and documents linked from that catalog only",
+        "source_catalog_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_document_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2024.zip",
+        "archived_source_path": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/6f6b826b3132547a.zip",
+        "extraction_sidecar": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/6f6b826b3132547a.zip.extracted.json",
+        "source_member_name": "1_shs_2024_4_22_6ab635e_bctc_quy_1_2024.pdf",
+        "report_scope_note": "Vietstock labels these reports with CTCK format but does not consistently label them consolidated or standalone; no scope has been inferred beyond the source document.",
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit"
+        ],
+        "balance_equation_difference_vnd": 0,
+        "balance_equation_result": "matches",
+        "quarterly_profit_check": {
+          "source": "The linked VietstockFinance BCTC/ZIP",
+          "method": "Use the current-quarter column; compare quarter profit with cumulative-to-date less prior cumulative whenever available.",
+          "profit_reconciliation": {
+            "source": "VietstockFinance-linked report only",
+            "source_report_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2024.zip",
+            "pretax_profit_vnd": {
+              "quarter": 443875769888
+            },
+            "net_profit_vnd": {
+              "quarter": 356303615910
+            },
+            "note": "Q1 LNTT/LNST lấy từ cột phát sinh riêng trong báo cáo VietstockFinance. Dòng tổng tài sản OCR lệch 560.000 VND so với nợ + vốn chủ; dữ liệu tổng tài sản lưu dùng nợ + vốn chủ để giữ phương trình cân đối ở VND gốc."
+          },
+          "pretax_minus_net_profit_vnd": 87572153978
+        },
+        "ratio_recalculation": {
+          "formula": "Quarter net profit / average opening and closing balance × 4 × 100",
+          "calculated_roa_percent": 12.19,
+          "stored_roa_percent": 12.19,
+          "calculated_roe_percent": 13.62,
+          "stored_roe_percent": 13.62,
+          "matches_after_rounding": true
+        },
+        "extraction_review": "OCR/text extraction and accounting arithmetic checks",
+        "manually_visual_reviewed": false,
+        "known_anomalies": [
+          {
+            "field": "total_assets",
+            "note": "The source OCR text reports a total-assets value differing by VND 560,000 from liabilities plus equity. The stored raw total is reconstructed from source liabilities plus equity so the accounting equation balances.",
+            "stored_vnd": 11925269843177,
+            "action": "Retain the reconciled value and keep a visual-review flag; do not treat the OCR subtotal as directly verified."
+          }
+        ],
+        "source_archive_verified_present": true
       }
     },
     {
@@ -166,6 +220,61 @@
           "stored_roe_matches": true
         },
         "note": "LNTT và LNST riêng Q2 đối chiếu đúng bằng lũy kế H1 trừ Q1 theo báo cáo VietstockFinance."
+      },
+      "source_validation": {
+        "reviewed_at": "2026-10-20",
+        "single_source_policy": "VietstockFinance document catalog and documents linked from that catalog only",
+        "source_catalog_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_document_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2024.zip",
+        "archived_source_path": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/ea899ceb74febb51.zip",
+        "extraction_sidecar": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/ea899ceb74febb51.zip.extracted.json",
+        "source_member_name": "2_shs_2024_7_22_6522739_shs_bcquy_bctc_ii_2024.pdf",
+        "report_scope_note": "Vietstock labels these reports with CTCK format but does not consistently label them consolidated or standalone; no scope has been inferred beyond the source document.",
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit"
+        ],
+        "balance_equation_difference_vnd": 0,
+        "balance_equation_result": "matches",
+        "quarterly_profit_check": {
+          "source": "The linked VietstockFinance BCTC/ZIP",
+          "method": "Use the current-quarter column; compare quarter profit with cumulative-to-date less prior cumulative whenever available.",
+          "profit_reconciliation": {
+            "source": "VietstockFinance-linked report only",
+            "source_report_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2024.zip",
+            "pretax_profit_vnd": {
+              "quarter": 434855422927,
+              "cumulative": 878731192815,
+              "priorCumulative": 443875769888,
+              "derived": 434855422927,
+              "difference": 0
+            },
+            "net_profit_vnd": {
+              "quarter": 354160895067,
+              "cumulative": 710464510977,
+              "priorCumulative": 356303615910,
+              "derived": 354160895067,
+              "difference": 0
+            },
+            "note": "LNTT và LNST riêng Q2 đối chiếu đúng bằng lũy kế H1 trừ Q1 theo báo cáo VietstockFinance."
+          },
+          "pretax_minus_net_profit_vnd": 80694527860
+        },
+        "ratio_recalculation": {
+          "formula": "Quarter net profit / average opening and closing balance × 4 × 100",
+          "calculated_roa_percent": 11.71,
+          "stored_roa_percent": 11.71,
+          "calculated_roe_percent": 13.09,
+          "stored_roe_percent": 13.09,
+          "matches_after_rounding": true
+        },
+        "extraction_review": "OCR/text extraction and accounting arithmetic checks",
+        "manually_visual_reviewed": false,
+        "known_anomalies": [],
+        "source_archive_verified_present": true
       }
     },
     {
@@ -252,6 +361,61 @@
           "stored_roe_matches": true
         },
         "note": "Lợi nhuận Q3 đối chiếu với cột so sánh của BCTC Q3/2025 và lũy kế 9 tháng của báo cáo VietstockFinance."
+      },
+      "source_validation": {
+        "reviewed_at": "2026-10-20",
+        "single_source_policy": "VietstockFinance document catalog and documents linked from that catalog only",
+        "source_catalog_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_document_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2024.zip",
+        "archived_source_path": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/e6d456f3b0aa85a5.zip",
+        "extraction_sidecar": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/e6d456f3b0aa85a5.zip.extracted.json",
+        "source_member_name": "2_shs_2024_10_22_0a7e059_shs_bcquy_bctc_iii_2024.pdf",
+        "report_scope_note": "Vietstock labels these reports with CTCK format but does not consistently label them consolidated or standalone; no scope has been inferred beyond the source document.",
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit"
+        ],
+        "balance_equation_difference_vnd": 0,
+        "balance_equation_result": "matches",
+        "quarterly_profit_check": {
+          "source": "The linked VietstockFinance BCTC/ZIP",
+          "method": "Use the current-quarter column; compare quarter profit with cumulative-to-date less prior cumulative whenever available.",
+          "profit_reconciliation": {
+            "source": "VietstockFinance-linked report only",
+            "source_report_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2024.zip",
+            "pretax_profit_vnd": {
+              "quarter": 74048127050,
+              "cumulative": 952779319865,
+              "priorCumulative": 878731192815,
+              "derived": 74048127050,
+              "difference": 0
+            },
+            "net_profit_vnd": {
+              "quarter": 68992358100,
+              "cumulative": 779456869077,
+              "priorCumulative": 710464510977,
+              "derived": 68992358100,
+              "difference": 0
+            },
+            "note": "Lợi nhuận Q3 đối chiếu với cột so sánh của BCTC Q3/2025 và lũy kế 9 tháng của báo cáo VietstockFinance."
+          },
+          "pretax_minus_net_profit_vnd": 5055768950
+        },
+        "ratio_recalculation": {
+          "formula": "Quarter net profit / average opening and closing balance × 4 × 100",
+          "calculated_roa_percent": 2.19,
+          "stored_roa_percent": 2.19,
+          "calculated_roe_percent": 2.51,
+          "stored_roe_percent": 2.51,
+          "matches_after_rounding": true
+        },
+        "extraction_review": "OCR/text extraction and accounting arithmetic checks",
+        "manually_visual_reviewed": false,
+        "known_anomalies": [],
+        "source_archive_verified_present": true
       }
     },
     {
@@ -360,6 +524,68 @@
           "stored_roe_matches": true
         },
         "note": "Đã xem trực tiếp PDF VietstockFinance: dòng 90 LNTT Q4 là 281.902.735.913 VND, dòng 200 LNST Q4 là 232.470.603.049 VND. Hai số cũng khớp phép trừ lũy kế năm trừ lũy kế 9 tháng. Bản dữ liệu trước nhầm PBT với giá trị 331.335.868.777 và lưu LNST/TNDN OCR lệch 1 triệu; đã sửa."
+      },
+      "source_validation": {
+        "reviewed_at": "2026-10-20",
+        "single_source_policy": "VietstockFinance document catalog and documents linked from that catalog only",
+        "source_catalog_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_document_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2024.pdf",
+        "archived_source_path": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/cc0a692f672abc5d.pdf",
+        "extraction_sidecar": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/cc0a692f672abc5d.pdf.extracted.json",
+        "source_member_name": null,
+        "report_scope_note": "Vietstock labels these reports with CTCK format but does not consistently label them consolidated or standalone; no scope has been inferred beyond the source document.",
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit"
+        ],
+        "balance_equation_difference_vnd": 0,
+        "balance_equation_result": "matches",
+        "quarterly_profit_check": {
+          "source": "The linked VietstockFinance BCTC/ZIP",
+          "method": "Use the current-quarter column; compare quarter profit with cumulative-to-date less prior cumulative whenever available.",
+          "profit_reconciliation": {
+            "source": "VietstockFinance-linked report only",
+            "source_report_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2024.pdf",
+            "pretax_profit_vnd": {
+              "quarter": 281902735913,
+              "cumulative": 1234682055778,
+              "priorCumulative": 952779319865,
+              "derived": 281902735913,
+              "difference": 0
+            },
+            "net_profit_vnd": {
+              "quarter": 232470603049,
+              "cumulative": 1011927472126,
+              "priorCumulative": 779456869077,
+              "derived": 232470603049,
+              "difference": 0
+            },
+            "note": "Đã xem trực tiếp PDF VietstockFinance: dòng 90 LNTT Q4 là 281.902.735.913 VND, dòng 200 LNST Q4 là 232.470.603.049 VND. Hai số cũng khớp phép trừ lũy kế năm trừ lũy kế 9 tháng. Bản dữ liệu trước nhầm PBT với giá trị 331.335.868.777 và lưu LNST/TNDN OCR lệch 1 triệu; đã sửa."
+          },
+          "pretax_minus_net_profit_vnd": 49432132864
+        },
+        "ratio_recalculation": {
+          "formula": "Quarter net profit / average opening and closing balance × 4 × 100",
+          "calculated_roa_percent": 6.9,
+          "stored_roa_percent": 6.9,
+          "calculated_roe_percent": 8.37,
+          "stored_roe_percent": 8.37,
+          "matches_after_rounding": true
+        },
+        "extraction_review": "manual visual review of source PDF",
+        "manually_visual_reviewed": true,
+        "known_anomalies": [],
+        "source_archive_verified_present": true,
+        "visual_review_pages": [
+          "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2024.pdf#page=6",
+          "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2024.pdf#page=7",
+          "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2024.pdf#page=11",
+          "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2024.pdf#page=12"
+        ],
+        "visual_review_note": "Direct PDF visual check confirmed total assets VND 14,028,673,097,886; liabilities VND 2,821,194,844,442; equity VND 11,207,478,253,444; Q4 pretax profit VND 281,902,735,913; Q4 net profit VND 232,470,603,049. Quarterly profit also equals full-year cumulative minus the nine-month cumulative."
       }
     },
     {
@@ -440,6 +666,59 @@
           "stored_roe_matches": true
         },
         "note": "LNTT/LNST lấy từ cột phát sinh Q1 trong báo cáo VietstockFinance. Báo cáo Q1/2025 dùng số dư đầu kỳ riêng cho tính ROA/ROE; số dư này lệch với số kết thúc Q4/2024 trong snapshot năm trước (tài sản 983.333.333 VND; vốn chủ khoảng 3,687 tỷ VND). Giữ số đầu kỳ của chính báo cáo Q1 và ghi chú chênh lệch, không tự sửa theo quý trước."
+      },
+      "source_validation": {
+        "reviewed_at": "2026-10-20",
+        "single_source_policy": "VietstockFinance document catalog and documents linked from that catalog only",
+        "source_catalog_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_document_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2025.pdf",
+        "archived_source_path": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/be10b6b2bb57c581.pdf",
+        "extraction_sidecar": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/be10b6b2bb57c581.pdf.extracted.json",
+        "source_member_name": null,
+        "report_scope_note": "Vietstock labels these reports with CTCK format but does not consistently label them consolidated or standalone; no scope has been inferred beyond the source document.",
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit"
+        ],
+        "balance_equation_difference_vnd": 0,
+        "balance_equation_result": "matches",
+        "quarterly_profit_check": {
+          "source": "The linked VietstockFinance BCTC/ZIP",
+          "method": "Use the current-quarter column; compare quarter profit with cumulative-to-date less prior cumulative whenever available.",
+          "profit_reconciliation": {
+            "source": "VietstockFinance-linked report only",
+            "source_report_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2025.pdf",
+            "pretax_profit_vnd": {
+              "quarter": 325686083810
+            },
+            "net_profit_vnd": {
+              "quarter": 262752614488
+            },
+            "note": "LNTT/LNST lấy từ cột phát sinh Q1 trong báo cáo VietstockFinance. Báo cáo Q1/2025 dùng số dư đầu kỳ riêng cho tính ROA/ROE; số dư này lệch với số kết thúc Q4/2024 trong snapshot năm trước (tài sản 983.333.333 VND; vốn chủ khoảng 3,687 tỷ VND). Giữ số đầu kỳ của chính báo cáo Q1 và ghi chú chênh lệch, không tự sửa theo quý trước."
+          },
+          "pretax_minus_net_profit_vnd": 62933469322
+        },
+        "ratio_recalculation": {
+          "formula": "Quarter net profit / average opening and closing balance × 4 × 100",
+          "calculated_roa_percent": 7.18,
+          "stored_roa_percent": 7.18,
+          "calculated_roe_percent": 9.2,
+          "stored_roe_percent": 9.2,
+          "matches_after_rounding": true
+        },
+        "extraction_review": "OCR/text extraction and accounting arithmetic checks",
+        "manually_visual_reviewed": false,
+        "known_anomalies": [
+          {
+            "field": "opening_balances",
+            "note": "The opening assets/equity in the Q1 2025 VietstockFinance report differ from the stored Q4 2024 closing values (assets by VND 983,333,333; equity by about VND 3.687 billion). The Q2 2025 report repeats the Q1 opening comparative, so these values are recorded from the period report rather than forcibly reset to the prior snapshot.",
+            "action": "Keep Q1 reported opening values and mark the cross-period difference for later reconciliation."
+          }
+        ],
+        "source_archive_verified_present": true
       }
     },
     {
@@ -544,6 +823,66 @@
           "stored_roe_matches": true
         },
         "note": "Đã xem trực tiếp PDF VietstockFinance: bảng cân đối và KQHĐ xác nhận tài sản, nợ, vốn chủ, PBT 462.967.220.068 VND và LNST 382.739.364.894 VND. Số quý khớp với lũy kế H1 trừ Q1."
+      },
+      "source_validation": {
+        "reviewed_at": "2026-10-20",
+        "single_source_policy": "VietstockFinance document catalog and documents linked from that catalog only",
+        "source_catalog_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_document_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2025.pdf",
+        "archived_source_path": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/12d2061881d334c4.pdf",
+        "extraction_sidecar": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/12d2061881d334c4.pdf.extracted.json",
+        "source_member_name": null,
+        "report_scope_note": "Vietstock labels these reports with CTCK format but does not consistently label them consolidated or standalone; no scope has been inferred beyond the source document.",
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit"
+        ],
+        "balance_equation_difference_vnd": 0,
+        "balance_equation_result": "matches",
+        "quarterly_profit_check": {
+          "source": "The linked VietstockFinance BCTC/ZIP",
+          "method": "Use the current-quarter column; compare quarter profit with cumulative-to-date less prior cumulative whenever available.",
+          "profit_reconciliation": {
+            "source": "VietstockFinance-linked report only",
+            "source_report_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2025.pdf",
+            "pretax_profit_vnd": {
+              "quarter": 462967220068,
+              "cumulative": 788653303878,
+              "priorCumulative": 325686083810,
+              "derived": 462967220068,
+              "difference": 0
+            },
+            "net_profit_vnd": {
+              "quarter": 382739364894,
+              "cumulative": 645491979382,
+              "priorCumulative": 262752614488,
+              "derived": 382739364894,
+              "difference": 0
+            },
+            "note": "Đã xem trực tiếp PDF VietstockFinance: bảng cân đối và KQHĐ xác nhận tài sản, nợ, vốn chủ, PBT 462.967.220.068 VND và LNST 382.739.364.894 VND. Số quý khớp với lũy kế H1 trừ Q1."
+          },
+          "pretax_minus_net_profit_vnd": 80227855174
+        },
+        "ratio_recalculation": {
+          "formula": "Quarter net profit / average opening and closing balance × 4 × 100",
+          "calculated_roa_percent": 9.4,
+          "stored_roa_percent": 9.4,
+          "calculated_roe_percent": 13.42,
+          "stored_roe_percent": 13.42,
+          "matches_after_rounding": true
+        },
+        "extraction_review": "manual visual review of source PDF",
+        "manually_visual_reviewed": true,
+        "known_anomalies": [],
+        "source_archive_verified_present": true,
+        "visual_review_pages": [
+          "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2025.pdf#page=7",
+          "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2025.pdf#page=10"
+        ],
+        "visual_review_note": "Direct PDF visual check confirmed total assets VND 17,328,148,799,014; liabilities VND 6,143,362,570,147; equity VND 11,184,786,228,867; Q2 pretax profit VND 462,967,220,068; Q2 net profit VND 382,739,364,894. Quarter values match H1 cumulative less Q1."
       }
     },
     {
@@ -630,6 +969,61 @@
           "stored_roe_matches": true
         },
         "note": "LNTT/LNST riêng Q3 và lũy kế 9 tháng đối chiếu theo PDF/ZIP VietstockFinance; Q3 = lũy kế 9 tháng trừ lũy kế H1."
+      },
+      "source_validation": {
+        "reviewed_at": "2026-10-20",
+        "single_source_policy": "VietstockFinance document catalog and documents linked from that catalog only",
+        "source_catalog_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_document_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2025.zip",
+        "archived_source_path": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/83437c9fa49105ec.zip",
+        "extraction_sidecar": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/83437c9fa49105ec.zip.extracted.json",
+        "source_member_name": "VI_SHS_BCQuy_BaoCaoTaiChinh_Q3_2025_UB1760523153470DnkZJN3C.pdf",
+        "report_scope_note": "Vietstock labels these reports with CTCK format but does not consistently label them consolidated or standalone; no scope has been inferred beyond the source document.",
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit"
+        ],
+        "balance_equation_difference_vnd": 0,
+        "balance_equation_result": "matches",
+        "quarterly_profit_check": {
+          "source": "The linked VietstockFinance BCTC/ZIP",
+          "method": "Use the current-quarter column; compare quarter profit with cumulative-to-date less prior cumulative whenever available.",
+          "profit_reconciliation": {
+            "source": "VietstockFinance-linked report only",
+            "source_report_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2025.zip",
+            "pretax_profit_vnd": {
+              "quarter": 590426958369,
+              "cumulative": 1379080262247,
+              "priorCumulative": 788653303878,
+              "derived": 590426958369,
+              "difference": 0
+            },
+            "net_profit_vnd": {
+              "quarter": 477817962396,
+              "cumulative": 1123309941778,
+              "priorCumulative": 645491979382,
+              "derived": 477817962396,
+              "difference": 0
+            },
+            "note": "LNTT/LNST riêng Q3 và lũy kế 9 tháng đối chiếu theo PDF/ZIP VietstockFinance; Q3 = lũy kế 9 tháng trừ lũy kế H1."
+          },
+          "pretax_minus_net_profit_vnd": 112608995973
+        },
+        "ratio_recalculation": {
+          "formula": "Quarter net profit / average opening and closing balance × 4 × 100",
+          "calculated_roa_percent": 10.17,
+          "stored_roa_percent": 10.17,
+          "calculated_roe_percent": 16.46,
+          "stored_roe_percent": 16.46,
+          "matches_after_rounding": true
+        },
+        "extraction_review": "OCR/text extraction and accounting arithmetic checks",
+        "manually_visual_reviewed": false,
+        "known_anomalies": [],
+        "source_archive_verified_present": true
       }
     },
     {
@@ -644,7 +1038,7 @@
       "roe": 7.19,
       "unit": "triệu VND",
       "ratio_unit": "%/năm (thường niên hóa từ lợi nhuận quý)",
-      "source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY 4/SHS_Baocaotaichinh_Q4_2025.zip",
+      "source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2025.zip",
       "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
       "source_archive_file": "reports/raw/SHS/vietstock-shs-ocr-refresh-20261019/6b19d1aa37e72f9a.zip",
       "source_archive_sha256": "6b19d1aa37e72f9ac34479b3ac2b52e2c3abb4ba5b4f464191c37749cc5bbd11",
@@ -682,7 +1076,7 @@
       },
       "profit_reconciliation": {
         "source": "VietstockFinance-linked report only",
-        "source_report_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY 4/SHS_Baocaotaichinh_Q4_2025.zip",
+        "source_report_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2025.zip",
         "pretax_profit_vnd": {
           "quarter": 271507757684,
           "cumulative": 1650588019931,
@@ -716,6 +1110,61 @@
           "stored_roe_matches": true
         },
         "note": "Lợi nhuận Q4 khớp lũy kế cả năm trừ lũy kế 9 tháng trong báo cáo VietstockFinance."
+      },
+      "source_validation": {
+        "reviewed_at": "2026-10-20",
+        "single_source_policy": "VietstockFinance document catalog and documents linked from that catalog only",
+        "source_catalog_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_document_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2025.zip",
+        "archived_source_path": "reports/raw/SHS/vietstock-shs-ocr-refresh-20261019/6b19d1aa37e72f9a.zip",
+        "extraction_sidecar": "reports/raw/SHS/vietstock-shs-ocr-refresh-20261019/6b19d1aa37e72f9a.zip.extracted.json",
+        "source_member_name": "SHS_Baocaotaichinh_Q4_2025_Congtyme.pdf",
+        "report_scope_note": "Vietstock labels these reports with CTCK format but does not consistently label them consolidated or standalone; no scope has been inferred beyond the source document.",
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit"
+        ],
+        "balance_equation_difference_vnd": 0,
+        "balance_equation_result": "matches",
+        "quarterly_profit_check": {
+          "source": "The linked VietstockFinance BCTC/ZIP",
+          "method": "Use the current-quarter column; compare quarter profit with cumulative-to-date less prior cumulative whenever available.",
+          "profit_reconciliation": {
+            "source": "VietstockFinance-linked report only",
+            "source_report_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2025.zip",
+            "pretax_profit_vnd": {
+              "quarter": 271507757684,
+              "cumulative": 1650588019931,
+              "priorCumulative": 1379080262247,
+              "derived": 271507757684,
+              "difference": 0
+            },
+            "net_profit_vnd": {
+              "quarter": 221469804155,
+              "cumulative": 1344779745933,
+              "priorCumulative": 1123309941778,
+              "derived": 221469804155,
+              "difference": 0
+            },
+            "note": "Lợi nhuận Q4 khớp lũy kế cả năm trừ lũy kế 9 tháng trong báo cáo VietstockFinance."
+          },
+          "pretax_minus_net_profit_vnd": 50037953529
+        },
+        "ratio_recalculation": {
+          "formula": "Quarter net profit / average opening and closing balance × 4 × 100",
+          "calculated_roa_percent": 4.09,
+          "stored_roa_percent": 4.09,
+          "calculated_roe_percent": 7.19,
+          "stored_roe_percent": 7.19,
+          "matches_after_rounding": true
+        },
+        "extraction_review": "OCR/text extraction and accounting arithmetic checks",
+        "manually_visual_reviewed": false,
+        "known_anomalies": [],
+        "source_archive_verified_present": true
       }
     },
     {
@@ -730,7 +1179,7 @@
       "roe": 7.32,
       "unit": "triệu VND",
       "ratio_unit": "%/năm (thường niên hóa từ lợi nhuận quý)",
-      "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY 1/SHS_Baocaotaichinh_Q1_2026.zip",
+      "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2026.zip",
       "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
       "source_archive_file": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/5fe69d1fa2a83054.zip",
       "source_archive_sha256": "5fe69d1fa2a8305491a3e83f5857893ebc64cded4474133bad249aa7cdc8be97",
@@ -769,7 +1218,7 @@
       },
       "profit_reconciliation": {
         "source": "VietstockFinance-linked report only",
-        "source_report_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY 1/SHS_Baocaotaichinh_Q1_2026.zip",
+        "source_report_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2026.zip",
         "pretax_profit_vnd": {
           "quarter": 279994199272
         },
@@ -795,6 +1244,59 @@
           "stored_roe_matches": true
         },
         "note": "LNTT/LNST lấy từ cột phát sinh Q1 trong tài liệu VietstockFinance. Số đầu kỳ trong BCTC Q1 khác số kết thúc Q4/2025 trong snapshot trước (tài sản chênh 50.000.000 VND; vốn chủ chênh khoảng 1,602 tỷ VND). Giữ số so sánh đầu kỳ theo báo cáo Q1, ghi nhận để rà soát, không tự động ép bằng snapshot quý trước."
+      },
+      "source_validation": {
+        "reviewed_at": "2026-10-20",
+        "single_source_policy": "VietstockFinance document catalog and documents linked from that catalog only",
+        "source_catalog_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_document_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2026.zip",
+        "archived_source_path": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/5fe69d1fa2a83054.zip",
+        "extraction_sidecar": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/5fe69d1fa2a83054.zip.extracted.json",
+        "source_member_name": "m88_20260420_vi_shs_bcquy_baocaotaichinh_q1_2026_ub1776692672575uvhcq2c1.pdf",
+        "report_scope_note": "Vietstock labels these reports with CTCK format but does not consistently label them consolidated or standalone; no scope has been inferred beyond the source document.",
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit"
+        ],
+        "balance_equation_difference_vnd": 0,
+        "balance_equation_result": "matches",
+        "quarterly_profit_check": {
+          "source": "The linked VietstockFinance BCTC/ZIP",
+          "method": "Use the current-quarter column; compare quarter profit with cumulative-to-date less prior cumulative whenever available.",
+          "profit_reconciliation": {
+            "source": "VietstockFinance-linked report only",
+            "source_report_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2026.zip",
+            "pretax_profit_vnd": {
+              "quarter": 279994199272
+            },
+            "net_profit_vnd": {
+              "quarter": 231824163916
+            },
+            "note": "LNTT/LNST lấy từ cột phát sinh Q1 trong tài liệu VietstockFinance. Số đầu kỳ trong BCTC Q1 khác số kết thúc Q4/2025 trong snapshot trước (tài sản chênh 50.000.000 VND; vốn chủ chênh khoảng 1,602 tỷ VND). Giữ số so sánh đầu kỳ theo báo cáo Q1, ghi nhận để rà soát, không tự động ép bằng snapshot quý trước."
+          },
+          "pretax_minus_net_profit_vnd": 48170035356
+        },
+        "ratio_recalculation": {
+          "formula": "Quarter net profit / average opening and closing balance × 4 × 100",
+          "calculated_roa_percent": 4.09,
+          "stored_roa_percent": 4.09,
+          "calculated_roe_percent": 7.32,
+          "stored_roe_percent": 7.32,
+          "matches_after_rounding": true
+        },
+        "extraction_review": "OCR/text extraction and accounting arithmetic checks",
+        "manually_visual_reviewed": false,
+        "known_anomalies": [
+          {
+            "field": "opening_balances",
+            "note": "The Q1 2026 VietstockFinance report's opening balance differs from the stored Q4 2025 closing snapshot (assets by VND 50 million and equity by about VND 1.602 billion). This is not silently overwritten; compare/reclassification needs review.",
+            "action": "Keep the opening figures reported by Q1 2026 and retain a cross-period warning."
+          }
+        ],
+        "source_archive_verified_present": true
       }
     },
     {
@@ -809,7 +1311,7 @@
       "roe": 2.4,
       "unit": "triệu VND",
       "ratio_unit": "%/năm (thường niên hóa từ lợi nhuận quý)",
-      "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY 2/SHS_Baocaotaichinh_Q2_2026.zip",
+      "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2026.zip",
       "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
       "source_archive_file": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/9246a0423b1cd4aa.zip",
       "source_archive_sha256": "9246a0423b1cd4aab71bf26bc93072d3fc3381c0b61709dd9d4c7673a9dc5369",
@@ -847,7 +1349,7 @@
       },
       "profit_reconciliation": {
         "source": "VietstockFinance-linked report only",
-        "source_report_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY 2/SHS_Baocaotaichinh_Q2_2026.zip",
+        "source_report_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2026.zip",
         "pretax_profit_vnd": {
           "quarter": 89717435664,
           "cumulative": 369711634936,
@@ -881,6 +1383,61 @@
           "stored_roe_matches": true
         },
         "note": "Lợi nhuận Q2 khớp phép trừ lũy kế H1 trừ Q1 trên tài liệu VietstockFinance."
+      },
+      "source_validation": {
+        "reviewed_at": "2026-10-20",
+        "single_source_policy": "VietstockFinance document catalog and documents linked from that catalog only",
+        "source_catalog_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_document_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2026.zip",
+        "archived_source_path": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/9246a0423b1cd4aa.zip",
+        "extraction_sidecar": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/9246a0423b1cd4aa.zip.extracted.json",
+        "source_member_name": "SHS_Baocaotaichinh_Q2_2026.pdf",
+        "report_scope_note": "Vietstock labels these reports with CTCK format but does not consistently label them consolidated or standalone; no scope has been inferred beyond the source document.",
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit"
+        ],
+        "balance_equation_difference_vnd": 0,
+        "balance_equation_result": "matches",
+        "quarterly_profit_check": {
+          "source": "The linked VietstockFinance BCTC/ZIP",
+          "method": "Use the current-quarter column; compare quarter profit with cumulative-to-date less prior cumulative whenever available.",
+          "profit_reconciliation": {
+            "source": "VietstockFinance-linked report only",
+            "source_report_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2026.zip",
+            "pretax_profit_vnd": {
+              "quarter": 89717435664,
+              "cumulative": 369711634936,
+              "priorCumulative": 279994199272,
+              "derived": 89717435664,
+              "difference": 0
+            },
+            "net_profit_vnd": {
+              "quarter": 75774982473,
+              "cumulative": 307599146389,
+              "priorCumulative": 231824163916,
+              "derived": 75774982473,
+              "difference": 0
+            },
+            "note": "Lợi nhuận Q2 khớp phép trừ lũy kế H1 trừ Q1 trên tài liệu VietstockFinance."
+          },
+          "pretax_minus_net_profit_vnd": 13942453191
+        },
+        "ratio_recalculation": {
+          "formula": "Quarter net profit / average opening and closing balance × 4 × 100",
+          "calculated_roa_percent": 1.21,
+          "stored_roa_percent": 1.21,
+          "calculated_roe_percent": 2.4,
+          "stored_roe_percent": 2.4,
+          "matches_after_rounding": true
+        },
+        "extraction_review": "OCR/text extraction and accounting arithmetic checks",
+        "manually_visual_reviewed": false,
+        "known_anomalies": [],
+        "source_archive_verified_present": true
       }
     }
   ],
