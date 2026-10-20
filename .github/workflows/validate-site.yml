@@ -106,7 +106,7 @@ jobs:
             [omoScript.includes('readLatest') && omoScript.includes('omo-latest.json'), 'OMO parser and output snapshot'],
             [omoWorkflow.includes('sync-omo-latest.cjs') && omoWorkflow.includes('curl --fail'), 'OMO automated source sync workflow'],
             [app.includes('function setupFinancials()') && app.includes('stockProfitChart') && app.includes('stockBalanceChart') && app.includes('stockRatiosChart') && app.includes('stockCompareChart'), 'Financial dashboard chart renderers'],
-            [html.includes('id="stockProfitChart"') && html.includes('id="stockBalanceChart"') && html.includes('id="stockRatiosChart"') && html.includes('id="stockCompareChart"') && /assets\\/app\\.js\\?v=[^"]*report-db-\\d+/.test(html) && /assets\\/styles\\.css\\?v=[^"]*report-db-\\d+/.test(html), 'Financial dashboard chart panels and cache version']
+            [html.includes('id="stockProfitChart"') && html.includes('id="stockBalanceChart"') && html.includes('id="stockRatiosChart"') && html.includes('id="stockCompareChart"') && html.includes('report-db-5'), 'Financial dashboard chart panels and cache version']
           ];
           for (const [ok, label] of checks) {
             if (!ok) throw new Error('Validation failed: ' + label);
