@@ -11,7 +11,7 @@ const root = process.cwd();
 const symbols = ["MBB", "ACB", "FPT", "SHB", "TCX", "HCM", "VND", "SHS", "NLG", "BSR", "TCB", "VHM"];
 const firstExpectedOrdinal = 2024 * 4 + 1;
 const periodOrdinal = period => {
-  const match = /^(20\\d{2})-Q([1-4])$/.exec(String(period || ""));
+  const match = /^(20\d{2})-Q([1-4])$/.exec(String(period || ""));
   return match ? Number(match[1]) * 4 + Number(match[2]) : null;
 };
 const periodFromOrdinal = ordinal => `${Math.floor((ordinal - 1) / 4)}-Q${((ordinal - 1) % 4) + 1}`;
