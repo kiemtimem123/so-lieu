@@ -22,7 +22,7 @@ ROOT = Path(__file__).resolve().parents[2]
 REPORTS = ROOT / "reports/raw"
 QUEUE_PATH = ROOT / "config/report-queue.json"
 MAX_PAGES = int(os.getenv("REPORT_OCR_MAX_PAGES", "14"))
-MAX_REPORTS = int(os.getenv("REPORT_OCR_MAX_REPORTS", "4"))
+MAX_REPORTS = int(os.getenv("REPORT_OCR_MAX_REPORTS", "14"))
 DPI = int(os.getenv("REPORT_OCR_DPI", "240"))
 FORCE_RESCAN_PAGES = {
     int(value.strip()) for value in os.getenv("REPORT_OCR_RESCAN_PAGES", "10,11,12,13,14").split(",")
@@ -49,7 +49,7 @@ def select_symbol() -> str | None:
     # Work through symbols in the agreed priority order. Prefer an existing
     # symbol whose quarter snapshots still have unverified periods, rather than
     # arbitrarily OCR-ing whichever queue job happened to run last.
-    priority = ["TCX", "HCM", "SHS", "NLG", "BSR", "TCB", "VHM"]
+    priority = ["TCB", "TCX", "HCM", "SHS", "NLG", "BSR", "VHM"]
     for symbol in priority:
         snapshot = load_json(ROOT / f"data/financials-{symbol}.json") or {}
         items = snapshot.get("items") or []
