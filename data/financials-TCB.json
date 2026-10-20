@@ -89,6 +89,43 @@
           "net_profit_cumulative_reconciliation": null
         },
         "note": "Q1 riêng lấy từ cột quý trong báo cáo KQHD hợp nhất VietstockFinance."
+      },
+      "source_validation": {
+        "reviewed_at": "2026-10-20",
+        "single_source_policy": "Chỉ danh mục VietstockFinance và PDF được liên kết từ chính danh mục đó",
+        "source_catalog_url": "https://finance.vietstock.vn/TCB/tai-tai-lieu.htm?doctype=1",
+        "source_document_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%201/TCB_Baocaotaichinh_Q1_2024_Hopnhat.pdf",
+        "archived_source_path": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/93716712dc18d9e0.pdf",
+        "extraction_sidecar": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/93716712dc18d9e0.pdf.extracted.json",
+        "source_catalog_single_source_confirmed": true,
+        "unit": "triệu VND; báo cáo ngân hàng ghi đơn vị triệu đồng",
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit",
+          "net_profit_attributable"
+        ],
+        "accounting_equation_difference_million_vnd": 0,
+        "accounting_equation_matches": true,
+        "profit_basis": {
+          "consolidated_net_profit_million_vnd": 6277003,
+          "net_profit_attributable_to_parent_million_vnd": 6220997,
+          "implied_non_controlling_interest_profit_million_vnd": 56006,
+          "quarter_profit_reconciliation": null
+        },
+        "ratio_recalculation": {
+          "formula": "LNST hợp nhất quý / bình quân tài sản đầu-cuối kỳ × 4 × 100; ROE tương tự dùng vốn chủ sở hữu",
+          "recalculated_roa_percent": 2.89,
+          "stored_roa_percent": 2.89,
+          "recalculated_roe_percent": 18.63,
+          "stored_roe_percent": 18.63,
+          "matches_after_rounding": true
+        },
+        "review_method": "OCR/text and arithmetic reconciliation from VietstockFinance-linked PDF",
+        "manually_visual_reviewed": false,
+        "known_anomalies": []
       }
     },
     {
@@ -185,6 +222,52 @@
           "net_profit_cumulative_reconciliation": true
         },
         "note": "Q2 riêng cộng Q1 khớp lũy kế H1 trong cùng báo cáo. Một bản OCR của cột so sánh H1/PBT ghi 45.628.168; số đúng là 15.628.168 vì bằng 7.801.659 + 7.826.509 và khớp BCTC Q3/2024."
+      },
+      "source_validation": {
+        "reviewed_at": "2026-10-20",
+        "single_source_policy": "Chỉ danh mục VietstockFinance và PDF được liên kết từ chính danh mục đó",
+        "source_catalog_url": "https://finance.vietstock.vn/TCB/tai-tai-lieu.htm?doctype=1",
+        "source_document_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%202/TCB_Baocaotaichinh_Q2_2024_Hopnhat.pdf",
+        "archived_source_path": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/84aa1591e3505ab7.pdf",
+        "extraction_sidecar": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/84aa1591e3505ab7.pdf.extracted.json",
+        "source_catalog_single_source_confirmed": true,
+        "unit": "triệu VND; báo cáo ngân hàng ghi đơn vị triệu đồng",
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit",
+          "net_profit_attributable"
+        ],
+        "accounting_equation_difference_million_vnd": 0,
+        "accounting_equation_matches": true,
+        "profit_basis": {
+          "consolidated_net_profit_million_vnd": 6269968,
+          "net_profit_attributable_to_parent_million_vnd": 6193361,
+          "implied_non_controlling_interest_profit_million_vnd": 76607,
+          "quarter_profit_reconciliation": null
+        },
+        "ratio_recalculation": {
+          "formula": "LNST hợp nhất quý / bình quân tài sản đầu-cuối kỳ × 4 × 100; ROE tương tự dùng vốn chủ sở hữu",
+          "recalculated_roa_percent": 2.8,
+          "stored_roa_percent": 2.8,
+          "recalculated_roe_percent": 18.15,
+          "stored_roe_percent": 18.15,
+          "matches_after_rounding": true
+        },
+        "review_method": "OCR/text and arithmetic reconciliation from VietstockFinance-linked PDF",
+        "manually_visual_reviewed": false,
+        "known_anomalies": [
+          {
+            "type": "source_ocr_transcription_error",
+            "field": "cumulative_pretax_profit_h1_2024",
+            "incorrect_ocr_value_million_vnd": 45628168,
+            "reconciled_value_million_vnd": 15628168,
+            "validation": "Q1 7,801,659 + Q2 7,826,509 = H1 15,628,168; later Q3 VietstockFinance comparative uses 15,628,168.",
+            "action": "Keep corrected cumulative comparison in reconciliation note; source is only VietstockFinance-linked reports."
+          }
+        ]
       }
     },
     {
@@ -281,6 +364,43 @@
           "net_profit_cumulative_reconciliation": true
         },
         "note": "Q3 riêng khớp lũy kế chín tháng trừ H1 theo BCTC VietstockFinance."
+      },
+      "source_validation": {
+        "reviewed_at": "2026-10-20",
+        "single_source_policy": "Chỉ danh mục VietstockFinance và PDF được liên kết từ chính danh mục đó",
+        "source_catalog_url": "https://finance.vietstock.vn/TCB/tai-tai-lieu.htm?doctype=1",
+        "source_document_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%203/TCB_Baocaotaichinh_Q3_2024_Hopnhat.pdf",
+        "archived_source_path": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/eadd37345b7f5f57.pdf",
+        "extraction_sidecar": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/eadd37345b7f5f57.pdf.extracted.json",
+        "source_catalog_single_source_confirmed": true,
+        "unit": "triệu VND; báo cáo ngân hàng ghi đơn vị triệu đồng",
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit",
+          "net_profit_attributable"
+        ],
+        "accounting_equation_difference_million_vnd": 0,
+        "accounting_equation_matches": true,
+        "profit_basis": {
+          "consolidated_net_profit_million_vnd": 5793022,
+          "net_profit_attributable_to_parent_million_vnd": 5737505,
+          "implied_non_controlling_interest_profit_million_vnd": 55517,
+          "quarter_profit_reconciliation": null
+        },
+        "ratio_recalculation": {
+          "formula": "LNST hợp nhất quý / bình quân tài sản đầu-cuối kỳ × 4 × 100; ROE tương tự dùng vốn chủ sở hữu",
+          "recalculated_roa_percent": 2.53,
+          "stored_roa_percent": 2.53,
+          "recalculated_roe_percent": 16.38,
+          "stored_roe_percent": 16.38,
+          "matches_after_rounding": true
+        },
+        "review_method": "OCR/text and arithmetic reconciliation from VietstockFinance-linked PDF",
+        "manually_visual_reviewed": false,
+        "known_anomalies": []
       }
     },
     {
@@ -395,6 +515,49 @@
           6
         ],
         "status": "visually_checked_against_report_tables"
+      },
+      "source_validation": {
+        "reviewed_at": "2026-10-20",
+        "single_source_policy": "Chỉ danh mục VietstockFinance và PDF được liên kết từ chính danh mục đó",
+        "source_catalog_url": "https://finance.vietstock.vn/TCB/tai-tai-lieu.htm?doctype=1",
+        "source_document_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%204/TCB_Baocaotaichinh_Q4_2024_Hopnhat_1.pdf",
+        "archived_source_path": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/5b7558b29eb7fb82.pdf",
+        "extraction_sidecar": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/5b7558b29eb7fb82.pdf.extracted.json",
+        "source_catalog_single_source_confirmed": true,
+        "unit": "triệu VND; báo cáo ngân hàng ghi đơn vị triệu đồng",
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit",
+          "net_profit_attributable"
+        ],
+        "accounting_equation_difference_million_vnd": 0,
+        "accounting_equation_matches": true,
+        "profit_basis": {
+          "consolidated_net_profit_million_vnd": 3420111,
+          "net_profit_attributable_to_parent_million_vnd": 3371065,
+          "implied_non_controlling_interest_profit_million_vnd": 49046,
+          "quarter_profit_reconciliation": null
+        },
+        "ratio_recalculation": {
+          "formula": "LNST hợp nhất quý / bình quân tài sản đầu-cuối kỳ × 4 × 100; ROE tương tự dùng vốn chủ sở hữu",
+          "recalculated_roa_percent": 1.44,
+          "stored_roa_percent": 1.44,
+          "recalculated_roe_percent": 9.36,
+          "stored_roe_percent": 9.36,
+          "matches_after_rounding": true
+        },
+        "review_method": "manual_visual_review_of_VietstockFinance_linked_PDF",
+        "manually_visual_reviewed": true,
+        "known_anomalies": [],
+        "visual_review_pages": [
+          "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%204/TCB_Baocaotaichinh_Q4_2024_Hopnhat_1.pdf#page=4",
+          "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%204/TCB_Baocaotaichinh_Q4_2024_Hopnhat_1.pdf#page=5",
+          "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%204/TCB_Baocaotaichinh_Q4_2024_Hopnhat_1.pdf#page=7"
+        ],
+        "visual_review_note": "PDF VietstockFinance kiểm tra trực tiếp: tổng tài sản 978.798.549 triệu VND; nợ 830.858.928; vốn chủ 147.939.621; PBT Q4 4.696.032; LNST hợp nhất 3.420.111. Các số khớp dữ liệu và Q4 bằng lũy kế năm trừ 9 tháng."
       }
     },
     {
@@ -483,6 +646,43 @@
           "net_profit_cumulative_reconciliation": null
         },
         "note": "Q1 riêng lấy từ cột quý trong báo cáo KQHD hợp nhất VietstockFinance."
+      },
+      "source_validation": {
+        "reviewed_at": "2026-10-20",
+        "single_source_policy": "Chỉ danh mục VietstockFinance và PDF được liên kết từ chính danh mục đó",
+        "source_catalog_url": "https://finance.vietstock.vn/TCB/tai-tai-lieu.htm?doctype=1",
+        "source_document_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%201/TCB_Baocaotaichinh_Q1_2025_Hopnhat.pdf",
+        "archived_source_path": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/c66142b157f47512.pdf",
+        "extraction_sidecar": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/c66142b157f47512.pdf.extracted.json",
+        "source_catalog_single_source_confirmed": true,
+        "unit": "triệu VND; báo cáo ngân hàng ghi đơn vị triệu đồng",
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit",
+          "net_profit_attributable"
+        ],
+        "accounting_equation_difference_million_vnd": 0,
+        "accounting_equation_matches": true,
+        "profit_basis": {
+          "consolidated_net_profit_million_vnd": 6013511,
+          "net_profit_attributable_to_parent_million_vnd": 5947960,
+          "implied_non_controlling_interest_profit_million_vnd": 65551,
+          "quarter_profit_reconciliation": null
+        },
+        "ratio_recalculation": {
+          "formula": "LNST hợp nhất quý / bình quân tài sản đầu-cuối kỳ × 4 × 100; ROE tương tự dùng vốn chủ sở hữu",
+          "recalculated_roa_percent": 2.44,
+          "stored_roa_percent": 2.44,
+          "recalculated_roe_percent": 15.94,
+          "stored_roe_percent": 15.94,
+          "matches_after_rounding": true
+        },
+        "review_method": "OCR/text and arithmetic reconciliation from VietstockFinance-linked PDF",
+        "manually_visual_reviewed": false,
+        "known_anomalies": []
       }
     },
     {
@@ -579,6 +779,43 @@
           "net_profit_cumulative_reconciliation": true
         },
         "note": "Q2 riêng cộng Q1 khớp lũy kế H1 theo báo cáo. Cột so sánh 2024 đã bị OCR nhầm 45.628.168; H1/2024 đúng 15.628.168."
+      },
+      "source_validation": {
+        "reviewed_at": "2026-10-20",
+        "single_source_policy": "Chỉ danh mục VietstockFinance và PDF được liên kết từ chính danh mục đó",
+        "source_catalog_url": "https://finance.vietstock.vn/TCB/tai-tai-lieu.htm?doctype=1",
+        "source_document_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%202/TCB_Baocaotaichinh_Q2_2025_Hopnhat.pdf",
+        "archived_source_path": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/ed276f17363405f3.pdf",
+        "extraction_sidecar": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/ed276f17363405f3.pdf.extracted.json",
+        "source_catalog_single_source_confirmed": true,
+        "unit": "triệu VND; báo cáo ngân hàng ghi đơn vị triệu đồng",
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit",
+          "net_profit_attributable"
+        ],
+        "accounting_equation_difference_million_vnd": 0,
+        "accounting_equation_matches": true,
+        "profit_basis": {
+          "consolidated_net_profit_million_vnd": 6347610,
+          "net_profit_attributable_to_parent_million_vnd": 6247364,
+          "implied_non_controlling_interest_profit_million_vnd": 100246,
+          "quarter_profit_reconciliation": null
+        },
+        "ratio_recalculation": {
+          "formula": "LNST hợp nhất quý / bình quân tài sản đầu-cuối kỳ × 4 × 100; ROE tương tự dùng vốn chủ sở hữu",
+          "recalculated_roa_percent": 2.51,
+          "stored_roa_percent": 2.51,
+          "recalculated_roe_percent": 16.08,
+          "stored_roe_percent": 16.08,
+          "matches_after_rounding": true
+        },
+        "review_method": "OCR/text and arithmetic reconciliation from VietstockFinance-linked PDF",
+        "manually_visual_reviewed": false,
+        "known_anomalies": []
       }
     },
     {
@@ -693,6 +930,49 @@
           6
         ],
         "status": "visually_checked_against_report_tables"
+      },
+      "source_validation": {
+        "reviewed_at": "2026-10-20",
+        "single_source_policy": "Chỉ danh mục VietstockFinance và PDF được liên kết từ chính danh mục đó",
+        "source_catalog_url": "https://finance.vietstock.vn/TCB/tai-tai-lieu.htm?doctype=1",
+        "source_document_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%203/TCB_Baocaotaichinh_Q3_2025_Hopnhat.pdf",
+        "archived_source_path": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/791460cc8f49996a.pdf",
+        "extraction_sidecar": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/791460cc8f49996a.pdf.extracted.json",
+        "source_catalog_single_source_confirmed": true,
+        "unit": "triệu VND; báo cáo ngân hàng ghi đơn vị triệu đồng",
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit",
+          "net_profit_attributable"
+        ],
+        "accounting_equation_difference_million_vnd": 0,
+        "accounting_equation_matches": true,
+        "profit_basis": {
+          "consolidated_net_profit_million_vnd": 6613525,
+          "net_profit_attributable_to_parent_million_vnd": 6419344,
+          "implied_non_controlling_interest_profit_million_vnd": 194181,
+          "quarter_profit_reconciliation": null
+        },
+        "ratio_recalculation": {
+          "formula": "LNST hợp nhất quý / bình quân tài sản đầu-cuối kỳ × 4 × 100; ROE tương tự dùng vốn chủ sở hữu",
+          "recalculated_roa_percent": 2.44,
+          "stored_roa_percent": 2.44,
+          "recalculated_roe_percent": 15.5,
+          "stored_roe_percent": 15.5,
+          "matches_after_rounding": true
+        },
+        "review_method": "manual_visual_review_of_VietstockFinance_linked_PDF",
+        "manually_visual_reviewed": true,
+        "known_anomalies": [],
+        "visual_review_pages": [
+          "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%203/TCB_Baocaotaichinh_Q3_2025_Hopnhat.pdf#page=5",
+          "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%203/TCB_Baocaotaichinh_Q3_2025_Hopnhat.pdf#page=6",
+          "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%203/TCB_Baocaotaichinh_Q3_2025_Hopnhat.pdf#page=8"
+        ],
+        "visual_review_note": "PDF VietstockFinance kiểm tra trực tiếp: tổng tài sản 1.129.570.458 triệu VND; nợ 950.139.865; vốn chủ 179.430.593; PBT riêng Q3 8.250.016; LNST hợp nhất 6.613.525; LNST cổ đông ngân hàng 6.419.344. Số quý khớp với lũy kế 9 tháng trừ H1."
       }
     },
     {
@@ -789,6 +1069,43 @@
           "net_profit_cumulative_reconciliation": true
         },
         "note": "Q4 riêng khớp lũy kế năm trừ lũy kế 9 tháng theo báo cáo VietstockFinance."
+      },
+      "source_validation": {
+        "reviewed_at": "2026-10-20",
+        "single_source_policy": "Chỉ danh mục VietstockFinance và PDF được liên kết từ chính danh mục đó",
+        "source_catalog_url": "https://finance.vietstock.vn/TCB/tai-tai-lieu.htm?doctype=1",
+        "source_document_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/TCB_Baocaotaichinh_Q4_2025_Hopnhat.pdf",
+        "archived_source_path": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/c1df78d8d31faa60.pdf",
+        "extraction_sidecar": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/c1df78d8d31faa60.pdf.extracted.json",
+        "source_catalog_single_source_confirmed": true,
+        "unit": "triệu VND; báo cáo ngân hàng ghi đơn vị triệu đồng",
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit",
+          "net_profit_attributable"
+        ],
+        "accounting_equation_difference_million_vnd": 0,
+        "accounting_equation_matches": true,
+        "profit_basis": {
+          "consolidated_net_profit_million_vnd": 6979826,
+          "net_profit_attributable_to_parent_million_vnd": 6675562,
+          "implied_non_controlling_interest_profit_million_vnd": 304264,
+          "quarter_profit_reconciliation": null
+        },
+        "ratio_recalculation": {
+          "formula": "LNST hợp nhất quý / bình quân tài sản đầu-cuối kỳ × 4 × 100; ROE tương tự dùng vốn chủ sở hữu",
+          "recalculated_roa_percent": 2.4,
+          "stored_roa_percent": 2.4,
+          "recalculated_roe_percent": 15.56,
+          "stored_roe_percent": 15.56,
+          "matches_after_rounding": true
+        },
+        "review_method": "OCR/text and arithmetic reconciliation from VietstockFinance-linked PDF",
+        "manually_visual_reviewed": false,
+        "known_anomalies": []
       }
     },
     {
@@ -877,6 +1194,43 @@
           "net_profit_cumulative_reconciliation": null
         },
         "note": "Q1 riêng lấy từ cột quý trong báo cáo KQHD hợp nhất VietstockFinance."
+      },
+      "source_validation": {
+        "reviewed_at": "2026-10-20",
+        "single_source_policy": "Chỉ danh mục VietstockFinance và PDF được liên kết từ chính danh mục đó",
+        "source_catalog_url": "https://finance.vietstock.vn/TCB/tai-tai-lieu.htm?doctype=1",
+        "source_document_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/TCB_Baocaotaichinh_Q1_2026_Hopnhat.pdf",
+        "archived_source_path": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/7e7749fd534f2767.pdf",
+        "extraction_sidecar": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/7e7749fd534f2767.pdf.extracted.json",
+        "source_catalog_single_source_confirmed": true,
+        "unit": "triệu VND; báo cáo ngân hàng ghi đơn vị triệu đồng",
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit",
+          "net_profit_attributable"
+        ],
+        "accounting_equation_difference_million_vnd": 0,
+        "accounting_equation_matches": true,
+        "profit_basis": {
+          "consolidated_net_profit_million_vnd": 6950280,
+          "net_profit_attributable_to_parent_million_vnd": 6671081,
+          "implied_non_controlling_interest_profit_million_vnd": 279199,
+          "quarter_profit_reconciliation": null
+        },
+        "ratio_recalculation": {
+          "formula": "LNST hợp nhất quý / bình quân tài sản đầu-cuối kỳ × 4 × 100; ROE tương tự dùng vốn chủ sở hữu",
+          "recalculated_roa_percent": 2.33,
+          "stored_roa_percent": 2.33,
+          "recalculated_roe_percent": 15.18,
+          "stored_roe_percent": 15.18,
+          "matches_after_rounding": true
+        },
+        "review_method": "OCR/text and arithmetic reconciliation from VietstockFinance-linked PDF",
+        "manually_visual_reviewed": false,
+        "known_anomalies": []
       }
     },
     {
@@ -991,6 +1345,49 @@
           6
         ],
         "status": "visually_checked_against_report_tables"
+      },
+      "source_validation": {
+        "reviewed_at": "2026-10-20",
+        "single_source_policy": "Chỉ danh mục VietstockFinance và PDF được liên kết từ chính danh mục đó",
+        "source_catalog_url": "https://finance.vietstock.vn/TCB/tai-tai-lieu.htm?doctype=1",
+        "source_document_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/TCB_Baocaotaichinh_Q2_2026_Hopnhat.pdf",
+        "archived_source_path": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/50b860c97df7b698.pdf",
+        "extraction_sidecar": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/50b860c97df7b698.pdf.extracted.json",
+        "source_catalog_single_source_confirmed": true,
+        "unit": "triệu VND; báo cáo ngân hàng ghi đơn vị triệu đồng",
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit",
+          "net_profit_attributable"
+        ],
+        "accounting_equation_difference_million_vnd": 0,
+        "accounting_equation_matches": true,
+        "profit_basis": {
+          "consolidated_net_profit_million_vnd": 7726642,
+          "net_profit_attributable_to_parent_million_vnd": 7350059,
+          "implied_non_controlling_interest_profit_million_vnd": 376583,
+          "quarter_profit_reconciliation": null
+        },
+        "ratio_recalculation": {
+          "formula": "LNST hợp nhất quý / bình quân tài sản đầu-cuối kỳ × 4 × 100; ROE tương tự dùng vốn chủ sở hữu",
+          "recalculated_roa_percent": 2.51,
+          "stored_roa_percent": 2.51,
+          "recalculated_roe_percent": 16.45,
+          "stored_roe_percent": 16.45,
+          "matches_after_rounding": true
+        },
+        "review_method": "manual_visual_review_of_VietstockFinance_linked_PDF",
+        "manually_visual_reviewed": true,
+        "known_anomalies": [],
+        "visual_review_pages": [
+          "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/TCB_Baocaotaichinh_Q2_2026_Hopnhat.pdf#page=5",
+          "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/TCB_Baocaotaichinh_Q2_2026_Hopnhat.pdf#page=6",
+          "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/TCB_Baocaotaichinh_Q2_2026_Hopnhat.pdf#page=7"
+        ],
+        "visual_review_note": "PDF VietstockFinance kiểm tra trực tiếp: tổng nợ 1.084.079.773 triệu VND; vốn chủ 188.997.150; tổng nợ và vốn chủ 1.273.076.923; PBT riêng Q2 9.670.016; LNST hợp nhất 7.726.642; LNST thuộc cổ đông ngân hàng 7.350.059. Q2 + Q1 khớp lũy kế H1."
       }
     }
   ],
