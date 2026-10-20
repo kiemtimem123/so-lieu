@@ -21,6 +21,7 @@ from pypdf import PdfReader
 ROOT = Path(__file__).resolve().parents[2]
 REPORTS = ROOT / "reports/raw"
 QUEUE_PATH = ROOT / "config/report-queue.json"
+# Include statement continuation pages in long consolidated reports.
 MAX_PAGES = int(os.getenv("REPORT_OCR_MAX_PAGES", "18"))
 MAX_REPORTS = int(os.getenv("REPORT_OCR_MAX_REPORTS", "20"))
 DPI = int(os.getenv("REPORT_OCR_DPI", "240"))
