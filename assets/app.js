@@ -891,6 +891,7 @@
     const tableWrap = $('#stockTableWrap');
     const tableBody = $('#stockTableBody');
     const status = $('#stockSourceStatus');
+    const loadSummary = $('#stockSyncSummary');
     const symbols = ['MBB','ACB','FPT','SHB','TCX','HCM','VND','SHS','NLG','BSR','TCB','VHM'];
     const snapshots = new Map();
     const charts = {};
@@ -928,7 +929,64 @@
       const snapshot = snapshots.get(ticker);
       return (snapshot?.items || []).filter(item => item && validPeriod(item.period)).slice().sort((a,b)=>a.period.localeCompare(b.period));
     };
-    const allPeriods = () => [...new Set(symbols.flatMap(ticker => rowsFor(ticker).map(item => item.period)))].sort();
+    const hasNumericFinancialData = item => ['revenue','pretax_profit','net_profit','total_assets','total_liabilities','equity','roa','roe'].some(field => validNumber(item?.[field]));
+    const verificationBadge = item => {
+      const raw = String(item?.verification_status || '').toLowerCase();
+      if (raw === 'auto_pending_extraction') return { label: 'Chờ trích xuất', kind: 'pending' };
+      if (raw.includes('pending_visual_review') || raw === 'auto_extracted_pending_visual_review') return { label: 'Chờ rà soát PDF', kind: 'review' };
+      if (raw.includes('manual_visual')) return { label: 'Đã kiểm tra PDF', kind: 'ready' };
+      if (raw.includes('derived')) return { label: 'Đối chiếu từ lũy kế', kind: 'review' };
+      if (raw.includes('ocr')) return { label: 'Đã đối chiếu OCR', kind: 'review' };
+      if (raw.includes('verified') || raw.includes('reconciled')) return { label: 'Đã đối chiếu nguồn', kind: 'ready' };
+      return hasNumericFinancialData(item)
+        ? { label: 'Có số liệu · cần rà soát', kind: 'review' }
+        : { label: 'Chờ dữ liệu', kind: 'pending' };
+    };
+    const allPeriods = () => [...new Set(symbols.flatMap(ticker => rowsFor(ticker).filter(hasNumericFinancialData).map(item => item.period)))].sort();
+
+    function populateYearOptions() {
+      if (!yearSelect) return;
+      const knownYears = symbols.flatMap(ticker => rowsFor(ticker).map(item => Number(item.period.slice(0, 4)))).filter(Number.isFinite);
+      const currentYear = new Date().getFullYear();
+      const priorYear = Number(yearSelect.value) || currentYear;
+      const maxYear = Math.max(2022, currentYear, ...knownYears);
+      const years = [];
+      for (let year = 2022; year <= maxYear; year++) years.push(year);
+      yearSelect.innerHTML = years.map(year => '<option value="' + year + '">' + year + '</option>').join('');
+      const newestYear = knownYears.length ? Math.max(...knownYears) : currentYear;
+      yearSelect.value = String(newestYear > priorYear ? newestYear : (years.includes(priorYear) ? priorYear : maxYear));
+    }
+
+    async function fetchLatestFinancialSnapshot(ticker) {
+      const filename = 'financials-' + ticker + '.json';
+      const cacheBust = Date.now();
+      const candidates = [
+        { label: 'website', url: 'data/' + filename + '?v=' + cacheBust, priority: 0 },
+        { label: 'GitHub', url: DATA_FALLBACK_BASE + encodeURIComponent(filename) + '?v=' + cacheBust, priority: 1 }
+      ];
+      const settled = await Promise.allSettled(candidates.map(async candidate => {
+        const response = await fetch(candidate.url, { cache: 'no-store', headers: { 'Cache-Control': 'no-cache' } });
+        if (!response.ok) throw new Error('HTTP ' + response.status + ' (' + candidate.label + ')');
+        const contentType = (response.headers.get('content-type') || '').toLowerCase();
+        if (contentType.includes('text/html')) throw new Error('HTML thay vì JSON (' + candidate.label + ')');
+        const snapshot = await response.json();
+        if (!snapshot || snapshot.symbol !== ticker || !Array.isArray(snapshot.items)) throw new Error('Snapshot không đúng schema (' + candidate.label + ')');
+        return { ...candidate, snapshot };
+      }));
+      const usable = settled.filter(result => result.status === 'fulfilled').map(result => result.value);
+      if (!usable.length) {
+        const reasons = settled.map(result => result.status === 'rejected' ? result.reason?.message : '').filter(Boolean).join('; ');
+        throw new Error(reasons || 'Không tải được snapshot từ website hoặc GitHub');
+      }
+      usable.sort((a, b) => {
+        const timeA = Date.parse(a.snapshot.fetchedAt || '') || 0;
+        const timeB = Date.parse(b.snapshot.fetchedAt || '') || 0;
+        if (timeA !== timeB) return timeB - timeA;
+        if (a.snapshot.items.length !== b.snapshot.items.length) return b.snapshot.items.length - a.snapshot.items.length;
+        return a.priority - b.priority;
+      });
+      return { ...usable[0].snapshot, _loadedFrom: usable[0].label };
+    }
 
     function drawChart(key, canvasId, noteId, config) {
       const canvas = document.getElementById(canvasId);
@@ -977,7 +1035,7 @@
       drawChart('profit','stockProfitChart','stockProfitNote',{
         labels, points:financialAvailable.flatMap(s=>s.values.filter(v=>v!==null)),
         datasets:financialAvailable.map(s=>({label:s.label,data:s.values,borderWidth:2,tension:.18,pointRadius:rows.length>32?0:3,spanGaps:false})),
-        note:financialAvailable.length ? 'Nguồn: snapshot báo cáo tài chính đã lưu. Kiểm tra đơn vị và cách trình bày doanh thu/lợi nhuận trong từng báo cáo trước khi so sánh.' : '',
+        note:financialAvailable.length ? 'Nguồn: snapshot báo cáo tài chính. Trạng thái rà soát từng kỳ được ghi trong bảng; điểm chưa trích xuất sẽ để trống, không nội suy.' : '',
         emptyMessage:'Chưa có trường doanh thu hoặc lợi nhuận hợp lệ trong snapshot. Hãy trích xuất từ báo cáo gốc; website không tự ước tính.'
       });
       const balance = [
@@ -989,7 +1047,7 @@
       drawChart('balance','stockBalanceChart','stockBalanceNote',{
         labels,points:balanceAvailable.flatMap(s=>s.values.filter(v=>v!==null)),
         datasets:balanceAvailable.map(s=>({label:s.label,data:s.values,borderWidth:2,tension:.18,pointRadius:rows.length>32?0:3,spanGaps:false})),
-        note:balanceAvailable.length?'Nguồn: snapshot báo cáo tài chính. So sánh theo cùng đơn vị và cùng cơ sở báo cáo (hợp nhất/riêng lẻ).':'',
+        note:balanceAvailable.length?'Nguồn: snapshot báo cáo tài chính. Kiểm tra trạng thái kỳ báo cáo và cơ sở hợp nhất/riêng lẻ trong bảng trước khi so sánh.':'',
         emptyMessage:'Chưa có số liệu tài sản, nợ hoặc vốn chủ sở hữu hợp lệ.'
       });
       const ratios=[
@@ -1000,7 +1058,7 @@
       drawChart('ratios','stockRatiosChart','stockRatiosNote',{
         labels,points:ratiosAvailable.flatMap(s=>s.values.filter(v=>v!==null)),
         datasets:ratiosAvailable.map(s=>({label:s.label,data:s.values,borderWidth:2,tension:.18,pointRadius:rows.length>32?0:3,spanGaps:false})),
-        note:ratiosAvailable.length?'ROA/ROE chỉ hiển thị nếu có trong snapshot đã xác minh. Cần ghi rõ công thức và dữ liệu bình quân đầu kỳ/cuối kỳ khi tự tính.':'',
+        note:ratiosAvailable.length?'ROA/ROE lấy từ snapshot có nguồn. Các kỳ cần rà soát vẫn được đánh dấu ở bảng; không tự tính khi thiếu đầu vào.':'',
         emptyMessage:'Chưa có ROA/ROE được xác minh. Không tính tỷ số nếu thiếu dữ liệu đầu vào hoặc công thức nguồn.'
       });
     }
@@ -1032,71 +1090,95 @@
       const ticker = String(symbolSelect?.value || 'MBB').toUpperCase();
       const selectedYear = String(yearSelect?.value || '2022');
       const snapshot = snapshots.get(ticker);
-      const rows = rowsFor(ticker).filter(item=>item.period.startsWith(selectedYear+'-Q'));
+      const rows = rowsFor(ticker).filter(item => item.period.startsWith(selectedYear + '-Q'));
       if (!rows.length) {
-        setEmpty('Chưa có báo cáo đã xác minh','Chưa có dữ liệu quý đã được kiểm chứng cho '+ticker+' năm '+selectedYear+'. Website vẫn giữ các biểu đồ trống cho tới khi snapshot được nạp từ báo cáo nguồn; không dùng số liệu minh họa.');
-        if (status) status.textContent=(snapshot?.sourceName?'Nguồn khai báo: '+snapshot.sourceName+'. ':'')+'Số quý hợp lệ trong năm được chọn: 0.';
+        setEmpty('Chưa có báo cáo trong năm này', 'Chưa tìm thấy kỳ báo cáo có liên kết nguồn cho ' + ticker + ' năm ' + selectedYear + '. Khi VietstockFinance công bố và workflow đồng bộ kỳ mới, dữ liệu sẽ xuất hiện tự động sau khi tải lại.');
+        if (status) status.textContent = 'Mã ' + ticker + ' · ' + selectedYear + ': chưa có kỳ báo cáo trong snapshot.';
       } else {
-        if (tableBody) tableBody.innerHTML=rows.map(item=>{
-          const sourceUrl=typeof item.source_url==='string'&&/^https?:\/\///i.test(item.source_url)?item.source_url:'';
-          return '<tr><td><strong>'+escapeHtml(periodLabel(item.period))+'</strong></td>'+
-            '<td>'+numberOrDash(item.revenue)+'</td><td>'+numberOrDash(item.total_assets)+'</td>'+
-            '<td>'+numberOrDash(item.total_liabilities)+'</td><td>'+numberOrDash(item.equity)+'</td>'+
-            '<td>'+numberOrDash(item.pretax_profit)+'</td><td>'+numberOrDash(item.net_profit)+'</td>'+
-            '<td>'+(validNumber(item.roa)?numberOrDash(item.roa)+'%':'—')+'</td>'+
-            '<td>'+(validNumber(item.roe)?numberOrDash(item.roe)+'%':'—')+'</td>'+
-            '<td>'+(sourceUrl?'<a href="'+escapeHtml(sourceUrl)+'" target="_blank" rel="noopener noreferrer">Báo cáo gốc</a>':'—')+'</td></tr>';
+        if (tableBody) tableBody.innerHTML = rows.map(item => {
+          const sourceUrl = typeof item.source_url === 'string' && /^https?:\/\//i.test(item.source_url) ? item.source_url : '';
+          const badge = verificationBadge(item);
+          return '<tr><td><strong>' + escapeHtml(periodLabel(item.period)) + '</strong></td>' +
+            '<td>' + numberOrDash(item.revenue) + '</td><td>' + numberOrDash(item.total_assets) + '</td>' +
+            '<td>' + numberOrDash(item.total_liabilities) + '</td><td>' + numberOrDash(item.equity) + '</td>' +
+            '<td>' + numberOrDash(item.pretax_profit) + '</td><td>' + numberOrDash(item.net_profit) + '</td>' +
+            '<td>' + (validNumber(item.roa) ? numberOrDash(item.roa) + '%' : '—') + '</td>' +
+            '<td>' + (validNumber(item.roe) ? numberOrDash(item.roe) + '%' : '—') + '</td>' +
+            '<td>' + (sourceUrl ? '<a href="' + escapeHtml(sourceUrl) + '" target="_blank" rel="noopener noreferrer">Báo cáo gốc</a>' : '—') + '</td>' +
+            '<td><span class="financial-status financial-status-' + badge.kind + '">' + escapeHtml(badge.label) + '</span></td></tr>';
         }).join('');
         if (stateBox) stateBox.classList.add('hidden');
         if (tableWrap) tableWrap.classList.remove('hidden');
-        if (status) status.textContent='Nguồn: '+(snapshot?.sourceName||'snapshot offline/repository')+' · '+rows.length+'/4 quý có dữ liệu · Đồng bộ: '+(snapshot?.fetchedAt?dateFmt(snapshot.fetchedAt):'chưa ghi nhận')+' · Đơn vị: '+(rows.find(item=>item.unit)?.unit||'theo snapshot')+'.';
+        const populated = rows.filter(hasNumericFinancialData).length;
+        const waiting = rows.length - populated;
+        const review = rows.filter(item => hasNumericFinancialData(item) && verificationBadge(item).kind !== 'ready').length;
+        const sourceLabel = snapshot?._loadedFrom === 'GitHub' ? 'GitHub mới nhất' : 'website/GitHub';
+        if (status) {
+          status.textContent = 'Nguồn: ' + (snapshot?.sourceName || 'VietstockFinance snapshot') +
+            ' · ' + populated + '/4 quý có số liệu · ' + waiting + ' kỳ đang chờ trích xuất · ' +
+            review + ' kỳ có số liệu cần rà soát · Nạp từ: ' + sourceLabel +
+            ' · Đồng bộ: ' + (snapshot?.fetchedAt ? dateFmt(snapshot.fetchedAt) : 'chưa ghi nhận') +
+            ' · Đơn vị: ' + (rows.find(item => item.unit)?.unit || 'theo snapshot') + '.';
+        }
       }
       drawSelectedCharts(ticker);
     }
 
     function populateComparePeriods() {
-      const select=$('#stockComparePeriod');
-      if(!select)return;
-      const periods=allPeriods();
-      const previous=select.value;
-      select.innerHTML=periods.slice().reverse().map(period=>'<option value="'+escapeHtml(period)+'">'+escapeHtml(periodLabel(period))+'</option>').join('');
-      if(periods.includes(previous))select.value=previous;
-      else if(periods.length)select.value=periods[periods.length-1];
+      const select = $('#stockComparePeriod');
+      if (!select) return;
+      const periods = allPeriods();
+      const previous = select.value;
+      select.innerHTML = periods.slice().reverse().map(period => '<option value="' + escapeHtml(period) + '">' + escapeHtml(periodLabel(period)) + '</option>').join('');
+      const metric = $('#stockCompareMetric')?.value || 'net_profit';
+      const hasComparisonValue = period => symbols.some(ticker => {
+        const row = rowsFor(ticker).find(item => item.period === period);
+        return row && validNumber(row[metric]);
+      });
+      if (periods.includes(previous) && hasComparisonValue(previous)) select.value = previous;
+      else {
+        const preferred = periods.slice().reverse().find(hasComparisonValue) || periods[periods.length - 1];
+        if (preferred) select.value = preferred;
+      }
     }
 
     async function loadAll() {
-      if(isLoading)return;
-      isLoading=true;
-      if(loadButton){loadButton.disabled=true;loadButton.textContent='Đang tải…';}
-      if(status)status.textContent='Đang đọc snapshot offline và kiểm tra bản repository…';
-      const results=await Promise.all(symbols.map(async ticker=>{
-        try{
-          const response=await fetchDataFile('financials-'+ticker+'.json');
-          if(!response.ok)throw new Error('HTTP '+response.status);
-          const snapshot=await response.json();
-          if(!snapshot||snapshot.symbol!==ticker||!Array.isArray(snapshot.items))throw new Error('Snapshot không đúng schema');
-          const items = snapshot.items.filter(function (record) { return Boolean(record && validPeriod(record.period) && typeof record.source_url === 'string' && /^https?:\/\//i.test(record.source_url)); });
-          snapshots.set(ticker,{...snapshot,items});
-          return {ticker,ok:true,count:items.length};
-        }catch(error){
-          snapshots.set(ticker,{symbol:ticker,items:[],sourceName:'Không tải được snapshot',fetchedAt:null});
-          console.warn('[financial-dashboard]',ticker,error);
-          return {ticker,ok:false,count:0};
-        }
-      }));
-      populateComparePeriods();
-      renderSelected();
-      drawComparison();
-      const total=results.reduce((sum,item)=>sum+item.count,0);
-      if(status)status.textContent='Đã kiểm tra '+results.length+' mã · '+total+' kỳ có URL nguồn hợp lệ trong snapshot. Đây là số bản ghi có schema hợp lệ, không thay thế việc đối chiếu số liệu với báo cáo gốc.';
-      isLoading=false;
-      if(loadButton){loadButton.disabled=false;loadButton.textContent='Tải báo cáo';}
+      if (isLoading) return;
+      isLoading = true;
+      if (loadButton) { loadButton.disabled = true; loadButton.textContent = 'Đang tải…'; }
+      if (loadSummary) loadSummary.textContent = 'Đang kiểm tra snapshot trên website và bản mới nhất trên GitHub…';
+      try {
+        const results = await Promise.all(symbols.map(async ticker => {
+          try {
+            const snapshot = await fetchLatestFinancialSnapshot(ticker);
+            const items = snapshot.items.filter(record => Boolean(record && validPeriod(record.period) &&
+              typeof record.source_url === 'string' && /^https?:\/\//i.test(record.source_url)));
+            snapshots.set(ticker, { ...snapshot, items });
+            return { ticker, ok: true, count: items.length, loadedFrom: snapshot._loadedFrom };
+          } catch (error) {
+            snapshots.set(ticker, { symbol: ticker, items: [], sourceName: 'Không tải được snapshot', fetchedAt: null });
+            console.warn('[financial-dashboard]', ticker, error);
+            return { ticker, ok: false, count: 0, loadedFrom: '' };
+          }
+        }));
+        populateYearOptions();
+        populateComparePeriods();
+        renderSelected();
+        drawComparison();
+        const total = results.reduce((sum, item) => sum + item.count, 0);
+        const failed = results.filter(item => !item.ok).length;
+        if (loadSummary) loadSummary.textContent = 'Đã kiểm tra ' + results.length + ' mã · ' + total +
+          ' kỳ có liên kết nguồn · ' + failed + ' mã không tải được snapshot. Bản mới nhất được chọn giữa website và GitHub; trạng thái từng kỳ hiển thị trong bảng.';
+      } finally {
+        isLoading = false;
+        if (loadButton) { loadButton.disabled = false; loadButton.textContent = 'Tải lại dữ liệu'; }
+      }
     }
 
     loadButton?.addEventListener('click',loadAll);
     symbolSelect?.addEventListener('change',renderSelected);
     yearSelect?.addEventListener('change',renderSelected);
-    $('#stockCompareMetric')?.addEventListener('change',drawComparison);
+    $('#stockCompareMetric')?.addEventListener('change', () => { populateComparePeriods(); drawComparison(); });
     $('#stockComparePeriod')?.addEventListener('change',drawComparison);
     loadAll();
   }
