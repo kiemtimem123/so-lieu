@@ -21,11 +21,11 @@ on:
       rescan_pages:
         description: Comma-separated page numbers to re-OCR even if text is already present
         required: false
-        default: "10,11,12,13,14,15,16,17,18"
+        default: "10,11"
       max_reports:
         description: Maximum report files to process in this run
         required: false
-        default: "20"
+        default: "4"
 
 permissions:
   contents: write
@@ -66,9 +66,9 @@ jobs:
         env:
           REPORT_OCR_SYMBOL: ${{ github.event.inputs.symbol || '' }}
           REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || '14' }}
-          REPORT_OCR_MAX_REPORTS: ${{ github.event.inputs.max_reports || '20' }}
-          REPORT_OCR_DPI: '240'
-          REPORT_OCR_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || '8,9,10,11,12,13,14' }}
+          REPORT_OCR_MAX_REPORTS: ${{ github.event.inputs.max_reports || '4' }}
+          REPORT_OCR_DPI: '280'
+          REPORT_OCR_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || '10,11' }}
         run: python .github/scripts/ocr-stored-reports.py
 
       - name: Validate queue after OCR
