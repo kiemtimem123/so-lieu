@@ -1,0 +1,60 @@
+name: Sync quarterly BCTC from VietstockFinance
+
+on:
+  schedule:
+    - cron: "17 2 * * *"
+  workflow_dispatch:
+  push:
+    paths:
+      - "scripts/sync-vietstock-financials.py"
+      - ".github/workflows/sync-vietstock-financials.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-vietstock-quarterly-financials
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install document processing dependencies
+        run: python -m pip install --upgrade requests pypdf
+
+      - name: Check VietstockFinance catalog and append new quarters
+        env:
+          PYTHONUTF8: "1"
+        run: python scripts/sync-vietstock-financials.py
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Validate financial snapshots
+        run: node scripts/validate-financials.mjs
+
+      - name: Commit snapshot changes (if any)
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/financials-*.json
+          if git diff --cached --quiet; then
+            echo "No new quarters or successful pending extractions; repository is unchanged."
+          else
+            git commit -m "Auto-sync quarterly BCTC from VietstockFinance"
+            git push
+          fi
