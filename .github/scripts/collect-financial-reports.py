@@ -716,7 +716,9 @@ def main():
         attempted_this_run = []
         successes_this_run = 0
         for candidate in candidates:
-            if successes_this_run >= MAX_PER_JOB:
+            # Bound attempted downloads, not just successful downloads. Broken
+            # source links must not cause the worker to sweep the whole catalog.
+            if len(attempted_this_run) >= MAX_PER_JOB:
                 break
             result = download_candidate(candidate, job_dir)
             results.append(result)
@@ -734,11 +736,15 @@ def main():
         more_candidates = len(attempted_this_run) < len(candidates)
         downloaded_any = any(item.get("status") == "downloaded_needs_review" for item in combined_files)
 
-        if more_candidates and downloaded_any:
-            # Keep the same ticker at the front of the queue on the next run.
+        if more_candidates:
+            # Keep the same ticker at the front of the queue, even if this
+            # batch contained only failed URLs; the next run will continue on
+            # the next unattempted candidates without sweeping the full catalog.
             job["status"] = "queued"
             job["resumeDownload"] = True
-            job["lastError"] = None
+            job["lastError"] = None if downloaded_any else (
+                "Một lượt tải chỉ thử tối đa hai URL; sẽ tiếp tục các URL còn lại ở lượt sau."
+            )
         elif downloaded_any:
             job["status"] = "needs_review"
             job["resumeDownload"] = False
