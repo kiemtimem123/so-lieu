@@ -12,7 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 RAW = ROOT / "reports" / "raw"
-NUMBER_RE = re.compile(r"(?<![A-Za-z])\(?-?\d[\d., ]*\d?\)?")
+NUMBER_RE = re.compile(r"(?<![A-Za-z0-9])\(?-?\d[\d.,]*\d?\)?")
 BANKS = {"MBB", "ACB", "SHB", "TCB"}
 BROKERS = {"HCM", "SHS", "TCX", "VND"}
 STANDARD_BUSINESSES = {"BSR", "FPT", "NLG", "VHM"}
@@ -93,12 +93,14 @@ def parse_amount(token):
  return -value if neg else value
 
 def amounts(line, threshold=1000):
+ # Do not allow spaces inside a number token: that would concatenate separate
+ # reporting-period columns into a gigantic false value.
  vals=[]
  for token in NUMBER_RE.findall(line):
   n=parse_amount(token)
-  if n is not None: vals.append(n)
- large=[n for n in vals if abs(n)>=threshold]
- return large if large else vals
+  if n is not None and abs(n)>=threshold and not (1900 <= abs(n) <= 2100):
+   vals.append(n)
+ return vals
 
 def get_pages(obj):
  raw=obj.get("pages")
@@ -130,8 +132,13 @@ def value_by_label(pages,labels,factor):
   for page in pages:
    lines=str(page.get("text","")).splitlines()
    for index,line in enumerate(lines):
-    if target not in norm(line): continue
-    vals=amounts(line)
+    clean=norm(line)
+    position=clean.find(target)
+    if position < 0: continue
+    # Parse only the text after the matched item label, not the whole row:
+    # dates, account codes and reference numbers occur before the value cells.
+    tail=line[min(len(line),position+len(target)):]
+    vals=amounts(tail)
     if not vals:
      for j in range(index+1,min(index+4,len(lines))):
       next_line=lines[j]
@@ -229,6 +236,42 @@ def period_key(item):
  m=re.fullmatch(r"(20\d{2})-Q([1-4])",str(item.get("period","")))
  return (int(m.group(1)),int(m.group(2))) if m else None
 
+def sane_fields(item, found):
+ # Guard against OCR/parser unit slips using the already reconciled core totals.
+ # Detail line items are not accepted if they are implausibly large for the
+ # same report's balance sheet. Keep those fields blank for later review.
+ assets=item.get("total_assets")
+ liabilities=item.get("total_liabilities")
+ equity=item.get("equity")
+ has_assets=isinstance(assets,(int,float)) and assets>0
+ has_liabilities=isinstance(liabilities,(int,float)) and liabilities>=0
+ has_equity=isinstance(equity,(int,float)) and equity>=0
+ asset_fields={"current_assets","cash_and_equivalents","short_term_investments","short_term_receivables","inventory","non_current_assets","fixed_assets"}
+ liability_fields={"current_liabilities","long_term_liabilities"}
+ retained_fields={"retained_earnings"}
+ income_fields={"revenue","cost_of_goods_sold","gross_profit","financial_income","financial_expense","interest_expense","selling_expense","admin_expense","operating_profit","income_tax","net_profit_attributable"}
+ cash_fields=set(CASHFLOW_LABELS)-{"cash_beginning","cash_ending"}
+ safe={}
+ rejected=[]
+ for field,value in found.items():
+  if field.startswith("__"):
+   safe[field]=value
+   continue
+  if not isinstance(value,(int,float)) or not __import__("math").isfinite(value):
+   rejected.append(field); continue
+  limit=None
+  if field in asset_fields and has_assets: limit=max(abs(assets)*1.25,1000)
+  elif field in liability_fields and has_liabilities: limit=max(abs(liabilities)*1.25,1000)
+  elif field in retained_fields and has_equity: limit=max(abs(equity)*2,1000)
+  elif field in income_fields and has_assets: limit=max(abs(assets)*5,1000)
+  elif field in cash_fields and has_assets: limit=max(abs(assets)*5,1000)
+  elif field in {"cash_beginning","cash_ending"} and has_assets: limit=max(abs(assets)*1.5,1000)
+  if limit is not None and abs(value)>limit:
+   rejected.append(field); continue
+  safe[field]=value
+ return safe,rejected
+
+
 def enrich_snapshot(path):
  snapshot=json.loads(path.read_text(encoding="utf-8"))
  symbol=str(snapshot.get("symbol") or path.stem.replace("financials-","")).upper()
@@ -240,6 +283,10 @@ def enrich_snapshot(path):
   pages=load_report_pages(item,symbol)
   if not pages: continue
   found=extract_fields(item,symbol,pages)
+  if not found: continue
+  found,rejected=sane_fields(item,found)
+  if rejected:
+   print(f"{path.name if 'path' in locals() else symbol} {item.get('period')}: skipped implausible extracted values {','.join(rejected)}")
   if not found: continue
   new_fields=[]
   for field,value in found.items():
