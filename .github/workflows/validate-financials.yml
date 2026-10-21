@@ -5,16 +5,20 @@ on:
     paths:
       - "data/financials-*.json"
       - "scripts/validate-financials.mjs"
+      - "scripts/enrich-financial-categories.py"
+      - "reports/raw/**/*.extracted.json"
       - ".github/workflows/validate-financials.yml"
   pull_request:
     paths:
       - "data/financials-*.json"
       - "scripts/validate-financials.mjs"
+      - "scripts/enrich-financial-categories.py"
+      - "reports/raw/**/*.extracted.json"
       - ".github/workflows/validate-financials.yml"
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   validate:
@@ -22,6 +26,27 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Enrich quarterly categories from stored PDF/ZIP text
+        run: python scripts/enrich-financial-categories.py
+      - name: Commit enriched financial snapshots
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/financials-*.json
+          if git diff --cached --quiet; then
+            echo "No additional financial line items extracted from the stored reports."
+          else
+            git commit -m "Enrich quarterly financial categories from stored BCTC text"
+            git pull --rebase origin "$GITHUB_REF_NAME"
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
