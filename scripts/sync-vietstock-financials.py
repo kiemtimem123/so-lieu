@@ -1040,7 +1040,8 @@ def load_snapshot(symbol: str) -> tuple[dict, Path]:
 
 
 def process_symbol(
-    session: requests.Session, token: str, symbol: str, current_year: int
+    session: requests.Session, token: str, symbol: str, current_year: int,
+    max_extract_periods: int | None = None,
 ) -> tuple[bool, int, int]:
     path = DATA_DIR / f"financials-{symbol}.json"
     snapshot_was_missing = not path.exists()
@@ -1095,7 +1096,53 @@ def process_symbol(
     changed = snapshot_was_missing
     added = 0
     filled = 0
-    for period in sorted(candidates, key=period_key):
+    ordered_periods = sorted(candidates, key=period_key)
+    processing_periods = ordered_periods
+    if max_extract_periods is not None:
+        cooldown_seconds = 30 * 60
+        now_epoch = datetime.now(timezone.utc).timestamp()
+
+        def extraction_attempt_age(period: str) -> float | None:
+            existing_item = existing.get(period) or {}
+            validation = existing_item.get("source_validation") or {}
+            attempted_at = validation.get("last_extraction_attempt_at")
+            if not attempted_at:
+                return None
+            try:
+                return now_epoch - datetime.fromisoformat(str(attempted_at).replace("Z", "+00:00")).timestamp()
+            except (TypeError, ValueError, OSError):
+                return None
+
+        # Prefer never-tried or cooldown-expired placeholders, and rotate through
+        # periods instead of retrying the same unparseable quarter on every run.
+        eligible_periods = [
+            period for period in ordered_periods
+            if period not in existing
+            or extraction_attempt_age(period) is None
+            or extraction_attempt_age(period) >= cooldown_seconds
+        ]
+        processing_periods = eligible_periods[:max(1, int(max_extract_periods))]
+        processing_set = set(processing_periods)
+
+        # Save all discovered source links now. Extraction of their figures is
+        # deferred to later scheduled runs, so one difficult PDF won't block the ticker queue.
+        for period in ordered_periods:
+            if period in processing_set or period in existing:
+                continue
+            options = sorted(candidates[period], key=lambda x: x[0])
+            _, record, cumulative = options[0]
+            url = doc_url(record)
+            placeholder = make_placeholder(symbol, period, record, url, cumulative)
+            placeholder.setdefault("source_validation", {})["extraction_deferred_for_short_batch"] = True
+            items.append(placeholder)
+            existing[period] = placeholder
+            added += 1
+            changed = True
+            print(f"  {symbol} {period}: đã lưu nguồn và kỳ báo cáo; trích xuất số liệu sẽ chạy ở lượt tiếp theo.")
+
+    if not processing_periods:
+        print(f"  {symbol}: tất cả kỳ chờ trích xuất đều đang trong thời gian nghỉ thử lại.")
+    for period in processing_periods:
         options = sorted(candidates[period], key=lambda x: x[0])
         _, record, cumulative = options[0]
         url = doc_url(record)
@@ -1126,10 +1173,22 @@ def process_symbol(
         except Exception as exc:
             print(f"  {symbol} {period}: chưa tự trích xuất đủ tin cậy: {exc}")
             if period in existing:
-                # Keep the pending placeholder unchanged; try again next run
-                # without generating a new commit every day.
+                # Keep reported figures untouched and record only the retry state.
+                idx = next((i for i, item in enumerate(items) if item.get("period") == period), None)
+                if idx is not None and items[idx].get("verification_status") == "auto_pending_extraction":
+                    item = items[idx]
+                    validation = item.setdefault("source_validation", {})
+                    validation["last_extraction_attempt_at"] = utc_now()
+                    validation["extraction_attempt_count"] = int(validation.get("extraction_attempt_count") or 0) + 1
+                    validation["last_extraction_error"] = str(exc)[:500]
+                    items[idx] = item
+                    changed = True
                 continue
             placeholder = make_placeholder(symbol, period, record, url, cumulative)
+            validation = placeholder.setdefault("source_validation", {})
+            validation["last_extraction_attempt_at"] = utc_now()
+            validation["extraction_attempt_count"] = 1
+            validation["last_extraction_error"] = str(exc)[:500]
             items.append(placeholder)
             existing[period] = placeholder
             added += 1
@@ -1183,7 +1242,7 @@ def main() -> int:
             # After the initial bootstrap, retry one ticker's unextracted periods
             # per scheduled tick. A persisted cooldown prevents an unreadable
             # PDF from monopolizing every run.
-            cooldown_seconds = 12 * 60 * 60
+            cooldown_seconds = 30 * 60
             now_epoch = datetime.now(timezone.utc).timestamp()
             retryable = []
             for symbol in SYMBOLS:
@@ -1218,7 +1277,10 @@ def main() -> int:
     for symbol in symbols_to_sync:
         print(f"\n[{symbol}]")
         try:
-            changed, added, filled = process_symbol(session, token, symbol, current_year)
+            changed, added, filled = process_symbol(
+                session, token, symbol, current_year,
+                max_extract_periods=1 if bootstrap_only else None,
+            )
             total_changed += int(changed)
             total_added += added
             total_filled += filled
