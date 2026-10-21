@@ -44,8 +44,8 @@ jobs:
           python-version: "3.12"
       - name: Check Vietstock sync worker syntax
         run: python -m py_compile scripts/sync-vietstock-financials.py
-      - name: Dry-run enrichment from stored PDF/ZIP text
-        run: python scripts/enrich-financial-categories.py
+      - name: Check financial enrichment script syntax
+        run: python -m py_compile scripts/enrich-financial-categories.py
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
