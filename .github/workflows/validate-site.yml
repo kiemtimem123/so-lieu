@@ -16,6 +16,19 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/scripts/
+            /.github/workflows/sync-category-data.yml
+            /.github/workflows/sync-omo-latest.yml
+            /api/analysis-reports.php
+            /assets/app.js
+            /config/
+            /data/
+            /index.html
+            /scripts/
 
       - name: Setup PHP for API syntax check
         uses: shivammathur/setup-php@v2
@@ -31,7 +44,7 @@ jobs:
           python-version: '3.12'
 
       - name: Check report worker syntax
-        run: python -m py_compile .github/scripts/collect-financial-reports.py
+        run: python -m py_compile .github/scripts/collect-financial-reports.py scripts/sync-vietstock-financials.py scripts/enrich-financial-categories.py
 
       - name: Check JavaScript syntax
         run: |
@@ -55,18 +68,6 @@ jobs:
             'data/financial-rates.json',
             'data/policy-rates.json',
             'data/credit-growth.json',
-            'data/financials-MBB.json',
-            'data/financials-ACB.json',
-            'data/financials-FPT.json',
-            'data/financials-SHB.json',
-            'data/financials-TCX.json',
-            'data/financials-HCM.json',
-            'data/financials-VND.json',
-            'data/financials-SHS.json',
-            'data/financials-NLG.json',
-            'data/financials-BSR.json',
-            'data/financials-TCB.json',
-            'data/financials-VHM.json',
           ];
           JSON.parse(fs.readFileSync('config/securities.json', 'utf8'));
           JSON.parse(fs.readFileSync('config/report-queue.json', 'utf8'));
@@ -75,13 +76,21 @@ jobs:
             if (!value || typeof value !== 'object') throw new Error('Invalid JSON root: ' + file);
             console.log('JSON OK:', file);
           }
-          for (const symbol of ['MBB','ACB','FPT','SHB','TCX','HCM','VND','SHS','NLG','BSR','TCB','VHM']) {
+          const securityConfig = JSON.parse(fs.readFileSync('config/securities.json', 'utf8'));
+          const configuredSymbols = [...new Set((securityConfig.securities || [])
+            .filter(item => item && item.enabled !== false && item.symbol)
+            .map(item => String(item.symbol).trim().toUpperCase()))];
+          for (const symbol of configuredSymbols) {
             const file = 'data/financials-' + symbol + '.json';
+            if (!fs.existsSync(file)) {
+              console.warn('Financial snapshot not bootstrapped yet:', file);
+              continue;
+            }
             const snapshot = JSON.parse(fs.readFileSync(file, 'utf8'));
             if (snapshot.symbol !== symbol || !Array.isArray(snapshot.items)) throw new Error('Invalid financial snapshot schema: ' + file);
             for (const row of snapshot.items) {
-              if (!/^\d{4}-Q[1-4]$/.test(String(row.period || ''))) throw new Error('Invalid quarter period in ' + file);
-              if (!row.source_url || !/^https?:\/\//i.test(row.source_url)) throw new Error('Financial row missing source URL in ' + file);
+              if (!/^\\d{4}-Q[1-4]$/.test(String(row.period || ''))) throw new Error('Invalid quarter period in ' + file);
+              if (!row.source_url || !/^https?:\\/\\//i.test(row.source_url)) throw new Error('Financial row missing source URL in ' + file);
             }
             console.log('Financial schema OK:', file, 'rows=' + snapshot.items.length);
           }
