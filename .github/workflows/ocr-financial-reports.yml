@@ -1,6 +1,8 @@
 name: OCR Financial Report Archive
 
 on:
+  schedule:
+    - cron: "*/30 * * * *"
   push:
     branches: [main]
     paths:
@@ -32,11 +34,11 @@ permissions:
 
 concurrency:
   group: financial-report-ocr-bounded-v2
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   ocr:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event_name == 'schedule' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 35
     steps:
