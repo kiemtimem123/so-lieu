@@ -978,6 +978,7 @@
       if (detailStatus.includes('pending_visual_review')) return { label: 'Chờ rà soát chỉ tiêu chi tiết', kind: 'review' };
       const raw = String(item?.verification_status || '').toLowerCase();
       if (raw === 'auto_pending_extraction') return { label: 'Chờ trích xuất', kind: 'pending' };
+      if (raw === 'manual_review_required_pending_extraction') return { label: 'Cần rà soát PDF thủ công', kind: 'review' };
       if (raw.includes('pending_visual_review') || raw === 'auto_extracted_pending_visual_review') return { label: 'Chờ rà soát PDF', kind: 'review' };
       if (raw.includes('manual_visual')) return { label: 'Đã kiểm tra PDF', kind: 'ready' };
       if (raw.includes('derived')) return { label: 'Đối chiếu từ lũy kế', kind: 'review' };

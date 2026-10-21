@@ -78,14 +78,16 @@ for (const symbol of symbols) {
     const status = item.verification_status || "missing_status";
     statusCounts[status] = (statusCounts[status] || 0) + 1;
 
-    const pendingExtraction = status === "auto_pending_extraction";
+    const pendingExtraction = status === "auto_pending_extraction" || status === "manual_review_required_pending_extraction";
     for (const field of ["total_assets", "total_liabilities", "equity", "pretax_profit", "net_profit"]) {
       if ((typeof item[field] !== "number" || !Number.isFinite(item[field])) && !pendingExtraction) {
         errors.push(`${symbol} ${item.period}: ${field} is missing or non-numeric`);
       }
     }
-    if (pendingExtraction) {
+    if (status === "auto_pending_extraction") {
       warnings.push(`${symbol} ${item.period}: new VietstockFinance report detected; financial fields await reliable extraction`);
+    } else if (status === "manual_review_required_pending_extraction") {
+      warnings.push(`${symbol} ${item.period}: automatic extraction limit reached; PDF review is required and missing fields remain blank`);
     }
     let sourceHost = "";
     try {

@@ -56,6 +56,7 @@ MAX_PDF_PAGES = 40
 MAX_OCR_PAGES = 20
 OCR_DPI = 180
 SLEEP_BETWEEN_CALLS = 0.18
+MAX_EXTRACTION_ATTEMPTS = 3  # After three failed attempts, preserve the source and request manual review.
 USER_AGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
@@ -1133,7 +1134,23 @@ def process_symbol(
             or extraction_attempt_age(period) is None
             or extraction_attempt_age(period) >= cooldown_seconds
         ]
-        processing_periods = eligible_periods[:max(1, int(max_extract_periods))]
+
+        def extraction_attempt_count(period: str) -> int:
+            validation = (existing.get(period) or {}).get("source_validation") or {}
+            try:
+                return int(validation.get("extraction_attempt_count") or 0)
+            except (TypeError, ValueError):
+                return 0
+
+        def extraction_priority(period: str) -> tuple[int, int, tuple[int, int]]:
+            # Visit every unattempted period first. After the first pass, retry
+            # lower-attempt-count periods first so one unreadable PDF cannot
+            # monopolize every scheduled run.
+            if period not in existing or extraction_attempt_age(period) is None:
+                return (0, 0, period_key(period))
+            return (1, extraction_attempt_count(period), period_key(period))
+
+        processing_periods = sorted(eligible_periods, key=extraction_priority)[:max(1, int(max_extract_periods))]
         processing_set = set(processing_periods)
 
         # Save all discovered source links now. Extraction of their figures is
@@ -1193,6 +1210,18 @@ def process_symbol(
                     validation["last_extraction_attempt_at"] = utc_now()
                     validation["extraction_attempt_count"] = int(validation.get("extraction_attempt_count") or 0) + 1
                     validation["last_extraction_error"] = str(exc)[:500]
+                    if validation["extraction_attempt_count"] >= MAX_EXTRACTION_ATTEMPTS:
+                        item["verification_status"] = "manual_review_required_pending_extraction"
+                        item["source_pages"] = (
+                            "Không trích xuất được số liệu đáng tin cậy sau ba lượt tự động. "
+                            "Giữ nguyên liên kết VietstockFinance; cần đối chiếu PDF thủ công."
+                        )
+                        validation["automatic_extraction_exhausted"] = True
+                        validation["manual_review_reason"] = str(exc)[:500]
+                        print(
+                            f"  {symbol} {period}: đã thử {MAX_EXTRACTION_ATTEMPTS} lượt; "
+                            "chuyển sang rà soát thủ công và tiếp tục quý khác của cùng mã."
+                        )
                     items[idx] = item
                     changed = True
                 continue
