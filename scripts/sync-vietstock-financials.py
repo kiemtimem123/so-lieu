@@ -400,7 +400,8 @@ def row_numbers(lines: list[str], labels: list[str], limit: int = 5, min_abs: in
                 continue
             if term == "nợ phải trả" and any(word in suffix for word in ("ngan han", "dai han")):
                 continue
-            if term in {"tổng nợ phải trả", "nợ phải trả"} and "von chu so huu" in suffix:
+            if "von chu so huu" in suffix and ("no phai tra" in term or "liabilities" in term):
+                # "Total liabilities and equity" is a source-of-funds total, not liabilities.
                 continue
             if term == "vốn chủ sở hữu" and "khac" in suffix:
                 continue
