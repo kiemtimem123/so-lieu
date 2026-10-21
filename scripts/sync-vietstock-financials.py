@@ -632,6 +632,8 @@ def extract_statement(
         raise ValueError("Số dư tài sản/nợ/vốn không hợp lệ sau chuẩn hóa đơn vị.")
     if abs(total_assets - total_liabilities - equity) > 3:
         raise ValueError("Phương trình cân đối không khớp sau chuẩn hóa đơn vị.")
+    if symbol in BANKS and equity <= 0:
+        raise ValueError("Vốn chủ sở hữu ngân hàng bằng hoặc nhỏ hơn 0; nhiều khả năng OCR bắt nhầm dòng tổng nguồn vốn.")
 
     pretax_series = row_numbers(lines, PRETAX_LABELS)
     net_profit_series = row_numbers(lines, NET_PROFIT_LABELS)
@@ -644,6 +646,15 @@ def extract_statement(
         )
     pretax_profit = million(pretax_series[0])
     net_profit = million(net_profit_series[0])
+    # Reject obvious OCR/column-selection errors before a number reaches charts.
+    # Quarterly net profit normally reconciles below pretax profit; extreme
+    # inversions are left as source-linked placeholders for later retries.
+    if pretax_profit > 0 and net_profit > pretax_profit * 1.5:
+        raise ValueError("LNST vượt quá 1,5 lần LNTT; nghi ngờ OCR lệch cột hoặc nhận nhầm dòng.")
+    if pretax_profit > 0 and net_profit < -pretax_profit * 0.5:
+        raise ValueError("LNST âm lớn trong khi LNTT dương; nghi ngờ OCR lệch cột hoặc nhận nhầm dòng.")
+    if total_assets > 0 and abs(net_profit) > total_assets * 0.25:
+        raise ValueError("LNST vượt quá 25% tổng tài sản; nghi ngờ OCR lệch đơn vị hoặc cột.")
 
     parent_profit_series = row_numbers(lines, PARENT_PROFIT_LABELS)
     revenue_series = row_numbers(lines, REVENUE_LABELS)
