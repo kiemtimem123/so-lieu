@@ -33,7 +33,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: financial-report-ocr-bounded-v2
+  group: so-lieu-financial-data-writes-v1
   cancel-in-progress: false
 
 jobs:
@@ -76,17 +76,40 @@ jobs:
       - name: Validate queue after OCR
         run: node .github/scripts/validate-report-queue.cjs
 
-      - name: Commit OCR text only
+      - name: Enrich quarterly financial categories from OCR text
+        run: python scripts/enrich-financial-categories.py
+
+      - name: Validate enriched financial snapshots
+        run: node scripts/validate-financials.mjs
+
+      - name: Commit OCR text and financial enrichment
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add reports/raw
+          git add reports/raw data/financials-*.json
           if git diff --cached --quiet; then
-            echo "No OCR extraction changes."
-          else
-            git commit -m "OCR scanned financial statement pages"
-            git pull --rebase origin main
-            git push
+            echo "No OCR or enrichment changes."
+            exit 0
+          fi
+          git commit -m "OCR and enrich Vietstock financial report fields"
+          pushed=false
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            if git rebase origin/main; then
+              if git push origin HEAD:main; then
+                pushed=true
+                break
+              fi
+            else
+              echo "::error::Concurrent financial snapshot edit caused a rebase conflict."
+              git rebase --abort || true
+              exit 1
+            fi
+            sleep $((attempt * 2))
+          done
+          if [ "$pushed" != "true" ]; then
+            echo "::error::Could not push OCR and enriched snapshot changes after five attempts."
+            exit 1
           fi
 
       - name: Upload OCR summary
