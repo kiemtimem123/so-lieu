@@ -511,6 +511,16 @@ def enrich_snapshot(path):
  changed=False; quarter_count=0; field_count=0
  for item in items:
   if not isinstance(item,dict) or not period_key(item): continue
+  report_type_text=str(item.get("report_type") or "")
+  source_norm=norm(item.get("source_url") or "")
+  # Every candidate processed by the quarterly sync has already passed the
+  # consolidated-only VietstockFinance filter; keep that scope explicit in the UI.
+  if ("hopnhat" in source_norm or "consolidated" in source_norm) and "hop nhat" not in norm(report_type_text):
+   if report_type_text.lower().startswith("bctc "):
+    item["report_type"]="BCTC hợp nhất "+report_type_text[5:]
+   else:
+    item["report_type"]=f"BCTC hợp nhất {symbol} {item.get('period')} ({report_type_text})"
+   changed=True
   pages=load_report_pages(item,symbol)
   if not pages: continue
   found=extract_fields(item,symbol,pages)
