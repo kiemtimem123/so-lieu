@@ -214,7 +214,7 @@ def extract_native_pdf_pages(pdf_path: Path, page_numbers: set[int]) -> tuple[li
             text = ""
         # Keep a real statement/table text layer only. Sparse or unreadable text
         # falls through to OCR rather than being treated as complete.
-        number_cells = re.findall(r"(?<![A-Za-z])\\(?-?\\d[\\d.,]{1,}\\)?(?![A-Za-z])", text)
+        number_cells = re.findall(r"(?<![A-Za-z])\(?-?\d[\d.,]{1,}\)?(?![A-Za-z])", text)
         if len(text) >= 100 and len(number_cells) >= 2:
             native_pages.append({
                 "page": number,
