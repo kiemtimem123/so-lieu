@@ -677,6 +677,86 @@ def extract_statement(
         series = row_numbers(lines, labels)
         if series:
             details[field] = million(series[0])
+
+    if symbol in BANKS:
+        bank_balance_labels = {
+            "bank_cash_on_hand": ["tiền mặt, vàng bạc, đá quý", "cash on hand, gold, silver and gems"],
+            "bank_deposits_at_state_bank": ["tiền gửi tại nhnn", "tiền gửi tại ngân hàng nhà nước"],
+            "bank_deposits_and_loans_to_credit_institutions": ["tiền gửi và cho vay các tctd khác", "tiền gửi và cho vay các tổ chức tín dụng khác"],
+            "bank_customer_loans": ["cho vay khách hàng", "loans to customers"],
+            "bank_trading_securities": ["chứng khoán kinh doanh", "trading securities"],
+            "bank_derivatives_and_other_financial_assets": ["các công cụ tài chính phái sinh và các tài sản tài chính khác"],
+            "bank_investment_securities": ["chứng khoán đầu tư", "investment securities"],
+            "bank_contributions_and_long_term_investments": ["góp vốn, đầu tư dài hạn", "góp vốn đầu tư dài hạn"],
+            "bank_other_assets": ["tài sản có khác", "other assets"],
+            "bank_deposits_and_borrowings_from_credit_institutions": ["tiền gửi và vay các tctd khác", "tiền gửi và vay các tổ chức tín dụng khác"],
+            "bank_customer_deposits": ["tiền gửi của khách hàng", "customer deposits"],
+            "bank_valuable_papers": ["phát hành giấy tờ có giá", "valuable papers issued"],
+            "bank_funding_and_trust_liabilities": ["vốn tài trợ, ủy thác đầu tư", "funding and trust liabilities"],
+            "bank_other_liabilities": ["nợ khác", "other liabilities"],
+        }
+        bank_income_labels = {
+            "bank_interest_income": ["thu nhập lãi và các khoản thu nhập tương tự"],
+            "bank_interest_expense": ["chi phí lãi và các khoản chi phí tương tự"],
+            "bank_net_interest_income": ["thu nhập lãi thuần"],
+            "bank_service_income": ["thu nhập từ hoạt động dịch vụ"],
+            "bank_service_expense": ["chi phí hoạt động dịch vụ"],
+            "bank_net_service_income": ["lãi thuần từ hoạt động dịch vụ"],
+            "bank_fx_net_income": ["lãi thuần từ hoạt động kinh doanh ngoại hối"],
+            "bank_trading_securities_net": ["lãi thuần từ mua bán chứng khoán kinh doanh"],
+            "bank_investment_securities_net": ["lãi thuần từ mua bán chứng khoán đầu tư", "lãi thuần từ mua bán chứng khoán đầu tư và góp vốn đầu tư dài hạn"],
+            "bank_other_operating_net": ["lãi thuần từ hoạt động kinh doanh khác"],
+            "bank_dividend_and_capital_income": ["thu nhập từ góp vốn, mua cổ phần"],
+            "bank_operating_expenses": ["tổng chi phí hoạt động"],
+            "bank_pre_provision_operating_profit": ["lợi nhuận thuần từ hoạt động kinh doanh trước chi phí dự phòng rủi ro"],
+            "bank_provision_expense": ["chi phí dự phòng rủi ro"],
+            "bank_non_controlling_profit": ["lợi ích của cổ đông không kiểm soát"],
+        }
+        for field, labels in bank_balance_labels.items():
+            series = row_numbers(lines, labels)
+            if series:
+                details[field] = million(series[0])
+        for field, labels in bank_income_labels.items():
+            series = row_numbers(lines, labels)
+            if series:
+                details[field] = million(series[0])
+
+    if symbol in BROKERS:
+        broker_balance_labels = {
+            "broker_fvtpl_assets": ["tài sản tài chính ghi nhận thông qua lãi/lỗ", "tài sản tài chính ghi nhận thông qua lãi lỗ"],
+            "broker_held_to_maturity_assets": ["các khoản đầu tư nắm giữ đến ngày đáo hạn"],
+            "broker_lending_assets": ["các khoản cho vay"],
+            "broker_afs_assets": ["tài sản tài chính sẵn sàng để bán"],
+            "broker_receivables": ["các khoản phải thu"],
+            "broker_short_term_borrowings": ["vay và nợ thuê tài chính ngắn hạn", "vay ngắn hạn"],
+            "broker_short_term_bonds": ["trái phiếu phát hành ngắn hạn"],
+            "broker_long_term_bonds": ["trái phiếu phát hành dài hạn"],
+            "broker_customer_deposits": ["tiền gửi của khách hàng"],
+        }
+        broker_income_labels = {
+            "broker_fvtpl_gain": ["lãi/(lỗ) từ các tài sản tài chính ghi nhận thông qua lãi/lỗ", "lãi từ các tài sản tài chính ghi nhận thông qua lãi/lỗ"],
+            "broker_held_to_maturity_income": ["lãi từ các khoản đầu tư nắm giữ đến ngày đáo hạn"],
+            "broker_lending_income": ["lãi từ các khoản cho vay và phải thu", "thu nhập từ các khoản cho vay"],
+            "broker_afs_income": ["lãi từ tài sản tài chính sẵn sàng để bán"],
+            "broker_brokerage_revenue": ["doanh thu nghiệp vụ môi giới chứng khoán"],
+            "broker_underwriting_revenue": ["doanh thu nghiệp vụ bảo lãnh, đại lý phát hành chứng khoán"],
+            "broker_advisory_revenue": ["doanh thu nghiệp vụ tư vấn đầu tư chứng khoán"],
+            "broker_custody_revenue": ["doanh thu nghiệp vụ lưu ký chứng khoán"],
+            "broker_financial_advisory_revenue": ["doanh thu hoạt động tư vấn tài chính"],
+            "broker_other_operating_income": ["thu nhập từ hoạt động khác"],
+            "broker_operating_expenses": ["chi phí hoạt động"],
+            "broker_admin_expenses": ["chi phí quản lý công ty chứng khoán", "chi phí quản lý doanh nghiệp"],
+            "broker_net_operating_profit": ["lợi nhuận thuần từ hoạt động kinh doanh"],
+        }
+        for field, labels in broker_balance_labels.items():
+            series = row_numbers(lines, labels)
+            if series:
+                details[field] = million(series[0])
+        for field, labels in broker_income_labels.items():
+            series = row_numbers(lines, labels)
+            if series:
+                details[field] = million(series[0])
+
     if "income_tax_current" in details or "income_tax_deferred" in details:
         details["income_tax"] = int(round(details.get("income_tax_current", 0) + details.get("income_tax_deferred", 0)))
 
@@ -876,7 +956,22 @@ def make_extracted_item(
         "interest_expense", "selling_expense", "admin_expense", "operating_profit", "income_tax",
         "income_tax_current", "income_tax_deferred", "eps", "diluted_eps", "operating_cash_flow_ytd",
         "investing_cash_flow_ytd", "financing_cash_flow_ytd", "capital_expenditure_ytd", "dividends_paid_ytd",
-        "net_cash_change_ytd", "cash_beginning", "cash_ending", "foreign_exchange_effect_ytd"
+        "net_cash_change_ytd", "cash_beginning", "cash_ending", "foreign_exchange_effect_ytd",
+        "bank_cash_on_hand", "bank_deposits_at_state_bank", "bank_deposits_and_loans_to_credit_institutions",
+        "bank_customer_loans", "bank_trading_securities", "bank_derivatives_and_other_financial_assets",
+        "bank_investment_securities", "bank_contributions_and_long_term_investments", "bank_other_assets",
+        "bank_deposits_and_borrowings_from_credit_institutions", "bank_customer_deposits", "bank_valuable_papers",
+        "bank_funding_and_trust_liabilities", "bank_other_liabilities", "bank_interest_income", "bank_interest_expense",
+        "bank_net_interest_income", "bank_service_income", "bank_service_expense", "bank_net_service_income",
+        "bank_fx_net_income", "bank_trading_securities_net", "bank_investment_securities_net",
+        "bank_other_operating_net", "bank_dividend_and_capital_income", "bank_operating_expenses",
+        "bank_pre_provision_operating_profit", "bank_provision_expense", "bank_non_controlling_profit",
+        "broker_fvtpl_assets", "broker_held_to_maturity_assets", "broker_lending_assets", "broker_afs_assets",
+        "broker_receivables", "broker_short_term_borrowings", "broker_short_term_bonds", "broker_long_term_bonds",
+        "broker_customer_deposits", "broker_fvtpl_gain", "broker_held_to_maturity_income", "broker_lending_income",
+        "broker_afs_income", "broker_brokerage_revenue", "broker_underwriting_revenue", "broker_advisory_revenue",
+        "broker_custody_revenue", "broker_financial_advisory_revenue", "broker_other_operating_income",
+        "broker_operating_expenses", "broker_admin_expenses", "broker_net_operating_profit"
     }
     extracted_fields = []
     for field in detailed_keys:
@@ -1028,6 +1123,12 @@ def process_symbol(
             )
         else:
             snapshot["sourceName"] = f"VietstockFinance — {symbol} (đang chờ báo cáo tài chính theo quý từ 2024-Q1)"
+            snapshot["source_index_url"] = f"https://finance.vietstock.vn/{symbol}/tai-tai-lieu.htm?doctype=1"
+            snapshot["sync_status"] = "no_quarterly_consolidated_records_returned"
+            snapshot["sync_note"] = "Chưa tìm thấy kỳ BCTC hợp nhất theo quý từ 2024 trong danh mục VietstockFinance; lịch đồng bộ sẽ thử lại."
+        if items:
+            snapshot["sync_status"] = "records_found"
+            snapshot.pop("sync_note", None)
         snapshot["fetchedAt"] = utc_now()
         path.write_text(json.dumps(snapshot, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return changed, added, filled
@@ -1040,10 +1141,23 @@ def main() -> int:
     token = get_anti_forgery_token(session)
     current_year = datetime.now(timezone.utc).year
     selected = os.environ.get("FINANCIAL_SYNC_SYMBOL", "").strip().upper()
+    bootstrap_only = os.environ.get("FINANCIAL_SYNC_BOOTSTRAP_ONLY", "").strip().lower() in {"1", "true", "yes"}
     if selected and selected not in SYMBOLS:
         print(f"Mã không có trong config/securities.json: {selected}", file=sys.stderr)
         return 2
-    symbols_to_sync = [selected] if selected else SYMBOLS
+    if selected:
+        symbols_to_sync = [selected]
+    elif bootstrap_only:
+        missing = [
+            symbol for symbol in SYMBOLS
+            if not (DATA_DIR / f"financials-{symbol}.json").exists()
+        ]
+        symbols_to_sync = missing[:1]
+        if not symbols_to_sync:
+            print("Bootstrap hoàn tất: tất cả mã đang bật đã có snapshot.")
+            return 0
+    else:
+        symbols_to_sync = SYMBOLS
     total_changed = total_added = total_filled = failed_symbols = 0
     for symbol in symbols_to_sync:
         print(f"\n[{symbol}]")
@@ -1055,13 +1169,29 @@ def main() -> int:
         except Exception as exc:
             failed_symbols += 1
             print(f"  LỖI {symbol}: {exc}", file=sys.stderr)
+            if bootstrap_only:
+                # Keep the sequential bootstrap moving without inventing numbers.
+                # The scheduled full sync retries this explicit empty/error snapshot.
+                path = DATA_DIR / f"financials-{symbol}.json"
+                if not path.exists():
+                    placeholder = {
+                        "symbol": symbol,
+                        "sourceName": f"VietstockFinance — {symbol} (chờ lấy báo cáo tài chính theo quý)",
+                        "fetchedAt": utc_now(),
+                        "source_index_url": f"https://finance.vietstock.vn/{symbol}/tai-tai-lieu.htm?doctype=1",
+                        "sync_status": "fetch_failed",
+                        "sync_note": "Lần lấy dữ liệu ban đầu gặp lỗi; không tạo số liệu giả. Lịch đồng bộ tiếp theo sẽ thử lại.",
+                        "items": [],
+                    }
+                    path.write_text(json.dumps(placeholder, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")
+                    print(f"  {symbol}: đã ghi snapshot rỗng có trạng thái lỗi để tiếp tục xử lý mã kế tiếp.")
         time.sleep(SLEEP_BETWEEN_CALLS)
     print("\nTóm tắt")
     print(f"- Mã: {len(symbols_to_sync)}; lỗi truy vấn/đọc snapshot: {failed_symbols}")
     print(f"- Snapshot thay đổi: {total_changed}")
     print(f"- Kỳ mới được thêm (có thể đang chờ trích xuất): {total_added}")
     print(f"- Kỳ chờ trước đó đã điền được số liệu: {total_filled}")
-    if failed_symbols == len(symbols_to_sync):
+    if failed_symbols == len(symbols_to_sync) and not bootstrap_only:
         print("Tất cả mã đều lỗi; workflow sẽ báo thất bại để không coi đây là lần đồng bộ thành công.", file=sys.stderr)
         return 1
     return 0

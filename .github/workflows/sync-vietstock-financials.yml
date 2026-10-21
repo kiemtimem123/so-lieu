@@ -12,6 +12,8 @@ on:
   push:
     paths:
       - "scripts/sync-vietstock-financials.py"
+      - "config/securities.json"
+      - "data/financials-*.json"
       - ".github/workflows/sync-vietstock-financials.yml"
 
 permissions:
@@ -55,6 +57,7 @@ jobs:
         env:
           PYTHONUTF8: "1"
           FINANCIAL_SYNC_SYMBOL: ${{ github.event.inputs.symbol || '' }}
+          FINANCIAL_SYNC_BOOTSTRAP_ONLY: ${{ github.event_name == 'push' && '1' || '' }}
         run: python scripts/sync-vietstock-financials.py
 
       - name: Set up Node.js
