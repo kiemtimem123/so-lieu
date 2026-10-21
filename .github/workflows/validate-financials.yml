@@ -26,6 +26,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /data/financials-*.json
+            /scripts/enrich-financial-categories.py
+            /scripts/validate-financials.mjs
+            /reports/raw/**/*.extracted.json
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
