@@ -770,7 +770,7 @@ def make_placeholder(
         "ratio_unit": "%/năm (tính từ lợi nhuận quý khi đủ dữ liệu bình quân đầu/cuối kỳ)",
         "source_url": source_url,
         "source_index_url": f"https://finance.vietstock.vn/{symbol}/tai-tai-lieu.htm?doctype=1",
-        "report_type": f"BCTC {symbol} {period} (phát hiện tự động qua VietstockFinance; chờ trích xuất)",
+        "report_type": f"BCTC hợp nhất {symbol} {period} (phát hiện tự động qua VietstockFinance; chờ trích xuất)",
         "source_pages": "Chưa trích xuất được đủ chỉ tiêu; xem PDF/ZIP trong đường dẫn VietstockFinance.",
         "quarter_profit_basis": (
             "Tài liệu 6/9 tháng: cần lấy cột phát sinh riêng trong quý, không dùng số lũy kế."
@@ -832,7 +832,7 @@ def make_extracted_item(
         "ratio_unit": "%/năm (tính từ LNST quý / bình quân số dư đầu-cuối quý × 4)",
         "source_url": source_url,
         "source_index_url": f"https://finance.vietstock.vn/{symbol}/tai-tai-lieu.htm?doctype=1",
-        "report_type": f"BCTC {symbol} {period} (tự trích xuất từ VietstockFinance; chờ rà soát trực quan)",
+        "report_type": f"BCTC hợp nhất {symbol} {period} (tự trích xuất từ VietstockFinance; chờ rà soát trực quan)",
         "source_pages": "Tự trích xuất văn bản PDF/ZIP; số trang có thể khác giữa mẫu báo cáo.",
         "quarter_profit_basis": (
             "Tự trích xuất số phát sinh riêng quý từ báo cáo lũy kế; cần kiểm tra trực quan."
@@ -951,9 +951,15 @@ def process_symbol(
     # Keep existing pending reports eligible for another extraction attempt.
     # For new periods, accept only a contiguous sequence from the first missing quarter.
     contiguous = {}
-    expected = "2024-Q1"
-    while expected in existing:
-        expected = next_period(expected)
+    if not existing and candidates:
+        # Newly listed tickers may have no pre-IPO reports in the catalog.
+        # Start at their earliest available consolidated quarter rather than
+        # discarding all later reports because Q1/2024 is absent.
+        expected = min(candidates, key=period_key)
+    else:
+        expected = "2024-Q1"
+        while expected in existing:
+            expected = next_period(expected)
     for period in sorted(candidates, key=period_key):
         if period in existing:
             contiguous[period] = candidates[period]
