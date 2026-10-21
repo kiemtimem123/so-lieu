@@ -1368,6 +1368,27 @@
           { label: 'Lợi nhuận sau thuế chưa phân phối', key: 'retained_earnings', level: 1 },
           { label: 'TỔNG NỢ VÀ VỐN CHỦ SỞ HỮU', formula: 'total_sources', strong: true }
         ];
+        if (activeIndustry === 'securities') return [
+          { label: 'A. TÀI SẢN CÔNG TY CHỨNG KHOÁN', type: 'section' },
+          { label: 'Tiền và tương đương tiền', key: 'cash_and_equivalents', level: 1 },
+          { label: 'Tài sản tài chính FVTPL', key: 'broker_fvtpl_assets', level: 1 },
+          { label: 'Đầu tư nắm giữ đến ngày đáo hạn', key: 'broker_held_to_maturity_assets', level: 1 },
+          { label: 'Các khoản cho vay', key: 'broker_lending_assets', level: 1 },
+          { label: 'Tài sản tài chính sẵn sàng để bán', key: 'broker_afs_assets', level: 1 },
+          { label: 'Các khoản phải thu', key: 'broker_receivables', level: 1 },
+          { label: 'Tài sản dài hạn', key: 'non_current_assets', level: 1 },
+          { label: 'Tài sản cố định', key: 'fixed_assets', level: 1 },
+          { label: 'TỔNG CỘNG TÀI SẢN', key: 'total_assets', strong: true },
+          { label: 'B. NỢ PHẢI TRẢ CÔNG TY CHỨNG KHOÁN', type: 'section' },
+          { label: 'Vay ngắn hạn', key: 'broker_short_term_borrowings', level: 1 },
+          { label: 'Trái phiếu phát hành ngắn hạn', key: 'broker_short_term_bonds', level: 1 },
+          { label: 'Trái phiếu phát hành dài hạn', key: 'broker_long_term_bonds', level: 1 },
+          { label: 'Tiền gửi của khách hàng', key: 'broker_customer_deposits', level: 1 },
+          { label: 'TỔNG NỢ PHẢI TRẢ', key: 'total_liabilities', strong: true },
+          { label: 'Vốn chủ sở hữu', key: 'equity', level: 1 },
+          { label: 'Lợi nhuận sau thuế chưa phân phối', key: 'retained_earnings', level: 1 },
+          { label: 'TỔNG NỢ VÀ VỐN CHỦ SỞ HỮU', formula: 'total_sources', strong: true }
+        ];
         return [
         { label: 'A. TÀI SẢN', type: 'section' },
         { label: 'I. Tài sản ngắn hạn', key: 'current_assets', level: 1 },
@@ -1412,6 +1433,29 @@
           { label: 'Lợi nhuận sau thuế', key: 'net_profit', strong: true },
           { label: 'Lợi ích cổ đông không kiểm soát', key: 'bank_non_controlling_profit', level: 1 },
           { label: 'Lợi nhuận sau thuế thuộc ngân hàng', key: 'net_profit_attributable', level: 1 }
+        ];
+        if (activeIndustry === 'securities') return [
+          { label: 'KẾT QUẢ HOẠT ĐỘNG KINH DOANH CÔNG TY CHỨNG KHOÁN', type: 'section' },
+          { label: 'Doanh thu hoạt động', key: 'revenue', strong: true },
+          { label: 'Lãi/(lỗ) tài sản tài chính FVTPL', key: 'broker_fvtpl_gain', level: 1 },
+          { label: 'Lãi từ đầu tư nắm giữ đến ngày đáo hạn', key: 'broker_held_to_maturity_income', level: 1 },
+          { label: 'Thu nhập từ khoản cho vay và phải thu', key: 'broker_lending_income', level: 1 },
+          { label: 'Lãi từ tài sản tài chính sẵn sàng để bán', key: 'broker_afs_income', level: 1 },
+          { label: 'Doanh thu môi giới chứng khoán', key: 'broker_brokerage_revenue', level: 1 },
+          { label: 'Doanh thu bảo lãnh, đại lý phát hành', key: 'broker_underwriting_revenue', level: 1 },
+          { label: 'Doanh thu tư vấn đầu tư chứng khoán', key: 'broker_advisory_revenue', level: 1 },
+          { label: 'Doanh thu lưu ký chứng khoán', key: 'broker_custody_revenue', level: 1 },
+          { label: 'Doanh thu tư vấn tài chính', key: 'broker_financial_advisory_revenue', level: 1 },
+          { label: 'Thu nhập hoạt động khác', key: 'broker_other_operating_income', level: 1 },
+          { label: 'Chi phí hoạt động', key: 'broker_operating_expenses', level: 1 },
+          { label: 'Chi phí tài chính', key: 'financial_expense', level: 1 },
+          { label: 'Chi phí quản lý công ty chứng khoán', key: 'broker_admin_expenses', level: 1 },
+          { label: 'Lợi nhuận thuần từ hoạt động kinh doanh', key: 'broker_net_operating_profit', strong: true },
+          { label: 'Lợi nhuận trước thuế', key: 'pretax_profit', strong: true },
+          { label: 'Thuế thu nhập doanh nghiệp', key: 'income_tax', level: 1 },
+          { label: 'Lợi nhuận sau thuế', key: 'net_profit', strong: true },
+          { label: 'LNST thuộc cổ đông công ty mẹ', key: 'net_profit_attributable', level: 1 },
+          { label: 'EPS cơ bản (đồng/cp)', key: 'eps', ratio: true, level: 1 }
         ];
         return [
         { label: 'KẾT QUẢ HOẠT ĐỘNG KINH DOANH', type: 'section' },
@@ -1517,7 +1561,9 @@
           balance: 'Bảng cân đối kế toán: các khoản mục chi tiết được điền từ dòng báo cáo có thể nhận diện và giữ trống nếu không khớp tổng tài sản/nợ.',
           income: activeIndustry === 'banking'
             ? 'Báo cáo ngân hàng: thu nhập lãi, thu nhập dịch vụ, chi phí hoạt động và dự phòng được lấy theo mẫu BCTC ngân hàng; chỉ tiêu không nhận diện chắc chắn sẽ để trống.'
-            : 'Kết quả kinh doanh: chỉ tiêu chi tiết lấy từ BCTC quý; doanh thu có thể được tái lập từ lợi nhuận gộp và giá vốn khi OCR sai chữ số, có ghi công thức trong ghi chú.',
+            : activeIndustry === 'securities'
+              ? 'Báo cáo công ty chứng khoán: doanh thu môi giới, cho vay, tự doanh, bảo lãnh và lưu ký được tách theo mẫu báo cáo CTCK; trường thiếu hoặc chưa khớp sẽ để trống.'
+              : 'Kết quả kinh doanh: chỉ tiêu chi tiết lấy từ BCTC quý; doanh thu có thể được tái lập từ lợi nhuận gộp và giá vốn khi OCR sai chữ số, có ghi công thức trong ghi chú.',
           cashflow: 'Lưu chuyển tiền tệ chỉ hiển thị khi các luồng tiền khớp biến động tiền thuần; kỳ có số OCR mâu thuẫn sẽ để trống và ghi rõ ở ghi chú.',
           notes: 'Thông tin nguồn, kỳ công bố và trạng thái kiểm chứng lấy từ bản ghi báo cáo; mở PDF để xem chi tiết gốc.',
           ratios: 'ROA/ROE và P/B chỉ lấy từ trường dữ liệu đã có trong snapshot; không tự tính P/B khi thiếu giá thị trường và giá trị sổ sách trên mỗi cổ phiếu.',

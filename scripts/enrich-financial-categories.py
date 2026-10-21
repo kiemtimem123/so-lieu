@@ -13,9 +13,9 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 RAW = ROOT / "reports" / "raw"
 NUMBER_RE = re.compile(r"(?<![A-Za-z0-9])\(?-?\d[\d.,]*\d?\)?")
-BANKS = {"MBB", "ACB", "SHB", "TCB"}
-BROKERS = {"HCM", "SHS", "TCX", "VND"}
-STANDARD_BUSINESSES = {"BSR", "FPT", "NLG", "VHM"}
+BANKS = {"MBB", "ACB", "SHB", "TCB", "TPB", "VPB", "STB", "VCB", "CTG", "BID"}
+BROKERS = {"HCM", "SHS", "TCX", "VND", "VCI", "VCK", "VIX", "SSI", "VDS"}
+STANDARD_BUSINESSES = {"BSR", "FPT", "NLG", "VHM", "KDH", "NVL", "HHV", "DPG", "GAS", "PLX", "IDC", "KBC", "GEG"}
 
 BALANCE_LABELS = {
  "current_assets":["tai san ngan han"],
@@ -44,6 +44,32 @@ BANK_BALANCE_LABELS = {
  "bank_valuable_papers":["phat hanh giay to co gia"],
  "bank_funding_and_trust_liabilities":["von tai tro, uy thac dau tu"],
  "bank_other_liabilities":["no khac"],
+}
+BROKER_BALANCE_LABELS = {
+ "broker_fvtpl_assets":["tai san tai chinh ghi nhan thong qua lai lo","tai san tai chinh ghi nhan thong qua lai/lo"],
+ "broker_held_to_maturity_assets":["cac khoan dau tu nam giu den ngay dao han","dau tu nam giu den ngay dao han"],
+ "broker_lending_assets":["cac khoan cho vay"],
+ "broker_afs_assets":["tai san tai chinh san sang de ban"],
+ "broker_receivables":["cac khoan phai thu"],
+ "broker_short_term_borrowings":["vay va no thue tai chinh ngan han","vay ngan han"],
+ "broker_short_term_bonds":["trai phieu phat hanh ngan han"],
+ "broker_long_term_bonds":["trai phieu phat hanh dai han"],
+ "broker_customer_deposits":["tien gui cua khach hang"],
+}
+BROKER_INCOME_LABELS = {
+ "broker_fvtpl_gain":["lai/(lo) tu cac tai san tai chinh ghi nhan thong qua lai lo","lai tu cac tai san tai chinh ghi nhan thong qua lai lo","lai tu tai san tai chinh ghi nhan thong qua lai lo"],
+ "broker_held_to_maturity_income":["lai tu cac khoan dau tu nam giu den ngay dao han"],
+ "broker_lending_income":["lai tu cac khoan cho vay va phai thu","thu nhap tu cac khoan cho vay"],
+ "broker_afs_income":["lai tu tai san tai chinh san sang de ban"],
+ "broker_brokerage_revenue":["doanh thu nghiep vu moi gioi chung khoan","doanh thu moi gioi chung khoan"],
+ "broker_underwriting_revenue":["doanh thu nghiep vu bao lanh, dai ly phat hanh chung khoan","doanh thu bao lanh, dai ly phat hanh chung khoan"],
+ "broker_advisory_revenue":["doanh thu nghiep vu tu van dau tu chung khoan","doanh thu tu van dau tu chung khoan"],
+ "broker_custody_revenue":["doanh thu nghiep vu luu ky chung khoan","doanh thu luu ky chung khoan"],
+ "broker_financial_advisory_revenue":["doanh thu hoat dong tu van tai chinh"],
+ "broker_other_operating_income":["thu nhap tu hoat dong khac"],
+ "broker_operating_expenses":["chi phi hoat dong"],
+ "broker_admin_expenses":["chi phi quan ly cong ty chung khoan","chi phi quan ly doanh nghiep"],
+ "broker_net_operating_profit":["loi nhuan thuan tu hoat dong kinh doanh"],
 }
 INCOME_LABELS = {
  "cost_of_goods_sold":["gia von hang ban"],
@@ -256,6 +282,10 @@ def extract_fields(item,symbol,pages):
   for field,labels in BANK_BALANCE_LABELS.items():
    val=value_by_label(bal,labels,scale)
    if val is not None: out[field]=val
+ if symbol in BROKERS and bal:
+  for field,labels in BROKER_BALANCE_LABELS.items():
+   val=value_by_label(bal,labels,scale)
+   if val is not None: out[field]=val
  if symbol in BANKS:
   revlabels=["tong thu nhap hoat dong","tong thu nhap hoat dong kinh doanh","doanh thu hoat dong","thu nhap lai thuan"]
  elif symbol in BROKERS:
@@ -273,6 +303,10 @@ def extract_fields(item,symbol,pages):
   if val is not None: out[field]=val
  if symbol in BANKS and inc:
   for field,labels in BANK_INCOME_LABELS.items():
+   val=value_by_label(inc,labels,scale)
+   if val is not None: out[field]=val
+ if symbol in BROKERS and inc:
+  for field,labels in BROKER_INCOME_LABELS.items():
    val=value_by_label(inc,labels,scale)
    if val is not None: out[field]=val
 
@@ -320,15 +354,20 @@ def sane_fields(item, found, symbol):
  asset_fields={"current_assets","cash_and_equivalents","short_term_investments","short_term_receivables","inventory","non_current_assets","fixed_assets",
   "bank_cash_on_hand","bank_deposits_at_state_bank","bank_deposits_and_loans_to_credit_institutions","bank_customer_loans",
   "bank_trading_securities","bank_derivatives_and_other_financial_assets","bank_investment_securities",
-  "bank_contributions_and_long_term_investments","bank_other_assets"}
+  "bank_contributions_and_long_term_investments","bank_other_assets",
+  "broker_fvtpl_assets","broker_held_to_maturity_assets","broker_lending_assets","broker_afs_assets","broker_receivables"}
  liability_fields={"current_liabilities","long_term_liabilities","bank_deposits_and_borrowings_from_credit_institutions",
-  "bank_customer_deposits","bank_valuable_papers","bank_funding_and_trust_liabilities","bank_other_liabilities"}
+  "bank_customer_deposits","bank_valuable_papers","bank_funding_and_trust_liabilities","bank_other_liabilities",
+  "broker_short_term_borrowings","broker_short_term_bonds","broker_long_term_bonds","broker_customer_deposits"}
  retained_fields={"retained_earnings","bank_undistributed_profit"}
  income_fields={"revenue","cost_of_goods_sold","gross_profit","financial_income","financial_expense","interest_expense","selling_expense","admin_expense","operating_profit","income_tax","income_tax_current","income_tax_deferred","net_profit_attributable",
   "bank_interest_income","bank_interest_expense","bank_net_interest_income","bank_service_income","bank_service_expense",
   "bank_net_service_income","bank_fx_net_income","bank_trading_securities_net","bank_investment_securities_net",
   "bank_other_operating_net","bank_dividend_and_capital_income","bank_operating_expenses","bank_pre_provision_operating_profit",
-  "bank_provision_expense","bank_non_controlling_profit"}
+  "bank_provision_expense","bank_non_controlling_profit","broker_fvtpl_gain","broker_held_to_maturity_income",
+  "broker_lending_income","broker_afs_income","broker_brokerage_revenue","broker_underwriting_revenue",
+  "broker_advisory_revenue","broker_custody_revenue","broker_financial_advisory_revenue","broker_other_operating_income",
+  "broker_operating_expenses","broker_admin_expenses","broker_net_operating_profit"}
  cash_fields=set(CASHFLOW_LABELS)-{"cash_beginning","cash_ending"}
  safe={}
  rejected=[]
