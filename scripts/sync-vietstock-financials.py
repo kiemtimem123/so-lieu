@@ -81,8 +81,8 @@ ALLOWED_HOSTS = {"finance.vietstock.vn", "static2.vietstock.vn", "vietstock.vn",
 
 ASSET_LABELS = ["tổng cộng tài sản", "tổng tài sản", "total assets"]
 LIABILITY_LABELS = [
-    "tổng nợ phải trả và vốn chủ sở hữu", "tổng nợ phải trả", "tổng các khoản nợ phải trả",
-    "tổng cộng nợ phải trả", "total liabilities", "nợ phải trả",
+    "tổng các khoản nợ phải trả", "tổng nợ phải trả", "tổng cộng nợ phải trả",
+    "total liabilities", "nợ phải trả",
 ]
 EQUITY_LABELS = ["tổng vốn chủ sở hữu", "vốn chủ sở hữu", "total equity"]
 SOURCE_TOTAL_LABELS = [
@@ -399,6 +399,8 @@ def row_numbers(lines: list[str], labels: list[str], limit: int = 5, min_abs: in
             if term in {"tổng cộng tài sản", "tổng tài sản"} and any(word in suffix for word in ("ngan han", "dai han")):
                 continue
             if term == "nợ phải trả" and any(word in suffix for word in ("ngan han", "dai han")):
+                continue
+            if term in {"tổng nợ phải trả", "nợ phải trả"} and "von chu so huu" in suffix:
                 continue
             if term == "vốn chủ sở hữu" and "khac" in suffix:
                 continue
