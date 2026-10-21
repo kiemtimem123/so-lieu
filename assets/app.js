@@ -968,6 +968,8 @@
     };
     const hasNumericFinancialData = item => ['revenue','pretax_profit','net_profit','total_assets','total_liabilities','equity','roa','roe','pb'].some(field => validNumber(item?.[field]));
     const verificationBadge = item => {
+      const detailStatus = String(item?.financial_line_items_status || '').toLowerCase();
+      if (detailStatus.includes('pending_visual_review')) return { label: 'Chờ rà soát chỉ tiêu chi tiết', kind: 'review' };
       const raw = String(item?.verification_status || '').toLowerCase();
       if (raw === 'auto_pending_extraction') return { label: 'Chờ trích xuất', kind: 'pending' };
       if (raw.includes('pending_visual_review') || raw === 'auto_extracted_pending_visual_review') return { label: 'Chờ rà soát PDF', kind: 'review' };
