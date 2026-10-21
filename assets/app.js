@@ -929,6 +929,12 @@
     const industryBySymbol = { MBB:'banking', ACB:'banking', SHB:'banking', TCB:'banking', TPB:'banking', VPB:'banking', STB:'banking', VCB:'banking', CTG:'banking', BID:'banking', FPT:'technology', HCM:'securities', VND:'securities', SHS:'securities', TCX:'securities', VCI:'securities', VCK:'securities', VIX:'securities', SSI:'securities', VDS:'securities', NLG:'real_estate', VHM:'real_estate', KDH:'real_estate', NVL:'real_estate', BSR:'energy_resources_construction', HHV:'energy_resources_construction', DPG:'energy_resources_construction', GAS:'energy_resources_construction', PLX:'energy_resources_construction', IDC:'energy_resources_construction', KBC:'energy_resources_construction', GEG:'energy_resources_construction' };
     const industryLabels = { banking:'Ngân hàng', securities:'Chứng khoán', real_estate:'Bất động sản', technology:'Công nghệ', energy:'Dầu khí & năng lượng', energy_resources_construction:'Dầu khí, năng lượng, tài nguyên & xây dựng' };
     const industryFor = ticker => industryBySymbol[ticker] || 'other';
+    const revenueLabelFor = ticker => {
+      const industry = industryFor(String(ticker || '').toUpperCase());
+      return industry === 'banking' ? 'Tổng thu nhập hoạt động'
+        : industry === 'securities' ? 'Doanh thu hoạt động'
+        : 'Doanh thu thuần';
+    };
     const snapshots = new Map();
     const charts = {};
     let isLoading = false;
@@ -1066,7 +1072,7 @@
         return { type, label, data: values, borderWidth: 2, tension: .18, pointRadius: rows.length > 32 ? 0 : 3, spanGaps: false, _valid: valid };
       };
       const financial = [
-        {field:'revenue',label:'Doanh thu'},
+        {field:'revenue',label:revenueLabelFor(ticker)},
         {field:'pretax_profit',label:'Lợi nhuận trước thuế'},
         {field:'net_profit',label:'Lợi nhuận sau thuế'}
       ].map(item=>({ ...item, values:rows.map(row=>validNumber(row[item.field])?Number(row[item.field]):null) }));
@@ -1105,7 +1111,10 @@
     function drawComparison() {
       const metric = $('#stockCompareMetric')?.value || 'net_profit';
       const period = $('#stockComparePeriod')?.value || '';
-      const meta = fieldMeta[metric] || fieldMeta.net_profit;
+      const baseMeta = fieldMeta[metric] || fieldMeta.net_profit;
+      const meta = metric === 'revenue'
+        ? { ...baseMeta, label: revenueLabelFor(String(symbolSelect?.value || 'MBB').toUpperCase()) }
+        : baseMeta;
       const compareIndustry = $('#stockCompareIndustry')?.value || 'all';
       const selectedIndustry = industryFor(String(symbolSelect?.value || 'MBB').toUpperCase());
       const compareSymbols = symbols.filter(ticker => compareIndustry === 'all' || industryFor(ticker) === selectedIndustry);
@@ -1226,6 +1235,8 @@
       setText('stockStatsMeta', period + ' · ' + (basisSelect?.value === 'separate' ? 'Báo cáo riêng lẻ' : 'Báo cáo hợp nhất') + ' · Nguồn: ' + (snapshots.get(ticker)?.sourceName || 'snapshot tài chính'));
       setText('stockStatPeriod', period);
       setText('stockStatRevenue', overviewMoney(latest.revenue, latest));
+      setText('stockStatRevenueLabel', revenueLabelFor(ticker) + ' kỳ gần nhất');
+      setText('stockStatRevenueYoYLabel', revenueLabelFor(ticker) + ' (YoY)');
       const revenueYoY = percentageChange('revenue', latest, rows);
       const pretaxYoY = percentageChange('pretax_profit', latest, rows);
       const netYoY = percentageChange('net_profit', latest, rows);
