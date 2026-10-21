@@ -6,6 +6,8 @@ on:
       - "data/financials-*.json"
       - "scripts/validate-financials.mjs"
       - "scripts/enrich-financial-categories.py"
+      - "scripts/sync-vietstock-financials.py"
+      - "config/securities.json"
       - "reports/raw/**/*.extracted.json"
       - ".github/workflows/validate-financials.yml"
   pull_request:
@@ -32,12 +34,16 @@ jobs:
           sparse-checkout: |
             /data/financials-*.json
             /scripts/enrich-financial-categories.py
+            /scripts/sync-vietstock-financials.py
+            /config/securities.json
             /scripts/validate-financials.mjs
             /reports/raw/**/*.extracted.json
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Check Vietstock sync worker syntax
+        run: python -m py_compile scripts/sync-vietstock-financials.py
       - name: Enrich quarterly categories from stored PDF/ZIP text
         run: python scripts/enrich-financial-categories.py
       - name: Commit enriched financial snapshots
