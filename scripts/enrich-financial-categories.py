@@ -126,26 +126,28 @@ def unit_factor(pages,item):
  if re.search(r"\bty\b",unit) or "billion" in unit: return 1000.0
  return 1.0
 
-def value_by_label(pages,labels,factor):
+def is_statement_row_start(line):
+ # Interim PDFs often wrap an item label across lines. A new row generally
+ # starts with a short account code followed by a pipe or another code.
+ return bool(re.match(r"^\\s*(?:\\|\\s*)?\\d{1,3}\\s*(?:\\||\\s+\\d{1,3}\\s)",str(line or "")))
+
+def value_by_label(pages,labels,factor,threshold=1000):
  for label in labels:
   target=norm(label)
   for page in pages:
    lines=str(page.get("text","")).splitlines()
-   for index,line in enumerate(lines):
-    clean=norm(line)
-    position=clean.find(target)
-    if position < 0: continue
-    # Parse only the text after the matched item label, not the whole row:
-    # dates, account codes and reference numbers occur before the value cells.
-    tail=line[min(len(line),position+len(target)):]
-    vals=amounts(tail)
-    if not vals:
-     for j in range(index+1,min(index+4,len(lines))):
-      next_line=lines[j]
-      if re.search(r"[a-z]",norm(next_line)) and len(re.findall(r"[a-z]+",norm(next_line)))>3: break
-      vals=amounts(next_line)
-      if vals: break
-    if vals: return int(round(vals[0]*factor))
+   for start in range(len(lines)):
+    parts=[]
+    for end in range(start,min(start+4,len(lines))):
+     if end>start and is_statement_row_start(lines[end]): break
+     parts.append(lines[end])
+     combined=norm(" ".join(parts))
+     position=combined.find(target)
+     if position < 0: continue
+     # Search after the complete label, including wrapped continuation lines.
+     tail=combined[position+len(target):]
+     vals=amounts(tail,threshold=threshold)
+     if vals: return int(round(vals[0]*factor))
  return None
 
 def value_by_code(pages,code,factor):
@@ -236,10 +238,8 @@ def period_key(item):
  m=re.fullmatch(r"(20\d{2})-Q([1-4])",str(item.get("period","")))
  return (int(m.group(1)),int(m.group(2))) if m else None
 
-def sane_fields(item, found):
- # Guard against OCR/parser unit slips using the already reconciled core totals.
- # Detail line items are not accepted if they are implausibly large for the
- # same report's balance sheet. Keep those fields blank for later review.
+def sane_fields(item, found, symbol):
+ # Cross-check extracted values against reconciled financial-statement totals.
  assets=item.get("total_assets")
  liabilities=item.get("total_liabilities")
  equity=item.get("equity")
@@ -253,22 +253,76 @@ def sane_fields(item, found):
  cash_fields=set(CASHFLOW_LABELS)-{"cash_beginning","cash_ending"}
  safe={}
  rejected=[]
- for field,value in found.items():
+ def discard(*fields,reason):
+  for field in fields:
+   if field in safe:
+    safe.pop(field,None)
+    rejected.append(field+"_"+reason)
+ def value(field):
+  candidate=safe.get(field)
+  if isinstance(candidate,(int,float)): return candidate
+  existing=item.get(field)
+  return existing if isinstance(existing,(int,float)) else None
+ for field,candidate in found.items():
   if field.startswith("__"):
-   safe[field]=value
+   safe[field]=candidate
    continue
-  if not isinstance(value,(int,float)) or not __import__("math").isfinite(value):
+  if not isinstance(candidate,(int,float)) or not __import__("math").isfinite(candidate):
    rejected.append(field); continue
   limit=None
   if field in asset_fields and has_assets: limit=max(abs(assets)*1.25,1000)
   elif field in liability_fields and has_liabilities: limit=max(abs(liabilities)*1.25,1000)
-  elif field in retained_fields and has_equity: limit=max(abs(equity)*2,1000)
+  elif field in retained_fields and has_equity: limit=max(abs(equity)*1.75,1000)
   elif field in income_fields and has_assets: limit=max(abs(assets)*5,1000)
   elif field in cash_fields and has_assets: limit=max(abs(assets)*5,1000)
   elif field in {"cash_beginning","cash_ending"} and has_assets: limit=max(abs(assets)*1.5,1000)
-  if limit is not None and abs(value)>limit:
-   rejected.append(field); continue
-  safe[field]=value
+  if limit is not None and abs(candidate)>limit:
+   rejected.append(field+"_magnitude"); continue
+  safe[field]=candidate
+
+ # Asset subtotals should reconcile to total assets; otherwise reject the
+ # newly extracted subtotals rather than display an unsupported decomposition.
+ current_assets=value("current_assets")
+ non_current_assets=value("non_current_assets")
+ if has_assets and current_assets is not None and non_current_assets is not None:
+  if abs(current_assets+non_current_assets-assets)>max(abs(assets)*0.08,1000):
+   discard("current_assets","non_current_assets",reason="asset_total_check")
+ # Liability subtotals should likewise reconcile with total liabilities.
+ current_liabilities=value("current_liabilities")
+ long_term_liabilities=value("long_term_liabilities")
+ if has_liabilities and current_liabilities is not None and long_term_liabilities is not None:
+  if abs(current_liabilities+long_term_liabilities-liabilities)>max(abs(liabilities)*0.08,1000):
+   discard("current_liabilities","long_term_liabilities",reason="liability_total_check")
+ # Cash/inventory/receivables/investments cannot each exceed their parent
+ # current-asset total by a material margin.
+ current_assets=value("current_assets")
+ if current_assets is not None and current_assets>0:
+  for field in ("cash_and_equivalents","short_term_investments","short_term_receivables","inventory"):
+   part=value(field)
+   if part is not None and abs(part)>max(abs(current_assets)*1.25,1000):
+    discard(field,reason="current_asset_component_check")
+ non_current_assets=value("non_current_assets")
+ fixed_assets=value("fixed_assets")
+ if non_current_assets is not None and non_current_assets>0 and fixed_assets is not None:
+  if abs(fixed_assets)>max(abs(non_current_assets)*1.25,1000):
+   discard("fixed_assets",reason="fixed_asset_parent_check")
+
+ # For standard non-financial issuers, net revenue less cost of goods sold
+ # must reconcile with gross profit. This also prevents an OCR match from a
+ # neighbouring note/row from replacing a real revenue number.
+ if symbol in STANDARD_BUSINESSES:
+  revenue=value("revenue")
+  cogs=value("cost_of_goods_sold")
+  gross=value("gross_profit")
+  if revenue is not None and cogs is not None and gross is not None:
+   expected=revenue-abs(cogs)
+   tolerance=max(abs(revenue)*0.03,1000)
+   if abs(expected-gross)>tolerance:
+    discard("revenue","cost_of_goods_sold","gross_profit",reason="gross_profit_equation_check")
+  revenue=value("revenue")
+  finance_income=value("financial_income")
+  if revenue is not None and revenue>0 and finance_income is not None and abs(finance_income)>abs(revenue)*0.5:
+   discard("financial_income",reason="finance_income_ratio_check")
  return safe,rejected
 
 
@@ -284,7 +338,7 @@ def enrich_snapshot(path):
   if not pages: continue
   found=extract_fields(item,symbol,pages)
   if not found: continue
-  found,rejected=sane_fields(item,found)
+  found,rejected=sane_fields(item,found,symbol)
   if rejected:
    print(f"{path.name if 'path' in locals() else symbol} {item.get('period')}: skipped implausible extracted values {','.join(rejected)}")
   if not found: continue
@@ -293,6 +347,21 @@ def enrich_snapshot(path):
    if field.startswith("__"): continue
    if item.get(field) is None:
     item[field]=value; new_fields.append(field)
+   elif field=="revenue" and symbol in STANDARD_BUSINESSES and isinstance(item.get("revenue"),(int,float)):
+    # Override a legacy revenue value only when the newly parsed row is backed
+    # by matching revenue/COGS/gross-profit arithmetic.
+    cogs=found.get("cost_of_goods_sold",item.get("cost_of_goods_sold"))
+    gross=found.get("gross_profit",item.get("gross_profit"))
+    consistent=(isinstance(cogs,(int,float)) and isinstance(gross,(int,float))
+      and abs((value-abs(cogs))-gross)<=max(abs(value)*0.03,1000))
+    if consistent and abs(value-item["revenue"])>max(abs(value)*0.02,1000):
+     item.setdefault("financial_line_items_prior_values",{})["revenue"]=item["revenue"]
+     item.setdefault("financial_line_items_overrides",{})["revenue"]={
+      "previous_value":item["revenue"],"new_value":value,
+      "reason":"Dòng doanh thu thuần trong báo cáo gốc khớp với giá vốn và lợi nhuận gộp."
+     }
+     item["revenue"]=value
+     new_fields.append("revenue")
   basis=found.get("__cashflow_period_basis")
   if basis and item.get("cashflow_period_basis")!=basis:
    item["cashflow_period_basis"]=basis; new_fields.append("cashflow_period_basis")
