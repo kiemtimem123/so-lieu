@@ -1294,7 +1294,10 @@
       setText('stockStatRoa', overviewNumber(latest.roa, latest, '%'));
       setText('stockStatRoe', overviewNumber(latest.roe, latest, '%'));
       if (statusBadge) { statusBadge.textContent = statusBadgeData.label; statusBadge.className = 'financial-status financial-status-' + statusBadgeData.kind; }
-      setText('stockStatsSourceNote', (latest.report_type || 'Báo cáo tài chính') + (latest.published_at ? ' · Công bố: ' + dateFmt(latest.published_at) : '') + (latest.source_pages ? ' · ' + latest.source_pages : ''));
+      const detailReview = latest.financial_line_items_status === 'auto_extracted_pending_visual_review'
+        ? ' · Chỉ tiêu chi tiết: trích xuất tự động, chờ đối chiếu PDF'
+        : '';
+      setText('stockStatsSourceNote', (latest.report_type || 'Báo cáo tài chính') + (latest.published_at ? ' · Công bố: ' + dateFmt(latest.published_at) : '') + (latest.source_pages ? ' · ' + latest.source_pages : '') + detailReview);
       const sourceLink = document.getElementById('stockStatsSource');
       if (sourceLink) {
         const url = typeof latest.source_url === 'string' && /^https?:\/\//i.test(latest.source_url) ? latest.source_url : '';
@@ -1402,6 +1405,9 @@
         { label: 'Ngày công bố', key: 'published_at', text: true },
         { label: 'Phạm vi trang PDF', key: 'source_pages', text: true },
         { label: 'Cơ sở số liệu lợi nhuận theo quý', key: 'quarter_profit_basis', text: true },
+        { label: 'Trạng thái trích xuất chỉ tiêu chi tiết', key: 'financial_line_items_status', text: true },
+        { label: 'Các trường chi tiết đã trích xuất', key: 'financial_line_items_extracted_fields', text: true },
+        { label: 'Ghi chú rà soát chỉ tiêu chi tiết', key: 'financial_line_items_note', text: true },
         { label: 'Nguồn báo cáo gốc', key: 'source_url', link: true },
         { label: 'Trang tài liệu VietstockFinance', key: 'source_index_url', link: true }
       ];
