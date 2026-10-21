@@ -65,6 +65,7 @@ jobs:
         run: node .github/scripts/validate-report-queue.cjs
 
       - name: OCR stored report archive
+        id: run_ocr
         env:
           REPORT_OCR_SYMBOL: ${{ github.event.inputs.symbol || '' }}
           REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || '14' }}
@@ -77,6 +78,8 @@ jobs:
         run: node .github/scripts/validate-report-queue.cjs
 
       - name: Enrich quarterly financial categories from OCR text
+        env:
+          FINANCIAL_ENRICH_SYMBOL: ${{ steps.run_ocr.outputs.symbol || github.event.inputs.symbol || '' }}
         run: python scripts/enrich-financial-categories.py
 
       - name: Validate enriched financial snapshots
@@ -89,6 +92,7 @@ jobs:
           REPORT_OCR_MAX_REPORTS: ${{ github.event.inputs.max_reports || '5' }}
           REPORT_OCR_DPI: '280'
           REPORT_OCR_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || '10,11' }}
+          FINANCIAL_ENRICH_SYMBOL: ${{ steps.run_ocr.outputs.symbol || github.event.inputs.symbol || '' }}
         shell: bash
         run: |
           set -euo pipefail

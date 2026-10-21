@@ -683,7 +683,15 @@ def enrich_snapshot(path):
   pages=load_report_pages(item,symbol)
   if not pages: continue
   found=extract_fields(item,symbol,pages)
-  if not found: continue
+  if not found:
+   if not item.get("financial_line_items_status"):
+    item["financial_line_items_status"]="no_detail_fields_matched_pending_manual_review"
+    item["financial_line_items_extracted_fields"]=[]
+    item["financial_line_items_source"]=str(item.get("source_archive_file") or "")
+    item["financial_line_items_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
+    item["financial_line_items_note"]="Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc."
+    changed=True; quarter_count+=1; field_count+=1
+   continue
   suppressed=set(item.get("financial_line_items_rejected_fields") or [])
   for key in list(found):
    if not key.startswith("__") and key in suppressed:
@@ -793,17 +801,22 @@ def enrich_snapshot(path):
  return changed,quarter_count,field_count
 
 def main():
- files=sorted(DATA.glob("financials-*.json"))
- changed_files=changed_quarters=changed_fields=0
- for path in files:
-  try:
-   changed,quarters,fields=enrich_snapshot(path)
-   if changed:
-    changed_files+=1; changed_quarters+=quarters; changed_fields+=fields
-    print(f"{path.name}: {quarters} quarter(s) enriched, {fields} field updates")
-  except Exception as exc:
-   print(f"::warning::{path.name}: {exc}")
- print(f"Financial category enrichment: {len(files)} snapshots; {changed_files} changed; {changed_quarters} quarter(s) enriched; {changed_fields} field updates.")
+ symbol=str(__import__("os").environ.get("FINANCIAL_ENRICH_SYMBOL", "")).strip().upper()
+ if not re.fullmatch(r"[A-Z0-9]{2,10}", symbol):
+  print("No valid FINANCIAL_ENRICH_SYMBOL; skip rather than process multiple tickers in one run.")
+  return 0
+ path=DATA / f"financials-{symbol}.json"
+ if not path.is_file():
+  print(f"No quarterly snapshot for selected ticker {symbol}; nothing to enrich.")
+  return 0
+ try:
+  changed,quarters,fields=enrich_snapshot(path)
+  if changed:
+   print(f"{path.name}: {quarters} quarter(s) enriched/marked for review, {fields} field updates")
+  else:
+   print(f"{path.name}: no further safe detail fields found.")
+ except Exception as exc:
+  print(f"::warning::{path.name}: {exc}")
  return 0
 
 if __name__=="__main__":

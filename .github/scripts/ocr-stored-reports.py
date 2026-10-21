@@ -47,9 +47,6 @@ def select_symbol() -> str | None:
     if override:
         return override
 
-    # Prefer tickers whose archived source PDFs still lack statement pages.
-    # This fills missing balance/income/cash-flow pages even when the headline
-    # quarter snapshots were already marked verified.
     priority = ["MBB", "ACB", "FPT", "SHB", "TCB", "VHM", "TCX", "HCM", "VND", "SHS", "NLG", "BSR"]
     configuration = load_json(ROOT / "config/securities.json") or {}
     configured = [
@@ -58,49 +55,52 @@ def select_symbol() -> str | None:
         if isinstance(item, dict) and item.get("enabled") is not False and item.get("symbol")
     ]
     priority.extend(symbol for symbol in configured if symbol and symbol not in priority)
-    for symbol in priority:
-        if symbol_needs_statement_pages(symbol):
-            return symbol
 
-    # If the page archive is complete, continue with any open queue review job.
-    # Do not loop forever on a needs_review job whose quarters have already been
-    # imported; such a job can remain open for archive-level visual review.
-    queue = load_json(QUEUE_PATH) or {}
+    # Work on one ticker until all of its stored report pages and machine-
+    # extractable detail fields have been attempted; only then move to the next.
     for symbol in priority:
-        open_jobs = [
-            job for job in queue.get("jobs", [])
-            if str(job.get("symbol") or "").upper() == symbol
-            and job.get("status") in {"needs_review", "queued", "pending", "downloaded", "extracted"}
-            and job.get("sourceCandidates")
-            and len(job.get("verifiedPeriods") or []) < 10
+        folder = REPORTS / symbol
+        if not folder.is_dir():
+            continue
+        archive_files = [
+            path for path in folder.rglob("*")
+            if path.is_file()
+            and path.name.lower().endswith((".pdf", ".zip"))
+            and Path(str(path) + ".extracted.json").is_file()
         ]
-        if open_jobs:
-            return symbol
-
-    # Work through symbols in the agreed priority order. TCB batch size is configured in workflow. Prefer an existing
-    # symbol whose quarter snapshots still have unverified periods, rather than
-    # arbitrarily OCR-ing whichever queue job happened to run last.
-    for symbol in priority:
+        if not archive_files:
+            continue
         snapshot = load_json(ROOT / f"data/financials-{symbol}.json") or {}
         items = snapshot.get("items") or []
-        if not items:
-            return symbol
-        verified_count = sum(
-            1 for item in items
-            if "verified" in str(item.get("verification_status") or "").casefold()
-            or item.get("verification_status") == "manual_visual_reconciliation"
-        )
-        if verified_count < len(items):
+        has_pending_detail = False
+        for item in items:
+            if not isinstance(item, dict) or item.get("financial_line_items_status"):
+                continue
+            source = str(item.get("source_archive_file") or "").strip()
+            if not source:
+                continue
+            source_path = (ROOT / source).resolve()
+            try:
+                source_path.relative_to(REPORTS.resolve())
+            except ValueError:
+                continue
+            if source_path.with_suffix(source_path.suffix + ".extracted.json").is_file():
+                has_pending_detail = True
+                break
+
+        if symbol_needs_statement_pages(symbol) or has_pending_detail:
             return symbol
 
-    # If all prioritized ticker snapshots are verified, retain the original
-    # fallback for newly queued symbols and newly added report batches.
-    queue = load_json(QUEUE_PATH) or {}
-    jobs = [j for j in queue.get("jobs", []) if j.get("processedAt")]
-    if not jobs:
-        return None
-    latest = max(jobs, key=lambda j: str(j.get("processedAt") or ""))
-    return str(latest.get("symbol") or "").upper() or None
+    return None
+
+
+def emit_selected_symbol(symbol: str | None) -> None:
+    output_path = os.getenv("GITHUB_OUTPUT", "").strip()
+    if not output_path:
+        return
+    safe_symbol = re.sub(r"[^A-Z0-9]", "", str(symbol or "").upper())
+    with open(output_path, "a", encoding="utf-8") as handle:
+        handle.write(f"symbol={safe_symbol}\\n")
 
 
 def page_has_text(pages) -> bool:
@@ -487,6 +487,7 @@ def process_zip(zip_path: Path):
 
 def main():
     symbol = select_symbol()
+    emit_selected_symbol(symbol)
     if not symbol:
         print(json.dumps({"event": "ocr_skip", "reason": "No latest processed symbol in report queue."}, ensure_ascii=False))
         return

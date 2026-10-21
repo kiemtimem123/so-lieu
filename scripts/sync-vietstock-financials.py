@@ -1242,49 +1242,73 @@ def main() -> int:
     if selected:
         symbols_to_sync = [selected]
     elif bootstrap_only:
-        # Finish creating each ticker snapshot first. GITHUB_TOKEN pushes do
-        # not trigger another workflow run, so scheduled ticks resume the queue.
-        missing = [
-            symbol for symbol in SYMBOLS
-            if not (DATA_DIR / f"financials-{symbol}.json").exists()
-        ]
-        if missing:
-            symbols_to_sync = missing[:1]
+        # Strict single-ticker queue. Walk configured order and stop at the
+        # first missing/incomplete snapshot; never skip it for another ticker.
+        cooldown_seconds = 30 * 60
+        now_epoch = datetime.now(timezone.utc).timestamp()
+        selected_symbol = None
+
+        def load_symbol_snapshot(symbol: str) -> dict | None:
+            path = DATA_DIR / f"financials-{symbol}.json"
+            if not path.exists():
+                return None
+            try:
+                return json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                return {}
+
+        def last_attempt_epoch(snapshot: dict) -> float:
+            stamp = snapshot.get("bootstrap_last_attempt_at") or snapshot.get("fetchedAt")
+            if not stamp:
+                return 0.0
+            try:
+                return datetime.fromisoformat(str(stamp).replace("Z", "+00:00")).timestamp()
+            except (TypeError, ValueError, OSError):
+                return 0.0
+
+        for symbol in SYMBOLS:
+            snapshot = load_symbol_snapshot(symbol)
+            if snapshot is None:
+                selected_symbol = symbol
+                print(f"Single-ticker queue: bắt đầu mã còn thiếu đầu tiên {symbol}.")
+                break
+            if not snapshot:
+                selected_symbol = symbol
+                print(f"Single-ticker queue: snapshot của {symbol} không đọc được; ưu tiên sửa mã này trước.")
+                break
+
+            items = snapshot.get("items", [])
+            has_pending = any(
+                isinstance(item, dict)
+                and item.get("verification_status") == "auto_pending_extraction"
+                for item in items
+            )
+            needs_retry = has_pending or snapshot.get("sync_status") == "fetch_failed" or not items
+            if needs_retry:
+                age = now_epoch - last_attempt_epoch(snapshot)
+                if age < cooldown_seconds:
+                    print(
+                        f"Single-ticker queue đang giữ {symbol}: còn dữ liệu chờ xử lý; "
+                        f"đã thử gần đây {max(0, int(age))} giây trước. Không chuyển sang mã khác."
+                    )
+                    return 0
+                selected_symbol = symbol
+                print(f"Single-ticker queue: tiếp tục hoàn tất {symbol} trước khi sang mã khác.")
+                break
+
+        if selected_symbol:
+            symbols_to_sync = [selected_symbol]
         else:
-            # After the initial bootstrap, retry one ticker's unextracted periods
-            # per scheduled tick. A persisted cooldown prevents an unreadable
-            # PDF from monopolizing every run.
-            cooldown_seconds = 30 * 60
-            now_epoch = datetime.now(timezone.utc).timestamp()
-            retryable = []
+            # All current snapshots are complete: poll one least-recently checked
+            # ticker per run to discover new quarterly filings without bulk syncs.
+            checked = []
             for symbol in SYMBOLS:
-                path = DATA_DIR / f"financials-{symbol}.json"
-                try:
-                    snapshot = json.loads(path.read_text(encoding="utf-8"))
-                except (OSError, json.JSONDecodeError):
-                    continue
-                has_pending = any(
-                    isinstance(item, dict) and item.get("verification_status") == "auto_pending_extraction"
-                    for item in snapshot.get("items", [])
-                )
-                has_failed_bootstrap = snapshot.get("sync_status") == "fetch_failed"
-                if not (has_pending or has_failed_bootstrap):
-                    continue
-                last_attempt = snapshot.get("bootstrap_last_attempt_at")
-                last_epoch = 0
-                if last_attempt:
-                    try:
-                        last_epoch = datetime.fromisoformat(str(last_attempt).replace("Z", "+00:00")).timestamp()
-                    except (TypeError, ValueError, OSError):
-                        last_epoch = 0
-                if now_epoch - last_epoch >= cooldown_seconds:
-                    retryable.append(symbol)
-            symbols_to_sync = retryable[:1]
-            if not symbols_to_sync:
-                print("Bootstrap queue idle: no missing snapshots or retryable extraction records.")
-                return 0
-    else:
-        symbols_to_sync = SYMBOLS
+                snapshot = load_symbol_snapshot(symbol) or {}
+                checked.append((last_attempt_epoch(snapshot), symbol))
+            selected_symbol = min(checked, key=lambda pair: (pair[0], SYMBOLS.index(pair[1])))[1]
+            symbols_to_sync = [selected_symbol]
+            print(f"Single-ticker refresh: kiểm tra kỳ báo cáo mới cho {selected_symbol}.")
+
     total_changed = total_added = total_filled = failed_symbols = 0
     for symbol in symbols_to_sync:
         print(f"\n[{symbol}]")
