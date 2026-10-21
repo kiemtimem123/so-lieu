@@ -24,13 +24,14 @@ on:
         default: false
   schedule:
     - cron: '17 1 * * *'
+    - cron: '5,35 * * * *'
 
 permissions:
   contents: write
 
 concurrency:
-  group: financial-report-collector
-  cancel-in-progress: true
+  group: so-lieu-financial-data-writes-v1
+  cancel-in-progress: false
 
 jobs:
   collect:
