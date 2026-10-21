@@ -11,6 +11,7 @@ import html
 import io
 import json
 import math
+import os
 import re
 import sys
 import time
@@ -27,7 +28,27 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 BASE_URL = "https://finance.vietstock.vn/"
 API_URL = urljoin(BASE_URL, "data/getdocument")
-SYMBOLS = ["MBB", "ACB", "FPT", "SHB", "TCX", "HCM", "VND", "SHS", "NLG", "BSR", "TCB", "VHM"]
+DEFAULT_SYMBOLS = ["MBB", "ACB", "FPT", "SHB", "TCX", "HCM", "VND", "SHS", "NLG", "BSR", "TCB", "VHM"]
+
+def configured_symbols() -> list[str]:
+    config_path = ROOT / "config" / "securities.json"
+    try:
+        payload = json.loads(config_path.read_text(encoding="utf-8"))
+        configured = [
+            str(item.get("symbol", "")).strip().upper()
+            for item in payload.get("securities", [])
+            if isinstance(item, dict) and item.get("enabled", True) and item.get("symbol")
+        ]
+        if configured:
+            return list(dict.fromkeys(configured))
+    except (OSError, json.JSONDecodeError, TypeError):
+        pass
+    return DEFAULT_SYMBOLS
+
+SYMBOLS = configured_symbols()
+BANKS = {"MBB", "ACB", "SHB", "TCB", "TPB", "VPB", "STB", "VCB", "CTG", "BID"}
+BROKERS = {"TCX", "HCM", "VND", "SHS", "VCI", "VCK", "VIX", "SSI", "VDS"}
+
 DOC_TYPE = 1
 MAX_PAGES_PER_YEAR = 20
 MAX_DOWNLOAD_BYTES = 80 * 1024 * 1024
@@ -360,7 +381,7 @@ def number_value(token: str) -> float | None:
         return None
 
 
-def row_numbers(lines: list[str], labels: list[str], limit: int = 5) -> list[float]:
+def row_numbers(lines: list[str], labels: list[str], limit: int = 5, min_abs: int = 1000) -> list[float]:
     normalized = [norm(line) for line in lines]
     for label in labels:
         term = norm(label)
@@ -380,7 +401,7 @@ def row_numbers(lines: list[str], labels: list[str], limit: int = 5) -> list[flo
             values = []
             for match in NUMBER_RE.findall(tail):
                 value = number_value(match)
-                if value is not None and abs(value) >= 1000:
+                if value is not None and abs(value) >= min_abs:
                     values.append(value)
             if values:
                 return values[:limit]
@@ -392,7 +413,7 @@ def row_numbers(lines: list[str], labels: list[str], limit: int = 5) -> list[flo
                 values = []
                 for match in NUMBER_RE.findall(lines[lookahead]):
                     value = number_value(match)
-                    if value is not None and abs(value) >= 1000:
+                    if value is not None and abs(value) >= min_abs:
                         values.append(value)
                 if values:
                     return values[:limit]
@@ -524,6 +545,7 @@ def ocr_pdf_text(pdf_bytes: bytes) -> str:
 def extract_statement(
     pdf_bytes: bytes,
     previous_item: dict | None,
+    symbol: str = "",
     cumulative: bool = False,
     force_ocr: bool = False,
 ) -> dict:
@@ -602,7 +624,96 @@ def extract_statement(
     parent_profit_series = row_numbers(lines, PARENT_PROFIT_LABELS)
     revenue_series = row_numbers(lines, REVENUE_LABELS)
     net_profit_attributable = million(parent_profit_series[0]) if parent_profit_series else None
+    if symbol in BANKS:
+        revenue_labels = ["tổng thu nhập hoạt động", "total operating income", "doanh thu hoạt động", "thu nhập lãi thuần"]
+    elif symbol in BROKERS:
+        revenue_labels = ["doanh thu hoạt động", "doanh thu thuần", "operating revenue"]
+    else:
+        revenue_labels = REVENUE_LABELS
+    revenue_series = row_numbers(lines, revenue_labels)
     revenue = million(revenue_series[0]) if revenue_series else None
+
+balance_detail_labels = {
+        "current_assets": ["tài sản ngắn hạn", "current assets"],
+        "cash_and_equivalents": ["tiền và các khoản tương đương tiền", "tiền và tương đương tiền", "cash and cash equivalents"],
+        "short_term_investments": ["đầu tư tài chính ngắn hạn", "short-term financial investments"],
+        "short_term_receivables": ["các khoản phải thu ngắn hạn", "short-term receivables"],
+        "inventory": ["hàng tồn kho", "inventories"],
+        "non_current_assets": ["tài sản dài hạn", "non-current assets"],
+        "fixed_assets": ["tài sản cố định", "fixed assets"],
+        "current_liabilities": ["nợ phải trả ngắn hạn", "nợ ngắn hạn", "current liabilities"],
+        "long_term_liabilities": ["nợ phải trả dài hạn", "nợ dài hạn", "long-term liabilities"],
+        "retained_earnings": ["lợi nhuận sau thuế chưa phân phối", "lợi nhuận chưa phân phối", "retained earnings"],
+    }
+    income_detail_labels = {
+        "cost_of_goods_sold": ["giá vốn hàng bán", "cost of goods sold"],
+        "gross_profit": ["lợi nhuận gộp về bán hàng và cung cấp dịch vụ", "lợi nhuận gộp", "gross profit"],
+        "financial_income": ["doanh thu hoạt động tài chính", "doanh thu tài chính", "financial income"],
+        "financial_expense": ["chi phí tài chính", "financial expenses"],
+        "interest_expense": ["chi phí lãi vay", "chi phí đi vay", "chi phí lãi và các khoản chi phí tương tự", "interest expense"],
+        "selling_expense": ["chi phí bán hàng", "selling expenses"],
+        "admin_expense": ["chi phí quản lý doanh nghiệp", "chi phí quản lý", "administrative expenses"],
+        "operating_profit": ["lợi nhuận thuần từ hoạt động kinh doanh", "lợi nhuận từ hoạt động kinh doanh", "operating profit"],
+        "income_tax_current": ["chi phí thuế tndn hiện hành", "chi phí thuế thu nhập doanh nghiệp hiện hành", "current corporate income tax expense"],
+        "income_tax_deferred": ["chi phí thuế tndn hoãn lại", "chi phí thuế thu nhập doanh nghiệp hoãn lại", "deferred corporate income tax expense"],
+    }
+    cashflow_detail_labels = {
+        "operating_cash_flow_ytd": ["lưu chuyển tiền thuần từ hoạt động kinh doanh", "lưu chuyển tiền từ hoạt động kinh doanh", "net cash from operating activities"],
+        "investing_cash_flow_ytd": ["lưu chuyển tiền thuần từ hoạt động đầu tư", "lưu chuyển tiền từ hoạt động đầu tư", "net cash from investing activities"],
+        "financing_cash_flow_ytd": ["lưu chuyển tiền thuần từ hoạt động tài chính", "lưu chuyển tiền từ hoạt động tài chính", "net cash from financing activities"],
+        "capital_expenditure_ytd": ["tiền chi để mua sắm, xây dựng tài sản cố định", "tiền chi mua sắm xây dựng tài sản cố định", "purchase of fixed assets"],
+        "dividends_paid_ytd": ["cổ tức, lợi nhuận đã trả cho chủ sở hữu", "cổ tức lợi nhuận đã trả cho chủ sở hữu", "dividends paid"],
+        "net_cash_change_ytd": ["lưu chuyển tiền thuần trong kỳ", "lưu chuyển tiền thuần trong năm", "net change in cash"],
+        "cash_beginning": ["tiền và các khoản tương đương tiền đầu kỳ", "tiền và tương đương tiền đầu kỳ", "cash and cash equivalents at beginning"],
+        "cash_ending": ["tiền và các khoản tương đương tiền cuối kỳ", "tiền và tương đương tiền cuối kỳ", "cash and cash equivalents at end"],
+        "foreign_exchange_effect_ytd": ["ảnh hưởng của thay đổi tỷ giá hối đoái quy đổi ngoại tệ", "ảnh hưởng thay đổi tỷ giá hối đoái", "effect of exchange rate changes"],
+    }
+    details: dict[str, object] = {}
+    for field, labels in balance_detail_labels.items():
+        series = row_numbers(lines, labels)
+        if series:
+            details[field] = million(series[0])
+    for field, labels in income_detail_labels.items():
+        series = row_numbers(lines, labels)
+        if series:
+            details[field] = million(series[0])
+    if "income_tax_current" in details or "income_tax_deferred" in details:
+        details["income_tax"] = int(round(details.get("income_tax_current", 0) + details.get("income_tax_deferred", 0)))
+
+    # Bank statements present total operating income rather than industrial net sales.
+    if symbol in BANKS:
+        eps = None
+        revenue_labels = ["tổng thu nhập hoạt động", "total operating income", "doanh thu hoạt động", "thu nhập lãi thuần"]
+    elif symbol in BROKERS:
+        revenue_labels = ["doanh thu hoạt động", "doanh thu thuần", "operating revenue"]
+    else:
+        revenue_labels = REVENUE_LABELS
+    selected_revenue = row_numbers(lines, revenue_labels)
+    if selected_revenue:
+        revenue = million(selected_revenue[0])
+        details["revenue"] = revenue
+
+    # EPS is reported in VND per share, so it must not be converted to million VND.
+    basic_eps = row_numbers(lines, ["lãi cơ bản trên cổ phiếu", "lãi cơ bản trên một cổ phiếu", "basic earnings per share"], min_abs=100)
+    diluted_eps = row_numbers(lines, ["lãi suy giảm trên cổ phiếu", "lãi suy giảm trên một cổ phiếu", "diluted earnings per share"], min_abs=100)
+    if basic_eps:
+        details["eps"] = int(round(basic_eps[0]))
+    if diluted_eps:
+        details["diluted_eps"] = int(round(diluted_eps[0]))
+
+    for field, labels in cashflow_detail_labels.items():
+        series = row_numbers(lines, labels)
+        if series:
+            details[field] = million(series[0])
+    normalized_text = norm(text)
+    if (
+        re.search(r"\b01\s*/\s*01\s*/?\s*20\d{2}\b", normalized_text)
+        or "tu ngay 01 thang 01" in normalized_text
+        or "giai doan tu 01/01" in normalized_text
+    ):
+        details["cashflow_period_basis"] = "year_to_date"
+    elif cashflow_detail_labels:
+        details["cashflow_period_basis"] = "quarterly_reported"
 
     result = {
         "total_assets": total_assets,
@@ -623,6 +734,7 @@ def extract_statement(
             "net_profit": net_profit_series[0],
         },
     }
+    result.update(details)
     return result
 
 
@@ -757,6 +869,33 @@ def make_extracted_item(
             "note": "Các số tự trích xuất cần được kiểm tra trực quan trước khi đánh dấu đã xác minh thủ công.",
         },
     }
+    detailed_keys = {
+        "current_assets", "cash_and_equivalents", "short_term_investments", "short_term_receivables",
+        "inventory", "non_current_assets", "fixed_assets", "current_liabilities", "long_term_liabilities",
+        "retained_earnings", "cost_of_goods_sold", "gross_profit", "financial_income", "financial_expense",
+        "interest_expense", "selling_expense", "admin_expense", "operating_profit", "income_tax",
+        "income_tax_current", "income_tax_deferred", "eps", "diluted_eps", "operating_cash_flow_ytd",
+        "investing_cash_flow_ytd", "financing_cash_flow_ytd", "capital_expenditure_ytd", "dividends_paid_ytd",
+        "net_cash_change_ytd", "cash_beginning", "cash_ending", "foreign_exchange_effect_ytd"
+    }
+    extracted_fields = []
+    for field in detailed_keys:
+        if values.get(field) is not None:
+            item[field] = values[field]
+            extracted_fields.append(field)
+    if values.get("cashflow_period_basis"):
+        item["cashflow_period_basis"] = values["cashflow_period_basis"]
+        extracted_fields.append("cashflow_period_basis")
+    if values.get("revenue") is not None:
+        extracted_fields.append("revenue")
+    if values.get("net_profit_attributable") is not None:
+        extracted_fields.append("net_profit_attributable")
+    if extracted_fields:
+        item["financial_line_items_status"] = "auto_extracted_pending_visual_review"
+        item["financial_line_items_extracted_fields"] = sorted(set(extracted_fields))
+        item["financial_line_items_source"] = source_url
+        item["financial_line_items_updated_at"] = utc_now()
+        item["financial_line_items_note"] = "Chỉ tiêu chi tiết trích xuất tự động từ PDF VietstockFinance; cần đối chiếu trực quan."
     published = parse_publication_date(record)
     if published:
         item["published_at"] = published
@@ -768,7 +907,13 @@ def make_extracted_item(
 def load_snapshot(symbol: str) -> tuple[dict, Path]:
     path = DATA_DIR / f"financials-{symbol}.json"
     if not path.exists():
-        raise FileNotFoundError(f"Không có snapshot hiện tại: {path}")
+        snapshot = {
+            "symbol": symbol,
+            "sourceName": f"VietstockFinance — báo cáo tài chính theo quý {symbol}",
+            "fetchedAt": utc_now(),
+            "items": [],
+        }
+        return snapshot, path
     snapshot = json.loads(path.read_text(encoding="utf-8"))
     if snapshot.get("symbol") != symbol or not isinstance(snapshot.get("items"), list):
         raise ValueError(f"Snapshot sai schema: {path}")
@@ -779,6 +924,8 @@ def load_snapshot(symbol: str) -> tuple[dict, Path]:
 def process_symbol(
     session: requests.Session, token: str, symbol: str, current_year: int
 ) -> tuple[bool, int, int]:
+    path = DATA_DIR / f"financials-{symbol}.json"
+    snapshot_was_missing = not path.exists()
     snapshot, path = load_snapshot(symbol)
     items = snapshot["items"]
     existing = {item.get("period"): item for item in items}
@@ -799,19 +946,29 @@ def process_symbol(
             continue
         if period in existing and existing[period].get("verification_status") != "auto_pending_extraction":
             continue
-        # Append only the immediate next quarter; skip gaps rather than make
-        # a series look complete when Vietstock's listing has not returned a
-        # previous quarter yet.
-        next_expected = next_period(max(
-            (item.get("period") for item in items if period_key(item.get("period", ""))[0]),
-            key=period_key,
-            default="2024-Q1",
-        ))
-        if period not in existing and period != next_expected:
-            continue
         candidates.setdefault(period, []).append((candidate_score(record, explicit, cumulative), record, cumulative))
 
-    changed = False
+    # Keep existing pending reports eligible for another extraction attempt.
+    # For new periods, accept only a contiguous sequence from the first missing quarter.
+    contiguous = {}
+    expected = "2024-Q1"
+    while expected in existing:
+        expected = next_period(expected)
+    for period in sorted(candidates, key=period_key):
+        if period in existing:
+            contiguous[period] = candidates[period]
+            continue
+        while expected in existing or expected in contiguous:
+            expected = next_period(expected)
+        if period == expected:
+            contiguous[period] = candidates[period]
+            expected = next_period(period)
+        elif period_key(period) > period_key(expected):
+            print(f"  Dừng ở {period}: còn thiếu kỳ trước {expected}; không tạo chuỗi có khoảng trống.")
+            break
+    candidates = contiguous
+
+    changed = snapshot_was_missing
     added = 0
     filled = 0
     for period in sorted(candidates, key=period_key):
@@ -822,11 +979,11 @@ def process_symbol(
             pdf_bytes, final_url = extract_pdf_bytes(url, session)
             previous = choose_previous_item(items, period)
             try:
-                values = extract_statement(pdf_bytes, previous, cumulative=cumulative)
+                values = extract_statement(pdf_bytes, previous, symbol=symbol, cumulative=cumulative)
             except ValueError as text_error:
                 print(f"    Trích xuất văn bản chưa đạt ({text_error}); chuyển sang OCR.")
                 values = extract_statement(
-                    pdf_bytes, previous, cumulative=cumulative, force_ocr=True
+                    pdf_bytes, previous, symbol=symbol, cumulative=cumulative, force_ocr=True
                 )
             new_item = make_extracted_item(symbol, period, record, url, values, items, cumulative)
             new_item["source_extract_review"]["final_download_url"] = final_url
@@ -858,10 +1015,13 @@ def process_symbol(
 
     if changed:
         snapshot["items"] = items
-        snapshot["sourceName"] = (
-            f"VietstockFinance — báo cáo tài chính theo quý {symbol} "
-            f"({items[0].get('period', '2024-Q1')} đến {items[-1].get('period', '')})"
-        )
+        if items:
+            snapshot["sourceName"] = (
+                f"VietstockFinance — báo cáo tài chính theo quý {symbol} "
+                f"({items[0].get('period', '2024-Q1')} đến {items[-1].get('period', '')})"
+            )
+        else:
+            snapshot["sourceName"] = f"VietstockFinance — {symbol} (đang chờ báo cáo tài chính theo quý từ 2024-Q1)"
         snapshot["fetchedAt"] = utc_now()
         path.write_text(json.dumps(snapshot, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return changed, added, filled
@@ -873,8 +1033,13 @@ def main() -> int:
     print("Đồng bộ BCTC theo quý — chỉ danh mục VietstockFinance, doctype=1")
     token = get_anti_forgery_token(session)
     current_year = datetime.now(timezone.utc).year
+    selected = os.environ.get("FINANCIAL_SYNC_SYMBOL", "").strip().upper()
+    if selected and selected not in SYMBOLS:
+        print(f"Mã không có trong config/securities.json: {selected}", file=sys.stderr)
+        return 2
+    symbols_to_sync = [selected] if selected else SYMBOLS
     total_changed = total_added = total_filled = failed_symbols = 0
-    for symbol in SYMBOLS:
+    for symbol in symbols_to_sync:
         print(f"\n[{symbol}]")
         try:
             changed, added, filled = process_symbol(session, token, symbol, current_year)
@@ -886,11 +1051,11 @@ def main() -> int:
             print(f"  LỖI {symbol}: {exc}", file=sys.stderr)
         time.sleep(SLEEP_BETWEEN_CALLS)
     print("\nTóm tắt")
-    print(f"- Mã: {len(SYMBOLS)}; lỗi truy vấn/đọc snapshot: {failed_symbols}")
+    print(f"- Mã: {len(symbols_to_sync)}; lỗi truy vấn/đọc snapshot: {failed_symbols}")
     print(f"- Snapshot thay đổi: {total_changed}")
     print(f"- Kỳ mới được thêm (có thể đang chờ trích xuất): {total_added}")
     print(f"- Kỳ chờ trước đó đã điền được số liệu: {total_filled}")
-    if failed_symbols == len(SYMBOLS):
+    if failed_symbols == len(symbols_to_sync):
         print("Tất cả mã đều lỗi; workflow sẽ báo thất bại để không coi đây là lần đồng bộ thành công.", file=sys.stderr)
         return 1
     return 0

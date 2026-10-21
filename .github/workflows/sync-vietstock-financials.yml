@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: "17 2 * * *"
   workflow_dispatch:
+    inputs:
+      symbol:
+        description: "Mã cổ phiếu cần đồng bộ; để trống để chạy tất cả mã đang bật trong config/securities.json"
+        required: false
+        default: ""
   push:
     paths:
       - "scripts/sync-vietstock-financials.py"
@@ -19,7 +24,7 @@ concurrency:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 60
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -40,6 +45,7 @@ jobs:
       - name: Check VietstockFinance catalog and append new quarters
         env:
           PYTHONUTF8: "1"
+          FINANCIAL_SYNC_SYMBOL: ${{ github.event.inputs.symbol || '' }}
         run: python scripts/sync-vietstock-financials.py
 
       - name: Set up Node.js
