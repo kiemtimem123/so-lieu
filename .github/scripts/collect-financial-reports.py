@@ -631,52 +631,134 @@ def main():
                 jobs.append({"id":job_id,"symbol":symbol,"startYear":int(securities.get("defaultStartYear",2024)),"reportType":"both" if len(sec.get("reportTypes",[]))>1 else (sec.get("reportTypes") or ["consolidated"])[0],"status":"queued","createdAt":NOW,"attempts":0,"sourceCandidates":[],"downloadedFiles":[],"verifiedPeriods":[],"origin":"scheduled_registry"})
                 known.add(job_id)
     summary = {"started_at":NOW,"jobs_processed":0,"downloaded":0,"needs_review":0,"errors":0,"allowlisted_domains":ALLOWED_DOMAINS}
-    # Do not let a few repeatedly failing early jobs starve the rest of the ticker queue.
-    # Process never-attempted queued jobs first; retry failed jobs only after queued coverage.
-    jobs.sort(key=lambda job: (0 if job.get("status") == "queued" else 1, int(job.get("priority", 50)), 0 if str(job.get("symbol", "")).upper() == "MBB" else 1, job.get("createdAt", "")))
+    # A ticker remains at the head of the queue while its discovered source URLs
+    # are being archived. Each run downloads at most MAX_PER_JOB documents; only
+    # after the remaining candidate list is exhausted does the worker move on.
+    jobs.sort(key=lambda job: (
+        0 if job.get("resumeDownload") else (1 if job.get("status") == "queued" else 2),
+        int(job.get("priority", 50)),
+        0 if str(job.get("symbol", "")).upper() == "MBB" else 1,
+        job.get("createdAt", ""),
+    ))
     for job in jobs:
         if summary["jobs_processed"] >= MAX_JOBS_PER_RUN:
             break
-        if job.get("status") not in {"queued","failed"}: continue
+        if job.get("status") not in {"queued", "failed"}:
+            continue
         if job.get("status") == "failed" and int(job.get("attempts", 0)) >= 3:
             continue
-        job["status"]="searching"; job["updatedAt"]=NOW; job["attempts"]=int(job.get("attempts",0))+1
+
+        previous_files = list(job.get("downloadedFiles") or [])
+        attempted_urls = set(str(url) for url in (job.get("attemptedUrls") or []) if url)
+        job["status"] = "searching"
+        job["updatedAt"] = NOW
+        job["attempts"] = int(job.get("attempts", 0)) + 1
         candidates = discover_for_job(job, ALLOWED_DOMAINS)
-        # Avoid re-downloading the same Vietstock URL when a follow-up job for
-        # this ticker is used to collect the remaining statements.
-        already_downloaded_urls = set()
+
+        already_downloaded_urls = set(attempted_urls)
         for previous_job in jobs:
-            if previous_job is job or str(previous_job.get("symbol","")).upper() != str(job.get("symbol","")).upper():
+            if str(previous_job.get("symbol", "")).upper() != str(job.get("symbol", "")).upper():
                 continue
-            for previous_file in previous_job.get("downloadedFiles", []) or []:
-                if previous_file.get("status") != "downloaded_needs_review":
-                    continue
-                for key in ("url", "final_url"):
-                    previous_url = previous_file.get(key)
-                    if previous_url:
-                        already_downloaded_urls.add(str(previous_url))
+            if previous_job is not job:
+                for previous_file in previous_job.get("downloadedFiles", []) or []:
+                    if previous_file.get("status") != "downloaded_needs_review":
+                        continue
+                    for key in ("url", "final_url"):
+                        previous_url = previous_file.get(key)
+                        if previous_url:
+                            already_downloaded_urls.add(str(previous_url))
+            else:
+                # Legacy queue entries may have successful files but no attemptedUrls.
+                for previous_file in previous_files:
+                    if previous_file.get("status") == "downloaded_needs_review":
+                        for key in ("url", "final_url"):
+                            previous_url = previous_file.get(key)
+                            if previous_url:
+                                already_downloaded_urls.add(str(previous_url))
+
         before_dedup = len(candidates)
-        candidates = [c for c in candidates if str(c.get("url","")) not in already_downloaded_urls]
-        print(json.dumps({"event":"deduplicate_previous_downloads","symbol":job.get("symbol"),
-                          "candidate_count_before":before_dedup,"already_downloaded_urls":len(already_downloaded_urls),
-                          "candidate_count_after":len(candidates)},ensure_ascii=False))
+        candidates = [c for c in candidates if str(c.get("url", "")) not in already_downloaded_urls]
         job["sourceCandidates"] = candidates[:80]
+        print(json.dumps({
+            "event": "deduplicate_previous_downloads",
+            "symbol": job.get("symbol"),
+            "candidate_count_before": before_dedup,
+            "already_downloaded_urls": len(already_downloaded_urls),
+            "candidate_count_after": len(candidates),
+        }, ensure_ascii=False))
+
+        if not candidates:
+            if any(item.get("status") == "downloaded_needs_review" for item in previous_files):
+                job["downloadedFiles"] = previous_files
+                job["status"] = "needs_review"
+                job["resumeDownload"] = False
+                job["lastError"] = None
+                job["processedAt"] = NOW
+                summary["jobs_processed"] += 1
+                summary["needs_review"] += 1
+                print(json.dumps({
+                    "job": job["id"], "symbol": job["symbol"],
+                    "status": job["status"], "event": "ticker_archive_batch_complete",
+                    "downloaded_total": len(previous_files),
+                }, ensure_ascii=False))
+                continue
+            job["downloadedFiles"] = previous_files
+            job["status"] = "failed"
+            job["resumeDownload"] = False
+            job["lastError"] = "Không tìm được thêm URL báo cáo có thể tải trong miền cho phép."
+            job["processedAt"] = NOW
+            summary["errors"] += 1
+            summary["jobs_processed"] += 1
+            continue
+
         job_dir = OUT / job["symbol"] / job["id"]
         results = []
+        attempted_this_run = []
+        successes_this_run = 0
         for candidate in candidates:
-            if len([r for r in results if r.get("status")=="downloaded_needs_review"]) >= MAX_PER_JOB: break
+            if successes_this_run >= MAX_PER_JOB:
+                break
             result = download_candidate(candidate, job_dir)
             results.append(result)
-            if result.get("status")=="downloaded_needs_review": summary["downloaded"] += 1
-            if result.get("status")=="download_error": summary["errors"] += 1
-        job["downloadedFiles"] = results
-        downloaded_any = any(r.get("status") == "downloaded_needs_review" for r in results)
-        job["status"]="needs_review" if downloaded_any else "failed"
-        job["lastError"] = None if downloaded_any else "Không tải được tài liệu từ miền đã cho phép; kiểm tra sourceCandidates và cấu hình allowlist."
-        job["processedAt"]=NOW
+            attempted_this_run.append(str(candidate.get("url", "")))
+            if result.get("status") == "downloaded_needs_review":
+                summary["downloaded"] += 1
+                successes_this_run += 1
+            if result.get("status") == "download_error":
+                summary["errors"] += 1
+
+        attempted_urls.update(url for url in attempted_this_run if url)
+        job["attemptedUrls"] = sorted(attempted_urls)
+        combined_files = previous_files + results
+        job["downloadedFiles"] = combined_files
+        more_candidates = len(attempted_this_run) < len(candidates)
+        downloaded_any = any(item.get("status") == "downloaded_needs_review" for item in combined_files)
+
+        if more_candidates and downloaded_any:
+            # Keep the same ticker at the front of the queue on the next run.
+            job["status"] = "queued"
+            job["resumeDownload"] = True
+            job["lastError"] = None
+        elif downloaded_any:
+            job["status"] = "needs_review"
+            job["resumeDownload"] = False
+            job["lastError"] = None
+        else:
+            job["status"] = "failed"
+            job["resumeDownload"] = False
+            job["lastError"] = "Không tải được tài liệu từ miền đã cho phép; kiểm tra sourceCandidates và cấu hình allowlist."
+
+        job["processedAt"] = NOW
         summary["jobs_processed"] += 1
-        if job["status"]=="needs_review": summary["needs_review"] += 1
-        print(json.dumps({"job":job["id"],"symbol":job["symbol"],"status":job["status"],"candidates":len(candidates),"downloaded":sum(1 for r in results if r.get("status")=="downloaded_needs_review")},ensure_ascii=False))
+        if job["status"] == "needs_review":
+            summary["needs_review"] += 1
+        print(json.dumps({
+            "job": job["id"], "symbol": job["symbol"], "status": job["status"],
+            "candidates": before_dedup,
+            "downloaded_this_run": successes_this_run,
+            "downloaded_total": sum(1 for item in combined_files if item.get("status") == "downloaded_needs_review"),
+            "more_candidates": more_candidates,
+        }, ensure_ascii=False))
     queue["updatedAt"]=NOW
     save(QUEUE_PATH, queue)
     save(ROOT / "reports/worker-last-run.json", summary)
