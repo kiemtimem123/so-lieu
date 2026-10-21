@@ -223,6 +223,59 @@
         <span class="section-index">02 / COMPANY</span>
       </div>
       <div class="financial-terminal" id="financialTerminal">
+        <section class="financial-overview" aria-label="Thống kê chính doanh nghiệp">
+          <div class="financial-overview-heading">
+            <div>
+              <h3>Thống kê chính <strong id="stockStatsSymbol">MBB</strong></h3>
+              <p id="stockStatsMeta" class="financial-overview-meta">Đang tải kỳ báo cáo mới nhất…</p>
+            </div>
+            <span class="financial-overview-unit" id="stockStatsUnit">Đơn vị: tỷ đồng</span>
+          </div>
+          <div class="financial-stats-grid">
+            <article class="financial-stat-card">
+              <div class="financial-stat-heading"><h4>Kết quả kinh doanh</h4><span id="stockStatPeriod">—</span></div>
+              <div class="financial-stat-rows">
+                <div><span>Doanh thu thuần</span><strong id="stockStatRevenue">—</strong></div>
+                <div><span>Lợi nhuận trước thuế</span><strong id="stockStatPretax">—</strong></div>
+                <div><span>Lợi nhuận sau thuế</span><strong id="stockStatNet">—</strong></div>
+                <div><span>Tăng trưởng LNST cùng kỳ</span><strong id="stockStatNetYoY">—</strong></div>
+              </div>
+              <p class="financial-stat-foot">Tăng trưởng chỉ tính khi có số liệu cùng quý năm trước.</p>
+            </article>
+            <article class="financial-stat-card">
+              <div class="financial-stat-heading"><h4>Định giá thị trường</h4><span>Chỉ số nguồn</span></div>
+              <div class="financial-stat-rows">
+                <div><span>Giá cổ phiếu</span><strong id="stockStatPrice">—</strong></div>
+                <div><span>EPS</span><strong id="stockStatEps">—</strong></div>
+                <div><span>P/E</span><strong id="stockStatPe">—</strong></div>
+                <div><span>P/B</span><strong id="stockStatPb">—</strong></div>
+                <div><span>EV/EBITDA</span><strong id="stockStatEvEbitda">—</strong></div>
+              </div>
+              <p class="financial-stat-foot">Không lấy giá thị trường từ báo cáo tài chính nếu snapshot không có trường tương ứng.</p>
+            </article>
+            <article class="financial-stat-card">
+              <div class="financial-stat-heading"><h4>Cân đối kế toán</h4><span id="stockStatBasis">—</span></div>
+              <div class="financial-stat-rows">
+                <div><span>Tổng tài sản</span><strong id="stockStatAssets">—</strong></div>
+                <div><span>Nợ phải trả</span><strong id="stockStatLiabilities">—</strong></div>
+                <div><span>Vốn chủ sở hữu</span><strong id="stockStatEquity">—</strong></div>
+              </div>
+              <p class="financial-stat-foot">Các số liệu lấy từ kỳ báo cáo mới nhất có dữ liệu.</p>
+            </article>
+            <article class="financial-stat-card">
+              <div class="financial-stat-heading"><h4>Sức khỏe tài chính</h4><span>Chỉ số tính từ BCTC</span></div>
+              <div class="financial-stat-rows">
+                <div><span>Nợ phải trả / Tổng tài sản</span><strong id="stockStatDebtAssets">—</strong></div>
+                <div><span>Nợ phải trả / Vốn chủ</span><strong id="stockStatDebtEquity">—</strong></div>
+                <div><span>ROA</span><strong id="stockStatRoa">—</strong></div>
+                <div><span>ROE</span><strong id="stockStatRoe">—</strong></div>
+                <div><span>Trạng thái dữ liệu</span><strong><span id="stockStatStatus" class="financial-status financial-status-pending">Đang tải</span></strong></div>
+              </div>
+              <p class="financial-stat-foot">Tỷ lệ đòn bẩy được tính từ nợ, tài sản và vốn chủ sở hữu cùng kỳ.</p>
+            </article>
+          </div>
+          <div class="financial-overview-source"><span id="stockStatsSourceNote">Nguồn và trạng thái kiểm chứng sẽ hiển thị sau khi tải dữ liệu.</span><a id="stockStatsSource" href="#" target="_blank" rel="noopener noreferrer" hidden>Mở báo cáo gốc ↗</a></div>
+        </section>
         <div class="statement-topbar">
           <label class="statement-basis-label" aria-label="Loại báo cáo">
             <select id="stockReportBasis">
@@ -232,11 +285,12 @@
           </label>
           <nav class="statement-tabs" id="stockStatementTabs" aria-label="Loại báo cáo tài chính" role="tablist">
             <button type="button" role="tab" aria-selected="true" class="is-active" data-statement="balance">Cân đối kế toán</button>
-            <button type="button" role="tab" aria-selected="false" data-statement="income">Báo cáo thu nhập</button>
+            <button type="button" role="tab" aria-selected="false" data-statement="income">Kết quả kinh doanh</button>
             <button type="button" role="tab" aria-selected="false" data-statement="cashflow">Lưu chuyển tiền tệ</button>
-            <button type="button" role="tab" aria-selected="false" data-statement="notes">Thuyết minh</button>
             <button type="button" role="tab" aria-selected="false" data-statement="ratios">Chỉ số tài chính</button>
+            <button type="button" role="tab" aria-selected="false" data-statement="valuation">Định giá</button>
             <button type="button" role="tab" aria-selected="false" data-statement="peers">So sánh cùng ngành</button>
+            <button type="button" role="tab" aria-selected="false" data-statement="notes">Thuyết minh &amp; nguồn</button>
           </nav>
         </div>
         <div class="statement-toolbar">
