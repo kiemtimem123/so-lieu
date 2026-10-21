@@ -1169,6 +1169,13 @@
     const formatPlain = value => validNumber(value)
       ? new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 2 }).format(Number(value))
       : '—';
+    const styleChange = (id, value) => {
+      const element = document.getElementById(id);
+      if (!element) return;
+      const textValue = String(value ?? '').trim();
+      element.classList.toggle('is-negative', textValue.startsWith('-'));
+      element.classList.toggle('is-positive', textValue !== '—' && textValue !== '' && !textValue.startsWith('-') && !/^0([,.]0+)?%$/.test(textValue));
+    };
     const percentageChange = (field, current, rows) => {
       if (!current || !validNumber(current[field])) return '—';
       const match = String(current.period || '').match(/^(\d{4})-Q([1-4])$/);
@@ -1217,22 +1224,32 @@
       setText('stockStatsMeta', period + ' · ' + (basisSelect?.value === 'separate' ? 'Báo cáo riêng lẻ' : 'Báo cáo hợp nhất') + ' · Nguồn: ' + (snapshots.get(ticker)?.sourceName || 'snapshot tài chính'));
       setText('stockStatPeriod', period);
       setText('stockStatRevenue', overviewMoney(latest.revenue, latest));
-      setText('stockStatRevenueYoY', percentageChange('revenue', latest, rows));
+      const revenueYoY = percentageChange('revenue', latest, rows);
+      const pretaxYoY = percentageChange('pretax_profit', latest, rows);
+      const netYoY = percentageChange('net_profit', latest, rows);
+      setText('stockStatRevenueYoY', revenueYoY);
       setText('stockStatPretax', overviewMoney(latest.pretax_profit, latest));
-      setText('stockStatPretaxYoY', percentageChange('pretax_profit', latest, rows));
+      setText('stockStatPretaxYoY', pretaxYoY);
       setText('stockStatNet', overviewMoney(latest.net_profit, latest));
-      setText('stockStatNetYoY', percentageChange('net_profit', latest, rows));
+      setText('stockStatNetYoY', netYoY);
+      [['stockStatRevenueYoY',revenueYoY],['stockStatPretaxYoY',pretaxYoY],['stockStatNetYoY',netYoY]].forEach(([id,value]) => styleChange(id,value));
 
       const price = firstNumber(latest, ['price','last_price','current_price','close','market_price']);
       const high52 = firstNumber(latest, ['high_52w','high_52_week','fifty_two_week_high','week52_high']);
       const low52 = firstNumber(latest, ['low_52w','low_52_week','fifty_two_week_low','week52_low']);
       setText('stockStatPrice', price === null ? '—' : formatPlain(price) + ' đ');
       setText('stockStatVolume15d', formatPlain(firstNumber(latest, ['avg_volume_15d','average_volume_15d','volume_avg_15d','avg_volume_15_days'])));
-      setText('stockStatChange1d', formatPct(firstNumber(latest, ['change_1d_pct','pct_change_1d','change_day_pct','daily_change_pct'])));
-      setText('stockStatChange1w', formatPct(firstNumber(latest, ['change_1w_pct','pct_change_1w','change_week_pct','weekly_change_pct'])));
-      setText('stockStatChange1m', formatPct(firstNumber(latest, ['change_1m_pct','pct_change_1m','change_month_pct','monthly_change_pct'])));
-      setText('stockStatChange3m', formatPct(firstNumber(latest, ['change_3m_pct','pct_change_3m','quarter_change_pct'])));
-      setText('stockStatChange1y', formatPct(firstNumber(latest, ['change_1y_pct','pct_change_1y','year_change_pct','yearly_change_pct'])));
+      const change1d = formatPct(firstNumber(latest, ['change_1d_pct','pct_change_1d','change_day_pct','daily_change_pct']));
+      const change1w = formatPct(firstNumber(latest, ['change_1w_pct','pct_change_1w','change_week_pct','weekly_change_pct']));
+      const change1m = formatPct(firstNumber(latest, ['change_1m_pct','pct_change_1m','change_month_pct','monthly_change_pct']));
+      const change3m = formatPct(firstNumber(latest, ['change_3m_pct','pct_change_3m','quarter_change_pct']));
+      const change1y = formatPct(firstNumber(latest, ['change_1y_pct','pct_change_1y','year_change_pct','yearly_change_pct']));
+      setText('stockStatChange1d', change1d);
+      setText('stockStatChange1w', change1w);
+      setText('stockStatChange1m', change1m);
+      setText('stockStatChange3m', change3m);
+      setText('stockStatChange1y', change1y);
+      [['stockStatChange1d',change1d],['stockStatChange1w',change1w],['stockStatChange1m',change1m],['stockStatChange3m',change3m],['stockStatChange1y',change1y]].forEach(([id,value]) => styleChange(id,value));
       setText('stockStatRange52w', high52 !== null || low52 !== null ? (high52 === null ? '—' : formatPlain(high52)) + ' / ' + (low52 === null ? '—' : formatPlain(low52)) + ' đ' : '—');
       setText('stockStatMarketCap', overviewNumber(firstNumber(latest, ['market_cap','market_cap_vnd']), latest));
       setText('stockStatEnterpriseValue', overviewNumber(firstNumber(latest, ['enterprise_value','ev']), latest));
