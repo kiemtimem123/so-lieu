@@ -3,6 +3,7 @@ name: Sync quarterly BCTC from VietstockFinance
 on:
   schedule:
     - cron: "17 2 * * *"
+    - cron: "*/20 * * * *"
   workflow_dispatch:
     inputs:
       symbol:
@@ -57,7 +58,7 @@ jobs:
         env:
           PYTHONUTF8: "1"
           FINANCIAL_SYNC_SYMBOL: ${{ github.event.inputs.symbol || '' }}
-          FINANCIAL_SYNC_BOOTSTRAP_ONLY: ${{ github.event_name == 'push' && '1' || '' }}
+          FINANCIAL_SYNC_BOOTSTRAP_ONLY: ${{ (github.event_name == 'push' || github.event.schedule == '*/20 * * * *') && '1' || '' }}
         run: python scripts/sync-vietstock-financials.py
 
       - name: Set up Node.js

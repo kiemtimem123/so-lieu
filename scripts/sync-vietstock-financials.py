@@ -79,10 +79,16 @@ YEAR_RE = re.compile(r"\b(20\d{2})\b")
 ROMAN_QUARTERS = {"i": 1, "ii": 2, "iii": 3, "iv": 4}
 ALLOWED_HOSTS = {"finance.vietstock.vn", "static2.vietstock.vn", "vietstock.vn", "www.vietstock.vn"}
 
-ASSET_LABELS = ["tổng cộng tài sản", "total assets"]
-LIABILITY_LABELS = ["tổng nợ phải trả", "tổng cộng nợ phải trả", "total liabilities", "nợ phải trả"]
+ASSET_LABELS = ["tổng cộng tài sản", "tổng tài sản", "total assets"]
+LIABILITY_LABELS = [
+    "tổng nợ phải trả và vốn chủ sở hữu", "tổng nợ phải trả", "tổng các khoản nợ phải trả",
+    "tổng cộng nợ phải trả", "total liabilities", "nợ phải trả",
+]
 EQUITY_LABELS = ["tổng vốn chủ sở hữu", "vốn chủ sở hữu", "total equity"]
-SOURCE_TOTAL_LABELS = ["tổng cộng nguồn vốn", "tổng nợ phải trả và vốn chủ sở hữu", "total liabilities and equity"]
+SOURCE_TOTAL_LABELS = [
+    "tổng cộng nguồn vốn", "tổng nguồn vốn", "tổng nợ phải trả và vốn chủ sở hữu",
+    "total liabilities and equity", "total sources",
+]
 PRETAX_LABELS = [
     "lợi nhuận kế toán trước thuế",
     "tổng lợi nhuận kế toán trước thuế",
@@ -390,7 +396,7 @@ def row_numbers(lines: list[str], labels: list[str], limit: int = 5, min_abs: in
             if start < 0:
                 continue
             suffix = clean_line[start + len(term):start + len(term) + 36]
-            if term == "tổng cộng tài sản" and any(word in suffix for word in ("ngan han", "dai han")):
+            if term in {"tổng cộng tài sản", "tổng tài sản"} and any(word in suffix for word in ("ngan han", "dai han")):
                 continue
             if term == "nợ phải trả" and any(word in suffix for word in ("ngan han", "dai han")):
                 continue
@@ -585,12 +591,27 @@ def extract_statement(
         if a > e >= 0:
             balances = (a, a - e, e)
             derived_fields.append("liabilities_from_assets_minus_equity")
+    # Some bank statement layouts show "total assets" and "total liabilities
+    # and equity" as matching totals, without a separately extractable equity row.
+    # Match the two totals first, then derive equity from the reported liabilities.
     if balances is None and asset_series and source_total_series and liability_series:
-        balances = choose_balance_columns(asset_series, liability_series, source_total_series)
-        if balances:
-            a, l, total_sources = balances
-            balances = (a, l, total_sources - l)
-            derived_fields.append("equity_from_total_sources_minus_liabilities")
+        candidates = []
+        for ai, assets in enumerate(asset_series[:5]):
+            if assets <= 0:
+                continue
+            for si, total_sources in enumerate(source_total_series[:5]):
+                match_delta = abs(assets - total_sources)
+                if match_delta > max(5.0, abs(assets) * 1e-8):
+                    continue
+                for li, liabilities in enumerate(liability_series[:5]):
+                    equity = assets - liabilities
+                    if liabilities < 0 or equity < 0:
+                        continue
+                    candidates.append(((ai + si + li, match_delta), assets, liabilities, equity))
+        if candidates:
+            _, assets, liabilities, equity = min(candidates, key=lambda x: x[0])
+            balances = (assets, liabilities, equity)
+            derived_fields.append("equity_from_matched_assets_and_total_sources_minus_liabilities")
     if balances is None:
         raise ValueError("Không tìm được ba dòng tài sản/nợ/vốn cùng một cột thỏa phương trình cân đối.")
 
