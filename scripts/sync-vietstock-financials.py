@@ -633,7 +633,7 @@ def extract_statement(
     revenue_series = row_numbers(lines, revenue_labels)
     revenue = million(revenue_series[0]) if revenue_series else None
 
-balance_detail_labels = {
+    balance_detail_labels = {
         "current_assets": ["tài sản ngắn hạn", "current assets"],
         "cash_and_equivalents": ["tiền và các khoản tương đương tiền", "tiền và tương đương tiền", "cash and cash equivalents"],
         "short_term_investments": ["đầu tư tài chính ngắn hạn", "short-term financial investments"],
