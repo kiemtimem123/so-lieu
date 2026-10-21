@@ -5,6 +5,13 @@ on:
     paths:
       - "data/financials-*.json"
       - "scripts/validate-financials.mjs"
+      - ".github/scripts/collect-financial-reports.py"
+      - ".github/scripts/ocr-stored-reports.py"
+      - ".github/scripts/validate-report-queue.cjs"
+      - "config/report-queue.json"
+      - "config/source-registry.json"
+      - ".github/workflows/collect-financial-reports.yml"
+      - ".github/workflows/ocr-financial-reports.yml"
       - "scripts/enrich-financial-categories.py"
       - "scripts/sync-vietstock-financials.py"
       - "config/securities.json"
@@ -14,6 +21,13 @@ on:
     paths:
       - "data/financials-*.json"
       - "scripts/validate-financials.mjs"
+      - ".github/scripts/collect-financial-reports.py"
+      - ".github/scripts/ocr-stored-reports.py"
+      - ".github/scripts/validate-report-queue.cjs"
+      - "config/report-queue.json"
+      - "config/source-registry.json"
+      - ".github/workflows/collect-financial-reports.yml"
+      - ".github/workflows/ocr-financial-reports.yml"
       - "scripts/enrich-financial-categories.py"
       - "reports/raw/**/*.extracted.json"
       - ".github/workflows/validate-financials.yml"
@@ -37,6 +51,13 @@ jobs:
             /scripts/sync-vietstock-financials.py
             /config/securities.json
             /scripts/validate-financials.mjs
+            /.github/scripts/collect-financial-reports.py
+            /.github/scripts/ocr-stored-reports.py
+            /.github/scripts/validate-report-queue.cjs
+            /config/report-queue.json
+            /config/source-registry.json
+            /.github/workflows/collect-financial-reports.yml
+            /.github/workflows/ocr-financial-reports.yml
             /reports/raw/**/*.extracted.json
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -50,5 +71,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+      - name: Check report collector syntax
+        run: python -m py_compile .github/scripts/collect-financial-reports.py
+      - name: Check archived-report OCR syntax
+        run: python -m py_compile .github/scripts/ocr-stored-reports.py
+      - name: Validate report queue
+        run: node .github/scripts/validate-report-queue.cjs
       - name: Validate quarterly financial snapshots
         run: node scripts/validate-financials.mjs
