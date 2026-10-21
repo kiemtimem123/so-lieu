@@ -1183,7 +1183,7 @@ def main() -> int:
                         "sync_note": "Lần lấy dữ liệu ban đầu gặp lỗi; không tạo số liệu giả. Lịch đồng bộ tiếp theo sẽ thử lại.",
                         "items": [],
                     }
-                    path.write_text(json.dumps(placeholder, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")
+                    path.write_text(json.dumps(placeholder, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
                     print(f"  {symbol}: đã ghi snapshot rỗng có trạng thái lỗi để tiếp tục xử lý mã kế tiếp.")
         time.sleep(SLEEP_BETWEEN_CALLS)
     print("\nTóm tắt")
