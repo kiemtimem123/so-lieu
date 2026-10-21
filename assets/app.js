@@ -1325,6 +1325,13 @@
       return new Intl.NumberFormat('en-US', { maximumFractionDigits: 1, minimumFractionDigits: 0 }).format(numeric);
     };
     const getStatementRows = () => {
+      const activeTicker = String(symbolSelect?.value || 'MBB').toUpperCase();
+      const activeIndustry = industryFor(activeTicker);
+      const revenueRowLabel = activeIndustry === 'banking'
+        ? 'Tổng thu nhập hoạt động'
+        : activeIndustry === 'securities'
+          ? 'Doanh thu hoạt động'
+          : 'Doanh thu thuần';
       if (activeStatement === 'balance') return [
         { label: 'A. TÀI SẢN', type: 'section' },
         { label: 'I. Tài sản ngắn hạn', key: 'current_assets', level: 1 },
@@ -1345,7 +1352,7 @@
       ];
       if (activeStatement === 'income') return [
         { label: 'KẾT QUẢ HOẠT ĐỘNG KINH DOANH', type: 'section' },
-        { label: 'Doanh thu thuần', key: 'revenue', level: 1 },
+        { label: revenueRowLabel, key: 'revenue', level: 1 },
         { label: 'Giá vốn hàng bán', key: 'cost_of_goods_sold', level: 1 },
         { label: 'Lợi nhuận gộp', key: 'gross_profit', strong: true },
         { label: 'Doanh thu hoạt động tài chính', key: 'financial_income', level: 1 },
