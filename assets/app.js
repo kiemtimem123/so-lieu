@@ -1155,6 +1155,20 @@
       const unit = (unitSelect?.value || 'billion') === 'billion' ? ' tỷ' : ' triệu';
       return statementNumber(value, item, false) + unit;
     };
+    const firstNumber = (item, names) => {
+      for (const name of names) if (validNumber(item?.[name])) return item[name];
+      return null;
+    };
+    const firstValue = (item, names) => {
+      for (const name of names) if (item?.[name] !== null && item?.[name] !== undefined && String(item[name]).trim() !== '') return item[name];
+      return null;
+    };
+    const formatPct = value => validNumber(value)
+      ? new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 2, minimumFractionDigits: 1 }).format(Number(value)) + '%'
+      : '—';
+    const formatPlain = value => validNumber(value)
+      ? new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 2 }).format(Number(value))
+      : '—';
     const percentageChange = (field, current, rows) => {
       if (!current || !validNumber(current[field])) return '—';
       const match = String(current.period || '').match(/^(\d{4})-Q([1-4])$/);
@@ -1172,13 +1186,23 @@
       const latest = allRows.slice().reverse().find(hasNumericFinancialData);
       const setText = (id, value) => {
         const element = document.getElementById(id);
-        if (element) element.textContent = value;
+        if (element) element.textContent = value == null || value === '' ? '—' : String(value);
       };
+      const allSummaryIds = [
+        'stockStatsSymbol','stockStatsMeta','stockStatsUnit','stockStatMarketPeriod','stockStatPeriod','stockStatRevenue','stockStatRevenueYoY',
+        'stockStatPretax','stockStatPretaxYoY','stockStatNet','stockStatNetYoY','stockStatPrice','stockStatVolume15d','stockStatChange1d',
+        'stockStatChange1w','stockStatChange1m','stockStatChange3m','stockStatChange1y','stockStatRange52w','stockStatMarketCap',
+        'stockStatEnterpriseValue','stockStatEps','stockStatPe','stockStatPeg','stockStatPb','stockStatEvEbitda','stockStatPs','stockStatBasis',
+        'stockStatAssets','stockStatCurrentAssets','stockStatCash','stockStatShortInvestments','stockStatInventory','stockStatCurrentLiabilities',
+        'stockStatLiabilities','stockStatEquity','stockStatOperatingCash','stockStatInvestingCash','stockStatFinancingCash','stockStatCapex',
+        'stockStatFcf','stockStatGrossMargin','stockStatNetMargin','stockStatDebtAssets','stockStatDebtEquity','stockStatEquityAssets',
+        'stockStatRoa','stockStatRoe','stockStatCurrentRatio'
+      ];
       setText('stockStatsSymbol', ticker);
       setText('stockStatsUnit', 'Đơn vị: ' + ((unitSelect?.value || 'billion') === 'billion' ? 'tỷ đồng' : 'triệu đồng'));
       if (!latest) {
         setText('stockStatsMeta', 'Chưa có kỳ báo cáo đủ dữ liệu cho mã và phạm vi đang chọn.');
-        ['stockStatPeriod','stockStatRevenue','stockStatRevenueYoY','stockStatPretax','stockStatPretaxYoY','stockStatNet','stockStatNetYoY','stockStatPrice','stockStatMarketCap','stockStatEnterpriseValue','stockStatEps','stockStatPe','stockStatPb','stockStatEvEbitda','stockStatBasis','stockStatAssets','stockStatLiabilities','stockStatEquity','stockStatDebtAssets','stockStatDebtEquity','stockStatRoa','stockStatRoe'].forEach(id => setText(id, '—'));
+        allSummaryIds.filter(id => id !== 'stockStatsSymbol' && id !== 'stockStatsMeta' && id !== 'stockStatsUnit').forEach(id => setText(id, '—'));
         setText('stockStatsSourceNote', 'Chưa có snapshot tài chính để hiển thị nguồn và trạng thái kiểm chứng.');
         const sourceLink = document.getElementById('stockStatsSource');
         if (sourceLink) sourceLink.hidden = true;
@@ -1188,36 +1212,68 @@
       }
       const period = displayPeriod(latest.period);
       const rows = allRows;
-      const revenueGrowth = percentageChange('revenue', latest, rows);
-      const pretaxGrowth = percentageChange('pretax_profit', latest, rows);
-      const priorYearGrowth = percentageChange('net_profit', latest, rows);
       const statusBadgeData = verificationBadge(latest);
       const statusBadge = document.getElementById('stockStatStatus');
       setText('stockStatsMeta', period + ' · ' + (basisSelect?.value === 'separate' ? 'Báo cáo riêng lẻ' : 'Báo cáo hợp nhất') + ' · Nguồn: ' + (snapshots.get(ticker)?.sourceName || 'snapshot tài chính'));
       setText('stockStatPeriod', period);
       setText('stockStatRevenue', overviewMoney(latest.revenue, latest));
-      setText('stockStatRevenueYoY', revenueGrowth);
+      setText('stockStatRevenueYoY', percentageChange('revenue', latest, rows));
       setText('stockStatPretax', overviewMoney(latest.pretax_profit, latest));
-      setText('stockStatPretaxYoY', pretaxGrowth);
+      setText('stockStatPretaxYoY', percentageChange('pretax_profit', latest, rows));
       setText('stockStatNet', overviewMoney(latest.net_profit, latest));
-      setText('stockStatNetYoY', priorYearGrowth);
-      setText('stockStatPrice', overviewNumber(latest.price ?? latest.last_price, latest, ' đ'));
-      setText('stockStatMarketCap', overviewNumber(latest.market_cap, latest));
-      setText('stockStatEnterpriseValue', overviewNumber(latest.enterprise_value, latest));
+      setText('stockStatNetYoY', percentageChange('net_profit', latest, rows));
+
+      const price = firstNumber(latest, ['price','last_price','current_price','close','market_price']);
+      const high52 = firstNumber(latest, ['high_52w','high_52_week','fifty_two_week_high','week52_high']);
+      const low52 = firstNumber(latest, ['low_52w','low_52_week','fifty_two_week_low','week52_low']);
+      setText('stockStatPrice', price === null ? '—' : formatPlain(price) + ' đ');
+      setText('stockStatVolume15d', formatPlain(firstNumber(latest, ['avg_volume_15d','average_volume_15d','volume_avg_15d','avg_volume_15_days'])));
+      setText('stockStatChange1d', formatPct(firstNumber(latest, ['change_1d_pct','pct_change_1d','change_day_pct','daily_change_pct'])));
+      setText('stockStatChange1w', formatPct(firstNumber(latest, ['change_1w_pct','pct_change_1w','change_week_pct','weekly_change_pct'])));
+      setText('stockStatChange1m', formatPct(firstNumber(latest, ['change_1m_pct','pct_change_1m','change_month_pct','monthly_change_pct'])));
+      setText('stockStatChange3m', formatPct(firstNumber(latest, ['change_3m_pct','pct_change_3m','quarter_change_pct'])));
+      setText('stockStatChange1y', formatPct(firstNumber(latest, ['change_1y_pct','pct_change_1y','year_change_pct','yearly_change_pct'])));
+      setText('stockStatRange52w', high52 !== null || low52 !== null ? (high52 === null ? '—' : formatPlain(high52)) + ' / ' + (low52 === null ? '—' : formatPlain(low52)) + ' đ' : '—');
+      setText('stockStatMarketCap', overviewNumber(firstNumber(latest, ['market_cap','market_cap_vnd']), latest));
+      setText('stockStatEnterpriseValue', overviewNumber(firstNumber(latest, ['enterprise_value','ev']), latest));
       setText('stockStatEps', overviewNumber(latest.eps, latest, ' đ/cp'));
       setText('stockStatPe', overviewNumber(latest.pe, latest, ' lần'));
+      setText('stockStatPeg', overviewNumber(latest.peg, latest, ' lần'));
       setText('stockStatPb', overviewNumber(latest.pb, latest, ' lần'));
-      setText('stockStatEvEbitda', overviewNumber(latest.ev_ebitda, latest, ' lần'));
+      setText('stockStatEvEbitda', overviewNumber(firstNumber(latest, ['ev_ebitda','evToEbitda']), latest, ' lần'));
+      setText('stockStatPs', overviewNumber(firstNumber(latest, ['ps','p_s']), latest, ' lần'));
       setText('stockStatBasis', basisSelect?.value === 'separate' ? 'Riêng lẻ' : 'Hợp nhất');
-      setText('stockStatAssets', overviewMoney(latest.total_assets, latest));
-      setText('stockStatLiabilities', overviewMoney(latest.total_liabilities, latest));
-      setText('stockStatEquity', overviewMoney(latest.equity, latest));
-      const debtAssets = validNumber(latest.total_liabilities) && validNumber(latest.total_assets) && Number(latest.total_assets) !== 0
-        ? Number(latest.total_liabilities) / Number(latest.total_assets) * 100 : null;
-      const debtEquity = validNumber(latest.total_liabilities) && validNumber(latest.equity) && Number(latest.equity) !== 0
-        ? Number(latest.total_liabilities) / Number(latest.equity) : null;
-      setText('stockStatDebtAssets', debtAssets === null ? '—' : new Intl.NumberFormat('vi-VN', {maximumFractionDigits:1,minimumFractionDigits:1}).format(debtAssets) + '%');
-      setText('stockStatDebtEquity', debtEquity === null ? '—' : new Intl.NumberFormat('vi-VN', {maximumFractionDigits:2,minimumFractionDigits:2}).format(debtEquity) + ' lần');
+      for (const [id, key] of [
+        ['stockStatAssets','total_assets'],['stockStatCurrentAssets','current_assets'],['stockStatCash','cash_and_equivalents'],
+        ['stockStatShortInvestments','short_term_investments'],['stockStatInventory','inventory'],
+        ['stockStatCurrentLiabilities','current_liabilities'],['stockStatLiabilities','total_liabilities'],['stockStatEquity','equity'],
+        ['stockStatOperatingCash','operating_cash_flow'],['stockStatInvestingCash','investing_cash_flow'],['stockStatFinancingCash','financing_cash_flow'],
+        ['stockStatCapex','capital_expenditure']
+      ]) setText(id, overviewMoney(firstNumber(latest, [key]), latest));
+
+      const operatingCash = firstNumber(latest, ['operating_cash_flow']);
+      const capex = firstNumber(latest, ['capital_expenditure']);
+      const fcf = operatingCash !== null && capex !== null ? operatingCash - Math.abs(capex) : null;
+      setText('stockStatFcf', fcf === null ? '—' : overviewMoney(fcf, latest));
+      const grossProfit = firstNumber(latest, ['gross_profit']);
+      const revenue = firstNumber(latest, ['revenue']);
+      const netProfit = firstNumber(latest, ['net_profit']);
+      setText('stockStatGrossMargin', grossProfit !== null && revenue !== null && revenue !== 0 ? formatPct(grossProfit/revenue*100) : '—');
+      setText('stockStatNetMargin', netProfit !== null && revenue !== null && revenue !== 0 ? formatPct(netProfit/revenue*100) : '—');
+
+      const assets = firstNumber(latest, ['total_assets']);
+      const liabilities = firstNumber(latest, ['total_liabilities']);
+      const equity = firstNumber(latest, ['equity']);
+      const debtAssets = assets !== null && assets !== 0 && liabilities !== null ? liabilities / assets * 100 : null;
+      const debtEquity = equity !== null && equity !== 0 && liabilities !== null ? liabilities / equity : null;
+      const equityAssets = assets !== null && assets !== 0 && equity !== null ? equity / assets * 100 : null;
+      const currentAssets = firstNumber(latest, ['current_assets']);
+      const currentLiabilities = firstNumber(latest, ['current_liabilities']);
+      const currentRatio = currentAssets !== null && currentLiabilities !== null && currentLiabilities !== 0 ? currentAssets / currentLiabilities : null;
+      setText('stockStatDebtAssets', formatPct(debtAssets));
+      setText('stockStatDebtEquity', debtEquity === null ? '—' : formatPlain(debtEquity) + ' lần');
+      setText('stockStatEquityAssets', formatPct(equityAssets));
+      setText('stockStatCurrentRatio', currentRatio === null ? '—' : formatPlain(currentRatio) + ' lần');
       setText('stockStatRoa', overviewNumber(latest.roa, latest, '%'));
       setText('stockStatRoe', overviewNumber(latest.roe, latest, '%'));
       if (statusBadge) { statusBadge.textContent = statusBadgeData.label; statusBadge.className = 'financial-status financial-status-' + statusBadgeData.kind; }
