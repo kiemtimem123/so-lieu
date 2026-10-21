@@ -129,7 +129,7 @@ def unit_factor(pages,item):
 def is_statement_row_start(line):
  # Interim PDFs often wrap an item label across lines. A new row generally
  # starts with a short account code followed by a pipe or another code.
- return bool(re.match(r"^\\s*(?:\\|\\s*)?\\d{1,3}\\s*(?:\\||\\s+\\d{1,3}\\s)",str(line or "")))
+ return bool(re.match(r"^\s*(?:\|\s*)?\d{1,3}\s*(?:\||\s+\d{1,3}\s)",str(line or "")))
 
 def value_by_label(pages,labels,factor,threshold=1000):
  for label in labels:
@@ -220,9 +220,25 @@ def extract_fields(item,symbol,pages):
  if revenue is None and symbol in STANDARD_BUSINESSES and inc: revenue=value_by_code(inc,INCOME_CODES["revenue"],scale)
  if revenue is not None: out["revenue"]=revenue
  for field,labels in INCOME_LABELS.items():
+  if field=="income_tax": continue
   val=value_by_label(inc,labels,scale) if inc else None
-  if val is None and symbol in STANDARD_BUSINESSES and inc: val=value_by_code(inc,INCOME_CODES[field],scale)
+  if val is None and symbol in STANDARD_BUSINESSES and inc and field in INCOME_CODES:
+   val=value_by_code(inc,INCOME_CODES[field],scale)
   if val is not None: out[field]=val
+
+ # Preserve current and deferred tax separately, then calculate the total tax
+ # expense/income only from the values reported in the same statement.
+ tax_current=value_by_label(inc,["chi phi thue tndn hien hanh","chi phi thue thu nhap doanh nghiep hien hanh"],scale) if inc else None
+ tax_deferred=value_by_label(inc,["chi phi thue tndn hoan lai","chi phi thue thu nhap doanh nghiep hoan lai"],scale) if inc else None
+ if tax_current is not None: out["income_tax_current"]=tax_current
+ if tax_deferred is not None: out["income_tax_deferred"]=tax_deferred
+ if tax_current is not None or tax_deferred is not None:
+  out["income_tax"]=(tax_current or 0)+(tax_deferred or 0)
+ else:
+  tax_total=value_by_label(inc,INCOME_LABELS["income_tax"],scale) if inc else None
+  if tax_total is None and symbol in STANDARD_BUSINESSES and inc:
+   tax_total=value_by_code(inc,INCOME_CODES["income_tax"],scale)
+  if tax_total is not None: out["income_tax"]=tax_total
  # Cash-flow rows are normally cumulative from 1 January on Q2/Q3/annual filings.
  for field,labels in CASHFLOW_LABELS.items():
   val=value_by_label(cf,labels,scale) if cf else None
@@ -249,7 +265,7 @@ def sane_fields(item, found, symbol):
  asset_fields={"current_assets","cash_and_equivalents","short_term_investments","short_term_receivables","inventory","non_current_assets","fixed_assets"}
  liability_fields={"current_liabilities","long_term_liabilities"}
  retained_fields={"retained_earnings"}
- income_fields={"revenue","cost_of_goods_sold","gross_profit","financial_income","financial_expense","interest_expense","selling_expense","admin_expense","operating_profit","income_tax","net_profit_attributable"}
+ income_fields={"revenue","cost_of_goods_sold","gross_profit","financial_income","financial_expense","interest_expense","selling_expense","admin_expense","operating_profit","income_tax","income_tax_current","income_tax_deferred","net_profit_attributable"}
  cash_fields=set(CASHFLOW_LABELS)-{"cash_beginning","cash_ending"}
  safe={}
  rejected=[]
@@ -280,51 +296,61 @@ def sane_fields(item, found, symbol):
    rejected.append(field+"_magnitude"); continue
   safe[field]=candidate
 
- # Asset subtotals should reconcile to total assets; otherwise reject the
- # newly extracted subtotals rather than display an unsupported decomposition.
- current_assets=value("current_assets")
- non_current_assets=value("non_current_assets")
- if has_assets and current_assets is not None and non_current_assets is not None:
-  if abs(current_assets+non_current_assets-assets)>max(abs(assets)*0.08,1000):
+ # A tiny 'current-assets' subtotal is usually a wrapped-label false match in
+ # bank/other statements; do not accept a subtotal below 0.5% of total assets.
+ ca=value("current_assets")
+ if has_assets and ca is not None and abs(ca)<abs(assets)*0.005:
+  discard("current_assets",reason="current_assets_too_small")
+
+ ca=value("current_assets")
+ nca=value("non_current_assets")
+ if has_assets and ca is not None and nca is not None:
+  if abs(ca+nca-assets)>max(abs(assets)*0.08,1000):
    discard("current_assets","non_current_assets",reason="asset_total_check")
- # Liability subtotals should likewise reconcile with total liabilities.
- current_liabilities=value("current_liabilities")
- long_term_liabilities=value("long_term_liabilities")
- if has_liabilities and current_liabilities is not None and long_term_liabilities is not None:
-  if abs(current_liabilities+long_term_liabilities-liabilities)>max(abs(liabilities)*0.08,1000):
+
+ cl=value("current_liabilities")
+ ll=value("long_term_liabilities")
+ if has_liabilities and cl is not None and ll is not None:
+  if abs(cl+ll-liabilities)>max(abs(liabilities)*0.08,1000):
    discard("current_liabilities","long_term_liabilities",reason="liability_total_check")
- # Cash/inventory/receivables/investments cannot each exceed their parent
- # current-asset total by a material margin.
- current_assets=value("current_assets")
- if current_assets is not None and current_assets>0:
+
+ ca=value("current_assets")
+ if ca is not None and ca>0:
   for field in ("cash_and_equivalents","short_term_investments","short_term_receivables","inventory"):
    part=value(field)
-   if part is not None and abs(part)>max(abs(current_assets)*1.25,1000):
+   if part is not None and abs(part)>max(abs(ca)*1.25,1000):
     discard(field,reason="current_asset_component_check")
- non_current_assets=value("non_current_assets")
- fixed_assets=value("fixed_assets")
- if non_current_assets is not None and non_current_assets>0 and fixed_assets is not None:
-  if abs(fixed_assets)>max(abs(non_current_assets)*1.25,1000):
+ nca=value("non_current_assets")
+ fa=value("fixed_assets")
+ if nca is not None and nca>0 and fa is not None:
+  if abs(fa)>max(abs(nca)*1.25,1000):
    discard("fixed_assets",reason="fixed_asset_parent_check")
 
- # For standard non-financial issuers, net revenue less cost of goods sold
- # must reconcile with gross profit. This also prevents an OCR match from a
- # neighbouring note/row from replacing a real revenue number.
  if symbol in STANDARD_BUSINESSES:
-  revenue=value("revenue")
+  rev=value("revenue")
   cogs=value("cost_of_goods_sold")
   gross=value("gross_profit")
-  if revenue is not None and cogs is not None and gross is not None:
-   expected=revenue-abs(cogs)
-   tolerance=max(abs(revenue)*0.03,1000)
+  if rev is not None and cogs is not None and gross is not None:
+   expected=rev-abs(cogs)
+   tolerance=max(abs(rev)*0.03,1000)
    if abs(expected-gross)>tolerance:
     discard("revenue","cost_of_goods_sold","gross_profit",reason="gross_profit_equation_check")
-  revenue=value("revenue")
+  rev=value("revenue")
   finance_income=value("financial_income")
-  if revenue is not None and revenue>0 and finance_income is not None and abs(finance_income)>abs(revenue)*0.5:
+  if rev is not None and rev>0 and finance_income is not None and abs(finance_income)>abs(rev)*0.5:
    discard("financial_income",reason="finance_income_ratio_check")
- return safe,rejected
 
+ # Tax should reconcile to the absolute gap between pre-tax and after-tax profit.
+ # Signed tax components are kept exactly as printed in the PDF; only the
+ # magnitude is compared because statement sign conventions differ by issuer.
+ pbt=item.get("pretax_profit")
+ net=item.get("net_profit")
+ tax=value("income_tax")
+ if isinstance(pbt,(int,float)) and isinstance(net,(int,float)) and tax is not None:
+  tax_gap=abs(pbt-net)
+  if tax_gap>1000 and abs(abs(tax)-tax_gap)>max(tax_gap*0.25,1000):
+   discard("income_tax","income_tax_current","income_tax_deferred",reason="tax_reconciliation_check")
+ return safe,rejected
 
 def enrich_snapshot(path):
  snapshot=json.loads(path.read_text(encoding="utf-8"))
@@ -411,6 +437,27 @@ def enrich_snapshot(path):
     item["cash_beginning"]=prev_cash
     item["cash_beginning_calculation"]="previous quarter closing cash"
     changed=True; field_count+=1
+ # Hide auto-extracted cash beginning/ending balances when their bridge to
+ # the separately reported quarterly cash change does not reconcile.
+ for item in items:
+  if not isinstance(item,dict) or not item.get("financial_line_items_status"): continue
+  fields=set(item.get("financial_line_items_extracted_fields") or [])
+  cash_begin=item.get("cash_beginning")
+  cash_end=item.get("cash_ending")
+  cash_change=item.get("net_cash_change")
+  asset_total=item.get("total_assets")
+  if all(isinstance(v,(int,float)) for v in (cash_begin,cash_end,cash_change)):
+   tolerance=max(abs(asset_total)*0.02,1000) if isinstance(asset_total,(int,float)) else 1000
+   if abs((cash_end-cash_begin)-cash_change)>tolerance:
+    removed=[]
+    for field in ("cash_beginning","cash_ending"):
+     if field in fields:
+      item.pop(field,None); fields.discard(field); removed.append(field); changed=True
+    if removed:
+     item["financial_line_items_extracted_fields"]=sorted(fields)
+     item["financial_line_items_cash_check"]="opening/closing cash hidden because the cash bridge did not reconcile"
+     item["financial_line_items_note"]=str(item.get("financial_line_items_note") or "")+" Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý."
+     field_count+=len(removed)
  if changed:
   path.write_text(json.dumps(snapshot,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
  return changed,quarter_count,field_count
