@@ -513,9 +513,15 @@ def enrich_snapshot(path):
   if not isinstance(item,dict) or not period_key(item): continue
   report_type_text=str(item.get("report_type") or "")
   source_norm=norm(item.get("source_url") or "")
-  # Every candidate processed by the quarterly sync has already passed the
-  # consolidated-only VietstockFinance filter; keep that scope explicit in the UI.
-  if ("hopnhat" in source_norm or "consolidated" in source_norm) and "hop nhat" not in norm(report_type_text):
+  source_index=str(item.get("source_index_url") or "")
+  sync_scope_verified=(
+   item.get("financial_line_items_source")==item.get("source_url")
+   and "finance.vietstock.vn/" in source_index
+   and "doctype=1" in source_index
+  )
+  # The direct quarterly worker accepts only consolidated records from this
+  # catalog; preserve that scope explicitly even when the PDF filename omits it.
+  if (sync_scope_verified or "hopnhat" in source_norm or "consolidated" in source_norm) and "hop nhat" not in norm(report_type_text):
    if report_type_text.lower().startswith("bctc "):
     item["report_type"]="BCTC hợp nhất "+report_type_text[5:]
    else:
