@@ -1178,8 +1178,8 @@
       setText('stockStatsUnit', 'Đơn vị: ' + ((unitSelect?.value || 'billion') === 'billion' ? 'tỷ đồng' : 'triệu đồng'));
       if (!latest) {
         setText('stockStatsMeta', 'Chưa có kỳ báo cáo đủ dữ liệu cho mã và phạm vi đang chọn.');
-        ['stockStatPeriod','stockStatRevenue','stockStatPretax','stockStatNet','stockStatNetYoY','stockStatPrice','stockStatEps','stockStatPe','stockStatPb','stockStatEvEbitda','stockStatBasis','stockStatAssets','stockStatLiabilities','stockStatEquity','stockStatDebtAssets','stockStatDebtEquity','stockStatRoa','stockStatRoe'].forEach(id => setText(id, '—'));
-        setText('stockStatSourceNote', 'Chưa có snapshot tài chính để hiển thị nguồn và trạng thái kiểm chứng.');
+        ['stockStatPeriod','stockStatRevenue','stockStatRevenueYoY','stockStatPretax','stockStatPretaxYoY','stockStatNet','stockStatNetYoY','stockStatPrice','stockStatMarketCap','stockStatEnterpriseValue','stockStatEps','stockStatPe','stockStatPb','stockStatEvEbitda','stockStatBasis','stockStatAssets','stockStatLiabilities','stockStatEquity','stockStatDebtAssets','stockStatDebtEquity','stockStatRoa','stockStatRoe'].forEach(id => setText(id, '—'));
+        setText('stockStatsSourceNote', 'Chưa có snapshot tài chính để hiển thị nguồn và trạng thái kiểm chứng.');
         const sourceLink = document.getElementById('stockStatsSource');
         if (sourceLink) sourceLink.hidden = true;
         const statusBadge = document.getElementById('stockStatStatus');
@@ -1188,16 +1188,22 @@
       }
       const period = displayPeriod(latest.period);
       const rows = allRows;
+      const revenueGrowth = percentageChange('revenue', latest, rows);
+      const pretaxGrowth = percentageChange('pretax_profit', latest, rows);
       const priorYearGrowth = percentageChange('net_profit', latest, rows);
       const statusBadgeData = verificationBadge(latest);
       const statusBadge = document.getElementById('stockStatStatus');
       setText('stockStatsMeta', period + ' · ' + (basisSelect?.value === 'separate' ? 'Báo cáo riêng lẻ' : 'Báo cáo hợp nhất') + ' · Nguồn: ' + (snapshots.get(ticker)?.sourceName || 'snapshot tài chính'));
       setText('stockStatPeriod', period);
       setText('stockStatRevenue', overviewMoney(latest.revenue, latest));
+      setText('stockStatRevenueYoY', revenueGrowth);
       setText('stockStatPretax', overviewMoney(latest.pretax_profit, latest));
+      setText('stockStatPretaxYoY', pretaxGrowth);
       setText('stockStatNet', overviewMoney(latest.net_profit, latest));
       setText('stockStatNetYoY', priorYearGrowth);
       setText('stockStatPrice', overviewNumber(latest.price ?? latest.last_price, latest, ' đ'));
+      setText('stockStatMarketCap', overviewNumber(latest.market_cap, latest));
+      setText('stockStatEnterpriseValue', overviewNumber(latest.enterprise_value, latest));
       setText('stockStatEps', overviewNumber(latest.eps, latest, ' đ/cp'));
       setText('stockStatPe', overviewNumber(latest.pe, latest, ' lần'));
       setText('stockStatPb', overviewNumber(latest.pb, latest, ' lần'));
@@ -1310,8 +1316,8 @@
         { label: 'P/E (lần)', key: 'pe', ratio: true, level: 1 },
         { label: 'P/B (lần)', key: 'pb', ratio: true, level: 1 },
         { label: 'EV/EBITDA (lần)', key: 'ev_ebitda', ratio: true, level: 1 },
-        { label: 'Vốn hóa thị trường', key: 'market_cap', ratio: true, level: 1 },
-        { label: 'Giá trị doanh nghiệp (EV)', key: 'enterprise_value', ratio: true, level: 1 },
+        { label: 'Vốn hóa thị trường', key: 'market_cap', level: 1 },
+        { label: 'Giá trị doanh nghiệp (EV)', key: 'enterprise_value', level: 1 },
         { label: 'GIẢI THÍCH', type: 'section' },
         { label: 'Trường dữ liệu định giá được cung cấp', key: 'valuation_source', text: true },
         { label: 'Đơn vị định giá', key: 'valuation_unit', text: true }
