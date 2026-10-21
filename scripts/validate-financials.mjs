@@ -8,7 +8,19 @@ import fs from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
-const symbols = ["MBB", "ACB", "FPT", "SHB", "TCX", "HCM", "VND", "SHS", "NLG", "BSR", "TCB", "VHM"];
+const configFile = path.join(root, "config", "securities.json");
+let symbols = ["MBB", "ACB", "FPT", "SHB", "TCX", "HCM", "VND", "SHS", "NLG", "BSR", "TCB", "VHM"];
+try {
+  const configuration = JSON.parse(fs.readFileSync(configFile, "utf8"));
+  const configured = Array.isArray(configuration.securities)
+    ? configuration.securities
+        .filter(item => item && item.enabled !== false && item.symbol)
+        .map(item => String(item.symbol).trim().toUpperCase())
+    : [];
+  if (configured.length) symbols = [...new Set(configured)];
+} catch (error) {
+  console.warn(`Could not read config/securities.json; validating the legacy symbol list (${error.message}).`);
+}
 const firstExpectedOrdinal = 2024 * 4 + 1;
 const periodOrdinal = period => {
   const match = /^(20\d{2})-Q([1-4])$/.exec(String(period || ""));
@@ -27,7 +39,8 @@ const summary = [];
 for (const symbol of symbols) {
   const file = path.join(root, "data", `financials-${symbol}.json`);
   if (!fs.existsSync(file)) {
-    errors.push(`${symbol}: missing ${path.relative(root, file)}`);
+    warnings.push(`${symbol}: snapshot not created yet; the VietstockFinance bootstrap workflow must create it.`);
+    summary.push({ symbol, periods: 0, first: null, last: null, statuses: {}, state: "not_bootstrapped" });
     continue;
   }
 
@@ -42,6 +55,12 @@ for (const symbol of symbols) {
   if (snapshot.symbol !== symbol) errors.push(`${symbol}: top-level symbol mismatch`);
   if (!Array.isArray(snapshot.items)) {
     errors.push(`${symbol}: items must be an array`);
+    continue;
+  }
+
+  if (snapshot.items.length === 0) {
+    warnings.push(`${symbol}: no quarterly reports have been added to this snapshot yet.`);
+    summary.push({ symbol, periods: 0, first: null, last: null, statuses: {}, state: "awaiting_reports" });
     continue;
   }
 
@@ -110,7 +129,8 @@ for (const symbol of symbols) {
     periods: snapshot.items.length,
     first: snapshot.items[0]?.period || null,
     last: snapshot.items.at(-1)?.period || null,
-    statuses: statusCounts
+    statuses: statusCounts,
+    detailQuarters: snapshot.items.filter(item => item.financial_line_items_status).length
   });
 }
 
