@@ -56,10 +56,37 @@ jobs:
           git add data/financials-*.json
           if git diff --cached --quiet; then
             echo "No additional financial line items extracted from the stored reports."
-          else
+            exit 0
+          fi
+
+          pushed=false
+          for attempt in 1 2 3 4 5; do
             git commit -m "Enrich quarterly financial categories from stored BCTC text"
-            git pull --rebase origin "$GITHUB_REF_NAME"
-            git push origin "HEAD:$GITHUB_REF_NAME"
+            git fetch origin "$GITHUB_REF_NAME"
+            if git rebase "origin/$GITHUB_REF_NAME"; then
+              if git push origin "HEAD:$GITHUB_REF_NAME"; then
+                pushed=true
+                break
+              fi
+            else
+              echo "Snapshot changed in parallel; recomputing enrichment from latest main."
+              git rebase --abort || true
+              git fetch origin "$GITHUB_REF_NAME"
+              git reset --hard "origin/$GITHUB_REF_NAME"
+              python scripts/enrich-financial-categories.py
+              git add data/financials-*.json
+              if git diff --cached --quiet; then
+                echo "No additional fields remain after recomputing on latest main."
+                pushed=true
+                break
+              fi
+            fi
+            sleep $((attempt * 2))
+          done
+
+          if [ "$pushed" != "true" ]; then
+            echo "::error::Could not push enriched financial snapshots after five safe attempts."
+            exit 1
           fi
       - name: Set up Node.js
         uses: actions/setup-node@v4
