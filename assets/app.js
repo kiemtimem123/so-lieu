@@ -1145,6 +1145,84 @@
       });
     };
     const displayPeriod = value => String(value || '').replace(/^(\d{4})-Q([1-4])$/, (_, year, quarter) => 'Q' + quarter + '/' + year);
+    const overviewNumber = (value, item, suffix = '') => {
+      if (!validNumber(value)) return '—';
+      const base = statementNumber(value, item, true);
+      return base === '—' ? base : base + suffix;
+    };
+    const overviewMoney = (value, item) => {
+      if (!validNumber(value)) return '—';
+      const unit = (unitSelect?.value || 'billion') === 'billion' ? ' tỷ' : ' triệu';
+      return statementNumber(value, item, false) + unit;
+    };
+    const percentageChange = (field, current, rows) => {
+      if (!current || !validNumber(current[field])) return '—';
+      const match = String(current.period || '').match(/^(\d{4})-Q([1-4])$/);
+      if (!match) return '—';
+      const previousPeriod = (Number(match[1]) - 1) + '-Q' + match[2];
+      const previous = rows.find(row => row.period === previousPeriod);
+      if (!previous || !validNumber(previous[field]) || Number(previous[field]) === 0) return '—';
+      const change = (Number(current[field]) - Number(previous[field])) / Math.abs(Number(previous[field])) * 100;
+      if (!Number.isFinite(change)) return '—';
+      const formatted = new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 1, minimumFractionDigits: 1 }).format(change);
+      return (change > 0 ? '+' : '') + formatted + '%';
+    };
+    function renderFinancialOverview(ticker) {
+      const allRows = rowsForBasis(ticker);
+      const latest = allRows.slice().reverse().find(hasNumericFinancialData);
+      const setText = (id, value) => {
+        const element = document.getElementById(id);
+        if (element) element.textContent = value;
+      };
+      setText('stockStatsSymbol', ticker);
+      setText('stockStatsUnit', 'Đơn vị: ' + ((unitSelect?.value || 'billion') === 'billion' ? 'tỷ đồng' : 'triệu đồng'));
+      if (!latest) {
+        setText('stockStatsMeta', 'Chưa có kỳ báo cáo đủ dữ liệu cho mã và phạm vi đang chọn.');
+        ['stockStatPeriod','stockStatRevenue','stockStatPretax','stockStatNet','stockStatNetYoY','stockStatPrice','stockStatEps','stockStatPe','stockStatPb','stockStatEvEbitda','stockStatBasis','stockStatAssets','stockStatLiabilities','stockStatEquity','stockStatDebtAssets','stockStatDebtEquity','stockStatRoa','stockStatRoe'].forEach(id => setText(id, '—'));
+        setText('stockStatSourceNote', 'Chưa có snapshot tài chính để hiển thị nguồn và trạng thái kiểm chứng.');
+        const sourceLink = document.getElementById('stockStatsSource');
+        if (sourceLink) sourceLink.hidden = true;
+        const statusBadge = document.getElementById('stockStatStatus');
+        if (statusBadge) { statusBadge.textContent = 'Chưa có dữ liệu'; statusBadge.className = 'financial-status financial-status-pending'; }
+        return;
+      }
+      const period = displayPeriod(latest.period);
+      const rows = allRows;
+      const priorYearGrowth = percentageChange('net_profit', latest, rows);
+      const statusBadgeData = verificationBadge(latest);
+      const statusBadge = document.getElementById('stockStatStatus');
+      setText('stockStatsMeta', period + ' · ' + (basisSelect?.value === 'separate' ? 'Báo cáo riêng lẻ' : 'Báo cáo hợp nhất') + ' · Nguồn: ' + (snapshots.get(ticker)?.sourceName || 'snapshot tài chính'));
+      setText('stockStatPeriod', period);
+      setText('stockStatRevenue', overviewMoney(latest.revenue, latest));
+      setText('stockStatPretax', overviewMoney(latest.pretax_profit, latest));
+      setText('stockStatNet', overviewMoney(latest.net_profit, latest));
+      setText('stockStatNetYoY', priorYearGrowth);
+      setText('stockStatPrice', overviewNumber(latest.price ?? latest.last_price, latest, ' đ'));
+      setText('stockStatEps', overviewNumber(latest.eps, latest, ' đ/cp'));
+      setText('stockStatPe', overviewNumber(latest.pe, latest, ' lần'));
+      setText('stockStatPb', overviewNumber(latest.pb, latest, ' lần'));
+      setText('stockStatEvEbitda', overviewNumber(latest.ev_ebitda, latest, ' lần'));
+      setText('stockStatBasis', basisSelect?.value === 'separate' ? 'Riêng lẻ' : 'Hợp nhất');
+      setText('stockStatAssets', overviewMoney(latest.total_assets, latest));
+      setText('stockStatLiabilities', overviewMoney(latest.total_liabilities, latest));
+      setText('stockStatEquity', overviewMoney(latest.equity, latest));
+      const debtAssets = validNumber(latest.total_liabilities) && validNumber(latest.total_assets) && Number(latest.total_assets) !== 0
+        ? Number(latest.total_liabilities) / Number(latest.total_assets) * 100 : null;
+      const debtEquity = validNumber(latest.total_liabilities) && validNumber(latest.equity) && Number(latest.equity) !== 0
+        ? Number(latest.total_liabilities) / Number(latest.equity) : null;
+      setText('stockStatDebtAssets', debtAssets === null ? '—' : new Intl.NumberFormat('vi-VN', {maximumFractionDigits:1,minimumFractionDigits:1}).format(debtAssets) + '%');
+      setText('stockStatDebtEquity', debtEquity === null ? '—' : new Intl.NumberFormat('vi-VN', {maximumFractionDigits:2,minimumFractionDigits:2}).format(debtEquity) + ' lần');
+      setText('stockStatRoa', overviewNumber(latest.roa, latest, '%'));
+      setText('stockStatRoe', overviewNumber(latest.roe, latest, '%'));
+      if (statusBadge) { statusBadge.textContent = statusBadgeData.label; statusBadge.className = 'financial-status financial-status-' + statusBadgeData.kind; }
+      setText('stockStatsSourceNote', (latest.report_type || 'Báo cáo tài chính') + (latest.published_at ? ' · Công bố: ' + dateFmt(latest.published_at) : '') + (latest.source_pages ? ' · ' + latest.source_pages : ''));
+      const sourceLink = document.getElementById('stockStatsSource');
+      if (sourceLink) {
+        const url = typeof latest.source_url === 'string' && /^https?:\/\//i.test(latest.source_url) ? latest.source_url : '';
+        if (url) { sourceLink.href = url; sourceLink.hidden = false; }
+        else sourceLink.hidden = true;
+      }
+    }
     const statementNumber = (value, item, isRatio = false) => {
       if (!validNumber(value)) return '—';
       let numeric = Number(value);
@@ -1164,28 +1242,79 @@
     };
     const getStatementRows = () => {
       if (activeStatement === 'balance') return [
-        { label: 'A. TÀI SẢN', key: 'total_assets', type: 'section' },
-        { label: 'B. NGUỒN VỐN', type: 'section' },
-        { label: 'I. Nợ phải trả', key: 'total_liabilities', level: 1 },
-        { label: 'II. Vốn chủ sở hữu', key: 'equity', level: 1 },
+        { label: 'A. TÀI SẢN', type: 'section' },
+        { label: 'I. Tài sản ngắn hạn', key: 'current_assets', level: 1 },
+        { label: 'Tiền và tương đương tiền', key: 'cash_and_equivalents', level: 1 },
+        { label: 'Đầu tư tài chính ngắn hạn', key: 'short_term_investments', level: 1 },
+        { label: 'Các khoản phải thu ngắn hạn', key: 'short_term_receivables', level: 1 },
+        { label: 'Hàng tồn kho', key: 'inventory', level: 1 },
+        { label: 'II. Tài sản dài hạn', key: 'non_current_assets', level: 1 },
+        { label: 'Tài sản cố định', key: 'fixed_assets', level: 1 },
+        { label: 'TỔNG CỘNG TÀI SẢN', key: 'total_assets', strong: true },
+        { label: 'B. NỢ PHẢI TRẢ VÀ VỐN CHỦ SỞ HỮU', type: 'section' },
+        { label: 'I. Nợ ngắn hạn', key: 'current_liabilities', level: 1 },
+        { label: 'II. Nợ dài hạn', key: 'long_term_liabilities', level: 1 },
+        { label: 'Tổng nợ phải trả', key: 'total_liabilities', strong: true },
+        { label: 'III. Vốn chủ sở hữu', key: 'equity', level: 1 },
+        { label: 'Lợi nhuận sau thuế chưa phân phối', key: 'retained_earnings', level: 1 },
         { label: 'TỔNG NỢ VÀ VỐN CHỦ SỞ HỮU', formula: 'total_sources', strong: true }
       ];
       if (activeStatement === 'income') return [
         { label: 'KẾT QUẢ HOẠT ĐỘNG KINH DOANH', type: 'section' },
-        { label: 'I. Doanh thu', key: 'revenue', level: 1 },
-        { label: 'II. Lợi nhuận trước thuế', key: 'pretax_profit', level: 1 },
-        { label: 'III. Thuế thu nhập', key: 'income_tax', level: 1 },
-        { label: 'IV. Lợi nhuận sau thuế', key: 'net_profit', strong: true },
+        { label: 'Doanh thu thuần', key: 'revenue', level: 1 },
+        { label: 'Giá vốn hàng bán', key: 'cost_of_goods_sold', level: 1 },
+        { label: 'Lợi nhuận gộp', key: 'gross_profit', strong: true },
+        { label: 'Doanh thu hoạt động tài chính', key: 'financial_income', level: 1 },
+        { label: 'Chi phí tài chính', key: 'financial_expense', level: 1 },
+        { label: 'Trong đó: Chi phí lãi vay', key: 'interest_expense', level: 1 },
+        { label: 'Chi phí bán hàng', key: 'selling_expense', level: 1 },
+        { label: 'Chi phí quản lý doanh nghiệp', key: 'admin_expense', level: 1 },
+        { label: 'Lợi nhuận từ hoạt động kinh doanh', key: 'operating_profit', strong: true },
+        { label: 'Lợi nhuận trước thuế', key: 'pretax_profit', strong: true },
+        { label: 'Thuế thu nhập doanh nghiệp', key: 'income_tax', level: 1 },
+        { label: 'Lợi nhuận sau thuế', key: 'net_profit', strong: true },
         { label: 'Trong đó: LNST thuộc cổ đông công ty mẹ', key: 'net_profit_attributable', level: 1 }
       ];
+      if (activeStatement === 'cashflow') return [
+        { label: 'LƯU CHUYỂN TIỀN TỆ', type: 'section' },
+        { label: 'Lưu chuyển tiền thuần từ hoạt động kinh doanh', key: 'operating_cash_flow', strong: true },
+        { label: 'Chi đầu tư tài sản cố định', key: 'capital_expenditure', level: 1 },
+        { label: 'Lưu chuyển tiền thuần từ hoạt động đầu tư', key: 'investing_cash_flow', strong: true },
+        { label: 'Lưu chuyển tiền thuần từ hoạt động tài chính', key: 'financing_cash_flow', strong: true },
+        { label: 'Cổ tức, lợi nhuận đã trả cho chủ sở hữu', key: 'dividends_paid', level: 1 },
+        { label: 'Lưu chuyển tiền thuần trong kỳ', key: 'net_cash_change', strong: true },
+        { label: 'Tiền và tương đương tiền đầu kỳ', key: 'cash_beginning', level: 1 },
+        { label: 'Tiền và tương đương tiền cuối kỳ', key: 'cash_ending', strong: true }
+      ];
       if (activeStatement === 'ratios') return [
-        { label: 'TỶ SUẤT SINH LỜI', type: 'section' },
+        { label: 'KHẢ NĂNG SINH LỜI', type: 'section' },
         { label: 'ROA (%)', key: 'roa', ratio: true, level: 1 },
         { label: 'ROE (%)', key: 'roe', ratio: true, level: 1 },
-        { label: 'P/B (lần)', key: 'pb', ratio: true, level: 1 },
+        { label: 'Biên lợi nhuận gộp (%)', formula: 'gross_margin', ratio: true, level: 1 },
+        { label: 'Biên lợi nhuận ròng (%)', formula: 'net_margin', ratio: true, level: 1 },
+        { label: 'CƠ CẤU NGUỒN VỐN', type: 'section' },
+        { label: 'Nợ phải trả / Tổng tài sản (%)', formula: 'liabilities_to_assets', ratio: true, level: 1 },
+        { label: 'Vốn chủ sở hữu / Tổng tài sản (%)', formula: 'equity_to_assets', ratio: true, level: 1 },
+        { label: 'Nợ phải trả / Vốn chủ sở hữu (lần)', formula: 'liabilities_to_equity', ratio: true, level: 1 },
+        { label: 'KHẢ NĂNG THANH TOÁN', type: 'section' },
+        { label: 'Hệ số thanh toán hiện hành (lần)', formula: 'current_ratio', ratio: true, level: 1 },
+        { label: 'Hệ số thanh toán nhanh (lần)', formula: 'quick_ratio', ratio: true, level: 1 },
         { label: 'Cơ sở tính ROA', key: 'roa_formula', text: true },
         { label: 'Cơ sở tính ROE', key: 'roe_formula', text: true },
         { label: 'Đơn vị tỷ số', key: 'ratio_unit', text: true }
+      ];
+      if (activeStatement === 'valuation') return [
+        { label: 'CHỈ SỐ ĐỊNH GIÁ', type: 'section' },
+        { label: 'Giá cổ phiếu (đồng/cp)', key: 'price', ratio: true, level: 1 },
+        { label: 'EPS — lợi nhuận trên mỗi cổ phiếu (đồng/cp)', key: 'eps', ratio: true, level: 1 },
+        { label: 'P/E (lần)', key: 'pe', ratio: true, level: 1 },
+        { label: 'P/B (lần)', key: 'pb', ratio: true, level: 1 },
+        { label: 'EV/EBITDA (lần)', key: 'ev_ebitda', ratio: true, level: 1 },
+        { label: 'Vốn hóa thị trường', key: 'market_cap', ratio: true, level: 1 },
+        { label: 'Giá trị doanh nghiệp (EV)', key: 'enterprise_value', ratio: true, level: 1 },
+        { label: 'GIẢI THÍCH', type: 'section' },
+        { label: 'Trường dữ liệu định giá được cung cấp', key: 'valuation_source', text: true },
+        { label: 'Đơn vị định giá', key: 'valuation_unit', text: true }
       ];
       if (activeStatement === 'notes') return [
         { label: 'THÔNG TIN NGUỒN BÁO CÁO', type: 'section' },
@@ -1193,6 +1322,7 @@
         { label: 'Loại báo cáo', key: 'report_type', text: true },
         { label: 'Ngày công bố', key: 'published_at', text: true },
         { label: 'Phạm vi trang PDF', key: 'source_pages', text: true },
+        { label: 'Cơ sở số liệu lợi nhuận theo quý', key: 'quarter_profit_basis', text: true },
         { label: 'Nguồn báo cáo gốc', key: 'source_url', link: true },
         { label: 'Trang tài liệu VietstockFinance', key: 'source_index_url', link: true }
       ];
@@ -1250,8 +1380,10 @@
         periods.map(period => '<th class="statement-period">' + escapeHtml(displayPeriod(period)) + '</th>').join('') + '</tr>';
 
       let body = '';
-      if (activeStatement === 'cashflow') {
-        body = '<tr><td colspan="' + (periods.length + 1) + '" class="statement-no-data">Chưa có trường lưu chuyển tiền tệ đã trích xuất trong snapshot hiện tại. Không tự tạo hoặc nội suy số liệu.</td></tr>';
+      const cashflowFields = ['operating_cash_flow','capital_expenditure','investing_cash_flow','financing_cash_flow','dividends_paid','net_cash_change','cash_beginning','cash_ending'];
+      const cashflowAvailable = activeStatement === 'cashflow' && sourceRows.some(row => cashflowFields.some(field => validNumber(row[field])));
+      if (activeStatement === 'cashflow' && !cashflowAvailable) {
+        body = '<tr><td colspan="' + (periods.length + 1) + '" class="statement-no-data">Chưa có trường lưu chuyển tiền tệ đã trích xuất trong snapshot hiện tại. Danh mục chuẩn đã sẵn sàng; các ô chỉ được điền khi bộ trích xuất xác minh được dữ liệu từ báo cáo gốc.</td></tr>';
       } else if (activeStatement === 'peers') {
         const metric = tableCompareMetric?.value || 'net_profit';
         const meta = fieldMeta[metric] || fieldMeta.net_profit;
@@ -1280,6 +1412,27 @@
                 ? statementNumber(Number(item.total_liabilities) + Number(item.equity), item)
                 : '—') + '</td>';
             }
+            if (def.formula && def.formula !== 'total_sources') {
+              const numeric = key => validNumber(item[key]) ? Number(item[key]) : null;
+              const assets = numeric('total_assets'), liabilities = numeric('total_liabilities'), equity = numeric('equity');
+              const revenue = numeric('revenue'), grossProfit = numeric('gross_profit'), netProfit = numeric('net_profit');
+              const currentAssets = numeric('current_assets'), currentLiabilities = numeric('current_liabilities');
+              let computed = null;
+              if (def.formula === 'liabilities_to_assets' && assets !== null && assets !== 0 && liabilities !== null) computed = liabilities / assets * 100;
+              if (def.formula === 'equity_to_assets' && assets !== null && assets !== 0 && equity !== null) computed = equity / assets * 100;
+              if (def.formula === 'liabilities_to_equity' && equity !== null && equity !== 0 && liabilities !== null) computed = liabilities / equity;
+              if (def.formula === 'gross_margin' && revenue !== null && revenue !== 0 && grossProfit !== null) computed = grossProfit / revenue * 100;
+              if (def.formula === 'net_margin' && revenue !== null && revenue !== 0 && netProfit !== null) computed = netProfit / revenue * 100;
+              if (def.formula === 'current_ratio' && currentLiabilities !== null && currentLiabilities !== 0 && currentAssets !== null) computed = currentAssets / currentLiabilities;
+              if (def.formula === 'quick_ratio' && currentLiabilities !== null && currentLiabilities !== 0) {
+                const quickAssets = ['cash_and_equivalents','short_term_investments','short_term_receivables'].map(numeric);
+                if (quickAssets.every(value => value !== null)) computed = quickAssets.reduce((sum, value) => sum + value, 0) / currentLiabilities;
+              }
+              const validComputed = computed !== null && Number.isFinite(computed);
+              const rendered = validComputed ? new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 2 }).format(computed) : '—';
+              const suffix = ['liabilities_to_equity','current_ratio','quick_ratio'].includes(def.formula) ? ' lần' : '%';
+              return '<td>' + rendered + (validComputed ? suffix : '') + '</td>';
+            }
             const value = item[def.key];
             if (def.link) {
               return '<td>' + (typeof value === 'string' && /^https?:\/\//i.test(value)
@@ -1292,7 +1445,11 @@
             }
             if (def.text) return '<td class="statement-text-cell">' + escapeHtml(value || '—') + '</td>';
             const displayed = statementNumber(value, item, Boolean(def.ratio));
-            return '<td>' + (displayed !== '—' && def.ratio ? displayed + (def.key === 'pb' ? ' lần' : '%') : displayed) + '</td>';
+            const ratioSuffix = ['pb','pe','ev_ebitda'].includes(def.key) ? ' lần'
+              : def.key === 'eps' ? ' đ/cp'
+              : ['price'].includes(def.key) ? ' đ'
+              : def.ratio ? '%' : '';
+            return '<td>' + (displayed !== '—' && def.ratio ? displayed + ratioSuffix : displayed) + '</td>';
           }).join('');
           return '<tr class="' + rowClass + '">' + label + cells + '</tr>';
         }).join('');
@@ -1318,6 +1475,7 @@
       }
       if (loadSummary) loadSummary.textContent = 'Mã ' + ticker + ' · ' + sourceRows.length + ' kỳ có liên kết nguồn · Chế độ ' +
         (basisSelect?.value === 'separate' ? 'riêng lẻ' : 'hợp nhất') + ' · các kỳ mới sẽ tự xuất hiện sau lần đồng bộ tiếp theo.';
+      renderFinancialOverview(ticker);
       drawSelectedCharts(ticker);
       return tableResult;
     }
