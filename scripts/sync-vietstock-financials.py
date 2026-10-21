@@ -1283,7 +1283,23 @@ def main() -> int:
                 and item.get("verification_status") == "auto_pending_extraction"
                 for item in items
             )
-            needs_retry = has_pending or snapshot.get("sync_status") == "fetch_failed" or not items
+            attempts = int(snapshot.get("bootstrap_attempt_count") or 0)
+            empty_snapshot = not items
+            terminal_empty = (
+                empty_snapshot
+                and attempts >= 3
+                and snapshot.get("sync_status") in {
+                    "fetch_failed", "no_quarterly_consolidated_records_returned",
+                    "needs_manual_review_no_quarterly_data",
+                }
+            )
+            if terminal_empty and not has_pending:
+                print(
+                    f"{symbol}: chưa có BCTC hợp nhất đọc được sau {attempts} lượt; "
+                    "để trạng thái chờ rà soát và tiếp tục mã kế tiếp. Mã này vẫn được kiểm tra lại theo vòng."
+                )
+                continue
+            needs_retry = has_pending or (empty_snapshot and not terminal_empty)
             if needs_retry:
                 age = now_epoch - last_attempt_epoch(snapshot)
                 if age < cooldown_seconds:

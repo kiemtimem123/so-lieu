@@ -3,13 +3,6 @@ name: OCR Financial Report Archive
 on:
   schedule:
     - cron: "10,40 * * * *"
-  push:
-    branches: [main]
-    paths:
-      - ".github/scripts/ocr-stored-reports.py"
-  workflow_run:
-    workflows: ["Collect Financial Reports"]
-    types: [completed]
   workflow_dispatch:
     inputs:
       symbol:
@@ -25,9 +18,9 @@ on:
         required: false
         default: "10,11"
       max_reports:
-        description: Maximum report files to process in this run
+        description: Maximum report files to process in this run (fixed to one file)
         required: false
-        default: "5"
+        default: "1"
 
 permissions:
   contents: write
@@ -38,9 +31,9 @@ concurrency:
 
 jobs:
   ocr:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event_name == 'schedule' || github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
+    timeout-minutes: 25
     steps:
       - name: Checkout latest main
         uses: actions/checkout@v5
@@ -69,7 +62,7 @@ jobs:
         env:
           REPORT_OCR_SYMBOL: ${{ github.event.inputs.symbol || '' }}
           REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || '14' }}
-          REPORT_OCR_MAX_REPORTS: ${{ github.event.inputs.max_reports || '5' }}
+          REPORT_OCR_MAX_REPORTS: "1"
           REPORT_OCR_DPI: '280'
           REPORT_OCR_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || '10,11' }}
         run: python .github/scripts/ocr-stored-reports.py
@@ -89,7 +82,7 @@ jobs:
         env:
           REPORT_OCR_SYMBOL: ${{ github.event.inputs.symbol || '' }}
           REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || '14' }}
-          REPORT_OCR_MAX_REPORTS: ${{ github.event.inputs.max_reports || '5' }}
+          REPORT_OCR_MAX_REPORTS: "1"
           REPORT_OCR_DPI: '280'
           REPORT_OCR_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || '10,11' }}
           FINANCIAL_ENRICH_SYMBOL: ${{ steps.run_ocr.outputs.symbol || github.event.inputs.symbol || '' }}

@@ -23,7 +23,7 @@ REPORTS = ROOT / "reports/raw"
 QUEUE_PATH = ROOT / "config/report-queue.json"
 # Include statement continuation pages in long consolidated reports.
 MAX_PAGES = int(os.getenv("REPORT_OCR_MAX_PAGES", "14"))  # keep report scope bounded
-MAX_REPORTS = min(max(1, int(os.getenv("REPORT_OCR_MAX_REPORTS", "5"))), 5)  # max 5 reports per resumable run
+MAX_REPORTS = 1  # One archive report file per run to keep runner time bounded.
 DPI = int(os.getenv("REPORT_OCR_DPI", "280"))
 FORCE_RESCAN_PAGES = {
     int(value.strip()) for value in os.getenv("REPORT_OCR_RESCAN_PAGES", "10,11").split(",")
@@ -100,7 +100,7 @@ def emit_selected_symbol(symbol: str | None) -> None:
         return
     safe_symbol = re.sub(r"[^A-Z0-9]", "", str(symbol or "").upper())
     with open(output_path, "a", encoding="utf-8") as handle:
-        handle.write(f"symbol={safe_symbol}\\n")
+        handle.write(f"symbol={safe_symbol}\n")
 
 
 def page_has_text(pages) -> bool:
