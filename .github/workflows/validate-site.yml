@@ -89,8 +89,9 @@ jobs:
             const snapshot = JSON.parse(fs.readFileSync(file, 'utf8'));
             if (snapshot.symbol !== symbol || !Array.isArray(snapshot.items)) throw new Error('Invalid financial snapshot schema: ' + file);
             for (const row of snapshot.items) {
-              if (!/^\\d{4}-Q[1-4]$/.test(String(row.period || ''))) throw new Error('Invalid quarter period in ' + file);
-              if (!row.source_url || !/^https?:\\/\\//i.test(row.source_url)) throw new Error('Financial row missing source URL in ' + file);
+              if (!/^[0-9]{4}-Q[1-4]$/.test(String(row.period || ''))) throw new Error('Invalid quarter period in ' + file);
+              const sourceUrl = String(row.source_url || '');
+              if (!(sourceUrl.startsWith('https://') || sourceUrl.startsWith('http://'))) throw new Error('Financial row missing source URL in ' + file);
             }
             console.log('Financial schema OK:', file, 'rows=' + snapshot.items.length);
           }
