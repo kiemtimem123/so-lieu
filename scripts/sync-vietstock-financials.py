@@ -1169,14 +1169,47 @@ def main() -> int:
     if selected:
         symbols_to_sync = [selected]
     elif bootstrap_only:
+        # Finish creating each ticker snapshot first. GITHUB_TOKEN pushes do
+        # not trigger another workflow run, so scheduled ticks resume the queue.
         missing = [
             symbol for symbol in SYMBOLS
             if not (DATA_DIR / f"financials-{symbol}.json").exists()
         ]
-        symbols_to_sync = missing[:1]
-        if not symbols_to_sync:
-            print("Bootstrap hoàn tất: tất cả mã đang bật đã có snapshot.")
-            return 0
+        if missing:
+            symbols_to_sync = missing[:1]
+        else:
+            # After the initial bootstrap, retry one ticker's unextracted periods
+            # per scheduled tick. A persisted cooldown prevents an unreadable
+            # PDF from monopolizing every run.
+            cooldown_seconds = 12 * 60 * 60
+            now_epoch = datetime.now(timezone.utc).timestamp()
+            retryable = []
+            for symbol in SYMBOLS:
+                path = DATA_DIR / f"financials-{symbol}.json"
+                try:
+                    snapshot = json.loads(path.read_text(encoding="utf-8"))
+                except (OSError, json.JSONDecodeError):
+                    continue
+                has_pending = any(
+                    isinstance(item, dict) and item.get("verification_status") == "auto_pending_extraction"
+                    for item in snapshot.get("items", [])
+                )
+                has_failed_bootstrap = snapshot.get("sync_status") == "fetch_failed"
+                if not (has_pending or has_failed_bootstrap):
+                    continue
+                last_attempt = snapshot.get("bootstrap_last_attempt_at")
+                last_epoch = 0
+                if last_attempt:
+                    try:
+                        last_epoch = datetime.fromisoformat(str(last_attempt).replace("Z", "+00:00")).timestamp()
+                    except (TypeError, ValueError, OSError):
+                        last_epoch = 0
+                if now_epoch - last_epoch >= cooldown_seconds:
+                    retryable.append(symbol)
+            symbols_to_sync = retryable[:1]
+            if not symbols_to_sync:
+                print("Bootstrap queue idle: no missing snapshots or retryable extraction records.")
+                return 0
     else:
         symbols_to_sync = SYMBOLS
     total_changed = total_added = total_filled = failed_symbols = 0
@@ -1206,6 +1239,16 @@ def main() -> int:
                     }
                     path.write_text(json.dumps(placeholder, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
                     print(f"  {symbol}: đã ghi snapshot rỗng có trạng thái lỗi để tiếp tục xử lý mã kế tiếp.")
+        if bootstrap_only:
+            state_path = DATA_DIR / f"financials-{symbol}.json"
+            if state_path.exists():
+                try:
+                    state_snapshot = json.loads(state_path.read_text(encoding="utf-8"))
+                    state_snapshot["bootstrap_last_attempt_at"] = utc_now()
+                    state_snapshot["bootstrap_attempt_count"] = int(state_snapshot.get("bootstrap_attempt_count") or 0) + 1
+                    state_path.write_text(json.dumps(state_snapshot, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+                except (OSError, json.JSONDecodeError, TypeError, ValueError) as state_error:
+                    print(f"  Không ghi được trạng thái bootstrap cho {symbol}: {state_error}", file=sys.stderr)
         time.sleep(SLEEP_BETWEEN_CALLS)
     print("\nTóm tắt")
     print(f"- Mã: {len(symbols_to_sync)}; lỗi truy vấn/đọc snapshot: {failed_symbols}")
