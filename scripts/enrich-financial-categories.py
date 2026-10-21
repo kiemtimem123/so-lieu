@@ -29,6 +29,22 @@ BALANCE_LABELS = {
  "long_term_liabilities":["no phai tra dai han","no dai han"],
  "retained_earnings":["loi nhuan sau thue chua phan phoi","loi nhuan chua phan phoi"],
 }
+BANK_BALANCE_LABELS = {
+ "bank_cash_on_hand":["tien mat, vang bac, da quy","tien mat vang bac da quy"],
+ "bank_deposits_at_state_bank":["tien gui tai nhnn","tien gui tai ngan hang nha nuoc"],
+ "bank_deposits_and_loans_to_credit_institutions":["tien gui va cho vay cac tctd khac","tien gui va cho vay cac to chuc tin dung khac"],
+ "bank_customer_loans":["cho vay khach hang"],
+ "bank_trading_securities":["chung khoan kinh doanh"],
+ "bank_derivatives_and_other_financial_assets":["cac cong cu tai chinh phai sinh va cac tai san tai chinh khac"],
+ "bank_investment_securities":["chung khoan dau tu"],
+ "bank_contributions_and_long_term_investments":["gop von, dau tu dai han","gop von dau tu dai han"],
+ "bank_other_assets":["tai san co khac"],
+ "bank_deposits_and_borrowings_from_credit_institutions":["tien gui va vay cac tctd khac","tien gui va vay cac to chuc tin dung khac"],
+ "bank_customer_deposits":["tien gui cua khach hang"],
+ "bank_valuable_papers":["phat hanh giay to co gia"],
+ "bank_funding_and_trust_liabilities":["von tai tro, uy thac dau tu"],
+ "bank_other_liabilities":["no khac"],
+}
 INCOME_LABELS = {
  "cost_of_goods_sold":["gia von hang ban"],
  "gross_profit":["loi nhuan gop ve ban hang va cung cap dich vu","loi nhuan gop"],
@@ -40,6 +56,23 @@ INCOME_LABELS = {
  "operating_profit":["loi nhuan thuan tu hoat dong kinh doanh","loi nhuan tu hoat dong kinh doanh"],
  "income_tax":["chi phi thue thu nhap doanh nghiep trong ky","chi phi thue thu nhap doanh nghiep","chi phi thue tndn"],
  "net_profit_attributable":["loi nhuan sau thue cua co dong cong ty me","loi nhuan sau thue cua co dong cua cong ty me","loi nhuan thuoc ve co dong cong ty me"],
+}
+BANK_INCOME_LABELS = {
+ "bank_interest_income":["thu nhap lai va cac khoan thu nhap tuong tu"],
+ "bank_interest_expense":["chi phi lai va cac khoan chi phi tuong tu"],
+ "bank_net_interest_income":["thu nhap lai thuan"],
+ "bank_service_income":["thu nhap tu hoat dong dich vu"],
+ "bank_service_expense":["chi phi hoat dong dich vu"],
+ "bank_net_service_income":["lai thuan tu hoat dong dich vu"],
+ "bank_fx_net_income":["lai thuan tu hoat dong kinh doanh ngoai hoi"],
+ "bank_trading_securities_net":["lai thuan tu mua ban chung khoan kinh doanh"],
+ "bank_investment_securities_net":["lai thuan tu mua ban chung khoan dau tu","lai thuan tu mua ban chung khoan dau tu va gop von dau tu dai han"],
+ "bank_other_operating_net":["lai thuan tu hoat dong kinh doanh khac"],
+ "bank_dividend_and_capital_income":["thu nhap tu gop von, mua co phan"],
+ "bank_operating_expenses":["tong chi phi hoat dong"],
+ "bank_pre_provision_operating_profit":["loi nhuan thuan tu hoat dong kinh doanh truoc chi phi du phong rui ro"],
+ "bank_provision_expense":["chi phi du phong rui ro"],
+ "bank_non_controlling_profit":["loi ich cua co dong khong kiem soat"],
 }
 CASHFLOW_LABELS = {
  "operating_cash_flow_ytd":["luu chuyen tien thuan tu hoat dong kinh doanh","luu chuyen tien tu hoat dong kinh doanh"],
@@ -219,6 +252,10 @@ def extract_fields(item,symbol,pages):
   val=value_by_label(bal,labels,scale) if bal else None
   if val is None and symbol in STANDARD_BUSINESSES and bal: val=value_by_code(bal,BALANCE_CODES[field],scale)
   if val is not None: out[field]=val
+ if symbol in BANKS and bal:
+  for field,labels in BANK_BALANCE_LABELS.items():
+   val=value_by_label(bal,labels,scale)
+   if val is not None: out[field]=val
  if symbol in BANKS:
   revlabels=["tong thu nhap hoat dong","tong thu nhap hoat dong kinh doanh","doanh thu hoat dong","thu nhap lai thuan"]
  elif symbol in BROKERS:
@@ -234,6 +271,10 @@ def extract_fields(item,symbol,pages):
   if val is None and symbol in STANDARD_BUSINESSES and inc and field in INCOME_CODES:
    val=value_by_code(inc,INCOME_CODES[field],scale)
   if val is not None: out[field]=val
+ if symbol in BANKS and inc:
+  for field,labels in BANK_INCOME_LABELS.items():
+   val=value_by_label(inc,labels,scale)
+   if val is not None: out[field]=val
 
  # Preserve current and deferred tax separately, then calculate the total tax
  # expense/income only from the values reported in the same statement.
@@ -276,10 +317,18 @@ def sane_fields(item, found, symbol):
  has_assets=isinstance(assets,(int,float)) and assets>0
  has_liabilities=isinstance(liabilities,(int,float)) and liabilities>=0
  has_equity=isinstance(equity,(int,float)) and equity>=0
- asset_fields={"current_assets","cash_and_equivalents","short_term_investments","short_term_receivables","inventory","non_current_assets","fixed_assets"}
- liability_fields={"current_liabilities","long_term_liabilities"}
- retained_fields={"retained_earnings"}
- income_fields={"revenue","cost_of_goods_sold","gross_profit","financial_income","financial_expense","interest_expense","selling_expense","admin_expense","operating_profit","income_tax","income_tax_current","income_tax_deferred","net_profit_attributable"}
+ asset_fields={"current_assets","cash_and_equivalents","short_term_investments","short_term_receivables","inventory","non_current_assets","fixed_assets",
+  "bank_cash_on_hand","bank_deposits_at_state_bank","bank_deposits_and_loans_to_credit_institutions","bank_customer_loans",
+  "bank_trading_securities","bank_derivatives_and_other_financial_assets","bank_investment_securities",
+  "bank_contributions_and_long_term_investments","bank_other_assets"}
+ liability_fields={"current_liabilities","long_term_liabilities","bank_deposits_and_borrowings_from_credit_institutions",
+  "bank_customer_deposits","bank_valuable_papers","bank_funding_and_trust_liabilities","bank_other_liabilities"}
+ retained_fields={"retained_earnings","bank_undistributed_profit"}
+ income_fields={"revenue","cost_of_goods_sold","gross_profit","financial_income","financial_expense","interest_expense","selling_expense","admin_expense","operating_profit","income_tax","income_tax_current","income_tax_deferred","net_profit_attributable",
+  "bank_interest_income","bank_interest_expense","bank_net_interest_income","bank_service_income","bank_service_expense",
+  "bank_net_service_income","bank_fx_net_income","bank_trading_securities_net","bank_investment_securities_net",
+  "bank_other_operating_net","bank_dividend_and_capital_income","bank_operating_expenses","bank_pre_provision_operating_profit",
+  "bank_provision_expense","bank_non_controlling_profit"}
  cash_fields=set(CASHFLOW_LABELS)-{"cash_beginning","cash_ending"}
  safe={}
  rejected=[]

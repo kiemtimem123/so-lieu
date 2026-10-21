@@ -1343,7 +1343,32 @@
         : activeIndustry === 'securities'
           ? 'Doanh thu hoạt động'
           : 'Doanh thu thuần';
-      if (activeStatement === 'balance') return [
+      if (activeStatement === 'balance') {
+        if (activeIndustry === 'banking') return [
+          { label: 'A. TÀI SẢN NGÂN HÀNG', type: 'section' },
+          { label: 'Tiền mặt, vàng bạc, đá quý', key: 'bank_cash_on_hand', level: 1 },
+          { label: 'Tiền gửi tại Ngân hàng Nhà nước', key: 'bank_deposits_at_state_bank', level: 1 },
+          { label: 'Tiền gửi và cho vay các tổ chức tín dụng khác', key: 'bank_deposits_and_loans_to_credit_institutions', level: 1 },
+          { label: 'Cho vay khách hàng', key: 'bank_customer_loans', level: 1 },
+          { label: 'Chứng khoán kinh doanh', key: 'bank_trading_securities', level: 1 },
+          { label: 'Công cụ tài chính phái sinh và tài sản tài chính khác', key: 'bank_derivatives_and_other_financial_assets', level: 1 },
+          { label: 'Chứng khoán đầu tư', key: 'bank_investment_securities', level: 1 },
+          { label: 'Góp vốn, đầu tư dài hạn', key: 'bank_contributions_and_long_term_investments', level: 1 },
+          { label: 'Tài sản cố định', key: 'fixed_assets', level: 1 },
+          { label: 'Tài sản có khác', key: 'bank_other_assets', level: 1 },
+          { label: 'TỔNG CỘNG TÀI SẢN', key: 'total_assets', strong: true },
+          { label: 'B. NỢ PHẢI TRẢ NGÂN HÀNG', type: 'section' },
+          { label: 'Tiền gửi và vay từ các tổ chức tín dụng khác', key: 'bank_deposits_and_borrowings_from_credit_institutions', level: 1 },
+          { label: 'Tiền gửi khách hàng', key: 'bank_customer_deposits', level: 1 },
+          { label: 'Phát hành giấy tờ có giá', key: 'bank_valuable_papers', level: 1 },
+          { label: 'Vốn tài trợ, ủy thác đầu tư', key: 'bank_funding_and_trust_liabilities', level: 1 },
+          { label: 'Nợ khác', key: 'bank_other_liabilities', level: 1 },
+          { label: 'TỔNG NỢ PHẢI TRẢ', key: 'total_liabilities', strong: true },
+          { label: 'Vốn chủ sở hữu', key: 'equity', level: 1 },
+          { label: 'Lợi nhuận sau thuế chưa phân phối', key: 'retained_earnings', level: 1 },
+          { label: 'TỔNG NỢ VÀ VỐN CHỦ SỞ HỮU', formula: 'total_sources', strong: true }
+        ];
+        return [
         { label: 'A. TÀI SẢN', type: 'section' },
         { label: 'I. Tài sản ngắn hạn', key: 'current_assets', level: 1 },
         { label: 'Tiền và tương đương tiền', key: 'cash_and_equivalents', level: 1 },
@@ -1360,8 +1385,35 @@
         { label: 'III. Vốn chủ sở hữu', key: 'equity', level: 1 },
         { label: 'Lợi nhuận sau thuế chưa phân phối', key: 'retained_earnings', level: 1 },
         { label: 'TỔNG NỢ VÀ VỐN CHỦ SỞ HỮU', formula: 'total_sources', strong: true }
-      ];
-      if (activeStatement === 'income') return [
+        ];
+      }
+      if (activeStatement === 'income') {
+        if (activeIndustry === 'banking') return [
+          { label: 'KẾT QUẢ HOẠT ĐỘNG KINH DOANH NGÂN HÀNG', type: 'section' },
+          { label: 'Tổng thu nhập hoạt động', key: 'revenue', strong: true },
+          { label: 'Thu nhập lãi và các khoản thu nhập tương tự', key: 'bank_interest_income', level: 1 },
+          { label: 'Chi phí lãi và các khoản chi phí tương tự', key: 'bank_interest_expense', level: 1 },
+          { label: 'Thu nhập lãi thuần', key: 'bank_net_interest_income', strong: true },
+          { label: 'Thu nhập từ hoạt động dịch vụ', key: 'bank_service_income', level: 1 },
+          { label: 'Chi phí hoạt động dịch vụ', key: 'bank_service_expense', level: 1 },
+          { label: 'Lãi thuần từ hoạt động dịch vụ', key: 'bank_net_service_income', level: 1 },
+          { label: 'Lãi thuần kinh doanh ngoại hối', key: 'bank_fx_net_income', level: 1 },
+          { label: 'Lãi thuần từ chứng khoán kinh doanh', key: 'bank_trading_securities_net', level: 1 },
+          { label: 'Lãi thuần từ chứng khoán đầu tư', key: 'bank_investment_securities_net', level: 1 },
+          { label: 'Lãi thuần từ hoạt động kinh doanh khác', key: 'bank_other_operating_net', level: 1 },
+          { label: 'Thu nhập góp vốn, mua cổ phần', key: 'bank_dividend_and_capital_income', level: 1 },
+          { label: 'Tổng chi phí hoạt động', key: 'bank_operating_expenses', level: 1 },
+          { label: 'Lợi nhuận trước dự phòng rủi ro', key: 'bank_pre_provision_operating_profit', strong: true },
+          { label: 'Chi phí dự phòng rủi ro', key: 'bank_provision_expense', level: 1 },
+          { label: 'Lợi nhuận trước thuế', key: 'pretax_profit', strong: true },
+          { label: 'Thuế thu nhập doanh nghiệp (tổng)', key: 'income_tax', level: 1 },
+          { label: 'Thuế TNDN hiện hành', key: 'income_tax_current', level: 1 },
+          { label: 'Thuế TNDN hoãn lại', key: 'income_tax_deferred', level: 1 },
+          { label: 'Lợi nhuận sau thuế', key: 'net_profit', strong: true },
+          { label: 'Lợi ích cổ đông không kiểm soát', key: 'bank_non_controlling_profit', level: 1 },
+          { label: 'Lợi nhuận sau thuế thuộc ngân hàng', key: 'net_profit_attributable', level: 1 }
+        ];
+        return [
         { label: 'KẾT QUẢ HOẠT ĐỘNG KINH DOANH', type: 'section' },
         { label: revenueRowLabel, key: 'revenue', level: 1 },
         { label: 'Giá vốn hàng bán', key: 'cost_of_goods_sold', level: 1 },
@@ -1379,7 +1431,8 @@
         { label: 'Lãi cơ bản trên cổ phiếu (EPS)', key: 'eps', ratio: true, level: 1 },
         { label: 'Lợi nhuận sau thuế', key: 'net_profit', strong: true },
         { label: 'Trong đó: LNST thuộc cổ đông công ty mẹ', key: 'net_profit_attributable', level: 1 }
-      ];
+        ];
+      }
       if (activeStatement === 'cashflow') return [
         { label: 'LƯU CHUYỂN TIỀN TỆ', type: 'section' },
         { label: 'Lưu chuyển tiền thuần từ hoạt động kinh doanh', key: 'operating_cash_flow', strong: true },
@@ -1462,7 +1515,9 @@
         const unitName = (unitSelect?.value || 'billion') === 'billion' ? 'tỷ đồng' : 'triệu đồng';
         const hints = {
           balance: 'Bảng cân đối kế toán: các khoản mục chi tiết được điền từ dòng báo cáo có thể nhận diện và giữ trống nếu không khớp tổng tài sản/nợ.',
-          income: 'Kết quả kinh doanh: chỉ tiêu chi tiết lấy từ BCTC quý; doanh thu có thể được tái lập từ lợi nhuận gộp và giá vốn khi OCR sai chữ số, có ghi công thức trong ghi chú.',
+          income: activeIndustry === 'banking'
+            ? 'Báo cáo ngân hàng: thu nhập lãi, thu nhập dịch vụ, chi phí hoạt động và dự phòng được lấy theo mẫu BCTC ngân hàng; chỉ tiêu không nhận diện chắc chắn sẽ để trống.'
+            : 'Kết quả kinh doanh: chỉ tiêu chi tiết lấy từ BCTC quý; doanh thu có thể được tái lập từ lợi nhuận gộp và giá vốn khi OCR sai chữ số, có ghi công thức trong ghi chú.',
           cashflow: 'Lưu chuyển tiền tệ chỉ hiển thị khi các luồng tiền khớp biến động tiền thuần; kỳ có số OCR mâu thuẫn sẽ để trống và ghi rõ ở ghi chú.',
           notes: 'Thông tin nguồn, kỳ công bố và trạng thái kiểm chứng lấy từ bản ghi báo cáo; mở PDF để xem chi tiết gốc.',
           ratios: 'ROA/ROE và P/B chỉ lấy từ trường dữ liệu đã có trong snapshot; không tự tính P/B khi thiếu giá thị trường và giá trị sổ sách trên mỗi cổ phiếu.',
