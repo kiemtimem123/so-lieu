@@ -8,10 +8,13 @@ from __future__ import annotations
 import json, re, unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import unquote, urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 RAW = ROOT / "reports" / "raw"
+REPORT_QUEUE = ROOT / "config" / "report-queue.json"
+_QUEUE_ARCHIVE_BY_URL = None
 NUMBER_RE = re.compile(r"(?<![A-Za-z0-9])\(?-?\d[\d.,]*\d?\)?")
 BANKS = {"MBB", "ACB", "SHB", "TCB", "TPB", "VPB", "STB", "VCB", "CTG", "BID"}
 BROKERS = {"HCM", "SHS", "TCX", "VND", "VCI", "VCK", "VIX", "SSI", "VDS"}
@@ -227,6 +230,63 @@ def value_by_code(pages,code,factor,threshold=1000):
     vals=[n for n in amounts(line[match.end():],threshold=threshold) if abs(n)>=threshold and not (1900 <= abs(n) <= 2100)]
     if vals: return int(round(vals[0]*factor))
  return None
+
+def normalized_archive_url(url):
+ parsed=urlparse(unquote(str(url or "").strip()))
+ host=(parsed.hostname or "").casefold()
+ path=unquote(parsed.path or "").rstrip("/").casefold()
+ if not host or not path: return None
+ return host,path
+
+def queue_archive_index():
+ global _QUEUE_ARCHIVE_BY_URL
+ if _QUEUE_ARCHIVE_BY_URL is not None: return _QUEUE_ARCHIVE_BY_URL
+ index={}
+ try:
+  payload=json.loads(REPORT_QUEUE.read_text(encoding="utf-8"))
+ except (OSError,json.JSONDecodeError):
+  _QUEUE_ARCHIVE_BY_URL={}
+  return _QUEUE_ARCHIVE_BY_URL
+ for job in payload.get("jobs",[]) if isinstance(payload,dict) else []:
+  if not isinstance(job,dict): continue
+  symbol=str(job.get("symbol") or "").strip().upper()
+  if not symbol: continue
+  for archived in job.get("downloadedFiles",[]) or []:
+   if not isinstance(archived,dict) or archived.get("status")!="downloaded_needs_review": continue
+   relative=str(archived.get("file") or "").replace("\\","/").strip()
+   if not relative: continue
+   archive=(ROOT/relative).resolve()
+   try: archive.relative_to(RAW.resolve())
+   except ValueError: continue
+   if not archive.is_file() or not Path(str(archive)+".extracted.json").is_file(): continue
+   record={
+    "symbol":symbol,
+    "period":str(archived.get("period") or ""),
+    "path":archive.relative_to(ROOT).as_posix(),
+   }
+   for url_key in ("url","final_url","source_url"):
+    key=normalized_archive_url(archived.get(url_key))
+    if key: index.setdefault(key,[]).append(record)
+ _QUEUE_ARCHIVE_BY_URL=index
+ return index
+
+def resolve_archive_source(item,symbol):
+ existing=str(item.get("source_archive_file") or "").strip()
+ if existing:
+  archive=(ROOT/existing).resolve()
+  try: archive.relative_to(RAW.resolve())
+  except ValueError: existing=""
+  else:
+   if archive.is_file() and Path(str(archive)+".extracted.json").is_file(): return archive.relative_to(ROOT).as_posix()
+ key=normalized_archive_url(item.get("source_url"))
+ if not key: return ""
+ candidates=queue_archive_index().get(key,[])
+ same_symbol=[x for x in candidates if x.get("symbol")==str(symbol).upper()]
+ if not same_symbol: return ""
+ period=str(item.get("period") or "")
+ same_period=[x for x in same_symbol if x.get("period")==period]
+ chosen=(same_period or same_symbol)[0]
+ return str(chosen.get("path") or "")
 
 def load_report_pages(item,symbol):
  source=str(item.get("source_archive_file") or "").strip()
@@ -614,6 +674,11 @@ def enrich_snapshot(path):
     item["report_type"]="BCTC hợp nhất "+report_type_text[5:]
    else:
     item["report_type"]=f"BCTC hợp nhất {symbol} {item.get('period')} ({report_type_text})"
+   changed=True
+  archive_source=resolve_archive_source(item,symbol)
+  if archive_source and item.get("source_archive_file")!=archive_source:
+   item["source_archive_file"]=archive_source
+   item["source_archive_match"]="matched_report_queue_url"
    changed=True
   pages=load_report_pages(item,symbol)
   if not pages: continue
