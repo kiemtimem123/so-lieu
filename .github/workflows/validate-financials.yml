@@ -20,11 +20,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
-
-concurrency:
-  group: so-lieu-financial-data-writes-v1
-  cancel-in-progress: false
+  contents: read
 
 jobs:
   validate:
@@ -48,50 +44,8 @@ jobs:
           python-version: "3.12"
       - name: Check Vietstock sync worker syntax
         run: python -m py_compile scripts/sync-vietstock-financials.py
-      - name: Enrich quarterly categories from stored PDF/ZIP text
+      - name: Dry-run enrichment from stored PDF/ZIP text
         run: python scripts/enrich-financial-categories.py
-      - name: Commit enriched financial snapshots
-        if: github.event_name != 'pull_request'
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/financials-*.json
-          if git diff --cached --quiet; then
-            echo "No additional financial line items extracted from the stored reports."
-            exit 0
-          fi
-
-          pushed=false
-          for attempt in 1 2 3 4 5; do
-            git commit -m "Enrich quarterly financial categories from stored BCTC text"
-            git fetch origin "$GITHUB_REF_NAME"
-            if git rebase "origin/$GITHUB_REF_NAME"; then
-              if git push origin "HEAD:$GITHUB_REF_NAME"; then
-                pushed=true
-                break
-              fi
-            else
-              echo "Snapshot changed in parallel; recomputing enrichment from latest main."
-              git rebase --abort || true
-              git fetch origin "$GITHUB_REF_NAME"
-              git reset --hard "origin/$GITHUB_REF_NAME"
-              python scripts/enrich-financial-categories.py
-              git add data/financials-*.json
-              if git diff --cached --quiet; then
-                echo "No additional fields remain after recomputing on latest main."
-                pushed=true
-                break
-              fi
-            fi
-            sleep $((attempt * 2))
-          done
-
-          if [ "$pushed" != "true" ]; then
-            echo "::error::Could not push enriched financial snapshots after five safe attempts."
-            exit 1
-          fi
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
