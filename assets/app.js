@@ -1353,7 +1353,10 @@
         { label: 'Chi phí quản lý doanh nghiệp', key: 'admin_expense', level: 1 },
         { label: 'Lợi nhuận từ hoạt động kinh doanh', key: 'operating_profit', strong: true },
         { label: 'Lợi nhuận trước thuế', key: 'pretax_profit', strong: true },
-        { label: 'Thuế thu nhập doanh nghiệp', key: 'income_tax', level: 1 },
+        { label: 'Thuế thu nhập doanh nghiệp (tổng)', key: 'income_tax', level: 1 },
+        { label: 'Thuế TNDN hiện hành', key: 'income_tax_current', level: 1 },
+        { label: 'Thuế TNDN hoãn lại', key: 'income_tax_deferred', level: 1 },
+        { label: 'Lãi cơ bản trên cổ phiếu (EPS)', key: 'eps', level: 1 },
         { label: 'Lợi nhuận sau thuế', key: 'net_profit', strong: true },
         { label: 'Trong đó: LNST thuộc cổ đông công ty mẹ', key: 'net_profit_attributable', level: 1 }
       ];
@@ -1363,6 +1366,7 @@
         { label: 'Chi đầu tư tài sản cố định', key: 'capital_expenditure', level: 1 },
         { label: 'Lưu chuyển tiền thuần từ hoạt động đầu tư', key: 'investing_cash_flow', strong: true },
         { label: 'Lưu chuyển tiền thuần từ hoạt động tài chính', key: 'financing_cash_flow', strong: true },
+        { label: 'Ảnh hưởng thay đổi tỷ giá ngoại tệ', key: 'foreign_exchange_effect', level: 1 },
         { label: 'Cổ tức, lợi nhuận đã trả cho chủ sở hữu', key: 'dividends_paid', level: 1 },
         { label: 'Lưu chuyển tiền thuần trong kỳ', key: 'net_cash_change', strong: true },
         { label: 'Tiền và tương đương tiền đầu kỳ', key: 'cash_beginning', level: 1 },
@@ -1408,6 +1412,8 @@
         { label: 'Trạng thái trích xuất chỉ tiêu chi tiết', key: 'financial_line_items_status', text: true },
         { label: 'Các trường chi tiết đã trích xuất', key: 'financial_line_items_extracted_fields', text: true },
         { label: 'Ghi chú rà soát chỉ tiêu chi tiết', key: 'financial_line_items_note', text: true },
+        { label: 'Chỉ tiêu bị ẩn do không khớp', key: 'financial_line_items_rejected_fields', text: true },
+        { label: 'Công thức doanh thu tái lập', key: 'revenue_calculation', text: true },
         { label: 'Nguồn báo cáo gốc', key: 'source_url', link: true },
         { label: 'Trang tài liệu VietstockFinance', key: 'source_index_url', link: true }
       ];
@@ -1435,9 +1441,9 @@
       if (statementHint) {
         const unitName = (unitSelect?.value || 'billion') === 'billion' ? 'tỷ đồng' : 'triệu đồng';
         const hints = {
-          balance: 'Bảng cân đối kế toán: chỉ hiển thị tổng tài sản, nợ phải trả và vốn chủ sở hữu đã có trong snapshot.',
-          income: 'Báo cáo thu nhập: doanh thu và thuế chỉ hiển thị ở kỳ có trường dữ liệu được trích xuất.',
-          cashflow: 'Chưa có các trường lưu chuyển tiền tệ trong snapshot hiện tại. Các ô không có dữ liệu được giữ trống, không nội suy.',
+          balance: 'Bảng cân đối kế toán: các khoản mục chi tiết được điền từ dòng báo cáo có thể nhận diện và giữ trống nếu không khớp tổng tài sản/nợ.',
+          income: 'Kết quả kinh doanh: chỉ tiêu chi tiết lấy từ BCTC quý; doanh thu có thể được tái lập từ lợi nhuận gộp và giá vốn khi OCR sai chữ số, có ghi công thức trong ghi chú.',
+          cashflow: 'Lưu chuyển tiền tệ chỉ hiển thị khi các luồng tiền khớp biến động tiền thuần; kỳ có số OCR mâu thuẫn sẽ để trống và ghi rõ ở ghi chú.',
           notes: 'Thông tin nguồn, kỳ công bố và trạng thái kiểm chứng lấy từ bản ghi báo cáo; mở PDF để xem chi tiết gốc.',
           ratios: 'ROA/ROE và P/B chỉ lấy từ trường dữ liệu đã có trong snapshot; không tự tính P/B khi thiếu giá thị trường và giá trị sổ sách trên mỗi cổ phiếu.',
           peers: 'So sánh các mã cùng nhóm ngành đã cấu hình, cùng kỳ và cùng chỉ tiêu. P/B chỉ hiển thị khi snapshot có dữ liệu được cung cấp; không tự suy đoán giá thị trường.'

@@ -34,7 +34,7 @@ INCOME_LABELS = {
  "gross_profit":["loi nhuan gop ve ban hang va cung cap dich vu","loi nhuan gop"],
  "financial_income":["doanh thu hoat dong tai chinh"],
  "financial_expense":["chi phi tai chinh"],
- "interest_expense":["chi phi lai vay","chi phi lai va cac khoan chi phi tuong tu"],
+ "interest_expense":["chi phi lai vay","chi phi di vay","chi phi lai va cac khoan chi phi tuong tu"],
  "selling_expense":["chi phi ban hang"],
  "admin_expense":["chi phi quan ly doanh nghiep","chi phi quan ly cong ty"],
  "operating_profit":["loi nhuan thuan tu hoat dong kinh doanh","loi nhuan tu hoat dong kinh doanh"],
@@ -50,6 +50,7 @@ CASHFLOW_LABELS = {
  "net_cash_change_ytd":["luu chuyen tien thuan trong ky","luu chuyen tien thuan trong nam"],
  "cash_beginning":["tien va cac khoan tuong duong tien dau ky","tien va tuong duong tien dau ky"],
  "cash_ending":["tien va cac khoan tuong duong tien cuoi ky","tien va tuong duong tien cuoi ky"],
+ "foreign_exchange_effect_ytd":["anh huong cua thay doi ty gia hoi doai quy doi ngoai te","anh huong thay doi ty gia hoi doai"],
 }
 BALANCE_CODES = {
  "current_assets":"100","cash_and_equivalents":"110","short_term_investments":"120",
@@ -75,6 +76,7 @@ CASHFLOW_QUARTER_FROM_YTD = {
  "capital_expenditure":"capital_expenditure_ytd",
  "dividends_paid":"dividends_paid_ytd",
  "net_cash_change":"net_cash_change_ytd",
+ "foreign_exchange_effect":"foreign_exchange_effect_ytd",
 }
 
 def norm(v):
@@ -112,7 +114,14 @@ def select_statement_pages(pages,kind):
   "income":["bao cao ket qua hoat dong","bao cao ket qua kinh doanh","bao cao thu nhap","statement of income","income statement"],
   "cashflow":["bao cao luu chuyen tien te","luu chuyen tien te","statement of cash flows","cash flow statement"],
  }[kind]
- return [p for p in pages if any(t in norm(p.get("text","")) for t in terms)]
+ selected=[]
+ for page in pages:
+  text=norm(page.get("text",""))
+  if "muc luc" in text or "table of contents" in text or "thuyet minh bao cao tai chinh" in text or "notes to the financial statements" in text:
+   continue
+  if any(term in text for term in terms):
+   selected.append(page)
+ return selected
 
 def unit_factor(pages,item):
  header=norm(" ".join(str(p.get("text",""))[:5000] for p in pages[:3]))
@@ -244,6 +253,11 @@ def extract_fields(item,symbol,pages):
   val=value_by_label(cf,labels,scale) if cf else None
   if val is None and symbol in STANDARD_BUSINESSES and cf: val=value_by_code(cf,CASHFLOW_CODES[field],scale)
   if val is not None: out[field]=val
+ if symbol in STANDARD_BUSINESSES and inc:
+  basic_eps=value_by_code(inc,"70",1.0)
+  diluted_eps=value_by_code(inc,"71",1.0)
+  if basic_eps is not None and abs(basic_eps)<1000000: out["eps"]=basic_eps
+  if diluted_eps is not None and abs(diluted_eps)<1000000: out["diluted_eps"]=diluted_eps
  if cf:
   cft=norm(" ".join(str(p.get("text","")) for p in cf))
   is_ytd=bool(re.search(r"\b01\s*/\s*01\s*/?\s*20\d{2}\b",cft) or "tu ngay 01 thang 01" in cft or "luy ke tu dau nam" in cft or "giai doan tu 01/01" in cft)
@@ -352,6 +366,143 @@ def sane_fields(item, found, symbol):
    discard("income_tax","income_tax_current","income_tax_deferred",reason="tax_reconciliation_check")
  return safe,rejected
 
+def reconcile_detail_items(items,symbol):
+ changed=False
+ affected_quarters=0
+ changed_fields=0
+ for item in items:
+  if not isinstance(item,dict) or not item.get("financial_line_items_status"):
+   continue
+  period_changed=False
+  fields=set(item.get("financial_line_items_extracted_fields") or [])
+  rejected=set(item.get("financial_line_items_rejected_fields") or [])
+  notes=[]
+  prior=item.setdefault("financial_line_items_prior_values",{})
+  rejected_values=item.setdefault("financial_line_items_rejected_values",{})
+
+  # Net revenue = gross profit + absolute cost of goods sold. If OCR garbles
+  # the revenue digit(s), reconstruct from the two corresponding statement
+  # rows and record the derivation instead of retaining a conflicting value.
+  if symbol in STANDARD_BUSINESSES:
+   rev=item.get("revenue")
+   cogs=item.get("cost_of_goods_sold")
+   gross=item.get("gross_profit")
+   if isinstance(cogs,(int,float)) and isinstance(gross,(int,float)):
+    reconstructed=int(round(gross+abs(cogs)))
+    if reconstructed>0 and isinstance(rev,(int,float)) and abs(rev-reconstructed)>max(abs(reconstructed)*0.003,1000):
+     prior.setdefault("revenue",rev)
+     item["revenue"]=reconstructed
+     item["revenue_calculation"]="Lợi nhuận gộp + |giá vốn hàng bán|; tái lập từ hai dòng của BCTC do doanh thu OCR không khớp."
+     item["financial_line_items_revenue_reconciliation"]={
+      "previous_value":rev,"reconstructed_value":reconstructed,
+      "formula":"gross_profit + abs(cost_of_goods_sold)",
+      "difference_from_parsed_value":int(round(rev-reconstructed))
+     }
+     fields.add("revenue")
+     notes.append("Doanh thu được tái lập từ lợi nhuận gộp và giá vốn do số OCR không khớp; cần đối chiếu trực quan.")
+     period_changed=True; changed_fields+=1
+
+  # PBT less after-tax profit is a reliable total-tax cross-check when both
+  # profit totals are available in the same quarterly snapshot.
+  pbt=item.get("pretax_profit")
+  net=item.get("net_profit")
+  tax=item.get("income_tax")
+  if isinstance(pbt,(int,float)) and isinstance(net,(int,float)):
+   expected_tax=int(round(pbt-net))
+   if expected_tax!=0 and (not isinstance(tax,(int,float)) or abs(tax-expected_tax)>max(abs(expected_tax)*0.02,1000)):
+    if isinstance(tax,(int,float)):
+     prior.setdefault("income_tax",tax)
+    item["income_tax"]=expected_tax
+    item["income_tax_calculation"]="Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có."
+    fields.add("income_tax")
+    notes.append("Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.")
+    period_changed=True; changed_fields+=1
+
+  def reject(*keys,reason):
+   nonlocal period_changed,changed_fields
+   for key in keys:
+    if key in item and isinstance(item.get(key),(int,float)):
+     rejected_values.setdefault(key,{"value":item[key],"reason":reason})
+     item.pop(key,None)
+     rejected.add(key)
+     fields.discard(key)
+     period_changed=True; changed_fields+=1
+
+  # A row-by-row cash-flow sum should reconcile to net change once the FX line
+  # is included. If not, leave those automatically parsed flow fields blank.
+  operating=item.get("operating_cash_flow")
+  investing=item.get("investing_cash_flow")
+  financing=item.get("financing_cash_flow")
+  net_change=item.get("net_cash_change")
+  fx=item.get("foreign_exchange_effect",0)
+  if all(isinstance(v,(int,float)) for v in (operating,investing,financing,net_change)) and isinstance(fx,(int,float)):
+   total=operating+investing+financing+fx
+   scale=max(abs(operating)+abs(investing)+abs(financing)+abs(fx),abs(net_change),1000)
+   if abs(total-net_change)>max(scale*0.05,1000):
+    reject("operating_cash_flow","investing_cash_flow","financing_cash_flow","foreign_exchange_effect",
+           "net_cash_change","capital_expenditure","dividends_paid",
+           "operating_cash_flow_ytd","investing_cash_flow_ytd","financing_cash_flow_ytd",
+           "foreign_exchange_effect_ytd","net_cash_change_ytd","capital_expenditure_ytd",
+           "dividends_paid_ytd","cash_beginning","cash_ending",
+           reason="cash-flow components do not reconcile to reported net cash change")
+    notes.append("Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần.")
+
+  # Validate balance-sheet subtotal equations against the original reconciled snapshot.
+  assets=item.get("total_assets")
+  liabilities=item.get("total_liabilities")
+  ca=item.get("current_assets")
+  nca=item.get("non_current_assets")
+  cl=item.get("current_liabilities")
+  ll=item.get("long_term_liabilities")
+  if isinstance(assets,(int,float)) and isinstance(ca,(int,float)) and isinstance(nca,(int,float)):
+   if abs(ca+nca-assets)>max(abs(assets)*0.08,1000):
+    reject("current_assets","non_current_assets",reason="asset subtotals do not reconcile")
+    notes.append("Tài sản ngắn hạn/dài hạn bị ẩn do tổng không khớp tổng tài sản.")
+  if isinstance(liabilities,(int,float)) and isinstance(cl,(int,float)) and isinstance(ll,(int,float)):
+   if abs(cl+ll-liabilities)>max(abs(liabilities)*0.08,1000):
+    reject("current_liabilities","long_term_liabilities",reason="liability subtotals do not reconcile")
+    notes.append("Nợ ngắn hạn/dài hạn bị ẩn do tổng không khớp nợ phải trả.")
+
+  ca=item.get("current_assets")
+  if isinstance(ca,(int,float)) and ca>0:
+   for key in ("cash_and_equivalents","short_term_investments","short_term_receivables","inventory"):
+    part=item.get(key)
+    if isinstance(part,(int,float)) and abs(part)>max(abs(ca)*1.25,1000):
+     reject(key,reason="asset component exceeds current assets")
+  nca=item.get("non_current_assets")
+  fixed=item.get("fixed_assets")
+  if isinstance(nca,(int,float)) and nca>0 and isinstance(fixed,(int,float)) and abs(fixed)>max(abs(nca)*1.25,1000):
+   reject("fixed_assets",reason="fixed assets exceed non-current assets")
+
+  # Beginning/ending cash must reconcile to standalone-quarter net cash change.
+  begin=item.get("cash_beginning")
+  end=item.get("cash_ending")
+  net_change=item.get("net_cash_change")
+  if all(isinstance(v,(int,float)) for v in (begin,end,net_change)):
+   tolerance=max(5,abs(begin)*0.0005,abs(end)*0.0005)
+   if abs((end-begin)-net_change)>tolerance:
+    reject("cash_beginning","cash_ending",reason="cash balance bridge does not reconcile to net cash change")
+    notes.append("Số dư tiền đầu/cuối kỳ bị ẩn vì không khớp biến động tiền thuần theo quý.")
+
+  if rejected:
+   item["financial_line_items_rejected_fields"]=sorted(rejected)
+   fields.difference_update(rejected)
+  if fields!=set(item.get("financial_line_items_extracted_fields") or []):
+   item["financial_line_items_extracted_fields"]=sorted(fields)
+   period_changed=True
+  if notes:
+   current_note=str(item.get("financial_line_items_note") or "")
+   addition=" ".join(dict.fromkeys(notes))
+   if addition not in current_note:
+    item["financial_line_items_note"]=(current_note+" "+addition).strip()
+    period_changed=True
+  if period_changed:
+   item["financial_line_items_status"]="auto_extracted_pending_visual_review"
+   item["financial_line_items_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
+   changed=True; affected_quarters+=1
+ return changed,affected_quarters,changed_fields
+
+
 def enrich_snapshot(path):
  snapshot=json.loads(path.read_text(encoding="utf-8"))
  symbol=str(snapshot.get("symbol") or path.stem.replace("financials-","")).upper()
@@ -363,6 +514,11 @@ def enrich_snapshot(path):
   pages=load_report_pages(item,symbol)
   if not pages: continue
   found=extract_fields(item,symbol,pages)
+  if not found: continue
+  suppressed=set(item.get("financial_line_items_rejected_fields") or [])
+  for key in list(found):
+   if not key.startswith("__") and key in suppressed:
+    found.pop(key,None)
   if not found: continue
   found,rejected=sane_fields(item,found,symbol)
   if rejected:
@@ -409,6 +565,7 @@ def enrich_snapshot(path):
   basis=item.get("cashflow_period_basis")
   if basis=="year_to_date":
    for quarterly_field,ytd_field in CASHFLOW_QUARTER_FROM_YTD.items():
+    if quarterly_field in set(item.get("financial_line_items_rejected_fields") or []): continue
     current=item.get(ytd_field)
     if not isinstance(current,(int,float)): continue
     if quarter==1:
@@ -458,6 +615,10 @@ def enrich_snapshot(path):
      item["financial_line_items_cash_check"]="opening/closing cash hidden because the cash bridge did not reconcile"
      item["financial_line_items_note"]=str(item.get("financial_line_items_note") or "")+" Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý."
      field_count+=len(removed)
+ reconciled,reconciled_quarters,reconciled_fields=reconcile_detail_items(items,symbol)
+ changed=changed or reconciled
+ quarter_count+=reconciled_quarters
+ field_count+=reconciled_fields
  if changed:
   path.write_text(json.dumps(snapshot,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
  return changed,quarter_count,field_count
