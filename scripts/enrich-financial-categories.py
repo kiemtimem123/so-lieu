@@ -67,7 +67,7 @@ CASHFLOW_CODES = {
  "operating_cash_flow_ytd":"20","capital_expenditure_ytd":"21",
  "investing_cash_flow_ytd":"30","dividends_paid_ytd":"35",
  "financing_cash_flow_ytd":"40","net_cash_change_ytd":"50",
- "cash_beginning":"60","cash_ending":"70",
+ "cash_beginning":"60","foreign_exchange_effect_ytd":"61","cash_ending":"70",
 }
 CASHFLOW_QUARTER_FROM_YTD = {
  "operating_cash_flow":"operating_cash_flow_ytd",
@@ -159,13 +159,13 @@ def value_by_label(pages,labels,factor,threshold=1000):
      if vals: return int(round(vals[0]*factor))
  return None
 
-def value_by_code(pages,code,factor):
+def value_by_code(pages,code,factor,threshold=1000):
  token=re.compile(r"(?<!\d)"+re.escape(code)+r"(?!\d)")
  for page in pages:
   for line in str(page.get("text","")).splitlines():
    matches=list(token.finditer(line))
    for match in reversed(matches):
-    vals=[n for n in amounts(line[match.end():]) if abs(n)>=1000]
+    vals=[n for n in amounts(line[match.end():],threshold=threshold) if abs(n)>=threshold and not (1900 <= abs(n) <= 2100)]
     if vals: return int(round(vals[0]*factor))
  return None
 
@@ -254,8 +254,8 @@ def extract_fields(item,symbol,pages):
   if val is None and symbol in STANDARD_BUSINESSES and cf: val=value_by_code(cf,CASHFLOW_CODES[field],scale)
   if val is not None: out[field]=val
  if symbol in STANDARD_BUSINESSES and inc:
-  basic_eps=value_by_code(inc,"70",1.0)
-  diluted_eps=value_by_code(inc,"71",1.0)
+  basic_eps=value_by_code(inc,"70",1.0,threshold=50)
+  diluted_eps=value_by_code(inc,"71",1.0,threshold=50)
   if basic_eps is not None and abs(basic_eps)<1000000: out["eps"]=basic_eps
   if diluted_eps is not None and abs(diluted_eps)<1000000: out["diluted_eps"]=diluted_eps
  if cf:

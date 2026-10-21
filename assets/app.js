@@ -1356,7 +1356,7 @@
         { label: 'Thuế thu nhập doanh nghiệp (tổng)', key: 'income_tax', level: 1 },
         { label: 'Thuế TNDN hiện hành', key: 'income_tax_current', level: 1 },
         { label: 'Thuế TNDN hoãn lại', key: 'income_tax_deferred', level: 1 },
-        { label: 'Lãi cơ bản trên cổ phiếu (EPS)', key: 'eps', level: 1 },
+        { label: 'Lãi cơ bản trên cổ phiếu (EPS)', key: 'eps', ratio: true, level: 1 },
         { label: 'Lợi nhuận sau thuế', key: 'net_profit', strong: true },
         { label: 'Trong đó: LNST thuộc cổ đông công ty mẹ', key: 'net_profit_attributable', level: 1 }
       ];
@@ -1471,7 +1471,7 @@
         periods.map(period => '<th class="statement-period">' + escapeHtml(displayPeriod(period)) + '</th>').join('') + '</tr>';
 
       let body = '';
-      const cashflowFields = ['operating_cash_flow','capital_expenditure','investing_cash_flow','financing_cash_flow','dividends_paid','net_cash_change','cash_beginning','cash_ending'];
+      const cashflowFields = ['operating_cash_flow','capital_expenditure','investing_cash_flow','financing_cash_flow','foreign_exchange_effect','dividends_paid','net_cash_change','cash_beginning','cash_ending'];
       const cashflowAvailable = activeStatement === 'cashflow' && sourceRows.some(row => cashflowFields.some(field => validNumber(row[field])));
       if (activeStatement === 'cashflow' && !cashflowAvailable) {
         body = '<tr><td colspan="' + (periods.length + 1) + '" class="statement-no-data">Chưa có trường lưu chuyển tiền tệ đã trích xuất trong snapshot hiện tại. Danh mục chuẩn đã sẵn sàng; các ô chỉ được điền khi bộ trích xuất xác minh được dữ liệu từ báo cáo gốc.</td></tr>';
