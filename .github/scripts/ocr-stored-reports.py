@@ -47,13 +47,25 @@ def select_symbol() -> str | None:
     if override:
         return override
 
-    # An open review job takes precedence over snapshot flags: a few already
-    # published quarters do not mean the whole ticker's archive is complete.
+    # Prefer tickers whose archived source PDFs still lack statement pages.
+    # This fills missing balance/income/cash-flow pages even when the headline
+    # quarter snapshots were already marked verified.
+    priority = ["MBB", "ACB", "FPT", "SHB", "TCB", "VHM", "TCX", "HCM", "VND", "SHS", "NLG", "BSR"]
+    configuration = load_json(ROOT / "config/securities.json") or {}
+    configured = [
+        str(item.get("symbol") or "").strip().upper()
+        for item in configuration.get("securities", [])
+        if isinstance(item, dict) and item.get("enabled") is not False and item.get("symbol")
+    ]
+    priority.extend(symbol for symbol in configured if symbol and symbol not in priority)
+    for symbol in priority:
+        if symbol_needs_statement_pages(symbol):
+            return symbol
+
+    # If the page archive is complete, continue with any open queue review job.
+    # Do not loop forever on a needs_review job whose quarters have already been
+    # imported; such a job can remain open for archive-level visual review.
     queue = load_json(QUEUE_PATH) or {}
-    # Keep the agreed ticker order after TCB: VHM is next, then remaining queued tickers.
-    # Do not loop forever on a needs_review queue job whose 10 quarterly periods have
-    # already been imported; such a job can remain open for archive-level visual review.
-    priority = ["TCB", "VHM", "TCX", "HCM", "SHS", "NLG", "BSR"]
     for symbol in priority:
         open_jobs = [
             job for job in queue.get("jobs", [])
@@ -119,6 +131,99 @@ def needs_ocr_rescan(page: dict) -> bool:
     if len(value) < 250:
         return True
     return "văn bản được tải lên hệ thống eoffice.bsr.com.vn" in value.casefold()
+
+
+def _extraction_has_missing_pages(extracted: dict) -> bool:
+    """Return true when the companion JSON is missing any target PDF page."""
+    if not isinstance(extracted, dict):
+        return False
+
+    def pages_missing(payload: dict) -> bool:
+        try:
+            count = int(payload.get("page_count") or 0)
+        except (TypeError, ValueError):
+            count = 0
+        target_count = min(max(count, 0), MAX_PAGES)
+        if target_count < 1:
+            return False
+        existing = {
+            int(page.get("page"))
+            for page in payload.get("pages", [])
+            if isinstance(page, dict) and str(page.get("page", "")).isdigit()
+        }
+        if any(number not in existing for number in range(1, target_count + 1)):
+            return True
+        existing_by_number = {
+            int(page.get("page")): page
+            for page in payload.get("pages", [])
+            if isinstance(page, dict) and str(page.get("page", "")).isdigit()
+        }
+        return any(
+            number in existing_by_number and needs_ocr_rescan(existing_by_number[number])
+            for number in FORCE_RESCAN_PAGES if 1 <= number <= target_count
+        )
+
+    if extracted.get("kind") == "pdf":
+        return pages_missing(extracted)
+    if extracted.get("kind") == "zip":
+        return any(
+            isinstance(member, dict) and member.get("kind") == "pdf" and pages_missing(member)
+            for member in extracted.get("members", [])
+        )
+    return False
+
+
+def symbol_needs_statement_pages(symbol: str) -> bool:
+    """Check only existing source archives; do not fetch or synthesize any new report."""
+    folder = REPORTS / symbol
+    if not folder.is_dir():
+        return False
+    for archive_path in sorted(folder.rglob("*")):
+        if not archive_path.is_file():
+            continue
+        lower = archive_path.name.lower()
+        if not (lower.endswith(".pdf") or lower.endswith(".zip")):
+            continue
+        sidecar = Path(str(archive_path) + ".extracted.json")
+        if not sidecar.is_file():
+            continue
+        extracted = load_json(sidecar)
+        if _extraction_has_missing_pages(extracted):
+            return True
+    return False
+
+
+def extract_native_pdf_pages(pdf_path: Path, page_numbers: set[int]) -> tuple[list[dict], set[int]]:
+    """Read embedded PDF text first; OCR only scanned/image-only pages."""
+    targets = {int(number) for number in page_numbers if str(number).isdigit() and int(number) > 0}
+    if not targets:
+        return [], set()
+    try:
+        reader = PdfReader(str(pdf_path), strict=False)
+    except Exception:
+        return [], targets
+    native_pages = []
+    remaining = set(targets)
+    for number in sorted(targets):
+        if number > len(reader.pages):
+            remaining.discard(number)
+            continue
+        try:
+            text = (reader.pages[number - 1].extract_text() or "").strip()
+        except Exception:
+            text = ""
+        # Keep a real statement/table text layer only. Sparse or unreadable text
+        # falls through to OCR rather than being treated as complete.
+        number_cells = re.findall(r"(?<![A-Za-z])\\(?-?\\d[\\d.,]{1,}\\)?(?![A-Za-z])", text)
+        if len(text) >= 100 and len(number_cells) >= 2:
+            native_pages.append({
+                "page": number,
+                "text": text[:25000],
+                "ocr": False,
+                "extraction_method": "native_pdf_text",
+            })
+            remaining.discard(number)
+    return native_pages, remaining
 
 
 def _ocr_quality(text: str) -> float:
@@ -232,7 +337,15 @@ def process_pdf(pdf_path: Path):
     if not missing_numbers:
         return {"path": str(pdf_path.relative_to(ROOT)), "status": "already_has_target_pages",
                 "pages_retained": len(existing_pages), "target_pages": target_count}
-    pages, note = ocr_pdf(pdf_path, max_pages=MAX_PAGES, page_numbers=missing_numbers)
+    # A large share of Vietstock PDFs already contain selectable text. Read
+    # those missing pages natively first (faster and more accurate than OCR),
+    # then OCR only pages without a usable text layer.
+    native_targets = {n for n in missing_numbers if n not in existing_by_number}
+    native_pages, remaining_targets = extract_native_pdf_pages(pdf_path, native_targets)
+    native_numbers = {int(page["page"]) for page in native_pages}
+    ocr_targets = set(missing_numbers) - native_numbers
+    ocr_pages, note = ocr_pdf(pdf_path, max_pages=MAX_PAGES, page_numbers=ocr_targets) if ocr_targets else ([], None)
+    pages = native_pages + ocr_pages
     if not pages:
         return {"path": str(pdf_path.relative_to(ROOT)), "status": "ocr_empty", "note": note}
     new_pages = [p for p in pages if int(p.get("page", 0)) in missing_numbers]
@@ -270,7 +383,7 @@ def process_pdf(pdf_path: Path):
     extracted["extraction"] = "text+ocr" if existing_pages else "ocr"
     extracted["ocr_pages"] = sum(1 for p in extracted["pages"] if p.get("ocr"))
     extracted["ocr_completed_at"] = datetime.now(timezone.utc).isoformat()
-    extracted["note"] = "OCR targeted financial-result table pages 10–11 within the first 12 pages; verify OCR figures before publication."
+    extracted["note"] = "Missing early financial-statement pages were extracted from native PDF text where possible; scanned pages use targeted OCR. Verify every auto-extracted figure before publication."
     save_json(extraction_path, extracted)
     return {"path": str(pdf_path.relative_to(ROOT)), "status": "ocr_done",
             "new_pages": sorted(int(p["page"]) for p in new_pages),
@@ -312,7 +425,12 @@ def process_zip(zip_path: Path):
                         missing_numbers = (set(range(1, target_count + 1)) - old_numbers) | forced_rescan
                         if not missing_numbers:
                             continue
-                        pages, note = ocr_pdf(inner_pdf, max_pages=MAX_PAGES, page_numbers=missing_numbers)
+                        native_targets = {n for n in missing_numbers if n not in old_by_number}
+                        native_pages, remaining_targets = extract_native_pdf_pages(inner_pdf, native_targets)
+                        native_numbers = {int(page["page"]) for page in native_pages}
+                        ocr_targets = set(missing_numbers) - native_numbers
+                        ocr_pages, note = ocr_pdf(inner_pdf, max_pages=MAX_PAGES, page_numbers=ocr_targets) if ocr_targets else ([], None)
+                        pages = native_pages + ocr_pages
                 except Exception as exc:
                     outcomes.append({"member": name, "status": "ocr_failed", "error": str(exc)[:400]})
                     continue
@@ -348,7 +466,7 @@ def process_zip(zip_path: Path):
                     member["extraction"] = "text+ocr" if old_pages else "ocr"
                     member["ocr_pages"] = sum(1 for p in member["pages"] if p.get("ocr"))
                     member["ocr_engine"] = "tesseract-vie+eng"
-                    member["note"] = "OCR targeted financial-statement pages 10–14 at up to 240 DPI; verify OCR figures before publishing."
+                    member["note"] = "Missing early financial-statement pages were extracted from native PDF text where possible; scanned pages use targeted OCR. Verify before publishing."
                     changes += 1
                     outcomes.append({"member": name, "status": "ocr_done",
                                      "new_pages": sorted(int(p["page"]) for p in new_pages),
@@ -361,7 +479,7 @@ def process_zip(zip_path: Path):
     if changes:
         extracted["extraction"] = "archive_members_with_ocr"
         extracted["ocr_completed_at"] = datetime.now(timezone.utc).isoformat()
-        extracted["note"] = "Image-only PDFs in ZIP had selected financial-statement pages OCRed within the first 14 pages; verify before publishing."
+        extracted["note"] = "PDF members were filled with native text extraction where possible and targeted OCR for scanned pages; verify before publishing."
         save_json(extraction_path, extracted)
     return {"path": str(zip_path.relative_to(ROOT)), "status": "ocr_done" if changes else "no_ocr_changes",
             "members_changed": changes, "members": outcomes}
