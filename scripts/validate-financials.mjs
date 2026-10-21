@@ -27,9 +27,11 @@ const periodOrdinal = period => {
   return match ? Number(match[1]) * 4 + Number(match[2]) : null;
 };
 const periodFromOrdinal = ordinal => `${Math.floor((ordinal - 1) / 4)}-Q${((ordinal - 1) % 4) + 1}`;
-const periodsBetween = endOrdinal => {
+const periodsBetween = (startOrdinal, endOrdinal) => {
   const periods = [];
-  for (let ordinal = firstExpectedOrdinal; ordinal <= endOrdinal; ordinal++) periods.push(periodFromOrdinal(ordinal));
+  for (let ordinal = Math.max(firstExpectedOrdinal, startOrdinal); ordinal <= endOrdinal; ordinal++) {
+    periods.push(periodFromOrdinal(ordinal));
+  }
   return periods;
 };
 const errors = [];
@@ -112,10 +114,14 @@ for (const symbol of symbols) {
   }
 
   const ordinals = [...byPeriod.keys()].map(periodOrdinal).filter(Number.isFinite);
+  const earliestOrdinal = ordinals.length ? Math.min(...ordinals) : firstExpectedOrdinal;
   const latestOrdinal = ordinals.length ? Math.max(...ordinals) : firstExpectedOrdinal - 1;
-  const expectedPeriods = periodsBetween(latestOrdinal);
+  const expectedPeriods = periodsBetween(earliestOrdinal, latestOrdinal);
+  if (ordinals.length && earliestOrdinal > firstExpectedOrdinal) {
+    warnings.push(`${symbol}: first stored report is ${periodFromOrdinal(earliestOrdinal)}; quarters before that were not returned by the VietstockFinance catalog for this ticker.`);
+  }
   for (const period of expectedPeriods) {
-    if (!byPeriod.has(period)) errors.push(`${symbol}: missing period ${period} before latest stored period`);
+    if (!byPeriod.has(period)) errors.push(`${symbol}: missing period ${period} within the stored reporting span`);
   }
   for (const period of byPeriod.keys()) {
     const ordinal = periodOrdinal(period);
@@ -138,7 +144,7 @@ console.log("VietstockFinance quarterly snapshot validation");
 console.log(`Symbols checked: ${summary.length}/${symbols.length}`);
 console.log("Expected coverage per symbol: contiguous periods from 2024-Q1 through that symbol's latest stored quarter.");
 console.log(`Errors: ${errors.length}; review warnings: ${warnings.length}`);
-for (const row of summary) console.log(`- ${row.symbol}: ${row.periods} periods; status counts ${JSON.stringify(row.statuses)}`);
+for (const row of summary) console.log(`- ${row.symbol}: ${row.periods} periods; detail-enriched quarters ${row.detailQuarters ?? 0}; state ${row.state || "active"}; status counts ${JSON.stringify(row.statuses)}`);
 if (warnings.length) {
   console.log("\nReview warnings (not automatic failures):");
   for (const warning of warnings) console.log(`WARN ${warning}`);
