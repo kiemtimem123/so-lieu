@@ -76,7 +76,10 @@ BROKER_INCOME_LABELS = {
  "broker_net_operating_profit":["loi nhuan thuan tu hoat dong kinh doanh"],
  "broker_total_operating_revenue":["cong doanh thu hoat dong","tong doanh thu hoat dong","tong cong doanh thu hoat dong"],
  "broker_total_operating_expenses":["cong chi phi hoat dong","tong chi phi hoat dong"],
- "broker_fvtpl_loss":["lo tu cac tai san tai chinh ghi nhan thong qua lai lo","lo tu cac tai san tai chinh ghi nhan thong qua lai/lo"],
+ "broker_fvtpl_loss":["lo cac tai san tai chinh ghi nhan thong qua lai lo","lo cac tai san tai chinh ghi nhan thong qua lai/lo","lo tu cac tai san tai chinh ghi nhan thong qua lai lo","lo tu cac tai san tai chinh ghi nhan thong qua lai/lo"],
+ "broker_lending_cost":["chi phi di vay cua cac khoan cho vay","chi phi di vay cho cac khoan cho vay"],
+ "broker_trading_expense":["chi phi hoat dong tu doanh"],
+ "broker_advisory_expense":["chi phi nghiep vu tu van tai chinh","chi phi tu van tai chinh"],
  "broker_brokerage_expense":["chi phi nghiep vu moi gioi chung khoan","chi phi moi gioi chung khoan"],
  "broker_custody_expense":["chi phi nghiep vu luu ky chung khoan","chi phi luu ky chung khoan"],
  "broker_other_operating_expense":["chi phi hoat dong khac"],
@@ -591,6 +594,7 @@ def sane_fields(item, found, symbol):
   "broker_operating_expenses","broker_admin_expenses","broker_net_operating_profit",
   "broker_total_operating_revenue","broker_total_operating_expenses","broker_fvtpl_loss",
   "broker_brokerage_expense","broker_custody_expense","broker_other_operating_expense",
+  "broker_lending_cost","broker_trading_expense","broker_advisory_expense",
   "broker_financial_income","broker_financial_expense","broker_interest_expense"}
  cash_fields=set(CASHFLOW_LABELS)-{"cash_beginning","cash_ending"}
  safe={}
