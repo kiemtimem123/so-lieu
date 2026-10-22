@@ -1,6 +1,11 @@
 name: Sync quarterly BCTC from VietstockFinance
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/sync-vietstock-financials.py"
+      - ".github/workflows/sync-vietstock-financials.yml"
   schedule:
     - cron: "17 2 * * *"
     - cron: "*/30 * * * *"

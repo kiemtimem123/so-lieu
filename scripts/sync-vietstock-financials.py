@@ -1076,8 +1076,13 @@ def process_symbol(
             continue
         if not is_scope_match(record, want_consolidated):
             continue
-        if period in existing and existing[period].get("verification_status") != "auto_pending_extraction":
-            continue
+        if period in existing:
+            existing_item = existing[period]
+            core_pending = existing_item.get("verification_status") == "auto_pending_extraction"
+            core_present = existing_item.get("total_assets") is not None and existing_item.get("net_profit") is not None
+            details_pending = core_present and not existing_item.get("financial_line_items_status")
+            if not core_pending and not details_pending:
+                continue
         candidates.setdefault(period, []).append((candidate_score(record, explicit, cumulative), record, cumulative))
 
     # Keep existing pending reports eligible for another extraction attempt.
@@ -1118,7 +1123,10 @@ def process_symbol(
         def extraction_attempt_age(period: str) -> float | None:
             existing_item = existing.get(period) or {}
             validation = existing_item.get("source_validation") or {}
-            attempted_at = validation.get("last_extraction_attempt_at")
+            if existing_item.get("verification_status") == "auto_pending_extraction":
+                attempted_at = validation.get("last_extraction_attempt_at")
+            else:
+                attempted_at = existing_item.get("financial_line_items_last_attempt_at")
             if not attempted_at:
                 return None
             try:
@@ -1136,9 +1144,12 @@ def process_symbol(
         ]
 
         def extraction_attempt_count(period: str) -> int:
-            validation = (existing.get(period) or {}).get("source_validation") or {}
+            existing_item = existing.get(period) or {}
+            validation = existing_item.get("source_validation") or {}
             try:
-                return int(validation.get("extraction_attempt_count") or 0)
+                if existing_item.get("verification_status") == "auto_pending_extraction":
+                    return int(validation.get("extraction_attempt_count") or 0)
+                return int(existing_item.get("financial_line_items_attempt_count") or 0)
             except (TypeError, ValueError):
                 return 0
 
@@ -1187,7 +1198,43 @@ def process_symbol(
                 )
             new_item = make_extracted_item(symbol, period, record, url, values, items, cumulative)
             new_item["source_extract_review"]["final_download_url"] = final_url
-            if period in existing:
+            if period in existing and existing[period].get("verification_status") != "auto_pending_extraction":
+                # The core quarter was already reconciled. Merge only detail rows
+                # into it; never replace manually verified assets/profit with OCR output.
+                extracted_fields = list(new_item.get("financial_line_items_extracted_fields") or [])
+                if not extracted_fields or not new_item.get("financial_line_items_status"):
+                    raise ValueError("BCTC lõi đọc được nhưng không trích xuất thêm được chỉ tiêu chi tiết an toàn.")
+                idx = next(i for i, item in enumerate(items) if item.get("period") == period)
+                item = items[idx]
+                prior_fields = set(item.get("financial_line_items_extracted_fields") or [])
+                for field in extracted_fields:
+                    value = new_item.get(field)
+                    if value is not None and item.get(field) is None:
+                        item[field] = value
+                    prior_fields.add(field)
+                item["financial_line_items_extracted_fields"] = sorted(prior_fields)
+                item["financial_line_items_status"] = "auto_extracted_pending_visual_review"
+                item["financial_line_items_source"] = url
+                item["financial_line_items_source_index_url"] = f"https://finance.vietstock.vn/{symbol}/tai-tai-lieu.htm?doctype=1"
+                item["financial_line_items_updated_at"] = utc_now()
+                item["financial_line_items_last_attempt_at"] = utc_now()
+                item["financial_line_items_attempt_count"] = 0
+                item["financial_line_items_last_error"] = None
+                item["financial_line_items_note"] = (
+                    "Chỉ tiêu chi tiết trích xuất từ báo cáo VietstockFinance. "
+                    "Các số lõi đã xác minh được giữ nguyên; chỉ tiêu chi tiết cần đối chiếu trực quan."
+                )
+                item["financial_line_items_extract_review"] = {
+                    "final_download_url": final_url,
+                    "balance_equation_matches": abs(values["total_assets"] - values["total_liabilities"] - values["equity"]) <= 3,
+                    "unit_note": values.get("unit_note"),
+                    "candidate_core_values_not_overwritten": True,
+                }
+                items[idx] = item
+                existing[period] = item
+                filled += 1
+                print(f"  {symbol} {period}: đã bổ sung chỉ tiêu chi tiết; giữ nguyên số liệu lõi đã xác minh.")
+            elif period in existing:
                 idx = next(i for i, item in enumerate(items) if item.get("period") == period)
                 items[idx] = new_item
                 existing[period] = new_item
@@ -1202,26 +1249,43 @@ def process_symbol(
         except Exception as exc:
             print(f"  {symbol} {period}: chưa tự trích xuất đủ tin cậy: {exc}")
             if period in existing:
-                # Keep reported figures untouched and record only the retry state.
+                # Keep the reconciled core unchanged; track either core or detail
+                # extraction retries on the selected ticker/quarter.
                 idx = next((i for i, item in enumerate(items) if item.get("period") == period), None)
-                if idx is not None and items[idx].get("verification_status") == "auto_pending_extraction":
+                if idx is not None:
                     item = items[idx]
-                    validation = item.setdefault("source_validation", {})
-                    validation["last_extraction_attempt_at"] = utc_now()
-                    validation["extraction_attempt_count"] = int(validation.get("extraction_attempt_count") or 0) + 1
-                    validation["last_extraction_error"] = str(exc)[:500]
-                    if validation["extraction_attempt_count"] >= MAX_EXTRACTION_ATTEMPTS:
-                        item["verification_status"] = "manual_review_required_pending_extraction"
-                        item["source_pages"] = (
-                            "Không trích xuất được số liệu đáng tin cậy sau ba lượt tự động. "
-                            "Giữ nguyên liên kết VietstockFinance; cần đối chiếu PDF thủ công."
-                        )
-                        validation["automatic_extraction_exhausted"] = True
-                        validation["manual_review_reason"] = str(exc)[:500]
-                        print(
-                            f"  {symbol} {period}: đã thử {MAX_EXTRACTION_ATTEMPTS} lượt; "
-                            "chuyển sang rà soát thủ công và tiếp tục quý khác của cùng mã."
-                        )
+                    if item.get("verification_status") == "auto_pending_extraction":
+                        validation = item.setdefault("source_validation", {})
+                        validation["last_extraction_attempt_at"] = utc_now()
+                        validation["extraction_attempt_count"] = int(validation.get("extraction_attempt_count") or 0) + 1
+                        validation["last_extraction_error"] = str(exc)[:500]
+                        if validation["extraction_attempt_count"] >= MAX_EXTRACTION_ATTEMPTS:
+                            item["verification_status"] = "manual_review_required_pending_extraction"
+                            item["source_pages"] = (
+                                "Không trích xuất được số liệu lõi đáng tin cậy sau ba lượt tự động. "
+                                "Giữ nguyên liên kết VietstockFinance; cần đối chiếu PDF thủ công."
+                            )
+                            validation["automatic_extraction_exhausted"] = True
+                            validation["manual_review_reason"] = str(exc)[:500]
+                            print(
+                                f"  {symbol} {period}: đã thử {MAX_EXTRACTION_ATTEMPTS} lượt; "
+                                "chuyển sang rà soát thủ công và tiếp tục quý khác của cùng mã."
+                            )
+                    elif not item.get("financial_line_items_status"):
+                        item["financial_line_items_last_attempt_at"] = utc_now()
+                        item["financial_line_items_attempt_count"] = int(item.get("financial_line_items_attempt_count") or 0) + 1
+                        item["financial_line_items_last_error"] = str(exc)[:500]
+                        if item["financial_line_items_attempt_count"] >= MAX_EXTRACTION_ATTEMPTS:
+                            item["financial_line_items_status"] = "manual_review_required"
+                            item["financial_line_items_note"] = (
+                                "Đã thử trích xuất chỉ tiêu chi tiết ba lượt nhưng chưa tìm được số liệu đủ tin cậy. "
+                                "Các trường còn thiếu được để trống; cần đối chiếu trực quan báo cáo gốc."
+                            )
+                            item["financial_line_items_manual_review_reason"] = str(exc)[:500]
+                            print(
+                                f"  {symbol} {period}: chỉ tiêu chi tiết không trích xuất được sau "
+                                f"{MAX_EXTRACTION_ATTEMPTS} lượt; đánh dấu cần rà soát thủ công."
+                            )
                     items[idx] = item
                     changed = True
                 continue
@@ -1307,9 +1371,17 @@ def main() -> int:
                 break
 
             items = snapshot.get("items", [])
-            has_pending = any(
+            has_pending_core = any(
                 isinstance(item, dict)
                 and item.get("verification_status") == "auto_pending_extraction"
+                for item in items
+            )
+            has_pending_details = any(
+                isinstance(item, dict)
+                and period_key(str(item.get("period") or ""))[0] >= 2024
+                and item.get("total_assets") is not None
+                and item.get("net_profit") is not None
+                and not item.get("financial_line_items_status")
                 for item in items
             )
             attempts = int(snapshot.get("bootstrap_attempt_count") or 0)
@@ -1328,7 +1400,7 @@ def main() -> int:
                     "để trạng thái chờ rà soát và tiếp tục mã kế tiếp. Mã này vẫn được kiểm tra lại theo vòng."
                 )
                 continue
-            needs_retry = has_pending or (empty_snapshot and not terminal_empty)
+            needs_retry = has_pending_core or has_pending_details or (empty_snapshot and not terminal_empty)
             if needs_retry:
                 age = now_epoch - last_attempt_epoch(snapshot)
                 if age < cooldown_seconds:

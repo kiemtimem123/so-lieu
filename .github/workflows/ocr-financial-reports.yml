@@ -1,6 +1,11 @@
 name: OCR Financial Report Archive
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/scripts/ocr-stored-reports.py"
+      - ".github/workflows/ocr-financial-reports.yml"
   schedule:
     - cron: "10,40 * * * *"
   workflow_dispatch:
@@ -31,7 +36,7 @@ concurrency:
 
 jobs:
   ocr:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' }}
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event_name == 'schedule' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:

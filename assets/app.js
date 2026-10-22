@@ -1310,7 +1310,9 @@
       if (statusBadge) { statusBadge.textContent = statusBadgeData.label; statusBadge.className = 'financial-status financial-status-' + statusBadgeData.kind; }
       const detailReview = latest.financial_line_items_status === 'auto_extracted_pending_visual_review'
         ? ' · Chỉ tiêu chi tiết: trích xuất tự động, chờ đối chiếu PDF'
-        : '';
+        : latest.financial_line_items_status === 'manual_review_required'
+          ? ' · Chỉ tiêu chi tiết: thiếu số đáng tin cậy, cần rà soát PDF thủ công'
+          : '';
       setText('stockStatsSourceNote', (latest.report_type || 'Báo cáo tài chính') + (latest.published_at ? ' · Công bố: ' + dateFmt(latest.published_at) : '') + (latest.source_pages ? ' · ' + latest.source_pages : '') + detailReview);
       const sourceLink = document.getElementById('stockStatsSource');
       if (sourceLink) {

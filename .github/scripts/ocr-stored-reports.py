@@ -47,49 +47,50 @@ def select_symbol() -> str | None:
     if override:
         return override
 
-    priority = ["MBB", "ACB", "FPT", "SHB", "TCB", "VHM", "TCX", "HCM", "VND", "SHS", "NLG", "BSR"]
     configuration = load_json(ROOT / "config/securities.json") or {}
-    configured = [
+    priority = [
         str(item.get("symbol") or "").strip().upper()
         for item in configuration.get("securities", [])
         if isinstance(item, dict) and item.get("enabled") is not False and item.get("symbol")
     ]
-    priority.extend(symbol for symbol in configured if symbol and symbol not in priority)
+    if not priority:
+        priority = ["MBB", "ACB", "FPT", "SHB", "TCX", "HCM", "VND", "SHS", "NLG", "BSR", "TCB", "VHM"]
 
-    # Work on one ticker until all of its stored report pages and machine-
-    # extractable detail fields have been attempted; only then move to the next.
+    # Use the same sequential order as the quarterly snapshot worker. If the
+    # first incomplete ticker has no pages left for OCR, stop this OCR run and
+    # let the sync worker finish that same ticker; do not jump ahead.
     for symbol in priority:
-        folder = REPORTS / symbol
-        if not folder.is_dir():
-            continue
-        archive_files = [
-            path for path in folder.rglob("*")
-            if path.is_file()
-            and path.name.lower().endswith((".pdf", ".zip"))
-            and Path(str(path) + ".extracted.json").is_file()
-        ]
-        if not archive_files:
-            continue
-        snapshot = load_json(ROOT / f"data/financials-{symbol}.json") or {}
-        items = snapshot.get("items") or []
-        has_pending_detail = False
-        for item in items:
-            if not isinstance(item, dict) or item.get("financial_line_items_status"):
-                continue
-            source = str(item.get("source_archive_file") or "").strip()
-            if not source:
-                continue
-            source_path = (ROOT / source).resolve()
-            try:
-                source_path.relative_to(REPORTS.resolve())
-            except ValueError:
-                continue
-            if source_path.with_suffix(source_path.suffix + ".extracted.json").is_file():
-                has_pending_detail = True
-                break
+        snapshot_path = ROOT / f"data/financials-{symbol}.json"
+        snapshot = load_json(snapshot_path)
+        if snapshot is None:
+            folder = REPORTS / symbol
+            if folder.is_dir() and symbol_needs_statement_pages(symbol):
+                return symbol
+            return None
 
-        if symbol_needs_statement_pages(symbol) or has_pending_detail:
+        items = snapshot.get("items") or []
+        has_pending_core = any(
+            isinstance(item, dict)
+            and item.get("verification_status") == "auto_pending_extraction"
+            for item in items
+        )
+        has_pending_details = any(
+            isinstance(item, dict)
+            and re.fullmatch(r"20\\d{2}-Q[1-4]", str(item.get("period") or ""))
+            and item.get("total_assets") is not None
+            and item.get("net_profit") is not None
+            and not item.get("financial_line_items_status")
+            for item in items
+        )
+        if not (has_pending_core or has_pending_details):
+            continue
+
+        folder = REPORTS / symbol
+        if folder.is_dir() and symbol_needs_statement_pages(symbol):
             return symbol
+        # This ticker remains the queue head. No OCR work is needed at present;
+        # do not process another ticker's archive while its data extraction retries.
+        return None
 
     return None
 
