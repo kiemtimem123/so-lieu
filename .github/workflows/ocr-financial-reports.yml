@@ -285,7 +285,7 @@ jobs:
           inspected_path = None
 
           def inspect_pdf(pdf_path, payload):
-              nonlocal native_work, needs_tools
+              global native_work, needs_tools
               try:
                   reader = PdfReader(str(pdf_path), strict=False)
                   page_count = len(reader.pages)

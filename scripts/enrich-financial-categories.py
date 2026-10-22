@@ -37,7 +37,7 @@ BANK_BALANCE_LABELS = {
  "bank_cash_on_hand":["tien mat, vang bac, da quy","tien mat vang bac da quy"],
  "bank_deposits_at_state_bank":["tien gui tai nhnn","tien gui tai ngan hang nha nuoc"],
  "bank_deposits_and_loans_to_credit_institutions":["tien gui va cho vay cac tctd khac","tien gui va cho vay cac to chuc tin dung khac"],
- "bank_customer_loans":["chovaykhachhang","cho vay khach hang","cho vay khach hang tong"],
+ "bank_customer_loans":["cho vay khach hang","cho vay khichhing","chovaykhachhang","cho vay khach hang tong"],
  "bank_trading_securities":["chung khoan kinh doanh"],
  "bank_derivatives_and_other_financial_assets":["cac cong cu tai chinh phai sinh va cac tai san tai chinh khac"],
  "bank_investment_securities":["chung khoan dau tu"],
@@ -47,7 +47,7 @@ BANK_BALANCE_LABELS = {
  "bank_customer_deposits":["tien gui cua khach hang"],
  "bank_valuable_papers":["phat hanh giay to co gia"],
  "bank_funding_and_trust_liabilities":["von tai tro, uy thac dau tu"],
- "bank_other_liabilities":["no khac"],
+ "bank_other_liabilities":["cac khoan no khac","cac khoan ngkhc","no khac"],
 }
 BROKER_BALANCE_LABELS = {
  "broker_fvtpl_assets":["tai san tai chinh ghi nhan thong qua lai lo","tai san tai chinh ghi nhan thong qua lai/lo"],
@@ -665,7 +665,12 @@ def extract_fields(item,symbol,pages):
   if val is not None: out[field]=val
  if symbol in BANKS and inc:
   for field,labels in BANK_INCOME_LABELS.items():
-   val=value_by_label(inc,labels,scale)
+   if field=="bank_operating_expenses":
+    val=value_by_label(inc,["chi phi hoat dong"],scale,exclude_terms=["chi phi hoat dong dich vu","chi phi hoat dong khac","chi phi hoat dong tai chinh"])
+   elif field in {"bank_net_interest_income","bank_net_service_income"}:
+    val=None
+   else:
+    val=value_by_label(inc,labels,scale)
    if val is not None: out[field]=val
  if symbol in BROKERS and inc:
   for field,labels in BROKER_INCOME_LABELS.items():
@@ -990,8 +995,8 @@ def reconcile_detail_items(items,symbol):
   prior=item.setdefault("financial_line_items_prior_values",{})
   rejected_values=item.setdefault("financial_line_items_rejected_values",{})
 
-  # Derive the bank subtotal hierarchy from reported rows before trusting OCR
-  # matches. Expenses are stored with their printed negative sign.
+  # Reconcile bank subtotals. Expenses are stored as positive statement values;
+  # net income and profit lines therefore subtract the absolute expense values.
   if symbol in BANKS:
    unquarterized=set(item.get("financial_line_items_unquarterized_fields") or [])
    def set_derived(field,value,formula,reason):
@@ -1024,9 +1029,9 @@ def reconcile_detail_items(items,symbol):
     and not ({"bank_interest_income","bank_interest_expense"} & unquarterized)
    ):
     set_derived(
-     "bank_net_interest_income",interest_income+interest_expense,
-     "Thu nhập lãi + chi phí lãi (chi phí giữ dấu âm) theo báo cáo ngân hàng.",
-     "derived from reported interest income plus signed interest expense",
+     "bank_net_interest_income",interest_income-abs(interest_expense),
+     "Thu nhập lãi - |chi phí lãi| theo BCTC ngân hàng.",
+     "derived from reported interest income minus reported interest expense",
     )
 
    service_income=item.get("bank_service_income")
@@ -1036,9 +1041,9 @@ def reconcile_detail_items(items,symbol):
     and not ({"bank_service_income","bank_service_expense"} & unquarterized)
    ):
     set_derived(
-     "bank_net_service_income",service_income+service_expense,
-     "Thu nhập dịch vụ + chi phí dịch vụ (chi phí giữ dấu âm).",
-     "derived from reported service income plus signed service expense",
+     "bank_net_service_income",service_income-abs(service_expense),
+     "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
+     "derived from reported service income minus reported service expense",
     )
 
    bank_components=[
@@ -1053,7 +1058,22 @@ def reconcile_detail_items(items,symbol):
     and not (set(bank_components) & rejected)
    )
    existing_revenue=item.get("revenue")
-   if components_safe:
+   # Prefer the reported pre-provision subtotal and operating expense over
+   # summing subcomponents that OCR may miss or misread.
+   reported_ppop=item.get("bank_pre_provision_operating_profit")
+   reported_op_expense=item.get("bank_operating_expenses")
+   if (
+    isinstance(reported_ppop,(int,float)) and isinstance(reported_op_expense,(int,float))
+    and not ({"bank_pre_provision_operating_profit","bank_operating_expenses"} & unquarterized)
+    and not ({"bank_pre_provision_operating_profit","bank_operating_expenses"} & rejected)
+   ):
+    operating_income=int(round(reported_ppop+abs(reported_op_expense)))
+    set_derived(
+     "revenue",operating_income,
+     "Lợi nhuận trước dự phòng + chi phí hoạt động; đối chiếu theo tổng phụ BCTC ngân hàng.",
+     "derived from reported pre-provision operating profit plus positive operating expenses",
+    )
+   elif components_safe:
     operating_income=int(round(sum(component_values)))
     set_derived(
      "revenue",operating_income,
@@ -1078,7 +1098,7 @@ def reconcile_detail_items(items,symbol):
     rejected.add("revenue")
     notes.append("Doanh thu cũ trùng thu nhập lãi thuần nhưng chưa đủ cấu phần để tái lập tổng thu nhập hoạt động; đã ẩn.")
 
-   # PPOP = total net operating income + signed operating expenses.
+   # PPOP = total operating income - reported operating expenses.
    op_expense=item.get("bank_operating_expenses")
    if (
     isinstance(item.get("revenue"),(int,float))
@@ -1086,35 +1106,35 @@ def reconcile_detail_items(items,symbol):
     and not ({"revenue","bank_operating_expenses"} & unquarterized)
     and not ({"revenue","bank_operating_expenses"} & rejected)
    ):
-    derived_ppop=item["revenue"]+op_expense
+    derived_ppop=item["revenue"]-abs(op_expense)
     set_derived(
      "bank_pre_provision_operating_profit",derived_ppop,
-     "Tổng thu nhập hoạt động + chi phí hoạt động (chi phí giữ dấu âm).",
-     "derived from total operating income plus signed operating expenses",
+     "Tổng thu nhập hoạt động - |chi phí hoạt động| theo BCTC ngân hàng.",
+     "derived from total operating income minus operating expense",
     )
 
-   # PBT = PPOP + signed credit provision expense. Derive the expense only
-   # when both the quarterly PPOP and the snapshot's verified PBT are available.
+   # PBT = PPOP - positive credit-provision expense. Derive only when both
+   # the quarterly PPOP and the snapshot's reported PBT are available.
    ppop=item.get("bank_pre_provision_operating_profit")
    pbt=item.get("pretax_profit")
    if isinstance(ppop,(int,float)) and isinstance(pbt,(int,float)):
-    derived_provision=int(round(pbt-ppop))
+    derived_provision=int(round(ppop-pbt))
     set_derived(
      "bank_provision_expense",derived_provision,
-     "Lợi nhuận trước thuế - lợi nhuận trước dự phòng; chi phí dự phòng giữ dấu âm.",
-     "derived from verified quarterly PBT minus reconciled pre-provision operating profit",
+     "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
+     "derived from reconciled pre-provision operating profit minus reported quarterly PBT",
     )
 
    ppop=item.get("bank_pre_provision_operating_profit")
    provision=item.get("bank_provision_expense")
    pbt=item.get("pretax_profit")
    if all(isinstance(value,(int,float)) for value in (ppop,provision,pbt)):
-    implied_pbt=ppop+provision
+    implied_pbt=ppop-abs(provision)
     tolerance=max(abs(pbt)*0.02,1000)
     if abs(implied_pbt-pbt)>tolerance:
      for field in ("bank_pre_provision_operating_profit","bank_provision_expense"):
       if isinstance(item.get(field),(int,float)):
-       rejected_values.setdefault(field,{"value":item[field],"reason":"bank PPOP plus signed provision expense does not reconcile to reported PBT"})
+       rejected_values.setdefault(field,{"value":item[field],"reason":"bank PPOP minus positive provision expense does not reconcile to reported PBT"})
        item.pop(field,None)
        item.pop(field+"_calculation",None)
        fields.discard(field)
@@ -1170,21 +1190,21 @@ def reconcile_detail_items(items,symbol):
      fields.discard(key)
      period_changed=True; changed_fields+=1
 
-  # A row-by-row cash-flow sum should reconcile to net change once the FX line
-  # is included. If not, leave those automatically parsed flow fields blank.
+  # Operating + investing + financing cash flows reconcile to net cash change.
+  # FX translation is separate and is used only in the cash-balance bridge.
   operating=item.get("operating_cash_flow")
   investing=item.get("investing_cash_flow")
   financing=item.get("financing_cash_flow")
   net_change=item.get("net_cash_change")
   fx=item.get("foreign_exchange_effect",0)
   if all(isinstance(v,(int,float)) for v in (operating,investing,financing,net_change)) and isinstance(fx,(int,float)):
-   total=operating+investing+financing+fx
-   scale=max(abs(operating)+abs(investing)+abs(financing)+abs(fx),abs(net_change),1000)
+   total=operating+investing+financing
+   scale=max(abs(operating)+abs(investing)+abs(financing),abs(net_change),1000)
    if abs(total-net_change)>max(scale*0.05,1000):
-    reject("operating_cash_flow","investing_cash_flow","financing_cash_flow","foreign_exchange_effect",
+    reject("operating_cash_flow","investing_cash_flow","financing_cash_flow",
            "net_cash_change","capital_expenditure","dividends_paid",
            "operating_cash_flow_ytd","investing_cash_flow_ytd","financing_cash_flow_ytd",
-           "foreign_exchange_effect_ytd","net_cash_change_ytd","capital_expenditure_ytd",
+           "net_cash_change_ytd","capital_expenditure_ytd",
            "dividends_paid_ytd","cash_beginning","cash_ending",
            reason="cash-flow components do not reconcile to reported net cash change")
     notes.append("Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần.")
@@ -1222,7 +1242,8 @@ def reconcile_detail_items(items,symbol):
   net_change=item.get("net_cash_change")
   if all(isinstance(v,(int,float)) for v in (begin,end,net_change)):
    tolerance=max(5,abs(begin)*0.0005,abs(end)*0.0005)
-   if abs((end-begin)-net_change)>tolerance:
+   fx=item.get("foreign_exchange_effect",0)
+   if abs((end-begin)-(net_change+(fx if isinstance(fx,(int,float)) else 0)))>tolerance:
     reject("cash_beginning","cash_ending",reason="cash balance bridge does not reconcile to net cash change")
     notes.append("Số dư tiền đầu/cuối kỳ bị ẩn vì không khớp biến động tiền thuần theo quý.")
 

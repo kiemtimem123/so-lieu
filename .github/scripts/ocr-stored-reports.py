@@ -31,7 +31,7 @@ TERMINAL_REVIEW_STATUSES = {
 }
 DPI = int(os.getenv("REPORT_OCR_DPI", "280"))
 FORCE_RESCAN_PAGES = {
-    int(value.strip()) for value in os.getenv("REPORT_OCR_RESCAN_PAGES", "10,11").split(",")
+    int(value.strip()) for value in os.getenv("REPORT_OCR_RESCAN_PAGES", "").split(",")
     if value.strip().isdigit() and int(value.strip()) > 0
 }
 
