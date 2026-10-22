@@ -512,6 +512,8 @@ def discover_for_job(job, allowed_domains):
         ]):
             continue
         period = _period_from_report_text(evidence)
+        if job.get("quarterly_only") and not re.fullmatch(r"20\\d{2}-Q[1-4]", str(period or "")):
+            continue
         year, published_at = _extract_report_year_and_date(evidence)
         period_year = re.match(r"(20\d{2})-", period or "")
         if period_year:
@@ -598,6 +600,152 @@ def download_candidate(candidate, job_dir):
     except Exception as exc:
         return {"url":url,"title":candidate.get("title"),"status":"download_error","error":str(exc)[:1000]}
 
+DETAIL_SCHEMA_ACCEPTED = {
+    "2026-10-22-bank-statement-qc-v3",
+    "2026-10-22-bank-statement-qc-v4",
+}
+TERMINAL_REVIEW_STATUSES = {
+    "manual_review_required",
+    "manual_review_required_pending_extraction",
+    "no_detail_fields_matched_pending_manual_review",
+}
+
+
+def first_incomplete_symbol(securities: dict) -> str | None:
+    for security in securities.get("securities", []):
+        if not isinstance(security, dict) or security.get("enabled") is False:
+            continue
+        symbol = str(security.get("symbol") or "").strip().upper()
+        if not symbol:
+            continue
+        path = ROOT / "data" / f"financials-{symbol}.json"
+        if not path.exists():
+            return symbol
+        try:
+            snapshot = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return symbol
+        items = snapshot.get("items") or []
+        if not items:
+            try:
+                attempts = int(snapshot.get("bootstrap_attempt_count") or 0)
+            except (TypeError, ValueError):
+                attempts = 0
+            terminal = (
+                attempts >= 3
+                and snapshot.get("sync_status") in {
+                    "fetch_failed", "no_quarterly_consolidated_records_returned",
+                    "needs_manual_review_no_quarterly_data"
+                }
+            )
+            if terminal:
+                continue
+            return symbol
+
+        core_pending = any(
+            isinstance(item, dict)
+            and item.get("verification_status") == "auto_pending_extraction"
+            for item in items
+        )
+        details_pending = any(
+            isinstance(item, dict)
+            and re.fullmatch(r"20\d{2}-Q[1-4]", str(item.get("period") or ""))
+            and item.get("total_assets") is not None
+            and item.get("net_profit") is not None
+            and not item.get("financial_line_items_status")
+            for item in items
+        )
+        stale_details = any(
+            isinstance(item, dict)
+            and item.get("financial_line_items_status")
+            and item.get("financial_line_items_status") not in TERMINAL_REVIEW_STATUSES
+            and item.get("financial_line_items_schema_version") not in DETAIL_SCHEMA_ACCEPTED
+            for item in items
+        )
+        if core_pending or details_pending or stale_details:
+            return symbol
+    return None
+
+
+def canonical_document_url(value: object) -> tuple[str, str] | None:
+    try:
+        parsed = urlparse(str(value or "").strip())
+        if not parsed.scheme or not parsed.netloc:
+            return None
+        return (
+            (parsed.hostname or "").casefold(),
+            unquote(parsed.path).rstrip("/").casefold(),
+        )
+    except Exception:
+        return None
+
+
+def link_quarterly_archive_sources(symbol: str, jobs: list[dict]) -> int:
+    """Link only exact, consolidated quarterly Vietstock URLs to snapshot periods."""
+    path = ROOT / "data" / f"financials-{symbol}.json"
+    if not path.is_file():
+        return 0
+    try:
+        snapshot = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return 0
+    items = snapshot.get("items")
+    if not isinstance(items, list):
+        return 0
+    by_period = {
+        str(item.get("period")): item
+        for item in items
+        if isinstance(item, dict) and re.fullmatch(r"20\d{2}-Q[1-4]", str(item.get("period") or ""))
+    }
+    changed = 0
+    for job in jobs:
+        if str(job.get("symbol") or "").upper() != symbol:
+            continue
+        for record in job.get("downloadedFiles") or []:
+            if not isinstance(record, dict) or record.get("status") != "downloaded_needs_review":
+                continue
+            period = str(record.get("period") or "")
+            if not re.fullmatch(r"20\d{2}-Q[1-4]", period):
+                continue
+            title = " ".join(str(record.get(key) or "") for key in (
+                "title", "index_title", "vietstock_title", "full_name"
+            ))
+            if not re.search(r"hợp\s*nhất|hop\s*nhat|consolidated", title, re.I):
+                continue
+            if re.search(r"công\s*ty\s*mẹ|cong\s*ty\s*me|riêng\s*lẻ|rieng\s*le|parent\s+company|separate", title, re.I):
+                continue
+            relative = str(record.get("file") or "").strip()
+            if not relative:
+                continue
+            archive_path = (ROOT / relative).resolve()
+            try:
+                archive_path.relative_to((ROOT / "reports" / "raw").resolve())
+            except ValueError:
+                continue
+            if not archive_path.is_file() or archive_path.suffix.lower() not in {".pdf", ".zip"}:
+                continue
+            item = by_period.get(period)
+            if not item:
+                continue
+            report_url = item.get("source_url")
+            download_url = record.get("url") or record.get("final_url")
+            if not report_url or canonical_document_url(report_url) != canonical_document_url(download_url):
+                continue
+            existing = str(item.get("source_archive_file") or "").strip()
+            existing_path = (ROOT / existing).resolve() if existing else None
+            if existing_path and existing_path.is_file():
+                continue
+            item["source_archive_file"] = relative
+            item["source_archive_source"] = "VietstockFinance document index"
+            item["source_archive_title"] = title
+            item["source_archive_linked_at"] = NOW
+            changed += 1
+    if changed:
+        snapshot["items"] = items
+        path.write_text(json.dumps(snapshot, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return changed
+
+
 def main():
     global ALLOWED_DOMAINS
     sources = load(SOURCES_PATH, {"allowedDomains":[]})
@@ -607,6 +755,7 @@ def main():
     queue = load(QUEUE_PATH, {"schemaVersion":1,"updatedAt":None,"jobs":[]})
     securities = load(SEC_PATH, {"securities":[]})
     jobs = queue.setdefault("jobs", [])
+    initial_job_ids = {j.get("id") for j in jobs}
     known = {j.get("id") for j in jobs}
     # Refresh discovery weekly for every enabled security; avoid creating a new job every day.
     last_processed = {}
@@ -631,6 +780,8 @@ def main():
                 jobs.append({"id":job_id,"symbol":symbol,"startYear":int(securities.get("defaultStartYear",2024)),"reportType":"both" if len(sec.get("reportTypes",[]))>1 else (sec.get("reportTypes") or ["consolidated"])[0],"status":"queued","createdAt":NOW,"attempts":0,"sourceCandidates":[],"downloadedFiles":[],"verifiedPeriods":[],"origin":"scheduled_registry"})
                 known.add(job_id)
     summary = {"started_at":NOW,"jobs_processed":0,"downloaded":0,"needs_review":0,"errors":0,"allowlisted_domains":ALLOWED_DOMAINS}
+    active_symbol = first_incomplete_symbol(securities)
+    print(json.dumps({"event":"single_ticker_queue_head","symbol":active_symbol},ensure_ascii=False))
     # A ticker remains at the head of the queue while its discovered source URLs
     # are being archived. Each run downloads at most MAX_PER_JOB documents; only
     # after the remaining candidate list is exhausted does the worker move on.
@@ -640,7 +791,10 @@ def main():
         0 if str(job.get("symbol", "")).upper() == "MBB" else 1,
         job.get("createdAt", ""),
     ))
+    processed_symbols = set()
     for job in jobs:
+        if active_symbol and str(job.get("symbol") or "").upper() != active_symbol:
+            continue
         if summary["jobs_processed"] >= MAX_JOBS_PER_RUN:
             break
         if job.get("status") not in {"queued", "failed"}:
@@ -650,6 +804,7 @@ def main():
 
         previous_files = list(job.get("downloadedFiles") or [])
         attempted_urls = set(str(url) for url in (job.get("attemptedUrls") or []) if url)
+        processed_symbols.add(str(job.get("symbol") or "").upper())
         job["status"] = "searching"
         job["updatedAt"] = NOW
         job["attempts"] = int(job.get("attempts", 0)) + 1
@@ -765,8 +920,17 @@ def main():
             "downloaded_total": sum(1 for item in combined_files if item.get("status") == "downloaded_needs_review"),
             "more_candidates": more_candidates,
         }, ensure_ascii=False))
-    queue["updatedAt"]=NOW
-    save(QUEUE_PATH, queue)
+    linked_count = 0
+    for symbol in processed_symbols:
+        linked_count += link_quarterly_archive_sources(symbol, jobs)
+    if linked_count:
+        print(json.dumps({"event":"quarterly_archive_sources_linked","symbol":active_symbol,"count":linked_count},ensure_ascii=False))
+    queue_changed = summary["jobs_processed"] > 0 or any(job.get("id") not in initial_job_ids for job in jobs)
+    if queue_changed:
+        queue["updatedAt"]=NOW
+        save(QUEUE_PATH, queue)
+    else:
+        print(json.dumps({"event":"no_queue_change","active_symbol":active_symbol,"note":"Keep the ticker on hold rather than moving to another symbol."},ensure_ascii=False))
     save(ROOT / "reports/worker-last-run.json", summary)
     print(json.dumps(summary,ensure_ascii=False,indent=2))
 
