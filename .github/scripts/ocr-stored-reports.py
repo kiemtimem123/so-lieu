@@ -523,11 +523,17 @@ def main():
     # Process linked quarterly reports in chronological order, one archive file
     # per run. Never scan arbitrary PDFs from the ticker folder.
     report_archives = symbol_report_archives(symbol)
-    files = [path for _period, path in report_archives]
-    period_for_path = {str(path.resolve()): period for period, path in report_archives}
+    ocr_archives = []
+    for period, archive_path in report_archives:
+        sidecar = Path(str(archive_path) + ".extracted.json")
+        extracted = load_json(sidecar) or {}
+        if _extraction_has_missing_pages(extracted):
+            ocr_archives.append((period, archive_path))
+    files = [path for _period, path in ocr_archives]
+    period_for_path = {str(path.resolve()): period for period, path in ocr_archives}
     summary = {"event": "ocr_stored_report_archive", "symbol": symbol, "max_pages": MAX_PAGES,
-               "max_reports": MAX_REPORTS, "quarterly_sources": len(files),
-               "work_units": 0, "results": []}
+               "max_reports": MAX_REPORTS, "quarterly_sources": len(report_archives),
+               "ocr_candidates": len(files), "work_units": 0, "results": []}
     # Bound each runner invocation; completed files are skipped so later runs
     # continue with the next reports instead of repeatedly scanning the archive.
     for path in files:

@@ -15,6 +15,7 @@ DATA = ROOT / "data"
 RAW = ROOT / "reports" / "raw"
 REPORT_QUEUE = ROOT / "config" / "report-queue.json"
 _QUEUE_ARCHIVE_BY_URL = None
+DETAIL_SCHEMA_VERSION = "2026-10-22-bank-statement-qc-v2"
 NUMBER_RE = re.compile(r"(?<![A-Za-z0-9])\(?-?\d[\d.,]*\d?\)?")
 BANKS = {"MBB", "ACB", "SHB", "TCB", "TPB", "VPB", "STB", "VCB", "CTG", "BID"}
 BROKERS = {"HCM", "SHS", "TCX", "VND", "VCI", "VCK", "VIX", "SSI", "VDS"}
@@ -879,6 +880,10 @@ def enrich_snapshot(path):
  for item in items:
   if not isinstance(item,dict) or not period_key(item): continue
   report_type_text=str(item.get("report_type") or "")
+  if item.get("financial_line_items_status") and item.get("financial_line_items_schema_version") != DETAIL_SCHEMA_VERSION:
+   item["financial_line_items_schema_version"]=DETAIL_SCHEMA_VERSION
+   item["financial_line_items_schema_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
+   changed=True
   source_norm=norm(item.get("source_url") or "")
   source_index=str(item.get("source_index_url") or "")
   sync_scope_verified=(
@@ -974,6 +979,8 @@ def enrich_snapshot(path):
    fields.update(new_fields)
    item["financial_line_items_extracted_fields"]=sorted(fields)
    item["financial_line_items_status"]="auto_extracted_pending_visual_review"
+   item["financial_line_items_schema_version"]=DETAIL_SCHEMA_VERSION
+   item["financial_line_items_schema_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
    item["financial_line_items_source"]=str(item.get("source_archive_file") or "")
    item["financial_line_items_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
    base_note=str(item.get("financial_line_items_note") or "")

@@ -169,12 +169,18 @@ jobs:
                       and not item.get("financial_line_items_status")
                       for item in items
                   )
-                  if core_pending or details_pending:
-                      if ticker_has_ocr_gap(symbol, items):
-                          selected = symbol
-                      # If no stored quarter PDF needs OCR, hold the head of the
-                      # queue for the sync worker/manual-review process. Do not
-                      # load another ticker's reports while this ticker is open.
+                  stale_details = any(
+                      isinstance(item, dict)
+                      and re.fullmatch(r"20\d{2}-Q[1-4]", str(item.get("period") or ""))
+                      and item.get("financial_line_items_status")
+                      and item.get("financial_line_items_schema_version") != "2026-10-22-bank-statement-qc-v2"
+                      for item in items
+                  )
+                  if core_pending or details_pending or stale_details:
+                      # Select the queue-head ticker even if OCR sidecars have no
+                      # page gaps: the enrichment step must re-parse those pages
+                      # with the current accounting/unit validation rules.
+                      selected = symbol
                       break
           print(f"Selected ticker for OCR: {selected or '(no OCR page gaps; queue remains on first incomplete ticker)'}")
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
