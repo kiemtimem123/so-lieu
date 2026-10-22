@@ -97,7 +97,7 @@ INCOME_LABELS = {
  "admin_expense":["chi phi quan ly doanh nghiep","chi phi quan ly cong ty"],
  "operating_profit":["loi nhuan thuan tu hoat dong kinh doanh","loi nhuan tu hoat dong kinh doanh"],
  "income_tax":["chi phi thue thu nhap doanh nghiep trong ky","chi phi thue thu nhap doanh nghiep","chi phi thue tndn"],
- "net_profit_attributable":["loi nhuan sau thue cua co dong cong ty me","loi nhuan sau thue cua co dong cua cong ty me","loi nhuan thuoc ve co dong cong ty me"],
+ "net_profit_attributable":["loi nhuan sau thue cua co dong cong ty me","loi nhuan sau thue cua co dong cua cong ty me","loi nhuan thuoc ve co dong cong ty me","loi nhuan thuan co dong ngan hang"],
 }
 BANK_INCOME_LABELS = {
  "bank_interest_income":["thu nhap lai va cac khoan thu nhap tuong tu"],
@@ -185,7 +185,7 @@ def get_pages(obj):
 
 STATEMENT_TERMS = {
  "balance":["bao cao tinh hinh tai chinh","bang can doi ke toan","statement of financial position"],
- "income":["bao cao ket qua hoat dong kinh doanh","bao cao ket qua kinh doanh","bao cao thu nhap","statement of profit or loss","statement of income","income statement"],
+ "income":["bao cao ket qua hoat dong","bao cao ket qua hoat dong kinh doanh","bao cao ket qua kinh doanh","bao cao thu nhap","statement of profit or loss","statement of income","income statement"],
  "cashflow":["bao cao luu chuyen tien te","statement of cash flows","cash flow statement"],
 }
 
@@ -402,9 +402,28 @@ def is_quarter_comparison_page(page):
   ("loi nhuan truoc thue" in text or "profit before tax" in text)
   and ("loi nhuan sau thue" in text or "profit after tax" in text)
  )
- has_comparison=any(term in text for term in ("tang","giam","increase","decrease","same period","cung ky"))
+ # A quarterly filing may title the page "Quý II ... and six months ended"
+ # rather than explicitly saying "same period". That wording still means
+ # the table can have quarterly columns followed by YTD columns.
+ has_comparison=any(term in text for term in (
+  "tang","giam","increase","decrease","same period","cung ky",
+  "nam truoc","nam nay","ky truoc","prior year","previous year",
+  "prior period","previous period"
+ ))
  has_quarter=any(term in text for term in ("quy ","quarter ended","quarter of","quy i","quy ii","quy iii","quy iv"))
- return has_unit and has_profit_rows and has_comparison and has_quarter
+ pbt_values=0
+ net_values=0
+ for line in str(page.get("text","")).splitlines():
+  clean=norm(line)
+  if ("loi nhuan truoc thue" in clean or "profit before tax" in clean) and not pbt_values:
+   pbt_values=len(amounts(line))
+  if ("loi nhuan sau thue" in clean or "profit after tax" in clean) and not net_values:
+   net_values=len(amounts(line))
+ # At least three values on each profit row indicate a standalone-quarter
+ # column plus comparison/YTD columns. Two-column YTD-only pages are not
+ # treated as a standalone-quarter statement.
+ has_quarter_columns=pbt_values>=3 and net_values>=3
+ return has_unit and has_profit_rows and has_comparison and has_quarter and has_quarter_columns
 
 def value_by_table_label(pages,labels,factor,threshold=1000):
  # Use values from the table after its unit declaration, not narrative values
@@ -536,8 +555,15 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
   "loi nhuan sau thue thu nhap doanh nghiep","loi nhuan sau thue","profit after tax"
  ]
  if summary_pages:
-  pbt=value_by_table_label(summary_pages,pbt_labels,factor)
-  net=value_by_table_label(summary_pages,net_labels,factor)
+  # The selected page is already identified as a quarterly comparative table.
+  # Parse from the text after the exact row label; this handles OCR variants
+  # where the unit/header is split across lines and value_by_table_label misses it.
+  pbt=value_by_label(summary_pages,pbt_labels,factor)
+  net=value_by_label(summary_pages,net_labels,factor)
+  if pbt is None:
+   pbt=value_by_table_label(summary_pages,pbt_labels,factor)
+  if net is None:
+   net=value_by_table_label(summary_pages,net_labels,factor)
  else:
   pbt=value_by_label(profit_pages,pbt_labels,factor) if profit_pages else None
   net=value_by_label(profit_pages,net_labels,factor) if profit_pages else None
@@ -545,8 +571,28 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
   out["pretax_profit"]=pbt
  if net is not None:
   out["net_profit"]=net
+ parent_profit=value_by_label(
+  profit_pages,
+  ["loi nhuan thuan co dong ngan hang","loi nhuan sau thue cua co dong cong ty me",
+   "loi nhuan sau thue cua co dong cua cong ty me","loi nhuan thuoc ve co dong cong ty me"],
+  factor
+ ) if profit_pages else None
+ if parent_profit is not None:
+  out["net_profit_attributable"]=parent_profit
+ eps=value_by_label(
+  profit_pages,["lai co ban tren co phieu","lai co ban tren co phieu vnd",
+   "earnings per share"],1.0,threshold=50
+ ) if profit_pages else None
+ if eps is not None and abs(eps)<1000000:
+  out["eps"]=eps
  if isinstance(detail_found.get("revenue"),(int,float)):
   out["revenue"]=detail_found["revenue"]
+ elif symbol in BANKS and profit_pages:
+  bank_revenue=value_by_label(
+   profit_pages,["tong thu nhap hoat dong","tong thu nhap hoat dong kinh doanh"],factor
+  )
+  if bank_revenue is not None:
+   out["revenue"]=bank_revenue
  out["__core_calculations"]=calculations
  out["__core_pages"]=sorted({
   int(page.get("page")) for page in balance+income+summary_pages
@@ -658,6 +704,12 @@ def cumulative_income_mode(item, pages):
   return ""
  text=norm(" ".join(str(p.get("text","")) for p in select_statement_pages(pages,"income")))
  if not text:
+  return ""
+ # If the comparative profit table contains 3+ figures per row, it already
+ # has standalone-quarter columns (usually Qn this year, Qn last year,
+ # year-to-date this year and year-to-date last year). Do not subtract Q1
+ # from these quarterly values again.
+ if any(is_quarter_comparison_page(page) for page in pages):
   return ""
  has_three_month_columns=bool(
   re.search(r"\b(?:cho )?ky 3 thang ket thuc ngay\b",text)
