@@ -184,6 +184,7 @@ def symbol_report_archives(symbol: str) -> list[tuple[str, Path]]:
     snapshot = load_json(ROOT / f"data/financials-{symbol}.json") or {}
     items = snapshot.get("items") or []
     selected: dict[str, Path] = {}
+    item_by_period: dict[str, dict] = {}
     for item in items:
         if not isinstance(item, dict):
             continue
@@ -206,7 +207,26 @@ def symbol_report_archives(symbol: str) -> list[tuple[str, Path]]:
             # sidecar is left to the Vietstock sync/download worker.
             continue
         selected[period] = archive_path
-    return [(period, selected[period]) for period in sorted(selected, key=lambda value: (int(value[:4]), int(value[-1])))]
+        item_by_period[period] = item
+
+    def order_key(period: str):
+        item = item_by_period[period]
+        # Finish all core/detail extraction for the current ticker before
+        # revisiting already enriched quarters for lower-priority page rescans.
+        core_pending = item.get("verification_status") == "auto_pending_extraction"
+        detail_pending = (
+            item.get("total_assets") is not None
+            and item.get("net_profit") is not None
+            and not item.get("financial_line_items_status")
+        )
+        detail_schema = item.get("financial_line_items_schema_version")
+        stale_detail = bool(item.get("financial_line_items_status")) and detail_schema not in {
+            "2026-10-22-bank-statement-qc-v3", "2026-10-22-bank-statement-qc-v4"
+        } and item.get("financial_line_items_status") not in TERMINAL_REVIEW_STATUSES
+        priority = 0 if (core_pending or detail_pending or stale_detail) else 1
+        return (priority, int(period[:4]), int(period[-1]))
+
+    return [(period, selected[period]) for period in sorted(selected, key=order_key)]
 
 def symbol_needs_statement_pages(symbol: str) -> bool:
     """Check the selected ticker's consolidated quarterly source files only."""
@@ -533,6 +553,7 @@ def main():
     period_for_path = {str(path.resolve()): period for period, path in ocr_archives}
     summary = {"event": "ocr_stored_report_archive", "symbol": symbol, "max_pages": MAX_PAGES,
                "max_reports": MAX_REPORTS, "quarterly_sources": len(report_archives),
+               "priority_periods": [period for period, _path in report_archives],
                "ocr_candidates": len(files), "work_units": 0, "results": []}
     # Bound each runner invocation; completed files are skipped so later runs
     # continue with the next reports instead of repeatedly scanning the archive.
