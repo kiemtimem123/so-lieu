@@ -29,6 +29,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: so-lieu-financial-data-writes-v2
@@ -135,3 +136,16 @@ jobs:
           path: reports/worker-last-run.json
           if-no-files-found: ignore
           retention-days: 30
+
+  trigger-ocr:
+    needs: collect
+    if: ${{ needs.collect.result == 'success' }}
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Start the next one-report OCR/enrichment run after the collector commits
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/workflows/ocr-financial-reports.yml/dispatches" -f ref=main
