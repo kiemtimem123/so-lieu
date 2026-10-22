@@ -544,6 +544,52 @@ def discover_for_job(job, allowed_domains):
             "file_ext":row.get("FileExt"),"last_update":updated,
             "total_rows":total_rows
         })
+    requested_urls = job.get("requestedUrls")
+    if isinstance(requested_urls, list) and requested_urls:
+        targeted = []
+        for request in requested_urls:
+            if not isinstance(request, dict):
+                continue
+            requested_url = str(request.get("url") or "").strip()
+            requested_title = str(request.get("title") or "").strip()
+            parsed_url = urlparse(requested_url)
+            file_name = Path(unquote(parsed_url.path)).name.lower()
+            if parsed_url.scheme != "https" or (parsed_url.hostname or "").lower() not in {
+                "static1.vietstock.vn", "static2.vietstock.vn"
+            }:
+                continue
+            if not file_name.startswith(symbol.lower() + "_") or not file_name.endswith(".pdf"):
+                continue
+            if not is_financial_statement_document(requested_title):
+                continue
+            if not re.search(r"hợp\s*nhất|hop\s*nhat|consolidated", requested_title, re.I):
+                continue
+            if re.search(r"công\s*ty\s*mẹ|cong\s*ty\s*me|riêng\s*lẻ|rieng\s*le|parent\s+company|separate", requested_title, re.I):
+                continue
+            matching = next((candidate for candidate in candidates
+                             if canonical_document_url(candidate.get("url")) == canonical_document_url(requested_url)), None)
+            candidate = dict(matching or {})
+            candidate.update({
+                "url": requested_url,
+                "title": requested_title,
+                "host": parsed_url.hostname,
+                "allowlisted": domain_allowed(requested_url, allowed_domains),
+                "symbol": symbol,
+                "query": "VietstockFinance targeted source repair",
+                "page_url": index_url,
+                "document_index": index_url,
+                "period": str(request.get("period") or candidate.get("period") or ""),
+                "report_year": int(request.get("report_year") or candidate.get("report_year") or start_year),
+                "published_at": request.get("published_at") or candidate.get("published_at"),
+                "report_type": "consolidated",
+                "vietstock_title": requested_title,
+                "full_name": requested_title,
+                "file_ext": ".pdf",
+            })
+            targeted.append(candidate)
+        # Targeted jobs never fall back to the broad index result set.
+        candidates = targeted
+
     print(json.dumps({
         "event":"vietstock_index_discovery","symbol":symbol,"index_url":index_url,
         "http_status":page_response.status_code,"page_title":page_title,
@@ -704,7 +750,13 @@ def link_quarterly_archive_sources(symbol: str, jobs: list[dict]) -> int:
         for record in job.get("downloadedFiles") or []:
             if not isinstance(record, dict) or record.get("status") != "downloaded_needs_review":
                 continue
-            period = str(record.get("period") or "")
+            source_period = str(record.get("period") or "")
+            period = source_period
+            half_year = re.fullmatch(r"(20\d{2})-H1", source_period)
+            if half_year:
+                # Reviewed half-year statements feed the Q2 snapshot only when
+                # its exact source_url matches the archived document URL.
+                period = half_year.group(1) + "-Q2"
             if not re.fullmatch(r"20\d{2}-Q[1-4]", period):
                 continue
             title = " ".join(str(record.get(key) or "") for key in (
