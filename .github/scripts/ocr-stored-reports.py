@@ -23,7 +23,9 @@ REPORTS = ROOT / "reports/raw"
 QUEUE_PATH = ROOT / "config/report-queue.json"
 # Include statement continuation pages in long consolidated reports.
 MAX_PAGES = min(max(1, int(os.getenv("REPORT_OCR_MAX_PAGES", "14"))), 14)  # bounded statement-page extraction
-MAX_REPORTS = 1  # One archive per run; stay on the first incomplete ticker until its available reports are processed.
+MAX_REPORTS = 1  # Strict one-report batch: finish the current ticker before selecting the next.
+# The OCR workflow reselects from configured order after each saved report; unresolved
+# quarterly values remain at the queue head and are never treated as completed.
 TERMINAL_REVIEW_STATUSES = {
     "manual_review_required",
     "manual_review_required_pending_extraction",

@@ -67,6 +67,7 @@ jobs:
           import json
           import os
           import re
+          from datetime import datetime, timezone
           from pathlib import Path
 
           config = json.loads(Path("config/securities.json").read_text(encoding="utf-8"))
@@ -163,7 +164,9 @@ jobs:
                       # configured symbols have completed their extraction/review state.
                       bootstrap_symbol = symbol
                       break
-                  if snapshot.get("bootstrap_status") in {"complete", "complete_needs_manual_review"}:
+                  # "complete_needs_manual_review" is not enough to skip a ticker
+                  # when some quarters still have no core figures or statement pages.
+                  if snapshot.get("bootstrap_status") == "complete":
                       continue
                   items = snapshot.get("items") or []
                   if not items:
@@ -193,7 +196,10 @@ jobs:
                       break
                   core_pending = any(
                       isinstance(item, dict)
-                      and item.get("verification_status") == "auto_pending_extraction"
+                      and item.get("verification_status") in {
+                          "auto_pending_extraction",
+                          "manual_review_required_pending_extraction",
+                      }
                       for item in items
                   )
                   details_pending = any(
