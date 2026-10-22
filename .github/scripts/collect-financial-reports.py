@@ -712,6 +712,56 @@ TERMINAL_REVIEW_STATUSES = {
 }
 
 
+def ticker_has_source_page_gap(items: list[dict], max_pages: int = 14) -> bool:
+    """Keep the current ticker active while any linked quarterly report lacks its first statement pages."""
+    raw_root = (ROOT / "reports" / "raw").resolve()
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        source = str(item.get("source_archive_file") or "").strip()
+        if not source:
+            continue
+        archive_path = (ROOT / source).resolve()
+        try:
+            archive_path.relative_to(raw_root)
+        except ValueError:
+            continue
+        sidecar = Path(str(archive_path) + ".extracted.json")
+        if not sidecar.is_file():
+            return True
+        try:
+            payload = json.loads(sidecar.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return True
+        if not isinstance(payload, dict):
+            return True
+        if payload.get("kind") == "pdf":
+            documents = [payload]
+        elif payload.get("kind") == "zip":
+            documents = [
+                member for member in payload.get("members", [])
+                if isinstance(member, dict) and member.get("kind") == "pdf"
+            ]
+        else:
+            documents = []
+        for document in documents:
+            try:
+                page_count = int(document.get("page_count") or 0)
+            except (TypeError, ValueError):
+                page_count = 0
+            if page_count <= 0:
+                continue
+            target_count = min(page_count, max_pages)
+            pages = {
+                int(page.get("page"))
+                for page in document.get("pages", [])
+                if isinstance(page, dict) and str(page.get("page", "")).isdigit()
+            }
+            if any(number not in pages for number in range(1, target_count + 1)):
+                return True
+    return False
+
+
 def first_incomplete_symbol(securities: dict) -> str | None:
     for security in securities.get("securities", []):
         if not isinstance(security, dict) or security.get("enabled") is False:
@@ -745,7 +795,10 @@ def first_incomplete_symbol(securities: dict) -> str | None:
 
         core_pending = any(
             isinstance(item, dict)
-            and item.get("verification_status") == "auto_pending_extraction"
+            and item.get("verification_status") in {
+                "auto_pending_extraction",
+                "manual_review_required_pending_extraction",
+            }
             for item in items
         )
         details_pending = any(
@@ -763,7 +816,8 @@ def first_incomplete_symbol(securities: dict) -> str | None:
             and item.get("financial_line_items_schema_version") not in DETAIL_SCHEMA_ACCEPTED
             for item in items
         )
-        if core_pending or details_pending or stale_details:
+        statement_pages_pending = ticker_has_source_page_gap(items)
+        if core_pending or details_pending or stale_details or statement_pages_pending:
             return symbol
     return None
 
