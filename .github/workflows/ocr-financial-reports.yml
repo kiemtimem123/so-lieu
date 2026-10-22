@@ -31,6 +31,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   # Only successful collector runs should join the shared write queue.
@@ -210,6 +211,8 @@ jobs:
 
   ocr:
     needs: select-ticker
+    outputs:
+      saved: ${{ steps.save_selected_ticker.outputs.saved }}
     if: ${{ needs['select-ticker'].outputs.symbol != '' && (github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')) }}
     runs-on: ubuntu-24.04
     timeout-minutes: 45
@@ -279,6 +282,7 @@ jobs:
         run: node scripts/validate-financials.mjs
 
       - name: Commit selected ticker's OCR text and detail fields
+        id: save_selected_ticker
         env:
           REPORT_OCR_SYMBOL: ${{ needs['select-ticker'].outputs.symbol }}
         shell: bash
@@ -291,7 +295,8 @@ jobs:
             git add -A -- "reports/raw/${REPORT_OCR_SYMBOL}"
           fi
           if git diff --cached --quiet; then
-            echo "No OCR or detail-field changes for ${REPORT_OCR_SYMBOL}."
+            echo "No OCR or detail-field changes for ${REPORT_OCR_SYMBOL}; stop the chain and let the scheduled retry revisit only unfinished data."
+            echo "saved=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
@@ -302,6 +307,7 @@ jobs:
             if git rebase origin/main; then
               if git push origin HEAD:main; then
                 pushed=true
+                echo "saved=true" >> "$GITHUB_OUTPUT"
                 break
               fi
             else
@@ -321,7 +327,8 @@ jobs:
                 git add -A -- "reports/raw/${REPORT_OCR_SYMBOL}"
               fi
               if git diff --cached --quiet; then
-                echo "No additional safe fields found after recomputing ${REPORT_OCR_SYMBOL}."
+                echo "No additional safe fields found after recomputing ${REPORT_OCR_SYMBOL}; stop the immediate chain."
+                echo "saved=false" >> "$GITHUB_OUTPUT"
                 pushed=true
                 break
               fi
@@ -343,3 +350,17 @@ jobs:
           path: reports/raw/${{ needs['select-ticker'].outputs.symbol }}/**/*.extracted.json
           if-no-files-found: ignore
           retention-days: 30
+
+  advance:
+    needs: [select-ticker, ocr]
+    if: ${{ needs['select-ticker'].outputs.symbol != '' && needs.ocr.result == 'success' && needs.ocr.outputs.saved == 'true' }}
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Dispatch the next one-ticker run only after the previous snapshot was pushed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/workflows/ocr-financial-reports.yml/dispatches" -f ref=main
+
