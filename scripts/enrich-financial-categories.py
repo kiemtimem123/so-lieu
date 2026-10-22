@@ -503,7 +503,7 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
   calculations["balance_totals_withheld"]="asset/liability/equity totals did not fully reconcile"
 
  profit_pages=summary_pages
- year,quarter=period_key(item.get("period","")) or (0,0)
+ year,quarter=period_key(item) or (0,0)
  if not profit_pages and (quarter==1 or not mode):
   profit_pages=income
  pbt_labels=[
