@@ -1394,7 +1394,7 @@ def main() -> int:
                     "needs_manual_review_no_quarterly_data",
                 }
             )
-            if terminal_empty and not has_pending:
+            if terminal_empty and not (has_pending_core or has_pending_details):
                 print(
                     f"{symbol}: chưa có BCTC hợp nhất đọc được sau {attempts} lượt; "
                     "để trạng thái chờ rà soát và tiếp tục mã kế tiếp. Mã này vẫn được kiểm tra lại theo vòng."
