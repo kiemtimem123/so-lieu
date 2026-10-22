@@ -37,13 +37,13 @@ BANK_BALANCE_LABELS = {
  "bank_cash_on_hand":["tien mat, vang bac, da quy","tien mat vang bac da quy"],
  "bank_deposits_at_state_bank":["tien gui tai nhnn","tien gui tai ngan hang nha nuoc"],
  "bank_deposits_and_loans_to_credit_institutions":["tien gui va cho vay cac tctd khac","tien gui va cho vay cac to chuc tin dung khac"],
- "bank_customer_loans":["cho vay khach hang"],
+ "bank_customer_loans":["chovaykhachhang","cho vay khach hang","cho vay khach hang tong"],
  "bank_trading_securities":["chung khoan kinh doanh"],
  "bank_derivatives_and_other_financial_assets":["cac cong cu tai chinh phai sinh va cac tai san tai chinh khac"],
  "bank_investment_securities":["chung khoan dau tu"],
  "bank_contributions_and_long_term_investments":["gop von, dau tu dai han","gop von dau tu dai han"],
  "bank_other_assets":["tai san co khac"],
- "bank_deposits_and_borrowings_from_credit_institutions":["tien gui va vay cac tctd khac","tien gui va vay cac to chuc tin dung khac"],
+ "bank_deposits_and_borrowings_from_credit_institutions":["tien gui va tien vay cac tctd khac","tien gui va vay cac tctd khac","tien gui va vay cac to chuc tin dung khac"],
  "bank_customer_deposits":["tien gui cua khach hang"],
  "bank_valuable_papers":["phat hanh giay to co gia"],
  "bank_funding_and_trust_liabilities":["von tai tro, uy thac dau tu"],
@@ -102,16 +102,16 @@ INCOME_LABELS = {
 BANK_INCOME_LABELS = {
  "bank_interest_income":["thu nhap lai va cac khoan thu nhap tuong tu"],
  "bank_interest_expense":["chi phi lai va cac khoan chi phi tuong tu"],
- "bank_net_interest_income":["thu nhap lai thuan"],
+ "bank_net_interest_income":["thu nhap thuan tu lai","thu nhap lai thuan"],
  "bank_service_income":["thu nhap tu hoat dong dich vu"],
  "bank_service_expense":["chi phi hoat dong dich vu"],
- "bank_net_service_income":["lai thuan tu hoat dong dich vu"],
+ "bank_net_service_income":["lai/lo thuan tu hoat dong dich vu","lai lo thuan tu hoat dong dich vu","lai thuan tu hoat dong dich vu"],
  "bank_fx_net_income":["lai thuan tu hoat dong kinh doanh ngoai hoi"],
  "bank_trading_securities_net":["lai thuan tu mua ban chung khoan kinh doanh"],
  "bank_investment_securities_net":["lai thuan tu mua ban chung khoan dau tu","lai thuan tu mua ban chung khoan dau tu va gop von dau tu dai han"],
  "bank_other_operating_net":["lai thuan tu hoat dong kinh doanh khac"],
  "bank_dividend_and_capital_income":["thu nhap tu gop von, mua co phan"],
- "bank_operating_expenses":["tong chi phi hoat dong"],
+ "bank_operating_expenses":["tong chi phi hoat dong","chi phi hoat dong"],
  "bank_pre_provision_operating_profit":["loi nhuan thuan tu hoat dong kinh doanh truoc chi phi du phong rui ro"],
  "bank_provision_expense":["chi phi du phong rui ro"],
  "bank_non_controlling_profit":["loi ich cua co dong khong kiem soat"],
@@ -119,17 +119,19 @@ BANK_INCOME_LABELS = {
 CASHFLOW_LABELS = {
  "operating_cash_flow_ytd":["luu chuyen tien thuan tu hoat dong kinh doanh","luu chuyen tien tu hoat dong kinh doanh"],
  "investing_cash_flow_ytd":["luu chuyen tien thuan tu hoat dong dau tu","luu chuyen tien tu hoat dong dau tu"],
- "financing_cash_flow_ytd":["luu chuyen tien thuan tu hoat dong tai chinh","luu chuyen tien tu hoat dong tai chinh"],
+ "financing_cash_flow_ytd":["luu chuyen tien thuan tu hoat dong tai chinh","luu chuyen tien thuan tu hoat dong taichinh","luu chuyen tien thuan tu hoat dong taichinn","luu chuyen tien tu hoat dong tai chinh"],
  "capital_expenditure_ytd":["tien chi de mua sam xay dung tai san co dinh","tien chi mua sam xay dung tai san co dinh","mua sam xay dung tai san co dinh va cac tai san dai han khac"],
  "dividends_paid_ytd":["co tuc loi nhuan da tra cho chu so huu","tien chi tra co tuc loi nhuan cho chu so huu"],
  "net_cash_change_ytd":["luu chuyen tien thuan trong ky","luu chuyen tien thuan trong nam"],
  "cash_beginning":[
   "tien va cac khoan tuong duong tien tai thoi diem dau ky",
+  "tien va cac khoan tuong duong tien tai thoi diem dau",
   "tien va cac khoan tuong duong tien dau ky",
   "tien va tuong duong tien dau ky",
  ],
  "cash_ending":[
   "tien va cac khoan tuong duong tien tai thoi diem cuoi ky",
+  "tien va cac khoan tuong duong tien tai thoi diem cuoi",
   "tien va cac khoan tuong duong tien cuoi ky",
   "tien va tuong duong tien cuoi ky",
  ],
@@ -259,6 +261,8 @@ def is_statement_row_start(line):
  # borrowing figures from the next line item.
  raw=str(line or "")
  if re.fullmatch(r"\s*\d{1,3}(?:\.\d{1,2})?\s*",raw):
+  return True
+ if re.match(r"^\s*[A-Za-z]{1,3}\s*\|",raw):
   return True
  return bool(re.match(r"^\s*(?:\|\s*)?\d{1,3}(?:\.\d{1,2})?\s*(?:\||\s+\d{1,3}\s)",raw))
 
@@ -512,8 +516,9 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
 
  equity_labels=["tong cong von chu so huu","tong von chu so huu","von chu so huu","total equity"]
  if symbol in BANKS:
-  # Some bank B02/TCTD templates label equity as "Vốn và các quỹ".
-  equity_labels.append("von va cac quy")
+  # Some bank B02/TCTD templates label equity as "Vốn và các quỹ"; prioritize
+  # it before the generic "vốn chủ sở hữu" substring in the total-sources row.
+  equity_labels=["von va cac quy"]+equity_labels
  equity=value_by_label(
   balance,equity_labels,factor,
   exclude_terms=["no phai tra","liabilities and equity"]
@@ -1381,6 +1386,28 @@ def enrich_snapshot(path):
    if item.get(field) is None:
     item[field]=value; new_fields.append(field)
    elif (
+    symbol in BANKS
+    and field in {"bank_customer_loans","bank_net_service_income","operating_cash_flow_ytd","financing_cash_flow_ytd","cash_beginning","cash_ending"}
+    and field in set(item.get("financial_line_items_extracted_fields") or [])
+    and isinstance(item.get(field),(int,float))
+    and item.get(field)!=value
+   ):
+    old_value=item[field]
+    item.setdefault("financial_line_items_prior_values",{}).setdefault(field,old_value)
+    reasons={
+     "bank_customer_loans":"Reparsed from the compactly OCRed main customer-loan subtotal row (net loan balance), not the gross-loan detail row.",
+     "bank_net_service_income":"Reparsed from the explicit net service income/loss row, not an adjacent row captured as service expense.",
+     "operating_cash_flow_ytd":"Reparsed from net operating cash flow after changes in operating assets and liabilities, not the subtotal before working-capital changes.",
+     "financing_cash_flow_ytd":"Reparsed from the explicit net financing cash-flow row in the bank B04/TCTD statement.",
+     "cash_beginning":"Reparsed from the explicit opening cash balance row in the bank B04/TCTD statement.",
+     "cash_ending":"Reparsed from the explicit closing cash balance row in the bank B04/TCTD statement.",
+    }
+    item.setdefault("financial_line_items_value_corrections",{})[field]={
+     "previous_value":old_value,"new_value":value,"reason":reasons[field]
+    }
+    item[field]=value
+    new_fields.append(field)
+   elif (
     field in set(item.get("financial_line_items_extracted_fields") or [])
     and str(item.get("financial_line_items_status") or "").startswith("auto_extracted")
     and scale_mismatch(item.get(field),value)
@@ -1409,6 +1436,27 @@ def enrich_snapshot(path):
      }
      item["revenue"]=value
      new_fields.append("revenue")
+  if symbol in BANKS and isinstance(found.get("bank_net_service_income"),(int,float)):
+   old_service_expense=item.get("bank_service_expense")
+   explicit_net_service=found["bank_net_service_income"]
+   if (
+    isinstance(old_service_expense,(int,float))
+    and old_service_expense==explicit_net_service
+    and "bank_service_expense" in set(item.get("financial_line_items_extracted_fields") or [])
+    and "bank_service_expense" not in found
+   ):
+    item.setdefault("financial_line_items_prior_values",{}).setdefault("bank_service_expense",old_service_expense)
+    item.setdefault("financial_line_items_value_corrections",{})["bank_service_expense"]={
+     "previous_value":old_service_expense,
+     "new_value":None,
+     "reason":"Previous OCR parser captured the adjacent net-service-income row as service expense; the report does not clearly disclose the expense amount on that row."
+    }
+    item.pop("bank_service_expense",None)
+    old_fields=set(item.get("financial_line_items_extracted_fields") or [])
+    old_fields.discard("bank_service_expense")
+    item["financial_line_items_extracted_fields"]=sorted(old_fields)
+    item["financial_line_items_note"]=(str(item.get("financial_line_items_note") or "")+" Chi phí dịch vụ được để trống do giá trị cũ bị nhận nhầm từ dòng lãi thuần dịch vụ.").strip()
+    changed=True; field_count+=1
   basis=found.get("__cashflow_period_basis")
   if basis and item.get("cashflow_period_basis")!=basis:
    item["cashflow_period_basis"]=basis; new_fields.append("cashflow_period_basis")
