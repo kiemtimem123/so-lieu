@@ -25,14 +25,14 @@ on:
         default: false
   schedule:
     - cron: '17 1 * * *'
-    - cron: '5,35 * * * *'
+    - cron: '5 * * * *'
 
 permissions:
   contents: write
 
 concurrency:
   group: so-lieu-financial-data-writes-v1
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   collect:
