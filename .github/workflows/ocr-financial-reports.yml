@@ -37,7 +37,7 @@ permissions:
 concurrency:
   # Only successful collector runs should join the shared write queue.
   # A skipped OCR run from a cancelled/failed collector must not evict a queued collector.
-  group: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion != 'success' && 'so-lieu-financial-data-noop-v1' || 'so-lieu-financial-data-writes-v1' }}
+  group: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion != 'success' && 'so-lieu-financial-data-noop-v2' || 'so-lieu-financial-data-writes-v2' }}
   cancel-in-progress: false
 
 jobs:
