@@ -192,7 +192,7 @@ jobs:
 
   ocr:
     needs: select-ticker
-    if: ${{ needs.select-ticker.outputs.symbol != '' && (github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event_name == 'schedule') }}
+    if: ${{ needs.select-ticker.outputs.symbol != '' && (github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')) }}
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:
