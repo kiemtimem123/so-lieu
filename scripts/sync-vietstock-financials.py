@@ -1368,8 +1368,31 @@ def main() -> int:
                 selected_symbol = symbol
                 print(f"Single-ticker queue: snapshot của {symbol} không đọc được; ưu tiên sửa mã này trước.")
                 break
-            if snapshot.get("bootstrap_status") in {"complete", "complete_needs_manual_review"}:
-                print(f"Skip {symbol}: bootstrap đã hoàn tất ({snapshot.get('bootstrap_status')}); không tải lại mã này.")
+            if snapshot.get("bootstrap_status") == "complete_needs_manual_review":
+                print(f"Skip {symbol}: đã lưu dữ liệu, chỉ còn rà soát thủ công; không tải lại mã này.")
+                continue
+            if snapshot.get("bootstrap_status") == "complete":
+                review_statuses = {
+                    "manual_review_required",
+                    "manual_review_required_pending_extraction",
+                    "no_detail_fields_matched_pending_manual_review",
+                    "auto_extracted_pending_visual_review",
+                    "auto_extracted_pending_visual_review",
+                }
+                if any(
+                    isinstance(item, dict) and (
+                        item.get("verification_status") in {"manual_review_required", "manual_review_required_pending_extraction"}
+                        or item.get("financial_line_items_status") in review_statuses
+                    )
+                    for item in snapshot.get("items", [])
+                ):
+                    snapshot["bootstrap_status"] = "complete_needs_manual_review"
+                    snapshot["bootstrap_completion_note"] = "Đã lưu dữ liệu tự động; các chỉ tiêu được trích xuất cần đối chiếu trực quan. Mã này sẽ không tự tải lại."
+                    snapshot_path = DATA_DIR / f"financials-{symbol}.json"
+                    snapshot_path.write_text(json.dumps(snapshot, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+                    print(f"Reclassified {symbol}: saved data, manual visual review remains; skip future automatic fetches.")
+                else:
+                    print(f"Skip {symbol}: bootstrap đã hoàn tất; không tải lại mã này.")
                 continue
 
             items = snapshot.get("items", [])
@@ -1407,6 +1430,7 @@ def main() -> int:
                     "manual_review_required",
                     "manual_review_required_pending_extraction",
                     "no_detail_fields_matched_pending_manual_review",
+                    "auto_extracted_pending_visual_review",
                 }
                 needs_manual_review = any(
                     isinstance(item, dict) and (
@@ -1515,6 +1539,7 @@ def main() -> int:
                         "manual_review_required",
                         "manual_review_required_pending_extraction",
                         "no_detail_fields_matched_pending_manual_review",
+                        "auto_extracted_pending_visual_review",
                     }
                     state_pending_core = any(
                         isinstance(item, dict) and item.get("verification_status") == "auto_pending_extraction"
