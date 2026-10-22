@@ -1325,7 +1325,6 @@ def main() -> int:
     session = requests.Session()
     session.headers.update(HEADERS)
     print("Đồng bộ BCTC theo quý — chỉ danh mục VietstockFinance, doctype=1")
-    token = get_anti_forgery_token(session)
     current_year = datetime.now(timezone.utc).year
     selected = os.environ.get("FINANCIAL_SYNC_SYMBOL", "").strip().upper()
     bootstrap_only = os.environ.get("FINANCIAL_SYNC_BOOTSTRAP_ONLY", "").strip().lower() in {"1", "true", "yes"}
@@ -1369,6 +1368,9 @@ def main() -> int:
                 selected_symbol = symbol
                 print(f"Single-ticker queue: snapshot của {symbol} không đọc được; ưu tiên sửa mã này trước.")
                 break
+            if snapshot.get("bootstrap_status") in {"complete", "complete_needs_manual_review"}:
+                print(f"Skip {symbol}: bootstrap đã hoàn tất ({snapshot.get('bootstrap_status')}); không tải lại mã này.")
+                continue
 
             items = snapshot.get("items", [])
             has_pending_core = any(
@@ -1400,6 +1402,31 @@ def main() -> int:
                     "OCR/enrichment workflow must finish this ticker before any later ticker is bootstrapped."
                 )
                 return 0
+            if items and not has_pending_core and not has_pending_details:
+                terminal_review_statuses = {
+                    "manual_review_required",
+                    "manual_review_required_pending_extraction",
+                    "no_detail_fields_matched_pending_manual_review",
+                }
+                needs_manual_review = any(
+                    isinstance(item, dict) and (
+                        item.get("verification_status") in {"manual_review_required", "manual_review_required_pending_extraction"}
+                        or item.get("financial_line_items_status") in terminal_review_statuses
+                    )
+                    for item in items
+                )
+                completed_status = "complete_needs_manual_review" if needs_manual_review else "complete"
+                snapshot["bootstrap_status"] = completed_status
+                snapshot["bootstrap_completed_at"] = snapshot.get("bootstrap_completed_at") or utc_now()
+                snapshot["bootstrap_completion_note"] = (
+                    "Các kỳ báo cáo có thể tự trích xuất đã được lưu; một số kỳ còn cần đối chiếu thủ công."
+                    if needs_manual_review else
+                    "Đã lưu các kỳ báo cáo hợp nhất theo quý; tự động không tải lại mã này."
+                )
+                snapshot_path = DATA_DIR / f"financials-{symbol}.json"
+                snapshot_path.write_text(json.dumps(snapshot, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+                print(f"Saved completion checkpoint for {symbol}: {completed_status}.")
+                continue
             attempts = int(snapshot.get("bootstrap_attempt_count") or 0)
             empty_snapshot = not items
             terminal_empty = (
@@ -1411,11 +1438,16 @@ def main() -> int:
                 }
             )
             if terminal_empty and not (has_pending_core or has_pending_details):
-                print(
-                    f"{symbol}: chưa có BCTC hợp nhất đọc được sau {attempts} lượt; "
-                    "để trạng thái chờ rà soát và tiếp tục mã kế tiếp. Mã này vẫn được kiểm tra lại theo vòng."
+                snapshot["bootstrap_status"] = "complete_needs_manual_review"
+                snapshot["bootstrap_completed_at"] = snapshot.get("bootstrap_completed_at") or utc_now()
+                snapshot["bootstrap_completion_note"] = (
+                    "Đã thử tự động ba lượt nhưng chưa lấy được BCTC hợp nhất. "
+                    "Giữ liên kết nguồn để rà soát thủ công; tự động không tải lại mã này."
                 )
-                continue
+                snapshot_path = DATA_DIR / f"financials-{symbol}.json"
+                snapshot_path.write_text(json.dumps(snapshot, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+                print(f"{symbol}: saved manual-review terminal state after {attempts} attempts; stop here so the checkpoint commits before any next ticker.")
+                return 0
             needs_retry = has_pending_core or has_pending_details or (empty_snapshot and not terminal_empty)
             if needs_retry:
                 # Per-quarter retry cooldown is enforced inside process_symbol:
@@ -1436,23 +1468,18 @@ def main() -> int:
         if selected_symbol:
             symbols_to_sync = [selected_symbol]
         else:
-            # All current snapshots are complete: poll one least-recently checked
-            # ticker per run to discover new quarterly filings without bulk syncs.
-            checked = []
-            for symbol in SYMBOLS:
-                snapshot = load_symbol_snapshot(symbol) or {}
-                checked.append((last_attempt_epoch(snapshot), symbol))
-            selected_symbol = min(checked, key=lambda pair: (pair[0], SYMBOLS.index(pair[1])))[1]
-            symbols_to_sync = [selected_symbol]
-            print(f"Single-ticker refresh: kiểm tra kỳ báo cáo mới cho {selected_symbol}.")
+            print("Single-ticker queue complete: all enabled tickers have saved completion checkpoints; no completed ticker will be fetched again automatically.")
+            return 0
 
+    # Only contact Vietstock after a pending ticker has been selected.
+    token = get_anti_forgery_token(session)
     total_changed = total_added = total_filled = failed_symbols = 0
     for symbol in symbols_to_sync:
         print(f"\n[{symbol}]")
         try:
             changed, added, filled = process_symbol(
                 session, token, symbol, current_year,
-                max_extract_periods=1 if bootstrap_only else None,
+                max_extract_periods=16 if bootstrap_only else None,
             )
             total_changed += int(changed)
             total_added += added
@@ -1483,6 +1510,55 @@ def main() -> int:
                     state_snapshot = json.loads(state_path.read_text(encoding="utf-8"))
                     state_snapshot["bootstrap_last_attempt_at"] = utc_now()
                     state_snapshot["bootstrap_attempt_count"] = int(state_snapshot.get("bootstrap_attempt_count") or 0) + 1
+                    state_items = state_snapshot.get("items") or []
+                    terminal_review_statuses = {
+                        "manual_review_required",
+                        "manual_review_required_pending_extraction",
+                        "no_detail_fields_matched_pending_manual_review",
+                    }
+                    state_pending_core = any(
+                        isinstance(item, dict) and item.get("verification_status") == "auto_pending_extraction"
+                        for item in state_items
+                    )
+                    state_pending_details = any(
+                        isinstance(item, dict)
+                        and period_key(str(item.get("period") or ""))[0] >= 2024
+                        and item.get("total_assets") is not None
+                        and item.get("net_profit") is not None
+                        and not item.get("financial_line_items_status")
+                        for item in state_items
+                    )
+                    state_stale_details = any(
+                        isinstance(item, dict)
+                        and period_key(str(item.get("period") or ""))[0] >= 2024
+                        and item.get("financial_line_items_status") is not None
+                        and item.get("financial_line_items_status") not in terminal_review_statuses
+                        and item.get("financial_line_items_schema_version") != "2026-10-22-bank-statement-qc-v4"
+                        for item in state_items
+                    )
+                    if state_items and not state_pending_core and not state_pending_details and not state_stale_details:
+                        needs_manual_review = any(
+                            isinstance(item, dict) and (
+                                item.get("verification_status") in {"manual_review_required", "manual_review_required_pending_extraction"}
+                                or item.get("financial_line_items_status") in terminal_review_statuses
+                            )
+                            for item in state_items
+                        )
+                        state_snapshot["bootstrap_status"] = "complete_needs_manual_review" if needs_manual_review else "complete"
+                        state_snapshot["bootstrap_completed_at"] = state_snapshot.get("bootstrap_completed_at") or utc_now()
+                        state_snapshot["bootstrap_completion_note"] = (
+                            "Các kỳ báo cáo có thể tự trích xuất đã được lưu; một số kỳ còn cần đối chiếu thủ công."
+                            if needs_manual_review else
+                            "Đã lưu các kỳ báo cáo hợp nhất theo quý; tự động không tải lại mã này."
+                        )
+                    elif not state_items and int(state_snapshot.get("bootstrap_attempt_count") or 0) >= 3 and state_snapshot.get("sync_status") in {
+                        "fetch_failed", "no_quarterly_consolidated_records_returned", "needs_manual_review_no_quarterly_data"
+                    }:
+                        state_snapshot["bootstrap_status"] = "complete_needs_manual_review"
+                        state_snapshot["bootstrap_completed_at"] = state_snapshot.get("bootstrap_completed_at") or utc_now()
+                        state_snapshot["bootstrap_completion_note"] = "Đã thử tự động ba lượt nhưng không lấy được BCTC; cần rà soát nguồn thủ công."
+                    else:
+                        state_snapshot["bootstrap_status"] = "in_progress"
                     state_path.write_text(json.dumps(state_snapshot, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
                 except (OSError, json.JSONDecodeError, TypeError, ValueError) as state_error:
                     print(f"  Không ghi được trạng thái bootstrap cho {symbol}: {state_error}", file=sys.stderr)

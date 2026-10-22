@@ -158,6 +158,8 @@ jobs:
                       # A missing snapshot belongs to the sync worker. Keep the queue
                       # on this symbol rather than paying to check out other archives.
                       break
+                  if snapshot.get("bootstrap_status") in {"complete", "complete_needs_manual_review"}:
+                      continue
                   items = snapshot.get("items") or []
                   if not items:
                       attempts = int(snapshot.get("bootstrap_attempt_count") or 0)

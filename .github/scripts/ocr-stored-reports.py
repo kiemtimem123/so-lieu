@@ -73,6 +73,9 @@ def select_symbol() -> str | None:
                 return symbol
             return None
 
+        if snapshot.get("bootstrap_status") in {"complete", "complete_needs_manual_review"}:
+            continue
+
         items = snapshot.get("items") or []
         has_pending_core = any(
             isinstance(item, dict)
