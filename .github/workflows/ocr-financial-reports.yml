@@ -198,10 +198,10 @@ jobs:
                       and item.get("financial_line_items_schema_version") != "2026-10-22-bank-statement-qc-v4"
                       for item in items
                   )
-                  page_gap = ticker_has_ocr_gap(symbol, items)
-                  if core_pending or details_pending or stale_details or page_gap:
-                      # Finish this ticker's quarterly figures AND its stored-report
-                      # text layer before selecting the next ticker.
+                  # A sidecar can contain optional pages that do not map to
+                  # snapshot fields. Once the quarterly fields are saved, page gaps
+                  # alone must not cause the completed ticker to be downloaded again.
+                  if core_pending or details_pending or stale_details:
                       selected = symbol
                       break
           print(f"Selected ticker for OCR: {selected or '(no OCR page gaps; queue remains on first incomplete ticker)'}")
