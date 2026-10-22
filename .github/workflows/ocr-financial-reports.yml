@@ -18,9 +18,9 @@ on:
         required: false
         default: ""
       max_pages:
-        description: Pages per report to OCR
+        description: Pages per report to OCR (covers the main financial statements; use a larger number only when needed)
         required: false
-        default: "18"
+        default: "8"
       rescan_pages:
         description: Comma-separated page numbers to re-OCR even if text is already present
         required: false
@@ -245,7 +245,7 @@ jobs:
         id: run_ocr
         env:
           REPORT_OCR_SYMBOL: ${{ needs.select-ticker.outputs.symbol }}
-          REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || '14' }}
+          REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || '8' }}
           REPORT_OCR_MAX_REPORTS: "1"
           REPORT_OCR_DPI: "280"
           REPORT_OCR_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || '' }}
