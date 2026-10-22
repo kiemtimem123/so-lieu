@@ -6,12 +6,13 @@ on:
     paths:
       - ".github/scripts/ocr-stored-reports.py"
       - ".github/workflows/ocr-financial-reports.yml"
+      - "scripts/enrich-financial-categories.py"
   schedule:
     - cron: "10,40 * * * *"
   workflow_dispatch:
     inputs:
       symbol:
-        description: Ticker to OCR; blank selects the first incomplete ticker in the agreed sequence
+        description: Ticker to OCR; blank selects the first incomplete ticker in configuration order
         required: false
         default: ""
       max_pages:
@@ -22,10 +23,6 @@ on:
         description: Comma-separated page numbers to re-OCR even if text is already present
         required: false
         default: "10,11"
-      max_reports:
-        description: Maximum report files to process in this run (fixed to one file)
-        required: false
-        default: "1"
 
 permissions:
   contents: write
@@ -35,21 +32,113 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  ocr:
+  select-ticker:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event_name == 'schedule' }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    outputs:
+      symbol: ${{ steps.pick.outputs.symbol }}
     steps:
-      - name: Checkout latest main
+      - name: Checkout ticker registry and snapshot headers only
         uses: actions/checkout@v5
         with:
           ref: main
-          fetch-depth: 0
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /config/securities.json
+            /data/financials-*.json
+
+      - name: Pick the first incomplete ticker in configured order
+        id: pick
+        env:
+          REQUESTED_SYMBOL: ${{ github.event.inputs.symbol || '' }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import re
+          from pathlib import Path
+
+          config = json.loads(Path("config/securities.json").read_text(encoding="utf-8"))
+          symbols = [
+              str(item.get("symbol") or "").strip().upper()
+              for item in config.get("securities", [])
+              if isinstance(item, dict) and item.get("enabled") is not False and item.get("symbol")
+          ]
+          requested = os.environ.get("REQUESTED_SYMBOL", "").strip().upper()
+          if requested:
+              if requested not in symbols:
+                  raise SystemExit(f"Ticker {requested} is not enabled in config/securities.json")
+              selected = requested
+          else:
+              selected = ""
+              for symbol in symbols:
+                  path = Path("data") / f"financials-{symbol}.json"
+                  if not path.exists():
+                      selected = symbol
+                      break
+                  try:
+                      snapshot = json.loads(path.read_text(encoding="utf-8"))
+                  except (OSError, json.JSONDecodeError):
+                      selected = symbol
+                      break
+                  items = snapshot.get("items") or []
+                  if not items and snapshot.get("sync_status") not in {
+                      "fetch_failed", "no_quarterly_consolidated_records_returned",
+                      "needs_manual_review_no_quarterly_data"
+                  }:
+                      selected = symbol
+                      break
+                  core_pending = any(
+                      isinstance(item, dict)
+                      and item.get("verification_status") == "auto_pending_extraction"
+                      for item in items
+                  )
+                  details_pending = any(
+                      isinstance(item, dict)
+                      and re.fullmatch(r"20\\d{2}-Q[1-4]", str(item.get("period") or ""))
+                      and item.get("total_assets") is not None
+                      and item.get("net_profit") is not None
+                      and not item.get("financial_line_items_status")
+                      for item in items
+                  )
+                  if core_pending or details_pending:
+                      selected = symbol
+                      break
+          print(f"Selected ticker: {selected or '(no pending ticker)'}")
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
+              handle.write(f"symbol={selected}\\n")
+          PY
+
+  ocr:
+    needs: select-ticker
+    if: ${{ needs.select-ticker.outputs.symbol != '' && (github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event_name == 'schedule') }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout only the selected ticker's report archive
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /config/securities.json
+            /config/report-queue.json
+            /data/financials-*.json
+            /.github/scripts/ocr-stored-reports.py
+            /.github/scripts/requirements-report-worker.txt
+            /.github/scripts/validate-report-queue.cjs
+            /scripts/enrich-financial-categories.py
+            /scripts/validate-financials.mjs
+            /reports/library.json
+            /reports/raw/${{ needs.select-ticker.outputs.symbol }}/**
 
       - name: Setup Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: Install OCR system tools
         run: |
@@ -62,50 +151,47 @@ jobs:
       - name: Validate queue before OCR
         run: node .github/scripts/validate-report-queue.cjs
 
-      - name: OCR stored report archive
+      - name: OCR one report from selected ticker
         id: run_ocr
         env:
-          REPORT_OCR_SYMBOL: ${{ github.event.inputs.symbol || '' }}
+          REPORT_OCR_SYMBOL: ${{ needs.select-ticker.outputs.symbol }}
           REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || '14' }}
           REPORT_OCR_MAX_REPORTS: "1"
-          REPORT_OCR_DPI: '280'
+          REPORT_OCR_DPI: "280"
           REPORT_OCR_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || '10,11' }}
         run: python .github/scripts/ocr-stored-reports.py
 
       - name: Validate queue after OCR
         run: node .github/scripts/validate-report-queue.cjs
 
-      - name: Enrich quarterly financial categories from OCR text
+      - name: Enrich only the selected ticker's quarterly categories
         env:
-          FINANCIAL_ENRICH_SYMBOL: ${{ steps.run_ocr.outputs.symbol || github.event.inputs.symbol || '' }}
+          FINANCIAL_ENRICH_SYMBOL: ${{ needs.select-ticker.outputs.symbol }}
         run: python scripts/enrich-financial-categories.py
 
       - name: Validate enriched financial snapshots
         run: node scripts/validate-financials.mjs
 
-      - name: Commit OCR text and financial enrichment
+      - name: Commit selected ticker's OCR text and detail fields
         env:
-          REPORT_OCR_SYMBOL: ${{ github.event.inputs.symbol || '' }}
-          REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || '14' }}
-          REPORT_OCR_MAX_REPORTS: "1"
-          REPORT_OCR_DPI: '280'
-          REPORT_OCR_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || '10,11' }}
-          FINANCIAL_ENRICH_SYMBOL: ${{ steps.run_ocr.outputs.symbol || github.event.inputs.symbol || '' }}
+          REPORT_OCR_SYMBOL: ${{ needs.select-ticker.outputs.symbol }}
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -- "data/financials-${REPORT_OCR_SYMBOL}.json"
+          if [ -d "reports/raw/${REPORT_OCR_SYMBOL}" ]; then
+            git add -A -- "reports/raw/${REPORT_OCR_SYMBOL}"
+          fi
+          if git diff --cached --quiet; then
+            echo "No OCR or detail-field changes for ${REPORT_OCR_SYMBOL}."
+            exit 0
+          fi
+
+          git commit -m "OCR and enrich ${REPORT_OCR_SYMBOL} financial reports"
           pushed=false
-
           for attempt in 1 2 3 4 5; do
-            git add reports/raw data/financials-*.json
-            if git diff --cached --quiet; then
-              echo "No OCR or enrichment changes."
-              exit 0
-            fi
-
-            git commit -m "OCR and enrich Vietstock financial report fields"
             git fetch origin main
             if git rebase origin/main; then
               if git push origin HEAD:main; then
@@ -113,45 +199,42 @@ jobs:
                 break
               fi
             else
-              echo "::warning::Concurrent snapshot update detected; preserving OCR page text and rebuilding financial enrichment on the latest main."
-              git diff HEAD^ HEAD -- reports/raw > /tmp/solie-report-archive.patch
+              echo "::warning::Concurrent update detected; reapplying only the selected ticker's archive patch and recomputing its details."
+              git diff HEAD^ HEAD -- "reports/raw/${REPORT_OCR_SYMBOL}" > /tmp/selected-ticker-report.patch || true
               git rebase --abort || true
               git fetch origin main
               git reset --hard origin/main
-
-              if [ -s /tmp/solie-report-archive.patch ]; then
-                if ! git apply --3way /tmp/solie-report-archive.patch; then
-                  echo "::error::Could not merge newly extracted report-page text with the latest archive. No snapshot values will be force-pushed."
-                  git status --short
-                  exit 1
-                fi
+              if [ -s /tmp/selected-ticker-report.patch ] && [ -d "reports/raw/${REPORT_OCR_SYMBOL}" ]; then
+                git apply --3way /tmp/selected-ticker-report.patch || true
               fi
-
-              node .github/scripts/validate-report-queue.cjs
-              python .github/scripts/ocr-stored-reports.py
               node .github/scripts/validate-report-queue.cjs
               python scripts/enrich-financial-categories.py
+              FINANCIAL_ENRICH_SYMBOL="${REPORT_OCR_SYMBOL}" python scripts/enrich-financial-categories.py
               node scripts/validate-financials.mjs
-              git add reports/raw data/financials-*.json
+              git add -A -- "data/financials-${REPORT_OCR_SYMBOL}.json"
+              if [ -d "reports/raw/${REPORT_OCR_SYMBOL}" ]; then
+                git add -A -- "reports/raw/${REPORT_OCR_SYMBOL}"
+              fi
               if git diff --cached --quiet; then
-                echo "Archive text is preserved; no additional safe snapshot fields were found after recomputation."
+                echo "No additional safe fields found after recomputing ${REPORT_OCR_SYMBOL}."
                 pushed=true
                 break
               fi
+              git commit -m "Reconcile ${REPORT_OCR_SYMBOL} financial report details"
             fi
             sleep $((attempt * 2))
           done
 
-          if [ "$pushed" != "true" ]; then
-            echo "::error::Could not push OCR and enriched snapshot changes after five safe attempts."
+          if [ "${pushed}" != "true" ]; then
+            echo "::error::Could not push selected ticker's OCR and detail fields after five safe attempts."
             exit 1
           fi
 
-      - name: Upload OCR summary
+      - name: Upload selected ticker OCR summary
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: financial-report-ocr-summary
-          path: reports/raw/**/*.extracted.json
+          name: financial-report-ocr-summary-${{ needs.select-ticker.outputs.symbol }}
+          path: reports/raw/${{ needs.select-ticker.outputs.symbol }}/**/*.extracted.json
           if-no-files-found: ignore
           retention-days: 30
