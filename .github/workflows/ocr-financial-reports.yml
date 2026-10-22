@@ -240,22 +240,125 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install OCR system tools only when missing
+      - name: Install extraction dependencies
+        run: pip install -r .github/scripts/requirements-report-worker.txt
+
+      - name: Preflight the next report for native PDF text
+        id: ocr_preflight
+        env:
+          REPORT_OCR_SYMBOL: ${{ needs['select-ticker'].outputs.symbol }}
+          REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || '14' }}
+          REPORT_OCR_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || '' }}
         shell: bash
         run: |
-          set -euo pipefail
+          python - <<'PY'
+          import json, os, runpy, tempfile, zipfile
+          from pathlib import Path
+          from pypdf import PdfReader
+
+          worker = runpy.run_path(".github/scripts/ocr-stored-reports.py")
+          symbol = os.environ["REPORT_OCR_SYMBOL"]
+          archives = worker["symbol_report_archives"](symbol)
+          reports_dir = worker["REPORTS"]
+          max_pages = worker["MAX_PAGES"]
+          force_pages = worker["FORCE_RESCAN_PAGES"]
+          native_work = False
+          needs_tools = False
+          inspected_path = None
+
+          def inspect_pdf(pdf_path, payload):
+              nonlocal native_work, needs_tools
+              try:
+                  reader = PdfReader(str(pdf_path), strict=False)
+                  page_count = len(reader.pages)
+              except Exception:
+                  return
+              limit = min(page_count, max_pages)
+              old_pages = {
+                  int(p.get("page")): p for p in payload.get("pages", [])
+                  if isinstance(p, dict) and str(p.get("page", "")).isdigit()
+              }
+              forced = {
+                  n for n in force_pages if 1 <= n <= limit
+                  and (n not in old_pages or worker["needs_ocr_rescan"](old_pages[n]))
+              }
+              missing = (set(range(1, limit + 1)) - set(old_pages)) | forced
+              if not missing:
+                  return
+              targets = {n for n in missing if n not in old_pages}
+              native_pages, _remaining = worker["extract_native_pdf_pages"](pdf_path, targets)
+              if native_pages:
+                  native_work = True
+              # Explicit rescans need OCR. Otherwise try all native-text pages first;
+              # install system OCR only when no pending page has usable native text.
+              if forced:
+                  needs_tools = True
+              elif not native_pages:
+                  needs_tools = True
+
+          for period, archive_path in archives:
+              sidecar = Path(str(archive_path) + ".extracted.json")
+              payload = worker["load_json"](sidecar) or {}
+              if not worker["_extraction_has_missing_pages"](payload):
+                  continue
+              inspected_path = str(archive_path.relative_to(worker["ROOT"]))
+              if archive_path.suffix.lower() == ".pdf":
+                  inspect_pdf(archive_path, payload)
+              elif archive_path.suffix.lower() == ".zip":
+                  try:
+                      with zipfile.ZipFile(archive_path) as archive:
+                          available = set(archive.namelist())
+                          for member in payload.get("members", []):
+                              if not isinstance(member, dict) or member.get("kind") != "pdf":
+                                  continue
+                              name = member.get("name")
+                              if not name or name not in available:
+                                  continue
+                              with tempfile.TemporaryDirectory(prefix="so-lieu-preflight-") as temp_dir:
+                                  inner_pdf = Path(temp_dir) / "member.pdf"
+                                  inner_pdf.write_bytes(archive.read(name))
+                                  inspect_pdf(inner_pdf, member)
+                  except Exception as exc:
+                      print(f"Preflight ZIP warning: {exc}")
+              break
+
+          # If this report has some native-readable pages, save those first.
+          # On the next single-report run, only scanned pages remain and OCR
+          # tools will be installed then, avoiding an apt-get call on every run.
+          if native_work and not force_pages:
+              needs_tools = False
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as out:
+              out.write(f"needs_ocr={'true' if needs_tools else 'false'}\\n")
+          print(json.dumps({
+              "symbol": symbol,
+              "next_report": inspected_path,
+              "native_text_available": native_work,
+              "needs_ocr_tools": needs_tools,
+          }, ensure_ascii=False))
+          PY
+
+      - name: Install OCR tools only when the next report is scanned
+        if: steps.ocr_preflight.outputs.needs_ocr == 'true'
+        timeout-minutes: 4
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -u
           if command -v pdftoppm >/dev/null 2>&1 \
             && command -v tesseract >/dev/null 2>&1 \
             && tesseract --list-langs 2>/dev/null | grep -qx 'vie' \
             && tesseract --list-langs 2>/dev/null | grep -qx 'eng'; then
-            echo "Poppler and Vietnamese/English Tesseract languages are already available."
-          else
-            sudo apt-get update
-            sudo apt-get install -y poppler-utils tesseract-ocr tesseract-ocr-vie tesseract-ocr-eng
+            echo "Poppler and Vietnamese/English Tesseract are ready."
+            exit 0
           fi
-
-      - name: Install extraction dependencies
-        run: pip install -r .github/scripts/requirements-report-worker.txt
+          if ! timeout 100s sudo apt-get -o Acquire::Retries=0 -o Acquire::http::Timeout=8 -o Acquire::https::Timeout=8 update; then
+            echo "::warning::OCR package index unavailable within 100 seconds; continue with native PDF text and keep the ticker queue unchanged."
+            exit 0
+          fi
+          if ! timeout 100s sudo apt-get -o Acquire::Retries=0 -o Acquire::http::Timeout=8 -o Acquire::https::Timeout=8 install -y poppler-utils tesseract-ocr tesseract-ocr-vie tesseract-ocr-eng; then
+            echo "::warning::OCR tools could not be installed within 100 seconds; continue safely without fabricating data."
+            exit 0
+          fi
 
       - name: Validate queue before OCR
         run: node .github/scripts/validate-report-queue.cjs
