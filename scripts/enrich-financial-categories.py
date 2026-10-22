@@ -246,7 +246,8 @@ def is_statement_row_start(line):
   return True
  return bool(re.match(r"^\s*(?:\|\s*)?\d{1,3}(?:\.\d{1,2})?\s*(?:\||\s+\d{1,3}\s)",raw))
 
-def value_by_label(pages,labels,factor,threshold=1000):
+def value_by_label(pages,labels,factor,threshold=1000,exclude_terms=None):
+ excludes=[norm(term) for term in (exclude_terms or [])]
  for label in labels:
   target=norm(label)
   for page in pages:
@@ -259,6 +260,8 @@ def value_by_label(pages,labels,factor,threshold=1000):
      combined=norm(" ".join(parts))
      position=combined.find(target)
      if position < 0: continue
+     if any(term and term in combined for term in excludes):
+      continue
      # Search after the complete label, including wrapped continuation lines.
      tail=combined[position+len(target):]
      vals=amounts(tail,threshold=threshold)
