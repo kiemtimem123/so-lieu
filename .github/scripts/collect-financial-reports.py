@@ -781,6 +781,67 @@ def canonical_document_url(value: object) -> tuple[str, str] | None:
         return None
 
 
+FAILED_URL_RETRY_COOLDOWN_SECONDS = 30 * 60
+FAILED_URL_MAX_ATTEMPTS = 3
+
+
+def retry_url_key(value: object):
+    """Normalize Vietstock URLs so a failed source can be retried safely."""
+    return canonical_document_url(value) or str(value or "").strip()
+
+
+def failed_url_retry_state(jobs: list[dict], symbol: str):
+    """Return successful URLs, failed-attempt metadata and URLs eligible for retry.
+
+    Older queue records may not have a timestamp; those get one retry immediately.
+    Subsequent failures wait 30 minutes, and a URL is attempted at most three times.
+    Successful archives always take precedence over any earlier failed download.
+    """
+    failures: dict[object, dict] = {}
+    successful: set[object] = set()
+    for prior_job in jobs:
+        if str(prior_job.get("symbol") or "").strip().upper() != symbol:
+            continue
+        for record in prior_job.get("downloadedFiles") or []:
+            if not isinstance(record, dict):
+                continue
+            status = str(record.get("status") or "")
+            keys = {
+                retry_url_key(record.get(field))
+                for field in ("url", "final_url")
+                if record.get(field)
+            }
+            for key in keys:
+                if status == "downloaded_needs_review":
+                    successful.add(key)
+                elif status == "download_error":
+                    state = failures.setdefault(key, {"attempts": 0, "last_attempt": 0.0})
+                    state["attempts"] += 1
+                    stamp = record.get("attempted_at") or record.get("failed_at") or record.get("downloaded_at")
+                    epoch = 0.0
+                    if stamp:
+                        try:
+                            dt = datetime.fromisoformat(str(stamp).replace("Z", "+00:00"))
+                            if dt.tzinfo is None:
+                                dt = dt.replace(tzinfo=timezone.utc)
+                            epoch = dt.timestamp()
+                        except (TypeError, ValueError, OSError, OverflowError):
+                            epoch = 0.0
+                    state["last_attempt"] = max(float(state.get("last_attempt") or 0), epoch)
+
+    now_epoch = datetime.now(timezone.utc).timestamp()
+    retryable = {
+        key for key, state in failures.items()
+        if key not in successful
+        and int(state.get("attempts") or 0) < FAILED_URL_MAX_ATTEMPTS
+        and (
+            not float(state.get("last_attempt") or 0)
+            or now_epoch - float(state["last_attempt"]) >= FAILED_URL_RETRY_COOLDOWN_SECONDS
+        )
+    }
+    return successful, failures, retryable
+
+
 def link_quarterly_archive_sources(symbol: str, jobs: list[dict]) -> int:
     """Link only exact, consolidated quarterly Vietstock URLs to snapshot periods."""
     path = ROOT / "data" / f"financials-{symbol}.json"
@@ -904,42 +965,44 @@ def main():
             continue
         if summary["jobs_processed"] >= MAX_JOBS_PER_RUN:
             break
-        if job.get("status") not in {"queued", "failed"}:
+        symbol = str(job.get("symbol") or "").strip().upper()
+        successful_url_keys, failed_url_states, retryable_failed_urls = failed_url_retry_state(jobs, symbol)
+        retry_failed_only = job.get("status") == "needs_review" and bool(retryable_failed_urls)
+        if job.get("status") not in {"queued", "failed"} and not retry_failed_only:
             continue
-        if job.get("status") == "failed" and int(job.get("attempts", 0)) >= 3:
+        if job.get("status") == "failed" and int(job.get("attempts", 0)) >= 3 and not retryable_failed_urls:
             continue
 
         previous_files = list(job.get("downloadedFiles") or [])
         attempted_urls = set(str(url) for url in (job.get("attemptedUrls") or []) if url)
-        processed_symbols.add(str(job.get("symbol") or "").upper())
+        processed_symbols.add(symbol)
         job["status"] = "searching"
         job["updatedAt"] = NOW
         job["attempts"] = int(job.get("attempts", 0)) + 1
         candidates = discover_for_job(job, ALLOWED_DOMAINS)
 
-        already_downloaded_urls = set(attempted_urls)
-        for previous_job in jobs:
-            if str(previous_job.get("symbol", "")).upper() != str(job.get("symbol", "")).upper():
-                continue
-            if previous_job is not job:
-                for previous_file in previous_job.get("downloadedFiles", []) or []:
-                    if previous_file.get("status") != "downloaded_needs_review":
-                        continue
-                    for key in ("url", "final_url"):
-                        previous_url = previous_file.get(key)
-                        if previous_url:
-                            already_downloaded_urls.add(str(previous_url))
-            else:
-                # Legacy queue entries may have successful files but no attemptedUrls.
-                for previous_file in previous_files:
-                    if previous_file.get("status") == "downloaded_needs_review":
-                        for key in ("url", "final_url"):
-                            previous_url = previous_file.get(key)
-                            if previous_url:
-                                already_downloaded_urls.add(str(previous_url))
+        # Avoid re-downloading successful archives, but allow bounded retries for
+        # failed URLs after the cooldown. attemptedUrls alone must not permanently
+        # hide a transient Vietstock 404/5xx or rate-limit response.
+        already_downloaded_urls = set(successful_url_keys)
+        for attempted_url in attempted_urls:
+            key = retry_url_key(attempted_url)
+            if key not in retryable_failed_urls:
+                already_downloaded_urls.add(key)
+        for failed_url in failed_url_states:
+            if failed_url not in retryable_failed_urls:
+                already_downloaded_urls.add(failed_url)
 
         before_dedup = len(candidates)
-        candidates = [c for c in candidates if str(c.get("url", "")) not in already_downloaded_urls]
+        filtered_candidates = []
+        seen_candidate_urls = set()
+        for candidate in candidates:
+            key = retry_url_key(candidate.get("url"))
+            if not key or key in already_downloaded_urls or key in seen_candidate_urls:
+                continue
+            filtered_candidates.append(candidate)
+            seen_candidate_urls.add(key)
+        candidates = filtered_candidates
         job["sourceCandidates"] = candidates[:80]
         print(json.dumps({
             "event": "deduplicate_previous_downloads",
@@ -983,8 +1046,19 @@ def main():
             if len(attempted_this_run) >= MAX_PER_JOB:
                 break
             result = download_candidate(candidate, job_dir)
+            candidate_url = str(candidate.get("url", "") or "")
+            candidate_key = retry_url_key(candidate_url)
+            if result.get("status") == "download_error":
+                previous_failure = failed_url_states.get(candidate_key, {})
+                result["attempted_at"] = NOW
+                result["attempt_number"] = int(previous_failure.get("attempts") or 0) + 1
+                failed_url_states[candidate_key] = {
+                    "attempts": result["attempt_number"],
+                    "last_attempt": datetime.now(timezone.utc).timestamp(),
+                }
+                retryable_failed_urls.discard(candidate_key)
             results.append(result)
-            attempted_this_run.append(str(candidate.get("url", "")))
+            attempted_this_run.append(candidate_url)
             if result.get("status") == "downloaded_needs_review":
                 summary["downloaded"] += 1
                 successes_this_run += 1
