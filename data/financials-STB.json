@@ -65,7 +65,7 @@
       "bank_service_expense": 578285,
       "bank_dividend_and_capital_income": 11595,
       "bank_provision_expense": 4001695,
-      "operating_cash_flow_ytd": 871410,
+      "operating_cash_flow_ytd": 12979972,
       "investing_cash_flow_ytd": -197483,
       "net_cash_change_ytd": 10478585,
       "cashflow_period_basis": "year_to_date",
@@ -74,18 +74,23 @@
         "bank_contributions_and_long_term_investments",
         "bank_customer_deposits",
         "bank_customer_loans",
+        "bank_deposits_and_borrowings_from_credit_institutions",
         "bank_deposits_at_state_bank",
         "bank_dividend_and_capital_income",
         "bank_interest_income",
         "bank_investment_securities",
+        "bank_net_interest_income",
         "bank_net_service_income",
+        "bank_operating_expenses",
         "bank_other_assets",
         "bank_other_liabilities",
         "bank_provision_expense",
         "bank_service_expense",
         "bank_service_income",
         "bank_valuable_papers",
+        "cash_beginning",
         "cashflow_period_basis",
+        "financing_cash_flow_ytd",
         "fixed_assets",
         "income_tax",
         "investing_cash_flow_ytd",
@@ -96,16 +101,19 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T15:26:41+00:00",
+      "financial_line_items_schema_updated_at": "2026-10-22T15:41:57+00:00",
       "financial_line_items_source": "reports/raw/STB/auto-stb-20261021/0ac492f8c7e33c1b.pdf",
-      "financial_line_items_updated_at": "2026-10-22T15:26:41+00:00",
-      "operating_cash_flow": 871410,
+      "financial_line_items_updated_at": "2026-10-22T15:41:57+00:00",
+      "operating_cash_flow": 12979972,
       "operating_cash_flow_calculation": "Q1 equals YTD Q1",
       "investing_cash_flow": -197483,
       "investing_cash_flow_calculation": "Q1 equals YTD Q1",
       "net_cash_change": 10478585,
       "net_cash_change_calculation": "Q1 equals YTD Q1",
-      "financial_line_items_prior_values": {},
+      "financial_line_items_prior_values": {
+        "bank_customer_loans": 500408348,
+        "operating_cash_flow_ytd": 871410
+      },
       "financial_line_items_rejected_values": {},
       "bank_net_service_income": 1935583,
       "bank_net_service_income_calculation": "Thu nhập dịch vụ + chi phí dịch vụ (chi phí giữ dấu âm).",
@@ -115,7 +123,7 @@
       "retained_earnings": 22496034,
       "bank_cash_on_hand": 8487570,
       "bank_deposits_at_state_bank": 45798185,
-      "bank_customer_loans": 500408348,
+      "bank_customer_loans": 492140463,
       "bank_investment_securities": 78898223,
       "bank_contributions_and_long_term_investments": 82642,
       "bank_other_assets": 36965705,
@@ -125,7 +133,26 @@
       "core_financial_extraction_calculations": {
         "total_liabilities": "total_assets minus reported equity; total sources matched total assets"
       },
-      "verification_status_note": "Các chỉ tiêu lõi đã được trích xuất tự động từ BCTC hợp nhất VietstockFinance; cần đối chiếu trực quan trước khi coi là xác minh."
+      "verification_status_note": "Các chỉ tiêu lõi đã được trích xuất tự động từ BCTC hợp nhất VietstockFinance; cần đối chiếu trực quan trước khi coi là xác minh.",
+      "financial_line_items_value_corrections": {
+        "bank_customer_loans": {
+          "previous_value": 500408348,
+          "new_value": 492140463,
+          "reason": "Reparsed from the compactly OCRed main customer-loan subtotal row (net loan balance), not the gross-loan detail row."
+        },
+        "operating_cash_flow_ytd": {
+          "previous_value": 871410,
+          "new_value": 12979972,
+          "reason": "Reparsed from net operating cash flow after changes in operating assets and liabilities, not the subtotal before working-capital changes."
+        }
+      },
+      "bank_deposits_and_borrowings_from_credit_institutions": 40646857,
+      "bank_net_interest_income": 5836702,
+      "bank_operating_expenses": 2142,
+      "financing_cash_flow_ytd": -2303904,
+      "cash_beginning": 70507716,
+      "financing_cash_flow": -2303904,
+      "financing_cash_flow_calculation": "Q1 equals YTD Q1"
     },
     {
       "symbol": "STB",
@@ -171,9 +198,9 @@
         4
       ],
       "core_financial_extraction_status": "manual_review_required_pending_extraction",
-      "core_financial_extraction_updated_at": "2026-10-22T15:38:15+00:00",
+      "core_financial_extraction_updated_at": "2026-10-22T15:41:58+00:00",
       "core_financial_extraction_note": "Đã thử tự động nhiều lượt nhưng chưa đủ bộ chỉ tiêu lõi khớp phương trình cân đối; giữ trống trường không đáng tin và yêu cầu rà soát PDF.",
-      "core_financial_extraction_attempt_count": 7,
+      "core_financial_extraction_attempt_count": 8,
       "bank_customer_deposits": 510744394,
       "operating_profit": 3153347,
       "bank_interest_income": 12381798,
@@ -182,7 +209,7 @@
       "bank_provision_expense": 1315656,
       "income_tax_current": 511201,
       "income_tax": 511201,
-      "operating_cash_flow_ytd": 3456916,
+      "operating_cash_flow_ytd": 27101785,
       "investing_cash_flow_ytd": -406680,
       "financing_cash_flow_ytd": -2267690,
       "net_cash_change_ytd": 24427395,
@@ -191,7 +218,9 @@
         "bank_customer_deposits",
         "bank_customer_loans",
         "bank_interest_income",
+        "bank_net_interest_income",
         "bank_net_service_income",
+        "bank_operating_expenses",
         "bank_provision_expense",
         "bank_service_expense",
         "bank_service_income",
@@ -206,21 +235,35 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T15:26:42+00:00",
+      "financial_line_items_schema_updated_at": "2026-10-22T15:41:58+00:00",
       "financial_line_items_source": "reports/raw/STB/auto-stb-20261021/681e6f4d0b9dbaf8.pdf",
-      "financial_line_items_updated_at": "2026-10-22T15:26:42+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
-      "operating_cash_flow": 2585506,
+      "financial_line_items_updated_at": "2026-10-22T15:41:58+00:00",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý.",
+      "operating_cash_flow": 14121813,
       "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "investing_cash_flow": -209197,
       "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "net_cash_change": 13948810,
       "net_cash_change_calculation": "current YTD minus previous quarter YTD",
-      "financial_line_items_prior_values": {},
+      "financial_line_items_prior_values": {
+        "operating_cash_flow_ytd": 3456916
+      },
       "financial_line_items_rejected_values": {},
       "bank_net_service_income": 2327243,
       "bank_net_service_income_calculation": "Thu nhập dịch vụ + chi phí dịch vụ (chi phí giữ dấu âm).",
-      "bank_customer_loans": 475169108
+      "bank_customer_loans": 475169108,
+      "bank_net_interest_income": 6116566,
+      "bank_operating_expenses": 823361,
+      "financial_line_items_value_corrections": {
+        "operating_cash_flow_ytd": {
+          "previous_value": 3456916,
+          "new_value": 27101785,
+          "reason": "Reparsed from net operating cash flow after changes in operating assets and liabilities, not the subtotal before working-capital changes."
+        }
+      },
+      "financing_cash_flow": 36214,
+      "financing_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "financial_line_items_cash_check": "opening/closing cash hidden because the cash bridge did not reconcile"
     },
     {
       "symbol": "STB",
@@ -304,10 +347,13 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_extracted_fields": [
         "bank_cash_on_hand",
+        "bank_deposits_and_borrowings_from_credit_institutions",
+        "bank_net_interest_income",
+        "bank_operating_expenses",
         "bank_trading_securities"
       ],
       "financial_line_items_source": "reports/raw/STB/auto-stb-20261021/50d0244cee7af604.pdf",
-      "financial_line_items_updated_at": "2026-10-22T15:26:44+00:00",
+      "financial_line_items_updated_at": "2026-10-22T15:41:59+00:00",
       "financial_line_items_note": "Các số tự trích xuất trước đó đã bị gỡ khỏi dữ liệu hiển thị: LNST vượt LNTT quá xa, nghi ngờ lấy nhầm cột hoặc dòng. Giữ nguyên nguồn VietstockFinance và chờ trích xuất lại. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
       "published_at": "2024-10-30",
       "financial_line_items_rejected_fields": [
@@ -383,7 +429,7 @@
       "financial_line_items_prior_values": {},
       "financial_line_items_rejected_values": {},
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T15:26:44+00:00",
+      "financial_line_items_schema_updated_at": "2026-10-22T15:41:59+00:00",
       "pretax_profit": 2085293,
       "net_profit": 2201173,
       "eps": 132,
@@ -417,7 +463,12 @@
       "core_financial_extraction_calculations": {
         "total_liabilities": "total_assets minus reported equity; total sources matched total assets"
       },
-      "verification_status_note": "Các chỉ tiêu lõi đã được trích xuất tự động từ BCTC hợp nhất VietstockFinance; cần đối chiếu trực quan trước khi coi là xác minh."
+      "verification_status_note": "Các chỉ tiêu lõi đã được trích xuất tự động từ BCTC hợp nhất VietstockFinance; cần đối chiếu trực quan trước khi coi là xác minh.",
+      "bank_deposits_and_borrowings_from_credit_institutions": 32209145,
+      "bank_net_interest_income": 6885108,
+      "bank_operating_expenses": 778896,
+      "cash_beginning": 94927505,
+      "cash_beginning_calculation": "previous quarter closing cash"
     },
     {
       "symbol": "STB",
@@ -464,13 +515,14 @@
         14
       ],
       "core_financial_extraction_status": "manual_review_required_pending_extraction",
-      "core_financial_extraction_updated_at": "2026-10-22T15:38:18+00:00",
+      "core_financial_extraction_updated_at": "2026-10-22T15:42:01+00:00",
       "core_financial_extraction_note": "Đã thử tự động nhiều lượt nhưng chưa đủ bộ chỉ tiêu lõi khớp phương trình cân đối; giữ trống trường không đáng tin và yêu cầu rà soát PDF.",
-      "core_financial_extraction_attempt_count": 5,
+      "core_financial_extraction_attempt_count": 6,
       "cashflow_period_basis": "quarterly_reported",
       "financial_line_items_extracted_fields": [
         "bank_dividend_and_capital_income",
         "bank_interest_income",
+        "bank_operating_expenses",
         "bank_provision_expense",
         "bank_service_income",
         "cashflow_period_basis",
@@ -479,9 +531,9 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T15:26:45+00:00",
+      "financial_line_items_schema_updated_at": "2026-10-22T15:42:01+00:00",
       "financial_line_items_source": "reports/raw/STB/auto-stb-20261021/079ae9815abc4d89.pdf",
-      "financial_line_items_updated_at": "2026-10-22T15:26:45+00:00",
+      "financial_line_items_updated_at": "2026-10-22T15:42:01+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại.",
       "financial_line_items_prior_values": {},
       "financial_line_items_rejected_values": {},
@@ -496,7 +548,8 @@
       "bank_interest_income": 12600526,
       "bank_service_income": 2980388,
       "bank_dividend_and_capital_income": 4841,
-      "bank_provision_expense": 544058
+      "bank_provision_expense": 544058,
+      "bank_operating_expenses": 108883
     },
     {
       "symbol": "STB",
@@ -579,11 +632,14 @@
       "cashflow_period_basis": "year_to_date",
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_extracted_fields": [
+        "bank_deposits_and_borrowings_from_credit_institutions",
         "bank_dividend_and_capital_income",
+        "bank_net_interest_income",
+        "bank_operating_expenses",
         "bank_provision_expense"
       ],
       "financial_line_items_source": "reports/raw/STB/auto-stb-20261021/d69ecb46b8b488f4.pdf",
-      "financial_line_items_updated_at": "2026-10-22T15:26:47+00:00",
+      "financial_line_items_updated_at": "2026-10-22T15:42:02+00:00",
       "financial_line_items_note": "Các số tự trích xuất trước đó đã bị gỡ khỏi dữ liệu hiển thị: Vốn chủ sở hữu bằng 0 đối với ngân hàng; nghi ngờ nhận nhầm dòng tổng nguồn vốn. Giữ nguyên nguồn VietstockFinance và chờ trích xuất lại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
       "published_at": "2025-04-28",
       "financial_line_items_rejected_fields": [
@@ -658,7 +714,7 @@
       "financial_line_items_prior_values": {},
       "financial_line_items_rejected_values": {},
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T15:26:47+00:00",
+      "financial_line_items_schema_updated_at": "2026-10-22T15:42:02+00:00",
       "pretax_profit": 3674030,
       "net_profit": 2896692,
       "eps": 132,
@@ -675,16 +731,19 @@
         14
       ],
       "core_financial_extraction_status": "manual_review_required_pending_extraction",
-      "core_financial_extraction_updated_at": "2026-10-22T15:38:19+00:00",
+      "core_financial_extraction_updated_at": "2026-10-22T15:42:02+00:00",
       "core_financial_extraction_note": "Đã thử tự động nhiều lượt nhưng chưa đủ bộ chỉ tiêu lõi khớp phương trình cân đối; giữ trống trường không đáng tin và yêu cầu rà soát PDF.",
       "core_financial_extraction_calculations": {
         "balance_totals_withheld": "asset/liability/equity totals did not fully reconcile"
       },
-      "core_financial_extraction_attempt_count": 4,
+      "core_financial_extraction_attempt_count": 5,
       "bank_dividend_and_capital_income": 3927147,
       "bank_provision_expense": 195263,
       "income_tax": 777338,
-      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có."
+      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
+      "bank_deposits_and_borrowings_from_credit_institutions": 56408256,
+      "bank_net_interest_income": 6863173,
+      "bank_operating_expenses": 705460
     },
     {
       "symbol": "STB",
@@ -749,7 +808,7 @@
       "bank_other_assets": 13128986,
       "income_tax": 763644,
       "bank_valuable_papers": 36558656,
-      "operating_cash_flow_ytd": 22993305,
+      "operating_cash_flow_ytd": 7716659,
       "retained_earnings": 34148437,
       "bank_interest_income": 28502029,
       "bank_provision_expense": 912321,
@@ -762,35 +821,52 @@
         "bank_contributions_and_long_term_investments",
         "bank_customer_deposits",
         "bank_customer_loans",
+        "bank_deposits_and_borrowings_from_credit_institutions",
         "bank_dividend_and_capital_income",
         "bank_interest_income",
         "bank_investment_securities",
         "bank_net_service_income",
+        "bank_operating_expenses",
         "bank_other_assets",
         "bank_other_liabilities",
         "bank_provision_expense",
         "bank_service_expense",
         "bank_service_income",
         "bank_valuable_papers",
+        "cash_beginning",
         "cashflow_period_basis",
+        "financing_cash_flow_ytd",
         "fixed_assets",
         "income_tax",
         "income_tax_current",
         "operating_cash_flow_ytd",
         "retained_earnings"
       ],
-      "financial_line_items_source": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%202/STB_Baocaotaichinh_Q2_2025_Hopnhat.pdf",
-      "financial_line_items_updated_at": "2026-10-22T15:10:02+00:00",
-      "financial_line_items_note": "Chỉ tiêu chi tiết trích xuất tự động từ PDF VietstockFinance; cần đối chiếu trực quan.",
+      "financial_line_items_source": "reports/raw/STB/auto-stb-20261021/7260dccced5ae737.pdf",
+      "financial_line_items_updated_at": "2026-10-22T15:42:04+00:00",
+      "financial_line_items_note": "Chỉ tiêu chi tiết trích xuất tự động từ PDF VietstockFinance; cần đối chiếu trực quan. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
       "published_at": "2025-07-30",
       "source_archive_file": "reports/raw/STB/auto-stb-20261021/7260dccced5ae737.pdf",
       "source_archive_match": "matched_report_queue_url",
-      "financial_line_items_prior_values": {},
+      "financial_line_items_prior_values": {
+        "operating_cash_flow_ytd": 22993305
+      },
       "financial_line_items_rejected_values": {},
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T15:10:02+00:00",
+      "financial_line_items_schema_updated_at": "2026-10-22T15:42:04+00:00",
       "bank_net_service_income": 2515297,
-      "bank_net_service_income_calculation": "Thu nhập dịch vụ + chi phí dịch vụ (chi phí giữ dấu âm)."
+      "bank_net_service_income_calculation": "Thu nhập dịch vụ + chi phí dịch vụ (chi phí giữ dấu âm).",
+      "bank_deposits_and_borrowings_from_credit_institutions": 60686995,
+      "bank_operating_expenses": 93722,
+      "financial_line_items_value_corrections": {
+        "operating_cash_flow_ytd": {
+          "previous_value": 22993305,
+          "new_value": 7716659,
+          "reason": "Reparsed from net operating cash flow after changes in operating assets and liabilities, not the subtotal before working-capital changes."
+        }
+      },
+      "financing_cash_flow_ytd": 888633,
+      "cash_beginning": 106493055
     },
     {
       "symbol": "STB",
@@ -904,10 +980,12 @@
       "cashflow_period_basis": "year_to_date",
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_extracted_fields": [
+        "bank_deposits_and_borrowings_from_credit_institutions",
+        "bank_operating_expenses",
         "bank_trading_securities"
       ],
       "financial_line_items_source": "reports/raw/STB/auto-stb-20261021/b0b7438ed502a175.pdf",
-      "financial_line_items_updated_at": "2026-10-22T15:30:33+00:00",
+      "financial_line_items_updated_at": "2026-10-22T15:42:05+00:00",
       "financial_line_items_note": "Các số tự trích xuất trước đó đã bị gỡ khỏi dữ liệu hiển thị: LNST âm lớn trong khi LNTT dương; nghi ngờ OCR lệch cột. Giữ nguyên nguồn VietstockFinance và chờ trích xuất lại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
       "published_at": "2026-01-30",
       "financial_line_items_rejected_fields": [
@@ -984,7 +1062,7 @@
       "financial_line_items_prior_values": {},
       "financial_line_items_rejected_values": {},
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T15:30:33+00:00",
+      "financial_line_items_schema_updated_at": "2026-10-22T15:42:05+00:00",
       "pretax_profit": 360145,
       "net_profit": -2752462,
       "eps": 132,
@@ -1003,15 +1081,17 @@
         14
       ],
       "core_financial_extraction_status": "manual_review_required_pending_extraction",
-      "core_financial_extraction_updated_at": "2026-10-22T15:38:21+00:00",
+      "core_financial_extraction_updated_at": "2026-10-22T15:42:05+00:00",
       "core_financial_extraction_note": "Đã thử tự động nhiều lượt nhưng chưa đủ bộ chỉ tiêu lõi khớp phương trình cân đối; giữ trống trường không đáng tin và yêu cầu rà soát PDF.",
       "core_financial_extraction_calculations": {
         "balance_totals_withheld": "asset/liability/equity totals did not fully reconcile"
       },
-      "core_financial_extraction_attempt_count": 3,
+      "core_financial_extraction_attempt_count": 4,
       "bank_trading_securities": 234999,
       "income_tax": 3112607,
-      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có."
+      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
+      "bank_deposits_and_borrowings_from_credit_institutions": 156037068,
+      "bank_operating_expenses": 900822
     },
     {
       "symbol": "STB",
@@ -1071,7 +1151,7 @@
       "retained_earnings": 32893741,
       "bank_cash_on_hand": 5956879,
       "bank_deposits_at_state_bank": 16458784,
-      "bank_customer_loans": 604877709,
+      "bank_customer_loans": 626959810,
       "bank_trading_securities": 1117,
       "bank_derivatives_and_other_financial_assets": 1117,
       "bank_investment_securities": 38998457,
@@ -1096,16 +1176,20 @@
         "bank_contributions_and_long_term_investments",
         "bank_customer_deposits",
         "bank_customer_loans",
+        "bank_deposits_and_borrowings_from_credit_institutions",
         "bank_deposits_at_state_bank",
         "bank_derivatives_and_other_financial_assets",
         "bank_dividend_and_capital_income",
         "bank_interest_income",
         "bank_investment_securities",
+        "bank_net_interest_income",
+        "bank_operating_expenses",
         "bank_other_assets",
         "bank_other_liabilities",
         "bank_service_income",
         "bank_trading_securities",
         "bank_valuable_papers",
+        "cash_beginning",
         "cashflow_period_basis",
         "financing_cash_flow_ytd",
         "fixed_assets",
@@ -1119,9 +1203,9 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T15:33:50+00:00",
+      "financial_line_items_schema_updated_at": "2026-10-22T15:42:06+00:00",
       "financial_line_items_source": "reports/raw/STB/auto-stb-20261021/9bdfef933a655d73.pdf",
-      "financial_line_items_updated_at": "2026-10-22T15:33:50+00:00",
+      "financial_line_items_updated_at": "2026-10-22T15:42:06+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
       "operating_cash_flow": -58545352,
       "operating_cash_flow_calculation": "Q1 equals YTD Q1",
@@ -1131,8 +1215,21 @@
       "financing_cash_flow_calculation": "Q1 equals YTD Q1",
       "net_cash_change": -58697886,
       "net_cash_change_calculation": "Q1 equals YTD Q1",
-      "financial_line_items_prior_values": {},
-      "financial_line_items_rejected_values": {}
+      "financial_line_items_prior_values": {
+        "bank_customer_loans": 604877709
+      },
+      "financial_line_items_rejected_values": {},
+      "financial_line_items_value_corrections": {
+        "bank_customer_loans": {
+          "previous_value": 604877709,
+          "new_value": 626959810,
+          "reason": "Reparsed from the compactly OCRed main customer-loan subtotal row (net loan balance), not the gross-loan detail row."
+        }
+      },
+      "bank_deposits_and_borrowings_from_credit_institutions": 124488501,
+      "bank_net_interest_income": 6042042,
+      "bank_operating_expenses": 27931,
+      "cash_beginning": 194472583
     },
     {
       "symbol": "STB",
@@ -1184,12 +1281,12 @@
         14
       ],
       "core_financial_extraction_status": "auto_pending_extraction",
-      "core_financial_extraction_updated_at": "2026-10-22T15:38:24+00:00",
+      "core_financial_extraction_updated_at": "2026-10-22T15:42:08+00:00",
       "core_financial_extraction_note": "Chỉ tiêu lõi được trích xuất từ văn bản PDF/ZIP đã lưu; chưa xác minh thủ công trên bản PDF.",
       "core_financial_extraction_calculations": {
         "equity": "total_assets minus reported liabilities; total sources matched total assets"
       },
-      "core_financial_extraction_attempt_count": 1,
+      "core_financial_extraction_attempt_count": 2,
       "fixed_assets": 6937711,
       "retained_earnings": 33071448,
       "bank_cash_on_hand": 5929857,
@@ -1216,9 +1313,12 @@
         "bank_cash_on_hand",
         "bank_customer_deposits",
         "bank_customer_loans",
+        "bank_deposits_and_borrowings_from_credit_institutions",
         "bank_deposits_at_state_bank",
         "bank_investment_securities",
+        "bank_net_interest_income",
         "bank_net_service_income",
+        "bank_operating_expenses",
         "bank_other_assets",
         "bank_other_liabilities",
         "bank_provision_expense",
@@ -1239,9 +1339,9 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T15:38:24+00:00",
+      "financial_line_items_schema_updated_at": "2026-10-22T15:42:08+00:00",
       "financial_line_items_source": "reports/raw/STB/auto-stb-20261021/b50173a5c871d979.pdf",
-      "financial_line_items_updated_at": "2026-10-22T15:38:24+00:00",
+      "financial_line_items_updated_at": "2026-10-22T15:42:08+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
       "operating_cash_flow": 17064708,
       "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
@@ -1252,7 +1352,10 @@
       "financial_line_items_prior_values": {},
       "financial_line_items_rejected_values": {},
       "bank_net_service_income": 4754556,
-      "bank_net_service_income_calculation": "Thu nhập dịch vụ + chi phí dịch vụ (chi phí giữ dấu âm)."
+      "bank_net_service_income_calculation": "Thu nhập dịch vụ + chi phí dịch vụ (chi phí giữ dấu âm).",
+      "bank_deposits_and_borrowings_from_credit_institutions": 90061309,
+      "bank_net_interest_income": 624724,
+      "bank_operating_expenses": 776280
     }
   ],
   "sync_status": "records_found",
