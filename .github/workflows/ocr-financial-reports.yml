@@ -219,10 +219,19 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install OCR system tools
+      - name: Install OCR system tools only when missing
+        shell: bash
         run: |
-          sudo apt-get update
-          sudo apt-get install -y poppler-utils tesseract-ocr tesseract-ocr-vie tesseract-ocr-eng
+          set -euo pipefail
+          if command -v pdftoppm >/dev/null 2>&1 \
+            && command -v tesseract >/dev/null 2>&1 \
+            && tesseract --list-langs 2>/dev/null | grep -qx 'vie' \
+            && tesseract --list-langs 2>/dev/null | grep -qx 'eng'; then
+            echo "Poppler and Vietnamese/English Tesseract languages are already available."
+          else
+            sudo apt-get update
+            sudo apt-get install -y poppler-utils tesseract-ocr tesseract-ocr-vie tesseract-ocr-eng
+          fi
 
       - name: Install extraction dependencies
         run: pip install -r .github/scripts/requirements-report-worker.txt
