@@ -373,7 +373,7 @@ jobs:
 
       - name: Install OCR tools only when the next report is scanned
         if: steps.ocr_preflight.outputs.needs_ocr == 'true'
-        timeout-minutes: 4
+        timeout-minutes: 6
         continue-on-error: true
         shell: bash
         run: |
@@ -385,11 +385,11 @@ jobs:
             echo "Poppler and Vietnamese/English Tesseract are ready."
             exit 0
           fi
-          if ! timeout 100s sudo apt-get -o Acquire::Retries=0 -o Acquire::http::Timeout=8 -o Acquire::https::Timeout=8 update; then
+          if ! timeout 60s sudo apt-get -o Acquire::Retries=0 -o Acquire::http::Timeout=8 -o Acquire::https::Timeout=8 update; then
             echo "::warning::OCR package index unavailable within 100 seconds; continue with native PDF text and keep the ticker queue unchanged."
             exit 0
           fi
-          if ! timeout 100s sudo apt-get -o Acquire::Retries=0 -o Acquire::http::Timeout=8 -o Acquire::https::Timeout=8 install -y poppler-utils tesseract-ocr tesseract-ocr-vie tesseract-ocr-eng; then
+          if ! timeout 220s sudo apt-get -o Acquire::Retries=0 -o Acquire::http::Timeout=8 -o Acquire::https::Timeout=8 install -y poppler-utils tesseract-ocr tesseract-ocr-vie tesseract-ocr-eng; then
             echo "::warning::OCR tools could not be installed within 100 seconds; continue safely without fabricating data."
             exit 0
           fi
