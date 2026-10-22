@@ -187,9 +187,11 @@ def select_statement_pages(pages,kind):
 
 def unit_factor(pages,item):
  header=norm(" ".join(str(p.get("text",""))[:5000] for p in pages[:3]))
- if any(t in header for t in ("nghin dong","nghin vnd","thousand vnd")): return 0.001
- if any(t in header for t in ("trieu dong","trieu vnd","million vnd")): return 1.0
- if any(t in header for t in ("ty dong","ty vnd","billion vnd")): return 1000.0
+ # OCR frequently renders "Triệu VND" as "Tri~u VND", "Trifu VND",
+ # or similar. Recognize these variants before falling back to the VND unit.
+ if any(t in header for t in ("nghin dong","nghin vnd","thousand vnd")) or re.search(r"\bngh[a-z~._-]{0,4}n\s+(?:dong|vnd)\b",header): return 0.001
+ if any(t in header for t in ("trieu dong","trieu vnd","million vnd")) or re.search(r"\btri[a-z~._-]{0,3}u\s+(?:dong|vnd)\b",header): return 1.0
+ if any(t in header for t in ("ty dong","ty vnd","billion vnd")) or re.search(r"\bty\s+(?:dong|vnd)\b",header): return 1000.0
  if re.search(r"\bvnd\b",header) or "don vi tinh dong" in header: return 0.000001
  unit=norm(item.get("unit",""))
  if "trieu" in unit or "million" in unit: return 1.0
@@ -347,7 +349,10 @@ def extract_fields(item,symbol,pages):
    val=value_by_label(bal,labels,scale)
    if val is not None: out[field]=val
  if symbol in BANKS:
-  revlabels=["tong thu nhap hoat dong","tong thu nhap hoat dong kinh doanh","doanh thu hoat dong","thu nhap lai thuan"]
+  # Do not label net interest income as total operating income. If the statement
+  # has no explicit aggregate, the aggregate is calculated from reconciled
+  # quarterly components in apply_quarter_scope().
+  revlabels=["tong thu nhap hoat dong","tong thu nhap hoat dong kinh doanh"]
  elif symbol in BROKERS:
   revlabels=["doanh thu hoat dong","tong doanh thu hoat dong kinh doanh","doanh thu thuan"]
  else:
@@ -395,13 +400,155 @@ def extract_fields(item,symbol,pages):
   if diluted_eps is not None and abs(diluted_eps)<1000000: out["diluted_eps"]=diluted_eps
  if cf:
   cft=norm(" ".join(str(p.get("text","")) for p in cf))
-  is_ytd=bool(re.search(r"\b01\s*/\s*01\s*/?\s*20\d{2}\b",cft) or "tu ngay 01 thang 01" in cft or "luy ke tu dau nam" in cft or "giai doan tu 01/01" in cft)
+  is_ytd=bool(
+   re.search(r"\b01\s*/\s*01\s*/?\s*20\d{2}\b",cft)
+   or "tu ngay 01 thang 01" in cft
+   or "luy ke tu dau nam" in cft
+   or "giai doan tu 01/01" in cft
+   or re.search(r"\b(?:cho )?ky (?:6|9|12) thang ket thuc ngay\b",cft)
+   or re.search(r"\bfor the (?:six|nine|twelve) months ended\b",cft)
+   or re.search(r"\b(?:cho )?nam ket thuc ngay\b",cft)
+   or re.search(r"\bfor the year ended\b",cft)
+  )
   out["__cashflow_period_basis"]="year_to_date" if is_ytd else "quarterly_reported"
  return out
 
 def period_key(item):
  m=re.fullmatch(r"(20\d{2})-Q([1-4])",str(item.get("period","")))
  return (int(m.group(1)),int(m.group(2))) if m else None
+
+
+INCOME_DETAIL_FIELDS = (
+ set(INCOME_LABELS)
+ | set(BANK_INCOME_LABELS)
+ | set(BROKER_INCOME_LABELS)
+ | {"revenue", "income_tax_current", "income_tax_deferred", "net_profit_attributable"}
+) - {"income_tax"}
+
+
+def cumulative_income_mode(item, pages):
+ key=period_key(item)
+ if not key:
+  return ""
+ text=norm(" ".join(str(p.get("text","")) for p in select_statement_pages(pages,"income")))
+ if not text:
+  return ""
+ has_three_month_columns=bool(
+  re.search(r"\b(?:cho )?ky 3 thang ket thuc ngay\b",text)
+  or re.search(r"\bfor the three months ended\b",text)
+  or re.search(r"\bthree months ended\b",text)
+ )
+ year,quarter=key
+ if quarter==2 and not has_three_month_columns and (
+  re.search(r"\b(?:cho )?ky 6 thang ket thuc ngay\b",text)
+  or re.search(r"\bfor the six months ended\b",text)
+  or re.search(r"\bsix months ended\b",text)
+ ):
+  return "cumulative_6m"
+ if quarter==3 and not has_three_month_columns and (
+  re.search(r"\b(?:cho )?ky 9 thang ket thuc ngay\b",text)
+  or re.search(r"\bfor the nine months ended\b",text)
+  or re.search(r"\bnine months ended\b",text)
+ ):
+  return "cumulative_9m"
+ if quarter==4 and not has_three_month_columns and (
+  re.search(r"\bnam ket thuc ngay\b",text)
+  or re.search(r"\bfor the year ended\b",text)
+  or re.search(r"\byear ended\b",text)
+ ):
+  return "cumulative_fy"
+ return ""
+
+
+def apply_quarter_scope(item, items, found, symbol, mode):
+ """Convert cumulative income rows to standalone-quarter values when possible.
+
+ If the prior-quarter detail is unavailable, suppress those rows instead of
+ displaying a six-/nine-/twelve-month total as a quarterly figure.
+ """
+ if not mode:
+  return found, []
+ key=period_key(item)
+ if not key:
+  return found, []
+ year,quarter=key
+ prior_periods=[f"{year}-Q{q}" for q in range(1,quarter)]
+ by_period={str(row.get("period")):row for row in items if isinstance(row,dict)}
+ old_fields=set(item.get("financial_line_items_extracted_fields") or [])
+ withheld=[]
+ reason="cumulative income value withheld; standalone quarter could not be reconciled to all prior-quarter detail rows"
+ for field in sorted(INCOME_DETAIL_FIELDS):
+  if symbol in BANKS and field=="revenue":
+   # Bank operating income is rebuilt after the component rows are quarterized.
+   continue
+  existing_is_machine_field=field in old_fields and isinstance(item.get(field),(int,float))
+  candidate=found.get(field)
+  if isinstance(candidate,(int,float)):
+   prior_values=[(by_period.get(period) or {}).get(field) for period in prior_periods]
+   if prior_values and all(isinstance(value,(int,float)) for value in prior_values):
+    found[field]=int(round(candidate-sum(prior_values)))
+   else:
+    found.pop(field,None)
+    withheld.append(field)
+    if existing_is_machine_field:
+     item.setdefault("financial_line_items_prior_values",{}).setdefault(field,item[field])
+     item.setdefault("financial_line_items_value_corrections",{})[field]={
+      "previous_value":item[field],
+      "reason":reason,
+     }
+     item.pop(field,None)
+     old_fields.discard(field)
+  elif existing_is_machine_field:
+   # Old cumulative/mis-scaled fields must not remain visible when the
+   # current report no longer provides a safely quarterized replacement.
+   item.setdefault("financial_line_items_prior_values",{}).setdefault(field,item[field])
+   item.setdefault("financial_line_items_value_corrections",{})[field]={
+    "previous_value":item[field],
+    "reason":reason,
+   }
+   item.pop(field,None)
+   old_fields.discard(field)
+   withheld.append(field)
+
+ if symbol in BANKS:
+  components=[
+   "bank_net_interest_income", "bank_net_service_income", "bank_fx_net_income",
+   "bank_trading_securities_net", "bank_investment_securities_net",
+   "bank_other_operating_net", "bank_dividend_and_capital_income",
+  ]
+  if isinstance(found.get("revenue"),(int,float)):
+   # Only quarterize an explicitly reported aggregate if the prior quarter
+   # has the matching aggregate; otherwise it is handled as a missing detail.
+   candidate=found["revenue"]
+   prior_values=[(by_period.get(period) or {}).get("revenue") for period in prior_periods]
+   if prior_values and all(isinstance(value,(int,float)) for value in prior_values):
+    found["revenue"]=int(round(candidate-sum(prior_values)))
+   else:
+    found.pop("revenue",None)
+    withheld.append("revenue")
+  elif all(isinstance(found.get(field),(int,float)) for field in components):
+   found["revenue"]=int(round(sum(found[field] for field in components)))
+  elif "revenue" in old_fields and isinstance(item.get("revenue"),(int,float)):
+   item.setdefault("financial_line_items_prior_values",{}).setdefault("revenue",item["revenue"])
+   item.setdefault("financial_line_items_value_corrections",{})["revenue"]={
+    "previous_value":item["revenue"],
+    "reason":"previous parser mislabeled net interest income as total bank operating income",
+   }
+   item.pop("revenue",None)
+   old_fields.discard("revenue")
+   withheld.append("revenue")
+
+ if old_fields!=set(item.get("financial_line_items_extracted_fields") or []):
+  item["financial_line_items_extracted_fields"]=sorted(old_fields)
+ return found, sorted(set(withheld))
+
+
+def scale_mismatch(old_value,new_value):
+ if not isinstance(old_value,(int,float)) or not isinstance(new_value,(int,float)):
+  return False
+ if old_value==0 or new_value==0 or (old_value<0)!=(new_value<0):
+  return False
+ return max(abs(old_value),abs(new_value))/max(min(abs(old_value),abs(new_value)),1) >= 1000
 
 def sane_fields(item, found, symbol):
  # Cross-check extracted values against reconciled financial-statement totals.
@@ -683,6 +830,18 @@ def enrich_snapshot(path):
   pages=load_report_pages(item,symbol)
   if not pages: continue
   found=extract_fields(item,symbol,pages)
+  mode=cumulative_income_mode(item,pages)
+  found,withheld_fields=apply_quarter_scope(item,items,found,symbol,mode)
+  if withheld_fields:
+   pending=set(item.get("financial_line_items_unquarterized_fields") or [])
+   pending.update(withheld_fields)
+   item["financial_line_items_unquarterized_fields"]=sorted(pending)
+   note="Một số chỉ tiêu thu nhập đang là số lũy kế; chưa đủ dữ liệu chi tiết các quý trước để tách riêng quý nên được để trống, không hiển thị số lũy kế như số quý."
+   current_note=str(item.get("financial_line_items_note") or "")
+   if note not in current_note:
+    item["financial_line_items_note"]=(current_note+" "+note).strip()
+   item["financial_line_items_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
+   changed=True; quarter_count+=1; field_count+=len(withheld_fields)
   if not found:
    if not item.get("financial_line_items_status"):
     item["financial_line_items_status"]="no_detail_fields_matched_pending_manual_review"
@@ -706,6 +865,20 @@ def enrich_snapshot(path):
    if field.startswith("__"): continue
    if item.get(field) is None:
     item[field]=value; new_fields.append(field)
+   elif (
+    field in set(item.get("financial_line_items_extracted_fields") or [])
+    and str(item.get("financial_line_items_status") or "").startswith("auto_extracted")
+    and scale_mismatch(item.get(field),value)
+   ):
+    old_value=item[field]
+    item.setdefault("financial_line_items_prior_values",{}).setdefault(field,old_value)
+    item.setdefault("financial_line_items_value_corrections",{})[field]={
+     "previous_value":old_value,
+     "new_value":value,
+     "reason":"reparsed with corrected VND unit scale after detecting an OCR-corrupted statement unit header",
+    }
+    item[field]=value
+    new_fields.append(field)
    elif field=="revenue" and symbol in STANDARD_BUSINESSES and isinstance(item.get("revenue"),(int,float)):
     # Override a legacy revenue value only when the newly parsed row is backed
     # by matching revenue/COGS/gross-profit arithmetic.
@@ -731,7 +904,10 @@ def enrich_snapshot(path):
    item["financial_line_items_status"]="auto_extracted_pending_visual_review"
    item["financial_line_items_source"]=str(item.get("source_archive_file") or "")
    item["financial_line_items_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
-   item["financial_line_items_note"]="Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc."
+   base_note=str(item.get("financial_line_items_note") or "")
+   generic_note="Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc."
+   if generic_note not in base_note:
+    item["financial_line_items_note"]=(base_note+" "+generic_note).strip()
    changed=True; quarter_count+=1; field_count+=len(new_fields)
 
  by_period={str(i.get("period")):i for i in items if isinstance(i,dict)}
