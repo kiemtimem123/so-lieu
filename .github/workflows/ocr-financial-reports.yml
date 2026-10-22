@@ -24,13 +24,15 @@ on:
       rescan_pages:
         description: Comma-separated page numbers to re-OCR even if text is already present
         required: false
-        default: "10,11"
+        default: ""
 
 permissions:
   contents: write
 
 concurrency:
-  group: so-lieu-financial-data-writes-v1
+  # Only successful collector runs should join the shared write queue.
+  # A skipped OCR run from a cancelled/failed collector must not evict a queued collector.
+  group: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion != 'success' && 'so-lieu-financial-data-noop-v1' || 'so-lieu-financial-data-writes-v1' }}
   cancel-in-progress: false
 
 jobs:
@@ -246,7 +248,7 @@ jobs:
           REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || '14' }}
           REPORT_OCR_MAX_REPORTS: "1"
           REPORT_OCR_DPI: "280"
-          REPORT_OCR_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || '10,11' }}
+          REPORT_OCR_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || '' }}
         run: python .github/scripts/ocr-stored-reports.py
 
       - name: Validate queue after OCR
