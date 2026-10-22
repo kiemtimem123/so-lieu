@@ -71,9 +71,18 @@ BROKER_INCOME_LABELS = {
  "broker_custody_revenue":["doanh thu nghiep vu luu ky chung khoan","doanh thu luu ky chung khoan"],
  "broker_financial_advisory_revenue":["doanh thu hoat dong tu van tai chinh"],
  "broker_other_operating_income":["thu nhap tu hoat dong khac"],
- "broker_operating_expenses":["chi phi hoat dong"],
+ "broker_operating_expenses":["chi phi hoat dong","cong chi phi hoat dong"],
  "broker_admin_expenses":["chi phi quan ly cong ty chung khoan","chi phi quan ly doanh nghiep"],
  "broker_net_operating_profit":["loi nhuan thuan tu hoat dong kinh doanh"],
+ "broker_total_operating_revenue":["cong doanh thu hoat dong","tong doanh thu hoat dong","tong cong doanh thu hoat dong"],
+ "broker_total_operating_expenses":["cong chi phi hoat dong","tong chi phi hoat dong"],
+ "broker_fvtpl_loss":["lo tu cac tai san tai chinh ghi nhan thong qua lai lo","lo tu cac tai san tai chinh ghi nhan thong qua lai/lo"],
+ "broker_brokerage_expense":["chi phi nghiep vu moi gioi chung khoan","chi phi moi gioi chung khoan"],
+ "broker_custody_expense":["chi phi nghiep vu luu ky chung khoan","chi phi luu ky chung khoan"],
+ "broker_other_operating_expense":["chi phi hoat dong khac"],
+ "broker_financial_income":["doanh thu hoat dong tai chinh"],
+ "broker_financial_expense":["chi phi tai chinh"],
+ "broker_interest_expense":["chi phi lai vay"],
 }
 INCOME_LABELS = {
  "cost_of_goods_sold":["gia von hang ban"],
@@ -201,9 +210,13 @@ def unit_factor(pages,item):
  return 1.0
 
 def is_statement_row_start(line):
- # Interim PDFs often wrap an item label across lines. A new row generally
- # starts with a short account code followed by a pipe or another code.
- return bool(re.match(r"^\s*(?:\|\s*)?\d{1,3}\s*(?:\||\s+\d{1,3}\s)",str(line or "")))
+ # OCR sometimes places a financial-statement code on its own line (e.g. "06")
+ # before a wrapped label. Stop label matching at these row boundaries to avoid
+ # borrowing figures from the next line item.
+ raw=str(line or "")
+ if re.fullmatch(r"\s*\d{1,3}(?:\.\d{1,2})?\s*",raw):
+  return True
+ return bool(re.match(r"^\s*(?:\|\s*)?\d{1,3}(?:\.\d{1,2})?\s*(?:\||\s+\d{1,3}\s)",raw))
 
 def value_by_label(pages,labels,factor,threshold=1000):
  for label in labels:
@@ -575,7 +588,10 @@ def sane_fields(item, found, symbol):
   "bank_provision_expense","bank_non_controlling_profit","broker_fvtpl_gain","broker_held_to_maturity_income",
   "broker_lending_income","broker_afs_income","broker_brokerage_revenue","broker_underwriting_revenue",
   "broker_advisory_revenue","broker_custody_revenue","broker_financial_advisory_revenue","broker_other_operating_income",
-  "broker_operating_expenses","broker_admin_expenses","broker_net_operating_profit"}
+  "broker_operating_expenses","broker_admin_expenses","broker_net_operating_profit",
+  "broker_total_operating_revenue","broker_total_operating_expenses","broker_fvtpl_loss",
+  "broker_brokerage_expense","broker_custody_expense","broker_other_operating_expense",
+  "broker_financial_income","broker_financial_expense","broker_interest_expense"}
  cash_fields=set(CASHFLOW_LABELS)-{"cash_beginning","cash_ending"}
  safe={}
  rejected=[]
