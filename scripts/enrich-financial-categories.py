@@ -123,8 +123,16 @@ CASHFLOW_LABELS = {
  "capital_expenditure_ytd":["tien chi de mua sam xay dung tai san co dinh","tien chi mua sam xay dung tai san co dinh","mua sam xay dung tai san co dinh va cac tai san dai han khac"],
  "dividends_paid_ytd":["co tuc loi nhuan da tra cho chu so huu","tien chi tra co tuc loi nhuan cho chu so huu"],
  "net_cash_change_ytd":["luu chuyen tien thuan trong ky","luu chuyen tien thuan trong nam"],
- "cash_beginning":["tien va cac khoan tuong duong tien dau ky","tien va tuong duong tien dau ky"],
- "cash_ending":["tien va cac khoan tuong duong tien cuoi ky","tien va tuong duong tien cuoi ky"],
+ "cash_beginning":[
+  "tien va cac khoan tuong duong tien tai thoi diem dau ky",
+  "tien va cac khoan tuong duong tien dau ky",
+  "tien va tuong duong tien dau ky",
+ ],
+ "cash_ending":[
+  "tien va cac khoan tuong duong tien tai thoi diem cuoi ky",
+  "tien va cac khoan tuong duong tien cuoi ky",
+  "tien va tuong duong tien cuoi ky",
+ ],
  "foreign_exchange_effect_ytd":["anh huong cua thay doi ty gia hoi doai quy doi ngoai te","anh huong thay doi ty gia hoi doai"],
 }
 BALANCE_CODES = {
@@ -193,6 +201,14 @@ def statement_heading_kind(page):
  text=norm(page.get("text",""))
  if "muc luc" in text or "table of contents" in text or "thuyet minh bao cao tai chinh" in text or "notes to the financial statements" in text:
   return None
+ # Vietnamese bank statements use regulator form codes (B02/TCTD, B03/TCTD,
+ # B04/TCTD), which OCR can preserve even when the title line is distorted.
+ if re.search(r"\\bb0?2\\s*/\\s*tctd\\b",text):
+  return "balance"
+ if re.search(r"\\bb0?3\\s*/\\s*tctd\\b",text):
+  return "income"
+ if re.search(r"\\bb0?4\\s*/\\s*tctd\\b",text):
+  return "cashflow"
  lines=[norm(line) for line in str(page.get("text","")).splitlines()[:45]]
  for line in lines:
   if not line or len(line)>155:
@@ -662,7 +678,15 @@ def extract_fields(item,symbol,pages):
   if tax_total is not None: out["income_tax"]=tax_total
  # Cash-flow rows are normally cumulative from 1 January on Q2/Q3/annual filings.
  for field,labels in CASHFLOW_LABELS.items():
-  val=value_by_label(cf,labels,scale) if cf else None
+  # Exclude the subtotal "before changes in operating assets and working
+  # capital"; the actual net operating cash-flow row appears later and is the
+  # value that belongs in the quarterly cash-flow category.
+  excludes=(
+   ["truoc nhung thay doi ve tai san va von luu dong",
+    "before changes in operating assets and liabilities"]
+   if field=="operating_cash_flow_ytd" else None
+  )
+  val=value_by_label(cf,labels,scale,exclude_terms=excludes) if cf else None
   if val is None and symbol in STANDARD_BUSINESSES and cf: val=value_by_code(cf,CASHFLOW_CODES[field],scale)
   if val is not None: out[field]=val
  if symbol in STANDARD_BUSINESSES and inc:
