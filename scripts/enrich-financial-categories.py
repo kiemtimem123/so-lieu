@@ -1176,6 +1176,60 @@ def enrich_snapshot(path):
   found=extract_fields(item,symbol,pages)
   mode=cumulative_income_mode(item,pages)
   found,withheld_fields=apply_quarter_scope(item,items,found,symbol,mode)
+  core_found=extract_core_fields(item,symbol,pages,found,mode)
+  core_calculations=core_found.pop("__core_calculations",{})
+  core_pages=core_found.pop("__core_pages",[])
+  core_new_fields=[]
+  for field,value in core_found.items():
+   if field=="revenue":
+    continue
+   if item.get(field) is None:
+    item[field]=value
+    core_new_fields.append(field)
+  if core_new_fields:
+   previous_fields=set(item.get("core_financial_extracted_fields") or [])
+   item["core_financial_extracted_fields"]=sorted(previous_fields|set(core_new_fields))
+   item["core_financial_extraction_source"]=str(item.get("source_archive_file") or "")
+   item["core_financial_extraction_pages"]=core_pages
+   item["core_financial_extraction_status"]="auto_extracted_pending_visual_review"
+   item["core_financial_extraction_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
+   item["core_financial_extraction_note"]="Chỉ tiêu lõi được trích xuất từ văn bản PDF/ZIP đã lưu; chưa xác minh thủ công trên bản PDF."
+   if core_calculations:
+    item["core_financial_extraction_calculations"]=core_calculations
+   changed=True
+   quarter_count+=1
+   field_count+=len(core_new_fields)
+  core_required_ok=all(
+   isinstance(item.get(field),(int,float))
+   for field in ("total_assets","total_liabilities","equity","pretax_profit","net_profit")
+  )
+  core_balance_ok=(
+   core_required_ok
+   and abs(item["total_assets"]-item["total_liabilities"]-item["equity"])<=3
+  )
+  if core_balance_ok and item.get("verification_status") in {"auto_pending_extraction","manual_review_required_pending_extraction"}:
+   item["verification_status"]="auto_extracted_pending_visual_review"
+   item["core_financial_extraction_status"]="auto_extracted_pending_visual_review"
+   item["core_financial_extracted_fields"]=sorted(set(item.get("core_financial_extracted_fields") or [])|{
+    "total_assets","total_liabilities","equity","pretax_profit","net_profit"
+   })
+   item["core_financial_extraction_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
+   item["verification_status_note"]="Các chỉ tiêu lõi đã được trích xuất tự động từ BCTC hợp nhất VietstockFinance; cần đối chiếu trực quan trước khi coi là xác minh."
+   changed=True
+   quarter_count+=1
+   field_count+=1
+  elif not core_required_ok and item.get("verification_status") in {"auto_pending_extraction","manual_review_required_pending_extraction"}:
+   attempts=int(item.get("core_financial_extraction_attempt_count") or 0)+1
+   item["core_financial_extraction_attempt_count"]=attempts
+   item["core_financial_extraction_status"]="auto_pending_extraction"
+   item["core_financial_extraction_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
+   changed=True
+   field_count+=1
+   if attempts>=3:
+    item["verification_status"]="manual_review_required_pending_extraction"
+    item["core_financial_extraction_status"]="manual_review_required_pending_extraction"
+    item["core_financial_extraction_note"]="Đã thử tự động nhiều lượt nhưng chưa đủ bộ chỉ tiêu lõi khớp phương trình cân đối; giữ trống trường không đáng tin và yêu cầu rà soát PDF."
+    quarter_count+=1
   if withheld_fields:
    pending=set(item.get("financial_line_items_unquarterized_fields") or [])
    pending.update(withheld_fields)
