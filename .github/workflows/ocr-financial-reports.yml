@@ -487,7 +487,7 @@ jobs:
 
   bootstrap-next:
     needs: [select-ticker, ocr]
-    if: ${{ needs['select-ticker'].result == 'success' && needs['select-ticker'].outputs.symbol == '' && needs['select-ticker'].outputs.bootstrap_symbol != '' && (github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')) }}
+    if: ${{ always() && needs['select-ticker'].result == 'success' && needs['select-ticker'].outputs.symbol == '' && needs['select-ticker'].outputs.bootstrap_symbol != '' && (github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')) }}
     runs-on: ubuntu-24.04
     steps:
       - name: Bootstrap exactly the next missing ticker
