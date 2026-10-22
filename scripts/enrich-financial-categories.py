@@ -675,6 +675,78 @@ def reconcile_detail_items(items,symbol):
   prior=item.setdefault("financial_line_items_prior_values",{})
   rejected_values=item.setdefault("financial_line_items_rejected_values",{})
 
+  # Bank operating income is the sum of seven net activity lines; net interest
+  # income alone is not a safe proxy for total operating income/revenue.
+  if symbol in BANKS:
+   bank_components=[
+    "bank_net_interest_income", "bank_net_service_income", "bank_fx_net_income",
+    "bank_trading_securities_net", "bank_investment_securities_net",
+    "bank_other_operating_net", "bank_dividend_and_capital_income",
+   ]
+   unquarterized=set(item.get("financial_line_items_unquarterized_fields") or [])
+   component_values=[item.get(field) for field in bank_components]
+   other_component_values=[item.get(field) for field in bank_components[1:]]
+   all_components_safe=(
+    all(isinstance(value,(int,float)) for value in component_values)
+    and not (set(bank_components) & unquarterized)
+   )
+   existing_revenue=item.get("revenue")
+   if all_components_safe:
+    operating_income=int(round(sum(component_values)))
+    if existing_revenue!=operating_income:
+     if isinstance(existing_revenue,(int,float)):
+      prior.setdefault("revenue",existing_revenue)
+      item.setdefault("financial_line_items_value_corrections",{})["revenue"]={
+       "previous_value":existing_revenue,
+       "new_value":operating_income,
+       "reason":"sum of seven reported net operating-income components for a bank",
+      }
+     item["revenue"]=operating_income
+     item["revenue_calculation"]="Tổng 7 cấu phần thu nhập hoạt động thuần theo báo cáo ngân hàng."
+     fields.add("revenue")
+     notes.append("Tổng thu nhập hoạt động ngân hàng được tính từ bảy cấu phần thuần; cần đối chiếu trực quan.")
+     period_changed=True; changed_fields+=1
+   elif (
+    isinstance(existing_revenue,(int,float))
+    and isinstance(item.get("bank_net_interest_income"),(int,float))
+    and abs(existing_revenue-item["bank_net_interest_income"])<=max(abs(existing_revenue)*0.001,1000)
+    and any(isinstance(value,(int,float)) and value!=0 for value in other_component_values)
+   ):
+    # Remove a legacy parser error where revenue was copied from net interest.
+    # Keep it in rejected/prior-value metadata, not in the displayed financial data.
+    prior.setdefault("revenue",existing_revenue)
+    rejected_values.setdefault("revenue",{
+     "value":existing_revenue,
+     "reason":"legacy parser mapped net interest income into total bank operating income",
+    })
+    item.pop("revenue",None)
+    item.pop("revenue_calculation",None)
+    fields.discard("revenue")
+    rejected.add("revenue")
+    notes.append("Doanh thu cũ trùng thu nhập lãi thuần nhưng thiếu đủ cấu phần tổng thu nhập hoạt động nên đã ẩn.")
+    period_changed=True; changed_fields+=1
+
+  # Bank PPOP less credit-risk provisions must reconcile to profit before tax.
+  # If OCR found inconsistent table rows, suppress the conflicting detail pair
+  # instead of presenting a false subtotal.
+  if symbol in BANKS:
+   ppop=item.get("bank_pre_provision_operating_profit")
+   provision=item.get("bank_provision_expense")
+   pbt=item.get("pretax_profit")
+   if all(isinstance(value,(int,float)) for value in (ppop,provision,pbt)):
+    provision_cost=abs(provision)
+    implied_pbt=ppop-provision_cost
+    tolerance=max(abs(pbt)*0.05,1000)
+    if abs(implied_pbt-pbt)>tolerance:
+     for field in ("bank_pre_provision_operating_profit","bank_provision_expense"):
+      if isinstance(item.get(field),(int,float)):
+       rejected_values.setdefault(field,{"value":item[field],"reason":"bank PPOP minus provision expense does not reconcile to reported PBT"})
+       item.pop(field,None)
+       fields.discard(field)
+       rejected.add(field)
+       period_changed=True; changed_fields+=1
+     notes.append("Lợi nhuận trước dự phòng và chi phí dự phòng OCR không khớp lợi nhuận trước thuế; hai chỉ tiêu chi tiết được ẩn.")
+
   # Net revenue = gross profit + absolute cost of goods sold. If OCR garbles
   # the revenue digit(s), reconstruct from the two corresponding statement
   # rows and record the derivation instead of retaining a conflicting value.
