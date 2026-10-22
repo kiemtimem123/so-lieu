@@ -229,7 +229,48 @@ jobs:
                   attempts = int(job.get("attempts") or 0)
               except (TypeError, ValueError):
                   attempts = 0
-              if status == "queued" or (status == "failed" and attempts < 3):
+
+              # Resume a ticker job when its latest catalog scan is already
+              # marked needs_review but it still contains a bounded-retryable
+              # download_error (for example, a temporary Vietstock PDF 404).
+              # This handoff pauses OCR advancement so the queue head is retried
+              # before moving to any other ticker.
+              failed = {}
+              successful = set()
+              for record in job.get("downloadedFiles", []) or []:
+                  if not isinstance(record, dict):
+                      continue
+                  url = str(record.get("url") or record.get("final_url") or "").strip()
+                  if not url:
+                      continue
+                  if record.get("status") == "downloaded_needs_review":
+                      successful.add(url)
+                  elif record.get("status") == "download_error":
+                      state = failed.setdefault(url, {"attempts": 0, "last_attempt": 0.0})
+                      try:
+                          state["attempts"] += max(1, int(record.get("attempt_number") or 1))
+                      except (TypeError, ValueError):
+                          state["attempts"] += 1
+                      stamp = record.get("attempted_at") or record.get("failed_at") or record.get("downloaded_at")
+                      if stamp:
+                          try:
+                              state["last_attempt"] = max(
+                                  float(state.get("last_attempt") or 0),
+                                  datetime.fromisoformat(str(stamp).replace("Z", "+00:00")).timestamp()
+                              )
+                          except (TypeError, ValueError, OSError):
+                              pass
+              now_epoch = datetime.now(timezone.utc).timestamp()
+              retryable_failure = any(
+                  url not in successful
+                  and state["attempts"] < 3
+                  and (
+                      not state["last_attempt"]
+                      or now_epoch - state["last_attempt"] >= 30 * 60
+                  )
+                  for url, state in failed.items()
+              )
+              if status == "queued" or (status == "failed" and attempts < 3) or (status == "needs_review" and retryable_failure):
                   collector_symbol = selected
                   break
           pause_ocr_chain = bool(collector_symbol)
