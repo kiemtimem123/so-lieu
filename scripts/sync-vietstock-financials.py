@@ -1384,6 +1384,22 @@ def main() -> int:
                 and not item.get("financial_line_items_status")
                 for item in items
             )
+            has_stale_details = any(
+                isinstance(item, dict)
+                and period_key(str(item.get("period") or ""))[0] >= 2024
+                and item.get("financial_line_items_status") not in {
+                    None, "manual_review_required", "manual_review_required_pending_extraction",
+                    "no_detail_fields_matched_pending_manual_review"
+                }
+                and item.get("financial_line_items_schema_version") != "2026-10-22-bank-statement-qc-v4"
+                for item in items
+            )
+            if has_stale_details:
+                print(
+                    f"Single-ticker queue paused at {symbol}: detail schema needs enrichment. "
+                    "OCR/enrichment workflow must finish this ticker before any later ticker is bootstrapped."
+                )
+                return 0
             attempts = int(snapshot.get("bootstrap_attempt_count") or 0)
             empty_snapshot = not items
             terminal_empty = (
