@@ -31,7 +31,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: so-lieu-financial-data-writes-v1
+  group: so-lieu-financial-data-writes-v2
   cancel-in-progress: false
 
 jobs:
@@ -82,18 +82,50 @@ jobs:
       - name: Validate queue after run
         run: node .github/scripts/validate-report-queue.cjs
       - name: Commit report archive and queue log
+        shell: bash
         run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add config/report-queue.json reports/ data/analysis-reports.json data/financials-*.json
           if git diff --cached --quiet; then
             echo "No report queue/archive changes to commit."
-          else
-            git commit -m "Collect public financial report candidates"
-            # Other workflows may update main while this job is running.
-            # Rebase the collector commit on the latest remote head before pushing.
-            git pull --rebase origin main
-            git push
+            exit 0
+          fi
+
+          git commit -m "Collect public financial report candidates"
+          pushed=false
+          for attempt in 1 2 3 4 5; do
+            echo "Safe collector push attempt ${attempt}/5"
+            git fetch origin main
+            if git rebase origin/main; then
+              if git push origin HEAD:main; then
+                pushed=true
+                break
+              fi
+              echo "::warning::Remote advanced between fetch and push; will retry."
+            else
+              echo "::warning::Concurrent report/snapshot update detected; rerunning the single-ticker collector from latest main."
+              git rebase --abort || true
+              git fetch origin main
+              git reset --hard origin/main
+              node .github/scripts/validate-report-queue.cjs
+              python .github/scripts/collect-financial-reports.py
+              node .github/scripts/validate-report-queue.cjs
+              git add config/report-queue.json reports/ data/analysis-reports.json data/financials-*.json
+              if git diff --cached --quiet; then
+                echo "No remaining changes after recomputing on latest main."
+                pushed=true
+                break
+              fi
+              git commit -m "Reconcile single-ticker report archive after concurrent update"
+            fi
+            sleep $((attempt * 2))
+          done
+
+          if [ "${pushed}" != "true" ]; then
+            echo "::error::Collector could not safely push its current single-ticker batch after five attempts."
+            exit 1
           fi
       - name: Upload worker summary
         if: always()
