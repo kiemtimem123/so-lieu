@@ -441,6 +441,28 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
  balance=select_statement_pages(pages,"balance")
  income=select_statement_pages(pages,"income")
  summary_pages=[page for page in pages if is_quarter_comparison_page(page)]
+ # A small number of Vietstock ZIP archives start with a disclosure covering
+ # both separate and consolidated reports. Never take a stand-alone summary
+ # table from that mixed document to populate a consolidated snapshot.
+ archive_path=str(item.get("source_archive_file") or "").lower()
+ first_text=norm(" ".join(str(page.get("text",""))[:3500] for page in pages[:3]))
+ mixed_separate_disclosure=(
+  archive_path.endswith(".zip")
+  and any(term in first_text for term in (
+   "bao cao tai chinh rieng le", "bao cao rieng le",
+   "separate financial statement", "separate financial statements"
+  ))
+ )
+ if mixed_separate_disclosure:
+  summary_pages=[
+   page for page in summary_pages
+   if any(term in norm(page.get("text","")) for term in (
+    "loi nhuan sau thue hop nhat",
+    "consolidated profit after tax",
+    "consolidated result of operations",
+    "bao cao ket qua hoat dong hop nhat"
+   ))
+  ]
  unit_pages=balance or summary_pages or income or select_statement_pages(pages,"cashflow") or pages
  factor=unit_factor(unit_pages,item)
 
