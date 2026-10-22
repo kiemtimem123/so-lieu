@@ -512,7 +512,7 @@ def discover_for_job(job, allowed_domains):
         ]):
             continue
         period = _period_from_report_text(evidence)
-        if job.get("quarterly_only") and not re.fullmatch(r"20\\d{2}-Q[1-4]", str(period or "")):
+        if job.get("quarterly_only") and not re.fullmatch(r"20\d{2}-Q[1-4]", str(period or "")):
             continue
         year, published_at = _extract_report_year_and_date(evidence)
         period_year = re.match(r"(20\d{2})-", period or "")
