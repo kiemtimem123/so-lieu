@@ -994,9 +994,24 @@ def enrich_snapshot(path):
     found.pop(key,None)
   if not found: continue
   found,rejected=sane_fields(item,found,symbol)
+  rejection_changed=False
   if rejected:
    print(f"{path.name if 'path' in locals() else symbol} {item.get('period')}: skipped implausible extracted values {','.join(rejected)}")
-  if not found: continue
+   prior_rejected=set(item.get("financial_line_items_rejected_fields") or [])
+   fresh_rejected=set(rejected)-prior_rejected
+   if fresh_rejected:
+    item["financial_line_items_rejected_fields"]=sorted(prior_rejected|set(rejected))
+    item["financial_line_items_rejected_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
+    note="Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại."
+    current_note=str(item.get("financial_line_items_note") or "")
+    if note not in current_note:
+     item["financial_line_items_note"]=(current_note+" "+note).strip()
+    changed=True
+    field_count+=len(fresh_rejected)
+    rejection_changed=True
+  if not found:
+   if rejection_changed: quarter_count+=1
+   continue
   new_fields=[]
   for field,value in found.items():
    if field.startswith("__"): continue
@@ -1047,7 +1062,11 @@ def enrich_snapshot(path):
    generic_note="Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc."
    if generic_note not in base_note:
     item["financial_line_items_note"]=(base_note+" "+generic_note).strip()
-   changed=True; quarter_count+=1; field_count+=len(new_fields)
+   changed=True
+   if not rejection_changed: quarter_count+=1
+   field_count+=len(new_fields)
+  elif rejection_changed:
+   quarter_count+=1
 
  by_period={str(i.get("period")):i for i in items if isinstance(i,dict)}
  for item in items:
