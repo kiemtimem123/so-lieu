@@ -1402,13 +1402,17 @@ def main() -> int:
                 continue
             needs_retry = has_pending_core or has_pending_details or (empty_snapshot and not terminal_empty)
             if needs_retry:
-                age = now_epoch - last_attempt_epoch(snapshot)
-                if age < cooldown_seconds:
-                    print(
-                        f"Single-ticker queue đang giữ {symbol}: còn dữ liệu chờ xử lý; "
-                        f"đã thử gần đây {max(0, int(age))} giây trước. Không chuyển sang mã khác."
-                    )
-                    return 0
+                # Per-quarter retry cooldown is enforced inside process_symbol:
+                # an unreadable quarter is skipped until its own retry window expires,
+                # while other unattempted quarters of this SAME ticker can continue.
+                if empty_snapshot:
+                    age = now_epoch - last_attempt_epoch(snapshot)
+                    if age < cooldown_seconds:
+                        print(
+                            f"Single-ticker queue đang giữ {symbol}: snapshot chưa có kỳ báo cáo; "
+                            f"đã thử gần đây {max(0, int(age))} giây trước. Không chuyển sang mã khác."
+                        )
+                        return 0
                 selected_symbol = symbol
                 print(f"Single-ticker queue: tiếp tục hoàn tất {symbol} trước khi sang mã khác.")
                 break
