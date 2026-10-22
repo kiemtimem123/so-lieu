@@ -7,12 +7,13 @@ on:
       - ".github/scripts/ocr-stored-reports.py"
       - "scripts/enrich-financial-categories.py"
       - ".github/workflows/ocr-financial-reports.yml"
-      - "data/financials-*.json"
-      - "reports/raw/**/*.extracted.json"
+      - "config/securities.json"
   schedule:
     - cron: "5 3 * * *"
   workflow_run:
-    workflows: ["Collect Financial Reports"]
+    workflows:
+      - "Collect Financial Reports"
+      - "Sync quarterly BCTC from VietstockFinance"
     types: [completed]
   workflow_dispatch:
     inputs:
@@ -45,6 +46,7 @@ jobs:
     runs-on: ubuntu-24.04
     outputs:
       symbol: ${{ steps.pick.outputs.symbol }}
+      bootstrap_symbol: ${{ steps.pick.outputs.bootstrap_symbol }}
     steps:
       - name: Checkout ticker registry and snapshot headers only
         uses: actions/checkout@v5
@@ -149,18 +151,21 @@ jobs:
               return False
 
           requested = os.environ.get("REQUESTED_SYMBOL", "").strip().upper()
+          bootstrap_symbol = ""
           if requested:
               if requested not in symbols:
                   raise SystemExit(f"Ticker {requested} is not enabled in config/securities.json")
               selected = requested
           else:
               selected = ""
+              now = __import__("datetime").datetime.now(__import__("datetime").timezone.utc).timestamp()
               for symbol in symbols:
                   path = Path("data") / f"financials-{symbol}.json"
                   snapshot = load_json(path)
                   if snapshot is None:
-                      # A missing snapshot belongs to the sync worker. Keep the queue
-                      # on this symbol rather than paying to check out other archives.
+                      # Bootstrap only the first missing ticker, after all earlier
+                      # configured symbols have completed their extraction/review state.
+                      bootstrap_symbol = symbol
                       break
                   if snapshot.get("bootstrap_status") in {"complete", "complete_needs_manual_review"}:
                       continue
@@ -176,6 +181,19 @@ jobs:
                       )
                       if terminal:
                           continue
+                      stamp = snapshot.get("bootstrap_last_attempt_at") or snapshot.get("fetchedAt")
+                      age = 10**12
+                      if stamp:
+                          try:
+                              from datetime import datetime, timezone
+                              age = now - datetime.fromisoformat(str(stamp).replace("Z", "+00:00")).timestamp()
+                          except (TypeError, ValueError, OSError):
+                              pass
+                      if age >= 30 * 60:
+                          bootstrap_symbol = symbol
+                          print(f"Bootstrap retry eligible for {symbol}; last attempt cooldown has expired.")
+                      else:
+                          print(f"Hold queue at {symbol}; waiting for its 30-minute retry cooldown.")
                       break
                   core_pending = any(
                       isinstance(item, dict)
@@ -198,15 +216,15 @@ jobs:
                       and item.get("financial_line_items_schema_version") != "2026-10-22-bank-statement-qc-v4"
                       for item in items
                   )
-                  # Finish this ticker's required statement pages before
-                  # advancing; never run OCR for different tickers in parallel.
                   statement_pages_pending = ticker_has_ocr_gap(symbol, items)
                   if core_pending or details_pending or stale_details or statement_pages_pending:
                       selected = symbol
                       break
-          print(f"Selected ticker for OCR: {selected or '(no OCR page gaps; queue remains on first incomplete ticker)'}")
+          print(f"Selected ticker for OCR: {selected or '(none; queue held or next ticker needs a snapshot)'}")
+          print(f"Next ticker requiring bootstrap, if any: {bootstrap_symbol or '(none)'}")
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
               handle.write(f"symbol={selected}\n")
+              handle.write(f"bootstrap_symbol={bootstrap_symbol}\n")
           PY
 
   ocr:
@@ -459,11 +477,25 @@ jobs:
     if: ${{ needs['select-ticker'].outputs.symbol != '' && needs.ocr.result == 'success' && needs.ocr.outputs.saved == 'true' }}
     runs-on: ubuntu-24.04
     steps:
-      - name: Dispatch the next one-ticker run only after the previous snapshot was pushed
+      - name: Dispatch the next one-report run only after the previous ticker's report was pushed
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
           gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/workflows/ocr-financial-reports.yml/dispatches" -f ref=main
+
+  bootstrap-next:
+    needs: [select-ticker, ocr]
+    if: ${{ needs['select-ticker'].result == 'success' && needs['select-ticker'].outputs.symbol == '' && needs['select-ticker'].outputs.bootstrap_symbol != '' && (github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')) }}
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Bootstrap exactly the next missing ticker
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "The OCR queue is at ${{ needs['select-ticker'].outputs.bootstrap_symbol }}; dispatching one-ticker Vietstock sync."
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/workflows/sync-vietstock-financials.yml/dispatches" -f ref=main
 
