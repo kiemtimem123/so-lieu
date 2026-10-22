@@ -23,7 +23,7 @@ on:
       max_pages:
         description: Pages per report to OCR (covers the main financial statements; use a larger number only when needed)
         required: false
-        default: "8"
+        default: "14"
       rescan_pages:
         description: Comma-separated page numbers to re-OCR even if text is already present
         required: false
@@ -61,7 +61,7 @@ jobs:
         id: pick
         env:
           REQUESTED_SYMBOL: ${{ github.event.inputs.symbol || '' }}
-          TARGET_MAX_PAGES: ${{ github.event.inputs.max_pages || '8' }}
+          TARGET_MAX_PAGES: ${{ github.event.inputs.max_pages || '14' }}
           TARGET_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || '' }}
         shell: bash
         run: |
@@ -198,10 +198,10 @@ jobs:
                       and item.get("financial_line_items_schema_version") != "2026-10-22-bank-statement-qc-v4"
                       for item in items
                   )
-                  # A sidecar can contain optional pages that do not map to
-                  # snapshot fields. Once the quarterly fields are saved, page gaps
-                  # alone must not cause the completed ticker to be downloaded again.
-                  if core_pending or details_pending or stale_details:
+                  # Finish this ticker's required statement pages before
+                  # advancing; never run OCR for different tickers in parallel.
+                  statement_pages_pending = ticker_has_ocr_gap(symbol, items)
+                  if core_pending or details_pending or stale_details or statement_pages_pending:
                       selected = symbol
                       break
           print(f"Selected ticker for OCR: {selected or '(no OCR page gaps; queue remains on first incomplete ticker)'}")
@@ -264,7 +264,7 @@ jobs:
         id: run_ocr
         env:
           REPORT_OCR_SYMBOL: ${{ needs['select-ticker'].outputs.symbol }}
-          REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || '8' }}
+          REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || '14' }}
           REPORT_OCR_MAX_REPORTS: "12"
           REPORT_OCR_DPI: "280"
           REPORT_OCR_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || '' }}
