@@ -8,7 +8,7 @@ on:
       - ".github/workflows/ocr-financial-reports.yml"
       - "scripts/enrich-financial-categories.py"
   schedule:
-    - cron: "10,40 * * * *"
+    - cron: "5,20,35,50 * * * *"
   workflow_dispatch:
     inputs:
       symbol:
@@ -47,6 +47,7 @@ jobs:
           sparse-checkout: |
             /config/securities.json
             /data/financials-*.json
+            /reports/raw/**/*.extracted.json
 
       - name: Pick the first incomplete ticker in configured order
         id: pick
@@ -66,6 +67,68 @@ jobs:
               for item in config.get("securities", [])
               if isinstance(item, dict) and item.get("enabled") is not False and item.get("symbol")
           ]
+
+          def load_json(path):
+              try:
+                  return json.loads(path.read_text(encoding="utf-8"))
+              except (OSError, json.JSONDecodeError):
+                  return None
+
+          def payload_needs_pages(payload):
+              if not isinstance(payload, dict):
+                  return False
+              if payload.get("kind") == "pdf":
+                  documents = [payload]
+              elif payload.get("kind") == "zip":
+                  documents = [member for member in payload.get("members", []) if isinstance(member, dict) and member.get("kind") == "pdf"]
+              else:
+                  return False
+              for document in documents:
+                  try:
+                      page_count = int(document.get("page_count") or 0)
+                  except (TypeError, ValueError):
+                      page_count = 0
+                  target_count = min(max(page_count, 0), 14)
+                  pages = {
+                      int(page.get("page")): page
+                      for page in document.get("pages", [])
+                      if isinstance(page, dict) and str(page.get("page", "")).isdigit()
+                  }
+                  if any(number not in pages for number in range(1, target_count + 1)):
+                      return True
+                  for number in (10, 11):
+                      page = pages.get(number)
+                      if page is None or not page.get("forced_rescan_completed"):
+                          if 1 <= number <= target_count:
+                              return True
+                      if page and page.get("forced_rescan_completed"):
+                          try:
+                              score = float(page.get("ocr_quality_score") or 0)
+                              attempts = int(page.get("forced_rescan_count") or 1)
+                          except (TypeError, ValueError):
+                              score, attempts = 0.0, 1
+                          if score < 0.34 and attempts < 3:
+                              return True
+              return False
+
+          def ticker_has_ocr_gap(symbol, items):
+              for item in items:
+                  if not isinstance(item, dict) or not re.fullmatch(r"20\\d{2}-Q[1-4]", str(item.get("period") or "")):
+                      continue
+                  source = str(item.get("source_archive_file") or "").strip()
+                  if not source:
+                      continue
+                  archive_path = (Path(source)).resolve()
+                  try:
+                      archive_path.relative_to(Path("reports/raw").resolve())
+                  except ValueError:
+                      continue
+                  sidecar = Path(str(archive_path) + ".extracted.json")
+                  extracted = load_json(sidecar)
+                  if extracted is not None and payload_needs_pages(extracted):
+                      return True
+              return False
+
           requested = os.environ.get("REQUESTED_SYMBOL", "").strip().upper()
           if requested:
               if requested not in symbols:
@@ -75,20 +138,23 @@ jobs:
               selected = ""
               for symbol in symbols:
                   path = Path("data") / f"financials-{symbol}.json"
-                  if not path.exists():
-                      selected = symbol
-                      break
-                  try:
-                      snapshot = json.loads(path.read_text(encoding="utf-8"))
-                  except (OSError, json.JSONDecodeError):
-                      selected = symbol
+                  snapshot = load_json(path)
+                  if snapshot is None:
+                      # A missing snapshot belongs to the sync worker. Keep the queue
+                      # on this symbol rather than paying to check out other archives.
                       break
                   items = snapshot.get("items") or []
-                  if not items and snapshot.get("sync_status") not in {
-                      "fetch_failed", "no_quarterly_consolidated_records_returned",
-                      "needs_manual_review_no_quarterly_data"
-                  }:
-                      selected = symbol
+                  if not items:
+                      attempts = int(snapshot.get("bootstrap_attempt_count") or 0)
+                      terminal = (
+                          attempts >= 3
+                          and snapshot.get("sync_status") in {
+                              "fetch_failed", "no_quarterly_consolidated_records_returned",
+                              "needs_manual_review_no_quarterly_data"
+                          }
+                      )
+                      if terminal:
+                          continue
                       break
                   core_pending = any(
                       isinstance(item, dict)
@@ -97,16 +163,20 @@ jobs:
                   )
                   details_pending = any(
                       isinstance(item, dict)
-                      and re.fullmatch(r"20\d{2}-Q[1-4]", str(item.get("period") or ""))
+                      and re.fullmatch(r"20\\d{2}-Q[1-4]", str(item.get("period") or ""))
                       and item.get("total_assets") is not None
                       and item.get("net_profit") is not None
                       and not item.get("financial_line_items_status")
                       for item in items
                   )
                   if core_pending or details_pending:
-                      selected = symbol
+                      if ticker_has_ocr_gap(symbol, items):
+                          selected = symbol
+                      # If no stored quarter PDF needs OCR, hold the head of the
+                      # queue for the sync worker/manual-review process. Do not
+                      # load another ticker's reports while this ticker is open.
                       break
-          print(f"Selected ticker: {selected or '(no pending ticker)'}")
+          print(f"Selected ticker for OCR: {selected or '(no OCR page gaps; queue remains on first incomplete ticker)'}")
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
               handle.write(f"symbol={selected}\n")
           PY
