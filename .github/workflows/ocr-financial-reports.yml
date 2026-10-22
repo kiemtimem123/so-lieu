@@ -97,7 +97,7 @@ jobs:
                   )
                   details_pending = any(
                       isinstance(item, dict)
-                      and re.fullmatch(r"20\\d{2}-Q[1-4]", str(item.get("period") or ""))
+                      and re.fullmatch(r"20\d{2}-Q[1-4]", str(item.get("period") or ""))
                       and item.get("total_assets") is not None
                       and item.get("net_profit") is not None
                       and not item.get("financial_line_items_status")
@@ -108,7 +108,7 @@ jobs:
                       break
           print(f"Selected ticker: {selected or '(no pending ticker)'}")
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
-              handle.write(f"symbol={selected}\\n")
+              handle.write(f"symbol={selected}\n")
           PY
 
   ocr:
@@ -208,7 +208,6 @@ jobs:
                 git apply --3way /tmp/selected-ticker-report.patch || true
               fi
               node .github/scripts/validate-report-queue.cjs
-              python scripts/enrich-financial-categories.py
               FINANCIAL_ENRICH_SYMBOL="${REPORT_OCR_SYMBOL}" python scripts/enrich-financial-categories.py
               node scripts/validate-financials.mjs
               git add -A -- "data/financials-${REPORT_OCR_SYMBOL}.json"
