@@ -47,6 +47,8 @@ jobs:
     outputs:
       symbol: ${{ steps.pick.outputs.symbol }}
       bootstrap_symbol: ${{ steps.pick.outputs.bootstrap_symbol }}
+      collector_symbol: ${{ steps.pick.outputs.collector_symbol }}
+      pause_ocr_chain: ${{ steps.pick.outputs.pause_ocr_chain }}
     steps:
       - name: Checkout ticker registry and snapshot headers only
         uses: actions/checkout@v5
@@ -56,6 +58,7 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /config/securities.json
+            /config/report-queue.json
             /data/financials-*.json
             /reports/raw/**/*.extracted.json
 
@@ -220,11 +223,31 @@ jobs:
                   if core_pending or details_pending or stale_details or statement_pages_pending:
                       selected = symbol
                       break
+          # If the current ticker has a queued/failed archive job, hand it to the
+          # collector after this one-report OCR run instead of dispatching another
+          # OCR run that could replace the collector's pending concurrency slot.
+          queue = load_json(Path("config/report-queue.json")) or {}
+          collector_symbol = ""
+          for job in queue.get("jobs", []):
+              if not isinstance(job, dict) or str(job.get("symbol") or "").strip().upper() != selected:
+                  continue
+              status = str(job.get("status") or "")
+              try:
+                  attempts = int(job.get("attempts") or 0)
+              except (TypeError, ValueError):
+                  attempts = 0
+              if status == "queued" or (status == "failed" and attempts < 3):
+                  collector_symbol = selected
+                  break
+          pause_ocr_chain = bool(collector_symbol)
           print(f"Selected ticker for OCR: {selected or '(none; queue held or next ticker needs a snapshot)'}")
           print(f"Next ticker requiring bootstrap, if any: {bootstrap_symbol or '(none)'}")
+          print(f"Pending collector handoff: {collector_symbol or '(none)'}")
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
               handle.write(f"symbol={selected}\n")
               handle.write(f"bootstrap_symbol={bootstrap_symbol}\n")
+              handle.write(f"collector_symbol={collector_symbol}\n")
+              handle.write(f"pause_ocr_chain={'true' if pause_ocr_chain else 'false'}\n")
           PY
 
   ocr:
@@ -474,7 +497,7 @@ jobs:
 
   advance:
     needs: [select-ticker, ocr]
-    if: ${{ needs['select-ticker'].outputs.symbol != '' && needs.ocr.result == 'success' && needs.ocr.outputs.saved == 'true' }}
+    if: ${{ needs['select-ticker'].outputs.symbol != '' && needs.ocr.result == 'success' && needs.ocr.outputs.saved == 'true' && needs['select-ticker'].outputs.pause_ocr_chain != 'true' }}
     runs-on: ubuntu-24.04
     steps:
       - name: Dispatch the next one-report run only after the previous ticker's report was pushed
@@ -485,9 +508,23 @@ jobs:
           set -euo pipefail
           gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/workflows/ocr-financial-reports.yml/dispatches" -f ref=main
 
+  handoff-to-collector:
+    needs: [select-ticker, ocr]
+    if: ${{ always() && needs['select-ticker'].result == 'success' && needs['select-ticker'].outputs.collector_symbol != '' && (needs.ocr.result == 'skipped' || needs.ocr.outputs.saved != 'true' || needs['select-ticker'].outputs.pause_ocr_chain == 'true') && (github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')) }}
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Hand the current ticker to the queued collector before advancing OCR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Queue head is ${{ needs['select-ticker'].outputs.collector_symbol }}; dispatching the collector instead of another OCR run."
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/workflows/collect-financial-reports.yml/dispatches" -f ref=main
+
   bootstrap-next:
     needs: [select-ticker, ocr]
-    if: ${{ always() && needs['select-ticker'].result == 'success' && needs['select-ticker'].outputs.symbol == '' && needs['select-ticker'].outputs.bootstrap_symbol != '' && (github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')) }}
+    if: ${{ always() && needs['select-ticker'].result == 'success' && needs['select-ticker'].outputs.symbol == '' && needs['select-ticker'].outputs.bootstrap_symbol != '' && needs['select-ticker'].outputs.collector_symbol == '' && (github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')) }}
     runs-on: ubuntu-24.04
     steps:
       - name: Bootstrap exactly the next missing ticker
