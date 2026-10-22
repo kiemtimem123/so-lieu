@@ -510,8 +510,12 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
    balance,[r"^\s*(?:\|\s*)?a\.?\s+tai san(?:\s|$)",r"^\s*assets(?:\s|$)"],factor
   )
 
+ equity_labels=["tong cong von chu so huu","tong von chu so huu","von chu so huu","total equity"]
+ if symbol in BANKS:
+  # Some bank B02/TCTD templates label equity as "Vốn và các quỹ".
+  equity_labels.append("von va cac quy")
  equity=value_by_label(
-  balance,["tong cong von chu so huu","tong von chu so huu","von chu so huu","total equity"],factor,
+  balance,equity_labels,factor,
   exclude_terms=["no phai tra","liabilities and equity"]
  ) if balance else None
  source_total=value_by_label(
