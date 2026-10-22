@@ -203,11 +203,11 @@ def statement_heading_kind(page):
   return None
  # Vietnamese bank statements use regulator form codes (B02/TCTD, B03/TCTD,
  # B04/TCTD), which OCR can preserve even when the title line is distorted.
- if re.search(r"\\bb0?2\\s*/\\s*tctd\\b",text):
+ if re.search(r"\bb0?2\s*/\s*tctd\b",text):
   return "balance"
- if re.search(r"\\bb0?3\\s*/\\s*tctd\\b",text):
+ if re.search(r"\bb0?3\s*/\s*tctd\b",text):
   return "income"
- if re.search(r"\\bb0?4\\s*/\\s*tctd\\b",text):
+ if re.search(r"\bb0?4\s*/\s*tctd\b",text):
   return "cashflow"
  lines=[norm(line) for line in str(page.get("text","")).splitlines()[:45]]
  for line in lines:
