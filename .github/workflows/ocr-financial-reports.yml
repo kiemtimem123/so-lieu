@@ -207,7 +207,7 @@ jobs:
 
   ocr:
     needs: select-ticker
-    if: ${{ needs.select-ticker.outputs.symbol != '' && (github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')) }}
+    if: ${{ needs['select-ticker'].outputs.symbol != '' && (github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')) }}
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
@@ -227,7 +227,7 @@ jobs:
             /scripts/enrich-financial-categories.py
             /scripts/validate-financials.mjs
             /reports/library.json
-            /reports/raw/${{ needs.select-ticker.outputs.symbol }}/**
+            /reports/raw/${{ needs['select-ticker'].outputs.symbol }}/**
 
       - name: Setup Python
         uses: actions/setup-python@v6
@@ -257,7 +257,7 @@ jobs:
       - name: OCR one report from selected ticker
         id: run_ocr
         env:
-          REPORT_OCR_SYMBOL: ${{ needs.select-ticker.outputs.symbol }}
+          REPORT_OCR_SYMBOL: ${{ needs['select-ticker'].outputs.symbol }}
           REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || '8' }}
           REPORT_OCR_MAX_REPORTS: "12"
           REPORT_OCR_DPI: "280"
@@ -269,7 +269,7 @@ jobs:
 
       - name: Enrich only the selected ticker's quarterly categories
         env:
-          FINANCIAL_ENRICH_SYMBOL: ${{ needs.select-ticker.outputs.symbol }}
+          FINANCIAL_ENRICH_SYMBOL: ${{ needs['select-ticker'].outputs.symbol }}
         run: python scripts/enrich-financial-categories.py
 
       - name: Validate enriched financial snapshots
@@ -277,7 +277,7 @@ jobs:
 
       - name: Commit selected ticker's OCR text and detail fields
         env:
-          REPORT_OCR_SYMBOL: ${{ needs.select-ticker.outputs.symbol }}
+          REPORT_OCR_SYMBOL: ${{ needs['select-ticker'].outputs.symbol }}
         shell: bash
         run: |
           set -euo pipefail
@@ -336,7 +336,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: financial-report-ocr-summary-${{ needs.select-ticker.outputs.symbol }}
-          path: reports/raw/${{ needs.select-ticker.outputs.symbol }}/**/*.extracted.json
+          name: financial-report-ocr-summary-${{ needs['select-ticker'].outputs.symbol }}
+          path: reports/raw/${{ needs['select-ticker'].outputs.symbol }}/**/*.extracted.json
           if-no-files-found: ignore
           retention-days: 30
