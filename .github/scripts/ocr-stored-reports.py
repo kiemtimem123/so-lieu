@@ -76,7 +76,7 @@ def select_symbol() -> str | None:
         )
         has_pending_details = any(
             isinstance(item, dict)
-            and re.fullmatch(r"20\\d{2}-Q[1-4]", str(item.get("period") or ""))
+            and re.fullmatch(r"20\d{2}-Q[1-4]", str(item.get("period") or ""))
             and item.get("total_assets") is not None
             and item.get("net_profit") is not None
             and not item.get("financial_line_items_status")
@@ -188,7 +188,7 @@ def symbol_report_archives(symbol: str) -> list[tuple[str, Path]]:
         if not isinstance(item, dict):
             continue
         period = str(item.get("period") or "").strip()
-        if not re.fullmatch(r"20\\d{2}-Q[1-4]", period):
+        if not re.fullmatch(r"20\d{2}-Q[1-4]", period):
             continue
         source = str(item.get("source_archive_file") or "").strip()
         if not source:
