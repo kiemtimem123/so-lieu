@@ -920,9 +920,10 @@ def main():
             "downloaded_total": sum(1 for item in combined_files if item.get("status") == "downloaded_needs_review"),
             "more_candidates": more_candidates,
         }, ensure_ascii=False))
-    linked_count = 0
-    for symbol in processed_symbols:
-        linked_count += link_quarterly_archive_sources(symbol, jobs)
+    # Also backfill exact source-to-archive links for the current queue-head
+    # ticker even when its prior queue jobs are already marked needs_review.
+    # This lets the OCR/enrichment workflow finish this ticker before moving on.
+    linked_count = link_quarterly_archive_sources(active_symbol, jobs) if active_symbol else 0
     if linked_count:
         print(json.dumps({"event":"quarterly_archive_sources_linked","symbol":active_symbol,"count":linked_count},ensure_ascii=False))
     queue_changed = summary["jobs_processed"] > 0 or any(job.get("id") not in initial_job_ids for job in jobs)
