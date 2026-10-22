@@ -1369,6 +1369,7 @@
           { label: 'B. NỢ PHẢI TRẢ NGÂN HÀNG', type: 'section' },
           { label: 'Nợ Chính phủ và Ngân hàng Nhà nước', key: 'bank_government_and_state_bank_liabilities', level: 1 },
           { label: 'Tiền gửi và vay từ các tổ chức tín dụng khác', key: 'bank_deposits_and_borrowings_from_credit_institutions', level: 1 },
+          { label: 'Công cụ tài chính phái sinh và các khoản nợ tài chính khác', key: 'bank_derivatives_and_other_financial_liabilities', level: 1 },
           { label: 'Tiền gửi khách hàng', key: 'bank_customer_deposits', level: 1 },
           { label: 'Phát hành giấy tờ có giá', key: 'bank_valuable_papers', level: 1 },
           { label: 'Vốn tài trợ, ủy thác đầu tư', key: 'bank_funding_and_trust_liabilities', level: 1 },
