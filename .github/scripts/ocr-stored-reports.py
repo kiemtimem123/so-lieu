@@ -24,6 +24,11 @@ QUEUE_PATH = ROOT / "config/report-queue.json"
 # Include statement continuation pages in long consolidated reports.
 MAX_PAGES = int(os.getenv("REPORT_OCR_MAX_PAGES", "14"))  # keep report scope bounded
 MAX_REPORTS = 1  # One archive report file per run to keep runner time bounded.
+TERMINAL_REVIEW_STATUSES = {
+    "manual_review_required",
+    "manual_review_required_pending_extraction",
+    "no_detail_fields_matched_pending_manual_review",
+}
 DPI = int(os.getenv("REPORT_OCR_DPI", "280"))
 FORCE_RESCAN_PAGES = {
     int(value.strip()) for value in os.getenv("REPORT_OCR_RESCAN_PAGES", "10,11").split(",")
