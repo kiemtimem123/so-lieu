@@ -183,20 +183,45 @@ def get_pages(obj):
  raw=obj.get("pages")
  return [p for p in raw if isinstance(p,dict) and p.get("text")] if isinstance(raw,list) else []
 
-def select_statement_pages(pages,kind):
- terms={
-  "balance":["bao cao tinh hinh tai chinh","bang can doi ke toan","statement of financial position"],
-  "income":["bao cao ket qua hoat dong","bao cao ket qua kinh doanh","bao cao thu nhap","statement of income","income statement"],
-  "cashflow":["bao cao luu chuyen tien te","luu chuyen tien te","statement of cash flows","cash flow statement"],
- }[kind]
- selected=[]
- for page in pages:
-  text=norm(page.get("text",""))
-  if "muc luc" in text or "table of contents" in text or "thuyet minh bao cao tai chinh" in text or "notes to the financial statements" in text:
+STATEMENT_TERMS = {
+ "balance":["bao cao tinh hinh tai chinh","bang can doi ke toan","statement of financial position"],
+ "income":["bao cao ket qua hoat dong kinh doanh","bao cao ket qua kinh doanh","bao cao thu nhap","statement of profit or loss","statement of income","income statement"],
+ "cashflow":["bao cao luu chuyen tien te","statement of cash flows","cash flow statement"],
+}
+
+def statement_heading_kind(page):
+ text=norm(page.get("text",""))
+ if "muc luc" in text or "table of contents" in text or "thuyet minh bao cao tai chinh" in text or "notes to the financial statements" in text:
+  return None
+ lines=[norm(line) for line in str(page.get("text","")).splitlines()[:45]]
+ for line in lines:
+  if not line or len(line)>155:
    continue
-  if any(term in text for term in terms):
-   selected.append(page)
- return selected
+  for kind,terms in STATEMENT_TERMS.items():
+   if any(term in line for term in terms):
+    return kind
+ return None
+
+def select_statement_pages(pages,kind):
+ ordered=sorted(
+  [page for page in pages if isinstance(page,dict) and page.get("text")],
+  key=lambda page:int(page.get("page") or 0)
+ )
+ kinds=[statement_heading_kind(page) for page in ordered]
+ selected=[]
+ for start,found_kind in enumerate(kinds):
+  if found_kind!=kind:
+   continue
+  end=len(ordered)
+  for idx in range(start+1,len(ordered)):
+   if kinds[idx] and kinds[idx]!=kind:
+    end=idx
+    break
+  selected.extend(ordered[start:end])
+ unique={}
+ for page in selected:
+  unique[int(page.get("page") or 0)]=page
+ return [unique[number] for number in sorted(unique)]
 
 def unit_factor(pages,item):
  header=norm(" ".join(str(p.get("text",""))[:5000] for p in pages[:3]))
