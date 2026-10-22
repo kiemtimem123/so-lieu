@@ -47,6 +47,7 @@ def save_json(path: Path, data):
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
+# Sequential worker revision: select one unfinished ticker and commit before advancing.
 def select_symbol() -> str | None:
     override = os.getenv("REPORT_OCR_SYMBOL", "").strip().upper()
     if override:
