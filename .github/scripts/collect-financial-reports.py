@@ -948,8 +948,21 @@ def main():
                 jobs.append({"id":job_id,"symbol":symbol,"startYear":int(securities.get("defaultStartYear",2024)),"reportType":"both" if len(sec.get("reportTypes",[]))>1 else (sec.get("reportTypes") or ["consolidated"])[0],"status":"queued","createdAt":NOW,"attempts":0,"sourceCandidates":[],"downloadedFiles":[],"verifiedPeriods":[],"origin":"scheduled_registry"})
                 known.add(job_id)
     summary = {"started_at":NOW,"jobs_processed":0,"downloaded":0,"needs_review":0,"errors":0,"allowlisted_domains":ALLOWED_DOMAINS}
-    active_symbol = first_incomplete_symbol(securities)
-    print(json.dumps({"event":"single_ticker_queue_head","symbol":active_symbol},ensure_ascii=False))
+    requested_symbol = os.getenv("REPORT_COLLECT_SYMBOL", "").strip().upper()
+    enabled_symbols = {
+        str(sec.get("symbol") or "").strip().upper()
+        for sec in securities.get("securities", [])
+        if sec.get("enabled", True) and sec.get("symbol")
+    }
+    if requested_symbol and requested_symbol not in enabled_symbols:
+        print(f"Requested collector ticker is not enabled: {requested_symbol}", file=sys.stderr)
+        return 2
+    active_symbol = requested_symbol or first_incomplete_symbol(securities)
+    print(json.dumps({
+        "event": "single_ticker_queue_head",
+        "symbol": active_symbol,
+        "selection": "explicit_handoff" if requested_symbol else "first_incomplete_ticker",
+    }, ensure_ascii=False))
     # A ticker remains at the head of the queue while its discovered source URLs
     # are being archived. Each run downloads at most MAX_PER_JOB documents; only
     # after the remaining candidate list is exhausted does the worker move on.

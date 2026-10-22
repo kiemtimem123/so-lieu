@@ -559,8 +559,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          echo "Queue head is ${{ needs['select-ticker'].outputs.collector_symbol }}; dispatching the collector instead of another OCR run."
-          gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/workflows/collect-financial-reports.yml/dispatches" -f ref=main
+          echo "Queue head is ${{ needs['select-ticker'].outputs.collector_symbol }}; dispatching only this ticker to the collector."
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/workflows/collect-financial-reports.yml/dispatches" -f ref=main -f "inputs[symbol]=${{ needs['select-ticker'].outputs.collector_symbol }}"
 
   bootstrap-next:
     needs: [select-ticker, ocr]
