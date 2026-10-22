@@ -32,12 +32,12 @@ permissions:
 
 concurrency:
   group: so-lieu-financial-data-writes-v1
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   collect:
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
+    timeout-minutes: 20
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -59,6 +59,7 @@ jobs:
           MAX_JOBS_PER_RUN: "1"
         run: python .github/scripts/collect-financial-reports.py
       - name: Install OCR tools for image-only financial statements
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.run_supplementary_crawlers == 'true' }}
         run: |
           sudo apt-get update
           sudo apt-get install -y poppler-utils tesseract-ocr tesseract-ocr-vie
