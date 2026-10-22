@@ -15,7 +15,7 @@ DATA = ROOT / "data"
 RAW = ROOT / "reports" / "raw"
 REPORT_QUEUE = ROOT / "config" / "report-queue.json"
 _QUEUE_ARCHIVE_BY_URL = None
-DETAIL_SCHEMA_VERSION = "2026-10-22-bank-statement-qc-v3"
+DETAIL_SCHEMA_VERSION = "2026-10-22-bank-statement-qc-v4"
 NUMBER_RE = re.compile(r"(?<![A-Za-z0-9])\(?-?\d[\d.,]*\d?\)?")
 BANKS = {"MBB", "ACB", "SHB", "TCB", "TPB", "VPB", "STB", "VCB", "CTG", "BID"}
 BROKERS = {"HCM", "SHS", "TCX", "VND", "VCI", "VCK", "VIX", "SSI", "VDS"}
@@ -684,17 +684,23 @@ def reconcile_detail_items(items,symbol):
     nonlocal period_changed,changed_fields
     if not isinstance(value,(int,float)) or not __import__("math").isfinite(value):
      return
+    rounded=int(round(value))
     previous=item.get(field)
-    if previous!=value:
+    if previous!=rounded:
      if isinstance(previous,(int,float)):
       prior.setdefault(field,previous)
       item.setdefault("financial_line_items_value_corrections",{})[field]={
-       "previous_value":previous,"new_value":int(round(value)),"reason":reason,
+       "previous_value":previous,"new_value":rounded,"reason":reason,
       }
-     item[field]=int(round(value))
+     item[field]=rounded
+     period_changed=True; changed_fields+=1
+    if item.get(field+"_calculation")!=formula:
      item[field+"_calculation"]=formula
-     fields.add(field)
+     period_changed=True; changed_fields+=1
+    fields.add(field)
+    if field in rejected:
      rejected.discard(field)
+     rejected_values.pop(field,None)
      period_changed=True; changed_fields+=1
 
    interest_income=item.get("bank_interest_income")
