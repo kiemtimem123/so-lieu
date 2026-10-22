@@ -174,21 +174,45 @@ def _extraction_has_missing_pages(extracted: dict) -> bool:
     return False
 
 
-def symbol_needs_statement_pages(symbol: str) -> bool:
-    """Check only existing source archives; do not fetch or synthesize any new report."""
-    folder = REPORTS / symbol
-    if not folder.is_dir():
-        return False
-    for archive_path in sorted(folder.rglob("*")):
-        if not archive_path.is_file():
+def symbol_report_archives(symbol: str) -> list[tuple[str, Path]]:
+    """Return only report archives explicitly linked by that ticker's quarterly snapshot.
+
+    This prevents OCR from accidentally reading standalone/non-consolidated or
+    unrelated documents that happen to sit in the same ticker archive folder.
+    The quarterly snapshot is the source-of-truth for the required report scope.
+    """
+    snapshot = load_json(ROOT / f"data/financials-{symbol}.json") or {}
+    items = snapshot.get("items") or []
+    selected: dict[str, Path] = {}
+    for item in items:
+        if not isinstance(item, dict):
             continue
-        lower = archive_path.name.lower()
-        if not (lower.endswith(".pdf") or lower.endswith(".zip")):
+        period = str(item.get("period") or "").strip()
+        if not re.fullmatch(r"20\\d{2}-Q[1-4]", period):
+            continue
+        source = str(item.get("source_archive_file") or "").strip()
+        if not source:
+            continue
+        archive_path = (ROOT / source).resolve()
+        try:
+            archive_path.relative_to(REPORTS.resolve())
+        except ValueError:
+            continue
+        if not archive_path.is_file() or archive_path.suffix.lower() not in {".pdf", ".zip"}:
             continue
         sidecar = Path(str(archive_path) + ".extracted.json")
         if not sidecar.is_file():
+            # OCR workers currently update existing sidecars only. A missing
+            # sidecar is left to the Vietstock sync/download worker.
             continue
-        extracted = load_json(sidecar)
+        selected[period] = archive_path
+    return [(period, selected[period]) for period in sorted(selected, key=lambda value: (int(value[:4]), int(value[-1])))]
+
+def symbol_needs_statement_pages(symbol: str) -> bool:
+    """Check the selected ticker's consolidated quarterly source files only."""
+    for _period, archive_path in symbol_report_archives(symbol):
+        sidecar = Path(str(archive_path) + ".extracted.json")
+        extracted = load_json(sidecar) or {}
         if _extraction_has_missing_pages(extracted):
             return True
     return False
@@ -496,14 +520,20 @@ def main():
     if not folder.exists():
         print(json.dumps({"event": "ocr_skip", "symbol": symbol, "reason": "No archive folder exists yet."}, ensure_ascii=False))
         return
-    files = sorted(folder.rglob("*"))
+    # Process linked quarterly reports in chronological order, one archive file
+    # per run. Never scan arbitrary PDFs from the ticker folder.
+    report_archives = symbol_report_archives(symbol)
+    files = [path for _period, path in report_archives]
+    period_for_path = {str(path.resolve()): period for period, path in report_archives}
     summary = {"event": "ocr_stored_report_archive", "symbol": symbol, "max_pages": MAX_PAGES,
-               "max_reports": MAX_REPORTS, "work_units": 0, "results": []}
+               "max_reports": MAX_REPORTS, "quarterly_sources": len(files),
+               "work_units": 0, "results": []}
     # Bound each runner invocation; completed files are skipped so later runs
     # continue with the next reports instead of repeatedly scanning the archive.
     for path in files:
         if not path.is_file():
             continue
+        period = period_for_path.get(str(path.resolve()), "")
         lower = path.name.lower()
         result = None
         if lower.endswith(".pdf") and not lower.endswith(".pdf.extracted.json"):
@@ -511,12 +541,14 @@ def main():
             if ext.exists():
                 result = process_pdf(path)
                 if result.get("status") != "already_has_target_pages":
+                    result["period"] = period
                     summary["results"].append(result)
         elif lower.endswith(".zip") and not lower.endswith(".zip.extracted.json"):
             ext = Path(str(path) + ".extracted.json")
             if ext.exists():
                 result = process_zip(path)
                 if result.get("members_changed") or result.get("status") != "no_ocr_changes":
+                    result["period"] = period
                     summary["results"].append(result)
         if result and result.get("status") not in {
             "already_has_target_pages", "no_ocr_changes", "skipped_no_zip_extraction",
