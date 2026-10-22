@@ -357,6 +357,61 @@ def discover_for_job(job, allowed_domains):
     index_url = vietstock_document_index_url(symbol)
     base_url = "https://finance.vietstock.vn"
     requested_type = str(job.get("reportType", "both")).casefold()
+
+    # Targeted single-document repair jobs must not query every year/page of
+    # the document catalog. Validate and return only their explicitly supplied
+    # VietstockFinance URL, so one-ticker repairs stay fast and predictable.
+    requested_urls = job.get("requestedUrls")
+    if isinstance(requested_urls, list) and requested_urls:
+        targeted = []
+        for request in requested_urls:
+            if not isinstance(request, dict):
+                continue
+            requested_url = str(request.get("url") or "").strip()
+            requested_title = str(request.get("title") or "").strip()
+            parsed = urlparse(requested_url)
+            hostname = (parsed.hostname or "").lower()
+            path = unquote(parsed.path).lower()
+            filename = Path(unquote(parsed.path)).name.lower()
+            if parsed.scheme != "https" or hostname not in {"static1.vietstock.vn", "static2.vietstock.vn"}:
+                continue
+            if not filename.startswith(symbol.lower() + "_") or not filename.endswith(".pdf"):
+                continue
+            if "/bctc/" not in path or "/vn/" not in path:
+                continue
+            if not is_financial_statement_document(requested_title):
+                continue
+            if not re.search(r"hợp\s*nhất|hop\s*nhat|consolidated", requested_title, re.I):
+                continue
+            if re.search(r"công\s*ty\s*mẹ|cong\s*ty\s*me|riêng\s*lẻ|rieng\s*le|parent\s+company|separate", requested_title, re.I):
+                continue
+            targeted.append({
+                "url": requested_url,
+                "title": requested_title,
+                "host": hostname,
+                "allowlisted": domain_allowed(requested_url, allowed_domains),
+                "symbol": symbol,
+                "query": "VietstockFinance targeted source repair",
+                "page_url": index_url,
+                "document_index": index_url,
+                "document_id": request.get("document_id"),
+                "period": str(request.get("period") or ""),
+                "report_year": int(request.get("report_year") or start_year),
+                "published_at": request.get("published_at"),
+                "report_type": "consolidated",
+                "vietstock_title": requested_title,
+                "full_name": requested_title,
+                "file_ext": ".pdf",
+            })
+        print(json.dumps({
+            "event": "vietstock_targeted_source_repair",
+            "symbol": symbol,
+            "requested_url_count": len(requested_urls),
+            "accepted_url_count": len(targeted),
+            "periods": [item.get("period") for item in targeted],
+        }, ensure_ascii=False))
+        return targeted
+
     try:
         page_response = SESSION.get(index_url, timeout=35, allow_redirects=True)
         page_response.raise_for_status()
