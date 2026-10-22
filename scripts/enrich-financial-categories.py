@@ -374,6 +374,165 @@ def load_report_pages(item,symbol):
  candidates.sort(key=lambda pair:pair[0],reverse=True)
  return candidates[0][1]
 
+def value_by_row_prefix(pages,prefix_patterns,factor,threshold=1000):
+ patterns=[re.compile(pattern) for pattern in prefix_patterns]
+ for page in pages:
+  lines=str(page.get("text","")).splitlines()
+  for index,line in enumerate(lines):
+   clean=norm(line)
+   if not any(pattern.search(clean) for pattern in patterns):
+    continue
+   vals=amounts(line,threshold=threshold)
+   if not vals:
+    for lookahead in range(index+1,min(index+3,len(lines))):
+     if is_statement_row_start(lines[lookahead]): break
+     vals=amounts(lines[lookahead],threshold=threshold)
+     if vals: break
+   if vals:
+    return int(round(vals[0]*factor))
+ return None
+
+def is_quarter_comparison_page(page):
+ text=norm(page.get("text",""))
+ has_unit=(
+  "trieu dong" in text or "trieu vnd" in text or "million vnd" in text
+  or "don vi tinh trieu" in text
+ )
+ has_profit_rows=(
+  ("loi nhuan truoc thue" in text or "profit before tax" in text)
+  and ("loi nhuan sau thue" in text or "profit after tax" in text)
+ )
+ has_comparison=any(term in text for term in ("tang","giam","increase","decrease","same period","cung ky"))
+ has_quarter=any(term in text for term in ("quy ","quarter ended","quarter of","quy i","quy ii","quy iii","quy iv"))
+ return has_unit and has_profit_rows and has_comparison and has_quarter
+
+def value_by_table_label(pages,labels,factor,threshold=1000):
+ # Use values from the table after its unit declaration, not narrative values
+ # stated in billions on the disclosure cover page.
+ for page in pages:
+  lines=str(page.get("text","")).splitlines()
+  normalized=[norm(line) for line in lines]
+  unit_indexes=[
+   idx for idx,line in enumerate(normalized)
+   if ("trieu dong" in line or "trieu vnd" in line or "million vnd" in line)
+   and (("don vi" in line) or ("unit" in line) or "%" in line)
+  ]
+  if not unit_indexes:
+   continue
+  for label in labels:
+   target=norm(label)
+   for start in range(unit_indexes[0]+1,len(lines)):
+    parts=[]
+    for end in range(start,min(start+4,len(lines))):
+     if end>start and is_statement_row_start(lines[end]): break
+     parts.append(lines[end])
+     combined=norm(" ".join(parts))
+     position=combined.find(target)
+     if position<0: continue
+     tail=combined[position+len(target):]
+     vals=amounts(tail,threshold=threshold)
+     if len(vals)>=2:
+      return int(round(vals[0]*factor))
+ return None
+
+def extract_core_fields(item,symbol,pages,detail_found,mode):
+ out={}
+ calculations={}
+ balance=select_statement_pages(pages,"balance")
+ income=select_statement_pages(pages,"income")
+ summary_pages=[page for page in pages if is_quarter_comparison_page(page)]
+ unit_pages=balance or summary_pages or income or select_statement_pages(pages,"cashflow") or pages
+ factor=unit_factor(unit_pages,item)
+
+ assets=value_by_label(
+  balance,["tong cong tai san","tong tai san","total assets"],factor,
+  exclude_terms=["tai san ngan han","tai san dai han"]
+ ) if balance else None
+ if assets is None and balance:
+  assets=value_by_row_prefix(
+   balance,[r"^\s*(?:\|\s*)?a\.?\s+tai san(?:\s|$)",r"^\s*assets(?:\s|$)"],factor
+  )
+
+ equity=value_by_label(
+  balance,["tong cong von chu so huu","tong von chu so huu","von chu so huu","total equity"],factor,
+  exclude_terms=["no phai tra","liabilities and equity"]
+ ) if balance else None
+ source_total=value_by_label(
+  balance,[
+   "tong cong nguon von","tong nguon von",
+   "tong no phai tra va von chu so huu","no phai tra va von chu so huu",
+   "total liabilities and equity","total sources"
+  ],factor
+ ) if balance else None
+ if source_total is None and balance:
+  source_total=value_by_row_prefix(
+   balance,[r"^\s*(?:\|\s*)?b\.?\s+no phai tra.*von chu so huu(?:\s|$)",
+            r"^\s*total liabilities and equity(?:\s|$)"],factor
+  )
+ liabilities=value_by_label(
+  balance,["tong cong no phai tra","tong no phai tra","total liabilities"],factor,
+  exclude_terms=["von chu so huu","liabilities and equity"]
+ ) if balance else None
+
+ tolerance=max(5.0,abs(assets)*0.00001) if isinstance(assets,(int,float)) else 5.0
+ source_matches_assets=(
+  isinstance(assets,(int,float)) and isinstance(source_total,(int,float))
+  and abs(assets-source_total)<=tolerance
+ )
+ if source_matches_assets and isinstance(equity,(int,float)) and liabilities is None:
+  candidate=assets-equity
+  if candidate>=0:
+   liabilities=int(round(candidate))
+   calculations["total_liabilities"]="total_assets minus reported equity; total sources matched total assets"
+ if source_matches_assets and isinstance(liabilities,(int,float)) and equity is None:
+  candidate=assets-liabilities
+  if candidate>=0:
+   equity=int(round(candidate))
+   calculations["equity"]="total_assets minus reported liabilities; total sources matched total assets"
+
+ balance_valid=(
+  isinstance(assets,(int,float)) and isinstance(liabilities,(int,float)) and isinstance(equity,(int,float))
+  and assets>0 and liabilities>=0 and equity>=0
+  and abs(assets-liabilities-equity)<=3
+ )
+ if balance_valid:
+  out["total_assets"]=int(round(assets))
+  out["total_liabilities"]=int(round(liabilities))
+  out["equity"]=int(round(equity))
+ elif any(isinstance(value,(int,float)) for value in (assets,liabilities,equity)):
+  calculations["balance_totals_withheld"]="asset/liability/equity totals did not fully reconcile"
+
+ profit_pages=summary_pages
+ year,quarter=period_key(item.get("period","")) or (0,0)
+ if not profit_pages and (quarter==1 or not mode):
+  profit_pages=income
+ pbt_labels=[
+  "tong loi nhuan truoc thue","tong loi nhuan ke toan truoc thue",
+  "loi nhuan ke toan truoc thue","loi nhuan truoc thue","profit before tax"
+ ]
+ net_labels=[
+  "loi nhuan sau thue thu nhap doanh nghiep","loi nhuan sau thue","profit after tax"
+ ]
+ if summary_pages:
+  pbt=value_by_table_label(summary_pages,pbt_labels,factor)
+  net=value_by_table_label(summary_pages,net_labels,factor)
+ else:
+  pbt=value_by_label(profit_pages,pbt_labels,factor) if profit_pages else None
+  net=value_by_label(profit_pages,net_labels,factor) if profit_pages else None
+ if pbt is not None:
+  out["pretax_profit"]=pbt
+ if net is not None:
+  out["net_profit"]=net
+ if isinstance(detail_found.get("revenue"),(int,float)):
+  out["revenue"]=detail_found["revenue"]
+ out["__core_calculations"]=calculations
+ out["__core_pages"]=sorted({
+  int(page.get("page")) for page in balance+income+summary_pages
+  if str(page.get("page","")).isdigit()
+ })
+ return out
+
+
 def extract_fields(item,symbol,pages):
  bal=select_statement_pages(pages,"balance")
  inc=select_statement_pages(pages,"income")
