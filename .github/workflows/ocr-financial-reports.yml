@@ -207,7 +207,7 @@ jobs:
     needs: select-ticker
     if: ${{ needs.select-ticker.outputs.symbol != '' && (github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')) }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 45
     steps:
       - name: Checkout only the selected ticker's report archive
         uses: actions/checkout@v5
@@ -257,7 +257,7 @@ jobs:
         env:
           REPORT_OCR_SYMBOL: ${{ needs.select-ticker.outputs.symbol }}
           REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || '8' }}
-          REPORT_OCR_MAX_REPORTS: "1"
+          REPORT_OCR_MAX_REPORTS: "12"
           REPORT_OCR_DPI: "280"
           REPORT_OCR_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || '' }}
         run: python .github/scripts/ocr-stored-reports.py

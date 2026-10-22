@@ -23,7 +23,7 @@ REPORTS = ROOT / "reports/raw"
 QUEUE_PATH = ROOT / "config/report-queue.json"
 # Include statement continuation pages in long consolidated reports.
 MAX_PAGES = int(os.getenv("REPORT_OCR_MAX_PAGES", "14"))  # keep report scope bounded
-MAX_REPORTS = 1  # One archive report file per run to keep runner time bounded.
+MAX_REPORTS = min(max(1, int(os.getenv("REPORT_OCR_MAX_REPORTS", "12"))), 12)  # Process one ticker's report archive per run.
 TERMINAL_REVIEW_STATUSES = {
     "manual_review_required",
     "manual_review_required_pending_extraction",
