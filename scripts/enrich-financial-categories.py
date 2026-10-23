@@ -355,16 +355,16 @@ def resolve_archive_source(item,symbol):
  chosen=(same_period or same_symbol)[0]
  return str(chosen.get("path") or "")
 
-def load_report_pages(item,symbol):
+def select_report_page_payload(item,symbol):
  source=str(item.get("source_archive_file") or "").strip()
- if not source: return []
+ if not source: return None
  file=(ROOT/source).resolve()
  try: file.relative_to(RAW.resolve())
- except ValueError: return []
+ except ValueError: return None
  extracted=file.with_suffix(file.suffix+".extracted.json")
- if not extracted.is_file(): return []
+ if not extracted.is_file(): return None
  try: payload=json.loads(extracted.read_text(encoding="utf-8"))
- except (OSError,json.JSONDecodeError): return []
+ except (OSError,json.JSONDecodeError): return None
  candidates=[]
  members=payload.get("members")
  if isinstance(members,list):
@@ -384,15 +384,37 @@ def load_report_pages(item,symbol):
    if not consolidated and any(t in nn for t in ("rieng le","rieng","congtyme")): score+=20
    if symbol.lower() in nn: score+=5
    if "bao cao tai chinh" in texts or "financial statement" in texts: score+=2
-   candidates.append((score,pages))
+   candidates.append((score,member))
  direct=get_pages(payload)
  if direct:
   direct_text=norm(" ".join(str(p.get("text",""))[:1000] for p in direct[:10]))
   score=min(len(direct),10)+(2 if "bao cao tai chinh" in direct_text or "financial statement" in direct_text else 0)
-  candidates.append((score,direct))
- if not candidates: return []
+  candidates.append((score,payload))
+ if not candidates: return None
  candidates.sort(key=lambda pair:pair[0],reverse=True)
  return candidates[0][1]
+
+
+def load_report_pages(item,symbol):
+ selected=select_report_page_payload(item,symbol)
+ return get_pages(selected) if selected else []
+
+
+def core_extraction_pages_complete(item,symbol,pages,max_pages=14):
+ """True only when the selected source PDF has every page in the OCR target range."""
+ selected=select_report_page_payload(item,symbol)
+ if not isinstance(selected,dict): return False
+ try:
+  page_count=int(selected.get("page_count") or 0)
+ except (TypeError,ValueError):
+  page_count=0
+ target_count=min(max(page_count,0),max(1,int(max_pages)))
+ if target_count<1: return False
+ existing={
+  int(page.get("page")) for page in pages
+  if isinstance(page,dict) and str(page.get("page","")).isdigit()
+ }
+ return all(number in existing for number in range(1,target_count+1))
 
 def value_by_row_prefix(pages,prefix_patterns,factor,threshold=1000):
  patterns=[re.compile(pattern) for pattern in prefix_patterns]
@@ -1433,6 +1455,7 @@ def enrich_snapshot(path):
   if not isinstance(source_validation,dict):
    source_validation={}
   explicitly_exhausted=source_validation.get("automatic_extraction_exhausted") is True
+  core_pages_complete=core_extraction_pages_complete(item,symbol,pages,14)
 
   if not previous_fingerprint:
    # Legacy attempt counters were incremented by repeated enrich passes, not
@@ -1494,6 +1517,7 @@ def enrich_snapshot(path):
   )
   if core_balance_ok and item.get("verification_status") in {"auto_pending_extraction","manual_review_required_pending_extraction"}:
    item.pop("core_financial_extraction_manual_terminal",None)
+   item.pop("core_financial_extraction_stable_evidence_count",None)
    item["verification_status"]="auto_extracted_pending_visual_review"
    item["core_financial_extraction_status"]="auto_extracted_pending_visual_review"
    item["core_financial_extracted_fields"]=sorted(set(item.get("core_financial_extracted_fields") or [])|{
@@ -1519,6 +1543,36 @@ def enrich_snapshot(path):
     item["verification_status"]="manual_review_required_pending_extraction"
     item["core_financial_extraction_status"]="manual_review_required_pending_extraction"
     item["core_financial_extraction_note"]="Đã thử trên ba phiên bản nội dung nguồn khác nhau nhưng chưa đủ bộ chỉ tiêu lõi khớp phương trình cân đối; giữ trống trường không đáng tin và yêu cầu rà soát PDF."
+    quarter_count+=1
+  elif (
+   not core_required_ok
+   and item.get("verification_status") in {"auto_pending_extraction","manual_review_required_pending_extraction"}
+   and not evidence_changed
+   and previous_fingerprint
+   and core_pages_complete
+  ):
+   # Do not retry forever when all target source pages are already archived and
+   # the same page text still cannot produce a reconciled core snapshot. Two
+   # unchanged evidence passes mark this quarter for manual visual review.
+   stable_count=int(item.get("core_financial_extraction_stable_evidence_count") or 0)+1
+   item["core_financial_extraction_stable_evidence_count"]=stable_count
+   item["core_financial_extraction_stable_evidence_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
+   changed=True
+   field_count+=1
+   if stable_count>=2:
+    unverified={}
+    for field in ("total_assets","total_liabilities","equity","pretax_profit","net_profit","roa","roe"):
+     value=item.get(field)
+     if isinstance(value,(int,float)):
+      unverified[field]=value
+      item[field]=None
+    if unverified:
+     item.setdefault("core_financial_extraction_unverified_values",{}).update(unverified)
+    item["verification_status"]="manual_review_required_pending_extraction"
+    item["core_financial_extraction_status"]="manual_review_required_pending_extraction"
+    item["core_financial_extraction_manual_terminal"]=True
+    item["core_financial_extraction_note"]="Đã có đủ trang nguồn mục tiêu nhưng hai lượt phân tích trên cùng văn bản vẫn không tạo được bộ chỉ tiêu lõi cân đối. Các số OCR chưa cân đối được lưu riêng để đối chiếu; chỉ tiêu chính chưa xác minh được để trống."
+    item["verification_status_note"]="Cần đối chiếu trực quan với PDF VietstockFinance trước khi công bố các chỉ tiêu lõi."
     quarter_count+=1
   if withheld_fields:
    pending=set(item.get("financial_line_items_unquarterized_fields") or [])
