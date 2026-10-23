@@ -313,7 +313,9 @@ jobs:
             /.github/scripts/validate-report-queue.cjs
             /scripts/enrich-financial-categories.py
             /scripts/validate-financials.mjs
+            /scripts/update-report-checkpoint.py
             /reports/library.json
+            /reports/processing-checkpoint.json
             /reports/raw/${{ needs['select-ticker'].outputs.symbol }}/**
 
       - name: Setup Python
@@ -323,6 +325,9 @@ jobs:
 
       - name: Install extraction dependencies
         run: pip install -r .github/scripts/requirements-report-worker.txt
+
+      - name: Compile checkpoint helper
+        run: python -m py_compile scripts/update-report-checkpoint.py
 
       - name: Preflight the next report for native PDF text
         id: ocr_preflight
@@ -469,6 +474,8 @@ jobs:
         id: save_selected_ticker
         env:
           REPORT_OCR_SYMBOL: ${{ needs['select-ticker'].outputs.symbol }}
+          REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || '14' }}
+          REPORT_OCR_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || '' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -483,6 +490,10 @@ jobs:
             echo "saved=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
+
+          REPORT_OCR_CHANGED_PATHS="$(git diff --cached --name-only)" \
+            python scripts/update-report-checkpoint.py "${REPORT_OCR_SYMBOL}"
+          git add -- reports/processing-checkpoint.json
 
           git commit -m "OCR and enrich ${REPORT_OCR_SYMBOL} financial reports"
           pushed=false
@@ -516,6 +527,9 @@ jobs:
                 pushed=true
                 break
               fi
+              REPORT_OCR_CHANGED_PATHS="$(git diff --cached --name-only)" \
+                python scripts/update-report-checkpoint.py "${REPORT_OCR_SYMBOL}"
+              git add -- reports/processing-checkpoint.json
               git commit -m "Reconcile ${REPORT_OCR_SYMBOL} financial report details"
             fi
             sleep $((attempt * 2))
