@@ -941,9 +941,12 @@ def link_quarterly_archive_sources(symbol: str, jobs: list[dict]) -> int:
             title = " ".join(str(record.get(key) or "") for key in (
                 "title", "index_title", "vietstock_title", "full_name"
             ))
-            if not re.search(r"hợp\s*nhất|hop\s*nhat|consolidated", title, re.I):
-                continue
-            if re.search(r"công\s*ty\s*mẹ|cong\s*ty\s*me|riêng\s*lẻ|rieng\s*le|parent\s+company|separate", title, re.I):
+            explicit_consolidated = re.search(r"hợp\s*nhất|hop\s*nhat|consolidated", title, re.I)
+            explicit_separate = re.search(r"công\s*ty\s*mẹ|cong\s*ty\s*me|riêng\s*lẻ|rieng\s*le|parent\s+company|separate", title, re.I)
+            official_financial_title = re.search(r"báo\s*cáo\s*tài\s*chính|bctc|financial\s+statements", title, re.I)
+            # Neutral official VietstockFinance titles are permitted when the exact source URL
+            # matches this saved quarter; explicit parent/separate reports are never linked.
+            if explicit_separate or not (explicit_consolidated or official_financial_title):
                 continue
             relative = str(record.get("file") or "").strip()
             if not relative:
@@ -1203,7 +1206,7 @@ def main():
     linked_count = link_quarterly_archive_sources(active_symbol, jobs) if active_symbol else 0
     if linked_count:
         print(json.dumps({"event":"quarterly_archive_sources_linked","symbol":active_symbol,"count":linked_count},ensure_ascii=False))
-    queue_changed = summary["jobs_processed"] > 0 or any(job.get("id") not in initial_job_ids for job in jobs)
+    queue_changed = summary["jobs_processed"] > 0 or linked_count > 0 or any(job.get("id") not in initial_job_ids for job in jobs)
     if queue_changed:
         queue["updatedAt"]=NOW
         save(QUEUE_PATH, queue)
