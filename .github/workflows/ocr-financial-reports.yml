@@ -201,17 +201,12 @@ jobs:
                       if not isinstance(validation, dict):
                           validation = {}
                       try:
-                          catalog_attempts = int(validation.get("extraction_attempt_count") or 0)
+                          evidence_attempts = int(item.get("core_financial_extraction_evidence_attempt_count") or 0)
                       except (TypeError, ValueError):
-                          catalog_attempts = 0
-                      try:
-                          core_attempts = int(item.get("core_financial_extraction_attempt_count") or 0)
-                      except (TypeError, ValueError):
-                          core_attempts = 0
+                          evidence_attempts = 0
                       return (
                           validation.get("automatic_extraction_exhausted") is True
-                          or catalog_attempts >= 3
-                          or core_attempts >= 3
+                          or evidence_attempts >= 3
                       )
 
                   core_pending = any(
