@@ -18,3 +18,10 @@ Danh mục báo cáo của website được khai báo tại `library.json`.
 - `completedSymbols` nghĩa là không còn khoảng trống xử lý tự động được bộ chọn phát hiện; trạng thái này **không đồng nghĩa** toàn bộ chỉ tiêu đã được người kiểm tra đối chiếu trực quan.
 - Khi tiếp tục thủ công, chạy workflow `OCR Financial Report Archive` và để trống đầu vào `symbol`. Workflow sẽ dò lại các snapshot và sidecar đã lưu để chọn điểm tiếp tục; không xóa `data/financials-*.json` hoặc `reports/raw/`.
 - Snapshot JSON, PDF/ZIP nguồn được phép lưu và các tệp `.extracted.json` đã commit là nguồn dữ liệu khôi phục chính; checkpoint là bản tóm tắt tiến độ.
+
+## Phạm vi kỳ báo cáo theo từng mã
+
+- Mỗi mã có thể khai báo `startPeriod` trong `config/securities.json` khi chuỗi dữ liệu bắt đầu từ một kỳ khác nhau.
+- Với VCK, `startPeriod` là `2025-Q1`. Những báo cáo quý 2024 tìm được dưới mã nguồn VPSS/đường dẫn OTC được giữ tại `pre_listing_legacy_reports`, không đưa vào `items` hoạt động dùng cho chuỗi VCK.
+- Không xóa PDF/ZIP đã lưu; tách riêng dữ liệu ngoài phạm vi nhằm giữ khả năng truy vết nguồn.
+
