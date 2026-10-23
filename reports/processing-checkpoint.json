@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-23T09:29:09Z",
+  "updatedAt": "2026-10-23T09:31:12.152Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -27,24 +27,31 @@
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "VCK",
-    "status": "in_progress",
+    "status": "period_scope_corrected_in_progress",
     "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-23T09:29:09Z",
-    "workflowRunId": "39931531945",
-    "workflowRunNumber": 1050,
-    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39931531945",
+    "processedAt": "2026-10-23T09:31:12.152Z",
+    "workflowRunId": "39931177337",
+    "workflowRunNumber": 1049,
+    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39931177337",
     "changedPaths": [
+      "config/securities.json",
+      "scripts/sync-vietstock-financials.py",
       "data/financials-VCK.json",
-      "reports/raw/VCK/auto-vck-20261021/4529f9f8c8bec23e.zip.extracted.json",
-      "reports/raw/VCK/auto-vck-20261021/6652ed69f6a3c666.pdf.extracted.json"
+      "config/report-queue.json",
+      "reports/processing-checkpoint.json"
     ],
-    "periodCount": 11,
-    "firstQuarter": "2024-Q1",
+    "periodCount": 7,
+    "firstQuarter": "2025-Q1",
     "lastQuarter": "2026-Q3",
-    "pendingCorePeriods": [
+    "startPeriod": "2025-Q1",
+    "excludedPreListingPeriods": [
+      "2024-Q1",
+      "2024-Q2",
       "2024-Q3",
-      "2024-Q4",
+      "2024-Q4"
+    ],
+    "pendingCorePeriods": [
       "2025-Q1",
       "2025-Q2",
       "2025-Q3",
@@ -56,7 +63,8 @@
     "terminalManualReviewPeriods": [],
     "pendingDetailPeriods": [],
     "staleDetailSchemaPeriods": [],
-    "statementPagesPending": true
+    "statementPagesPending": true,
+    "note": "Removed pre-2025 VPSS/OTC entries from active items and retained them separately; start-period handling is now per-ticker."
   },
   "symbolStates": {
     "MBB": {
@@ -279,15 +287,13 @@
       "note": "Completed automatic processing; all 11 periods that lack reliable consolidated scope/values are retained with source links and need manual review. No unsupported figures were filled."
     },
     "VCK": {
-      "status": "in_progress",
+      "status": "period_scope_corrected_in_progress",
       "completeForAutomation": false,
       "manualReviewRemaining": true,
-      "periodCount": 11,
-      "firstQuarter": "2024-Q1",
+      "periodCount": 7,
+      "firstQuarter": "2025-Q1",
       "lastQuarter": "2026-Q3",
       "pendingCorePeriods": [
-        "2024-Q3",
-        "2024-Q4",
         "2025-Q1",
         "2025-Q2",
         "2025-Q3",
@@ -301,21 +307,19 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": true,
       "sourceArchivesChecked": 4,
-      "updatedAt": "2026-10-23T09:29:09Z",
-      "snapshotFetchedAt": "2026-10-23T09:23:16+00:00"
+      "updatedAt": "2026-10-23T09:31:12.152Z",
+      "snapshotFetchedAt": "2026-10-23T09:23:16+00:00",
+      "startPeriod": "2025-Q1",
+      "excludedPreListingPeriods": [
+        "2024-Q1",
+        "2024-Q2",
+        "2024-Q3",
+        "2024-Q4"
+      ],
+      "note": "2024 VPSS/OTC documents are archival references, not part of the active VCK ticker series. Continue one report per run from 2025-Q1; do not move to VIX until VCK finishes or reaches explicit manual-review terminal states."
     }
   },
   "progressHistory": [
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-10-23T07:14:29Z",
-      "workflowRunId": "39916329713",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
     {
       "symbol": "VCI",
       "status": "in_progress",
@@ -835,30 +839,41 @@
         "reports/raw/VCK/auto-vck-20261021/4529f9f8c8bec23e.zip.extracted.json",
         "reports/raw/VCK/auto-vck-20261021/6652ed69f6a3c666.pdf.extracted.json"
       ]
+    },
+    {
+      "symbol": "VCK",
+      "status": "period_scope_corrected_in_progress",
+      "completeForAutomation": false,
+      "processedAt": "2026-10-23T09:31:12.152Z",
+      "startPeriod": "2025-Q1",
+      "excludedPreListingPeriods": [
+        "2024-Q1",
+        "2024-Q2",
+        "2024-Q3",
+        "2024-Q4"
+      ],
+      "changedPaths": [
+        "config/securities.json",
+        "scripts/sync-vietstock-financials.py",
+        "data/financials-VCK.json",
+        "config/report-queue.json"
+      ]
     }
   ],
   "currentRun": {
     "symbol": "VCK",
-    "status": "in_progress_core_reconciliation",
-    "updatedAt": "2026-10-23T09:23:05Z",
-    "workflowRuns": [
-      {
-        "workflow": "Sync quarterly BCTC from VietstockFinance",
-        "runId": "39931333337",
-        "runNumber": 196,
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/39931333337",
-        "status": "success",
-        "note": "Year-range fix deployed; query now includes all years from the oldest unresolved quarter. Q3/Q4 2024 were picked up again, but totals remain blank pending OCR/source-scope validation."
-      },
-      {
-        "workflow": "OCR Financial Report Archive",
-        "runId": "39931177337",
-        "runNumber": 1049,
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/39931177337",
-        "status": "in_progress",
-        "note": "One-report OCR run for VCK remains active; process only one report per run."
-      }
-    ],
-    "note": "Keep VCK active until all 2024-Q3 through 2026-Q3 items have reliable core values or an explicit terminal manual-review status. Do not move to VIX until then."
+    "status": "period_scope_corrected_in_progress",
+    "updatedAt": "2026-10-23T09:31:12.152Z",
+    "note": "VCK now starts at 2025-Q1. Run OCR/enrichment sequentially over 2025-Q1 onward; preserve 2024 VPSS/OTC PDFs as legacy references only, and do not advance to VIX until VCK completes automation or all unresolved periods reach explicit manual-review terminal states."
+  },
+  "scopePolicy": {
+    "VCK": {
+      "startPeriod": "2025-Q1",
+      "excludedPreListingQuarterRange": [
+        "2024-Q1",
+        "2024-Q4"
+      ],
+      "sourceTreatment": "2024 quarter statements from VPSS/OTC are preserved in data/financials-VCK.json under pre_listing_legacy_reports and excluded from active VCK series."
+    }
   }
 }
