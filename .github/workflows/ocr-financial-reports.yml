@@ -194,12 +194,33 @@ jobs:
                       else:
                           print(f"Hold queue at {symbol}; waiting for its 30-minute retry cooldown.")
                       break
+                  def terminal_manual_extraction(item):
+                      if not isinstance(item, dict) or item.get("verification_status") != "manual_review_required_pending_extraction":
+                          return False
+                      validation = item.get("source_validation")
+                      if not isinstance(validation, dict):
+                          validation = {}
+                      try:
+                          catalog_attempts = int(validation.get("extraction_attempt_count") or 0)
+                      except (TypeError, ValueError):
+                          catalog_attempts = 0
+                      try:
+                          core_attempts = int(item.get("core_financial_extraction_attempt_count") or 0)
+                      except (TypeError, ValueError):
+                          core_attempts = 0
+                      return (
+                          validation.get("automatic_extraction_exhausted") is True
+                          or catalog_attempts >= 3
+                          or core_attempts >= 3
+                      )
+
                   core_pending = any(
                       isinstance(item, dict)
                       and item.get("verification_status") in {
                           "auto_pending_extraction",
                           "manual_review_required_pending_extraction",
                       }
+                      and not terminal_manual_extraction(item)
                       for item in items
                   )
                   details_pending = any(
