@@ -20,7 +20,8 @@ permissions:
   actions: write
 
 concurrency:
-  group: so-lieu-financial-data-writes-v2
+  # Isolate catalog sync from OCR/collector dispatches; commits use safe fetch/rebase/push retries.
+  group: so-lieu-vietstock-sync-v1
   cancel-in-progress: false
 
 jobs:
