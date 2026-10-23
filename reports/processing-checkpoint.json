@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-23T05:10:38Z",
+  "updatedAt": "2026-10-23T05:11:40Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -17,12 +17,11 @@
     "VPB",
     "STB",
     "VCB",
-    "CTG",
-    "BID"
+    "CTG"
   ],
-  "lastCompletedSymbol": "BID",
-  "activeSymbol": null,
-  "resumeSymbolHint": "VCI",
+  "lastCompletedSymbol": "CTG",
+  "activeSymbol": "BID",
+  "resumeSymbolHint": "BID",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "BID",
@@ -223,8 +222,8 @@
       "snapshotFetchedAt": "2026-10-23T03:45:53+00:00"
     },
     "BID": {
-      "status": "automated_processing_complete",
-      "completeForAutomation": true,
+      "status": "in_progress",
+      "completeForAutomation": false,
       "manualReviewRemaining": true,
       "periodCount": 10,
       "firstQuarter": "2024-Q1",
@@ -238,8 +237,13 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-10-23T05:10:38Z",
-      "snapshotFetchedAt": "2026-10-23T04:27:50+00:00"
+      "updatedAt": "2026-10-23T05:11:40Z",
+      "snapshotFetchedAt": "2026-10-23T04:27:50+00:00",
+      "recheckPeriods": [
+        "2024-Q3",
+        "2026-Q2"
+      ],
+      "note": "Eight of ten quarters now have reconciled core totals. Only Q3/2024 and Q2/2026 are reopened for a final controlled parse; visual review is still needed for every OCR-derived record."
     }
   },
   "progressHistory": [
@@ -651,8 +655,8 @@
   ],
   "currentRun": {
     "symbol": "BID",
-    "status": "reprocessing_after_parser_fix",
-    "updatedAt": "2026-10-23T05:09:20Z",
-    "reason": "Reopened only 2024-Q3, 2026-Q1 and 2026-Q2 after diagnostics found a truncated source-total label and punctuation-prefixed total-assets line. Existing verified-by-equation data is unchanged; remaining values will only be saved if the accounting equation passes."
+    "status": "reprocessing_after_parser_v5",
+    "updatedAt": "2026-10-23T05:11:40Z",
+    "reason": "Only 2024-Q3 and 2026-Q2 were reopened. Parser v5 will match the source-total row against the same-period/comparative total-assets columns after normalizing OCR slash separators. Existing accepted quarters are unchanged."
   }
 }
