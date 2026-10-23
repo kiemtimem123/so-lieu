@@ -16,6 +16,7 @@ RAW = ROOT / "reports" / "raw"
 REPORT_QUEUE = ROOT / "config" / "report-queue.json"
 _QUEUE_ARCHIVE_BY_URL = None
 DETAIL_SCHEMA_VERSION = "2026-10-22-bank-statement-qc-v4"
+CORE_EXTRACTION_DEBUG_VERSION = "2026-10-23-bid-balance-source-v1"
 NUMBER_RE = re.compile(r"(?<![A-Za-z0-9])\(?-?\d[\d.,]*\d?\)?")
 BANKS = {"MBB", "ACB", "SHB", "TCB", "TPB", "VPB", "STB", "VCB", "CTG", "BID"}
 BROKERS = {"HCM", "SHS", "TCX", "VND", "VCI", "VCK", "VIX", "SSI", "VDS"}
@@ -601,6 +602,7 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
    return None if value is None else int(round(value))
   print(
    "[CORE_DEBUG]",
+   CORE_EXTRACTION_DEBUG_VERSION,
    item.get("period"),
    {
     "balance_pages":[int(page.get("page") or 0) for page in balance],
