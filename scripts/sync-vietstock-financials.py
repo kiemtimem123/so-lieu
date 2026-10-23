@@ -370,16 +370,20 @@ def desired_consolidated(items: list[dict]) -> bool:
     return any("hopnhat" in norm(x.get("source_url", "")) for x in items)
 
 
-def candidate_score(record: dict, explicit: bool, cumulative: bool) -> tuple[int, int, int]:
+def candidate_score(record: dict, explicit: bool, cumulative: bool) -> tuple[int, int, int, int]:
     text = norm(unquote(doc_title(record) + " " + doc_url(record)))
     # Explicit Qn report first; use 6/9-month report only when necessary.
     quarter_penalty = 1 if cumulative else (0 if explicit else 2)
-    # Soát xét/kiểm toán is preferred when available for the same quarter.
+    # Prefer the primary financial statement over supplementary notes when both
+    # are listed for the same quarter. Notes remain archived, but should not be
+    # used as the primary source for balance-sheet / income-statement extraction.
+    supplementary_notes_penalty = 1 if "thuyet minh" in text else 0
+    # Soát xét/kiểm toán is preferred when available for the same document type.
     review_penalty = 0 if ("soat xet" in text or "kiem toan" in text) else 1
     # A direct PDF is smaller/easier to parse than an archive, all else equal.
     file_url = urlparse(doc_url(record)).path.lower()
     archive_penalty = 1 if file_url.endswith(".zip") else 0
-    return (quarter_penalty, review_penalty, archive_penalty)
+    return (quarter_penalty, supplementary_notes_penalty, review_penalty, archive_penalty)
 
 
 def is_scope_match(record: dict, consolidated_wanted: bool) -> bool:
