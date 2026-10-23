@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-23T14:16:47.565Z",
+  "updatedAt": "2026-10-23T14:17:31Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -23,31 +23,30 @@
     "VCK",
     "VIX",
     "SSI",
-    "VDS"
+    "VDS",
+    "KDH"
   ],
-  "lastCompletedSymbol": "VDS",
-  "activeSymbol": "KDH",
-  "resumeSymbolHint": "KDH",
+  "lastCompletedSymbol": "KDH",
+  "activeSymbol": null,
+  "resumeSymbolHint": "NVL",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "KDH",
-    "status": "in_progress",
-    "completeForAutomation": false,
+    "status": "automated_processing_complete",
+    "completeForAutomation": true,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-23T14:16:47.565Z",
-    "workflowRunId": null,
-    "workflowRunNumber": null,
-    "workflowRunUrl": null,
+    "processedAt": "2026-10-23T14:17:31Z",
+    "workflowRunId": "39968313037",
+    "workflowRunNumber": 1109,
+    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39968313037",
     "changedPaths": [
-      "scripts/enrich-financial-categories.py",
-      "scripts/sync-vietstock-financials.py",
-      "data/financials-KDH.json",
-      "reports/processing-checkpoint.json"
+      "data/financials-KDH.json"
     ],
     "periodCount": 10,
     "firstQuarter": "2024-Q1",
     "lastQuarter": "2026-Q2",
-    "pendingCorePeriods": [
+    "pendingCorePeriods": [],
+    "terminalManualReviewPeriods": [
       "2024-Q1",
       "2024-Q2",
       "2024-Q3",
@@ -56,14 +55,11 @@
       "2025-Q2",
       "2025-Q3",
       "2025-Q4",
-      "2026-Q1",
       "2026-Q2"
     ],
-    "terminalManualReviewPeriods": [],
     "pendingDetailPeriods": [],
     "staleDetailSchemaPeriods": [],
-    "statementPagesPending": false,
-    "note": "KDH is active again for unit-scale re-extraction; no values from the previous parser will be displayed as verified."
+    "statementPagesPending": false
   },
   "symbolStates": {
     "MBB": {
@@ -388,14 +384,14 @@
       "snapshotFetchedAt": "2026-10-23T11:20:31+00:00"
     },
     "KDH": {
-      "status": "reopened_for_unit_scale_correction",
-      "completeForAutomation": false,
+      "status": "automated_processing_complete",
+      "completeForAutomation": true,
       "manualReviewRemaining": true,
-      "updatedAt": "2026-10-23T14:16:47.565Z",
       "periodCount": 10,
       "firstQuarter": "2024-Q1",
       "lastQuarter": "2026-Q2",
-      "pendingCorePeriods": [
+      "pendingCorePeriods": [],
+      "terminalManualReviewPeriods": [
         "2024-Q1",
         "2024-Q2",
         "2024-Q3",
@@ -404,25 +400,17 @@
         "2025-Q2",
         "2025-Q3",
         "2025-Q4",
-        "2026-Q1",
         "2026-Q2"
       ],
-      "terminalManualReviewPeriods": [],
+      "pendingDetailPeriods": [],
+      "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
-      "note": "A parser unit defect affecting the Vietnamese label 'Ngàn VND' was discovered in KDH OCR values; old values retained only in per-quarter unverified audit objects."
+      "sourceArchivesChecked": 10,
+      "updatedAt": "2026-10-23T14:17:31Z",
+      "snapshotFetchedAt": "2026-10-23T14:16:47.565Z"
     }
   },
   "progressHistory": [
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-10-23T08:37:11Z",
-      "workflowRunId": "39925807896",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
     {
       "symbol": "VCI",
       "status": "in_progress",
@@ -1040,6 +1028,16 @@
       "changedPaths": [
         "scripts/enrich-financial-categories.py",
         "scripts/sync-vietstock-financials.py",
+        "data/financials-KDH.json"
+      ]
+    },
+    {
+      "symbol": "KDH",
+      "status": "automated_processing_complete",
+      "completeForAutomation": true,
+      "processedAt": "2026-10-23T14:17:31Z",
+      "workflowRunId": "39968313037",
+      "changedPaths": [
         "data/financials-KDH.json"
       ]
     }
