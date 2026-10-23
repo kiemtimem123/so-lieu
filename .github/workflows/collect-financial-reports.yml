@@ -386,8 +386,8 @@ jobs:
           gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/workflows/collect-financial-reports.yml/dispatches" -f ref=main -f "inputs[symbol]=${{ steps.continuation.outputs.symbol }}" -f "inputs[max_downloads_per_job]=2"
 
   trigger-ocr:
-    needs: collect
-    if: ${{ needs.collect.result == 'success' }}
+    needs: [collect, advance-collector]
+    if: ${{ needs.collect.result == 'success' && needs['advance-collector'].result == 'success' && needs['advance-collector'].outputs.should_continue != 'true' }}
     runs-on: ubuntu-24.04
     steps:
       - name: Start the next one-report OCR/enrichment run after the collector commits
