@@ -16,7 +16,7 @@ RAW = ROOT / "reports" / "raw"
 REPORT_QUEUE = ROOT / "config" / "report-queue.json"
 _QUEUE_ARCHIVE_BY_URL = None
 DETAIL_SCHEMA_VERSION = "2026-10-22-bank-statement-qc-v4"
-CORE_EXTRACTION_PARSER_VERSION = "2026-10-23-ngan-vnd-unit-v1"
+CORE_EXTRACTION_PARSER_VERSION = "2026-10-23-ngan-vnd-unit-v2-statement-rows"
 NUMBER_RE = re.compile(r"(?<![A-Za-z0-9])\(?-?\d[\d.,]*\d?\)?")
 BANKS = {"MBB", "ACB", "SHB", "TCB", "TPB", "VPB", "STB", "VCB", "CTG", "BID"}
 BROKERS = {"HCM", "SHS", "TCX", "VND", "VCI", "VCK", "VIX", "SSI", "VDS"}
@@ -211,6 +211,25 @@ def statement_heading_kind(page):
  if re.search(r"\bb0?3\s*/\s*tctd\b",text):
   return "income"
  if re.search(r"\bb0?4\s*/\s*tctd\b",text):
+  return "cashflow"
+ # Company-form B01a-DN/HN statements can OCR "Đổi" as "Đột" or "B01a" as "BO1a".
+ # Use the official form code plus a balance-sheet total as a strong fallback.
+ if any(term in text for term in ("bang can doi ke toan","bang can dot ke toan","statement of financial position","balance sheet")):
+  return "balance"
+ if (
+  re.search(r"\bb[0o]?1[a-z]?\s*[-/]?\s*dn(?:/hn)?\b",text)
+  and any(term in text for term in ("tong cong tai san","tong cong nguon von","total assets","total liabilities"))
+ ):
+  return "balance"
+ if (
+  re.search(r"\bb[0o]?2[a-z]?\s*[-/]?\s*dn(?:/hn)?\b",text)
+  and any(term in text for term in ("doanh thu","loi nhuan","revenue","profit before tax"))
+ ):
+  return "income"
+ if (
+  re.search(r"\bb[0o]?3[a-z]?\s*[-/]?\s*dn(?:/hn)?\b",text)
+  and any(term in text for term in ("luu chuyen tien te","cash flow"))
+ ):
   return "cashflow"
  lines=[norm(line) for line in str(page.get("text","")).splitlines()[:45]]
  for line in lines:
@@ -442,7 +461,7 @@ def is_quarter_comparison_page(page):
    "trieu dong","trieu vnd","million vnd","ngan dong","ngan vnd",
    "nghin dong","nghin vnd","thousand dong","thousand vnd","don vi tinh trieu"
   ))
-  or re.search(r"\\bngh?[a-z~._-]{0,4}n\\s+(?:dong|vnd)\\b",text)
+  or re.search(r"\bngh?[a-z~._-]{0,4}n\s+(?:dong|vnd)\b",text)
  )
  has_profit_rows=(
   ("loi nhuan truoc thue" in text or "profit before tax" in text)
@@ -484,7 +503,7 @@ def value_by_table_label(pages,labels,factor,threshold=1000):
      "trieu dong","trieu vnd","million vnd","ngan dong","ngan vnd",
      "nghin dong","nghin vnd","thousand dong","thousand vnd"
     ))
-    or re.search(r"\\bngh?[a-z~._-]{0,4}n\\s+(?:dong|vnd)\\b",line)
+    or re.search(r"\bngh?[a-z~._-]{0,4}n\s+(?:dong|vnd)\b",line)
    ) and (
     ("don vi" in line) or ("unit" in line) or "%" in line
     or any(term in line for term in ("ngan dong","ngan vnd","nghin dong","nghin vnd","thousand dong","thousand vnd"))
@@ -732,6 +751,16 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
  else:
   pbt=value_by_label(profit_pages,pbt_labels,factor) if profit_pages else None
   net=value_by_label(profit_pages,net_labels,factor) if profit_pages else None
+ # Standard Vietnamese income statement codes are stable even when OCR wraps the words
+ # "trước thuế"/"sau thuế" after the numeric columns.
+ if pbt is None and profit_pages:
+  pbt=value_by_row_prefix(
+   profit_pages,[r"^\s*(?:\|\s*)?50\s*(?:\||\s)"],factor
+  )
+ if net is None and profit_pages:
+  net=value_by_row_prefix(
+   profit_pages,[r"^\s*(?:\|\s*)?60\s*(?:\||\s)"],factor
+  )
  if pbt is not None:
   out["pretax_profit"]=pbt
  if net is not None:
