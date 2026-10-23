@@ -596,6 +596,38 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
    equity=int(round(candidate))
    calculations["equity"]="total_assets minus reported liabilities; total sources matched total assets"
 
+ if symbol=="BID":
+  def debug_money(value):
+   return None if value is None else int(round(value))
+  print(
+   "[CORE_DEBUG]",
+   item.get("period"),
+   {
+    "balance_pages":[int(page.get("page") or 0) for page in balance],
+    "factor":factor,
+    "assets":debug_money(assets),
+    "liabilities":debug_money(liabilities),
+    "equity":debug_money(equity),
+    "source_total":debug_money(source_total),
+    "source_matches_assets":bool(source_matches_assets),
+    "equation_delta":(
+     debug_money(assets-liabilities-equity)
+     if all(isinstance(v,(int,float)) for v in (assets,liabilities,equity)) else None
+    ),
+   },
+  )
+  shown=0
+  for page in balance:
+   for line in str(page.get("text","")).splitlines():
+    clean=norm(line)
+    if any(term in clean for term in (
+     "tong tai san co","tong cong tai san","von va cac quy",
+     "tong no phai tra va von chu so huu","tong no phai tra va von chu so huu"
+    )):
+     print("[CORE_DEBUG_ROW]", item.get("period"), int(page.get("page") or 0), line[:260])
+     shown+=1
+     if shown>=6: break
+   if shown>=6: break
  balance_valid=(
   isinstance(assets,(int,float)) and isinstance(liabilities,(int,float)) and isinstance(equity,(int,float))
   and assets>0 and liabilities>=0 and equity>=0
