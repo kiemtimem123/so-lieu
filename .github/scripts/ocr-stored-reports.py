@@ -23,7 +23,7 @@ REPORTS = ROOT / "reports/raw"
 QUEUE_PATH = ROOT / "config/report-queue.json"
 # Include statement continuation pages in long consolidated reports.
 MAX_PAGES = min(max(1, int(os.getenv("REPORT_OCR_MAX_PAGES", "14"))), 14)  # bounded statement-page extraction
-MAX_REPORTS = min(max(1, int(os.getenv("REPORT_OCR_MAX_REPORTS", "2"))), 3)
+MAX_REPORTS = min(max(1, int(os.getenv("REPORT_OCR_MAX_REPORTS", "1"))), 3)
 # A small batch may contain two reports, but every run remains restricted to exactly
 # one ticker. The next ticker is never selected until the active ticker is complete
 # for automation or all remaining periods have an explicit manual-review terminal state.
