@@ -446,7 +446,7 @@ jobs:
 
       - name: Install OCR tools only when the next report is scanned
         if: steps.ocr_preflight.outputs.needs_ocr == 'true'
-        timeout-minutes: 6
+        timeout-minutes: 12
         continue-on-error: true
         shell: bash
         run: |
@@ -458,14 +458,24 @@ jobs:
             echo "Poppler and Vietnamese/English Tesseract are ready."
             exit 0
           fi
-          if ! timeout 60s sudo apt-get -o Acquire::Retries=0 -o Acquire::http::Timeout=8 -o Acquire::https::Timeout=8 update; then
-            echo "::warning::OCR package index unavailable within 60 seconds; continue with native PDF text and keep the ticker queue unchanged."
+          if ! timeout 120s sudo apt-get -o Acquire::Retries=0 -o Acquire::http::Timeout=12 -o Acquire::https::Timeout=12 update; then
+            echo "::warning::OCR package index unavailable within 120 seconds."
             exit 0
           fi
-          if ! timeout 220s sudo apt-get -o Acquire::Retries=0 -o Acquire::http::Timeout=8 -o Acquire::https::Timeout=8 install -y poppler-utils tesseract-ocr tesseract-ocr-vie tesseract-ocr-eng; then
-            echo "::warning::OCR tools could not be installed within 220 seconds; continue safely without fabricating data."
+          if ! timeout 480s sudo apt-get -o Acquire::Retries=0 -o Acquire::http::Timeout=12 -o Acquire::https::Timeout=12 install -y poppler-utils tesseract-ocr tesseract-ocr-vie tesseract-ocr-eng; then
+            echo "::warning::OCR tools could not be installed within 480 seconds."
             exit 0
           fi
+
+      - name: Verify OCR binaries before processing scanned pages
+        if: steps.ocr_preflight.outputs.needs_ocr == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          command -v pdftoppm >/dev/null
+          command -v tesseract >/dev/null
+          tesseract --list-langs 2>/dev/null | grep -qx 'vie'
+          tesseract --list-langs 2>/dev/null | grep -qx 'eng'
 
       - name: Validate queue before OCR
         run: node .github/scripts/validate-report-queue.cjs
@@ -475,7 +485,7 @@ jobs:
         env:
           REPORT_OCR_SYMBOL: ${{ needs['select-ticker'].outputs.symbol }}
           REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || '14' }}
-          REPORT_OCR_MAX_REPORTS: "1"
+          REPORT_OCR_MAX_REPORTS: "2"
           REPORT_OCR_DPI: "240"
           REPORT_OCR_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || '' }}
         run: python .github/scripts/ocr-stored-reports.py
