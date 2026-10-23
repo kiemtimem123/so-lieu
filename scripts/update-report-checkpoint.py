@@ -226,7 +226,7 @@ def main() -> int:
                 "vẫn thiếu hoặc chưa cân đối. Giữ trống chỉ tiêu chưa xác minh và yêu cầu "
                 "đối chiếu trực quan với báo cáo VietstockFinance."
             )
-            item["core_financial_extraction_updated_at"] = now
+            item["core_financial_extraction_updated_at"] = utc_now()
             snapshot_changed = True
         if snapshot_changed:
             snapshot_path.write_text(
