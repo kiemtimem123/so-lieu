@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-23T09:44:23.551Z",
+  "updatedAt": "2026-10-23T09:46:08.290Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -326,30 +326,23 @@
       ],
       "pendingDetailPeriods": [],
       "statementPagesPending": true,
-      "updatedAt": "2026-10-23T09:44:23.551Z",
-      "workflowRunId": "39933855799",
-      "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39933855799",
-      "note": "VIX remains the only active ticker. The archive queue is saving candidate reports two at a time; OCR will process one report per run only after the source archive batch is complete.",
+      "updatedAt": "2026-10-23T09:46:08.290Z",
+      "workflowRunId": "39934143792",
+      "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39934143792",
+      "note": "VIX remains the only active ticker. Archive batches have linked quarterly PDF/ZIP sources for 2024-Q1 through 2025-Q4; 2026 reports are still being downloaded. OCR must process one report per run.",
       "archivedQuarterPeriods": [
         "2024-Q1",
         "2024-Q2",
         "2024-Q3",
         "2024-Q4",
+        "2025-Q1",
+        "2025-Q2",
+        "2025-Q3",
         "2025-Q4"
       ]
     }
   },
   "progressHistory": [
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-10-23T07:23:26Z",
-      "workflowRunId": "39917244498",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
     {
       "symbol": "VCI",
       "status": "in_progress",
@@ -884,32 +877,54 @@
         "2024-Q4",
         "2025-Q4"
       ]
-    }
-  ],
-  "currentRun": {
-    "symbol": "VIX",
-    "status": "archive_collection_in_progress",
-    "updatedAt": "2026-10-23T09:44:23.551Z",
-    "workflowRunId": "39933855799",
-    "workflowRunNumber": 151,
-    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39933855799",
-    "archiveProgress": {
-      "jobId": "auto-vix-20261021",
-      "queueStatus": "queued",
-      "queueAttempts": 5,
-      "resumeDownload": true,
-      "sourceCandidatesRemaining": 10,
-      "archivedReports": 9,
+    },
+    {
+      "symbol": "VIX",
+      "status": "archive_collection_in_progress",
+      "completeForAutomation": false,
+      "processedAt": "2026-10-23T09:46:08.290Z",
+      "workflowRunId": "39934143792",
+      "downloadedReportCount": 13,
+      "remainingSourceCandidates": 6,
       "archivedQuarterPeriods": [
         "2024-Q1",
         "2024-Q2",
         "2024-Q3",
         "2024-Q4",
+        "2025-Q1",
+        "2025-Q2",
+        "2025-Q3",
+        "2025-Q4"
+      ]
+    }
+  ],
+  "currentRun": {
+    "symbol": "VIX",
+    "status": "archive_collection_in_progress",
+    "updatedAt": "2026-10-23T09:46:08.290Z",
+    "workflowRunId": "39934143792",
+    "workflowRunNumber": 153,
+    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39934143792",
+    "archiveProgress": {
+      "jobId": "auto-vix-20261021",
+      "queueStatus": "queued",
+      "queueAttempts": 7,
+      "resumeDownload": true,
+      "sourceCandidatesRemaining": 6,
+      "downloadedReportCount": 13,
+      "archivedQuarterPeriods": [
+        "2024-Q1",
+        "2024-Q2",
+        "2024-Q3",
+        "2024-Q4",
+        "2025-Q1",
+        "2025-Q2",
+        "2025-Q3",
         "2025-Q4"
       ],
-      "nextStep": "continue VIX report collection, then OCR one report per run"
+      "nextStep": "finish archive queue for VIX; then OCR/enrich one report per run"
     },
-    "note": "VCK is closed for automated processing with manual review remaining. Do not start SSI until VIX is complete for automatic extraction or has explicit manual-review terminal markers."
+    "note": "VCK is complete for automated processing with manual-review status remaining. Do not start SSI before VIX reaches automatic completion or terminal manual-review statuses."
   },
   "scopePolicy": {
     "VCK": {
