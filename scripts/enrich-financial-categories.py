@@ -521,7 +521,12 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
    ],factor
   )
 
- equity_labels=["tong cong von chu so huu","tong von chu so huu","von chu so huu","total equity"]
+ equity_labels=[
+  "tong cong von chu so huu","tong von chu so huu","von chu so huu","total equity",
+  "owners' equity","owners’ equity","owner's equity",
+  "shareholders' equity","shareholders’ equity","shareholders equity",
+  "total owners' equity","total shareholders' equity"
+ ]
  if symbol in BANKS:
   # Some bank B02/TCTD templates label equity as "Vốn và các quỹ"; prioritize
   # it before the generic "vốn chủ sở hữu" substring in the total-sources row.
@@ -625,6 +630,8 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
    balance,[
     r"^\s*(?:\|\s*)?\d{1,3}\s*\|\s*c\.?\s*no\s+phai\s+tra(?:\s|$)",
     r"^\s*(?:\|\s*)?c\.?\s+no\s+phai\s+tra(?:\s|$)",
+    r"^\s*(?:\|\s*)?\d{1,3}\s*\|\s*c\.?\s*liabilities(?:\s|$)",
+    r"^\s*(?:\|\s*)?c\.?\s*liabilities(?:\s|$)",
     r"^\s*(?:\|\s*)?\d{1,3}\s*\|\s*c\.?\s*total\s+liabilities(?:\s|$)",
    ],factor
   )
