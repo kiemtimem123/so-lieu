@@ -115,6 +115,146 @@ jobs:
             exit 1
           fi
 
+  advance-sync:
+    needs: sync
+    if: ${{ needs.sync.result == 'success' }}
+    runs-on: ubuntu-24.04
+    outputs:
+      symbol: ${{ steps.check.outputs.symbol }}
+      should_continue: ${{ steps.check.outputs.should_continue }}
+    steps:
+      - name: Checkout only the selected ticker snapshot and checkpoint
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /config/securities.json
+            /data/financials-*.json
+            /reports/processing-checkpoint.json
+      - name: Check whether the same ticker has another eligible quarter
+        id: check
+        env:
+          REQUESTED_SYMBOL: ${{ github.event.inputs.symbol || '' }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import re
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          def read(path):
+              try:
+                  return json.loads(Path(path).read_text(encoding="utf-8"))
+              except (OSError, json.JSONDecodeError):
+                  return {}
+
+          def age_seconds(stamp):
+              if not stamp:
+                  return None
+              try:
+                  parsed = datetime.fromisoformat(str(stamp).replace("Z", "+00:00"))
+                  if parsed.tzinfo is None:
+                      parsed = parsed.replace(tzinfo=timezone.utc)
+                  return (datetime.now(timezone.utc) - parsed).total_seconds()
+              except (TypeError, ValueError, OSError, OverflowError):
+                  return None
+
+          config = read("config/securities.json")
+          checkpoint = read("reports/processing-checkpoint.json")
+          securities = {
+              str(item.get("symbol") or "").strip().upper()
+              for item in config.get("securities", [])
+              if isinstance(item, dict) and item.get("enabled") is not False and item.get("symbol")
+          }
+          requested = os.environ.get("REQUESTED_SYMBOL", "").strip().upper()
+          symbol = requested or str(checkpoint.get("activeSymbol") or "").strip().upper()
+          snapshot = read(Path("data") / f"financials-{symbol}.json") if symbol else {}
+          should_continue = False
+          reason = "no eligible work found for the saved ticker"
+          cooldown = 30 * 60
+
+          if symbol in securities and snapshot:
+              state = str(snapshot.get("bootstrap_status") or "")
+              items = snapshot.get("items") or []
+              if state in {"complete", "complete_needs_manual_review"}:
+                  reason = "ticker already has a saved terminal completion state"
+              elif not items:
+                  try:
+                      attempts = int(snapshot.get("bootstrap_attempt_count") or 0)
+                  except (TypeError, ValueError):
+                      attempts = 0
+                  sync_status = snapshot.get("sync_status")
+                  last_age = age_seconds(snapshot.get("bootstrap_last_attempt_at") or snapshot.get("fetchedAt"))
+                  terminal_empty = attempts >= 3 and sync_status in {
+                      "fetch_failed", "no_quarterly_consolidated_records_returned",
+                      "needs_manual_review_no_quarterly_data"
+                  }
+                  if terminal_empty:
+                      reason = "empty catalog result reached its retry limit"
+                  elif last_age is None or last_age >= cooldown:
+                      should_continue = True
+                      reason = "empty snapshot is eligible for one more same-ticker catalog retry"
+                  else:
+                      reason = "empty snapshot is still inside its retry cooldown"
+              else:
+                  for item in items:
+                      if not isinstance(item, dict) or not re.fullmatch(r"20\\d{2}-Q[1-4]", str(item.get("period") or "")):
+                          continue
+                      status = str(item.get("verification_status") or "")
+                      validation = item.get("source_validation")
+                      if not isinstance(validation, dict):
+                          validation = {}
+                      if status == "manual_review_required_pending_extraction":
+                          try:
+                              validation_attempts = int(validation.get("extraction_attempt_count") or 0)
+                          except (TypeError, ValueError):
+                              validation_attempts = 0
+                          try:
+                              core_attempts = int(item.get("core_financial_extraction_attempt_count") or 0)
+                          except (TypeError, ValueError):
+                              core_attempts = 0
+                          if validation.get("automatic_extraction_exhausted") is True or validation_attempts >= 3 or core_attempts >= 3:
+                              continue
+                      if status == "auto_pending_extraction":
+                          last_age = age_seconds(validation.get("last_extraction_attempt_at"))
+                          if last_age is None or last_age >= cooldown:
+                              should_continue = True
+                              reason = f"{item.get('period')} still needs core extraction and is eligible for another short batch"
+                              break
+                      if (
+                          item.get("total_assets") is not None
+                          and item.get("net_profit") is not None
+                          and not item.get("financial_line_items_status")
+                      ):
+                          last_age = age_seconds(item.get("financial_line_items_last_attempt_at"))
+                          if last_age is None or last_age >= cooldown:
+                              should_continue = True
+                              reason = f"{item.get('period')} still needs detail extraction and is eligible for another short batch"
+                              break
+
+          print(json.dumps({
+              "symbol": symbol or None,
+              "should_continue": should_continue,
+              "reason": reason,
+          }, ensure_ascii=False))
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
+              handle.write("symbol=" + (symbol if should_continue else "") + chr(10))
+              handle.write("should_continue=" + ("true" if should_continue else "false") + chr(10))
+          PY
+      - name: Dispatch next short sync batch for the same ticker
+        if: ${{ steps.check.outputs.should_continue == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Continue quarterly extraction for ticker ${{ steps.check.outputs.symbol }} from its committed snapshot."
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/workflows/sync-vietstock-financials.yml/dispatches" -f ref=main -f "inputs[symbol]=${{ steps.check.outputs.symbol }}"
+
   trigger-ocr:
     needs: sync
     if: ${{ needs.sync.result == 'success' }}
