@@ -535,6 +535,29 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
    balance,[r"^\s*(?:\|\s*)?b\.?\s+no phai tra.*von chu so huu(?:\s|$)",
             r"^\s*total liabilities and equity(?:\s|$)"],factor
   )
+ # Some bank PDFs/OCR put the source totals BEFORE the wrapped final word
+ # in "Tổng nợ phải trả và vốn chủ sở hữu". Recover that total only when
+ # the adjacent lines complete the label and a candidate total reconciles
+ # to the independently extracted total-assets row.
+ if source_total is None and balance and symbol in BANKS:
+  for page in balance:
+   lines=str(page.get("text","")).splitlines()
+   for index,line in enumerate(lines):
+    clean_window=norm(" ".join(lines[index:index+3]))
+    if "tong no phai tra" not in clean_window or "von chu so huu" not in clean_window:
+     continue
+    row_values=amounts(line,threshold=1000)
+    if not row_values:
+     continue
+    candidates=[int(round(value*factor)) for value in row_values]
+    if isinstance(assets,(int,float)):
+     candidate=min(candidates,key=lambda value:abs(value-assets))
+     tolerance=max(abs(assets)*0.00001,1000)
+     if abs(candidate-assets)<=tolerance:
+      source_total=candidate
+      break
+   if source_total is not None:
+    break
  liabilities=value_by_label(
   balance,["tong cong no phai tra","tong no phai tra","total liabilities"],factor,
   exclude_terms=["von chu so huu","liabilities and equity"]
