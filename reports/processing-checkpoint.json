@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-23T10:33:05.766Z",
+  "updatedAt": "2026-10-23T10:37:59.597Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -345,13 +345,15 @@
       "snapshotFetchedAt": "2026-10-23T09:38:33+00:00"
     },
     "SSI": {
-      "status": "report_archive_collection_in_progress",
+      "status": "archive_collection_running_no_recent_commit",
       "completeForAutomation": false,
       "manualReviewRemaining": false,
-      "updatedAt": "2026-10-23T10:33:05.766Z",
+      "updatedAt": "2026-10-23T10:37:59.597Z",
       "workflowRunId": "39938661744",
       "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39938661744",
-      "note": "SSI has 2024-Q1 through 2026-Q2 quarterly snapshot rows; the current single-ticker archive collector is attempting to complete source PDF/ZIP archiving and queue updates before OCR."
+      "note": "SSI has 2024-Q1 through 2026-Q2 quarterly snapshot rows; the current single-ticker archive collector is attempting to complete source PDF/ZIP archiving and queue updates before OCR.",
+      "queuedResumeWorkflowRunId": "39940433773",
+      "queuedResumeWorkflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39940433773"
     }
   },
   "progressHistory": [
@@ -943,20 +945,23 @@
   ],
   "currentRun": {
     "symbol": "SSI",
-    "status": "report_archive_collection_in_progress",
+    "status": "archive_collection_running_no_recent_commit",
     "workflowRunId": "39938661744",
     "workflowRunNumber": 161,
     "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39938661744",
-    "updatedAt": "2026-10-23T10:33:05.766Z",
+    "updatedAt": "2026-10-23T10:37:59.597Z",
     "archiveProgress": {
       "queueJobId": "auto-ssi-20261021",
       "queueStatus": "queued",
       "queueAttempts": 4,
       "successfullyArchived": 8,
-      "sourceCandidatesRemaining": 10,
-      "note": "Single-ticker collection run selected SSI; wait for this run's commit before starting/advancing OCR."
+      "sourceCandidatesRemaining": 8,
+      "note": "SSI remains the only active ticker. Existing run #161 has not produced a new commit since its collector step started; optimized resume run #162 is queued behind the current collector by concurrency."
     },
-    "note": "VCK's quarter coverage intentionally begins at 2025-Q1 because the company did not have BCTC to include from 2024 according to the user's correction. SSI remains active; process one ticker at a time."
+    "note": "VCK's quarter coverage intentionally begins at 2025-Q1; exclude 2024-Q1 through 2024-Q4 from missing-period checks. Continue SSI until its archive and quarterly extraction are finished or remaining failures are explicitly marked for manual review.",
+    "queuedResumeWorkflowRunId": "39940433773",
+    "queuedResumeWorkflowRunNumber": 162,
+    "queuedResumeWorkflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39940433773"
   },
   "scopePolicy": {
     "VCK": {
@@ -981,5 +986,13 @@
       "excludedFromIncompleteChecks": true,
       "updatedAt": "2026-10-23T10:33:05.766Z"
     }
+  },
+  "collectorResumeOptimization": {
+    "status": "committed",
+    "commit": "9f288ae990f7ebff31e4558aad6ff969c6d1d613",
+    "behavior": "Reuse saved sourceCandidates on queued resumeDownload batches instead of rescanning every VietstockFinance year/page; continue to filter successful and already attempted URLs.",
+    "workflowTriggerCommit": "ad2ef3f4644ec319091ac29ee8f54bebfc09c004",
+    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39940433773",
+    "updatedAt": "2026-10-23T10:37:59.597Z"
   }
 }
