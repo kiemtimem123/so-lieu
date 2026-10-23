@@ -1528,7 +1528,7 @@ def enrich_snapshot(path):
    changed=True
    quarter_count+=1
    field_count+=1
-  elif not core_required_ok and item.get("verification_status") in {"auto_pending_extraction","manual_review_required_pending_extraction"} and evidence_changed:
+  elif not core_balance_ok and item.get("verification_status") in {"auto_pending_extraction","manual_review_required_pending_extraction"} and evidence_changed:
    # A retry is meaningful only after a new version of this quarter's page text
    # arrives (for example, after another OCR pass). Do not increment on every
    # run merely because this ticker still has some missing values.
@@ -1545,7 +1545,7 @@ def enrich_snapshot(path):
     item["core_financial_extraction_note"]="Đã thử trên ba phiên bản nội dung nguồn khác nhau nhưng chưa đủ bộ chỉ tiêu lõi khớp phương trình cân đối; giữ trống trường không đáng tin và yêu cầu rà soát PDF."
     quarter_count+=1
   elif (
-   not core_required_ok
+   not core_balance_ok
    and item.get("verification_status") in {"auto_pending_extraction","manual_review_required_pending_extraction"}
    and not evidence_changed
    and previous_fingerprint
