@@ -596,6 +596,8 @@ def extract_statement(
     )
     if expected_consolidated is True and header_separate and not header_consolidated:
         raise ValueError("PDF ghi rõ báo cáo riêng lẻ/công ty mẹ; từ chối dùng làm BCTC hợp nhất.")
+    if expected_consolidated is True and not header_consolidated:
+        raise ValueError("Đầu PDF không xác nhận rõ phạm vi hợp nhất; giữ liên kết nguồn và yêu cầu rà soát thủ công, không lưu số liệu vào chuỗi hợp nhất.")
     if expected_consolidated is False and header_consolidated:
         raise ValueError("PDF ghi rõ BCTC hợp nhất; từ chối dùng làm BCTC riêng lẻ.")
 
