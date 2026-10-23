@@ -5,7 +5,7 @@ Only fills missing fields. Text/OCR-derived fields are marked pending visual rev
 No prices, market multiples or other values are inferred from accounting reports.
 """
 from __future__ import annotations
-import json, re, unicodedata
+import hashlib, json, re, unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import unquote, urlparse
@@ -1301,6 +1301,52 @@ def enrich_snapshot(path):
    changed=True
   pages=load_report_pages(item,symbol)
   if not pages: continue
+
+  # Count an extraction retry only when the source text evidence for this
+  # quarter changes. This script runs on every one-report OCR pass; without
+  # this fingerprint, all pending quarters would burn through the retry limit
+  # even when their PDF text had not changed.
+  page_evidence=[
+   {
+    "page":page.get("page"),
+    "text":str(page.get("text") or ""),
+    "ocr":page.get("ocr"),
+    "extraction_method":page.get("extraction_method"),
+   }
+   for page in pages if isinstance(page,dict)
+  ]
+  evidence_payload=json.dumps(
+   {"source_archive_file":str(item.get("source_archive_file") or ""),
+    "pages":page_evidence},
+   ensure_ascii=False,sort_keys=True,separators=(",",":")
+  ).encode("utf-8")
+  evidence_fingerprint=hashlib.sha256(evidence_payload).hexdigest()
+  previous_fingerprint=str(item.get("core_financial_extraction_evidence_fingerprint") or "")
+  evidence_changed=bool(previous_fingerprint and previous_fingerprint!=evidence_fingerprint)
+  source_validation=item.get("source_validation")
+  if not isinstance(source_validation,dict):
+   source_validation={}
+  explicitly_exhausted=source_validation.get("automatic_extraction_exhausted") is True
+
+  if not previous_fingerprint:
+   # Legacy attempt counters were incremented by repeated enrich passes, not
+   # necessarily by distinct source revisions. Establish a baseline and reset
+   # only those legacy manual-review states that lack an explicit source-level
+   # exhaustion marker. Missing numbers remain blank until reconciled.
+   item["core_financial_extraction_evidence_fingerprint"]=evidence_fingerprint
+   item["core_financial_extraction_evidence_attempt_count"]=0
+   if item.get("verification_status")=="manual_review_required_pending_extraction" and not explicitly_exhausted:
+    item["verification_status"]="auto_pending_extraction"
+    item["core_financial_extraction_status"]="auto_pending_extraction"
+    item["core_financial_extraction_note"]="Đặt lại bộ đếm thử cũ chưa gắn với phiên bản nguồn; chỉ tính lượt mới khi nội dung nguồn thay đổi. Số liệu chưa đủ vẫn cần đối chiếu báo cáo."
+   changed=True
+  elif evidence_changed:
+   item["core_financial_extraction_evidence_fingerprint"]=evidence_fingerprint
+   if item.get("verification_status")=="manual_review_required_pending_extraction" and not explicitly_exhausted:
+    item["verification_status"]="auto_pending_extraction"
+    item["core_financial_extraction_status"]="auto_pending_extraction"
+   changed=True
+
   found=extract_fields(item,symbol,pages)
   mode=cumulative_income_mode(item,pages)
   found,withheld_fields=apply_quarter_scope(item,items,found,symbol,mode)
@@ -1346,8 +1392,12 @@ def enrich_snapshot(path):
    changed=True
    quarter_count+=1
    field_count+=1
-  elif not core_required_ok and item.get("verification_status") in {"auto_pending_extraction","manual_review_required_pending_extraction"}:
-   attempts=int(item.get("core_financial_extraction_attempt_count") or 0)+1
+  elif not core_required_ok and item.get("verification_status") in {"auto_pending_extraction","manual_review_required_pending_extraction"} and evidence_changed:
+   # A retry is meaningful only after a new version of this quarter's page text
+   # arrives (for example, after another OCR pass). Do not increment on every
+   # run merely because this ticker still has some missing values.
+   attempts=int(item.get("core_financial_extraction_evidence_attempt_count") or 0)+1
+   item["core_financial_extraction_evidence_attempt_count"]=attempts
    item["core_financial_extraction_attempt_count"]=attempts
    item["core_financial_extraction_status"]="auto_pending_extraction"
    item["core_financial_extraction_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
@@ -1356,7 +1406,7 @@ def enrich_snapshot(path):
    if attempts>=3:
     item["verification_status"]="manual_review_required_pending_extraction"
     item["core_financial_extraction_status"]="manual_review_required_pending_extraction"
-    item["core_financial_extraction_note"]="Đã thử tự động nhiều lượt nhưng chưa đủ bộ chỉ tiêu lõi khớp phương trình cân đối; giữ trống trường không đáng tin và yêu cầu rà soát PDF."
+    item["core_financial_extraction_note"]="Đã thử trên ba phiên bản nội dung nguồn khác nhau nhưng chưa đủ bộ chỉ tiêu lõi khớp phương trình cân đối; giữ trống trường không đáng tin và yêu cầu rà soát PDF."
     quarter_count+=1
   if withheld_fields:
    pending=set(item.get("financial_line_items_unquarterized_fields") or [])
