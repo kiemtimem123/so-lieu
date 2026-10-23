@@ -371,7 +371,7 @@
       "report_type": "BCTC hợp nhất BID 2024-Q3 (phát hiện tự động qua VietstockFinance; chờ trích xuất)",
       "source_pages": "Chưa trích xuất được đủ chỉ tiêu; xem PDF/ZIP trong đường dẫn VietstockFinance.",
       "quarter_profit_basis": "Chỉ lưu số liệu khi cột phát sinh riêng của quý được trích xuất và cân đối hợp lệ.",
-      "verification_status": "auto_pending_extraction",
+      "verification_status": "manual_review_required_pending_extraction",
       "source_validation": {
         "reviewed_at": "2026-10-23T04:13:10+00:00",
         "single_source_policy": "Chỉ danh mục VietstockFinance và tệp do danh mục đó liên kết.",
@@ -407,9 +407,9 @@
         13,
         14
       ],
-      "core_financial_extraction_status": "auto_pending_extraction",
-      "core_financial_extraction_updated_at": "2026-10-23T05:07:44Z",
-      "core_financial_extraction_note": "Đã mở lại sau sửa bộ nhận diện nhãn OCR; chỉ chấp nhận tổng tài sản, nợ và vốn khi phương trình cân đối khớp.",
+      "core_financial_extraction_status": "manual_review_required_pending_extraction",
+      "core_financial_extraction_updated_at": "2026-10-23T05:10:38Z",
+      "core_financial_extraction_note": "Không còn trang PDF/ZIP đang chờ trích xuất tự động nhưng bộ chỉ tiêu lõi vẫn thiếu hoặc chưa cân đối. Giữ trống chỉ tiêu chưa xác minh và yêu cầu đối chiếu trực quan với báo cáo VietstockFinance.",
       "core_financial_extraction_calculations": {
         "balance_totals_withheld": "asset/liability/equity totals did not fully reconcile"
       },
@@ -514,7 +514,8 @@
         "operating_cash_flow",
         "operating_cash_flow_ytd"
       ],
-      "core_financial_extraction_attempt_count": 0
+      "core_financial_extraction_attempt_count": 0,
+      "core_financial_extraction_manual_terminal": true
     },
     {
       "symbol": "BID",
@@ -1201,9 +1202,9 @@
     {
       "symbol": "BID",
       "period": "2026-Q1",
-      "total_assets": null,
-      "total_liabilities": null,
-      "equity": null,
+      "total_assets": 3388221517,
+      "total_liabilities": 3197598357,
+      "equity": 190623160,
       "pretax_profit": 8571616,
       "net_profit": 6878794,
       "net_profit_attributable": null,
@@ -1217,7 +1218,7 @@
       "report_type": "BCTC hợp nhất BID 2026-Q1 (phát hiện tự động qua VietstockFinance; chờ trích xuất)",
       "source_pages": "Chưa trích xuất được đủ chỉ tiêu; xem PDF/ZIP trong đường dẫn VietstockFinance.",
       "quarter_profit_basis": "Chỉ lưu số liệu khi cột phát sinh riêng của quý được trích xuất và cân đối hợp lệ.",
-      "verification_status": "auto_pending_extraction",
+      "verification_status": "auto_extracted_pending_visual_review",
       "source_validation": {
         "reviewed_at": "2026-10-23T04:25:40+00:00",
         "single_source_policy": "Chỉ danh mục VietstockFinance và tệp do danh mục đó liên kết.",
@@ -1302,8 +1303,11 @@
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-23T05:00:16+00:00",
       "core_financial_extracted_fields": [
+        "equity",
         "net_profit",
-        "pretax_profit"
+        "pretax_profit",
+        "total_assets",
+        "total_liabilities"
       ],
       "core_financial_extraction_source": "reports/raw/BID/auto-bid-20261021/187ace9c81d22437.pdf",
       "core_financial_extraction_pages": [
@@ -1314,11 +1318,11 @@
         13,
         14
       ],
-      "core_financial_extraction_status": "auto_pending_extraction",
-      "core_financial_extraction_updated_at": "2026-10-23T05:07:44Z",
-      "core_financial_extraction_note": "Đã mở lại sau sửa bộ nhận diện nhãn OCR; chỉ chấp nhận tổng tài sản, nợ và vốn khi phương trình cân đối khớp.",
+      "core_financial_extraction_status": "auto_extracted_pending_visual_review",
+      "core_financial_extraction_updated_at": "2026-10-23T05:10:36+00:00",
+      "core_financial_extraction_note": "Chỉ tiêu lõi được trích xuất từ văn bản PDF/ZIP đã lưu; chưa xác minh thủ công trên bản PDF.",
       "core_financial_extraction_calculations": {
-        "balance_totals_withheld": "asset/liability/equity totals did not fully reconcile"
+        "total_liabilities": "total_assets minus reported equity; total sources matched total assets"
       },
       "core_financial_extraction_attempt_count": 0,
       "fixed_assets": 12961150,
@@ -1354,7 +1358,8 @@
         "net_cash_change_ytd",
         "operating_cash_flow",
         "operating_cash_flow_ytd"
-      ]
+      ],
+      "verification_status_note": "Các chỉ tiêu lõi đã được trích xuất tự động từ BCTC hợp nhất VietstockFinance; cần đối chiếu trực quan trước khi coi là xác minh."
     },
     {
       "symbol": "BID",
@@ -1375,7 +1380,7 @@
       "report_type": "BCTC hợp nhất BID 2026-Q2 (phát hiện tự động qua VietstockFinance; chờ trích xuất)",
       "source_pages": "Chưa trích xuất được đủ chỉ tiêu; xem PDF/ZIP trong đường dẫn VietstockFinance.",
       "quarter_profit_basis": "Chỉ lưu số liệu khi cột phát sinh riêng của quý được trích xuất và cân đối hợp lệ.",
-      "verification_status": "auto_pending_extraction",
+      "verification_status": "manual_review_required_pending_extraction",
       "source_validation": {
         "reviewed_at": "2026-10-23T04:27:50+00:00",
         "single_source_policy": "Chỉ danh mục VietstockFinance và tệp do danh mục đó liên kết.",
@@ -1408,9 +1413,9 @@
         13,
         14
       ],
-      "core_financial_extraction_status": "auto_pending_extraction",
-      "core_financial_extraction_updated_at": "2026-10-23T05:07:44Z",
-      "core_financial_extraction_note": "Đã mở lại sau sửa bộ nhận diện nhãn OCR; chỉ chấp nhận tổng tài sản, nợ và vốn khi phương trình cân đối khớp.",
+      "core_financial_extraction_status": "manual_review_required_pending_extraction",
+      "core_financial_extraction_updated_at": "2026-10-23T05:10:38Z",
+      "core_financial_extraction_note": "Không còn trang PDF/ZIP đang chờ trích xuất tự động nhưng bộ chỉ tiêu lõi vẫn thiếu hoặc chưa cân đối. Giữ trống chỉ tiêu chưa xác minh và yêu cầu đối chiếu trực quan với báo cáo VietstockFinance.",
       "core_financial_extraction_calculations": {
         "balance_totals_withheld": "asset/liability/equity totals did not fully reconcile"
       },
@@ -1496,7 +1501,8 @@
       },
       "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "core_financial_extraction_attempt_count": 0
+      "core_financial_extraction_attempt_count": 0,
+      "core_financial_extraction_manual_terminal": true
     }
   ],
   "sync_status": "records_found",
