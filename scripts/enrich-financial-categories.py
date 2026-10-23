@@ -16,7 +16,7 @@ RAW = ROOT / "reports" / "raw"
 REPORT_QUEUE = ROOT / "config" / "report-queue.json"
 _QUEUE_ARCHIVE_BY_URL = None
 DETAIL_SCHEMA_VERSION = "2026-10-22-bank-statement-qc-v4"
-CORE_EXTRACTION_DEBUG_VERSION = "2026-10-23-bid-balance-source-v3"
+CORE_EXTRACTION_DEBUG_VERSION = "2026-10-23-bid-balance-source-v4"
 NUMBER_RE = re.compile(r"(?<![A-Za-z0-9])\(?-?\d[\d.,]*\d?\)?")
 BANKS = {"MBB", "ACB", "SHB", "TCB", "TPB", "VPB", "STB", "VCB", "CTG", "BID"}
 BROKERS = {"HCM", "SHS", "TCX", "VND", "VCI", "VCK", "VIX", "SSI", "VDS"}
@@ -516,9 +516,9 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
   # joins "tài sản" into "taisan", so allow optional whitespace in total labels.
   assets=value_by_row_prefix(
    balance,[
-    r"^\s*(?:\|\s*)?(?:tong\s*)?(?:cong\s*)?tai\s*san\s*co(?:\s|$)",
-    r"^\s*(?:\|\s*)?(?:tong\s*)?(?:cong\s*)?tai\s*san(?:\s|$)",
-    r"^\s*(?:\|\s*)?total\s*assets(?:\s|$)"
+    r"^\s*[,;:._\-\x60~]*\s*(?:\|\s*)?(?:tong\s*)?(?:cong\s*)?tai\s*san\s*co(?:\s|$)",
+    r"^\s*[,;:._\-\x60~]*\s*(?:\|\s*)?(?:tong\s*)?(?:cong\s*)?tai\s*san(?:\s|$)",
+    r"^\s*[,;:._\-\x60~]*\s*(?:\|\s*)?total\s*assets(?:\s|$)"
    ],factor
   )
 
