@@ -113,14 +113,15 @@
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-22T14:44:50+00:00",
       "financial_line_items_source": "reports/raw/VPB/auto-vpb-20261021/c70fe8fffe290345.pdf",
-      "financial_line_items_updated_at": "2026-10-22T14:45:04+00:00",
+      "financial_line_items_updated_at": "2026-10-23T03:03:42+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
       "operating_cash_flow": 6834558,
       "operating_cash_flow_calculation": "reported as standalone quarter",
       "net_cash_change": -5358713,
       "net_cash_change_calculation": "reported as standalone quarter",
       "financial_line_items_prior_values": {
-        "income_tax": -1039969
+        "income_tax": -1039969,
+        "bank_provision_expense": -5762193
       },
       "financial_line_items_rejected_values": {},
       "eps": 378,
@@ -132,16 +133,26 @@
       "bank_net_service_income": 1553831,
       "bank_investment_securities_net": 37219,
       "bank_operating_expenses": -3466567,
-      "bank_provision_expense": -5762193,
+      "bank_provision_expense": 5762193,
       "bank_non_controlling_profit": -424814,
       "income_tax_current": -1042770,
       "income_tax_deferred": 2801,
       "income_tax": 1039969,
-      "bank_net_service_income_calculation": "Thu nhập dịch vụ + chi phí dịch vụ (chi phí giữ dấu âm).",
+      "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
       "bank_pre_provision_operating_profit": 9944045,
-      "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động + chi phí hoạt động (chi phí giữ dấu âm).",
-      "bank_provision_expense_calculation": "Lợi nhuận trước thuế - lợi nhuận trước dự phòng; chi phí dự phòng giữ dấu âm.",
-      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có."
+      "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động - |chi phí hoạt động| theo BCTC ngân hàng.",
+      "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
+      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
+      "core_financial_extraction_evidence_fingerprint": "f68ebc2a74e012a2734cfc76fbcca238e1574f7df764578714e70b398a88c67d",
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "revenue_calculation": "Lợi nhuận trước dự phòng + chi phí hoạt động; đối chiếu theo tổng phụ BCTC ngân hàng.",
+      "financial_line_items_value_corrections": {
+        "bank_provision_expense": {
+          "previous_value": -5762193,
+          "new_value": 5762193,
+          "reason": "derived from reconciled pre-provision operating profit minus reported quarterly PBT"
+        }
+      }
     },
     {
       "symbol": "VPB",
@@ -251,7 +262,7 @@
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-22T14:44:51+00:00",
       "financial_line_items_source": "reports/raw/VPB/auto-vpb-20261021/8e91134c67b63a50.pdf",
-      "financial_line_items_updated_at": "2026-10-22T14:45:04+00:00",
+      "financial_line_items_updated_at": "2026-10-23T03:03:42+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
       "operating_cash_flow": 39145572,
       "operating_cash_flow_calculation": "reported as standalone quarter",
@@ -273,22 +284,25 @@
       "bank_trading_securities_net": 33719,
       "bank_investment_securities_net": 411663,
       "bank_operating_expenses": -3331115,
-      "bank_provision_expense": -8313437,
+      "bank_provision_expense": 8313437,
       "bank_non_controlling_profit": 74299,
       "income_tax_current": -780526,
       "income_tax_deferred": -70232,
       "income_tax": 850758,
       "bank_pre_provision_operating_profit": 12796880,
-      "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động + chi phí hoạt động (chi phí giữ dấu âm).",
+      "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động - |chi phí hoạt động| theo BCTC ngân hàng.",
       "financial_line_items_value_corrections": {
         "bank_provision_expense": {
-          "previous_value": 12796880,
-          "new_value": -8313437,
-          "reason": "derived from verified quarterly PBT minus reconciled pre-provision operating profit"
+          "previous_value": -8313437,
+          "new_value": 8313437,
+          "reason": "derived from reconciled pre-provision operating profit minus reported quarterly PBT"
         }
       },
-      "bank_provision_expense_calculation": "Lợi nhuận trước thuế - lợi nhuận trước dự phòng; chi phí dự phòng giữ dấu âm.",
-      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có."
+      "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
+      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
+      "core_financial_extraction_evidence_fingerprint": "5b10e69277f21e59c9a968c4869f6275974658840e761434945a65b12cf2e999",
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "revenue_calculation": "Lợi nhuận trước dự phòng + chi phí hoạt động; đối chiếu theo tổng phụ BCTC ngân hàng."
     },
     {
       "symbol": "VPB",
@@ -434,7 +448,9 @@
       "eps": 1195,
       "verification_status_note": "Các chỉ tiêu lõi đã được trích xuất tự động từ BCTC hợp nhất VietstockFinance; cần đối chiếu trực quan trước khi coi là xác minh.",
       "income_tax": 1022666,
-      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có."
+      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
+      "core_financial_extraction_evidence_fingerprint": "aee54b99076489c8145e0d3252717037dd6a605957cd7e5a66405bb5b4409198",
+      "core_financial_extraction_evidence_attempt_count": 0
     },
     {
       "symbol": "VPB",
@@ -470,7 +486,7 @@
       "source_archive_match": "matched_report_queue_url",
       "core_financial_extraction_attempt_count": 7,
       "core_financial_extraction_status": "manual_review_required_pending_extraction",
-      "core_financial_extraction_updated_at": "2026-10-22T14:59:30+00:00",
+      "core_financial_extraction_updated_at": "2026-10-23T03:03:42Z",
       "fixed_assets": 2023899,
       "retained_earnings": 24007579,
       "bank_cash_on_hand": 2148289,
@@ -520,7 +536,7 @@
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-22T14:44:53+00:00",
       "financial_line_items_source": "reports/raw/VPB/auto-vpb-20261021/5f1495f3fae3389e.pdf",
-      "financial_line_items_updated_at": "2026-10-22T14:45:04+00:00",
+      "financial_line_items_updated_at": "2026-10-23T03:03:42+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
       "operating_cash_flow_calculation": "reported as standalone quarter",
       "investing_cash_flow_calculation": "reported as standalone quarter",
@@ -586,7 +602,7 @@
         7,
         8
       ],
-      "core_financial_extraction_note": "Đã thử tự động nhiều lượt nhưng chưa đủ bộ chỉ tiêu lõi khớp phương trình cân đối; giữ trống trường không đáng tin và yêu cầu rà soát PDF.",
+      "core_financial_extraction_note": "Không còn trang PDF/ZIP đang chờ trích xuất tự động nhưng bộ chỉ tiêu lõi vẫn thiếu hoặc chưa cân đối. Giữ trống chỉ tiêu chưa xác minh và yêu cầu đối chiếu trực quan với báo cáo VietstockFinance.",
       "core_financial_extraction_calculations": {
         "balance_totals_withheld": "asset/liability/equity totals did not fully reconcile"
       },
@@ -597,22 +613,26 @@
       "bank_net_service_income": 1541890,
       "bank_trading_securities_net": 236288,
       "bank_operating_expenses": -3791098,
-      "bank_provision_expense": -7701873,
+      "bank_provision_expense": 7701873,
       "bank_non_controlling_profit": 422102,
       "income_tax_current": -1113274,
       "income_tax": 1111912,
-      "bank_net_service_income_calculation": "Thu nhập dịch vụ + chi phí dịch vụ (chi phí giữ dấu âm).",
+      "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
       "bank_pre_provision_operating_profit": 13853307,
-      "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động + chi phí hoạt động (chi phí giữ dấu âm).",
+      "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động - |chi phí hoạt động| theo BCTC ngân hàng.",
       "financial_line_items_value_corrections": {
         "bank_provision_expense": {
-          "previous_value": 13853307,
-          "new_value": -7701873,
-          "reason": "derived from verified quarterly PBT minus reconciled pre-provision operating profit"
+          "previous_value": -7701873,
+          "new_value": 7701873,
+          "reason": "derived from reconciled pre-provision operating profit minus reported quarterly PBT"
         }
       },
-      "bank_provision_expense_calculation": "Lợi nhuận trước thuế - lợi nhuận trước dự phòng; chi phí dự phòng giữ dấu âm.",
-      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có."
+      "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
+      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
+      "core_financial_extraction_evidence_fingerprint": "41493f44d078ce2d89a8bae56733dfb6c52c278962428949ad9ca6e997539fc0",
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "revenue_calculation": "Lợi nhuận trước dự phòng + chi phí hoạt động; đối chiếu theo tổng phụ BCTC ngân hàng.",
+      "core_financial_extraction_manual_terminal": true
     },
     {
       "symbol": "VPB",
@@ -648,7 +668,7 @@
       "source_archive_match": "matched_report_queue_url",
       "core_financial_extraction_attempt_count": 6,
       "core_financial_extraction_status": "manual_review_required_pending_extraction",
-      "core_financial_extraction_updated_at": "2026-10-22T14:59:30+00:00",
+      "core_financial_extraction_updated_at": "2026-10-23T03:03:42Z",
       "fixed_assets": 1941077,
       "retained_earnings": 27901391,
       "bank_cash_on_hand": 2671682,
@@ -701,7 +721,7 @@
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-22T14:44:53+00:00",
       "financial_line_items_source": "reports/raw/VPB/auto-vpb-20261021/630674877ce10513.pdf",
-      "financial_line_items_updated_at": "2026-10-22T14:45:04+00:00",
+      "financial_line_items_updated_at": "2026-10-23T03:03:42+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
       "operating_cash_flow_calculation": "reported as standalone quarter",
       "investing_cash_flow_calculation": "reported as standalone quarter",
@@ -710,7 +730,8 @@
       "financial_line_items_cash_check": "opening/closing cash hidden because the cash bridge did not reconcile",
       "financial_line_items_prior_values": {
         "bank_pre_provision_operating_profit": -6677305,
-        "income_tax": -1078750
+        "income_tax": -1078750,
+        "bank_provision_expense": -6677305
       },
       "financial_line_items_rejected_values": {
         "operating_cash_flow": {
@@ -769,7 +790,7 @@
         7,
         8
       ],
-      "core_financial_extraction_note": "Đã thử tự động nhiều lượt nhưng chưa đủ bộ chỉ tiêu lõi khớp phương trình cân đối; giữ trống trường không đáng tin và yêu cầu rà soát PDF.",
+      "core_financial_extraction_note": "Không còn trang PDF/ZIP đang chờ trích xuất tự động nhưng bộ chỉ tiêu lõi vẫn thiếu hoặc chưa cân đối. Giữ trống chỉ tiêu chưa xác minh và yêu cầu đối chiếu trực quan với báo cáo VietstockFinance.",
       "core_financial_extraction_calculations": {
         "balance_totals_withheld": "asset/liability/equity totals did not fully reconcile"
       },
@@ -782,23 +803,32 @@
       "bank_fx_net_income": 119466,
       "bank_operating_expenses": -3873901,
       "bank_pre_provision_operating_profit": 11692187,
-      "bank_provision_expense": -6677305,
+      "bank_provision_expense": 6677305,
       "bank_non_controlling_profit": 40045,
       "income_tax_current": -1078750,
       "income_tax": 1079928,
       "cash_beginning": 443002784,
       "cash_ending": 151497743,
-      "bank_net_service_income_calculation": "Thu nhập dịch vụ + chi phí dịch vụ (chi phí giữ dấu âm).",
+      "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
       "financial_line_items_value_corrections": {
         "bank_pre_provision_operating_profit": {
           "previous_value": -6677305,
           "new_value": 11692187,
           "reason": "derived from total operating income plus signed operating expenses"
+        },
+        "bank_provision_expense": {
+          "previous_value": -6677305,
+          "new_value": 6677305,
+          "reason": "derived from reconciled pre-provision operating profit minus reported quarterly PBT"
         }
       },
-      "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động + chi phí hoạt động (chi phí giữ dấu âm).",
-      "bank_provision_expense_calculation": "Lợi nhuận trước thuế - lợi nhuận trước dự phòng; chi phí dự phòng giữ dấu âm.",
-      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có."
+      "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động - |chi phí hoạt động| theo BCTC ngân hàng.",
+      "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
+      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
+      "core_financial_extraction_evidence_fingerprint": "0797764e7705bcfc90742477653d67b1819c8e04b09b798cad5be227e9d1ba90",
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "revenue_calculation": "Lợi nhuận trước dự phòng + chi phí hoạt động; đối chiếu theo tổng phụ BCTC ngân hàng.",
+      "core_financial_extraction_manual_terminal": true
     },
     {
       "symbol": "VPB",
@@ -845,8 +875,8 @@
         8
       ],
       "core_financial_extraction_status": "manual_review_required_pending_extraction",
-      "core_financial_extraction_updated_at": "2026-10-22T14:59:31+00:00",
-      "core_financial_extraction_note": "Đã thử tự động nhiều lượt nhưng chưa đủ bộ chỉ tiêu lõi khớp phương trình cân đối; giữ trống trường không đáng tin và yêu cầu rà soát PDF.",
+      "core_financial_extraction_updated_at": "2026-10-23T03:03:42Z",
+      "core_financial_extraction_note": "Không còn trang PDF/ZIP đang chờ trích xuất tự động nhưng bộ chỉ tiêu lõi vẫn thiếu hoặc chưa cân đối. Giữ trống chỉ tiêu chưa xác minh và yêu cầu đối chiếu trực quan với báo cáo VietstockFinance.",
       "core_financial_extraction_calculations": {
         "balance_totals_withheld": "asset/liability/equity totals did not fully reconcile"
       },
@@ -872,7 +902,7 @@
       "bank_fx_net_income": 93240,
       "bank_trading_securities_net": 326594,
       "bank_operating_expenses": -4206364,
-      "bank_provision_expense": -35915679,
+      "bank_provision_expense": 35915679,
       "bank_non_controlling_profit": 75096,
       "income_tax_current": -1249088,
       "income_tax_deferred": -27941,
@@ -915,7 +945,7 @@
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-22T14:48:47+00:00",
       "financial_line_items_source": "reports/raw/VPB/auto-vpb-20261021/1db3edcdef5697a7.pdf",
-      "financial_line_items_updated_at": "2026-10-22T14:48:47+00:00",
+      "financial_line_items_updated_at": "2026-10-23T03:03:42+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần.",
       "operating_cash_flow_calculation": "reported as standalone quarter",
       "investing_cash_flow_calculation": "reported as standalone quarter",
@@ -960,17 +990,17 @@
           "reason": "cash-flow components do not reconcile to reported net cash change"
         }
       },
-      "bank_net_service_income_calculation": "Thu nhập dịch vụ + chi phí dịch vụ (chi phí giữ dấu âm).",
+      "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
       "bank_pre_provision_operating_profit": 42130204,
-      "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động + chi phí hoạt động (chi phí giữ dấu âm).",
+      "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động - |chi phí hoạt động| theo BCTC ngân hàng.",
       "financial_line_items_value_corrections": {
         "bank_provision_expense": {
-          "previous_value": 12130204,
-          "new_value": -35915679,
-          "reason": "derived from verified quarterly PBT minus reconciled pre-provision operating profit"
+          "previous_value": -35915679,
+          "new_value": 35915679,
+          "reason": "derived from reconciled pre-provision operating profit minus reported quarterly PBT"
         }
       },
-      "bank_provision_expense_calculation": "Lợi nhuận trước thuế - lợi nhuận trước dự phòng; chi phí dự phòng giữ dấu âm.",
+      "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
       "financial_line_items_rejected_fields": [
         "financing_cash_flow",
@@ -983,7 +1013,11 @@
         "operating_cash_flow_ytd"
       ],
       "cash_beginning": 143002784,
-      "cash_ending": 162358835
+      "cash_ending": 162358835,
+      "core_financial_extraction_evidence_fingerprint": "781c6494f222948fca6f2911db7fe65635a3a3a8a569c13b2483e8f6446bb847",
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "revenue_calculation": "Lợi nhuận trước dự phòng + chi phí hoạt động; đối chiếu theo tổng phụ BCTC ngân hàng.",
+      "core_financial_extraction_manual_terminal": true
     },
     {
       "symbol": "VPB",
@@ -1037,7 +1071,7 @@
       "bank_net_service_income": 2392034,
       "bank_fx_net_income": 3621,
       "bank_operating_expenses": -4427750,
-      "bank_provision_expense": -6543509,
+      "bank_provision_expense": 6543509,
       "bank_non_controlling_profit": 88258,
       "income_tax_current": -1780337,
       "income_tax": 1802560,
@@ -1074,14 +1108,15 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/VPB/auto-vpb-20261021/cfd78534904b1cb7.zip",
-      "financial_line_items_updated_at": "2026-10-22T14:48:48+00:00",
+      "financial_line_items_updated_at": "2026-10-23T03:03:42+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
       "operating_cash_flow_calculation": "reported as standalone quarter",
       "investing_cash_flow_calculation": "reported as standalone quarter",
       "financing_cash_flow_calculation": "reported as standalone quarter",
       "net_cash_change_calculation": "reported as standalone quarter",
       "financial_line_items_prior_values": {
-        "income_tax": -1780337
+        "income_tax": -1780337,
+        "bank_provision_expense": -6543509
       },
       "financial_line_items_rejected_values": {
         "operating_cash_flow": {
@@ -1159,14 +1194,24 @@
       "core_financial_extraction_updated_at": "2026-10-22T14:44:55+00:00",
       "core_financial_extraction_note": "Chỉ tiêu lõi được trích xuất từ văn bản PDF/ZIP đã lưu; chưa xác minh thủ công trên bản PDF.",
       "core_financial_extraction_attempt_count": 5,
-      "bank_net_service_income_calculation": "Thu nhập dịch vụ + chi phí dịch vụ (chi phí giữ dấu âm).",
+      "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
       "bank_pre_provision_operating_profit": 15709806,
-      "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động + chi phí hoạt động (chi phí giữ dấu âm).",
+      "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động - |chi phí hoạt động| theo BCTC ngân hàng.",
       "eps": 1407,
       "verification_status_note": "Các chỉ tiêu lõi đã được trích xuất tự động từ BCTC hợp nhất VietstockFinance; cần đối chiếu trực quan trước khi coi là xác minh.",
-      "bank_provision_expense_calculation": "Lợi nhuận trước thuế - lợi nhuận trước dự phòng; chi phí dự phòng giữ dấu âm.",
+      "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "bank_trading_securities_net": 1286954
+      "bank_trading_securities_net": 1286954,
+      "core_financial_extraction_evidence_fingerprint": "404e95b02ff36254ddf9988b3c4a8524a97e4699e84a9ee4972126b729615115",
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "revenue_calculation": "Lợi nhuận trước dự phòng + chi phí hoạt động; đối chiếu theo tổng phụ BCTC ngân hàng.",
+      "financial_line_items_value_corrections": {
+        "bank_provision_expense": {
+          "previous_value": -6543509,
+          "new_value": 6543509,
+          "reason": "derived from reconciled pre-provision operating profit minus reported quarterly PBT"
+        }
+      }
     },
     {
       "symbol": "VPB",
@@ -1221,7 +1266,7 @@
       "bank_fx_net_income": 80689,
       "bank_investment_securities_net": 144469,
       "bank_operating_expenses": -5924241,
-      "bank_provision_expense": -6262056,
+      "bank_provision_expense": 6262056,
       "bank_non_controlling_profit": 161267,
       "income_tax_current": -2062453,
       "income_tax": 2110836,
@@ -1258,14 +1303,15 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/VPB/auto-vpb-20261021/e0f7fa6cedc219c5.zip",
-      "financial_line_items_updated_at": "2026-10-22T14:45:04+00:00",
+      "financial_line_items_updated_at": "2026-10-23T03:03:42+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
       "operating_cash_flow_calculation": "reported as standalone quarter",
       "investing_cash_flow_calculation": "reported as standalone quarter",
       "financing_cash_flow_calculation": "reported as standalone quarter",
       "net_cash_change_calculation": "reported as standalone quarter",
       "financial_line_items_prior_values": {
-        "income_tax": -2062453
+        "income_tax": -2062453,
+        "bank_provision_expense": -6262056
       },
       "financial_line_items_rejected_values": {
         "operating_cash_flow": {
@@ -1333,13 +1379,23 @@
       "core_financial_extraction_updated_at": "2026-10-22T14:44:57+00:00",
       "core_financial_extraction_note": "Chỉ tiêu lõi được trích xuất từ văn bản PDF/ZIP đã lưu; chưa xác minh thủ công trên bản PDF.",
       "core_financial_extraction_attempt_count": 5,
-      "bank_net_service_income_calculation": "Thu nhập dịch vụ + chi phí dịch vụ (chi phí giữ dấu âm).",
+      "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
       "bank_pre_provision_operating_profit": 16491301,
-      "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động + chi phí hoạt động (chi phí giữ dấu âm).",
+      "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động - |chi phí hoạt động| theo BCTC ngân hàng.",
       "eps": 3024,
       "verification_status_note": "Các chỉ tiêu lõi đã được trích xuất tự động từ BCTC hợp nhất VietstockFinance; cần đối chiếu trực quan trước khi coi là xác minh.",
-      "bank_provision_expense_calculation": "Lợi nhuận trước thuế - lợi nhuận trước dự phòng; chi phí dự phòng giữ dấu âm.",
-      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có."
+      "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
+      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
+      "core_financial_extraction_evidence_fingerprint": "cc4cb207241ae9e563f40b2ded9d73794751e06bacb5d9d6f53379985e0cbfff",
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "revenue_calculation": "Lợi nhuận trước dự phòng + chi phí hoạt động; đối chiếu theo tổng phụ BCTC ngân hàng.",
+      "financial_line_items_value_corrections": {
+        "bank_provision_expense": {
+          "previous_value": -6262056,
+          "new_value": 6262056,
+          "reason": "derived from reconciled pre-provision operating profit minus reported quarterly PBT"
+        }
+      }
     },
     {
       "symbol": "VPB",
@@ -1406,15 +1462,18 @@
         20
       ],
       "core_financial_extraction_status": "manual_review_required_pending_extraction",
-      "core_financial_extraction_updated_at": "2026-10-22T14:59:36+00:00",
-      "core_financial_extraction_note": "Đã thử tự động nhiều lượt nhưng chưa đủ bộ chỉ tiêu lõi khớp phương trình cân đối; giữ trống trường không đáng tin và yêu cầu rà soát PDF.",
+      "core_financial_extraction_updated_at": "2026-10-23T03:03:42Z",
+      "core_financial_extraction_note": "Không còn trang PDF/ZIP đang chờ trích xuất tự động nhưng bộ chỉ tiêu lõi vẫn thiếu hoặc chưa cân đối. Giữ trống chỉ tiêu chưa xác minh và yêu cầu đối chiếu trực quan với báo cáo VietstockFinance.",
       "core_financial_extraction_calculations": {
         "balance_totals_withheld": "asset/liability/equity totals did not fully reconcile"
       },
       "core_financial_extraction_attempt_count": 10,
       "income_tax": 2,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "eps": 781
+      "eps": 781,
+      "core_financial_extraction_evidence_fingerprint": "0743544fa8a9d2eac124e908d08ec0829fb1679b5c1efee9d6768a58aa36e483",
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "core_financial_extraction_manual_terminal": true
     },
     {
       "symbol": "VPB",
@@ -1468,7 +1527,7 @@
       "bank_net_service_income": 3490130,
       "bank_trading_securities_net": 502242,
       "bank_operating_expenses": -4614080,
-      "bank_provision_expense": -7910375,
+      "bank_provision_expense": 7910375,
       "income_tax_current": -2131030,
       "income_tax": 2183270,
       "operating_cash_flow_ytd": 28080406,
@@ -1510,7 +1569,7 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/VPB/auto-vpb-20261021/ae41e9ee993f6487.zip",
-      "financial_line_items_updated_at": "2026-10-22T14:55:51+00:00",
+      "financial_line_items_updated_at": "2026-10-23T03:03:42+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
       "operating_cash_flow": 28080406,
       "operating_cash_flow_calculation": "reported as standalone quarter",
@@ -1519,7 +1578,8 @@
       "net_cash_change": 6949765,
       "net_cash_change_calculation": "reported as standalone quarter",
       "financial_line_items_prior_values": {
-        "income_tax": -2131030
+        "income_tax": -2131030,
+        "bank_provision_expense": -7910375
       },
       "financial_line_items_rejected_values": {},
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
@@ -1551,17 +1611,27 @@
       "core_financial_extraction_note": "Chỉ tiêu lõi được trích xuất từ văn bản PDF/ZIP đã lưu; chưa xác minh thủ công trên bản PDF.",
       "core_financial_extraction_attempt_count": 5,
       "bank_deposits_and_loans_to_credit_institutions": -4153556,
-      "bank_net_service_income_calculation": "Thu nhập dịch vụ + chi phí dịch vụ (chi phí giữ dấu âm).",
+      "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
       "bank_pre_provision_operating_profit": 18869554,
-      "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động + chi phí hoạt động (chi phí giữ dấu âm).",
+      "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động - |chi phí hoạt động| theo BCTC ngân hàng.",
       "eps": 1838,
       "verification_status_note": "Các chỉ tiêu lõi đã được trích xuất tự động từ BCTC hợp nhất VietstockFinance; cần đối chiếu trực quan trước khi coi là xác minh.",
-      "bank_provision_expense_calculation": "Lợi nhuận trước thuế - lợi nhuận trước dự phòng; chi phí dự phòng giữ dấu âm.",
+      "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
       "core_financial_extraction_calculations": {
         "balance_totals_withheld": "asset/liability/equity totals did not fully reconcile"
       },
-      "cash_and_equivalents": 496097219
+      "cash_and_equivalents": 496097219,
+      "core_financial_extraction_evidence_fingerprint": "355e884d68be0b84c7363d0d13d7318d8364ae06a5a9a2d147ba2d9bd40d97ce",
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "revenue_calculation": "Lợi nhuận trước dự phòng + chi phí hoạt động; đối chiếu theo tổng phụ BCTC ngân hàng.",
+      "financial_line_items_value_corrections": {
+        "bank_provision_expense": {
+          "previous_value": -7910375,
+          "new_value": 7910375,
+          "reason": "derived from reconciled pre-provision operating profit minus reported quarterly PBT"
+        }
+      }
     },
     {
       "symbol": "VPB",
@@ -1614,7 +1684,7 @@
       "bank_service_expense": -2611612,
       "bank_net_service_income": 3088867,
       "bank_operating_expenses": -4807933,
-      "bank_provision_expense": -6244795,
+      "bank_provision_expense": 6244795,
       "income_tax_current": -2252981,
       "income_tax": 2167977,
       "operating_cash_flow_ytd": 42624493,
@@ -1654,7 +1724,7 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/VPB/auto-vpb-20261021/99a59d7b4f87ab28.zip",
-      "financial_line_items_updated_at": "2026-10-22T14:45:04+00:00",
+      "financial_line_items_updated_at": "2026-10-23T03:03:42+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
       "operating_cash_flow": 42624493,
       "operating_cash_flow_calculation": "reported as standalone quarter",
@@ -1663,7 +1733,8 @@
       "net_cash_change": 30373394,
       "net_cash_change_calculation": "reported as standalone quarter",
       "financial_line_items_prior_values": {
-        "income_tax": -2252981
+        "income_tax": -2252981,
+        "bank_provision_expense": -6244795
       },
       "financial_line_items_rejected_values": {},
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
@@ -1700,13 +1771,23 @@
       "core_financial_extraction_note": "Chỉ tiêu lõi được trích xuất từ văn bản PDF/ZIP đã lưu; chưa xác minh thủ công trên bản PDF.",
       "core_financial_extraction_attempt_count": 5,
       "bank_deposits_and_loans_to_credit_institutions": -14104410,
-      "bank_net_service_income_calculation": "Thu nhập dịch vụ + chi phí dịch vụ (chi phí giữ dấu âm).",
+      "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
       "bank_pre_provision_operating_profit": 17275682,
-      "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động + chi phí hoạt động (chi phí giữ dấu âm).",
+      "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động - |chi phí hoạt động| theo BCTC ngân hàng.",
       "eps": 2323,
       "verification_status_note": "Các chỉ tiêu lõi đã được trích xuất tự động từ BCTC hợp nhất VietstockFinance; cần đối chiếu trực quan trước khi coi là xác minh.",
-      "bank_provision_expense_calculation": "Lợi nhuận trước thuế - lợi nhuận trước dự phòng; chi phí dự phòng giữ dấu âm.",
-      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có."
+      "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
+      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
+      "core_financial_extraction_evidence_fingerprint": "abc4d1d2b48f0b01bd3740b9c4287072825c8b8fdb5776678582665ad245c211",
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "revenue_calculation": "Lợi nhuận trước dự phòng + chi phí hoạt động; đối chiếu theo tổng phụ BCTC ngân hàng.",
+      "financial_line_items_value_corrections": {
+        "bank_provision_expense": {
+          "previous_value": -6244795,
+          "new_value": 6244795,
+          "reason": "derived from reconciled pre-provision operating profit minus reported quarterly PBT"
+        }
+      }
     }
   ],
   "sync_status": "records_found",
