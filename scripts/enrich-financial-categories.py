@@ -539,7 +539,10 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
  # in "Tổng nợ phải trả và vốn chủ sở hữu". Recover that total only when
  # the adjacent lines complete the label and a candidate total reconciles
  # to the independently extracted total-assets row.
- if source_total is None and balance and symbol in BANKS:
+ if balance and symbol in BANKS:
+  # Run this even when a generic text matcher already returned a number:
+  # it may have picked the first liability component from the section heading.
+  # A source total that reconciles to assets takes precedence over that weak match.
   for page in balance:
    lines=str(page.get("text","")).splitlines()
    for index,line in enumerate(lines):
