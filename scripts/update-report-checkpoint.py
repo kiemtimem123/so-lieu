@@ -189,7 +189,15 @@ def main() -> int:
         if is_terminal_manual_extraction(item):
             continue
         source = str(item.get("source_archive_file") or "").strip()
-        if not source or source in checked_archives:
+        if not source:
+            # No archive path means collection/linking has not completed yet.
+            # Do not close unresolved quarters as manual review merely because
+            # their linked PDF is not stored locally yet.
+            if item.get("verification_status") in CORE_PENDING:
+                statement_pages_pending = True
+                break
+            continue
+        if source in checked_archives:
             continue
         checked_archives.add(source)
         archive_path = (ROOT / source).resolve()
@@ -198,8 +206,10 @@ def main() -> int:
         except ValueError:
             continue
         if not archive_path.is_file():
-            # A missing archive is not an OCR task: it cannot be improved from
-            # local pages and must remain identifiable for manual/source recovery.
+            # Collector may still be archiving the catalog-linked PDF/ZIP.
+            if item.get("verification_status") in CORE_PENDING:
+                statement_pages_pending = True
+                break
             continue
         sidecar_path = Path(str(archive_path) + ".extracted.json")
         extracted = load_json(sidecar_path)
