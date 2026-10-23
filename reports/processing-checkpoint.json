@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-23T05:07:44Z",
+  "updatedAt": "2026-10-23T05:09:20Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -17,12 +17,11 @@
     "VPB",
     "STB",
     "VCB",
-    "CTG",
-    "BID"
+    "CTG"
   ],
-  "lastCompletedSymbol": "BID",
-  "activeSymbol": null,
-  "resumeSymbolHint": "VCI",
+  "lastCompletedSymbol": "CTG",
+  "activeSymbol": "BID",
+  "resumeSymbolHint": "BID",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "BID",
@@ -224,8 +223,8 @@
       "snapshotFetchedAt": "2026-10-23T03:45:53+00:00"
     },
     "BID": {
-      "status": "automated_processing_complete",
-      "completeForAutomation": true,
+      "status": "in_progress",
+      "completeForAutomation": false,
       "manualReviewRemaining": true,
       "periodCount": 10,
       "firstQuarter": "2024-Q1",
@@ -240,8 +239,14 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-10-23T05:07:44Z",
-      "snapshotFetchedAt": "2026-10-23T04:27:50+00:00"
+      "updatedAt": "2026-10-23T05:09:20Z",
+      "snapshotFetchedAt": "2026-10-23T04:27:50+00:00",
+      "recheckPeriods": [
+        "2024-Q3",
+        "2026-Q1",
+        "2026-Q2"
+      ],
+      "note": "Only the three remaining quarters were reopened after parser diagnosis. Six quarters now have reconciled core totals; no numbers were fabricated."
     }
   },
   "progressHistory": [
@@ -643,11 +648,8 @@
   ],
   "currentRun": {
     "symbol": "BID",
-    "status": "bootstrap_sync_in_progress",
-    "workflowRunId": "39898299881",
-    "workflowRunNumber": 41,
-    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39898299881",
-    "updatedAt": "2026-10-23T04:05:09.201Z",
-    "note": "Single-ticker bootstrap sync dispatched after CTG reached terminal automated status; next step is OCR/enrichment for BID."
+    "status": "reprocessing_after_parser_fix",
+    "updatedAt": "2026-10-23T05:09:20Z",
+    "reason": "Reopened only 2024-Q3, 2026-Q1 and 2026-Q2 after diagnostics found a truncated source-total label and punctuation-prefixed total-assets line. Existing verified-by-equation data is unchanged; remaining values will only be saved if the accounting equation passes."
   }
 }
