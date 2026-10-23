@@ -1222,17 +1222,38 @@ def process_symbol(
         try:
             pdf_bytes, final_url = extract_pdf_bytes(url, session)
             previous = choose_previous_item(items, period)
+            # Check the text layer first. Scanned reports should be OCR'd only once
+            # per batch; previously an empty text layer caused OCR, a parser failure,
+            # then a second full OCR of the same 30–100 page PDF.
+            native_text_chunks = []
             try:
-                values = extract_statement(
-                    pdf_bytes, previous, symbol=symbol, cumulative=cumulative,
-                    expected_consolidated=want_consolidated,
-                )
-            except ValueError as text_error:
-                print(f"    Trích xuất văn bản chưa đạt ({text_error}); chuyển sang OCR.")
+                probe_reader = PdfReader(io.BytesIO(pdf_bytes), strict=False)
+                for page in probe_reader.pages[:MAX_PDF_PAGES]:
+                    try:
+                        native_text_chunks.append(page.extract_text() or "")
+                    except Exception:
+                        native_text_chunks.append("")
+            except Exception:
+                native_text_chunks = []
+            has_native_text = len("\n".join(native_text_chunks).strip()) >= 300
+
+            if not has_native_text:
                 values = extract_statement(
                     pdf_bytes, previous, symbol=symbol, cumulative=cumulative,
                     force_ocr=True, expected_consolidated=want_consolidated,
                 )
+            else:
+                try:
+                    values = extract_statement(
+                        pdf_bytes, previous, symbol=symbol, cumulative=cumulative,
+                        expected_consolidated=want_consolidated,
+                    )
+                except ValueError as text_error:
+                    print(f"    Trích xuất văn bản chưa đạt ({text_error}); chuyển sang OCR một lần.")
+                    values = extract_statement(
+                        pdf_bytes, previous, symbol=symbol, cumulative=cumulative,
+                        force_ocr=True, expected_consolidated=want_consolidated,
+                    )
             new_item = make_extracted_item(symbol, period, record, url, values, items, cumulative)
             new_item["source_extract_review"]["final_download_url"] = final_url
             if period in existing and existing[period].get("verification_status") != "auto_pending_extraction":
