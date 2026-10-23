@@ -1342,7 +1342,12 @@ def enrich_snapshot(path):
    changed=True
   elif evidence_changed:
    item["core_financial_extraction_evidence_fingerprint"]=evidence_fingerprint
-   if item.get("verification_status")=="manual_review_required_pending_extraction" and not explicitly_exhausted:
+   if item.get("core_financial_extraction_manual_terminal") is True and not explicitly_exhausted:
+    item.pop("core_financial_extraction_manual_terminal",None)
+    item["core_financial_extraction_evidence_attempt_count"]=0
+    item["verification_status"]="auto_pending_extraction"
+    item["core_financial_extraction_status"]="auto_pending_extraction"
+   elif item.get("verification_status")=="manual_review_required_pending_extraction" and not explicitly_exhausted:
     item["verification_status"]="auto_pending_extraction"
     item["core_financial_extraction_status"]="auto_pending_extraction"
    changed=True
@@ -1382,6 +1387,7 @@ def enrich_snapshot(path):
    and abs(item["total_assets"]-item["total_liabilities"]-item["equity"])<=3
   )
   if core_balance_ok and item.get("verification_status") in {"auto_pending_extraction","manual_review_required_pending_extraction"}:
+   item.pop("core_financial_extraction_manual_terminal",None)
    item["verification_status"]="auto_extracted_pending_visual_review"
    item["core_financial_extraction_status"]="auto_extracted_pending_visual_review"
    item["core_financial_extracted_fields"]=sorted(set(item.get("core_financial_extracted_fields") or [])|{
