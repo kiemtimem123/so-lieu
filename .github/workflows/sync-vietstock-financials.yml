@@ -47,26 +47,13 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install OCR tools with bounded retries
-        timeout-minutes: 6
-        continue-on-error: true
+      - name: Keep short sync batches lightweight
         shell: bash
         run: |
-          set -u
-          if command -v pdftoppm >/dev/null 2>&1 \
-            && command -v tesseract >/dev/null 2>&1 \
-            && tesseract --list-langs 2>/dev/null | grep -qx 'vie' \
-            && tesseract --list-langs 2>/dev/null | grep -qx 'eng'; then
-            echo "Poppler and Vietnamese/English Tesseract are ready."
-            exit 0
-          fi
-          if ! timeout 60s sudo apt-get -o Acquire::Retries=0 -o Acquire::http::Timeout=8 -o Acquire::https::Timeout=8 update; then
-            echo "::warning::OCR package index unavailable within 60 seconds; continue with native PDF text and preserve unresolved fields for review."
-            exit 0
-          fi
-          if ! timeout 220s sudo apt-get -o Acquire::Retries=0 -o Acquire::http::Timeout=8 -o Acquire::https::Timeout=8 install -y poppler-utils tesseract-ocr tesseract-ocr-vie tesseract-ocr-eng; then
-            echo "::warning::OCR packages could not be installed within 220 seconds; continue safely without fabricating report values."
-            exit 0
+          if command -v pdftoppm >/dev/null 2>&1 && command -v tesseract >/dev/null 2>&1; then
+            echo "OCR binaries are already present; native PDF text extraction remains preferred."
+          else
+            echo "::notice::Do not download system OCR packages in each sync batch. Searchable PDFs will be parsed natively; scanned PDFs remain pending for the separate stored-report OCR workflow."
           fi
 
       - name: Install document processing dependencies
