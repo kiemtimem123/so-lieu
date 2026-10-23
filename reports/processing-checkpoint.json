@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-23T08:38:28Z",
+  "updatedAt": "2026-10-23T08:39:32.174Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -18,34 +18,36 @@
     "STB",
     "VCB",
     "CTG",
-    "BID"
+    "BID",
+    "VCI"
   ],
-  "lastCompletedSymbol": "BID",
-  "activeSymbol": "VCI",
-  "resumeSymbolHint": "VCI",
-  "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
+  "lastCompletedSymbol": "VCI",
+  "activeSymbol": "VCK",
+  "resumeSymbolHint": "VCK",
+  "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. A ticker marked complete_needs_manual_review is terminal for automation; do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "VCI",
-    "status": "in_progress",
-    "completeForAutomation": false,
+    "status": "terminal_needs_manual_review",
+    "completeForAutomation": true,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-23T08:38:28Z",
-    "workflowRunId": "39925943185",
-    "workflowRunNumber": 1028,
-    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39925943185",
+    "processedAt": "2026-10-23T08:39:32.174Z",
+    "workflowRunId": "39926092445",
+    "workflowRunNumber": 1031,
+    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39926092445",
     "changedPaths": [
-      "data/financials-VCI.json"
+      "data/financials-VCI.json",
+      ".github/workflows/ocr-financial-reports.yml",
+      "scripts/update-report-checkpoint.py"
     ],
     "periodCount": 11,
     "firstQuarter": "2024-Q1",
     "lastQuarter": "2026-Q3",
-    "pendingCorePeriods": [
+    "pendingCorePeriods": [],
+    "terminalManualReviewPeriods": [
       "2024-Q1",
       "2024-Q2",
       "2024-Q3",
-      "2024-Q4"
-    ],
-    "terminalManualReviewPeriods": [
+      "2024-Q4",
       "2025-Q1",
       "2025-Q2",
       "2025-Q3",
@@ -56,7 +58,8 @@
     ],
     "pendingDetailPeriods": [],
     "staleDetailSchemaPeriods": [],
-    "statementPagesPending": true
+    "statementPagesPending": false,
+    "note": "VCI is closed for automatic processing because consolidation scope is not clearly verified for unresolved linked reports; no missing figures were fabricated. Next ticker is VCK."
   },
   "symbolStates": {
     "MBB": {
@@ -250,19 +253,18 @@
       "note": "All ten quarterly records have assets, liabilities and equity that reconcile within 3 million VND rounding tolerance. Values are OCR-derived and remain pending visual review."
     },
     "VCI": {
-      "status": "in_progress",
-      "completeForAutomation": false,
+      "status": "terminal_needs_manual_review",
+      "completeForAutomation": true,
       "manualReviewRemaining": true,
       "periodCount": 11,
       "firstQuarter": "2024-Q1",
       "lastQuarter": "2026-Q3",
-      "pendingCorePeriods": [
+      "pendingCorePeriods": [],
+      "terminalManualReviewPeriods": [
         "2024-Q1",
         "2024-Q2",
         "2024-Q3",
-        "2024-Q4"
-      ],
-      "terminalManualReviewPeriods": [
+        "2024-Q4",
         "2025-Q1",
         "2025-Q2",
         "2025-Q3",
@@ -273,23 +275,23 @@
       ],
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
-      "statementPagesPending": true,
+      "statementPagesPending": false,
       "sourceArchivesChecked": 2,
-      "updatedAt": "2026-10-23T08:38:28Z",
-      "snapshotFetchedAt": "2026-10-23T07:18:58+00:00"
+      "updatedAt": "2026-10-23T08:39:32.174Z",
+      "snapshotFetchedAt": "2026-10-23T07:18:58+00:00",
+      "note": "Đã kết thúc tự động để tiếp tục sang VCK. Các kỳ VCI có tiêu đề/tệp không xác nhận rõ phạm vi hợp nhất giữ nguyên liên kết nguồn, số liệu lõi để trống; 11 kỳ cần rà soát thủ công trước khi sử dụng trong chuỗi hợp nhất."
+    },
+    "VCK": {
+      "status": "bootstrap_sync_in_progress",
+      "completeForAutomation": false,
+      "manualReviewRemaining": false,
+      "updatedAt": "2026-10-23T08:39:32.174Z",
+      "workflowRunId": "39926123861",
+      "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39926123861",
+      "note": "Đang đồng bộ danh mục VietstockFinance cho một mã này; không chuyển sang VIX cho đến khi VCK hoàn tất tự động hoặc được đánh dấu cần rà soát thủ công."
     }
   },
   "progressHistory": [
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-10-23T06:56:36Z",
-      "workflowRunId": "39914480235",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
     {
       "symbol": "VCI",
       "status": "in_progress",
@@ -779,49 +781,27 @@
       "changedPaths": [
         "data/financials-VCI.json"
       ]
+    },
+    {
+      "symbol": "VCI",
+      "status": "terminal_needs_manual_review",
+      "completeForAutomation": true,
+      "processedAt": "2026-10-23T08:39:32.174Z",
+      "workflowRunId": "39926092445",
+      "changedPaths": [
+        "data/financials-VCI.json",
+        ".github/workflows/ocr-financial-reports.yml",
+        "scripts/update-report-checkpoint.py"
+      ]
     }
   ],
   "currentRun": {
-    "symbol": "VCI",
-    "status": "quarterly_sync_short_batch_in_progress",
-    "updatedAt": "2026-10-23T05:47:20.607Z",
-    "workflowRuns": [
-      {
-        "workflow": "Collect Financial Reports",
-        "runId": "39906811175",
-        "runNumber": 130,
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/39906811175",
-        "status": "success",
-        "note": "17 linked PDF/ZIP reports archived from the VietstockFinance catalog; one remaining candidate was not retried because the queue has no new downloadable work."
-      },
-      {
-        "workflow": "Sync quarterly BCTC from VietstockFinance",
-        "runId": "39905714668",
-        "runNumber": 45,
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/39905714668",
-        "status": "cancelled",
-        "note": "The long batch was superseded before committing; no VCI quarter values were saved by that run."
-      },
-      {
-        "workflow": "Sync quarterly BCTC from VietstockFinance",
-        "runId": "39907569515",
-        "runNumber": 50,
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/39907569515",
-        "status": "in_progress",
-        "note": "New short-batch sync. Each run is capped at two quarters and OCR runs once for scanned reports. The source PDF header must explicitly confirm consolidated scope before core figures are accepted."
-      }
-    ],
-    "archiveProgress": {
-      "symbol": "VCI",
-      "queueJobId": "auto-vci-20261021",
-      "status": "needs_review",
-      "attempts": 9,
-      "successfullyArchived": 17,
-      "remainingCandidates": 1,
-      "resumeDownload": false,
-      "updatedAt": "2026-10-23T05:47:20.607Z",
-      "note": "Report PDFs/ZIPs remain saved in reports/raw/VCI/auto-vci-20261021 and indexed in config/report-queue.json."
-    },
-    "note": "VCI remains the active ticker. Do not advance to VCK until VCI quarterly extraction completes automatically or all unresolved quarters have explicit manual-review terminal markers. Neutral document titles alone do not establish consolidated scope."
+    "symbol": "VCK",
+    "status": "bootstrap_sync_in_progress",
+    "workflowRunId": "39926123861",
+    "workflowRunNumber": 153,
+    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39926123861",
+    "updatedAt": "2026-10-23T08:39:32.174Z",
+    "note": "VCK is the next configured ticker. Bootstrap workflow #153 is running; process only VCK until automated extraction completes or unresolved quarters receive terminal manual-review markers."
   }
 }
