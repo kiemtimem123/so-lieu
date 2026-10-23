@@ -568,6 +568,20 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
   isinstance(assets,(int,float)) and isinstance(source_total,(int,float))
   and abs(assets-source_total)<=tolerance
  )
+ # When OCR places the source-total numbers inside the wrapped label
+ # "liabilities and equity", the liability label parser can mistake the
+ # total-sources row for the liabilities subtotal. If the row total matches
+ # assets, and this parsed "liabilities" equals that entire total, discard it;
+ # the correct liabilities can then be derived from assets minus reported
+ # equity below. The balance equation remains a hard gate.
+ if (
+  source_matches_assets
+  and isinstance(liabilities,(int,float))
+  and abs(liabilities-source_total)<=tolerance
+  and isinstance(equity,(int,float))
+  and equity>0
+ ):
+  liabilities=None
  if source_matches_assets and isinstance(equity,(int,float)) and liabilities is None:
   candidate=assets-equity
   if candidate>=0:
