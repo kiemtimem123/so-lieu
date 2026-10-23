@@ -1177,6 +1177,26 @@ def main():
             "downloaded_total": sum(1 for item in combined_files if item.get("status") == "downloaded_needs_review"),
             "more_candidates": more_candidates,
         }, ensure_ascii=False))
+    active_job = next(
+        (
+            job for job in jobs
+            if active_symbol and str(job.get("symbol") or "").strip().upper() == active_symbol
+            and (job.get("status") in {"queued", "failed", "needs_review"} or job.get("resumeDownload"))
+        ),
+        None,
+    )
+    summary["active_symbol"] = active_symbol
+    summary["active_job_id"] = active_job.get("id") if active_job else None
+    summary["active_job_status"] = active_job.get("status") if active_job else None
+    summary["remaining_source_candidates"] = len(active_job.get("sourceCandidates") or []) if active_job else 0
+    # Chain only when the previous batch actually ran and explicitly left more
+    # candidate URLs for the same ticker. A cooldown/no-progress run must stop.
+    summary["continuation_needed"] = bool(
+        summary["jobs_processed"] > 0
+        and active_job
+        and active_job.get("status") == "queued"
+        and active_job.get("resumeDownload") is True
+    )
     # Also backfill exact source-to-archive links for the current queue-head
     # ticker even when its prior queue jobs are already marked needs_review.
     # This lets the OCR/enrichment workflow finish this ticker before moving on.
