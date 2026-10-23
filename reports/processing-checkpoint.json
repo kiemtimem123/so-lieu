@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-23T10:17:33Z",
+  "updatedAt": "2026-10-23T10:33:05.766Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -24,7 +24,7 @@
     "VIX"
   ],
   "lastCompletedSymbol": "VIX",
-  "activeSymbol": null,
+  "activeSymbol": "SSI",
   "resumeSymbolHint": "SSI",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
@@ -282,7 +282,7 @@
       "note": "Completed automatic processing; all 11 periods that lack reliable consolidated scope/values are retained with source links and need manual review. No unsupported figures were filled."
     },
     "VCK": {
-      "status": "terminal_needs_manual_review",
+      "status": "automated_processing_complete",
       "completeForAutomation": true,
       "manualReviewRemaining": true,
       "periodCount": 7,
@@ -302,10 +302,19 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 0,
-      "updatedAt": "2026-10-23T09:37:36.203Z",
+      "updatedAt": "2026-10-23T10:33:05.766Z",
       "snapshotFetchedAt": "2026-10-23T09:35:23.748Z",
       "startPeriod": "2025-Q1",
-      "note": "2024 VPSS/OTC reports are excluded from VCK active series. The seven periods from 2025-Q1 onward are closed for automatic extraction because the linked reports do not yet establish consolidated scope; numeric values remain held for manual review."
+      "note": "2024 VPSS/OTC reports are excluded from VCK active series. The seven periods from 2025-Q1 onward are closed for automatic extraction because the linked reports do not yet establish consolidated scope; numeric values remain held for manual review.",
+      "coverageStart": "2025-Q1",
+      "coverageEnd": "2026-Q3",
+      "excludedPeriods": [
+        "2024-Q1",
+        "2024-Q2",
+        "2024-Q3",
+        "2024-Q4"
+      ],
+      "coverageReason": "Company started listing in 2025; 2024 reporting periods are not expected for this dashboard according to the user."
     },
     "VIX": {
       "status": "automated_processing_complete",
@@ -334,6 +343,15 @@
       "sourceArchivesChecked": 11,
       "updatedAt": "2026-10-23T10:17:33Z",
       "snapshotFetchedAt": "2026-10-23T09:38:33+00:00"
+    },
+    "SSI": {
+      "status": "report_archive_collection_in_progress",
+      "completeForAutomation": false,
+      "manualReviewRemaining": false,
+      "updatedAt": "2026-10-23T10:33:05.766Z",
+      "workflowRunId": "39938661744",
+      "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39938661744",
+      "note": "SSI has 2024-Q1 through 2026-Q2 quarterly snapshot rows; the current single-ticker archive collector is attempting to complete source PDF/ZIP archiving and queue updates before OCR."
     }
   },
   "progressHistory": [
@@ -924,35 +942,21 @@
     }
   ],
   "currentRun": {
-    "symbol": "VIX",
-    "status": "archive_complete_ocr_pending",
-    "updatedAt": "2026-10-23T09:48:08.881Z",
-    "workflowRunId": "39934335365",
-    "workflowRunNumber": 155,
-    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39934335365",
+    "symbol": "SSI",
+    "status": "report_archive_collection_in_progress",
+    "workflowRunId": "39938661744",
+    "workflowRunNumber": 161,
+    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39938661744",
+    "updatedAt": "2026-10-23T10:33:05.766Z",
     "archiveProgress": {
-      "jobId": "auto-vix-20261021",
-      "queueStatus": "needs_review",
-      "queueAttempts": 9,
-      "resumeDownload": false,
-      "sourceCandidatesRemaining": 2,
-      "archivedQuarterPeriods": [
-        "2024-Q1",
-        "2024-Q2",
-        "2024-Q3",
-        "2024-Q4",
-        "2025-Q1",
-        "2025-Q2",
-        "2025-Q3",
-        "2025-Q4",
-        "2026-Q1",
-        "2026-Q2",
-        "2026-Q3"
-      ],
-      "quarterPeriodCount": 11,
-      "nextStep": "OCR/enrich VIX, one report per run"
+      "queueJobId": "auto-ssi-20261021",
+      "queueStatus": "queued",
+      "queueAttempts": 4,
+      "successfullyArchived": 8,
+      "sourceCandidatesRemaining": 10,
+      "note": "Single-ticker collection run selected SSI; wait for this run's commit before starting/advancing OCR."
     },
-    "note": "VCK is complete for automatic processing but still requires manual review. VIX is the only active ticker until extraction completes."
+    "note": "VCK's quarter coverage intentionally begins at 2025-Q1 because the company did not have BCTC to include from 2024 according to the user's correction. SSI remains active; process one ticker at a time."
   },
   "scopePolicy": {
     "VCK": {
@@ -962,6 +966,20 @@
         "2024-Q4"
       ],
       "sourceTreatment": "2024 quarter statements from VPSS/OTC are preserved in data/financials-VCK.json under pre_listing_legacy_reports and excluded from active VCK series."
+    }
+  },
+  "coverageNotes": {
+    "VCK": {
+      "coverageStart": "2025-Q1",
+      "excludedPeriods": [
+        "2024-Q1",
+        "2024-Q2",
+        "2024-Q3",
+        "2024-Q4"
+      ],
+      "reason": "Theo xác nhận của người dùng, doanh nghiệp mới lên sàn năm 2025; không có báo cáo năm 2024 cần đưa vào bộ dữ liệu quý.",
+      "excludedFromIncompleteChecks": true,
+      "updatedAt": "2026-10-23T10:33:05.766Z"
     }
   }
 }
