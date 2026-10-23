@@ -342,7 +342,10 @@ def ocr_pdf(path: Path, max_pages: int = MAX_PAGES, page_numbers=None):
                 engine = "tesseract-vie+eng-psm6"
                 # Financial statement tables often have multi-column number cells.
                 # Compare several Tesseract layouts and keep the best quality score.
-                if 8 <= page_number <= 14:
+                # Alternate layouts are expensive. Use them only when the
+                # primary pass is below the same quality threshold used by the
+                # rescan selector; good native OCR output avoids 3 extra passes.
+                if 8 <= page_number <= 14 and _ocr_quality(text) < 0.34:
                     for psm in ("4", "11", "12"):
                         try:
                             alternate = subprocess.run(
