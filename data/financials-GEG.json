@@ -736,12 +736,12 @@
     {
       "symbol": "GEG",
       "period": "2025-Q3",
-      "total_assets": null,
-      "total_liabilities": null,
-      "equity": null,
-      "pretax_profit": null,
-      "net_profit": null,
-      "net_profit_attributable": null,
+      "total_assets": 15247952,
+      "total_liabilities": 8674762,
+      "equity": 6573190,
+      "pretax_profit": 98726,
+      "net_profit": 0,
+      "net_profit_attributable": 74646,
       "revenue": null,
       "roa": null,
       "roe": null,
@@ -752,7 +752,7 @@
       "report_type": "BCTC hợp nhất GEG 2025-Q3 (phát hiện tự động qua VietstockFinance; chờ trích xuất)",
       "source_pages": "Chưa trích xuất được đủ chỉ tiêu; xem PDF/ZIP trong đường dẫn VietstockFinance.",
       "quarter_profit_basis": "Chỉ lưu số liệu khi cột phát sinh riêng của quý được trích xuất và cân đối hợp lệ.",
-      "verification_status": "auto_pending_extraction",
+      "verification_status": "auto_extracted_pending_visual_review",
       "source_validation": {
         "reviewed_at": "2026-10-23T20:44:02+00:00",
         "single_source_policy": "Chỉ danh mục VietstockFinance và tệp do danh mục đó liên kết.",
@@ -769,32 +769,176 @@
       "source_archive_title": "Báo cáo tài chính Hợp nhất quý 3 năm 2025 Báo cáo tài chính Hợp nhất quý 3 năm 2025  ",
       "source_archive_linked_at": "2026-10-23T20:53:42.318273+00:00",
       "core_financial_extraction_unverified_values": {},
-      "core_financial_extracted_fields": [],
-      "core_financial_extraction_status": "auto_pending_extraction",
-      "core_financial_extraction_note": "Đang trích xuất lại chỉ tiêu lõi bằng bộ nhận diện đơn vị đã sửa; các giá trị OCR của bộ phân tích cũ được lưu riêng và không dùng để hiển thị.",
-      "verification_status_note": "Đang kiểm tra lại đơn vị Ngàn/Nghìn VND với PDF/ZIP gốc VietstockFinance.",
+      "core_financial_extracted_fields": [
+        "equity",
+        "net_profit",
+        "pretax_profit",
+        "total_assets",
+        "total_liabilities"
+      ],
+      "core_financial_extraction_status": "auto_extracted_pending_visual_review",
+      "core_financial_extraction_note": "Chỉ tiêu lõi được trích xuất từ văn bản PDF/ZIP đã lưu; chưa xác minh thủ công trên bản PDF.",
+      "verification_status_note": "Các chỉ tiêu lõi đã được trích xuất tự động từ BCTC hợp nhất VietstockFinance; cần đối chiếu trực quan trước khi coi là xác minh.",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
-      "core_financial_extraction_evidence_fingerprint": "6a3a9a6d75d22c195ec626ce355ad8bab751e3aaefbbb5c88b90d172a10c3a8b",
+      "core_financial_extraction_evidence_fingerprint": "573b3c1cdea6e3f49513390f073704cd3588135597cae5198cc8326ace257da0",
       "core_financial_extraction_evidence_attempt_count": 0,
-      "financial_line_items_status": "no_detail_fields_matched_pending_manual_review",
-      "financial_line_items_extracted_fields": [],
+      "financial_line_items_status": "auto_extracted_pending_visual_review",
+      "financial_line_items_extracted_fields": [
+        "admin_expense",
+        "cash_and_equivalents",
+        "cashflow_period_basis",
+        "current_assets",
+        "current_liabilities",
+        "diluted_eps",
+        "eps",
+        "financial_expense",
+        "financial_income",
+        "fixed_assets",
+        "foreign_exchange_effect_ytd",
+        "income_tax",
+        "interest_expense",
+        "inventory",
+        "long_term_liabilities",
+        "net_profit_attributable",
+        "non_current_assets",
+        "operating_profit",
+        "retained_earnings",
+        "selling_expense",
+        "short_term_investments",
+        "short_term_receivables"
+      ],
       "financial_line_items_source": "reports/raw/GEG/auto-geg-20261021/770d2246aaa4f701.pdf",
-      "financial_line_items_updated_at": "2026-10-23T20:57:52+00:00",
-      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc.",
+      "financial_line_items_updated_at": "2026-10-23T21:05:43+00:00",
+      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần.",
       "financial_line_items_prior_values": {},
-      "financial_line_items_rejected_values": {},
+      "financial_line_items_rejected_values": {
+        "operating_cash_flow": {
+          "value": 300788,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "investing_cash_flow": {
+          "value": -596122,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "financing_cash_flow": {
+          "value": -136267,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "net_cash_change": {
+          "value": -309775,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "capital_expenditure": {
+          "value": 16670,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "dividends_paid": {
+          "value": 7330,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "operating_cash_flow_ytd": {
+          "value": 856209,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "investing_cash_flow_ytd": {
+          "value": -120055,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "financing_cash_flow_ytd": {
+          "value": -857980,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "net_cash_change_ytd": {
+          "value": 0,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "capital_expenditure_ytd": {
+          "value": 1,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "dividends_paid_ytd": {
+          "value": 918,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        }
+      },
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-23T21:00:47+00:00"
+      "financial_line_items_schema_updated_at": "2026-10-23T21:05:40+00:00",
+      "core_financial_extraction_source": "reports/raw/GEG/auto-geg-20261021/770d2246aaa4f701.pdf",
+      "core_financial_extraction_pages": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "core_financial_extraction_updated_at": "2026-10-23T21:05:40+00:00",
+      "core_financial_extraction_calculations": {
+        "total_liabilities": "total_assets minus reported equity; total sources matched total assets"
+      },
+      "financial_line_items_rejected_fields": [
+        "capital_expenditure",
+        "capital_expenditure_ytd",
+        "cost_of_goods_sold_gross_profit_equation_check",
+        "dividends_paid",
+        "dividends_paid_ytd",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
+        "gross_profit_gross_profit_equation_check",
+        "income_tax_current_tax_reconciliation_check",
+        "income_tax_deferred_tax_reconciliation_check",
+        "income_tax_tax_reconciliation_check",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
+        "operating_cash_flow",
+        "operating_cash_flow_ytd",
+        "revenue_gross_profit_equation_check"
+      ],
+      "financial_line_items_rejected_updated_at": "2026-10-23T21:05:40+00:00",
+      "current_assets": 1975119,
+      "cash_and_equivalents": 406053,
+      "short_term_investments": 378500,
+      "short_term_receivables": 1099570,
+      "inventory": 62960,
+      "non_current_assets": 13272834,
+      "fixed_assets": 12701094,
+      "current_liabilities": 950488,
+      "long_term_liabilities": 7724214,
+      "retained_earnings": 666487,
+      "financial_income": 7289,
+      "financial_expense": 0,
+      "interest_expense": 193441,
+      "selling_expense": 37895,
+      "admin_expense": 37895,
+      "operating_profit": 98357,
+      "foreign_exchange_effect_ytd": 74,
+      "eps": 198,
+      "diluted_eps": 198,
+      "cashflow_period_basis": "year_to_date",
+      "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "financing_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "capital_expenditure_calculation": "current YTD minus previous quarter YTD",
+      "dividends_paid_calculation": "current YTD minus previous quarter YTD",
+      "net_cash_change_calculation": "current YTD minus previous quarter YTD",
+      "foreign_exchange_effect": 18,
+      "foreign_exchange_effect_calculation": "current YTD minus previous quarter YTD",
+      "financial_line_items_cash_check": "opening/closing cash hidden because the cash bridge did not reconcile",
+      "income_tax": 98726,
+      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có."
     },
     {
       "symbol": "GEG",
       "period": "2025-Q4",
-      "total_assets": null,
-      "total_liabilities": null,
-      "equity": null,
-      "pretax_profit": null,
-      "net_profit": null,
-      "net_profit_attributable": null,
+      "total_assets": 15110888,
+      "total_liabilities": 8613176,
+      "equity": 6497712,
+      "pretax_profit": 90552,
+      "net_profit": 0,
+      "net_profit_attributable": 83445,
       "revenue": null,
       "roa": null,
       "roe": null,
@@ -805,7 +949,7 @@
       "report_type": "BCTC hợp nhất GEG 2025-Q4 (phát hiện tự động qua VietstockFinance; chờ trích xuất)",
       "source_pages": "Chưa trích xuất được đủ chỉ tiêu; xem PDF/ZIP trong đường dẫn VietstockFinance.",
       "quarter_profit_basis": "Chỉ lưu số liệu khi cột phát sinh riêng của quý được trích xuất và cân đối hợp lệ.",
-      "verification_status": "auto_pending_extraction",
+      "verification_status": "auto_extracted_pending_visual_review",
       "source_validation": {
         "reviewed_at": "2026-10-23T20:44:02+00:00",
         "single_source_policy": "Chỉ danh mục VietstockFinance và tệp do danh mục đó liên kết.",
@@ -822,22 +966,173 @@
       "source_archive_title": "Báo cáo tài chính Hợp nhất quý 4 năm 2025 Báo cáo tài chính Hợp nhất quý 4 năm 2025  ",
       "source_archive_linked_at": "2026-10-23T20:53:01.959766+00:00",
       "core_financial_extraction_unverified_values": {},
-      "core_financial_extracted_fields": [],
-      "core_financial_extraction_status": "auto_pending_extraction",
-      "core_financial_extraction_note": "Đang trích xuất lại chỉ tiêu lõi bằng bộ nhận diện đơn vị đã sửa; các giá trị OCR của bộ phân tích cũ được lưu riêng và không dùng để hiển thị.",
-      "verification_status_note": "Đang kiểm tra lại đơn vị Ngàn/Nghìn VND với PDF/ZIP gốc VietstockFinance.",
+      "core_financial_extracted_fields": [
+        "eps",
+        "equity",
+        "net_profit",
+        "pretax_profit",
+        "total_assets",
+        "total_liabilities"
+      ],
+      "core_financial_extraction_status": "auto_extracted_pending_visual_review",
+      "core_financial_extraction_note": "Chỉ tiêu lõi được trích xuất từ văn bản PDF/ZIP đã lưu; chưa xác minh thủ công trên bản PDF.",
+      "verification_status_note": "Các chỉ tiêu lõi đã được trích xuất tự động từ BCTC hợp nhất VietstockFinance; cần đối chiếu trực quan trước khi coi là xác minh.",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
-      "core_financial_extraction_evidence_fingerprint": "56da65baabbe6fe93f3e471725f9a7fd211bc5561bf7dddb5e424cee44e602f5",
+      "core_financial_extraction_evidence_fingerprint": "59fe14d54e44c4290517504fafcf3d56cbe1d8970fbe9e61d019198374af5589",
       "core_financial_extraction_evidence_attempt_count": 0,
-      "financial_line_items_status": "no_detail_fields_matched_pending_manual_review",
-      "financial_line_items_extracted_fields": [],
+      "financial_line_items_status": "auto_extracted_pending_visual_review",
+      "financial_line_items_extracted_fields": [
+        "admin_expense",
+        "cash_and_equivalents",
+        "cashflow_period_basis",
+        "current_liabilities",
+        "financial_expense",
+        "financial_income",
+        "foreign_exchange_effect_ytd",
+        "income_tax",
+        "interest_expense",
+        "inventory",
+        "long_term_liabilities",
+        "net_profit_attributable",
+        "non_current_assets",
+        "operating_profit",
+        "retained_earnings",
+        "selling_expense",
+        "short_term_investments",
+        "short_term_receivables"
+      ],
       "financial_line_items_source": "reports/raw/GEG/auto-geg-20261021/a5dc3fd9e734420f.pdf",
-      "financial_line_items_updated_at": "2026-10-23T20:57:52+00:00",
-      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc.",
+      "financial_line_items_updated_at": "2026-10-23T21:05:43+00:00",
+      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần.",
       "financial_line_items_prior_values": {},
-      "financial_line_items_rejected_values": {},
+      "financial_line_items_rejected_values": {
+        "operating_cash_flow": {
+          "value": 76675,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "investing_cash_flow": {
+          "value": -288512,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "financing_cash_flow": {
+          "value": -154260,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "net_cash_change": {
+          "value": -77435,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "capital_expenditure": {
+          "value": 454,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "dividends_paid": {
+          "value": -13743,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "operating_cash_flow_ytd": {
+          "value": 932884,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "investing_cash_flow_ytd": {
+          "value": -408567,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "financing_cash_flow_ytd": {
+          "value": -1012240,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "net_cash_change_ytd": {
+          "value": -77435,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "capital_expenditure_ytd": {
+          "value": 455,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "dividends_paid_ytd": {
+          "value": -12825,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "cash_beginning": {
+          "value": 406053,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "cash_ending": {
+          "value": 86365,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        }
+      },
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-23T21:00:47+00:00"
+      "financial_line_items_schema_updated_at": "2026-10-23T21:05:41+00:00",
+      "eps": 70,
+      "core_financial_extraction_source": "reports/raw/GEG/auto-geg-20261021/a5dc3fd9e734420f.pdf",
+      "core_financial_extraction_pages": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "core_financial_extraction_updated_at": "2026-10-23T21:05:41+00:00",
+      "core_financial_extraction_calculations": {
+        "total_liabilities": "total_assets minus reported equity; total sources matched total assets"
+      },
+      "financial_line_items_rejected_fields": [
+        "capital_expenditure",
+        "capital_expenditure_ytd",
+        "cash_beginning",
+        "cash_ending",
+        "cost_of_goods_sold_gross_profit_equation_check",
+        "current_assets_current_assets_too_small",
+        "dividends_paid",
+        "dividends_paid_ytd",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
+        "fixed_assets_fixed_asset_parent_check",
+        "gross_profit_gross_profit_equation_check",
+        "income_tax_current_tax_reconciliation_check",
+        "income_tax_deferred_tax_reconciliation_check",
+        "income_tax_tax_reconciliation_check",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
+        "operating_cash_flow",
+        "operating_cash_flow_ytd",
+        "revenue_gross_profit_equation_check"
+      ],
+      "financial_line_items_rejected_updated_at": "2026-10-23T21:05:41+00:00",
+      "cash_and_equivalents": 86365,
+      "short_term_investments": 335163,
+      "short_term_receivables": 1279926,
+      "inventory": 46145,
+      "non_current_assets": 33101,
+      "current_liabilities": 884098,
+      "long_term_liabilities": 7729079,
+      "retained_earnings": 705959,
+      "financial_income": 7406,
+      "financial_expense": 0,
+      "interest_expense": 128721,
+      "selling_expense": 25,
+      "admin_expense": 0,
+      "operating_profit": 91054,
+      "foreign_exchange_effect_ytd": 82,
+      "cashflow_period_basis": "year_to_date",
+      "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "financing_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "capital_expenditure_calculation": "current YTD minus previous quarter YTD",
+      "dividends_paid_calculation": "current YTD minus previous quarter YTD",
+      "net_cash_change_calculation": "current YTD minus previous quarter YTD",
+      "foreign_exchange_effect": 8,
+      "foreign_exchange_effect_calculation": "current YTD minus previous quarter YTD",
+      "cash_beginning_calculation": "previous quarter closing cash",
+      "income_tax": 90552,
+      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có."
     },
     {
       "symbol": "GEG",
@@ -1149,7 +1444,7 @@
         4,
         5
       ],
-      "core_financial_extraction_updated_at": "2026-10-23T20:57:54+00:00",
+      "core_financial_extraction_updated_at": "2026-10-23T21:05:43+00:00",
       "core_financial_extraction_calculations": {
         "balance_totals_withheld": "asset/liability/equity totals did not fully reconcile"
       },
@@ -1161,7 +1456,7 @@
         "revenue_gross_profit_equation_check"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-23T20:57:54+00:00",
-      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý.",
+      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý.",
       "current_assets": 1414512,
       "inventory": 2066,
       "current_liabilities": 1563146,
@@ -1207,9 +1502,9 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-23T21:03:07+00:00",
+      "financial_line_items_schema_updated_at": "2026-10-23T21:05:43+00:00",
       "financial_line_items_source": "reports/raw/GEG/auto-geg-20261021/55c5b7c66cb1a05b.pdf",
-      "financial_line_items_updated_at": "2026-10-23T21:03:07+00:00",
+      "financial_line_items_updated_at": "2026-10-23T21:05:43+00:00",
       "operating_cash_flow": 360900,
       "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "investing_cash_flow": 670,
@@ -1230,8 +1525,8 @@
       "financial_line_items_rejected_values": {},
       "income_tax": 20075,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "core_financial_extraction_stable_evidence_count": 2,
-      "core_financial_extraction_stable_evidence_updated_at": "2026-10-23T21:03:07+00:00",
+      "core_financial_extraction_stable_evidence_count": 3,
+      "core_financial_extraction_stable_evidence_updated_at": "2026-10-23T21:05:43+00:00",
       "core_financial_extraction_manual_terminal": true,
       "income_tax_deferred": 4097
     }
