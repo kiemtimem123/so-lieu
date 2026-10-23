@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-23T02:49:10Z",
+  "updatedAt": "2026-10-23T02:49:35Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -15,8 +15,8 @@
     "VND"
   ],
   "lastCompletedSymbol": "VND",
-  "activeSymbol": null,
-  "resumeSymbolHint": "SHS",
+  "activeSymbol": "VCB",
+  "resumeSymbolHint": "VCB",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "VND",
@@ -101,6 +101,13 @@
       "updatedAt": "2026-10-23T02:49:10Z",
       "snapshotFetchedAt": "2026-10-22T00:37:51+00:00",
       "note": "Q3/2026 reached the automatic extraction limit in the VietstockFinance-linked archive. Unreconciled core totals remain null and must not be fabricated; keep this quarter flagged for manual visual review."
+    },
+    "VCB": {
+      "status": "in_progress",
+      "completeForAutomation": false,
+      "manualReviewRemaining": true,
+      "updatedAt": "2026-10-23T02:49:35Z",
+      "note": "Selected by OCR workflow run 773; several quarterly records currently carry pending-extraction statuses. This entry will be refreshed when the next successful report update is committed."
     }
   },
   "progressHistory": [
@@ -144,5 +151,13 @@
         "data/financials-VND.json"
       ]
     }
-  ]
+  ],
+  "currentRun": {
+    "symbol": "VCB",
+    "status": "in_progress",
+    "workflowRunId": "39891626948",
+    "workflowRunNumber": 773,
+    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39891626948",
+    "note": "Run selected VCB after VND was marked terminal for automation with Q3/2026 left for manual review."
+  }
 }
