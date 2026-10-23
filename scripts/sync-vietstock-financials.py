@@ -1347,7 +1347,7 @@ def process_symbol(
                             validation["ocr_deferred_at"] = utc_now()
                             validation["ocr_deferred_reason"] = str(exc)[:500]
                             # Cool down this same report without incrementing extraction failures.
-                            validation.setdefault("last_extraction_attempt_at", utc_now())
+                            validation["last_extraction_attempt_at"] = validation["ocr_deferred_at"]
                             items[idx] = item
                             changed = True
                 else:
