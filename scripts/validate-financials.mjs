@@ -10,24 +10,34 @@ import path from "node:path";
 const root = process.cwd();
 const configFile = path.join(root, "config", "securities.json");
 let symbols = ["MBB", "ACB", "FPT", "SHB", "TCX", "HCM", "VND", "SHS", "NLG", "BSR", "TCB", "VHM"];
+let defaultStartPeriod = "2024-Q1";
+const startPeriodBySymbol = new Map();
 try {
   const configuration = JSON.parse(fs.readFileSync(configFile, "utf8"));
+  const configuredDefaultYear = Number(configuration.defaultStartYear || 2024);
+  if (Number.isInteger(configuredDefaultYear) && configuredDefaultYear >= 2000 && configuredDefaultYear <= 2100) {
+    defaultStartPeriod = `${configuredDefaultYear}-Q1`;
+  }
   const configured = Array.isArray(configuration.securities)
     ? configuration.securities
         .filter(item => item && item.enabled !== false && item.symbol)
-        .map(item => String(item.symbol).trim().toUpperCase())
+        .map(item => {
+          const symbol = String(item.symbol).trim().toUpperCase();
+          const configuredStart = /^(20\\d{2}-Q[1-4])$/.exec(String(item.startPeriod || "").trim().toUpperCase());
+          startPeriodBySymbol.set(symbol, configuredStart ? configuredStart[1] : defaultStartPeriod);
+          return symbol;
+        })
     : [];
   if (configured.length) symbols = [...new Set(configured)];
 } catch (error) {
   console.warn(`Could not read config/securities.json; validating the legacy symbol list (${error.message}).`);
 }
-const firstExpectedOrdinal = 2024 * 4 + 1;
 const periodOrdinal = period => {
   const match = /^(20\d{2})-Q([1-4])$/.exec(String(period || ""));
   return match ? Number(match[1]) * 4 + Number(match[2]) : null;
 };
 const periodFromOrdinal = ordinal => `${Math.floor((ordinal - 1) / 4)}-Q${((ordinal - 1) % 4) + 1}`;
-const periodsBetween = (startOrdinal, endOrdinal) => {
+const periodsBetween = (startOrdinal, endOrdinal, firstExpectedOrdinal) => {
   const periods = [];
   for (let ordinal = Math.max(firstExpectedOrdinal, startOrdinal); ordinal <= endOrdinal; ordinal++) {
     periods.push(periodFromOrdinal(ordinal));
@@ -66,6 +76,8 @@ for (const symbol of symbols) {
     continue;
   }
 
+  const symbolStartPeriod = startPeriodBySymbol.get(symbol) || defaultStartPeriod;
+  const firstExpectedOrdinal = periodOrdinal(symbolStartPeriod) || periodOrdinal(defaultStartPeriod);
   const byPeriod = new Map();
   const statusCounts = {};
   for (const item of snapshot.items) {
@@ -118,9 +130,9 @@ for (const symbol of symbols) {
   const ordinals = [...byPeriod.keys()].map(periodOrdinal).filter(Number.isFinite);
   const earliestOrdinal = ordinals.length ? Math.min(...ordinals) : firstExpectedOrdinal;
   const latestOrdinal = ordinals.length ? Math.max(...ordinals) : firstExpectedOrdinal - 1;
-  const expectedPeriods = periodsBetween(earliestOrdinal, latestOrdinal);
+  const expectedPeriods = periodsBetween(earliestOrdinal, latestOrdinal, firstExpectedOrdinal);
   if (ordinals.length && earliestOrdinal > firstExpectedOrdinal) {
-    warnings.push(`${symbol}: first stored report is ${periodFromOrdinal(earliestOrdinal)}; quarters before that were not returned by the VietstockFinance catalog for this ticker.`);
+    warnings.push(`${symbol}: first stored report is ${periodFromOrdinal(earliestOrdinal)}; this is later than its configured start period ${symbolStartPeriod}.`);
   }
   for (const period of expectedPeriods) {
     if (!byPeriod.has(period)) errors.push(`${symbol}: missing period ${period} within the stored reporting span`);
