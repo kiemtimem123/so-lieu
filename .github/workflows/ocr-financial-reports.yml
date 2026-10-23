@@ -480,12 +480,12 @@ jobs:
       - name: Validate queue before OCR
         run: node .github/scripts/validate-report-queue.cjs
 
-      - name: OCR one report from selected ticker
+      - name: OCR up to two reports from the selected ticker
         id: run_ocr
         env:
           REPORT_OCR_SYMBOL: ${{ needs['select-ticker'].outputs.symbol }}
           REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || '14' }}
-          REPORT_OCR_MAX_REPORTS: "1"
+          REPORT_OCR_MAX_REPORTS: "2"
           REPORT_OCR_DPI: "240"
           REPORT_OCR_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || '' }}
         run: python .github/scripts/ocr-stored-reports.py
