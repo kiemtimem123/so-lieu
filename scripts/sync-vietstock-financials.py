@@ -320,6 +320,15 @@ def fetch_symbol_documents(
     return list(all_records.values())
 
 
+def terminal_scope_review(item: dict) -> bool:
+    """Stop automatic extraction where the linked document's reporting scope is unverified."""
+    validation = item.get("source_validation") or {}
+    return (
+        item.get("core_financial_extraction_manual_terminal") is True
+        or validation.get("manual_review_blocking_automatic_extraction") is True
+    )
+
+
 def desired_consolidated(items: list[dict]) -> bool:
     labels = [norm(x.get("report_type", "")) for x in items if x.get("report_type")]
     if not labels:
@@ -1114,6 +1123,12 @@ def process_symbol(
             continue
         if period in existing:
             existing_item = existing[period]
+            if terminal_scope_review(existing_item):
+                print(
+                    f"  {symbol} {period}: đang chờ rà soát phạm vi hợp nhất; "
+                    "giữ URL nguồn, không thử trích xuất hoặc điền số liệu tự động."
+                )
+                continue
             core_pending = existing_item.get("verification_status") == "auto_pending_extraction"
             core_present = existing_item.get("total_assets") is not None and existing_item.get("net_profit") is not None
             details_pending = core_present and not existing_item.get("financial_line_items_status")
@@ -1466,6 +1481,7 @@ def main() -> int:
             has_pending_core = any(
                 isinstance(item, dict)
                 and item.get("verification_status") == "auto_pending_extraction"
+                and not terminal_scope_review(item)
                 for item in items
             )
             has_pending_details = any(
