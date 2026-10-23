@@ -301,6 +301,90 @@ jobs:
           if-no-files-found: ignore
           retention-days: 30
 
+  advance-collector:
+    needs: collect
+    if: ${{ needs.collect.result == 'success' }}
+    runs-on: ubuntu-24.04
+    outputs:
+      symbol: ${{ steps.continuation.outputs.symbol }}
+      should_continue: ${{ steps.continuation.outputs.should_continue }}
+    steps:
+      - name: Read the committed worker checkpoint
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /config/report-queue.json
+            /config/securities.json
+            /reports/worker-last-run.json
+      - name: Continue only the same ticker when the previous batch made progress
+        id: continuation
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          def read(path):
+              try:
+                  return json.loads(Path(path).read_text(encoding="utf-8"))
+              except (OSError, json.JSONDecodeError):
+                  return {}
+
+          summary = read("reports/worker-last-run.json")
+          queue = read("config/report-queue.json")
+          registry = read("config/securities.json")
+          valid_symbols = {
+              str(item.get("symbol") or "").strip().upper()
+              for item in registry.get("securities", [])
+              if isinstance(item, dict) and item.get("enabled") is not False and item.get("symbol")
+          }
+          symbol = str(summary.get("active_symbol") or "").strip().upper()
+          job_id = summary.get("active_job_id")
+          job = next(
+              (
+                  item for item in queue.get("jobs", [])
+                  if isinstance(item, dict)
+                  and item.get("id") == job_id
+                  and str(item.get("symbol") or "").strip().upper() == symbol
+              ),
+              None,
+          )
+          should_continue = bool(
+              symbol in valid_symbols
+              and summary.get("continuation_needed") is True
+              and int(summary.get("jobs_processed") or 0) == 1
+              and job
+              and job.get("status") == "queued"
+              and job.get("resumeDownload") is True
+              and len(job.get("sourceCandidates") or []) > 0
+          )
+          print(json.dumps({
+              "active_symbol": symbol or None,
+              "job_id": job_id,
+              "jobs_processed": summary.get("jobs_processed"),
+              "continuation_needed": summary.get("continuation_needed"),
+              "queue_status": job.get("status") if job else None,
+              "remaining_candidates": len(job.get("sourceCandidates") or []) if job else 0,
+              "should_continue": should_continue,
+          }, ensure_ascii=False))
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
+              handle.write(f"symbol={symbol if should_continue else ''}\\n")
+              handle.write(f"should_continue={'true' if should_continue else 'false'}\\n")
+          PY
+      - name: Dispatch the next two-document batch for the same ticker
+        if: ${{ steps.continuation.outputs.should_continue == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Continue only ticker ${{ steps.continuation.outputs.symbol }} from its committed queue checkpoint."
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/workflows/collect-financial-reports.yml/dispatches" -f ref=main -f "inputs[symbol]=${{ steps.continuation.outputs.symbol }}" -f "inputs[max_downloads_per_job]=2"
+
   trigger-ocr:
     needs: collect
     if: ${{ needs.collect.result == 'success' }}
