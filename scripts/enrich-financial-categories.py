@@ -16,7 +16,7 @@ RAW = ROOT / "reports" / "raw"
 REPORT_QUEUE = ROOT / "config" / "report-queue.json"
 _QUEUE_ARCHIVE_BY_URL = None
 DETAIL_SCHEMA_VERSION = "2026-10-22-bank-statement-qc-v4"
-CORE_EXTRACTION_DEBUG_VERSION = "2026-10-23-bid-balance-source-v2"
+CORE_EXTRACTION_DEBUG_VERSION = "2026-10-23-bid-balance-source-v3"
 NUMBER_RE = re.compile(r"(?<![A-Za-z0-9])\(?-?\d[\d.,]*\d?\)?")
 BANKS = {"MBB", "ACB", "SHB", "TCB", "TPB", "VPB", "STB", "VCB", "CTG", "BID"}
 BROKERS = {"HCM", "SHS", "TCX", "VND", "VCI", "VCK", "VIX", "SSI", "VDS"}
@@ -556,7 +556,17 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
    lines=str(page.get("text","")).splitlines()
    for index,line in enumerate(lines):
     clean_window=norm(" ".join(lines[index:index+3]))
-    if not re.search(r"tong\s*no\s*phai\s*tra", clean_window) or not re.search(r"von\s*chu\s*so", clean_window):
+    # Treat a row with a total marker and an equity label as a candidate
+    # source total even when OCR corrupts "nợ phải trả" (e.g. "NG PHATTRA").
+    # We accept it only if its numeric value independently matches total assets.
+    if not (
+     re.search(r"von\s*chu\s*so", clean_window)
+     and (
+      "tong" in clean_window
+      or "total liabilities and equity" in clean_window
+      or "total sources" in clean_window
+     )
+    ):
      continue
     row_values=amounts(line,threshold=1000)
     if not row_values:
