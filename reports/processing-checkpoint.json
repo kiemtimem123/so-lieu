@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-23T05:16:10Z",
+  "updatedAt": "2026-10-23T05:27:05.574Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -237,14 +237,18 @@
       "note": "All ten quarterly records have assets, liabilities and equity that reconcile within 3 million VND rounding tolerance. Values are OCR-derived and remain pending visual review."
     },
     "VCI": {
-      "status": "source_discovery_pending",
+      "status": "catalog_retry_and_extract_in_progress",
       "completeForAutomation": false,
       "manualReviewRemaining": false,
-      "updatedAt": "2026-10-23T05:16:10Z",
+      "updatedAt": "2026-10-23T05:27:05.574Z",
       "previousCatalogAttemptAt": "2026-10-23T05:02:42+00:00",
       "previousCatalogAttemptCount": 1,
       "sourceIndexUrl": "https://finance.vietstock.vn/VCI/tai-tai-lieu.htm?doctype=1",
-      "note": "Initial catalog sync returned no quarterly consolidated records; start a focused source discovery run for VCI before deciding whether records are missing or outside the configured consolidated scope."
+      "note": "Retry was forced on a dedicated sync concurrency group. Continue until quarterly data are saved or extraction has reached a recorded manual-review terminal state.",
+      "workflowRunId": "39905714668",
+      "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39905714668",
+      "catalogCandidateCount": 19,
+      "archivedReportCount": 4
     }
   },
   "progressHistory": [
@@ -666,8 +670,13 @@
   ],
   "currentRun": {
     "symbol": "VCI",
-    "status": "source_discovery_pending",
-    "updatedAt": "2026-10-23T05:16:10Z",
-    "note": "BID has all 10 quarterly core balance sheets reconciled; OCR-derived figures remain pending visual review. VCI is the next enabled ticker and has an empty snapshot after one failed quarterly-catalog scan. The report queue will be triggered for VCI only."
+    "status": "catalog_retry_and_extract_in_progress",
+    "workflowRunId": "39905714668",
+    "workflowRunNumber": 45,
+    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39905714668",
+    "updatedAt": "2026-10-23T05:27:05.574Z",
+    "catalogCandidateCount": 19,
+    "archivedReportCount": 4,
+    "note": "VCI is held as the sole active ticker. Neutral VietstockFinance BCTC titles are now eligible candidates; the linked PDF header is checked so an explicitly separate/parent-only report cannot be used as consolidated data."
   }
 }
