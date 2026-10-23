@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-23T05:13:26Z",
+  "updatedAt": "2026-10-23T05:16:10Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -21,7 +21,7 @@
     "BID"
   ],
   "lastCompletedSymbol": "BID",
-  "activeSymbol": null,
+  "activeSymbol": "VCI",
   "resumeSymbolHint": "VCI",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
@@ -29,7 +29,7 @@
     "status": "automated_processing_complete",
     "completeForAutomation": true,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-23T05:13:26Z",
+    "processedAt": "2026-10-23T05:16:10Z",
     "workflowRunId": "39904477819",
     "workflowRunNumber": 828,
     "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39904477819",
@@ -232,8 +232,19 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-10-23T05:13:26Z",
-      "snapshotFetchedAt": "2026-10-23T04:27:50+00:00"
+      "updatedAt": "2026-10-23T05:16:10Z",
+      "snapshotFetchedAt": "2026-10-23T04:27:50+00:00",
+      "note": "All ten quarterly records have assets, liabilities and equity that reconcile within 3 million VND rounding tolerance. Values are OCR-derived and remain pending visual review."
+    },
+    "VCI": {
+      "status": "source_discovery_pending",
+      "completeForAutomation": false,
+      "manualReviewRemaining": false,
+      "updatedAt": "2026-10-23T05:16:10Z",
+      "previousCatalogAttemptAt": "2026-10-23T05:02:42+00:00",
+      "previousCatalogAttemptCount": 1,
+      "sourceIndexUrl": "https://finance.vietstock.vn/VCI/tai-tai-lieu.htm?doctype=1",
+      "note": "Initial catalog sync returned no quarterly consolidated records; start a focused source discovery run for VCI before deciding whether records are missing or outside the configured consolidated scope."
     }
   },
   "progressHistory": [
@@ -654,9 +665,9 @@
     }
   ],
   "currentRun": {
-    "symbol": "BID",
-    "status": "reprocessing_after_parser_v5",
-    "updatedAt": "2026-10-23T05:11:40Z",
-    "reason": "Only 2024-Q3 and 2026-Q2 were reopened. Parser v5 will match the source-total row against the same-period/comparative total-assets columns after normalizing OCR slash separators. Existing accepted quarters are unchanged."
+    "symbol": "VCI",
+    "status": "source_discovery_pending",
+    "updatedAt": "2026-10-23T05:16:10Z",
+    "note": "BID has all 10 quarterly core balance sheets reconciled; OCR-derived figures remain pending visual review. VCI is the next enabled ticker and has an empty snapshot after one failed quarterly-catalog scan. The report queue will be triggered for VCI only."
   }
 }
