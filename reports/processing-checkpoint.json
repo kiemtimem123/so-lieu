@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-23T04:03:26Z",
+  "updatedAt": "2026-10-23T04:05:09.201Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -20,7 +20,7 @@
     "CTG"
   ],
   "lastCompletedSymbol": "CTG",
-  "activeSymbol": null,
+  "activeSymbol": "BID",
   "resumeSymbolHint": "BID",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
@@ -223,6 +223,15 @@
       "sourceArchivesChecked": 10,
       "updatedAt": "2026-10-23T04:03:26Z",
       "snapshotFetchedAt": "2026-10-23T03:45:53+00:00"
+    },
+    "BID": {
+      "status": "bootstrap_sync_in_progress",
+      "completeForAutomation": false,
+      "manualReviewRemaining": false,
+      "updatedAt": "2026-10-23T04:05:09.201Z",
+      "workflowRunId": "39898299881",
+      "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39898299881",
+      "note": "Awaiting the first VietstockFinance-linked snapshot for BID; process only BID until automated extraction is complete or reaches manual-review terminal state."
     }
   },
   "progressHistory": [
@@ -493,11 +502,12 @@
     }
   ],
   "currentRun": {
-    "symbol": "VCB",
-    "status": "in_progress",
-    "workflowRunId": "39891626948",
-    "workflowRunNumber": 773,
-    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39891626948",
-    "note": "Run selected VCB after VND was marked terminal for automation with Q3/2026 left for manual review."
+    "symbol": "BID",
+    "status": "bootstrap_sync_in_progress",
+    "workflowRunId": "39898299881",
+    "workflowRunNumber": 41,
+    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39898299881",
+    "updatedAt": "2026-10-23T04:05:09.201Z",
+    "note": "Single-ticker bootstrap sync dispatched after CTG reached terminal automated status; next step is OCR/enrichment for BID."
   }
 }
