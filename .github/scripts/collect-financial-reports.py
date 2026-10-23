@@ -776,6 +776,15 @@ def first_incomplete_symbol(securities: dict) -> str | None:
             snapshot = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
             return symbol
+
+        # The sync/OCR pipeline intentionally closes a ticker as
+        # complete_needs_manual_review when automated extraction has reached a
+        # terminal limit. Do not let the collector queue loop back to that
+        # ticker forever just because its preserved source record still carries
+        # manual_review_required_pending_extraction.
+        if snapshot.get("bootstrap_status") in {"complete", "complete_needs_manual_review"}:
+            continue
+
         items = snapshot.get("items") or []
         if not items:
             try:
