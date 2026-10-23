@@ -544,7 +544,7 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
    lines=str(page.get("text","")).splitlines()
    for index,line in enumerate(lines):
     clean_window=norm(" ".join(lines[index:index+3]))
-    if "tong no phai tra" not in clean_window or "von chu so huu" not in clean_window:
+    if "tong no phai tra" not in clean_window or "von chu so" not in clean_window or "huu" not in clean_window:
      continue
     row_values=amounts(line,threshold=1000)
     if not row_values:
