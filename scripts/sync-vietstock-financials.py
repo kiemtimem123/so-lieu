@@ -352,10 +352,17 @@ def is_scope_match(record: dict, consolidated_wanted: bool) -> bool:
     text = norm(unquote(doc_title(record) + " " + doc_url(record)))
     has_consolidated = "hop nhat" in text or "consolidated" in text
     has_parent_only = "cong ty me" in text or "parent company" in text
+    has_separate = "rieng le" in text or "separate financial" in text
     if consolidated_wanted:
-        return has_consolidated
-    # Do not let a separate-company record be silently replaced with a
-    # consolidated report, or vice versa.
+        if has_consolidated:
+            return True
+        if has_parent_only or has_separate:
+            return False
+        # VietstockFinance sometimes lists a consolidated report with a neutral
+        # title/file name. Accept it as a candidate, then verify the PDF header
+        # against the expected scope before any numbers can be saved.
+        return True
+    # Never substitute an explicitly consolidated report for a separate-company one.
     return not has_consolidated and not has_parent_only
 
 
@@ -558,6 +565,7 @@ def extract_statement(
     symbol: str = "",
     cumulative: bool = False,
     force_ocr: bool = False,
+    expected_consolidated: bool | None = None,
 ) -> dict:
     reader = PdfReader(io.BytesIO(pdf_bytes), strict=False)
     texts = []
@@ -573,6 +581,24 @@ def extract_statement(
         text = ocr_pdf_text(pdf_bytes)
     if len(text.strip()) < 300:
         raise ValueError("PDF không có đủ văn bản sau thử OCR; giữ liên kết chờ xử lý.")
+
+    header_text = norm("\n".join(text.splitlines()[:100]))[:16000]
+    header_consolidated = (
+        "bao cao tai chinh hop nhat" in header_text
+        or "bctc hop nhat" in header_text
+        or "consolidated financial statements" in header_text
+    )
+    header_separate = (
+        re.search(r"(bao cao tai chinh|bctc)\s+(rieng le|cua cong ty me|cong ty me)", header_text) is not None
+        or "separate financial statements" in header_text
+        or "financial statements of the parent company" in header_text
+    )
+    if expected_consolidated is True and header_separate and not header_consolidated:
+        raise ValueError("PDF ghi rõ báo cáo riêng lẻ/công ty mẹ; từ chối dùng làm BCTC hợp nhất.")
+    if expected_consolidated is False and header_consolidated:
+        raise ValueError("PDF ghi rõ BCTC hợp nhất; từ chối dùng làm BCTC riêng lẻ.")
+
+    observed_scope = "consolidated" if header_consolidated else ("separate" if header_separate else "not_explicit_in_pdf_header")
     lines = [line.strip() for line in text.splitlines() if line.strip()]
 
     asset_series = row_numbers(lines, ASSET_LABELS)
@@ -849,6 +875,12 @@ def extract_statement(
             "pretax_profit": pretax_series[0],
             "net_profit": net_profit_series[0],
         },
+        "source_scope_check": {
+            "expected": "consolidated" if expected_consolidated is True else ("separate" if expected_consolidated is False else "unspecified"),
+            "observed_pdf_header": observed_scope,
+            "neutral_catalog_title_allowed": True,
+            "explicit_scope_conflict_rejected": True,
+        },
     }
     result.update(details)
     return result
@@ -982,6 +1014,7 @@ def make_extracted_item(
                 "unit_note": values["unit_note"],
                 "cumulative_document": cumulative,
             },
+            "scope_check": values.get("source_scope_check"),
             "note": "Các số tự trích xuất cần được kiểm tra trực quan trước khi đánh dấu đã xác minh thủ công.",
         },
     }
@@ -1190,11 +1223,15 @@ def process_symbol(
             pdf_bytes, final_url = extract_pdf_bytes(url, session)
             previous = choose_previous_item(items, period)
             try:
-                values = extract_statement(pdf_bytes, previous, symbol=symbol, cumulative=cumulative)
+                values = extract_statement(
+                    pdf_bytes, previous, symbol=symbol, cumulative=cumulative,
+                    expected_consolidated=want_consolidated,
+                )
             except ValueError as text_error:
                 print(f"    Trích xuất văn bản chưa đạt ({text_error}); chuyển sang OCR.")
                 values = extract_statement(
-                    pdf_bytes, previous, symbol=symbol, cumulative=cumulative, force_ocr=True
+                    pdf_bytes, previous, symbol=symbol, cumulative=cumulative,
+                    force_ocr=True, expected_consolidated=want_consolidated,
                 )
             new_item = make_extracted_item(symbol, period, record, url, values, items, cumulative)
             new_item["source_extract_review"]["final_download_url"] = final_url
