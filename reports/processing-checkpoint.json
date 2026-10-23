@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-23T05:27:05.574Z",
+  "updatedAt": "2026-10-23T05:28:10Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -232,23 +232,25 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-10-23T05:16:10Z",
+      "updatedAt": "2026-10-23T05:28:10Z",
       "snapshotFetchedAt": "2026-10-23T04:27:50+00:00",
       "note": "All ten quarterly records have assets, liabilities and equity that reconcile within 3 million VND rounding tolerance. Values are OCR-derived and remain pending visual review."
     },
     "VCI": {
-      "status": "catalog_retry_and_extract_in_progress",
+      "status": "catalog_scope_review",
       "completeForAutomation": false,
-      "manualReviewRemaining": false,
-      "updatedAt": "2026-10-23T05:27:05.574Z",
+      "manualReviewRemaining": true,
+      "updatedAt": "2026-10-23T05:28:10Z",
       "previousCatalogAttemptAt": "2026-10-23T05:02:42+00:00",
       "previousCatalogAttemptCount": 1,
       "sourceIndexUrl": "https://finance.vietstock.vn/VCI/tai-tai-lieu.htm?doctype=1",
-      "note": "Retry was forced on a dedicated sync concurrency group. Continue until quarterly data are saved or extraction has reached a recorded manual-review terminal state.",
+      "note": "VietstockFinance catalog discovery succeeded, but the generic document titles do not explicitly identify consolidated vs standalone statements. Keep the ticker active and do not infer consolidated values from filenames alone.",
       "workflowRunId": "39905714668",
       "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39905714668",
-      "catalogCandidateCount": 19,
-      "archivedReportCount": 4
+      "catalogCandidateCount": 17,
+      "archivedReportCount": 4,
+      "archivedCatalogDocuments": 4,
+      "quarterlySnapshotPeriods": 0
     }
   },
   "progressHistory": [
@@ -670,13 +672,34 @@
   ],
   "currentRun": {
     "symbol": "VCI",
-    "status": "catalog_retry_and_extract_in_progress",
-    "workflowRunId": "39905714668",
-    "workflowRunNumber": 45,
-    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39905714668",
-    "updatedAt": "2026-10-23T05:27:05.574Z",
-    "catalogCandidateCount": 19,
-    "archivedReportCount": 4,
-    "note": "VCI is held as the sole active ticker. Neutral VietstockFinance BCTC titles are now eligible candidates; the linked PDF header is checked so an explicitly separate/parent-only report cannot be used as consolidated data."
+    "status": "catalog_sync_and_source_discovery_in_progress",
+    "updatedAt": "2026-10-23T05:28:10Z",
+    "workflowRuns": [
+      {
+        "workflow": "Collect Financial Reports",
+        "runId": "39905597210",
+        "runNumber": 123,
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/39905597210",
+        "status": "success",
+        "note": "Selected VCI and archived additional VietstockFinance catalog files."
+      },
+      {
+        "workflow": "Sync quarterly BCTC from VietstockFinance",
+        "runId": "39905714668",
+        "runNumber": 45,
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/39905714668",
+        "status": "in_progress",
+        "note": "Re-checking the VCI catalog; snapshot is still empty pending validation of consolidated scope."
+      },
+      {
+        "workflow": "Collect Financial Reports",
+        "runId": "39905867279",
+        "runNumber": 124,
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/39905867279",
+        "status": "in_progress",
+        "note": "Using the new light-checkout selector to process one ticker only."
+      }
+    ],
+    "note": "BID is complete for automated extraction with all ten quarterly balance equations reconciled; VCI is next. The VietstockFinance index returned 17 VCI documents, four catalog documents are archived; titles do not explicitly state consolidation, so do not publish financial values as consolidated until report scope is established."
   }
 }
