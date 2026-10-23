@@ -16,7 +16,7 @@ RAW = ROOT / "reports" / "raw"
 REPORT_QUEUE = ROOT / "config" / "report-queue.json"
 _QUEUE_ARCHIVE_BY_URL = None
 DETAIL_SCHEMA_VERSION = "2026-10-22-bank-statement-qc-v4"
-CORE_EXTRACTION_DEBUG_VERSION = "2026-10-23-bid-balance-source-v4"
+CORE_EXTRACTION_DEBUG_VERSION = "2026-10-23-bid-balance-source-v5"
 NUMBER_RE = re.compile(r"(?<![A-Za-z0-9])\(?-?\d[\d.,]*\d?\)?")
 BANKS = {"MBB", "ACB", "SHB", "TCB", "TPB", "VPB", "STB", "VCB", "CTG", "BID"}
 BROKERS = {"HCM", "SHS", "TCX", "VND", "VCI", "VCK", "VIX", "SSI", "VDS"}
@@ -548,41 +548,67 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
  # the adjacent lines complete the label and a candidate total reconciles
  # to the independently extracted total-assets row.
  if balance and symbol in BANKS:
-  # Run this even when a generic text matcher already returned a number:
-  # it may have picked the first liability component from the section heading.
-  # Accept the wrapped total row without requiring the OCR to preserve the final
-  # word "hữu"; the independent assets match is the verification gate.
+  # Keep the values in both balance-sheet columns for a strict same-column
+  # match: OCR may merge a digit into the current source total or convert a
+  # thousands separator to "/", while the comparative column remains intact.
+  asset_column_values=[]
+  total_asset_patterns=[
+   re.compile(r"^\s*[,;:._\-\x60~]*\s*(?:\|\s*)?(?:tong\s*)?(?:cong\s*)?tai\s*san\s*co(?:\s|$)"),
+   re.compile(r"^\s*[,;:._\-\x60~]*\s*(?:\|\s*)?(?:tong\s*)?(?:cong\s*)?tai\s*san(?:\s|$)"),
+   re.compile(r"^\s*[,;:._\-\x60~]*\s*(?:\|\s*)?total\s*assets(?:\s|$)"),
+  ]
+  if isinstance(assets,(int,float)):
+   row_tolerance=max(abs(assets)*0.00001,1000)
+   for page in balance:
+    for asset_line in str(page.get("text","")).splitlines():
+     asset_clean=norm(asset_line)
+     if not any(pattern.search(asset_clean) for pattern in total_asset_patterns):
+      continue
+     values=[int(round(value*factor)) for value in amounts(asset_line,threshold=1000)]
+     if values and abs(values[0]-assets)<=row_tolerance:
+      asset_column_values=values
+      break
+    if asset_column_values:
+     break
+   if not asset_column_values:
+    asset_column_values=[int(round(assets))]
+
+  # Don't require a perfectly OCRed "Tổng nợ phải trả" label. The hard gate
+  # is that the source-total row has "vốn chủ sở hữu" and its values match
+  # total-assets values in the same column(s). Normalize slash separators
+  # inside numbers, for example "2/300,868/728" -> "2,300,868,728".
   for page in balance:
    lines=str(page.get("text","")).splitlines()
    for index,line in enumerate(lines):
     clean_window=norm(" ".join(lines[index:index+3]))
-    # Treat a row with a total marker and an equity label as a candidate
-    # source total even when OCR corrupts "nợ phải trả" (e.g. "NG PHATTRA").
-    # We accept it only if its numeric value independently matches total assets.
-    if not (
-     re.search(r"von\s*chu\s*so", clean_window)
-     and (
-      "tong" in clean_window
-      or "total liabilities and equity" in clean_window
-      or "total sources" in clean_window
-     )
-    ):
+    if "von chu so" not in clean_window:
      continue
-    row_values=amounts(line,threshold=1000)
-    if not row_values:
+    candidate_lines=[line]
+    if not amounts(re.sub(r"(?<=\d)/(?=\d)",",",line),threshold=1000):
      for lookahead in range(index+1,min(index+4,len(lines))):
       if is_statement_row_start(lines[lookahead]):
        break
-      row_values=amounts(lines[lookahead],threshold=1000)
-      if row_values:
+      candidate_lines.append(lines[lookahead])
+      if amounts(re.sub(r"(?<=\d)/(?=\d)",",",lines[lookahead]),threshold=1000):
        break
-    if not row_values or not isinstance(assets,(int,float)):
+    row_values=[]
+    for candidate_line in candidate_lines:
+     parsed=amounts(re.sub(r"(?<=\d)/(?=\d)",",",candidate_line),threshold=1000)
+     if parsed:
+      row_values=parsed
+      break
+    if not row_values or not asset_column_values:
      continue
-    candidates=[int(round(value*factor)) for value in row_values]
-    candidate=min(candidates,key=lambda value:abs(value-assets))
-    tolerance=max(abs(assets)*0.00001,1000)
-    if abs(candidate-assets)<=tolerance:
-     source_total=candidate
+    source_values=[int(round(value*factor)) for value in row_values]
+    matched_column=None
+    for column,(source_value,asset_value) in enumerate(zip(source_values,asset_column_values)):
+     compare_tolerance=max(abs(asset_value)*0.00001,1000)
+     if abs(source_value-asset_value)<=compare_tolerance:
+      matched_column=column
+      break
+    if matched_column is not None:
+     source_total=int(round(assets))
+     calculations["source_total_match"]="Source-total row matches total-assets row in column %d after OCR separator normalization" % (matched_column+1)
      break
    if source_total is not None and isinstance(assets,(int,float)) and abs(source_total-assets)<=max(abs(assets)*0.00001,1000):
     break
@@ -640,10 +666,11 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
   for page in balance:
    for line in str(page.get("text","")).splitlines():
     clean=norm(line)
-    if any(term in clean for term in (
-     "tong tai san co","tong cong tai san","von va cac quy",
-     "tong no phai tra va von chu so huu","tong no phai tra va von chu so huu"
-    )):
+    if (
+     ("tong" in clean and "tai" in clean and "san" in clean)
+     or "von va cac quy" in clean
+     or "von chu so" in clean
+    ):
      print("[CORE_DEBUG_ROW]", item.get("period"), int(page.get("page") or 0), line[:260])
      shown+=1
      if shown>=6: break
