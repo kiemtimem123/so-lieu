@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-23T10:39:37.194Z",
+  "updatedAt": "2026-10-23T10:41:13.833Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -345,17 +345,18 @@
       "snapshotFetchedAt": "2026-10-23T09:38:33+00:00"
     },
     "SSI": {
-      "status": "archive_batch_running",
+      "status": "next_archive_batch_in_progress",
       "completeForAutomation": false,
       "manualReviewRemaining": false,
-      "updatedAt": "2026-10-23T10:39:37.194Z",
-      "workflowRunId": "39940585901",
-      "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39940585901",
+      "updatedAt": "2026-10-23T10:41:13.833Z",
+      "workflowRunId": "39940771284",
+      "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39940771284",
       "note": "SSI has 2024-Q1 through 2026-Q2 quarterly snapshot rows; the current single-ticker archive collector is attempting to complete source PDF/ZIP archiving and queue updates before OCR.",
       "queuedResumeWorkflowRunId": "39940433773",
       "queuedResumeWorkflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39940433773",
-      "archivedReports": 12,
-      "remainingSourceCandidates": 6
+      "archivedReports": 13,
+      "remainingSourceCandidates": 6,
+      "failedDownloadRecords": 1
     }
   },
   "progressHistory": [
@@ -947,28 +948,31 @@
   ],
   "currentRun": {
     "symbol": "SSI",
-    "status": "archive_batch_running",
-    "workflowRunId": "39940585901",
-    "workflowRunNumber": 164,
-    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39940585901",
-    "updatedAt": "2026-10-23T10:39:37.194Z",
+    "status": "next_archive_batch_in_progress",
+    "workflowRunId": "39940771284",
+    "workflowRunNumber": 165,
+    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39940771284",
+    "updatedAt": "2026-10-23T10:41:13.833Z",
     "priorSuccessfulBatch": {
-      "workflowRunId": "39940493730",
-      "workflowRunNumber": 163,
-      "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39940493730",
+      "workflowRunId": "39940585901",
+      "workflowRunNumber": 164,
+      "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39940585901",
       "outcome": "success",
-      "archivedThisBatch": 2,
-      "archivedTotal": 12
+      "successfulArchivesInBatch": 1,
+      "failedDownloadsInBatch": 1,
+      "totalSuccessfullyArchived": 13,
+      "totalDownloadAttempts": 14
     },
     "archiveProgress": {
       "queueJobId": "auto-ssi-20261021",
       "queueStatus": "queued",
-      "queueAttempts": 6,
-      "successfullyArchived": 12,
-      "sourceCandidatesRemaining": 6,
-      "note": "SSI is the only active ticker. Current run reuses the persisted source URL list and must complete the remaining SSI archive before advancing."
+      "queueAttempts": 7,
+      "successfullyArchived": 13,
+      "failedDownloadRecords": 1,
+      "storedSourceCandidates": 4,
+      "note": "Continue only SSI. A 2025-Q1 download attempt failed once and remains subject to the 30-minute retry cooldown; leave its source link and do not fabricate data."
     },
-    "note": "VCK coverage starts at 2025-Q1; 2024-Q1 to 2024-Q4 remain excluded from the active VCK quarterly series. SSI remains active."
+    "note": "VCK coverage begins at 2025-Q1; 2024 quarters remain excluded from the active VCK series. SSI remains active until archive/download retries and quarterly extraction are complete or unresolved periods are explicitly terminal for manual review."
   },
   "scopePolicy": {
     "VCK": {
