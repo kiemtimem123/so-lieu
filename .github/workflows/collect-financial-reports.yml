@@ -372,8 +372,8 @@ jobs:
               "should_continue": should_continue,
           }, ensure_ascii=False))
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
-              handle.write(f"symbol={symbol if should_continue else ''}\\n")
-              handle.write(f"should_continue={'true' if should_continue else 'false'}\\n")
+              handle.write("symbol=" + (symbol if should_continue else "") + chr(10))
+              handle.write("should_continue=" + ("true" if should_continue else "false") + chr(10))
           PY
       - name: Dispatch the next two-document batch for the same ticker
         if: ${{ steps.continuation.outputs.should_continue == 'true' }}
