@@ -38,7 +38,153 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  select-ticker:
+    runs-on: ubuntu-24.04
+    outputs:
+      symbol: ${{ steps.pick.outputs.symbol }}
+    steps:
+      - name: Checkout ticker snapshots and checkpoint only
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /config/securities.json
+            /data/financials-*.json
+            /reports/processing-checkpoint.json
+      - name: Select exactly one resumable ticker
+        id: pick
+        env:
+          REQUESTED_SYMBOL: ${{ github.event.inputs.symbol || '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          import re
+          from pathlib import Path
+
+          def load(path):
+              try:
+                  return json.loads(Path(path).read_text(encoding="utf-8"))
+              except (OSError, json.JSONDecodeError):
+                  return None
+
+          config = load("config/securities.json") or {}
+          securities = [
+              item for item in config.get("securities", [])
+              if isinstance(item, dict)
+              and item.get("enabled") is not False
+              and re.fullmatch(r"[A-Z0-9]{1,12}", str(item.get("symbol") or "").strip().upper())
+          ]
+          symbols = [str(item.get("symbol") or "").strip().upper() for item in securities]
+          requested = os.environ.get("REQUESTED_SYMBOL", "").strip().upper()
+          selected = ""
+          reason = "all enabled tickers have no automated collection gaps"
+
+          def snapshot_for(symbol):
+              return load(Path("data") / f"financials-{symbol}.json")
+
+          def terminal_manual(item):
+              if not isinstance(item, dict) or item.get("verification_status") != "manual_review_required_pending_extraction":
+                  return False
+              validation = item.get("source_validation")
+              if not isinstance(validation, dict):
+                  validation = {}
+              try:
+                  attempts = int(validation.get("extraction_attempt_count") or 0)
+              except (TypeError, ValueError):
+                  attempts = 0
+              try:
+                  core_attempts = int(item.get("core_financial_extraction_attempt_count") or 0)
+              except (TypeError, ValueError):
+                  core_attempts = 0
+              return validation.get("automatic_extraction_exhausted") is True or attempts >= 3 or core_attempts >= 3
+
+          def needs_collection(symbol, snapshot):
+              if snapshot is None:
+                  return True
+              if snapshot.get("bootstrap_status") in {"complete", "complete_needs_manual_review"}:
+                  return False
+              items = snapshot.get("items") or []
+              if not items:
+                  try:
+                      attempts = int(snapshot.get("bootstrap_attempt_count") or 0)
+                  except (TypeError, ValueError):
+                      attempts = 0
+                  terminal_empty = (
+                      attempts >= 3
+                      and snapshot.get("sync_status") in {
+                          "fetch_failed",
+                          "no_quarterly_consolidated_records_returned",
+                          "needs_manual_review_no_quarterly_data",
+                      }
+                  )
+                  return not terminal_empty
+              core_pending = any(
+                  isinstance(item, dict)
+                  and item.get("verification_status") in {
+                      "auto_pending_extraction",
+                      "manual_review_required_pending_extraction",
+                  }
+                  and not terminal_manual(item)
+                  for item in items
+              )
+              detail_review_statuses = {
+                  "manual_review_required",
+                  "manual_review_required_pending_extraction",
+                  "no_detail_fields_matched_pending_manual_review",
+                  "auto_extracted_pending_visual_review",
+              }
+              details_pending = any(
+                  isinstance(item, dict)
+                  and re.fullmatch(r"20\\d{2}-Q[1-4]", str(item.get("period") or ""))
+                  and item.get("total_assets") is not None
+                  and item.get("net_profit") is not None
+                  and not item.get("financial_line_items_status")
+                  for item in items
+              )
+              stale_details = any(
+                  isinstance(item, dict)
+                  and item.get("financial_line_items_status")
+                  and item.get("financial_line_items_status") not in detail_review_statuses
+                  and item.get("financial_line_items_schema_version") != "2026-10-22-bank-statement-qc-v4"
+                  for item in items
+              )
+              return core_pending or details_pending or stale_details or snapshot.get("bootstrap_status") not in {"complete", "complete_needs_manual_review"}
+
+          if requested:
+              if requested not in symbols:
+                  raise SystemExit(f"Requested ticker is not enabled: {requested}")
+              selected = requested
+              reason = "explicit workflow input"
+          else:
+              checkpoint = load("reports/processing-checkpoint.json") or {}
+              active = str(checkpoint.get("activeSymbol") or "").strip().upper()
+              if active in symbols and needs_collection(active, snapshot_for(active)):
+                  selected = active
+                  reason = "resume from saved checkpoint"
+              else:
+                  for symbol in symbols:
+                      if needs_collection(symbol, snapshot_for(symbol)):
+                          selected = symbol
+                          reason = "first incomplete ticker in registry order"
+                          break
+
+          print(json.dumps({
+              "symbol": selected or None,
+              "reason": reason,
+              "mode": "one ticker only",
+          }, ensure_ascii=False))
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
+              handle.write(f"symbol={selected}\\n")
+              handle.write(f"reason={reason}\\n")
+          PY
+
   collect:
+    needs: select-ticker
+    if: ${{ needs.select-ticker.result == 'success' && needs.select-ticker.outputs.symbol != '' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
@@ -59,7 +205,7 @@ jobs:
             /data/analysis-reports.json
             /data/financials-*.json
             /reports/worker-last-run.json
-            /reports/raw/${{ github.event.inputs.symbol || '*' }}/**
+            /reports/raw/${{ needs['select-ticker'].outputs.symbol }}/**
       - name: Setup Python
         uses: actions/setup-python@v6
         with:
@@ -72,7 +218,7 @@ jobs:
         run: node .github/scripts/validate-report-queue.cjs
       - name: Run report discovery, download and extraction worker
         env:
-          REPORT_COLLECT_SYMBOL: ${{ github.event.inputs.symbol || '' }}
+          REPORT_COLLECT_SYMBOL: ${{ needs['select-ticker'].outputs.symbol }}
           MAX_DOWNLOADS_PER_JOB: ${{ github.event.inputs.max_downloads_per_job || '2' }}
           MAX_JOBS_PER_RUN: "1"
         run: python .github/scripts/collect-financial-reports.py
