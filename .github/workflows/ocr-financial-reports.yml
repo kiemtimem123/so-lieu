@@ -205,7 +205,8 @@ jobs:
                       except (TypeError, ValueError):
                           evidence_attempts = 0
                       return (
-                          validation.get("automatic_extraction_exhausted") is True
+                          item.get("core_financial_extraction_manual_terminal") is True
+                          or validation.get("automatic_extraction_exhausted") is True
                           or evidence_attempts >= 3
                       )
 
@@ -509,6 +510,7 @@ jobs:
 
           REPORT_OCR_CHANGED_PATHS="$(git diff --cached --name-only)" \
             python scripts/update-report-checkpoint.py "${REPORT_OCR_SYMBOL}"
+          git add -A -- "data/financials-${REPORT_OCR_SYMBOL}.json"
           git add -- reports/processing-checkpoint.json
 
           git commit -m "OCR and enrich ${REPORT_OCR_SYMBOL} financial reports"
@@ -545,6 +547,7 @@ jobs:
               fi
               REPORT_OCR_CHANGED_PATHS="$(git diff --cached --name-only)" \
                 python scripts/update-report-checkpoint.py "${REPORT_OCR_SYMBOL}"
+              git add -A -- "data/financials-${REPORT_OCR_SYMBOL}.json"
               git add -- reports/processing-checkpoint.json
               git commit -m "Reconcile ${REPORT_OCR_SYMBOL} financial report details"
             fi
