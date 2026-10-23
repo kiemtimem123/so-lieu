@@ -1054,11 +1054,33 @@ def main():
 
         previous_files = list(job.get("downloadedFiles") or [])
         attempted_urls = set(str(url) for url in (job.get("attemptedUrls") or []) if url)
+        # A resume job already carries the remaining catalog URLs from the previous
+        # successful/partial batch. Reusing these URLs avoids re-querying every
+        # VietstockFinance year/page before each two-file download batch.
+        resume_saved_candidates = (
+            job.get("status") == "queued"
+            and job.get("resumeDownload") is True
+            and isinstance(job.get("sourceCandidates"), list)
+            and bool(job.get("sourceCandidates"))
+        )
+        saved_candidates = [
+            candidate for candidate in (job.get("sourceCandidates") or [])
+            if isinstance(candidate, dict) and candidate.get("url")
+        ] if resume_saved_candidates else []
         processed_symbols.add(symbol)
         job["status"] = "searching"
         job["updatedAt"] = NOW
         job["attempts"] = int(job.get("attempts", 0)) + 1
-        candidates = discover_for_job(job, ALLOWED_DOMAINS)
+        if saved_candidates:
+            candidates = saved_candidates
+            print(json.dumps({
+                "event": "resume_saved_source_candidates",
+                "symbol": symbol,
+                "candidate_count": len(candidates),
+                "note": "Reusing checkpointed VietstockFinance URLs for this ticker; no full catalog rescan for the continuation batch."
+            }, ensure_ascii=False))
+        else:
+            candidates = discover_for_job(job, ALLOWED_DOMAINS)
 
         # Avoid re-downloading successful archives, but allow bounded retries for
         # failed URLs after the cooldown. attemptedUrls alone must not permanently
