@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-23T09:31:12.152Z",
+  "updatedAt": "2026-10-23T09:37:29Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -19,39 +19,30 @@
     "VCB",
     "CTG",
     "BID",
-    "VCI"
+    "VCI",
+    "VCK"
   ],
-  "lastCompletedSymbol": "VCI",
-  "activeSymbol": "VCK",
-  "resumeSymbolHint": "VCK",
+  "lastCompletedSymbol": "VCK",
+  "activeSymbol": null,
+  "resumeSymbolHint": "VIX",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "VCK",
-    "status": "period_scope_corrected_in_progress",
-    "completeForAutomation": false,
+    "status": "automated_processing_complete",
+    "completeForAutomation": true,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-23T09:31:12.152Z",
-    "workflowRunId": "39931177337",
-    "workflowRunNumber": 1049,
-    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39931177337",
+    "processedAt": "2026-10-23T09:37:29Z",
+    "workflowRunId": "39931851424",
+    "workflowRunNumber": 1051,
+    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39931851424",
     "changedPaths": [
-      "config/securities.json",
-      "scripts/sync-vietstock-financials.py",
-      "data/financials-VCK.json",
-      "config/report-queue.json",
-      "reports/processing-checkpoint.json"
+      "data/financials-VCK.json"
     ],
     "periodCount": 7,
     "firstQuarter": "2025-Q1",
     "lastQuarter": "2026-Q3",
-    "startPeriod": "2025-Q1",
-    "excludedPreListingPeriods": [
-      "2024-Q1",
-      "2024-Q2",
-      "2024-Q3",
-      "2024-Q4"
-    ],
-    "pendingCorePeriods": [
+    "pendingCorePeriods": [],
+    "terminalManualReviewPeriods": [
       "2025-Q1",
       "2025-Q2",
       "2025-Q3",
@@ -60,11 +51,9 @@
       "2026-Q2",
       "2026-Q3"
     ],
-    "terminalManualReviewPeriods": [],
     "pendingDetailPeriods": [],
     "staleDetailSchemaPeriods": [],
-    "statementPagesPending": true,
-    "note": "Removed pre-2025 VPSS/OTC entries from active items and retained them separately; start-period handling is now per-ticker."
+    "statementPagesPending": false
   },
   "symbolStates": {
     "MBB": {
@@ -287,13 +276,14 @@
       "note": "Completed automatic processing; all 11 periods that lack reliable consolidated scope/values are retained with source links and need manual review. No unsupported figures were filled."
     },
     "VCK": {
-      "status": "period_scope_corrected_in_progress",
-      "completeForAutomation": false,
+      "status": "automated_processing_complete",
+      "completeForAutomation": true,
       "manualReviewRemaining": true,
       "periodCount": 7,
       "firstQuarter": "2025-Q1",
       "lastQuarter": "2026-Q3",
-      "pendingCorePeriods": [
+      "pendingCorePeriods": [],
+      "terminalManualReviewPeriods": [
         "2025-Q1",
         "2025-Q2",
         "2025-Q3",
@@ -302,34 +292,15 @@
         "2026-Q2",
         "2026-Q3"
       ],
-      "terminalManualReviewPeriods": [],
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
-      "statementPagesPending": true,
-      "sourceArchivesChecked": 4,
-      "updatedAt": "2026-10-23T09:31:12.152Z",
-      "snapshotFetchedAt": "2026-10-23T09:23:16+00:00",
-      "startPeriod": "2025-Q1",
-      "excludedPreListingPeriods": [
-        "2024-Q1",
-        "2024-Q2",
-        "2024-Q3",
-        "2024-Q4"
-      ],
-      "note": "2024 VPSS/OTC documents are archival references, not part of the active VCK ticker series. Continue one report per run from 2025-Q1; do not move to VIX until VCK finishes or reaches explicit manual-review terminal states."
+      "statementPagesPending": false,
+      "sourceArchivesChecked": 0,
+      "updatedAt": "2026-10-23T09:37:29Z",
+      "snapshotFetchedAt": "2026-10-23T09:35:23.748Z"
     }
   },
   "progressHistory": [
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-10-23T07:19:09Z",
-      "workflowRunId": "39916499503",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
     {
       "symbol": "VCI",
       "status": "in_progress",
@@ -857,6 +828,16 @@
         "scripts/sync-vietstock-financials.py",
         "data/financials-VCK.json",
         "config/report-queue.json"
+      ]
+    },
+    {
+      "symbol": "VCK",
+      "status": "automated_processing_complete",
+      "completeForAutomation": true,
+      "processedAt": "2026-10-23T09:37:29Z",
+      "workflowRunId": "39931851424",
+      "changedPaths": [
+        "data/financials-VCK.json"
       ]
     }
   ],
