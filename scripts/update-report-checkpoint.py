@@ -186,6 +186,8 @@ def main() -> int:
     statement_pages_pending = False
     checked_archives: set[str] = set()
     for item in quarter_items:
+        if is_terminal_manual_extraction(item):
+            continue
         source = str(item.get("source_archive_file") or "").strip()
         if not source or source in checked_archives:
             continue
@@ -250,7 +252,7 @@ def main() -> int:
     if snapshot is None:
         status = "missing_snapshot"
         complete_for_automation = False
-    elif snapshot.get("bootstrap_status") == "complete":
+    elif snapshot.get("bootstrap_status") in {"complete", "complete_needs_manual_review"}:
         status = "automated_processing_complete"
         complete_for_automation = True
     elif not (snapshot.get("items") or []):
