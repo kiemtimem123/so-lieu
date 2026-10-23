@@ -230,7 +230,7 @@ def main() -> int:
             snapshot_changed = True
         if snapshot_changed:
             snapshot_path.write_text(
-                json.dumps(snapshot, ensure_ascii=False, indent=2) + "\\n",
+                json.dumps(snapshot, ensure_ascii=False, indent=2) + "\n",
                 encoding="utf-8",
             )
             quarter_items = [
