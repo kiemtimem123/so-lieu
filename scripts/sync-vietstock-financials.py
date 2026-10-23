@@ -57,6 +57,7 @@ MAX_OCR_PAGES = 20
 OCR_DPI = 180
 SLEEP_BETWEEN_CALLS = 0.18
 MAX_EXTRACTION_ATTEMPTS = 3  # After three failed attempts, preserve the source and request manual review.
+MAX_BOOTSTRAP_EXTRACT_PERIODS = 2  # Keep long OCR runs resumable; commit after short batches.
 USER_AGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
@@ -1568,7 +1569,7 @@ def main() -> int:
             changed, added, filled = process_symbol(
                 session, token, symbol, current_year,
                 # Bound each run to two reports so extraction/OCR cannot monopolize a long runner; the checkpoint-driven workflow advances the same ticker.
-                max_extract_periods=2 if bootstrap_only else None,
+                max_extract_periods=MAX_BOOTSTRAP_EXTRACT_PERIODS if bootstrap_only else None,
             )
             total_changed += int(changed)
             total_added += added
