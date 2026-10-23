@@ -94,7 +94,7 @@ jobs:
               git rebase --abort || true
               git fetch origin "${GITHUB_REF_NAME}"
               git reset --hard "origin/${GITHUB_REF_NAME}"
-              python scripts/sync-vietstock-financials.py
+              FINANCIAL_SYNC_SYMBOL="${{ github.event.inputs.symbol || '' }}" FINANCIAL_SYNC_BOOTSTRAP_ONLY="1" FINANCIAL_SYNC_FORCE_RETRY="${{ github.event_name == 'push' && '1' || '0' }}" python scripts/sync-vietstock-financials.py
               node scripts/validate-financials.mjs
               git add data/financials-*.json
               if git diff --cached --quiet; then
