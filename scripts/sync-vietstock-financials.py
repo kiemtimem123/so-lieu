@@ -1365,6 +1365,8 @@ def main() -> int:
     current_year = datetime.now(timezone.utc).year
     selected = os.environ.get("FINANCIAL_SYNC_SYMBOL", "").strip().upper()
     bootstrap_only = os.environ.get("FINANCIAL_SYNC_BOOTSTRAP_ONLY", "").strip().lower() in {"1", "true", "yes"}
+    if bootstrap_only:
+        print("Bootstrap mode: xử lý tối đa 2 kỳ mỗi lượt; lưu checkpoint rồi tiếp tục cùng mã.")
     # A script-push run is an intentional operator retry; scheduled runs keep the 30-minute cooldown.
     force_retry = os.environ.get("FINANCIAL_SYNC_FORCE_RETRY", "").strip().lower() in {"1", "true", "yes"}
     if force_retry:
