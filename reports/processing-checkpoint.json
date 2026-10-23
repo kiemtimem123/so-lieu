@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-23T09:20:33Z",
+  "updatedAt": "2026-10-23T09:23:05Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -27,17 +27,16 @@
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "VCK",
-    "status": "in_progress",
+    "status": "in_progress_core_reconciliation",
     "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-23T09:20:33Z",
-    "workflowRunId": "39930166479",
-    "workflowRunNumber": 1048,
-    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39930166479",
+    "processedAt": "2026-10-23T09:23:05Z",
+    "workflowRunId": "39931333337",
+    "workflowRunNumber": 196,
+    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39931333337",
     "changedPaths": [
       "data/financials-VCK.json",
-      "reports/raw/VCK/auto-vck-20261021/1eb8c56340d1006d.zip.extracted.json",
-      "reports/raw/VCK/auto-vck-20261021/6b8623b993d35eb4.zip.extracted.json"
+      "scripts/sync-vietstock-financials.py"
     ],
     "periodCount": 11,
     "firstQuarter": "2024-Q1",
@@ -279,7 +278,7 @@
       "note": "Completed automatic processing; all 11 periods that lack reliable consolidated scope/values are retained with source links and need manual review. No unsupported figures were filled."
     },
     "VCK": {
-      "status": "in_progress",
+      "status": "in_progress_core_reconciliation",
       "completeForAutomation": false,
       "manualReviewRemaining": true,
       "periodCount": 11,
@@ -301,21 +300,13 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": true,
       "sourceArchivesChecked": 4,
-      "updatedAt": "2026-10-23T09:20:33Z",
-      "snapshotFetchedAt": "2026-10-23T09:00:30Z"
+      "updatedAt": "2026-10-23T09:22:44Z",
+      "snapshotFetchedAt": "2026-10-23T09:22:44+00:00",
+      "latestQueryFixCommit": "3eeaf0a7f3430606b9f23e973782bfa55d22000c",
+      "note": "The oldest unresolved quarters were previously missed because the query started at latest_year - 1. The fix restores querying from the oldest unresolved year; Q3/Q4 2024 now have recent extraction timestamps but still have no reconciled core totals."
     }
   },
   "progressHistory": [
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-10-23T07:11:34Z",
-      "workflowRunId": "39916078633",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
     {
       "symbol": "VCI",
       "status": "in_progress",
@@ -831,30 +822,42 @@
         "reports/raw/VCK/auto-vck-20261021/1eb8c56340d1006d.zip.extracted.json",
         "reports/raw/VCK/auto-vck-20261021/6b8623b993d35eb4.zip.extracted.json"
       ]
+    },
+    {
+      "symbol": "VCK",
+      "status": "in_progress_core_reconciliation",
+      "completeForAutomation": false,
+      "processedAt": "2026-10-23T09:23:05Z",
+      "workflowRunId": "39931333337",
+      "changedPaths": [
+        "data/financials-VCK.json",
+        "scripts/sync-vietstock-financials.py"
+      ],
+      "note": "Resumed old-year quarter discovery; Q3/Q4 2024 attempted, unresolved source/extraction remains."
     }
   ],
   "currentRun": {
     "symbol": "VCK",
     "status": "in_progress_core_reconciliation",
-    "updatedAt": "2026-10-23T09:02:00Z",
+    "updatedAt": "2026-10-23T09:23:05Z",
     "workflowRuns": [
       {
         "workflow": "Sync quarterly BCTC from VietstockFinance",
-        "runId": "39928797831",
-        "runNumber": 167,
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/39928797831",
-        "status": "in_progress",
-        "note": "Continuing only VCK from the saved snapshot after two quarters were reconciled."
+        "runId": "39931333337",
+        "runNumber": 196,
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/39931333337",
+        "status": "success",
+        "note": "Year-range fix deployed; query now includes all years from the oldest unresolved quarter. Q3/Q4 2024 were picked up again, but totals remain blank pending OCR/source-scope validation."
       },
       {
-        "workflow": "Sync quarterly BCTC from VietstockFinance",
-        "runId": "39928688895",
-        "runNumber": 166,
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/39928688895",
-        "status": "success",
-        "note": "Previous short batch finished successfully."
+        "workflow": "OCR Financial Report Archive",
+        "runId": "39931177337",
+        "runNumber": 1049,
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/39931177337",
+        "status": "in_progress",
+        "note": "One-report OCR run for VCK remains active; process only one report per run."
       }
     ],
-    "note": "VCK Q1/Q2 2024 now have reconciled core values committed. Continue through the remaining nine quarterly periods; keep detail fields tagged pending visual review and never advance to VIX until VCK reaches a terminal automated state."
+    "note": "Keep VCK active until all 2024-Q3 through 2026-Q3 items have reliable core values or an explicit terminal manual-review status. Do not move to VIX until then."
   }
 }
