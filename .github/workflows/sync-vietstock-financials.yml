@@ -274,8 +274,8 @@ jobs:
           gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/workflows/sync-vietstock-financials.yml/dispatches" -f ref=main -f "inputs[symbol]=${{ steps.check.outputs.symbol }}"
 
   trigger-ocr:
-    needs: sync
-    if: ${{ needs.sync.result == 'success' }}
+    needs: [sync, advance-sync]
+    if: ${{ needs.sync.result == 'success' && needs['advance-sync'].result == 'success' && needs['advance-sync'].outputs.should_continue != 'true' }}
     runs-on: ubuntu-24.04
     steps:
       - name: Start the next one-report OCR/enrichment run after the snapshot sync
