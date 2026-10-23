@@ -84,6 +84,27 @@ def payload_needs_pages(payload: Any, max_pages: int, rescan_pages: set[int]) ->
     return False
 
 
+def is_terminal_manual_extraction(item: Any) -> bool:
+    if not isinstance(item, dict) or item.get("verification_status") != "manual_review_required_pending_extraction":
+        return False
+    validation = item.get("source_validation")
+    if not isinstance(validation, dict):
+        validation = {}
+    try:
+        catalog_attempts = int(validation.get("extraction_attempt_count") or 0)
+    except (TypeError, ValueError):
+        catalog_attempts = 0
+    try:
+        core_attempts = int(item.get("core_financial_extraction_attempt_count") or 0)
+    except (TypeError, ValueError):
+        core_attempts = 0
+    return (
+        validation.get("automatic_extraction_exhausted") is True
+        or catalog_attempts >= 3
+        or core_attempts >= 3
+    )
+
+
 def next_symbol_hint(symbols: list[str], symbol: str) -> str | None:
     try:
         index = symbols.index(symbol)
@@ -141,6 +162,13 @@ def main() -> int:
         str(item.get("period") or "unknown")
         for item in (snapshot.get("items") or []) if isinstance(item, dict)
         and item.get("verification_status") in CORE_PENDING
+        and not is_terminal_manual_extraction(item)
+    }) if isinstance(snapshot, dict) else []
+
+    terminal_manual_review_periods = sorted({
+        str(item.get("period") or "unknown")
+        for item in (snapshot.get("items") or []) if isinstance(item, dict)
+        and is_terminal_manual_extraction(item)
     }) if isinstance(snapshot, dict) else []
 
     details_pending_periods = sorted({
@@ -241,6 +269,7 @@ def main() -> int:
         "firstQuarter": periods[0] if periods else None,
         "lastQuarter": periods[-1] if periods else None,
         "pendingCorePeriods": core_pending_periods,
+        "terminalManualReviewPeriods": terminal_manual_review_periods,
         "pendingDetailPeriods": details_pending_periods,
         "staleDetailSchemaPeriods": stale_detail_periods,
         "statementPagesPending": statement_pages_pending,
@@ -298,6 +327,7 @@ def main() -> int:
             "firstQuarter": periods[0] if periods else None,
             "lastQuarter": periods[-1] if periods else None,
             "pendingCorePeriods": core_pending_periods,
+            "terminalManualReviewPeriods": terminal_manual_review_periods,
             "pendingDetailPeriods": details_pending_periods,
             "staleDetailSchemaPeriods": stale_detail_periods,
             "statementPagesPending": statement_pages_pending,
