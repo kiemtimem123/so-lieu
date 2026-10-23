@@ -1116,7 +1116,27 @@ def process_symbol(
     items = snapshot["items"]
     existing = {item.get("period"): item for item in items}
     latest = max((period_key(p) for p in existing if period_key(p)[0]), default=(2024, 1))
-    years = list(range(max(2024, min(current_year, latest[0]) - 1), current_year + 1))
+    # Do not let a recent quarter hide older unresolved periods. For example,
+    # a 2026 snapshot can still contain unextracted 2024-Q3/Q4 records; querying
+    # only latest_year - 1 makes those periods look eligible to the queue checker
+    # but leaves process_symbol with no candidate URLs, causing a no-progress loop.
+    start_year = max(2024, min(current_year, latest[0]) - 1)
+    unresolved_years = [
+        period_key(str(item.get("period") or ""))[0]
+        for item in items
+        if period_key(str(item.get("period") or ""))[0] >= 2024
+        and (
+            item.get("verification_status") == "auto_pending_extraction"
+            or (
+                item.get("total_assets") is not None
+                and item.get("net_profit") is not None
+                and not item.get("financial_line_items_status")
+            )
+        )
+    ]
+    if unresolved_years:
+        start_year = min(start_year, min(unresolved_years))
+    years = list(range(start_year, current_year + 1))
     records = fetch_symbol_documents(session, token, symbol, years)
 
     want_consolidated = desired_consolidated(items)
