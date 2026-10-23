@@ -23,7 +23,7 @@ try {
         .filter(item => item && item.enabled !== false && item.symbol)
         .map(item => {
           const symbol = String(item.symbol).trim().toUpperCase();
-          const configuredStart = /^(20\\d{2}-Q[1-4])$/.exec(String(item.startPeriod || "").trim().toUpperCase());
+          const configuredStart = /^(20\d{2}-Q[1-4])$/.exec(String(item.startPeriod || "").trim().toUpperCase());
           startPeriodBySymbol.set(symbol, configuredStart ? configuredStart[1] : defaultStartPeriod);
           return symbol;
         })
