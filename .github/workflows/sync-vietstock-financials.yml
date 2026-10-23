@@ -89,9 +89,19 @@ jobs:
             echo "Push attempt ${attempt}/5"
             git fetch origin "${GITHUB_REF_NAME}"
             if ! git rebase "origin/${GITHUB_REF_NAME}"; then
-              echo "::error::Rebase conflict while syncing snapshots. No force push will be attempted."
+              echo "::warning::Concurrent data update; recompute only from the latest committed snapshots before retrying."
               git rebase --abort || true
-              exit 1
+              git fetch origin "${GITHUB_REF_NAME}"
+              git reset --hard "origin/${GITHUB_REF_NAME}"
+              python scripts/sync-vietstock-financials.py
+              node scripts/validate-financials.mjs
+              git add data/financials-*.json
+              if git diff --cached --quiet; then
+                echo "No remaining snapshot changes after recomputing from latest main."
+                pushed=true
+                break
+              fi
+              git commit -m "Reconcile one-ticker BCTC snapshot after concurrent update"
             fi
             if git push origin "HEAD:${GITHUB_REF_NAME}"; then
               pushed=true
