@@ -134,6 +134,8 @@ jobs:
               for item in items:
                   if not isinstance(item, dict) or not re.fullmatch(r"20\d{2}-Q[1-4]", str(item.get("period") or "")):
                       continue
+                  if terminal_manual_extraction(item):
+                      continue
                   source = str(item.get("source_archive_file") or "").strip()
                   if not source:
                       continue
@@ -167,7 +169,7 @@ jobs:
                       break
                   # "complete_needs_manual_review" is not enough to skip a ticker
                   # when some quarters still have no core figures or statement pages.
-                  if snapshot.get("bootstrap_status") == "complete":
+                  if snapshot.get("bootstrap_status") in {"complete", "complete_needs_manual_review"}:
                       continue
                   items = snapshot.get("items") or []
                   if not items:
@@ -207,6 +209,7 @@ jobs:
                           evidence_attempts = 0
                       return (
                           item.get("core_financial_extraction_manual_terminal") is True
+                          or validation.get("manual_review_blocking_automatic_extraction") is True
                           or validation.get("automatic_extraction_exhausted") is True
                           or evidence_attempts >= 3
                       )
