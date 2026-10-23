@@ -450,9 +450,9 @@ def discover_for_job(job, allowed_domains):
                 data = dict(payload or {})
                 if token:
                     data["__RequestVerificationToken"] = token
-                resp = SESSION.post(url, data=data, headers=headers, timeout=20)
+                resp = SESSION.post(url, data=data, headers=headers, timeout=15)
             else:
-                resp = SESSION.get(url, headers=headers, timeout=20)
+                resp = SESSION.get(url, headers=headers, timeout=15)
             ctype = resp.headers.get("Content-Type","")
             try:
                 parsed = resp.json()
@@ -535,10 +535,16 @@ def discover_for_job(job, allowed_domains):
             except (TypeError, ValueError):
                 total_rows = 0
         total_rows_by_year[str(report_year)] = total_rows or len(rows)
+        # Bound the catalog scan during a single-ticker run. Eight pages means
+        # at most 160 records per year; this is a broad margin for quarterly
+        # financial statements while avoiding dozens of slow requests if the
+        # site's TotalRow metadata is unexpectedly high. Older/missing periods
+        # can still be added later via targeted source URLs.
+        max_pages_per_year = 8
         if total_rows:
-            pages = min(max((total_rows + 19) // 20, 1), 30)
+            pages = min(max((total_rows + 19) // 20, 1), max_pages_per_year)
         else:
-            pages = 1 if len(rows) < 20 else 30
+            pages = 1 if len(rows) < 20 else max_pages_per_year
         for page in range(2, pages + 1):
             result = call_json("/data/getdocument", "POST",
                                {"code":symbol,"page":page,"type":doctype,"year":report_year})
