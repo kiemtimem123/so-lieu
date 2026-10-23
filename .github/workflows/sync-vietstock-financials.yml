@@ -22,7 +22,8 @@ permissions:
 concurrency:
   # Isolate catalog sync from OCR/collector dispatches; commits use safe fetch/rebase/push retries.
   group: so-lieu-vietstock-sync-v1
-  cancel-in-progress: false
+  # A deliberate script push supersedes an older long-running sync; chained dispatches do not cancel each other.
+  cancel-in-progress: ${{ github.event_name == 'push' }}
 
 jobs:
   sync:
