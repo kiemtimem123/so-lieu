@@ -34,7 +34,8 @@ permissions:
   actions: write
 
 concurrency:
-  group: so-lieu-financial-data-writes-v2
+  # Keep the single-ticker archive queue advancing even when OCR launches a new run.
+  group: so-lieu-report-collector-v1
   cancel-in-progress: false
 
 jobs:
