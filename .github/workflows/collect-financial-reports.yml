@@ -140,7 +140,7 @@ jobs:
               }
               details_pending = any(
                   isinstance(item, dict)
-                  and re.fullmatch(r"20\\d{2}-Q[1-4]", str(item.get("period") or ""))
+                  and re.fullmatch(r"20\d{2}-Q[1-4]", str(item.get("period") or ""))
                   and item.get("total_assets") is not None
                   and item.get("net_profit") is not None
                   and not item.get("financial_line_items_status")
@@ -179,13 +179,13 @@ jobs:
               "mode": "one ticker only",
           }, ensure_ascii=False))
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
-              handle.write(f"symbol={selected}\\n")
-              handle.write(f"reason={reason}\\n")
+              handle.write(f"symbol={selected}\n")
+              handle.write(f"reason={reason}\n")
           PY
 
   collect:
     needs: select-ticker
-    if: ${{ needs.select-ticker.result == 'success' && needs.select-ticker.outputs.symbol != '' }}
+    if: ${{ needs['select-ticker'].result == 'success' && needs['select-ticker'].outputs.symbol != '' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
