@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-23T09:48:08.881Z",
+  "updatedAt": "2026-10-23T09:57:03Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -27,22 +27,27 @@
   "resumeSymbolHint": "VIX",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
-    "symbol": "VCK",
-    "status": "terminal_needs_manual_review",
-    "completeForAutomation": true,
+    "symbol": "VIX",
+    "status": "in_progress",
+    "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-23T09:37:36.203Z",
-    "workflowRunId": "39931851424",
-    "workflowRunNumber": 1051,
-    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39931851424",
+    "processedAt": "2026-10-23T09:57:03Z",
+    "workflowRunId": "39935146658",
+    "workflowRunNumber": 1060,
+    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39935146658",
     "changedPaths": [
-      "data/financials-VCK.json"
+      "data/financials-VIX.json",
+      "reports/raw/VIX/auto-vix-20261021/1eaae0e7c4b84269.pdf.extracted.json",
+      "reports/raw/VIX/auto-vix-20261021/8b30c15936e778b7.pdf.extracted.json"
     ],
-    "periodCount": 7,
-    "firstQuarter": "2025-Q1",
+    "periodCount": 11,
+    "firstQuarter": "2024-Q1",
     "lastQuarter": "2026-Q3",
-    "pendingCorePeriods": [],
-    "terminalManualReviewPeriods": [
+    "pendingCorePeriods": [
+      "2024-Q1",
+      "2024-Q2",
+      "2024-Q3",
+      "2024-Q4",
       "2025-Q1",
       "2025-Q2",
       "2025-Q3",
@@ -51,11 +56,10 @@
       "2026-Q2",
       "2026-Q3"
     ],
+    "terminalManualReviewPeriods": [],
     "pendingDetailPeriods": [],
     "staleDetailSchemaPeriods": [],
-    "statementPagesPending": false,
-    "startPeriod": "2025-Q1",
-    "note": "VCK's active series begins in 2025. Pre-listing VPSS/OTC reports are preserved separately; unresolved consolidated-scope records are terminal for automatic extraction and kept for manual review."
+    "statementPagesPending": true
   },
   "symbolStates": {
     "MBB": {
@@ -304,8 +308,7 @@
       "note": "2024 VPSS/OTC reports are excluded from VCK active series. The seven periods from 2025-Q1 onward are closed for automatic extraction because the linked reports do not yet establish consolidated scope; numeric values remain held for manual review."
     },
     "VIX": {
-      "status": "archive_complete_ocr_pending",
-      "startPeriod": "2024-Q1",
+      "status": "in_progress",
       "completeForAutomation": false,
       "manualReviewRemaining": true,
       "periodCount": 11,
@@ -324,38 +327,16 @@
         "2026-Q2",
         "2026-Q3"
       ],
+      "terminalManualReviewPeriods": [],
       "pendingDetailPeriods": [],
+      "staleDetailSchemaPeriods": [],
       "statementPagesPending": true,
-      "updatedAt": "2026-10-23T09:48:08.881Z",
-      "workflowRunId": "39934335365",
-      "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39934335365",
-      "note": "All 11 VIX quarterly periods from 2024-Q1 through 2026-Q3 now have their catalog-linked PDF/ZIP archive connected. OCR/enrichment will proceed one report per run; do not advance to SSI until VIX is automated-complete or all unresolved quarters have explicit manual-review terminal markers.",
-      "archivedQuarterPeriods": [
-        "2024-Q1",
-        "2024-Q2",
-        "2024-Q3",
-        "2024-Q4",
-        "2025-Q1",
-        "2025-Q2",
-        "2025-Q3",
-        "2025-Q4",
-        "2026-Q1",
-        "2026-Q2",
-        "2026-Q3"
-      ]
+      "sourceArchivesChecked": 1,
+      "updatedAt": "2026-10-23T09:57:03Z",
+      "snapshotFetchedAt": "2026-10-23T09:38:33+00:00"
     }
   },
   "progressHistory": [
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-10-23T07:27:45Z",
-      "workflowRunId": "39917756589",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
     {
       "symbol": "VCI",
       "status": "in_progress",
@@ -918,6 +899,18 @@
         "2026-Q1",
         "2026-Q2",
         "2026-Q3"
+      ]
+    },
+    {
+      "symbol": "VIX",
+      "status": "in_progress",
+      "completeForAutomation": false,
+      "processedAt": "2026-10-23T09:57:03Z",
+      "workflowRunId": "39935146658",
+      "changedPaths": [
+        "data/financials-VIX.json",
+        "reports/raw/VIX/auto-vix-20261021/1eaae0e7c4b84269.pdf.extracted.json",
+        "reports/raw/VIX/auto-vix-20261021/8b30c15936e778b7.pdf.extracted.json"
       ]
     }
   ],
