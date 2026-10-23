@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-23T08:53:36Z",
+  "updatedAt": "2026-10-23T09:02:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -30,20 +30,19 @@
     "status": "in_progress",
     "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-23T08:53:36Z",
-    "workflowRunId": "39927623591",
-    "workflowRunNumber": 1040,
-    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39927623591",
+    "processedAt": "2026-10-23T09:02:00Z",
+    "commitSha": "fc92df3a66627d38fc4102f6e0fd215c23f8a4cb",
     "changedPaths": [
-      "data/financials-VCK.json",
-      "reports/raw/VCK/auto-vck-20261021/8cc271009b22727f.pdf.extracted.json"
+      "data/financials-VCK.json"
     ],
     "periodCount": 11,
     "firstQuarter": "2024-Q1",
     "lastQuarter": "2026-Q3",
-    "pendingCorePeriods": [
+    "reconciledCorePeriods": [
       "2024-Q1",
-      "2024-Q2",
+      "2024-Q2"
+    ],
+    "pendingCorePeriods": [
       "2024-Q3",
       "2024-Q4",
       "2025-Q1",
@@ -57,7 +56,8 @@
     "terminalManualReviewPeriods": [],
     "pendingDetailPeriods": [],
     "staleDetailSchemaPeriods": [],
-    "statementPagesPending": true
+    "statementPagesPending": true,
+    "note": "Saved Q1/Q2 2024 core values after checking raw VND balance equations, current-quarter PBT/net profit/tax, revenues, and ROA/ROE formula. `financial_line_items_status` stays auto_extracted_pending_visual_review and manually_visual_reviewed=false."
   },
   "symbolStates": {
     "MBB": {
@@ -287,8 +287,6 @@
       "firstQuarter": "2024-Q1",
       "lastQuarter": "2026-Q3",
       "pendingCorePeriods": [
-        "2024-Q1",
-        "2024-Q2",
         "2024-Q3",
         "2024-Q4",
         "2025-Q1",
@@ -303,22 +301,17 @@
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": true,
-      "sourceArchivesChecked": 3,
-      "updatedAt": "2026-10-23T08:53:36Z",
-      "snapshotFetchedAt": "2026-10-23T08:50:47+00:00"
+      "sourceArchivesChecked": 10,
+      "updatedAt": "2026-10-23T09:02:00Z",
+      "snapshotFetchedAt": "2026-10-23T09:00:30Z",
+      "reconciledCorePeriods": [
+        "2024-Q1",
+        "2024-Q2"
+      ],
+      "note": "Q1 and Q2 2024 core figures were reconciled from the exact consolidated PDF/ZIP linked by VietstockFinance; both raw-VND balance equations equal zero and quarterly PBT/net profit/tax rows agree. These records remain pending final human visual review. Nine later quarter core sets are still unresolved."
     }
   },
   "progressHistory": [
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-10-23T07:02:40Z",
-      "workflowRunId": "39915052082",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
     {
       "symbol": "VCI",
       "status": "in_progress",
@@ -814,49 +807,55 @@
         "data/financials-VCK.json",
         "reports/raw/VCK/auto-vck-20261021/8cc271009b22727f.pdf.extracted.json"
       ]
+    },
+    {
+      "symbol": "VCK",
+      "status": "in_progress",
+      "completeForAutomation": false,
+      "processedAt": "2026-10-23T09:02:00Z",
+      "commitSha": "fc92df3a66627d38fc4102f6e0fd215c23f8a4cb",
+      "reconciledCorePeriods": [
+        "2024-Q1",
+        "2024-Q2"
+      ],
+      "pendingCorePeriods": [
+        "2024-Q3",
+        "2024-Q4",
+        "2025-Q1",
+        "2025-Q2",
+        "2025-Q3",
+        "2025-Q4",
+        "2026-Q1",
+        "2026-Q2",
+        "2026-Q3"
+      ],
+      "changedPaths": [
+        "data/financials-VCK.json"
+      ]
     }
   ],
   "currentRun": {
     "symbol": "VCK",
-    "status": "quarterly_sync_ocr_archive_in_progress",
-    "updatedAt": "2026-10-23T08:48:21.240Z",
+    "status": "in_progress_core_reconciliation",
+    "updatedAt": "2026-10-23T09:02:00Z",
     "workflowRuns": [
       {
         "workflow": "Sync quarterly BCTC from VietstockFinance",
-        "runId": "39927051355",
-        "runNumber": 156,
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/39927051355",
+        "runId": "39928797831",
+        "runNumber": 167,
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/39928797831",
         "status": "in_progress",
-        "note": "Short-batch sync for VCK; linked-source PDFs are parsed/validated before any core numbers are saved."
+        "note": "Continuing only VCK from the saved snapshot after two quarters were reconciled."
       },
       {
-        "workflow": "OCR Financial Report Archive",
-        "runId": "39927109467",
-        "runNumber": 1036,
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/39927109467",
-        "status": "pending",
-        "note": "Queued OCR pass for one linked VCK report; earlier overlapping runs were cancelled when a newer report commit arrived."
-      },
-      {
-        "workflow": "Collect Financial Reports",
-        "runId": "39927107464",
-        "runNumber": 135,
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/39927107464",
-        "status": "in_progress",
-        "note": "VCK source archive queue is being downloaded in batches of two reports; same ticker only."
+        "workflow": "Sync quarterly BCTC from VietstockFinance",
+        "runId": "39928688895",
+        "runNumber": 166,
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/39928688895",
+        "status": "success",
+        "note": "Previous short batch finished successfully."
       }
     ],
-    "archiveProgress": {
-      "symbol": "VCK",
-      "queueJobId": "auto-vck-20261021",
-      "status": "queued",
-      "attempts": 3,
-      "successfullyArchived": 6,
-      "remainingCandidates": 10,
-      "downloadErrors": 0,
-      "updatedAt": "2026-10-23T08:48:21.240Z",
-      "note": "Six VietstockFinance-linked PDFs/ZIPs are archived in reports/raw/VCK/auto-vck-20261021; later collector batches will continue the remaining candidates."
-    },
-    "note": "VCK remains the active ticker. Do not advance to VIX until VCK's eligible consolidated quarterly data has been processed automatically or every unresolved quarter has an explicit terminal manual-review marker. Preserve blank values that do not reconcile."
+    "note": "VCK Q1/Q2 2024 now have reconciled core values committed. Continue through the remaining nine quarterly periods; keep detail fields tagged pending visual review and never advance to VIX until VCK reaches a terminal automated state."
   }
 }
