@@ -615,6 +615,18 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
   balance,["tong cong no phai tra","tong no phai tra","total liabilities"],factor,
   exclude_terms=["von chu so huu","liabilities and equity"]
  ) if balance else None
+ if liabilities is None and balance:
+  # Several securities-company B01-CTCK/HN layouts label the aggregate
+  # liability row as "C. Nợ phải trả" rather than "Tổng nợ phải trả".
+  # Anchor to the statement row/code so this does not accidentally select
+  # "Nợ phải trả ngắn hạn" or "Nợ phải trả dài hạn" component rows.
+  liabilities=value_by_row_prefix(
+   balance,[
+    r"^\s*(?:\|\s*)?\d{1,3}\s*\|\s*c\.?\s*no\s+phai\s+tra(?:\s|$)",
+    r"^\s*(?:\|\s*)?c\.?\s+no\s+phai\s+tra(?:\s|$)",
+    r"^\s*(?:\|\s*)?\d{1,3}\s*\|\s*c\.?\s*total\s+liabilities(?:\s|$)",
+   ],factor
+  )
 
  tolerance=max(5.0,abs(assets)*0.00001) if isinstance(assets,(int,float)) else 5.0
  source_matches_assets=(
