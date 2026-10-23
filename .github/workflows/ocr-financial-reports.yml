@@ -485,7 +485,7 @@ jobs:
         env:
           REPORT_OCR_SYMBOL: ${{ needs['select-ticker'].outputs.symbol }}
           REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || '14' }}
-          REPORT_OCR_MAX_REPORTS: "2"
+          REPORT_OCR_MAX_REPORTS: "1"
           REPORT_OCR_DPI: "240"
           REPORT_OCR_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || '' }}
         run: python .github/scripts/ocr-stored-reports.py
@@ -527,6 +527,12 @@ jobs:
           git add -A -- "data/financials-${REPORT_OCR_SYMBOL}.json"
           git add -- reports/processing-checkpoint.json
 
+          # Preserve OCR sidecars before any rebase: the checkpoint may have
+          # advanced concurrently even though no other worker touched this ticker.
+          if [ -d "reports/raw/${REPORT_OCR_SYMBOL}" ]; then
+            tar -czf "/tmp/selected-ticker-raw-${REPORT_OCR_SYMBOL}.tar.gz" "reports/raw/${REPORT_OCR_SYMBOL}"
+          fi
+
           git commit -m "OCR and enrich ${REPORT_OCR_SYMBOL} financial reports"
           pushed=false
           for attempt in 1 2 3 4 5; do
@@ -538,13 +544,12 @@ jobs:
                 break
               fi
             else
-              echo "::warning::Concurrent update detected; reapplying only the selected ticker's archive patch and recomputing its details."
-              git diff HEAD^ HEAD -- "reports/raw/${REPORT_OCR_SYMBOL}" > /tmp/selected-ticker-report.patch || true
+              echo "::warning::Concurrent update detected; restoring the selected ticker's preserved OCR sidecars and recomputing its details."
               git rebase --abort || true
               git fetch origin main
               git reset --hard origin/main
-              if [ -s /tmp/selected-ticker-report.patch ] && [ -d "reports/raw/${REPORT_OCR_SYMBOL}" ]; then
-                git apply --3way /tmp/selected-ticker-report.patch || true
+              if [ -s "/tmp/selected-ticker-raw-${REPORT_OCR_SYMBOL}.tar.gz" ]; then
+                tar -xzf "/tmp/selected-ticker-raw-${REPORT_OCR_SYMBOL}.tar.gz" -C .
               fi
               node .github/scripts/validate-report-queue.cjs
               FINANCIAL_ENRICH_SYMBOL="${REPORT_OCR_SYMBOL}" python scripts/enrich-financial-categories.py
