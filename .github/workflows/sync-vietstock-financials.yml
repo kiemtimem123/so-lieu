@@ -58,6 +58,8 @@ jobs:
           PYTHONUTF8: "1"
           FINANCIAL_SYNC_SYMBOL: ${{ github.event.inputs.symbol || '' }}
           FINANCIAL_SYNC_BOOTSTRAP_ONLY: "1"
+          # A deliberate script push is the operator's retry signal; scheduled runs still honor the cooldown.
+          FINANCIAL_SYNC_FORCE_RETRY: ${{ github.event_name == 'push' && '1' || '0' }}
         run: python scripts/sync-vietstock-financials.py
 
       - name: Set up Node.js
