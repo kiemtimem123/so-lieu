@@ -1544,7 +1544,8 @@ def main() -> int:
         try:
             changed, added, filled = process_symbol(
                 session, token, symbol, current_year,
-                max_extract_periods=16 if bootstrap_only else None,
+                # Bound each run to two reports so extraction/OCR cannot monopolize a long runner; the checkpoint-driven workflow advances the same ticker.
+                max_extract_periods=2 if bootstrap_only else None,
             )
             total_changed += int(changed)
             total_added += added
