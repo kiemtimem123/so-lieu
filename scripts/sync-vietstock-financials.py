@@ -46,6 +46,29 @@ def configured_symbols() -> list[str]:
         pass
     return DEFAULT_SYMBOLS
 
+def configured_start_period(symbol: str) -> str:
+    """Return a per-ticker first quarter; default to the global configured start year."""
+    config_path = ROOT / "config" / "securities.json"
+    fallback = "2024-Q1"
+    try:
+        payload = json.loads(config_path.read_text(encoding="utf-8"))
+        try:
+            default_year = int(payload.get("defaultStartYear") or 2024)
+            if 2000 <= default_year <= 2100:
+                fallback = f"{default_year}-Q1"
+        except (TypeError, ValueError):
+            pass
+        for item in payload.get("securities", []):
+            if not isinstance(item, dict) or str(item.get("symbol") or "").strip().upper() != symbol.upper():
+                continue
+            start_period = str(item.get("startPeriod") or "").strip().upper()
+            if re.fullmatch(r"20\d{2}-Q[1-4]", start_period):
+                return start_period
+            return fallback
+    except (OSError, json.JSONDecodeError, TypeError):
+        pass
+    return fallback
+
 SYMBOLS = configured_symbols()
 BANKS = {"MBB", "ACB", "SHB", "TCB", "TPB", "VPB", "STB", "VCB", "CTG", "BID"}
 BROKERS = {"TCX", "HCM", "VND", "SHS", "VCI", "VCK", "VIX", "SSI", "VDS"}
@@ -1115,16 +1138,18 @@ def process_symbol(
     snapshot, path = load_snapshot(symbol)
     items = snapshot["items"]
     existing = {item.get("period"): item for item in items}
-    latest = max((period_key(p) for p in existing if period_key(p)[0]), default=(2024, 1))
-    # Do not let a recent quarter hide older unresolved periods. For example,
-    # a 2026 snapshot can still contain unextracted 2024-Q3/Q4 records; querying
-    # only latest_year - 1 makes those periods look eligible to the queue checker
-    # but leaves process_symbol with no candidate URLs, causing a no-progress loop.
-    start_year = max(2024, min(current_year, latest[0]) - 1)
+    configured_start = configured_start_period(symbol)
+    configured_start_key = period_key(configured_start)
+    if not configured_start_key[0]:
+        configured_start, configured_start_key = "2024-Q1", (2024, 1)
+    latest = max((period_key(p) for p in existing if period_key(p)[0]), default=configured_start_key)
+    # Keep the earliest unresolved period in range, but never query earlier than
+    # the security-specific start period (for example, VCK starts at 2025-Q1).
+    start_year = max(configured_start_key[0], min(current_year, latest[0]) - 1)
     unresolved_years = [
         period_key(str(item.get("period") or ""))[0]
         for item in items
-        if period_key(str(item.get("period") or ""))[0] >= 2024
+        if period_key(str(item.get("period") or "")) >= configured_start_key
         and (
             item.get("verification_status") == "auto_pending_extraction"
             or (
@@ -1143,7 +1168,7 @@ def process_symbol(
     candidates: dict[str, list[tuple[tuple[int, int, int], dict, bool]]] = {}
     for record in records:
         period, explicit, cumulative = document_period(record)
-        if not period or period_key(period) < (2024, 1):
+        if not period or period_key(period) < configured_start_key:
             continue
         url = doc_url(record)
         if not url:
@@ -1174,7 +1199,7 @@ def process_symbol(
         # discarding all later reports because Q1/2024 is absent.
         expected = min(candidates, key=period_key)
     else:
-        expected = "2024-Q1"
+        expected = configured_start
         while expected in existing:
             expected = next_period(expected)
     for period in sorted(candidates, key=period_key):
@@ -1445,7 +1470,7 @@ def process_symbol(
                 f"({items[0].get('period', '2024-Q1')} đến {items[-1].get('period', '')})"
             )
         else:
-            snapshot["sourceName"] = f"VietstockFinance — {symbol} (đang chờ báo cáo tài chính theo quý từ 2024-Q1)"
+            snapshot["sourceName"] = f"VietstockFinance — {symbol} (đang chờ báo cáo tài chính theo quý từ {configured_start_period(symbol)})"
             snapshot["source_index_url"] = f"https://finance.vietstock.vn/{symbol}/tai-tai-lieu.htm?doctype=1"
             snapshot["sync_status"] = "no_quarterly_consolidated_records_returned"
             snapshot["sync_note"] = "Chưa tìm thấy kỳ BCTC hợp nhất theo quý từ 2024 trong danh mục VietstockFinance; lịch đồng bộ sẽ thử lại."
