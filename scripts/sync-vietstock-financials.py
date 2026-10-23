@@ -1328,6 +1328,7 @@ def main() -> int:
     current_year = datetime.now(timezone.utc).year
     selected = os.environ.get("FINANCIAL_SYNC_SYMBOL", "").strip().upper()
     bootstrap_only = os.environ.get("FINANCIAL_SYNC_BOOTSTRAP_ONLY", "").strip().lower() in {"1", "true", "yes"}
+    # A script-push run is an intentional operator retry; scheduled runs keep the 30-minute cooldown.
     force_retry = os.environ.get("FINANCIAL_SYNC_FORCE_RETRY", "").strip().lower() in {"1", "true", "yes"}
     if force_retry:
         print("Bỏ qua cooldown của snapshot rỗng theo yêu cầu retry có chủ đích; vẫn chỉ xử lý một mã và không tự tạo số liệu.")
