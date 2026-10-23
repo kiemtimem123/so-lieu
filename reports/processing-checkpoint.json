@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-23T09:37:29Z",
+  "updatedAt": "2026-10-23T09:37:36.203Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -23,15 +23,15 @@
     "VCK"
   ],
   "lastCompletedSymbol": "VCK",
-  "activeSymbol": null,
+  "activeSymbol": "VCK",
   "resumeSymbolHint": "VIX",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "VCK",
-    "status": "automated_processing_complete",
+    "status": "terminal_needs_manual_review",
     "completeForAutomation": true,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-23T09:37:29Z",
+    "processedAt": "2026-10-23T09:37:36.203Z",
     "workflowRunId": "39931851424",
     "workflowRunNumber": 1051,
     "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39931851424",
@@ -53,7 +53,9 @@
     ],
     "pendingDetailPeriods": [],
     "staleDetailSchemaPeriods": [],
-    "statementPagesPending": false
+    "statementPagesPending": false,
+    "startPeriod": "2025-Q1",
+    "note": "VCK's active series begins in 2025. Pre-listing VPSS/OTC reports are preserved separately; unresolved consolidated-scope records are terminal for automatic extraction and kept for manual review."
   },
   "symbolStates": {
     "MBB": {
@@ -276,7 +278,7 @@
       "note": "Completed automatic processing; all 11 periods that lack reliable consolidated scope/values are retained with source links and need manual review. No unsupported figures were filled."
     },
     "VCK": {
-      "status": "automated_processing_complete",
+      "status": "terminal_needs_manual_review",
       "completeForAutomation": true,
       "manualReviewRemaining": true,
       "periodCount": 7,
@@ -296,8 +298,10 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 0,
-      "updatedAt": "2026-10-23T09:37:29Z",
-      "snapshotFetchedAt": "2026-10-23T09:35:23.748Z"
+      "updatedAt": "2026-10-23T09:37:36.203Z",
+      "snapshotFetchedAt": "2026-10-23T09:35:23.748Z",
+      "startPeriod": "2025-Q1",
+      "note": "2024 VPSS/OTC reports are excluded from VCK active series. The seven periods from 2025-Q1 onward are closed for automatic extraction because the linked reports do not yet establish consolidated scope; numeric values remain held for manual review."
     }
   },
   "progressHistory": [
@@ -843,9 +847,12 @@
   ],
   "currentRun": {
     "symbol": "VCK",
-    "status": "period_scope_corrected_in_progress",
-    "updatedAt": "2026-10-23T09:31:12.152Z",
-    "note": "VCK now starts at 2025-Q1. Run OCR/enrichment sequentially over 2025-Q1 onward; preserve 2024 VPSS/OTC PDFs as legacy references only, and do not advance to VIX until VCK completes automation or all unresolved periods reach explicit manual-review terminal states."
+    "status": "terminal_needs_manual_review",
+    "updatedAt": "2026-10-23T09:37:36.203Z",
+    "workflowRunId": "39931851424",
+    "workflowRunNumber": 1051,
+    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39931851424",
+    "note": "The in-flight one-report OCR job is allowed to finish and save its source text. The active numeric scope remains on manual-review hold; next symbol in configured order is VIX."
   },
   "scopePolicy": {
     "VCK": {
