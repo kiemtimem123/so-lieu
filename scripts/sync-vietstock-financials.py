@@ -501,8 +501,8 @@ def choose_balance_columns(
 
 def scale_to_million(text: str, raw_assets: float, previous_assets_million: float | None) -> tuple[float, str]:
     header = norm(text[:25000])
-    if "nghin dong" in header or "nghin vnd" in header or "thousand vnd" in header:
-        return 1e-3, "nghìn VND → triệu VND"
+    if any(term in header for term in ("ngan dong","ngan vnd","nghin dong","nghin vnd","thousand dong","thousand vnd")) or re.search(r"\\bngh?[a-z~._-]{0,4}n\\s+(?:dong|vnd)\\b",header):
+        return 1e-3, "ngàn/nghìn VND → triệu VND"
     if "trieu dong" in header or "trieu vnd" in header or "million vnd" in header:
         return 1.0, "triệu VND"
     if "ty dong" in header or "ty vnd" in header or "billion vnd" in header:

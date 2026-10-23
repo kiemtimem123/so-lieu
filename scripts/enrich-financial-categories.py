@@ -16,6 +16,7 @@ RAW = ROOT / "reports" / "raw"
 REPORT_QUEUE = ROOT / "config" / "report-queue.json"
 _QUEUE_ARCHIVE_BY_URL = None
 DETAIL_SCHEMA_VERSION = "2026-10-22-bank-statement-qc-v4"
+CORE_EXTRACTION_PARSER_VERSION = "2026-10-23-ngan-vnd-unit-v1"
 NUMBER_RE = re.compile(r"(?<![A-Za-z0-9])\(?-?\d[\d.,]*\d?\)?")
 BANKS = {"MBB", "ACB", "SHB", "TCB", "TPB", "VPB", "STB", "VCB", "CTG", "BID"}
 BROKERS = {"HCM", "SHS", "TCX", "VND", "VCI", "VCK", "VIX", "SSI", "VDS"}
@@ -245,7 +246,7 @@ def unit_factor(pages,item):
  header=norm(" ".join(str(p.get("text",""))[:5000] for p in pages[:3]))
  # OCR frequently renders "Triệu VND" as "Tri~u VND", "Trifu VND",
  # or similar. Recognize these variants before falling back to the VND unit.
- if any(t in header for t in ("nghin dong","nghin vnd","thousand vnd")) or re.search(r"\bngh[a-z~._-]{0,4}n\s+(?:dong|vnd)\b",header): return 0.001
+ if any(t in header for t in ("ngan dong","ngan vnd","nghin dong","nghin vnd","thousand dong","thousand vnd")) or re.search(r"\bngh?[a-z~._-]{0,4}n\s+(?:dong|vnd)\b",header): return 0.001
  if any(t in header for t in ("trieu dong","trieu vnd","million vnd")) or re.search(r"\btri[a-z~._-]{0,3}u\s+(?:dong|vnd)\b",header): return 1.0
  if any(t in header for t in ("ty dong","ty vnd","billion vnd")) or re.search(r"\bty\s+(?:dong|vnd)\b",header): return 1000.0
  if re.search(r"\bvnd\b",header) or "don vi tinh dong" in header: return 0.000001
@@ -437,8 +438,11 @@ def value_by_row_prefix(pages,prefix_patterns,factor,threshold=1000):
 def is_quarter_comparison_page(page):
  text=norm(page.get("text",""))
  has_unit=(
-  "trieu dong" in text or "trieu vnd" in text or "million vnd" in text
-  or "don vi tinh trieu" in text
+  any(term in text for term in (
+   "trieu dong","trieu vnd","million vnd","ngan dong","ngan vnd",
+   "nghin dong","nghin vnd","thousand dong","thousand vnd","don vi tinh trieu"
+  ))
+  or re.search(r"\\bngh?[a-z~._-]{0,4}n\\s+(?:dong|vnd)\\b",text)
  )
  has_profit_rows=(
   ("loi nhuan truoc thue" in text or "profit before tax" in text)
@@ -475,8 +479,16 @@ def value_by_table_label(pages,labels,factor,threshold=1000):
   normalized=[norm(line) for line in lines]
   unit_indexes=[
    idx for idx,line in enumerate(normalized)
-   if ("trieu dong" in line or "trieu vnd" in line or "million vnd" in line)
-   and (("don vi" in line) or ("unit" in line) or "%" in line)
+   if (
+    any(term in line for term in (
+     "trieu dong","trieu vnd","million vnd","ngan dong","ngan vnd",
+     "nghin dong","nghin vnd","thousand dong","thousand vnd"
+    ))
+    or re.search(r"\\bngh?[a-z~._-]{0,4}n\\s+(?:dong|vnd)\\b",line)
+   ) and (
+    ("don vi" in line) or ("unit" in line) or "%" in line
+    or any(term in line for term in ("ngan dong","ngan vnd","nghin dong","nghin vnd","thousand dong","thousand vnd"))
+   )
   ]
   if not unit_indexes:
    continue
@@ -1430,6 +1442,48 @@ def enrich_snapshot(path):
   pages=load_report_pages(item,symbol)
   if not pages: continue
 
+  # A parser-version change invalidates only machine-extracted core values.
+  # Preserve the old values for audit, clear them from visible metrics, and
+  # re-extract against the already archived Vietstock PDF/ZIP pages. Manual
+  # verification states are never cleared by this migration.
+  old_parser_version=str(item.get("core_financial_extraction_parser_version") or "")
+  core_review_statuses={"auto_pending_extraction","manual_review_required_pending_extraction","auto_extracted_pending_visual_review"}
+  source_validation_for_parser=item.get("source_validation")
+  if not isinstance(source_validation_for_parser,dict):
+   source_validation_for_parser={}
+  parser_migration_allowed=(
+   item.get("verification_status") in core_review_statuses
+   and source_validation_for_parser.get("automatic_extraction_exhausted") is not True
+  )
+  if old_parser_version!=CORE_EXTRACTION_PARSER_VERSION:
+   if parser_migration_allowed:
+    unverified=item.setdefault("core_financial_extraction_unverified_values",{})
+    for field in ("total_assets","total_liabilities","equity","pretax_profit","net_profit","roa","roe"):
+     previous_value=item.get(field)
+     if isinstance(previous_value,(int,float)):
+      unverified.setdefault(field,previous_value)
+      item[field]=None
+    if unverified:
+     item["core_financial_extraction_unverified_values_parser_version"]=old_parser_version or "legacy-parser-before-ngan-vnd-unit-fix"
+    item["core_financial_extracted_fields"]=[
+     field for field in (item.get("core_financial_extracted_fields") or [])
+     if field not in {"total_assets","total_liabilities","equity","pretax_profit","net_profit","roa","roe"}
+    ]
+    item["verification_status"]="auto_pending_extraction"
+    item["core_financial_extraction_status"]="auto_pending_extraction"
+    item["core_financial_extraction_note"]="Đang trích xuất lại chỉ tiêu lõi bằng bộ nhận diện đơn vị đã sửa; các giá trị OCR của bộ phân tích cũ được lưu riêng và không dùng để hiển thị."
+    item["verification_status_note"]="Đang kiểm tra lại đơn vị Ngàn/Nghìn VND với PDF/ZIP gốc VietstockFinance."
+    item.pop("core_financial_extraction_manual_terminal",None)
+    item.pop("core_financial_extraction_stable_evidence_count",None)
+    item.pop("core_financial_extraction_evidence_attempt_count",None)
+    item.pop("core_financial_extraction_attempt_count",None)
+    item.pop("core_financial_extraction_evidence_fingerprint",None)
+    item.pop("core_financial_extraction_calculations",None)
+    changed=True
+    quarter_count+=1
+   item["core_financial_extraction_parser_version"]=CORE_EXTRACTION_PARSER_VERSION
+   changed=True
+
   # Count an extraction retry only when the source text evidence for this
   # quarter changes. This script runs on every one-report OCR pass; without
   # this fingerprint, all pending quarters would burn through the retry limit
@@ -1445,6 +1499,7 @@ def enrich_snapshot(path):
   ]
   evidence_payload=json.dumps(
    {"source_archive_file":str(item.get("source_archive_file") or ""),
+    "core_extraction_parser_version":CORE_EXTRACTION_PARSER_VERSION,
     "pages":page_evidence},
    ensure_ascii=False,sort_keys=True,separators=(",",":")
   ).encode("utf-8")
