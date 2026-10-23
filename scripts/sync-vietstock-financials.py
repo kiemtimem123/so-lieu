@@ -1328,6 +1328,9 @@ def main() -> int:
     current_year = datetime.now(timezone.utc).year
     selected = os.environ.get("FINANCIAL_SYNC_SYMBOL", "").strip().upper()
     bootstrap_only = os.environ.get("FINANCIAL_SYNC_BOOTSTRAP_ONLY", "").strip().lower() in {"1", "true", "yes"}
+    force_retry = os.environ.get("FINANCIAL_SYNC_FORCE_RETRY", "").strip().lower() in {"1", "true", "yes"}
+    if force_retry:
+        print("Bỏ qua cooldown của snapshot rỗng theo yêu cầu retry có chủ đích; vẫn chỉ xử lý một mã và không tự tạo số liệu.")
     if selected and selected not in SYMBOLS:
         print(f"Mã không có trong config/securities.json: {selected}", file=sys.stderr)
         return 2
@@ -1479,7 +1482,7 @@ def main() -> int:
                 # while other unattempted quarters of this SAME ticker can continue.
                 if empty_snapshot:
                     age = now_epoch - last_attempt_epoch(snapshot)
-                    if age < cooldown_seconds:
+                    if age < cooldown_seconds and not force_retry:
                         print(
                             f"Single-ticker queue đang giữ {symbol}: snapshot chưa có kỳ báo cáo; "
                             f"đã thử gần đây {max(0, int(age))} giây trước. Không chuyển sang mã khác."
