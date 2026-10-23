@@ -13,6 +13,7 @@ import json
 import math
 import os
 import re
+import shutil
 import sys
 import time
 import unicodedata
@@ -532,8 +533,16 @@ def extract_pdf_bytes(url: str, session: requests.Session) -> tuple[bytes, str]:
     raise ValueError(f"Liên kết không trả PDF/ZIP trực tiếp (Content-Type={response.headers.get('Content-Type', '')}).")
 
 
+class OCRToolsUnavailable(RuntimeError):
+    """Raised when a short sync batch has no installed OCR runtime."""
+
+
 def ocr_pdf_text(pdf_bytes: bytes) -> str:
-    """OCR scanned PDFs locally in the GitHub runner; never calls another data source."""
+    """OCR scanned PDFs locally when binaries are present; otherwise defer to the archive OCR worker."""
+    if not shutil.which("pdftoppm") or not shutil.which("tesseract"):
+        raise OCRToolsUnavailable(
+            "Không có binary Poppler/Tesseract trong lô đồng bộ ngắn; giữ báo cáo chờ workflow OCR kho tài liệu."
+        )
     try:
         from pdf2image import convert_from_bytes
         import pytesseract
@@ -1323,6 +1332,37 @@ def process_symbol(
                 print(f"  {symbol} {period}: đã thêm số liệu tự trích xuất; cân đối khớp, cần rà soát trực quan.")
             changed = True
         except Exception as exc:
+            if isinstance(exc, OCRToolsUnavailable):
+                print(
+                    f"  {symbol} {period}: trì hoãn OCR ảnh sang workflow kho tài liệu; "
+                    "không tính đây là một lượt trích xuất lỗi."
+                )
+                if period in existing:
+                    idx = next((i for i, item in enumerate(items) if item.get("period") == period), None)
+                    if idx is not None:
+                        item = items[idx]
+                        validation = item.setdefault("source_validation", {})
+                        if validation.get("ocr_deferred_to_archive_workflow") is not True:
+                            validation["ocr_deferred_to_archive_workflow"] = True
+                            validation["ocr_deferred_at"] = utc_now()
+                            validation["ocr_deferred_reason"] = str(exc)[:500]
+                            # Cool down this same report without incrementing extraction failures.
+                            validation.setdefault("last_extraction_attempt_at", utc_now())
+                            items[idx] = item
+                            changed = True
+                else:
+                    placeholder = make_placeholder(symbol, period, record, url, cumulative)
+                    validation = placeholder.setdefault("source_validation", {})
+                    validation["ocr_deferred_to_archive_workflow"] = True
+                    validation["ocr_deferred_at"] = utc_now()
+                    validation["ocr_deferred_reason"] = str(exc)[:500]
+                    validation["last_extraction_attempt_at"] = utc_now()
+                    validation["extraction_attempt_count"] = 0
+                    items.append(placeholder)
+                    existing[period] = placeholder
+                    added += 1
+                    changed = True
+                continue
             print(f"  {symbol} {period}: chưa tự trích xuất đủ tin cậy: {exc}")
             if period in existing:
                 # Keep the reconciled core unchanged; track either core or detail
