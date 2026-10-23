@@ -202,7 +202,7 @@ jobs:
                       reason = "empty snapshot is still inside its retry cooldown"
               else:
                   for item in items:
-                      if not isinstance(item, dict) or not re.fullmatch(r"20\\d{2}-Q[1-4]", str(item.get("period") or "")):
+                      if not isinstance(item, dict) or not re.fullmatch(r"20\d{2}-Q[1-4]", str(item.get("period") or "")):
                           continue
                       status = str(item.get("verification_status") or "")
                       validation = item.get("source_validation")
