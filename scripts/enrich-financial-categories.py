@@ -16,7 +16,7 @@ RAW = ROOT / "reports" / "raw"
 REPORT_QUEUE = ROOT / "config" / "report-queue.json"
 _QUEUE_ARCHIVE_BY_URL = None
 DETAIL_SCHEMA_VERSION = "2026-10-22-bank-statement-qc-v4"
-CORE_EXTRACTION_DEBUG_VERSION = "2026-10-23-bid-balance-source-v1"
+CORE_EXTRACTION_DEBUG_VERSION = "2026-10-23-bid-balance-source-v2"
 NUMBER_RE = re.compile(r"(?<![A-Za-z0-9])\(?-?\d[\d.,]*\d?\)?")
 BANKS = {"MBB", "ACB", "SHB", "TCB", "TPB", "VPB", "STB", "VCB", "CTG", "BID"}
 BROKERS = {"HCM", "SHS", "TCX", "VND", "VCI", "VCK", "VIX", "SSI", "VDS"}
@@ -511,8 +511,15 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
   exclude_terms=["tai san ngan han","tai san dai han"]
  ) if balance else None
  if assets is None and balance:
+  # Do not fall back to the "A. Tài sản" section heading: it is not a total
+  # and would silently capture the first component (e.g. cash). OCR sometimes
+  # joins "tài sản" into "taisan", so allow optional whitespace in total labels.
   assets=value_by_row_prefix(
-   balance,[r"^\s*(?:\|\s*)?a\.?\s+tai san(?:\s|$)",r"^\s*assets(?:\s|$)"],factor
+   balance,[
+    r"^\s*(?:\|\s*)?(?:tong\s*)?(?:cong\s*)?tai\s*san\s*co(?:\s|$)",
+    r"^\s*(?:\|\s*)?(?:tong\s*)?(?:cong\s*)?tai\s*san(?:\s|$)",
+    r"^\s*(?:\|\s*)?total\s*assets(?:\s|$)"
+   ],factor
   )
 
  equity_labels=["tong cong von chu so huu","tong von chu so huu","von chu so huu","total equity"]
@@ -543,24 +550,31 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
  if balance and symbol in BANKS:
   # Run this even when a generic text matcher already returned a number:
   # it may have picked the first liability component from the section heading.
-  # A source total that reconciles to assets takes precedence over that weak match.
+  # Accept the wrapped total row without requiring the OCR to preserve the final
+  # word "hữu"; the independent assets match is the verification gate.
   for page in balance:
    lines=str(page.get("text","")).splitlines()
    for index,line in enumerate(lines):
     clean_window=norm(" ".join(lines[index:index+3]))
-    if not re.search(r"tong no phai\s*tra", clean_window) or "von chu so" not in clean_window or "huu" not in clean_window:
+    if not re.search(r"tong\s*no\s*phai\s*tra", clean_window) or not re.search(r"von\s*chu\s*so", clean_window):
      continue
     row_values=amounts(line,threshold=1000)
     if not row_values:
+     for lookahead in range(index+1,min(index+4,len(lines))):
+      if is_statement_row_start(lines[lookahead]):
+       break
+      row_values=amounts(lines[lookahead],threshold=1000)
+      if row_values:
+       break
+    if not row_values or not isinstance(assets,(int,float)):
      continue
     candidates=[int(round(value*factor)) for value in row_values]
-    if isinstance(assets,(int,float)):
-     candidate=min(candidates,key=lambda value:abs(value-assets))
-     tolerance=max(abs(assets)*0.00001,1000)
-     if abs(candidate-assets)<=tolerance:
-      source_total=candidate
-      break
-   if source_total is not None:
+    candidate=min(candidates,key=lambda value:abs(value-assets))
+    tolerance=max(abs(assets)*0.00001,1000)
+    if abs(candidate-assets)<=tolerance:
+     source_total=candidate
+     break
+   if source_total is not None and isinstance(assets,(int,float)) and abs(source_total-assets)<=max(abs(assets)*0.00001,1000):
     break
  liabilities=value_by_label(
   balance,["tong cong no phai tra","tong no phai tra","total liabilities"],factor,
@@ -572,23 +586,17 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
   isinstance(assets,(int,float)) and isinstance(source_total,(int,float))
   and abs(assets-source_total)<=tolerance
  )
- # When OCR places the source-total numbers inside the wrapped label
- # "liabilities and equity", the liability label parser can mistake the
- # total-sources row for the liabilities subtotal. If the row total matches
- # assets, and this parsed "liabilities" equals that entire total, discard it;
- # the correct liabilities can then be derived from assets minus reported
- # equity below. The balance equation remains a hard gate.
- if (
-  source_matches_assets
-  and isinstance(liabilities,(int,float))
-  and abs(liabilities-source_total)<=tolerance
-  and isinstance(equity,(int,float))
-  and equity>0
- ):
-  liabilities=None
- if source_matches_assets and isinstance(equity,(int,float)) and liabilities is None:
+ # If the independently matched total-sources row equals total assets,
+ # a weak liability-label match may have captured the whole total or one
+ # component of liabilities. Keep a parsed subtotal only if the accounting
+ # equation already reconciles; otherwise derive liabilities from reported
+ # equity and retain a hard equation check below.
+ if source_matches_assets and isinstance(equity,(int,float)) and equity>0:
   candidate=assets-equity
-  if candidate>=0:
+  if candidate>=0 and (
+   not isinstance(liabilities,(int,float))
+   or abs(assets-liabilities-equity)>3
+  ):
    liabilities=int(round(candidate))
    calculations["total_liabilities"]="total_assets minus reported equity; total sources matched total assets"
  if source_matches_assets and isinstance(liabilities,(int,float)) and equity is None:
