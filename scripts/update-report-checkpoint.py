@@ -95,7 +95,8 @@ def is_terminal_manual_extraction(item: Any) -> bool:
     except (TypeError, ValueError):
         evidence_attempts = 0
     return (
-        validation.get("automatic_extraction_exhausted") is True
+        item.get("core_financial_extraction_manual_terminal") is True
+        or validation.get("automatic_extraction_exhausted") is True
         or evidence_attempts >= 3
     )
 
@@ -194,12 +195,57 @@ def main() -> int:
             archive_path.relative_to((ROOT / "reports" / "raw").resolve())
         except ValueError:
             continue
-        extracted = load_json(Path(str(archive_path) + ".extracted.json"))
-        # Match the selector: an archive without an extraction sidecar is not
-        # treated as OCR work by this check; the report collector can handle it.
-        if extracted is not None and payload_needs_pages(extracted, max_pages, rescan_pages):
+        if not archive_path.is_file():
+            # A missing archive is not an OCR task: it cannot be improved from
+            # local pages and must remain identifiable for manual/source recovery.
+            continue
+        sidecar_path = Path(str(archive_path) + ".extracted.json")
+        extracted = load_json(sidecar_path)
+        # Existing archive + missing/invalid sidecar means this report still
+        # has extraction work to do. Do not silently call the ticker complete.
+        if extracted is None or payload_needs_pages(extracted, max_pages, rescan_pages):
             statement_pages_pending = True
             break
+
+    snapshot_changed = False
+    if isinstance(snapshot, dict) and not statement_pages_pending:
+        # Once no linked report has any tracked pages left to OCR, remaining
+        # unresolved core fields cannot progress automatically on the same
+        # evidence. Mark them terminal for automation but retain blanks and
+        # require visual review; never manufacture balancing figures.
+        for item in quarter_items:
+            if item.get("verification_status") not in CORE_PENDING:
+                continue
+            if is_terminal_manual_extraction(item):
+                continue
+            item["verification_status"] = "manual_review_required_pending_extraction"
+            item["core_financial_extraction_status"] = "manual_review_required_pending_extraction"
+            item["core_financial_extraction_manual_terminal"] = True
+            item["core_financial_extraction_note"] = (
+                "Không còn trang PDF/ZIP đang chờ trích xuất tự động nhưng bộ chỉ tiêu lõi "
+                "vẫn thiếu hoặc chưa cân đối. Giữ trống chỉ tiêu chưa xác minh và yêu cầu "
+                "đối chiếu trực quan với báo cáo VietstockFinance."
+            )
+            item["core_financial_extraction_updated_at"] = now
+            snapshot_changed = True
+        if snapshot_changed:
+            snapshot_path.write_text(
+                json.dumps(snapshot, ensure_ascii=False, indent=2) + "\\n",
+                encoding="utf-8",
+            )
+            quarter_items = [
+                item for item in (snapshot.get("items") or [])
+                if isinstance(item, dict) and QUARTER_RE.fullmatch(str(item.get("period") or ""))
+            ]
+            core_pending_periods = sorted({
+                str(item.get("period") or "unknown")
+                for item in quarter_items if item.get("verification_status") in CORE_PENDING
+                and not is_terminal_manual_extraction(item)
+            })
+            terminal_manual_review_periods = sorted({
+                str(item.get("period") or "unknown")
+                for item in quarter_items if is_terminal_manual_extraction(item)
+            })
 
     if snapshot is None:
         status = "missing_snapshot"
