@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-24T13:24:01Z",
+  "updatedAt": "2026-10-24T13:48:33.746Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -27,7 +27,6 @@
     "KDH",
     "NVL",
     "HHV",
-    "GAS",
     "PLX",
     "IDC",
     "KBC",
@@ -40,32 +39,20 @@
     "DPG"
   ],
   "lastCompletedSymbol": "DPG",
-  "activeSymbol": null,
+  "activeSymbol": "GAS",
   "resumeSymbolHint": "GAS",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
-    "symbol": "DPG",
-    "status": "automated_processing_complete",
-    "completeForAutomation": true,
+    "symbol": "GAS",
+    "status": "queued_for_resumed_processing",
+    "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-24T13:24:01Z",
-    "workflowRunId": "40097834209",
-    "workflowRunNumber": 1214,
-    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/40097834209",
-    "changedPaths": [
-      "data/financials-DPG.json",
-      "reports/raw/DPG/repair-dpg-2025q2-full-report/2c3e49e48cbf78c5.pdf.extracted.json"
-    ],
-    "periodCount": 10,
-    "firstQuarter": "2024-Q1",
-    "lastQuarter": "2026-Q2",
-    "pendingCorePeriods": [],
-    "terminalManualReviewPeriods": [
-      "2025-Q2"
-    ],
-    "pendingDetailPeriods": [],
-    "staleDetailSchemaPeriods": [],
-    "statementPagesPending": false
+    "processedAt": "2026-10-24T13:48:33.746Z",
+    "workflowRunId": null,
+    "workflowRunNumber": null,
+    "workflowRunUrl": null,
+    "changedPaths": [],
+    "note": "User requested to move on from DPG and backfill its missing Q2/2025 core figures later. Resume GAS next; keep DPG data and manual-review flag intact."
   },
   "symbolStates": {
     "MBB": {
@@ -497,8 +484,8 @@
       "snapshotFetchedAt": "2026-10-23T16:14:01+00:00"
     },
     "GAS": {
-      "status": "automated_processing_complete",
-      "completeForAutomation": true,
+      "status": "in_progress",
+      "completeForAutomation": false,
       "manualReviewRemaining": true,
       "periodCount": 10,
       "firstQuarter": "2024-Q1",
@@ -520,8 +507,9 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-10-23T18:23:33Z",
-      "snapshotFetchedAt": "2026-10-23T18:00:37+00:00"
+      "updatedAt": "2026-10-24T13:48:33.746Z",
+      "snapshotFetchedAt": "2026-10-23T18:00:37+00:00",
+      "note": "Reopened by user request as the next ticker after DPG. Resume its existing data and sidecars; do not discard any stored data. DPG Q2/2025 missing fields are deferred for later."
     },
     "PLX": {
       "status": "automated_processing_complete",
