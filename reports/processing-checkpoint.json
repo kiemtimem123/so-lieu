@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-24T12:28:45Z",
+  "updatedAt": "2026-10-24T12:30:01.254Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -27,7 +27,6 @@
     "KDH",
     "NVL",
     "HHV",
-    "DPG",
     "GAS",
     "PLX",
     "IDC",
@@ -40,31 +39,30 @@
     "VHM"
   ],
   "lastCompletedSymbol": "DPG",
-  "activeSymbol": null,
-  "resumeSymbolHint": "GAS",
+  "activeSymbol": "DPG",
+  "resumeSymbolHint": "DPG",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "DPG",
-    "status": "automated_processing_complete",
-    "completeForAutomation": true,
+    "status": "in_progress",
+    "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-24T12:28:45Z",
-    "workflowRunId": "40094047421",
-    "workflowRunNumber": 1193,
-    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/40094047421",
+    "processedAt": "2026-10-24T12:30:01.254Z",
     "changedPaths": [
-      "data/financials-DPG.json"
+      "data/financials-DPG.json",
+      "reports/processing-checkpoint.json"
     ],
     "periodCount": 10,
     "firstQuarter": "2024-Q1",
     "lastQuarter": "2026-Q2",
-    "pendingCorePeriods": [],
-    "terminalManualReviewPeriods": [
+    "pendingCorePeriods": [
       "2025-Q2"
     ],
+    "terminalManualReviewPeriods": [],
     "pendingDetailPeriods": [],
     "staleDetailSchemaPeriods": [],
-    "statementPagesPending": false
+    "statementPagesPending": false,
+    "note": "Không đánh dấu DPG hoàn tất: Q2/2025 chỉ có tệp KQKD điều chỉnh 3 trang; các số lợi nhuận chưa xác minh đang để trống, bảng cân đối còn thiếu. Cần lấy/trích xuất BCTC hợp nhất đầy đủ từ VietstockFinance trước khi chuyển mã."
   },
   "symbolStates": {
     "MBB": {
@@ -478,22 +476,23 @@
       "note": "Đã đối chiếu lại OCR HHV Q1/2024: tổng tài sản, nợ phải trả, vốn chủ sở hữu cân đối chính xác; lợi nhuận sau thuế và ROA/ROE chưa xác nhận nên vẫn chờ rà soát trực quan PDF."
     },
     "DPG": {
-      "status": "automated_processing_complete",
-      "completeForAutomation": true,
+      "status": "in_progress",
+      "completeForAutomation": false,
       "manualReviewRemaining": true,
       "periodCount": 10,
       "firstQuarter": "2024-Q1",
       "lastQuarter": "2026-Q2",
-      "pendingCorePeriods": [],
-      "terminalManualReviewPeriods": [
+      "pendingCorePeriods": [
         "2025-Q2"
       ],
+      "terminalManualReviewPeriods": [],
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 9,
-      "updatedAt": "2026-10-24T12:28:45Z",
-      "snapshotFetchedAt": "2026-10-23T16:14:01+00:00"
+      "updatedAt": "2026-10-24T12:30:01.254Z",
+      "snapshotFetchedAt": "2026-10-23T16:14:01+00:00",
+      "note": "DPG vẫn đang xử lý; Q2/2025 cần báo cáo hợp nhất đầy đủ từ VietstockFinance, không được bỏ qua chỉ vì tự động trích xuất đã chạm giới hạn."
     },
     "GAS": {
       "status": "automated_processing_complete",
