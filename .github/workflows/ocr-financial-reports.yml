@@ -150,6 +150,12 @@ jobs:
                       return True
               return False
 
+          checkpoint = load_json(Path("reports/processing-checkpoint.json")) or {}
+          completed_symbols = {
+              str(value).strip().upper()
+              for value in checkpoint.get("completedSymbols", [])
+              if str(value).strip()
+          }
           requested = os.environ.get("REQUESTED_SYMBOL", "").strip().upper()
           bootstrap_symbol = ""
           if requested:
@@ -166,6 +172,12 @@ jobs:
                       # Bootstrap only the first missing ticker, after all earlier
                       # configured symbols have completed their extraction/review state.
                       bootstrap_symbol = symbol
+                      break
+                  # Use the durable ticker checkpoint as the queue cursor. Existing snapshots
+                  # can be present before the ticker has completed its one-at-a-time OCR pass.
+                  if symbol not in completed_symbols:
+                      selected = symbol
+                      print(f"Selected {symbol} from the persisted completion queue.")
                       break
                   # "complete_needs_manual_review" is not enough to skip a ticker
                   # when some quarters still have no core figures or statement pages.
