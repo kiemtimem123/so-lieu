@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-25T19:08:00Z",
+  "updatedAt": "2026-10-25T19:26:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -45,9 +45,9 @@
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "PLX",
-    "status": "manual_review_blocked_ocr_conflicts_documented",
-    "updatedAt": "2026-10-25T19:08:00Z",
-    "nextAction": "PLX vẫn là mã đang xử lý. Đã rà lại OCR gốc lưu trong repo: Q2/2025 có mâu thuẫn giữa doanh thu bán hàng, giảm trừ, doanh thu thuần, giá vốn và lợi nhuận gộp; đã đặt revenue=null và cost_of_goods_sold=null thay vì dùng số suy ra không được xác minh. Q4/2025 giá vốn OCR 71.082.243 triệu không khớp phép đối chiếu, có vẻ sai chữ số đầu nhưng không tự sửa; giữ null. Q2/2026 tiếp tục giữ các chỉ tiêu KQKD riêng quý null vì OCR không phân biệt được cột quý và lũy kế. Chưa có ảnh PDF trực tiếp để kiểm tra thị giác; không chuyển sang mã khác cho tới khi xác minh được hoặc ghi rõ PLX bị chặn bởi thiếu khả năng xem ảnh PDF."
+    "status": "manual_visual_verification_blocked_source_pdf_too_large",
+    "updatedAt": "2026-10-25T19:26:00Z",
+    "nextAction": "Đã rà lại OCR chi tiết ba PDF VietstockFinance. Q2/2025: các dòng doanh thu bán hàng trừ giảm trừ, doanh thu thuần OCR và phép đối chiếu doanh thu/giá vốn/lợi nhuận gộp không khớp; revenue, cost_of_goods_sold và gross_profit giữ null. Q4/2025: doanh thu thuần khớp công thức nhưng giá vốn OCR mâu thuẫn; không tự sửa khi chưa xem ảnh PDF. Q2/2026: OCR chưa phân biệt được số liệu quý và lũy kế; giữ các chỉ tiêu KQKD riêng quý null. Mở trực tiếp PDF VietstockFinance thất bại vì file 13.7–15.9 MB vượt giới hạn tải của công cụ. Cần bản PDF có thể truy cập hoặc ảnh trang 5 để xác minh trực quan. Giữ PLX là mã tiếp tục xử lý."
   },
   "symbolStates": {
     "MBB": {
@@ -506,7 +506,7 @@
       "snapshotFetchedAt": "2026-10-23T18:00:37+00:00"
     },
     "PLX": {
-      "status": "manual_review_blocked_ocr_conflicts_documented",
+      "status": "manual_visual_verification_blocked_source_pdf_too_large",
       "completeForAutomation": true,
       "manualReviewRemaining": true,
       "periodCount": 10,
@@ -529,15 +529,15 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 4,
-      "updatedAt": "2026-10-25T19:08:00Z",
+      "updatedAt": "2026-10-25T19:26:00Z",
       "snapshotFetchedAt": "2026-10-23T18:24:32+00:00",
       "latestManualProgress": {
         "updatedFile": "data/financials-PLX.json",
-        "commit": "7745d54b2ef4b71eaca48888f699a32568b89af5",
+        "commit": "eb1d4d8d0120a3708f28592d9b64780953bc98f4",
         "periodsTouched": [
           "2025-Q2"
         ],
-        "note": "Đã thu hồi revenue Q2/2025 về null vì OCR có nhiều dòng KQKD không nhất quán; không giữ giá trị tính từ 2 dòng OCR khi các dòng đối chiếu không khớp. Cần xem ảnh PDF trực tiếp."
+        "note": "Đối chiếu OCR đầy đủ trang 5; do doanh thu thuần/giá vốn/lợi nhuận gộp mâu thuẫn nên đặt cả ba trường null. Chưa xác minh ảnh PDF trực tiếp."
       }
     },
     "IDC": {
@@ -1248,6 +1248,13 @@
       "status": "manual_review_blocked_ocr_conflicts_documented",
       "commit": "7745d54b2ef4b71eaca48888f699a32568b89af5",
       "note": "Rà OCR Q2/2025 và phát hiện doanh thu thuần OCR không khớp phép trừ doanh thu bán hàng trừ giảm trừ; lợi nhuận gộp/giá vốn cũng không khớp. Đặt revenue=null để tránh dữ liệu sai. Chưa xác minh ảnh PDF."
+    },
+    {
+      "symbol": "PLX",
+      "at": "2026-10-25T19:26:00Z",
+      "status": "manual_visual_verification_blocked_source_pdf_too_large",
+      "commit": "eb1d4d8d0120a3708f28592d9b64780953bc98f4",
+      "note": "Rà lại OCR ba PDF; Q2/2025 đã để trống doanh thu, giá vốn, lợi nhuận gộp vì mâu thuẫn số học. Không thể xem trực tiếp PDF do vượt giới hạn tải."
     }
   ],
   "currentRun": {
