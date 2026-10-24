@@ -601,7 +601,7 @@
           4,
           5
         ],
-        "review_note": "Rà lại OCR trang 5 phát hiện các dòng doanh thu bán hàng, giảm trừ, doanh thu thuần, giá vốn và lợi nhuận gộp không nhất quán. Dù doanh thu bán hàng trừ giảm trừ cho 77.080.571.305.837 VND, dòng doanh thu thuần OCR lại là 77.054.375.514.284 VND và các số lợi nhuận gộp/giá vốn cũng không khớp. Không thể xác định chuỗi nào bị OCR đọc sai nếu chưa xem ảnh PDF trực tiếp; giữ revenue=null và cost_of_goods_sold=null, không suy diễn."
+        "review_note": "Đối chiếu OCR trang 5: doanh thu bán hàng 77.083.481.942.676 trừ giảm trừ 2.910.636.839 = 77.080.571.305.837 VND, nhưng dòng doanh thu thuần OCR là 77.054.375.514.284 VND; doanh thu thuần OCR trừ giá vốn OCR 71.919.641.395.348 không bằng lợi nhuận gộp OCR 5.144.744.180.936 VND. Không có cách xác định chính xác các chữ số OCR sai nếu không xem ảnh PDF, do đó revenue, cost_of_goods_sold và gross_profit đều null."
       },
       "published_at": "2025-07-31",
       "source_archive_file": "reports/raw/PLX/auto-plx-20261021/90195e13c974fbad.pdf",
@@ -614,7 +614,7 @@
         "total_liabilities"
       ],
       "core_financial_extraction_status": "needs_visual_review_ocr_conflict",
-      "core_financial_extraction_note": "Bảng cân đối đã trích từ văn bản OCR; các chỉ tiêu KQKD cốt lõi revenue và cost_of_goods_sold được giữ null do nhiều dòng OCR mâu thuẫn số học. Các chỉ tiêu lợi nhuận khác vẫn cần đối chiếu trực quan.",
+      "core_financial_extraction_note": "Bảng cân đối được kiểm tra số học. Ba chỉ tiêu doanh thu thuần, giá vốn và lợi nhuận gộp Q2/2025 bị giữ null do các dòng OCR mâu thuẫn nhau; không thể xác minh bằng văn bản trích xuất, cần xem ảnh PDF trực tiếp.",
       "verification_status_note": "KQKD Q2/2025 chưa được xác minh: OCR có nhiều dòng không khớp nhau. Không dùng doanh thu tính từ OCR như dữ liệu chính thức; cần kiểm tra ảnh PDF VietstockFinance.",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "plx-q2-2025-ocr-conflict-20261025-v1",
@@ -632,7 +632,7 @@
         13,
         14
       ],
-      "core_financial_extraction_updated_at": "2026-10-25T19:05:00Z",
+      "core_financial_extraction_updated_at": "2026-10-25T19:25:00Z",
       "financial_line_items_rejected_fields": [
         "cost_of_goods_sold_gross_profit_equation_check",
         "current_assets_current_assets_too_small",
@@ -651,7 +651,8 @@
         "short_term_investments",
         "short_term_investments_current_asset_component_check",
         "short_term_receivables_current_asset_component_check",
-        "short_term_receivables_magnitude"
+        "short_term_receivables_magnitude",
+        "revenue_net_revenue_formula_ocr_conflict"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-23T19:14:50+00:00",
       "financial_line_items_note": "Các dòng KQKD OCR mâu thuẫn; không chọn số doanh thu/giá vốn khi chưa xem ảnh PDF. Giữ các trường không đủ tin cậy trống để tránh đưa số liệu sai.",
@@ -685,11 +686,11 @@
         "retained_earnings",
         "selling_expense"
       ],
-      "financial_line_items_status": "auto_extracted_pending_visual_review",
+      "financial_line_items_status": "needs_visual_review_ocr_conflict",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-23T19:14:50+00:00",
       "financial_line_items_source": "reports/raw/PLX/auto-plx-20261021/90195e13c974fbad.pdf",
-      "financial_line_items_updated_at": "2026-10-23T19:14:59+00:00",
+      "financial_line_items_updated_at": "2026-10-25T19:25:00Z",
       "operating_cash_flow_calculation": "reported as standalone quarter",
       "investing_cash_flow_calculation": "reported as standalone quarter",
       "financing_cash_flow_calculation": "reported as standalone quarter",
@@ -741,13 +742,17 @@
         "cost_of_goods_sold": {
           "value": 71919641,
           "reason": "OCR trang KQKD cho giá vốn không khớp với doanh thu thuần và lợi nhuận gộp đã trích xuất; giữ trường này chưa xác nhận thay vì ghi số không nhất quán."
+        },
+        "gross_profit": {
+          "value": 5144744,
+          "reason": "OCR dòng lợi nhuận gộp 5.144.744.180.936 VND không thể đối chiếu với dòng doanh thu thuần OCR 77.054.375.514.284 VND và giá vốn OCR 71.919.641.395.348 VND; đồng thời doanh thu bán hàng trừ giảm trừ cho kết quả khác. Giữ null đến khi xem ảnh PDF trực tiếp."
         }
       },
       "core_financial_extraction_stable_evidence_count": 0,
       "core_financial_extraction_stable_evidence_updated_at": "2026-10-25T19:05:00Z",
       "core_financial_extraction_manual_terminal": false,
       "current_assets": 123402,
-      "gross_profit": 5144744
+      "gross_profit": null
     },
     {
       "symbol": "PLX",
