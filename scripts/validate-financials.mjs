@@ -91,10 +91,26 @@ for (const symbol of symbols) {
     statusCounts[status] = (statusCounts[status] || 0) + 1;
 
     const pendingExtraction = status === "auto_pending_extraction" || status === "manual_review_required_pending_extraction";
+    // A quarter may have a separately published correction/quarterly income
+    // statement while the linked full consolidated report is still unavailable.
+    // Permit only the three balance-sheet fields to remain blank in that
+    // explicitly documented state; never infer or fabricate those values.
+    let pendingBalanceSheet = item.balance_sheet_extraction_status === "pending_full_report_archive_and_extraction";
+    try {
+      const balanceSourceHost = new URL(item.balance_sheet_source_url || "").hostname;
+      pendingBalanceSheet = pendingBalanceSheet &&
+        (balanceSourceHost === "vietstock.vn" || balanceSourceHost.endsWith(".vietstock.vn"));
+    } catch {
+      pendingBalanceSheet = false;
+    }
     for (const field of ["total_assets", "total_liabilities", "equity", "pretax_profit", "net_profit"]) {
-      if ((typeof item[field] !== "number" || !Number.isFinite(item[field])) && !pendingExtraction) {
+      const balanceFieldPending = pendingBalanceSheet && ["total_assets", "total_liabilities", "equity"].includes(field);
+      if ((typeof item[field] !== "number" || !Number.isFinite(item[field])) && !pendingExtraction && !balanceFieldPending) {
         errors.push(`${symbol} ${item.period}: ${field} is missing or non-numeric`);
       }
+    }
+    if (pendingBalanceSheet) {
+      warnings.push(`${symbol} ${item.period}: balance-sheet fields remain blank pending extraction of the linked full Vietstock report`);
     }
     if (status === "auto_pending_extraction") {
       warnings.push(`${symbol} ${item.period}: new VietstockFinance report detected; financial fields await reliable extraction`);
