@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-25T20:15:00Z",
+  "updatedAt": "2026-10-25T20:30:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -45,9 +45,9 @@
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "PLX",
-    "status": "manual_review_in_progress_no_more_uploads",
-    "updatedAt": "2026-10-25T20:15:00Z",
-    "nextAction": "Không yêu cầu người dùng tải thêm ảnh vì họ đã hết hạn mức upload. Tiếp tục xử lý PLX bằng OCR sidecar/PDF đã lưu trong reports/raw/PLX và các phép kiểm tra chéo. Q2/2025 đã xác minh trực quan và lưu ở commit c543ffa18c42ca56b58f506ae79abd9418e6938b. Q4/2025: doanh thu thuần/lợi nhuận gộp khớp nhưng dòng giá vốn OCR lệch chữ số đầu; giữ cost_of_goods_sold null cho tới khi có bằng chứng nguồn đủ tin cậy. Q2/2026: chỉ tiêu KQKD riêng quý chưa phân biệt chắc với lũy kế, giữ null. Tránh tự suy ra số liệu báo cáo chính thức; vẫn giữ PLX là mã hiện hành."
+    "status": "partially_reconciled_from_saved_ocr_no_more_uploads",
+    "updatedAt": "2026-10-25T20:30:00Z",
+    "nextAction": "Người dùng đã hết hạn mức tải ảnh; không yêu cầu ảnh mới. Tiếp tục rà dữ liệu PLX từ các PDF VietstockFinance và sidecar OCR đã lưu. Đã cập nhật Q4/2025 bằng đối chiếu phương trình doanh thu thuần − giá vốn = lợi nhuận gộp; sửa dòng tiền Q4 thành lũy kế năm và loại giá trị CFO gán nhầm. Đã phục hồi doanh thu thuần, giá vốn, lợi nhuận gộp, LNTT riêng Q2/2026 bằng OCR cộng đối chiếu chéo với Q1; vẫn để trống LNST/thuế/chi phí không chắc. Tiếp theo rà các kỳ PLX còn lại, đặc biệt các trường dòng tiền đang có nhãn quý nhưng nguồn là lũy kế. Vẫn giữ PLX là mã hiện hành."
   },
   "symbolStates": {
     "MBB": {
@@ -506,7 +506,7 @@
       "snapshotFetchedAt": "2026-10-23T18:00:37+00:00"
     },
     "PLX": {
-      "status": "manual_review_in_progress",
+      "status": "partially_reconciled_from_saved_ocr_no_more_uploads",
       "completeForAutomation": true,
       "manualReviewRemaining": true,
       "periodCount": 10,
@@ -529,15 +529,16 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 4,
-      "updatedAt": "2026-10-25T20:15:00Z",
+      "updatedAt": "2026-10-25T20:30:00Z",
       "snapshotFetchedAt": "2026-10-23T18:24:32+00:00",
       "latestManualProgress": {
         "updatedFile": "data/financials-PLX.json",
-        "commit": "c543ffa18c42ca56b58f506ae79abd9418e6938b",
+        "commit": "9fae7ce3c5d2d8fed22f77e00d673a01838b9a82",
         "periodsTouched": [
-          "2025-Q2"
+          "2025-Q4",
+          "2026-Q2"
         ],
-        "note": "Q2/2025 page 5 visually verified from user image and updated. User reports upload image quota exhausted; do not repeatedly request more screenshots. Continue from archived VietstockFinance PDFs and extracted OCR text. Q4/2025 gross profit/revenue imply COGS 77,082,243,329,860 VND but OCR reads 71,082,243,329,860 VND; leave COGS null rather than substitute inferred value. Q2/2026 OCR lacks reliable quarter-vs-YTD separation; keep unsupported quarterly P&L fields null."
+        "note": "Q4/2025: giá vốn khôi phục bằng doanh thu thuần trừ lợi nhuận gộp; OCR dòng giá vốn cũ sai chữ số đầu. Sửa lỗi gán nhầm PBT thành CFO; báo cáo dòng tiền là YTD cả năm, đã sửa dòng tiền hoạt động YTD từ 3.658.327 thành 4.254.126 triệu VND và để null trường dòng tiền riêng Q4. Q2/2026: khôi phục doanh thu thuần, giá vốn, lợi nhuận gộp và LNTT từ OCR cộng phép đối chiếu với Q1; LNST/thuế/chi phí chi tiết mơ hồ được giữ null. Q2/2025 đã xác minh trực quan từ ảnh người dùng trong commit c543ffa18c42ca56b58f506ae79abd9418e6938b."
       }
     },
     "IDC": {
