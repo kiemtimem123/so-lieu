@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-24T09:05:00Z",
+  "updatedAt": "2026-10-24T09:25:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -44,32 +44,31 @@
   "resumeSymbolHint": "DPG",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
-    "symbol": "HHV",
-    "status": "automated_processing_complete",
-    "completeForAutomation": true,
+    "symbol": "DPG",
+    "status": "in_progress",
+    "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-24T09:05:00Z",
+    "processedAt": "2026-10-24T09:25:00Z",
     "changedPaths": [
-      "data/financials-HHV.json",
+      "data/financials-DPG.json",
       "reports/processing-checkpoint.json"
     ],
     "periodCount": 10,
     "firstQuarter": "2024-Q1",
     "lastQuarter": "2026-Q2",
-    "pendingCorePeriods": [],
+    "pendingCorePeriods": [
+      "2025-Q2",
+      "2025-Q4"
+    ],
     "terminalManualReviewPeriods": [
-      "2024-Q1",
-      "2024-Q2",
-      "2024-Q3",
       "2025-Q3",
-      "2025-Q4",
       "2026-Q1",
       "2026-Q2"
     ],
     "pendingDetailPeriods": [],
     "staleDetailSchemaPeriods": [],
     "statementPagesPending": false,
-    "note": "Đã đối chiếu lại OCR HHV Q1/2024; số liệu cân đối được lưu, LNST/ROA/ROE chưa xác nhận nên tiếp tục gắn cờ rà soát trực quan."
+    "note": "Đã lưu phần trích xuất OCR bổ sung; tiếp tục DPG vì Q2/2025 thiếu BCTC hợp nhất đầy đủ và Q4/2025 thiếu KQKD quý đáng tin cậy."
   },
   "symbolStates": {
     "MBB": {
@@ -483,17 +482,18 @@
       "note": "Đã đối chiếu lại OCR HHV Q1/2024: tổng tài sản, nợ phải trả, vốn chủ sở hữu cân đối chính xác; lợi nhuận sau thuế và ROA/ROE chưa xác nhận nên vẫn chờ rà soát trực quan PDF."
     },
     "DPG": {
-      "status": "automated_processing_complete",
-      "completeForAutomation": true,
+      "status": "in_progress",
+      "completeForAutomation": false,
       "manualReviewRemaining": true,
       "periodCount": 10,
       "firstQuarter": "2024-Q1",
       "lastQuarter": "2026-Q2",
-      "pendingCorePeriods": [],
-      "terminalManualReviewPeriods": [
+      "pendingCorePeriods": [
         "2025-Q2",
+        "2025-Q4"
+      ],
+      "terminalManualReviewPeriods": [
         "2025-Q3",
-        "2025-Q4",
         "2026-Q1",
         "2026-Q2"
       ],
@@ -501,8 +501,9 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 9,
-      "updatedAt": "2026-10-23T17:59:33Z",
-      "snapshotFetchedAt": "2026-10-23T16:14:01+00:00"
+      "updatedAt": "2026-10-24T09:25:00Z",
+      "snapshotFetchedAt": "2026-10-23T16:14:01+00:00",
+      "note": "Đã trích xuất bổ sung các số dư hợp nhất Q3/2025, Q4/2025, Q1/2026, Q2/2026 và kết quả kinh doanh Q3/2025, Q1/Q2/2026 từ sidecar OCR. Q2/2025 hiện chỉ có tài liệu đính chính KQKD, cần tiếp tục tìm đúng BCTC hợp nhất đầy đủ qua VietstockFinance; Q4/2025 còn thiếu kết quả quý đáng tin cậy. DPG vẫn là mã đang xử lý."
     },
     "GAS": {
       "status": "automated_processing_complete",
@@ -1285,7 +1286,7 @@
     "workflowRunId": "39987608439",
     "workflowRunNumber": 210,
     "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/39987608439",
-    "updatedAt": "2026-10-23T16:33:19.728Z",
+    "updatedAt": "2026-10-24T09:25:00Z",
     "archiveProgress": {
       "queueJobId": "auto-dpg-20261021",
       "queueStatus": "queued",
@@ -1312,7 +1313,7 @@
       ],
       "lastKnownDownloadedTotalReported": 10
     },
-    "note": "Current collector run 210 is processing only DPG. The last committed snapshot links archived source PDFs for six quarterly periods; all ten quarter values remain pending extraction. Keep processing DPG until its source candidate queue closes, then OCR/extract one report at a time."
+    "note": "Tiếp tục xử lý DPG theo thứ tự từng mã. Một số số liệu đã được cập nhật từ OCR; tiếp tục hoàn tất lưu trữ báo cáo hợp nhất đầy đủ cho các kỳ còn thiếu, đặc biệt Q2/2025, rồi mới chuyển mã tiếp theo."
   },
   "scopePolicy": {
     "VCK": {
