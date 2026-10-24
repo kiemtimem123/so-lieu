@@ -934,7 +934,7 @@
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "24dd9b44d4f6218e7400b616c0496e451228278a9ee38536a57dfdce7f8f96ca",
       "core_financial_extraction_evidence_attempt_count": 1,
-      "financial_line_items_status": "auto_extracted_pending_visual_review",
+      "financial_line_items_status": "needs_visual_review_reconciliation_mismatch",
       "financial_line_items_extracted_fields": [
         "admin_expense",
         "capital_expenditure_ytd",
@@ -963,9 +963,14 @@
       ],
       "financial_line_items_source": "reports/raw/PLX/auto-plx-20261021/35a0f637ffbb0ecf.pdf",
       "financial_line_items_updated_at": "2026-10-23T19:11:20+00:00",
-      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Giá vốn được bổ sung từ dòng giá vốn hàng bán trong OCR báo cáo hợp nhất VietstockFinance; cần xác minh trực quan ảnh PDF.",
+      "financial_line_items_note": "Giá vốn OCR không khớp doanh thu thuần trừ giá vốn bằng lợi nhuận gộp; giữ null để tránh dữ liệu sai. Cần kiểm tra trực tiếp ảnh PDF VietstockFinance Q4/2025.",
       "financial_line_items_prior_values": {},
-      "financial_line_items_rejected_values": {},
+      "financial_line_items_rejected_values": {
+        "cost_of_goods_sold": {
+          "value": 71082243,
+          "reason": "Không khớp phép đối chiếu: doanh thu thuần 81.892.813 - giá vốn OCR 71.082.243 = 10.810.570 triệu VND, trong khi lợi nhuận gộp báo cáo là 4.810.570 triệu VND. Có khả năng OCR đọc sai chữ số đầu ở dòng giá vốn; không tự sửa thành số suy ra, giữ trường giá vốn chưa xác nhận đến khi xem ảnh PDF."
+        }
+      },
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-23T19:11:20+00:00",
       "eps": 350,
@@ -1035,7 +1040,7 @@
       "core_financial_extraction_stable_evidence_updated_at": "2026-10-23T19:14:53+00:00",
       "core_financial_extraction_manual_terminal": false,
       "gross_profit": 4810570,
-      "cost_of_goods_sold": 71082243
+      "cost_of_goods_sold": null
     },
     {
       "symbol": "PLX",
@@ -1242,7 +1247,7 @@
       "source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/PLX_Baocaotaichinh_Q2_2026_Hopnhat.pdf",
       "source_index_url": "https://finance.vietstock.vn/PLX/tai-tai-lieu.htm?doctype=1",
       "report_type": "BCTC hợp nhất PLX 2026-Q2 (phát hiện tự động qua VietstockFinance; chờ trích xuất)",
-      "source_pages": "BCTC hợp nhất PLX Q2/2026: bảng cân đối trang 2–4; KQKD trang 5. Lợi nhuận được chuẩn hóa từ OCR; doanh thu quý chưa cập nhật do cột doanh thu OCR không đủ rõ để phân biệt số quý và lũy kế.",
+      "source_pages": "BCTC hợp nhất PLX Q2/2026: bảng cân đối trang 2–4; KQKD trang 5. Doanh thu và các chỉ tiêu lợi nhuận quý được giữ null vì OCR chưa phân biệt chắc chắn cột quý và cột lũy kế; chỉ tiêu bảng cân đối được trích từ văn bản OCR. Chưa xác minh trực quan ảnh PDF.",
       "quarter_profit_basis": "Chỉ lưu số liệu khi cột phát sinh riêng của quý được trích xuất và cân đối hợp lệ.",
       "verification_status": "partially_verified_from_archived_source_text",
       "source_validation": {
@@ -1261,7 +1266,7 @@
           4,
           5
         ],
-        "review_note": "BCTC hợp nhất PLX Q2/2026: bảng cân đối trang 2–4; KQKD trang 5. Lợi nhuận được chuẩn hóa từ OCR; doanh thu quý chưa cập nhật do cột doanh thu OCR không đủ rõ để phân biệt số quý và lũy kế. Các chỉ tiêu lợi nhuận quý 2/2026 chưa được điền do OCR không phân biệt chắc chắn cột số quý với số lũy kế; giữ null để tránh gán nhầm."
+        "review_note": "Không sử dụng số doanh thu/lợi nhuận Q2/2026 do OCR chưa xác định chắc cột phát sinh riêng quý hay lũy kế. Các trường revenue, gross_profit, operating_profit, pretax_profit, net_profit vẫn null có chủ đích."
       },
       "published_at": "2026-07-31",
       "source_archive_file": "reports/raw/PLX/auto-plx-20261021/925339daf7038fe2.pdf",
