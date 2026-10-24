@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-24T12:33:30Z",
+  "updatedAt": "2026-10-24T13:12:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -36,19 +36,18 @@
     "NLG",
     "BSR",
     "TCB",
-    "VHM",
-    "DPG"
+    "VHM"
   ],
   "lastCompletedSymbol": "DPG",
-  "activeSymbol": null,
-  "resumeSymbolHint": null,
+  "activeSymbol": "DPG",
+  "resumeSymbolHint": "DPG",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "DPG",
-    "status": "automated_processing_complete",
-    "completeForAutomation": true,
+    "status": "in_progress",
+    "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-24T12:33:30Z",
+    "processedAt": "2026-10-24T13:12:00Z",
     "workflowRunId": 40094289621,
     "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/40094289621",
     "changedPaths": [
@@ -58,7 +57,9 @@
     "periodCount": 10,
     "firstQuarter": "2024-Q1",
     "lastQuarter": "2026-Q2",
-    "pendingCorePeriods": [],
+    "pendingCorePeriods": [
+      "2025-Q2"
+    ],
     "terminalManualReviewPeriods": [
       "2025-Q3",
       "2026-Q1",
@@ -67,7 +68,7 @@
     "pendingDetailPeriods": [],
     "staleDetailSchemaPeriods": [],
     "statementPagesPending": false,
-    "note": "DPG Q2/2025 đã được đối chiếu trực quan với BCTC hợp nhất đầy đủ trên VietstockFinance; đã điền KQKD và bảng cân đối, kiểm tra tổng tài sản = nợ phải trả + vốn chủ sở hữu. PDF đầy đủ chưa lưu được vào kho GitHub, đã lưu đường dẫn nguồn trực tiếp. Các kỳ Q3/2025, Q1/2026, Q2/2026 vẫn cần rà soát thủ công."
+    "note": "Kiểm tra lại phát hiện doanh thu Q2/2026 bị trích xuất sai: đã sửa từ 209.302 lên 1.858.765 triệu VND theo trang 10 PDF. Bảng cân đối Q2/2025 chưa xác minh được từ PDF đầy đủ nên đã gỡ số chưa xác minh và đưa kỳ này về pending để thử tải/trích xuất lại từ VietstockFinance."
   },
   "symbolStates": {
     "MBB": {
@@ -481,13 +482,15 @@
       "note": "Đã đối chiếu lại OCR HHV Q1/2024: tổng tài sản, nợ phải trả, vốn chủ sở hữu cân đối chính xác; lợi nhuận sau thuế và ROA/ROE chưa xác nhận nên vẫn chờ rà soát trực quan PDF."
     },
     "DPG": {
-      "status": "automated_processing_complete",
-      "completeForAutomation": true,
+      "status": "in_progress",
+      "completeForAutomation": false,
       "manualReviewRemaining": true,
       "periodCount": 10,
       "firstQuarter": "2024-Q1",
       "lastQuarter": "2026-Q2",
-      "pendingCorePeriods": [],
+      "pendingCorePeriods": [
+        "2025-Q2"
+      ],
       "terminalManualReviewPeriods": [
         "2025-Q3",
         "2026-Q1",
@@ -497,9 +500,9 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 9,
-      "updatedAt": "2026-10-24T12:33:30Z",
-      "snapshotFetchedAt": "2026-10-24T12:33:30Z",
-      "note": "Đã hoàn tất phần trích xuất lõi DPG; còn các kỳ cần rà soát trực quan thủ công."
+      "updatedAt": "2026-10-24T13:12:00Z",
+      "snapshotFetchedAt": "2026-10-24T13:12:00Z",
+      "note": "Còn thiếu bảng cân đối Q2/2025; tiếp tục thu thập BCTC hợp nhất đầy đủ. Q2/2026 revenue corrected to 1,858,765 triệu VND from extracted PDF page 10."
     },
     "GAS": {
       "status": "automated_processing_complete",
