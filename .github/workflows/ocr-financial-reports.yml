@@ -169,7 +169,7 @@ jobs:
                       break
                   # "complete_needs_manual_review" is not enough to skip a ticker
                   # when some quarters still have no core figures or statement pages.
-                  if snapshot.get("bootstrap_status") in {"complete", "complete_needs_manual_review"}:
+                  if snapshot.get("bootstrap_status") == "complete":
                       continue
                   items = snapshot.get("items") or []
                   if not items:
