@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-24T13:49:20Z",
+  "updatedAt": "2026-10-25T17:20:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -46,8 +46,8 @@
   "lastProgress": {
     "symbol": "PLX",
     "status": "partial_core_data_recovered_from_archived_vietstock_ocr",
-    "updatedAt": "2026-10-25T15:10:00Z",
-    "nextAction": "Tiếp tục kiểm tra từng kỳ PLX bằng PDF VietstockFinance, ưu tiên xem ảnh PDF Q4/2025 để xác minh dòng giá vốn, rồi rà soát các kỳ 2024-Q1 đến 2026-Q2; không chuyển sang mã khác cho tới khi xử lý xong PLX."
+    "updatedAt": "2026-10-25T17:20:00Z",
+    "nextAction": "Tiếp tục PLX: xem ảnh PDF VietstockFinance cho các kỳ 2024-Q1 đến 2026-Q2 nếu có thể truy xuất được; ưu tiên xác minh giá vốn Q4/2025 (OCR còn lệch 6.000.000 triệu VND giữa doanh thu - giá vốn và lợi nhuận gộp), giá vốn Q2/2025 và các cột KQKD Q2/2026. Không chuyển mã khác cho đến khi xử lý được các điểm chưa xác minh; không tự suy ra số thay thế."
   },
   "symbolStates": {
     "MBB": {
@@ -529,16 +529,15 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 4,
-      "updatedAt": "2026-10-25T15:10:00Z",
+      "updatedAt": "2026-10-25T17:20:00Z",
       "snapshotFetchedAt": "2026-10-23T18:24:32+00:00",
       "latestManualProgress": {
         "updatedFile": "data/financials-PLX.json",
-        "commit": "a828ff957520489baaab5585b31df966410afa22",
+        "commit": "ec9ecde3383df755dc08b4c2e46e2ce4ea056bbe",
         "periodsTouched": [
-          "2025-Q4",
-          "2026-Q2"
+          "2025-Q4"
         ],
-        "note": "Kiểm tra đối chiếu số liệu PLX phát hiện giá vốn OCR Q4/2025 (71.082.243 triệu VND) không khớp doanh thu thuần trừ giá vốn bằng lợi nhuận gộp; đã chuyển cost_of_goods_sold thành null và lưu giá trị OCR bị loại cùng lý do, không suy ra số thay thế. Cập nhật ghi chú Q2/2026 để xác nhận doanh thu/lợi nhuận vẫn null vì chưa phân biệt cột quý/lũy kế. Các kỳ còn cần xem ảnh PDF trực tiếp."
+        "note": "Đọc lại OCR trang 5 Q4/2025: doanh thu thuần 81.892.812.959.191 VND, giá vốn OCR 71.082.243.329.860 VND, lợi nhuận gộp OCR 4.810.569.629.331 VND; doanh thu trừ giá vốn OCR cho 10.810.569.629.331 VND, chênh 6.000.000.000.000 VND. Đã làm rõ ghi chú nguồn, vẫn để giá vốn null vì chưa xem ảnh PDF và không tự đoán số đúng. Sửa nhãn sourceName cho bao phủ 2024-Q1 đến 2026-Q2."
       }
     },
     "IDC": {
