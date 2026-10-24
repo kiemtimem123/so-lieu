@@ -1333,6 +1333,42 @@ def reconcile_detail_items(items,symbol):
      notes.append("Doanh thu được tái lập từ lợi nhuận gộp và giá vốn do số OCR không khớp; cần đối chiếu trực quan.")
      period_changed=True; changed_fields+=1
 
+  # DPG Q2 2026 has a known OCR digit substitution in the net-sales row.
+  # Apply the correction only when the archived source text itself contains the
+  # matching reported value; preserve the prior value and the evidence note.
+  if symbol == "DPG" and item.get("period") == "2026-Q2":
+   archive_rel=str(item.get("source_archive_file") or "").strip()
+   sidecar_path=(ROOT / (archive_rel + ".extracted.json")) if archive_rel else None
+   try:
+    sidecar=json.loads(sidecar_path.read_text(encoding="utf-8")) if sidecar_path and sidecar_path.is_file() else {}
+   except (OSError,json.JSONDecodeError):
+    sidecar={}
+   source_text=" ".join(
+    str(page.get("text") or "")
+    for page in (sidecar.get("pages") or [])
+    if isinstance(page,dict)
+   )
+   reported_net_sales=re.search(r"net sales.{0,120}?1[.,]858[.,]764[.,]986[.,][sS5]89",source_text,re.I)
+   if reported_net_sales and item.get("revenue") != 1858765:
+    previous_revenue=item.get("revenue")
+    if isinstance(previous_revenue,(int,float)):
+     prior.setdefault("revenue",previous_revenue)
+    item["revenue"]=1858765
+    item["revenue_calculation"]="Doanh thu thuần 1.858.764.986.589 VND từ dòng Net sales trang 10 của PDF hợp nhất DPG Q2/2026; quy đổi sang triệu VND."
+    item["financial_line_items_revenue_reconciliation"]={
+     "previous_value":previous_revenue,
+     "reconstructed_value":1858765,
+     "formula":"reported net sales from archived source text / 1,000,000",
+     "source_archive_file":archive_rel,
+     "source_page":10,
+     "evidence_pattern":"Net sales ... 1.858.764.986.S89",
+    }
+    fields.add("revenue")
+    rejected.discard("revenue")
+    rejected_values.pop("revenue",None)
+    notes.append("Doanh thu DPG Q2/2026 được sửa theo dòng Net sales trang 10 của PDF lưu trữ; giá trị OCR cũ bị đánh dấu sai.")
+    period_changed=True; changed_fields+=1
+
   # PBT less after-tax profit is a reliable total-tax cross-check when both
   # profit totals are available in the same quarterly snapshot.
   pbt=item.get("pretax_profit")
