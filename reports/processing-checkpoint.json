@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-25T18:35:00Z",
+  "updatedAt": "2026-10-25T19:08:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -45,9 +45,9 @@
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "PLX",
-    "status": "partial_core_data_recovered_from_archived_vietstock_ocr",
-    "updatedAt": "2026-10-25T18:35:00Z",
-    "nextAction": "Tiếp tục xác minh PLX từ ảnh PDF trực tiếp. Q2/2025 đã khôi phục doanh thu thuần bằng phép trừ doanh thu bán hàng 77.083.481.942.676 VND trừ giảm trừ 2.910.636.839 VND = 77.080.571.305.837 VND (lưu 77.080.571 triệu VND); giá vốn vẫn null vì không khớp lợi nhuận gộp OCR. Q4/2025 giá vốn OCR vẫn mâu thuẫn; Q2/2026 chưa tách chắc chắn chỉ tiêu riêng quý. Không chuyển mã khác cho đến khi hoàn tất hoặc ghi rõ trạng thái review cuối."
+    "status": "manual_review_blocked_ocr_conflicts_documented",
+    "updatedAt": "2026-10-25T19:08:00Z",
+    "nextAction": "PLX vẫn là mã đang xử lý. Đã rà lại OCR gốc lưu trong repo: Q2/2025 có mâu thuẫn giữa doanh thu bán hàng, giảm trừ, doanh thu thuần, giá vốn và lợi nhuận gộp; đã đặt revenue=null và cost_of_goods_sold=null thay vì dùng số suy ra không được xác minh. Q4/2025 giá vốn OCR 71.082.243 triệu không khớp phép đối chiếu, có vẻ sai chữ số đầu nhưng không tự sửa; giữ null. Q2/2026 tiếp tục giữ các chỉ tiêu KQKD riêng quý null vì OCR không phân biệt được cột quý và lũy kế. Chưa có ảnh PDF trực tiếp để kiểm tra thị giác; không chuyển sang mã khác cho tới khi xác minh được hoặc ghi rõ PLX bị chặn bởi thiếu khả năng xem ảnh PDF."
   },
   "symbolStates": {
     "MBB": {
@@ -506,7 +506,7 @@
       "snapshotFetchedAt": "2026-10-23T18:00:37+00:00"
     },
     "PLX": {
-      "status": "partial_core_data_recovered_from_archived_vietstock_ocr",
+      "status": "manual_review_blocked_ocr_conflicts_documented",
       "completeForAutomation": true,
       "manualReviewRemaining": true,
       "periodCount": 10,
@@ -529,15 +529,15 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 4,
-      "updatedAt": "2026-10-25T18:35:00Z",
+      "updatedAt": "2026-10-25T19:08:00Z",
       "snapshotFetchedAt": "2026-10-23T18:24:32+00:00",
       "latestManualProgress": {
         "updatedFile": "data/financials-PLX.json",
-        "commit": "d75da043296ab414f94a499607b5ddd7656d9313",
+        "commit": "7745d54b2ef4b71eaca48888f699a32568b89af5",
         "periodsTouched": [
           "2025-Q2"
         ],
-        "note": "Khôi phục doanh thu thuần Q2/2025 bằng phép trừ hai dòng đầu vào OCR của báo cáo; giá vốn giữ null do không khớp lợi nhuận gộp OCR. Chưa xác minh trực quan ảnh PDF."
+        "note": "Đã thu hồi revenue Q2/2025 về null vì OCR có nhiều dòng KQKD không nhất quán; không giữ giá trị tính từ 2 dòng OCR khi các dòng đối chiếu không khớp. Cần xem ảnh PDF trực tiếp."
       }
     },
     "IDC": {
@@ -1241,6 +1241,13 @@
       "changedPaths": [
         "data/financials-GAS.json"
       ]
+    },
+    {
+      "symbol": "PLX",
+      "at": "2026-10-25T19:08:00Z",
+      "status": "manual_review_blocked_ocr_conflicts_documented",
+      "commit": "7745d54b2ef4b71eaca48888f699a32568b89af5",
+      "note": "Rà OCR Q2/2025 và phát hiện doanh thu thuần OCR không khớp phép trừ doanh thu bán hàng trừ giảm trừ; lợi nhuận gộp/giá vốn cũng không khớp. Đặt revenue=null để tránh dữ liệu sai. Chưa xác minh ảnh PDF."
     }
   ],
   "currentRun": {
