@@ -162,7 +162,13 @@ def main() -> int:
                 item.get("verification_status") in CORE_PENDING
                 and not is_terminal_manual_extraction(item)
             )
-            or item.get("balance_sheet_extraction_status") == "pending_full_report_archive_and_extraction"
+            or (
+                item.get("balance_sheet_extraction_status") == "pending_full_report_archive_and_extraction"
+                and not (
+                    isinstance(item.get("source_validation"), dict)
+                    and item["source_validation"].get("full_report_present_in_archive") is True
+                )
+            )
         )
     }) if isinstance(snapshot, dict) else []
 
@@ -193,7 +199,13 @@ def main() -> int:
     for item in quarter_items:
         # A missing linked full report is a live collection dependency even if
         # OCR has exhausted its retries on a shorter correction notice.
-        if item.get("balance_sheet_extraction_status") == "pending_full_report_archive_and_extraction":
+        if (
+            item.get("balance_sheet_extraction_status") == "pending_full_report_archive_and_extraction"
+            and not (
+                isinstance(item.get("source_validation"), dict)
+                and item["source_validation"].get("full_report_present_in_archive") is True
+            )
+        ):
             statement_pages_pending = True
             break
         if is_terminal_manual_extraction(item):
