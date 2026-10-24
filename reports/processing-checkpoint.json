@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-25T18:05:00Z",
+  "updatedAt": "2026-10-25T18:20:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -46,8 +46,8 @@
   "lastProgress": {
     "symbol": "PLX",
     "status": "partial_core_data_recovered_from_archived_vietstock_ocr",
-    "updatedAt": "2026-10-25T18:05:00Z",
-    "nextAction": "Tiếp tục xác minh PLX bằng ảnh PDF trực tiếp. Đã rà soát OCR Q2/2025 và Q4/2025; Q4/2025 giá vốn OCR mâu thuẫn với doanh thu và lợi nhuận gộp nên giữ null, không tự suy ra. Q2/2025 OCR dòng doanh thu bị nhiễu; Q2/2026 là báo cáo lũy kế 6 tháng, chưa xác định được số riêng quý. Chưa chuyển mã khác."
+    "updatedAt": "2026-10-25T18:20:00Z",
+    "nextAction": "Tiếp tục xác minh PLX bằng ảnh PDF trực tiếp. Đã bỏ doanh thu 2025-Q2 về null vì OCR dòng doanh thu thuần bị nhiễu và không khớp đối chiếu; Q4/2025 giá vốn OCR mâu thuẫn doanh thu và lợi nhuận gộp nên giữ null; Q2/2026 chưa tách được chắc chắn số riêng quý từ OCR. Tất cả 10 kỳ vẫn cần review trực quan; chưa chuyển mã khác."
   },
   "symbolStates": {
     "MBB": {
@@ -529,16 +529,15 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 4,
-      "updatedAt": "2026-10-25T18:05:00Z",
+      "updatedAt": "2026-10-25T18:20:00Z",
       "snapshotFetchedAt": "2026-10-23T18:24:32+00:00",
       "latestManualProgress": {
         "updatedFile": "data/financials-PLX.json",
-        "commit": "92b22bcbab38212bff541e675cde8f0072d102f5",
+        "commit": "78eaf8b1d579ab1b8e1858f7e36709734f7a00b2",
         "periodsTouched": [
-          "2025-Q2",
-          "2025-Q4"
+          "2025-Q2"
         ],
-        "note": "Đọc lại OCR sidecar Q2/2025 và Q4/2025. Q4/2025 cần xác minh trực quan do dòng giá vốn không khớp phép đối chiếu; Q2/2025 OCR doanh thu nhiễu. Không tự điền số chưa xác nhận."
+        "note": "Đã loại doanh thu Q2/2025 về null do OCR nhiễu/mâu thuẫn, không tự suy ra giá trị. Q4/2025 giá vốn vẫn null; Q2/2026 KQKD vẫn null đến khi xác định được số riêng quý. Cần xác minh trực quan PDF; chưa chuyển mã."
       }
     },
     "IDC": {
