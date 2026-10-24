@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-25T19:26:00Z",
+  "updatedAt": "2026-10-25T20:00:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -40,14 +40,14 @@
     "GAS"
   ],
   "lastCompletedSymbol": "GAS",
-  "activeSymbol": null,
+  "activeSymbol": "PLX",
   "resumeSymbolHint": "PLX",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "PLX",
-    "status": "manual_visual_verification_blocked_source_pdf_too_large",
-    "updatedAt": "2026-10-25T19:26:00Z",
-    "nextAction": "Đã rà lại OCR chi tiết ba PDF VietstockFinance. Q2/2025: các dòng doanh thu bán hàng trừ giảm trừ, doanh thu thuần OCR và phép đối chiếu doanh thu/giá vốn/lợi nhuận gộp không khớp; revenue, cost_of_goods_sold và gross_profit giữ null. Q4/2025: doanh thu thuần khớp công thức nhưng giá vốn OCR mâu thuẫn; không tự sửa khi chưa xem ảnh PDF. Q2/2026: OCR chưa phân biệt được số liệu quý và lũy kế; giữ các chỉ tiêu KQKD riêng quý null. Mở trực tiếp PDF VietstockFinance thất bại vì file 13.7–15.9 MB vượt giới hạn tải của công cụ. Cần bản PDF có thể truy cập hoặc ảnh trang 5 để xác minh trực quan. Giữ PLX là mã tiếp tục xử lý."
+    "status": "manual_review_in_progress",
+    "updatedAt": "2026-10-25T20:00:00Z",
+    "nextAction": "Q2/2025 trang 5 đã được xác minh từ ảnh người dùng và cập nhật vào data/financials-PLX.json. Còn cần ảnh trang 5 Q4/2025 để kiểm tra giá vốn/lợi nhuận gộp OCR mâu thuẫn, và trang 5 Q2/2026 để phân biệt số quý với lũy kế. Giữ PLX là mã tiếp tục xử lý, không chuyển mã cho đến khi các vướng mắc PLX được giải quyết hoặc ghi nhận rõ là không thể xác minh."
   },
   "symbolStates": {
     "MBB": {
@@ -506,7 +506,7 @@
       "snapshotFetchedAt": "2026-10-23T18:00:37+00:00"
     },
     "PLX": {
-      "status": "manual_visual_verification_blocked_source_pdf_too_large",
+      "status": "manual_review_in_progress",
       "completeForAutomation": true,
       "manualReviewRemaining": true,
       "periodCount": 10,
@@ -529,15 +529,15 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 4,
-      "updatedAt": "2026-10-25T19:26:00Z",
+      "updatedAt": "2026-10-25T20:00:00Z",
       "snapshotFetchedAt": "2026-10-23T18:24:32+00:00",
       "latestManualProgress": {
         "updatedFile": "data/financials-PLX.json",
-        "commit": "eb1d4d8d0120a3708f28592d9b64780953bc98f4",
+        "commit": "c543ffa18c42ca56b58f506ae79abd9418e6938b",
         "periodsTouched": [
           "2025-Q2"
         ],
-        "note": "Đối chiếu OCR đầy đủ trang 5; do doanh thu thuần/giá vốn/lợi nhuận gộp mâu thuẫn nên đặt cả ba trường null. Chưa xác minh ảnh PDF trực tiếp."
+        "note": "Đã xác minh trực quan ảnh trang 5 do người dùng gửi. Sửa doanh thu thuần 77.054.375.574.284 VND, giá vốn 71.919.641.393.348 VND, lợi nhuận gộp 5.134.734.180.936 VND và các chỉ tiêu KQKD quý II/2025; công thức doanh thu thuần và lợi nhuận gộp khớp. Tiếp tục giữ PLX làm mã hiện hành; Q4/2025 và Q2/2026 còn cần xác minh trực quan."
       }
     },
     "IDC": {
