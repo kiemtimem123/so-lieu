@@ -1030,6 +1030,64 @@ def main():
         print(f"Requested collector ticker is not enabled: {requested_symbol}", file=sys.stderr)
         return 2
     active_symbol = requested_symbol or first_incomplete_symbol(securities)
+
+    # If a quarterly snapshot explicitly points to a full consolidated report
+    # that is still missing from the archive, create a targeted one-document
+    # repair job. This prevents a previously exhausted general catalog scan from
+    # silently holding the ticker forever without retrying the exact source URL.
+    if active_symbol:
+        snapshot_path = ROOT / "data" / f"financials-{active_symbol}.json"
+        try:
+            snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            snapshot = {}
+        for item in snapshot.get("items", []) if isinstance(snapshot, dict) else []:
+            if not isinstance(item, dict):
+                continue
+            if item.get("balance_sheet_extraction_status") != "pending_full_report_archive_and_extraction":
+                continue
+            source_url = str(item.get("balance_sheet_source_url") or "").strip()
+            period = str(item.get("period") or "").strip().upper()
+            if not source_url or not re.fullmatch(r"20\\d{2}-Q[1-4]", period):
+                continue
+            validation = item.get("source_validation")
+            if isinstance(validation, dict) and validation.get("full_report_present_in_archive") is True:
+                continue
+            repair_id = f"repair-{active_symbol.lower()}-{period.lower().replace('-', '')}-full-report"
+            existing = next((job for job in jobs if job.get("id") == repair_id), None)
+            if existing is None:
+                year = int(period[:4])
+                title = f"Báo cáo tài chính hợp nhất {active_symbol} {period}"
+                jobs.append({
+                    "id": repair_id,
+                    "symbol": active_symbol,
+                    "startYear": year,
+                    "reportType": "consolidated",
+                    "status": "queued",
+                    "createdAt": NOW,
+                    "attempts": 0,
+                    "sourceCandidates": [],
+                    "requestedUrls": [{
+                        "url": source_url,
+                        "title": title,
+                        "period": period,
+                        "report_year": year,
+                    }],
+                    "downloadedFiles": [],
+                    "verifiedPeriods": [],
+                    "origin": "missing_full_report_dependency",
+                    "priority": 1,
+                })
+                known.add(repair_id)
+                print(json.dumps({
+                    "event": "targeted_full_report_repair_queued",
+                    "symbol": active_symbol,
+                    "period": period,
+                    "url": source_url,
+                    "job_id": repair_id,
+                }, ensure_ascii=False))
+            break
+
     print(json.dumps({
         "event": "single_ticker_queue_head",
         "symbol": active_symbol,
