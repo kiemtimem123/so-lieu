@@ -1178,26 +1178,27 @@ def main():
         # general catalog jobs exhausted their retries; successful archives still win.
         if job.get("origin") == "missing_full_report_dependency":
             for request in job.get("requestedUrls") or []:
-                requested_url = str(request.get("url") or "") if isinstance(request, dict) else ""
+                if not isinstance(request, dict):
+                    continue
+                requested_url = str(request.get("url") or "")
                 requested_key = retry_url_key(requested_url)
+                requested_period = str(request.get("period") or "").upper()
                 if not requested_key:
                     continue
-                archived_file_exists = any(
-                    str(record.get("status") or "") == "downloaded_needs_review"
-                    and requested_key in {
-                        retry_url_key(record.get("url")),
-                        retry_url_key(record.get("final_url")),
-                    }
-                    and str(record.get("file") or "").strip()
-                    and (ROOT / str(record.get("file") or "").strip()).is_file()
-                    for prior_job in jobs
-                    if str(prior_job.get("symbol") or "").strip().upper() == active_symbol
-                    for record in (prior_job.get("downloadedFiles") or [])
-                    if isinstance(record, dict)
-                )
-                if not archived_file_exists:
-                    # A historical success record without a file in the current
-                    # archive is not a usable source; retry the exact dependency.
+                dependency_still_pending = any(
+                    isinstance(item, dict)
+                    and str(item.get("period") or "").upper() == requested_period
+                    and item.get("balance_sheet_extraction_status") == "pending_full_report_archive_and_extraction"
+                    and str(item.get("balance_sheet_source_url") or "").strip() == requested_url
+                    and not (
+                        isinstance(item.get("source_validation"), dict)
+                        and item["source_validation"].get("full_report_present_in_archive") is True
+                    )
+                    for item in (snapshot.get("items") or [])
+                ) if isinstance(snapshot, dict) else False
+                if dependency_still_pending:
+                    # The snapshot itself says this exact report is still missing.
+                    # Do not let stale queue success metadata suppress the repair.
                     successful_url_keys.discard(requested_key)
                     already_downloaded_urls.discard(requested_key)
 
