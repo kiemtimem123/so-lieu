@@ -1180,7 +1180,25 @@ def main():
             for request in job.get("requestedUrls") or []:
                 requested_url = str(request.get("url") or "") if isinstance(request, dict) else ""
                 requested_key = retry_url_key(requested_url)
-                if requested_key and requested_key not in successful_url_keys:
+                if not requested_key:
+                    continue
+                archived_file_exists = any(
+                    str(record.get("status") or "") == "downloaded_needs_review"
+                    and requested_key in {
+                        retry_url_key(record.get("url")),
+                        retry_url_key(record.get("final_url")),
+                    }
+                    and str(record.get("file") or "").strip()
+                    and (ROOT / str(record.get("file") or "").strip()).is_file()
+                    for prior_job in jobs
+                    if str(prior_job.get("symbol") or "").strip().upper() == active_symbol
+                    for record in (prior_job.get("downloadedFiles") or [])
+                    if isinstance(record, dict)
+                )
+                if not archived_file_exists:
+                    # A historical success record without a file in the current
+                    # archive is not a usable source; retry the exact dependency.
+                    successful_url_keys.discard(requested_key)
                     already_downloaded_urls.discard(requested_key)
 
         before_dedup = len(candidates)
