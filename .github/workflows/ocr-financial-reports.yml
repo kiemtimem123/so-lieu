@@ -172,7 +172,16 @@ jobs:
           else:
               selected = ""
               now = __import__("datetime").datetime.now(__import__("datetime").timezone.utc).timestamp()
-              for symbol in symbols:
+              # Resume the explicitly persisted active ticker before scanning the registry.
+              # This prevents an old completion flag elsewhere in the queue from causing
+              # an in-progress ticker to be skipped after a manual checkpoint correction.
+              active_hint = str(checkpoint.get("activeSymbol") or checkpoint.get("resumeSymbolHint") or "").strip().upper()
+              if active_hint in symbols and active_hint not in completed_symbols:
+                  active_snapshot = load_json(Path("data") / f"financials-{active_hint}.json")
+                  if active_snapshot is not None:
+                      selected = active_hint
+                      print(f"Resuming active checkpoint ticker first: {active_hint}.")
+              for symbol in ([] if selected else symbols):
                   path = Path("data") / f"financials-{symbol}.json"
                   snapshot = load_json(path)
                   if snapshot is None:
