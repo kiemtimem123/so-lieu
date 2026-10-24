@@ -157,8 +157,13 @@ def main() -> int:
     core_pending_periods = sorted({
         str(item.get("period") or "unknown")
         for item in (snapshot.get("items") or []) if isinstance(item, dict)
-        and item.get("verification_status") in CORE_PENDING
-        and not is_terminal_manual_extraction(item)
+        and (
+            (
+                item.get("verification_status") in CORE_PENDING
+                and not is_terminal_manual_extraction(item)
+            )
+            or item.get("balance_sheet_extraction_status") == "pending_full_report_archive_and_extraction"
+        )
     }) if isinstance(snapshot, dict) else []
 
     terminal_manual_review_periods = sorted({
@@ -186,6 +191,11 @@ def main() -> int:
     statement_pages_pending = False
     checked_archives: set[str] = set()
     for item in quarter_items:
+        # A missing linked full report is a live collection dependency even if
+        # OCR has exhausted its retries on a shorter correction notice.
+        if item.get("balance_sheet_extraction_status") == "pending_full_report_archive_and_extraction":
+            statement_pages_pending = True
+            break
         if is_terminal_manual_extraction(item):
             continue
         source = str(item.get("source_archive_file") or "").strip()
@@ -262,7 +272,13 @@ def main() -> int:
     if snapshot is None:
         status = "missing_snapshot"
         complete_for_automation = False
-    elif snapshot.get("bootstrap_status") in {"complete", "complete_needs_manual_review"}:
+    elif (
+        snapshot.get("bootstrap_status") in {"complete", "complete_needs_manual_review"}
+        and not core_pending_periods
+        and not details_pending_periods
+        and not stale_detail_periods
+        and not statement_pages_pending
+    ):
         status = "automated_processing_complete"
         complete_for_automation = True
     elif not (snapshot.get("items") or []):
