@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-25T21:45:00Z",
+  "updatedAt": "2026-10-25T22:05:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -45,9 +45,9 @@
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "IDC",
-    "status": "manual_review_in_progress_reconciled_first_period",
-    "updatedAt": "2026-10-25T21:45:00Z",
-    "nextAction": "Tiếp tục IDC (không chuyển mã khác): xử lý BCTC hợp nhất Q4/2024 từ ZIP VietstockFinance, sau đó các kỳ 2024-Q1/Q2 và 2025-Q3/Q4/2026-Q1/Q2 còn trống. Người dùng hết hạn mức ảnh nên chỉ dựa trên PDF/sidecar OCR lưu trong repo, ghi rõ trạng thái chưa xác minh trực quan."
+    "status": "manual_review_in_progress_two_periods_reconciled",
+    "updatedAt": "2026-10-25T22:05:00Z",
+    "nextAction": "Tiếp tục mã IDC. Q3/2024 và Q4/2024 được phục hồi từ sidecar OCR VietstockFinance, với phương trình cân đối, doanh thu−giá vốn=lợi nhuận gộp, LNTT−thuế=LNST khớp trong sai số làm tròn. Kế tiếp xử lý Q1/2024 và Q2/2024 đang trống nhiều trường, rồi Q3/Q4 2025 và Q1/Q2 2026. Không yêu cầu người dùng tải ảnh."
   },
   "symbolStates": {
     "MBB": {
@@ -589,7 +589,7 @@
       }
     },
     "IDC": {
-      "status": "manual_review_in_progress_reconciled_first_period",
+      "status": "manual_review_in_progress_two_periods_reconciled",
       "completeForAutomation": false,
       "manualReviewRemaining": true,
       "periodCount": 10,
@@ -609,16 +609,17 @@
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
-      "sourceArchivesChecked": 4,
-      "updatedAt": "2026-10-25T21:45:00Z",
+      "sourceArchivesChecked": 5,
+      "updatedAt": "2026-10-25T22:05:00Z",
       "snapshotFetchedAt": "2026-10-23T19:16:14+00:00",
       "latestManualProgress": {
         "updatedFile": "data/financials-IDC.json",
-        "commit": "6a968c79cd118db03b58481b053c10d5e3e6ac3c",
+        "commit": "d40a72baaac7a55fe4c14b2992089e9c4fbe6584",
         "periodsTouched": [
-          "2024-Q3"
+          "2024-Q3",
+          "2024-Q4"
         ],
-        "note": "Bắt đầu xử lý IDC sau lượt PLX. Đã trích và đối chiếu Q3/2024 từ PDF hợp nhất bên trong ZIP VietstockFinance: phục hồi bảng cân đối, KQKD, EPS và ROA/ROE; sửa các placeholder OCR sai. Các phương trình cân đối tài sản, doanh thu−giá vốn=lợi nhuận gộp và LNTT−thuế=LNST khớp trong sai số làm tròn. Tiếp tục Q4/2024 rồi các kỳ thiếu nặng; chưa xác minh trực quan ảnh PDF."
+        "note": "Đã phục hồi IDC Q3/2024 và Q4/2024 từ OCR sidecar của đúng báo cáo hợp nhất trong các ZIP VietstockFinance. Cả hai kỳ đã điền doanh thu, giá vốn, lợi nhuận gộp, lợi nhuận, bảng cân đối, EPS và ROA/ROE khi đủ số dư đầu-cuối; Q4 thuế hoãn lại vẫn null do OCR không khớp phép đối chiếu LNTT−LNST. Chưa xác minh trực quan ảnh PDF, tiếp tục xử lý các kỳ trống."
       }
     },
     "KBC": {
