@@ -973,12 +973,33 @@ def link_quarterly_archive_sources(symbol: str, jobs: list[dict]) -> int:
                 continue
             existing = str(item.get("source_archive_file") or "").strip()
             existing_path = (ROOT / existing).resolve() if existing else None
-            if existing_path and existing_path.is_file():
+            pending_full_report = (
+                item.get("balance_sheet_extraction_status") == "pending_full_report_archive_and_extraction"
+                and canonical_document_url(item.get("balance_sheet_source_url")) == canonical_document_url(download_url)
+                and not (
+                    isinstance(item.get("source_validation"), dict)
+                    and item["source_validation"].get("full_report_present_in_archive") is True
+                )
+            )
+            if existing_path and existing_path.is_file() and not pending_full_report:
                 continue
             item["source_archive_file"] = relative
             item["source_archive_source"] = "VietstockFinance document index"
             item["source_archive_title"] = title
             item["source_archive_linked_at"] = NOW
+            if pending_full_report:
+                validation = item.get("source_validation")
+                if not isinstance(validation, dict):
+                    validation = {}
+                validation["full_report_present_in_archive"] = True
+                validation["full_report_extracted_via_direct_vietstock_pdf"] = False
+                validation["full_report_archive_file"] = relative
+                validation["note"] = "BCTC hợp nhất đầy đủ đã được lưu vào kho; chờ OCR/trích xuất bảng cân đối trước khi công bố số liệu."
+                item["source_validation"] = validation
+                item["core_financial_extraction_manual_terminal"] = False
+                item["core_financial_extraction_evidence_attempt_count"] = 0
+                item["core_financial_extraction_attempt_count"] = 0
+                changed += 1
             changed += 1
     if changed:
         snapshot["items"] = items
