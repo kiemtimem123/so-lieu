@@ -1058,7 +1058,7 @@ def main():
             if existing is None:
                 year = int(period[:4])
                 title = f"Báo cáo tài chính hợp nhất {active_symbol} {period}"
-                jobs.append({
+                existing = {
                     "id": repair_id,
                     "symbol": active_symbol,
                     "startYear": year,
@@ -1077,7 +1077,8 @@ def main():
                     "verifiedPeriods": [],
                     "origin": "missing_full_report_dependency",
                     "priority": 1,
-                })
+                }
+                jobs.append(existing)
                 known.add(repair_id)
                 print(json.dumps({
                     "event": "targeted_full_report_repair_queued",
@@ -1085,6 +1086,21 @@ def main():
                     "period": period,
                     "url": source_url,
                     "job_id": repair_id,
+                }, ensure_ascii=False))
+            elif (
+                existing.get("origin") == "missing_full_report_dependency"
+                and existing.get("status") == "failed"
+                and int(existing.get("attempts", 0)) < 3
+            ):
+                existing["status"] = "queued"
+                existing["updatedAt"] = NOW
+                print(json.dumps({
+                    "event": "targeted_full_report_repair_requeued",
+                    "symbol": active_symbol,
+                    "period": period,
+                    "url": source_url,
+                    "job_id": repair_id,
+                    "attempts": int(existing.get("attempts", 0)),
                 }, ensure_ascii=False))
             break
 
@@ -1157,6 +1173,15 @@ def main():
         for failed_url in failed_url_states:
             if failed_url not in retryable_failed_urls:
                 already_downloaded_urls.add(failed_url)
+        # A targeted repair exists specifically because the linked full report is
+        # still missing. Permit a bounded retry of that exact URL even if older
+        # general catalog jobs exhausted their retries; successful archives still win.
+        if job.get("origin") == "missing_full_report_dependency":
+            for request in job.get("requestedUrls") or []:
+                requested_url = str(request.get("url") or "") if isinstance(request, dict) else ""
+                requested_key = retry_url_key(requested_url)
+                if requested_key and requested_key not in successful_url_keys:
+                    already_downloaded_urls.discard(requested_key)
 
         before_dedup = len(candidates)
         filtered_candidates = []
