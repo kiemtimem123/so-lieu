@@ -103,11 +103,23 @@ for (const symbol of symbols) {
     } catch {
       pendingBalanceSheet = false;
     }
+    // Do not fail validation when a quarterly profit figure is intentionally
+    // withheld because OCR cannot distinguish standalone-quarter from YTD columns.
+    // The item must explicitly document the ambiguity and the missing values.
+    const profitBasisAmbiguous =
+      item.quarter_profit_extraction_status === "ambiguous_quarter_vs_ytd" &&
+      Boolean(String(item.quarter_profit_extraction_note || "").trim());
     for (const field of ["total_assets", "total_liabilities", "equity", "pretax_profit", "net_profit"]) {
       const balanceFieldPending = pendingBalanceSheet && ["total_assets", "total_liabilities", "equity"].includes(field);
-      if ((typeof item[field] !== "number" || !Number.isFinite(item[field])) && !pendingExtraction && !balanceFieldPending) {
+      const documentedProfitBlank = profitBasisAmbiguous && ["pretax_profit", "net_profit"].includes(field) &&
+        (item[field] === null || item[field] === undefined || item[field] === "");
+      if ((typeof item[field] !== "number" || !Number.isFinite(item[field])) &&
+          !pendingExtraction && !balanceFieldPending && !documentedProfitBlank) {
         errors.push(`${symbol} ${item.period}: ${field} is missing or non-numeric`);
       }
+    }
+    if (profitBasisAmbiguous) {
+      warnings.push(`${symbol} ${item.period}: quarterly profit withheld because OCR cannot reliably separate quarterly and YTD columns`);
     }
     if (pendingBalanceSheet) {
       warnings.push(`${symbol} ${item.period}: balance-sheet fields remain blank pending extraction of the linked full Vietstock report`);
