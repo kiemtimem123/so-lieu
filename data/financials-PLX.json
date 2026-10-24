@@ -307,7 +307,7 @@
         "short_term_receivables_current_asset_component_check"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-23T19:14:46+00:00",
-      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần.",
+      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Giá vốn được bổ sung từ dòng giá vốn hàng bán trong OCR báo cáo hợp nhất VietstockFinance; cần xác minh trực quan ảnh PDF.",
       "non_current_assets": 21322766,
       "fixed_assets": 11168342,
       "retained_earnings": 3921246,
@@ -414,7 +414,8 @@
       "current_assets": 708,
       "current_liabilities": 449,
       "long_term_liabilities": 816109,
-      "gross_profit": 4603965
+      "gross_profit": 4603965,
+      "cost_of_goods_sold": 66433806
     },
     {
       "symbol": "PLX",
@@ -653,7 +654,7 @@
         "short_term_receivables_magnitude"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-23T19:14:50+00:00",
-      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần.",
+      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Giá vốn Q2/2025 bị giữ lại chưa xác nhận do số OCR không khớp phép đối chiếu doanh thu thuần trừ giá vốn bằng lợi nhuận gộp; cần rà ảnh PDF.",
       "cash_and_equivalents": 0,
       "non_current_assets": 21135984,
       "fixed_assets": 10679135,
@@ -736,6 +737,10 @@
         "inventory": {
           "value": 17005741,
           "reason": "asset component exceeds current assets"
+        },
+        "cost_of_goods_sold": {
+          "value": 71919641,
+          "reason": "OCR trang KQKD cho giá vốn không khớp với doanh thu thuần và lợi nhuận gộp đã trích xuất; giữ trường này chưa xác nhận thay vì ghi số không nhất quán."
         }
       },
       "core_financial_extraction_stable_evidence_count": 2,
@@ -817,7 +822,7 @@
       ],
       "financial_line_items_source": "reports/raw/PLX/auto-plx-20261021/012d34a3166e67ca.pdf",
       "financial_line_items_updated_at": "2026-10-23T19:14:52+00:00",
-      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý.",
+      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Giá vốn được bổ sung từ dòng giá vốn hàng bán trong OCR báo cáo hợp nhất VietstockFinance; cần xác minh trực quan ảnh PDF.",
       "financial_line_items_prior_values": {},
       "financial_line_items_rejected_values": {},
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
@@ -873,7 +878,8 @@
       "core_financial_extraction_stable_evidence_count": 1,
       "core_financial_extraction_stable_evidence_updated_at": "2026-10-23T19:14:52+00:00",
       "core_financial_extraction_manual_terminal": false,
-      "gross_profit": 4499156
+      "gross_profit": 4499156,
+      "cost_of_goods_sold": 79132251
     },
     {
       "symbol": "PLX",
@@ -957,7 +963,7 @@
       ],
       "financial_line_items_source": "reports/raw/PLX/auto-plx-20261021/35a0f637ffbb0ecf.pdf",
       "financial_line_items_updated_at": "2026-10-23T19:11:20+00:00",
-      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
+      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Giá vốn được bổ sung từ dòng giá vốn hàng bán trong OCR báo cáo hợp nhất VietstockFinance; cần xác minh trực quan ảnh PDF.",
       "financial_line_items_prior_values": {},
       "financial_line_items_rejected_values": {},
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
@@ -1028,7 +1034,8 @@
       "core_financial_extraction_stable_evidence_count": 1,
       "core_financial_extraction_stable_evidence_updated_at": "2026-10-23T19:14:53+00:00",
       "core_financial_extraction_manual_terminal": false,
-      "gross_profit": 4810570
+      "gross_profit": 4810570,
+      "cost_of_goods_sold": 71082243
     },
     {
       "symbol": "PLX",
