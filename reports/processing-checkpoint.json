@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-25T22:05:00Z",
+  "updatedAt": "2026-10-24T20:35:57Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -39,15 +39,32 @@
     "DPG",
     "GAS"
   ],
-  "lastCompletedSymbol": "PLX",
-  "activeSymbol": "IDC",
-  "resumeSymbolHint": "IDC",
+  "lastCompletedSymbol": "IDC",
+  "activeSymbol": null,
+  "resumeSymbolHint": "KBC",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "IDC",
-    "status": "manual_review_in_progress_two_periods_reconciled",
-    "updatedAt": "2026-10-25T22:05:00Z",
-    "nextAction": "Tiếp tục mã IDC. Q3/2024 và Q4/2024 được phục hồi từ sidecar OCR VietstockFinance, với phương trình cân đối, doanh thu−giá vốn=lợi nhuận gộp, LNTT−thuế=LNST khớp trong sai số làm tròn. Kế tiếp xử lý Q1/2024 và Q2/2024 đang trống nhiều trường, rồi Q3/Q4 2025 và Q1/Q2 2026. Không yêu cầu người dùng tải ảnh."
+    "status": "automated_processing_complete",
+    "completeForAutomation": true,
+    "manualReviewRemaining": true,
+    "processedAt": "2026-10-24T20:35:57Z",
+    "workflowRunId": "40130430823",
+    "workflowRunNumber": 1222,
+    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/40130430823",
+    "changedPaths": [
+      "data/financials-IDC.json"
+    ],
+    "periodCount": 10,
+    "firstQuarter": "2024-Q1",
+    "lastQuarter": "2026-Q2",
+    "pendingCorePeriods": [],
+    "terminalManualReviewPeriods": [
+      "2026-Q2"
+    ],
+    "pendingDetailPeriods": [],
+    "staleDetailSchemaPeriods": [],
+    "statementPagesPending": false
   },
   "symbolStates": {
     "MBB": {
@@ -589,38 +606,22 @@
       }
     },
     "IDC": {
-      "status": "manual_review_in_progress_two_periods_reconciled",
-      "completeForAutomation": false,
+      "status": "automated_processing_complete",
+      "completeForAutomation": true,
       "manualReviewRemaining": true,
       "periodCount": 10,
       "firstQuarter": "2024-Q1",
       "lastQuarter": "2026-Q2",
       "pendingCorePeriods": [],
       "terminalManualReviewPeriods": [
-        "2024-Q1",
-        "2024-Q2",
-        "2024-Q3",
-        "2024-Q4",
-        "2025-Q3",
-        "2025-Q4",
-        "2026-Q1",
         "2026-Q2"
       ],
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
-      "sourceArchivesChecked": 5,
-      "updatedAt": "2026-10-25T22:05:00Z",
-      "snapshotFetchedAt": "2026-10-23T19:16:14+00:00",
-      "latestManualProgress": {
-        "updatedFile": "data/financials-IDC.json",
-        "commit": "d40a72baaac7a55fe4c14b2992089e9c4fbe6584",
-        "periodsTouched": [
-          "2024-Q3",
-          "2024-Q4"
-        ],
-        "note": "Đã phục hồi IDC Q3/2024 và Q4/2024 từ OCR sidecar của đúng báo cáo hợp nhất trong các ZIP VietstockFinance. Cả hai kỳ đã điền doanh thu, giá vốn, lợi nhuận gộp, lợi nhuận, bảng cân đối, EPS và ROA/ROE khi đủ số dư đầu-cuối; Q4 thuế hoãn lại vẫn null do OCR không khớp phép đối chiếu LNTT−LNST. Chưa xác minh trực quan ảnh PDF, tiếp tục xử lý các kỳ trống."
-      }
+      "sourceArchivesChecked": 9,
+      "updatedAt": "2026-10-24T20:35:57Z",
+      "snapshotFetchedAt": "2026-10-25T23:45:00Z"
     },
     "KBC": {
       "status": "automated_processing_complete",
@@ -749,38 +750,6 @@
     }
   },
   "progressHistory": [
-    {
-      "symbol": "DPG",
-      "status": "report_collection_in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-10-23T16:30:34.419Z",
-      "workflowRunId": "39987216031",
-      "archivedReportsAcrossBatches": 4,
-      "note": "Collector runs 204 and 205 succeeded; run 207 continues the same ticker."
-    },
-    {
-      "symbol": "DPG",
-      "status": "report_collection_in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-10-23T16:32:29.563Z",
-      "workflowRunId": "39987451963",
-      "downloadedTotalReported": 8,
-      "quarterlyArchivedPeriods": [
-        "2024-Q1",
-        "2024-Q2",
-        "2024-Q3",
-        "2024-Q4",
-        "2025-Q4"
-      ]
-    },
-    {
-      "symbol": "DPG",
-      "status": "report_collection_in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-10-23T16:33:19.728Z",
-      "workflowRunId": "39987608439",
-      "quarterPeriodsWithArchivedSource": 6
-    },
     {
       "symbol": "DPG",
       "status": "in_progress",
@@ -1312,6 +1281,16 @@
       "status": "manual_visual_verification_blocked_source_pdf_too_large",
       "commit": "eb1d4d8d0120a3708f28592d9b64780953bc98f4",
       "note": "Rà lại OCR ba PDF; Q2/2025 đã để trống doanh thu, giá vốn, lợi nhuận gộp vì mâu thuẫn số học. Không thể xem trực tiếp PDF do vượt giới hạn tải."
+    },
+    {
+      "symbol": "IDC",
+      "status": "automated_processing_complete",
+      "completeForAutomation": true,
+      "processedAt": "2026-10-24T20:35:57Z",
+      "workflowRunId": "40130430823",
+      "changedPaths": [
+        "data/financials-IDC.json"
+      ]
     }
   ],
   "currentRun": {
