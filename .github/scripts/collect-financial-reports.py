@@ -1090,7 +1090,7 @@ def main():
             elif (
                 existing.get("origin") == "missing_full_report_dependency"
                 and existing.get("status") == "failed"
-                and int(existing.get("attempts", 0)) < 3
+                and int(existing.get("attempts", 0)) < 5
             ):
                 existing["status"] = "queued"
                 existing["updatedAt"] = NOW
@@ -1129,7 +1129,7 @@ def main():
         retry_failed_only = job.get("status") == "needs_review" and bool(retryable_failed_urls)
         if job.get("status") not in {"queued", "failed"} and not retry_failed_only:
             continue
-        if job.get("status") == "failed" and int(job.get("attempts", 0)) >= 3 and not retryable_failed_urls:
+        if job.get("status") == "failed" and int(job.get("attempts", 0)) >= 5 and job.get("origin") != "missing_full_report_dependency" and not retryable_failed_urls:
             continue
 
         previous_files = list(job.get("downloadedFiles") or [])
