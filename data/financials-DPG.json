@@ -1346,7 +1346,7 @@
       "pretax_profit": 149613,
       "net_profit": 130813,
       "net_profit_attributable": null,
-      "revenue": 209302,
+      "revenue": 1858765,
       "roa": 5.4,
       "roe": 14.34,
       "unit": "triệu VND",
@@ -1546,19 +1546,22 @@
         },
         "revenue": {
           "value": 209302,
-          "reason": "OCR/parser selected the wrong numeric field. Page 10 of archived consolidated Q2 2026 report states net sales of 1,858,764,986,589 VND; correct value is 1,858,765 million VND."
+          "reason": "OCR/parser selected the wrong numeric field. Page 10 of the archived consolidated Q2 2026 report states net sales of 1,858,764,986,589 VND; correct value is 1,858,765 million VND."
         }
       },
       "income_tax": 18800,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
       "core_financial_extraction_manual_terminal": true,
       "cash_beginning": 34166,
-      "revenue_calculation": "Lợi nhuận gộp + |giá vốn hàng bán|; tái lập từ hai dòng của BCTC do doanh thu OCR không khớp.",
+      "revenue_calculation": "Doanh thu thuần 1.858.764.986.589 VND từ dòng Net sales trang 10 của PDF hợp nhất DPG Q2/2026; quy đổi sang triệu VND.",
       "financial_line_items_revenue_reconciliation": {
-        "previous_value": 1858765,
-        "reconstructed_value": 209302,
-        "formula": "gross_profit + abs(cost_of_goods_sold)",
-        "difference_from_parsed_value": 1649463
+        "previous_value": 209302,
+        "reconstructed_value": 1858765,
+        "formula": "reported net sales from archived source text / 1,000,000",
+        "difference_from_parsed_value": 1649463,
+        "source_archive_file": "reports/raw/DPG/auto-dpg-20261021/cebeec54de24c812.pdf",
+        "source_page": 10,
+        "evidence_pattern": "Net sales ... 1.858.764.986.S89"
       },
       "cash_and_equivalents": 815345,
       "short_term_receivables": 1173763,
