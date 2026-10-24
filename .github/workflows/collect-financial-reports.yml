@@ -126,6 +126,18 @@ jobs:
                       }
                   )
                   return not terminal_empty
+              # Do not let a known missing full report disappear from the collection queue
+              # merely because OCR has reached its retry limit on a shorter correction PDF.
+              balance_sheet_pending = any(
+                  isinstance(item, dict)
+                  and item.get("balance_sheet_extraction_status") == "pending_full_report_archive_and_extraction"
+                  and str(item.get("balance_sheet_source_url") or "").startswith("https://")
+                  and not (
+                      isinstance(item.get("source_validation"), dict)
+                      and item["source_validation"].get("full_report_present_in_archive") is True
+                  )
+                  for item in items
+              )
               core_pending = any(
                   isinstance(item, dict)
                   and item.get("verification_status") in {
@@ -156,7 +168,7 @@ jobs:
                   and item.get("financial_line_items_schema_version") != "2026-10-22-bank-statement-qc-v4"
                   for item in items
               )
-              return core_pending or details_pending or stale_details or snapshot.get("bootstrap_status") not in {"complete", "complete_needs_manual_review"}
+              return balance_sheet_pending or core_pending or details_pending or stale_details or snapshot.get("bootstrap_status") not in {"complete", "complete_needs_manual_review"}
 
           if requested:
               if requested not in symbols:
