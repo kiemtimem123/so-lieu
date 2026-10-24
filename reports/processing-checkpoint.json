@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-25T20:00:00Z",
+  "updatedAt": "2026-10-25T20:15:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -45,9 +45,9 @@
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "PLX",
-    "status": "manual_review_in_progress",
-    "updatedAt": "2026-10-25T20:00:00Z",
-    "nextAction": "Q2/2025 trang 5 đã được xác minh từ ảnh người dùng và cập nhật vào data/financials-PLX.json. Còn cần ảnh trang 5 Q4/2025 để kiểm tra giá vốn/lợi nhuận gộp OCR mâu thuẫn, và trang 5 Q2/2026 để phân biệt số quý với lũy kế. Giữ PLX là mã tiếp tục xử lý, không chuyển mã cho đến khi các vướng mắc PLX được giải quyết hoặc ghi nhận rõ là không thể xác minh."
+    "status": "manual_review_in_progress_no_more_uploads",
+    "updatedAt": "2026-10-25T20:15:00Z",
+    "nextAction": "Không yêu cầu người dùng tải thêm ảnh vì họ đã hết hạn mức upload. Tiếp tục xử lý PLX bằng OCR sidecar/PDF đã lưu trong reports/raw/PLX và các phép kiểm tra chéo. Q2/2025 đã xác minh trực quan và lưu ở commit c543ffa18c42ca56b58f506ae79abd9418e6938b. Q4/2025: doanh thu thuần/lợi nhuận gộp khớp nhưng dòng giá vốn OCR lệch chữ số đầu; giữ cost_of_goods_sold null cho tới khi có bằng chứng nguồn đủ tin cậy. Q2/2026: chỉ tiêu KQKD riêng quý chưa phân biệt chắc với lũy kế, giữ null. Tránh tự suy ra số liệu báo cáo chính thức; vẫn giữ PLX là mã hiện hành."
   },
   "symbolStates": {
     "MBB": {
@@ -529,7 +529,7 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 4,
-      "updatedAt": "2026-10-25T20:00:00Z",
+      "updatedAt": "2026-10-25T20:15:00Z",
       "snapshotFetchedAt": "2026-10-23T18:24:32+00:00",
       "latestManualProgress": {
         "updatedFile": "data/financials-PLX.json",
@@ -537,7 +537,7 @@
         "periodsTouched": [
           "2025-Q2"
         ],
-        "note": "Đã xác minh trực quan ảnh trang 5 do người dùng gửi. Sửa doanh thu thuần 77.054.375.574.284 VND, giá vốn 71.919.641.393.348 VND, lợi nhuận gộp 5.134.734.180.936 VND và các chỉ tiêu KQKD quý II/2025; công thức doanh thu thuần và lợi nhuận gộp khớp. Tiếp tục giữ PLX làm mã hiện hành; Q4/2025 và Q2/2026 còn cần xác minh trực quan."
+        "note": "Q2/2025 page 5 visually verified from user image and updated. User reports upload image quota exhausted; do not repeatedly request more screenshots. Continue from archived VietstockFinance PDFs and extracted OCR text. Q4/2025 gross profit/revenue imply COGS 77,082,243,329,860 VND but OCR reads 71,082,243,329,860 VND; leave COGS null rather than substitute inferred value. Q2/2026 OCR lacks reliable quarter-vs-YTD separation; keep unsupported quarterly P&L fields null."
       }
     },
     "IDC": {
