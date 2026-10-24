@@ -1048,7 +1048,7 @@ def main():
                 continue
             source_url = str(item.get("balance_sheet_source_url") or "").strip()
             period = str(item.get("period") or "").strip().upper()
-            if not source_url or not re.fullmatch(r"20\\d{2}-Q[1-4]", period):
+            if not source_url or not re.fullmatch(r"20\d{2}-Q[1-4]", period):
                 continue
             validation = item.get("source_validation")
             if isinstance(validation, dict) and validation.get("full_report_present_in_archive") is True:
