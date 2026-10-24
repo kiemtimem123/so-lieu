@@ -109,8 +109,7 @@ jobs:
           def needs_collection(symbol, snapshot):
               if snapshot is None:
                   return True
-              if snapshot.get("bootstrap_status") in {"complete", "complete_needs_manual_review"}:
-                  return False
+              # Inspect item-level unresolved full-report dependencies even when bootstrap is complete.
               items = snapshot.get("items") or []
               if not items:
                   try:
