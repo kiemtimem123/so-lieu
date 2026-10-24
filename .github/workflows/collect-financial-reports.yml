@@ -177,7 +177,7 @@ jobs:
               reason = "explicit workflow input"
           else:
               checkpoint = load("reports/processing-checkpoint.json") or {}
-              active = str(checkpoint.get("activeSymbol") or "").strip().upper()
+              active = str(checkpoint.get("activeSymbol") or checkpoint.get("resumeSymbolHint") or "").strip().upper()
               if active in symbols and needs_collection(active, snapshot_for(active)):
                   selected = active
                   reason = "resume from saved checkpoint"
