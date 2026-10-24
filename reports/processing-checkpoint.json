@@ -46,8 +46,8 @@
   "lastProgress": {
     "symbol": "PLX",
     "status": "partial_core_data_recovered_from_archived_vietstock_ocr",
-    "updatedAt": "2026-10-24T16:05:00Z",
-    "nextAction": "Tiếp tục rà soát ảnh PDF gốc các kỳ PLX từ Q1/2024 đến Q2/2026, xác minh trực quan và bổ sung các chỉ tiêu còn thiếu; chưa chuyển mã khác cho đến khi hoàn tất phần rà soát PLX."
+    "updatedAt": "2026-10-24T16:45:00Z",
+    "nextAction": "Tiếp tục rà soát trực quan PDF gốc VietstockFinance của PLX từ Q1/2024 đến Q2/2026, ưu tiên kiểm tra các số OCR chất lượng thấp và chỉ tiêu chi tiết; giữ null khi chưa phân biệt được cột quý/lũy kế. Chưa chuyển mã khác."
   },
   "symbolStates": {
     "MBB": {
@@ -529,24 +529,15 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 4,
-      "updatedAt": "2026-10-24T16:05:00Z",
+      "updatedAt": "2026-10-24T16:45:00Z",
       "snapshotFetchedAt": "2026-10-23T18:24:32+00:00",
       "latestManualProgress": {
         "updatedFile": "data/financials-PLX.json",
-        "commit": "9bc3a3ed645cec3bf2526fbda31db1cb11dcdf37",
+        "commit": "48069b774f99ea3ca4a328477ab75b9441b9d49d",
         "periodsTouched": [
-          "2024-Q1",
-          "2024-Q2",
-          "2024-Q3",
-          "2024-Q4",
-          "2025-Q1",
-          "2025-Q2",
-          "2025-Q3",
-          "2025-Q4",
-          "2026-Q1",
           "2026-Q2"
         ],
-        "note": "Đã bổ sung/đối chiếu các chỉ tiêu cốt lõi từ OCR báo cáo hợp nhất VietstockFinance lưu trữ. Các giá trị chưa xác minh trực quan được gắn trạng thái một phần; chỉ tiêu lợi nhuận Q2/2026 để null do OCR không tách rõ cột quý/lũy kế. Cần rà ảnh PDF để hoàn tất xác minh."
+        "note": "Đã rà lại OCR PDF VietstockFinance Q2/2026: xác nhận được tổng tài sản 87.876.314 triệu VND, nợ phải trả 58.722.730 triệu VND và vốn chủ sở hữu 29.153.584 triệu VND từ bảng cân đối. Bảng KQKD OCR có nhiều cột quý/lũy kế khó phân biệt nên pretax_profit và net_profit vẫn null, có ghi rõ trạng thái ambiguous_quarter_vs_ytd; validator đã cập nhật để chấp nhận trường lợi nhuận bị giữ trống có giải trình. Chưa xem ảnh PDF trực tiếp; PLX vẫn cần rà trực quan các kỳ và chưa được coi là hoàn tất."
       }
     },
     "IDC": {
