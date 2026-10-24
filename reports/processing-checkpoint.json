@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-25T21:00:00Z",
+  "updatedAt": "2026-10-25T21:30:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -39,15 +39,15 @@
     "DPG",
     "GAS"
   ],
-  "lastCompletedSymbol": "GAS",
-  "activeSymbol": "PLX",
-  "resumeSymbolHint": "PLX",
+  "lastCompletedSymbol": "PLX",
+  "activeSymbol": "IDC",
+  "resumeSymbolHint": "IDC",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
-    "symbol": "PLX",
-    "status": "partially_reconciled_ratios_added_no_more_uploads",
-    "updatedAt": "2026-10-25T21:00:00Z",
-    "nextAction": "Đã thêm ROA/ROE thường niên hóa cho 2024-Q1–2026-Q1 khi có LNST và số dư đầu/cuối đủ; Q2/2026 giữ null do chưa có LNST quý đáng tin cậy. Dòng tiền quý cũng đã phân rã từ số YTD ở báo cáo gốc và qua kiểm tra cộng dòng tiền/cầu nối tiền; một số trường OCR vẫn null có chủ đích. Tiếp tục kiểm tra chi tiết PLX còn thiếu và chạy xác thực kho dữ liệu, không yêu cầu người dùng tải ảnh vì họ hết hạn mức."
+    "symbol": "IDC",
+    "status": "in_progress_next_symbol",
+    "updatedAt": "2026-10-25T21:30:00Z",
+    "nextAction": "PLX đã qua kiểm tra tĩnh trên các trường đủ dữ liệu; cờ xác minh ảnh còn giữ cho kỳ OCR mơ hồ. Chuyển sang IDC: kiểm tra từng archive và sidecar OCR liên kết VietstockFinance, bắt đầu kỳ trống/sai dấu hiệu đơn vị lớn. Giữ quy tắc một mã tại một thời điểm; không yêu cầu người dùng tải thêm ảnh."
   },
   "symbolStates": {
     "MBB": {
@@ -506,7 +506,7 @@
       "snapshotFetchedAt": "2026-10-23T18:00:37+00:00"
     },
     "PLX": {
-      "status": "partially_reconciled_ratios_added_no_more_uploads",
+      "status": "processing_pass_reconciled_manual_visual_flags_preserved",
       "completeForAutomation": true,
       "manualReviewRemaining": true,
       "periodCount": 10,
@@ -529,11 +529,11 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 4,
-      "updatedAt": "2026-10-25T21:00:00Z",
+      "updatedAt": "2026-10-25T21:30:00Z",
       "snapshotFetchedAt": "2026-10-23T18:24:32+00:00",
       "latestManualProgress": {
         "updatedFile": "data/financials-PLX.json",
-        "commit": "981f785e509795e1954db5c36b0c8e6f05bc2798",
+        "commit": "1a8c805924175ceeeff4e7f00d2ddd9ef768a8",
         "periodsTouched": [
           "2024-Q1",
           "2024-Q2",
@@ -546,7 +546,7 @@
           "2026-Q1",
           "2026-Q2"
         ],
-        "note": "Đã tính ROA/ROE thường niên hóa cho 9 kỳ có LNST quý và số dư đầu-cuối đủ: 2024-Q1 đến 2026-Q1; công thức dùng LNST hợp nhất quý × 4 / số dư tài sản hoặc VCSH bình quân. Q2/2026 để null vì LNST quý còn chưa xác định. Tiếp tục giữ PLX, không yêu cầu thêm ảnh."
+        "note": "Hoàn tất lượt kiểm tra PLX bằng OCR lưu trữ và đối chiếu số học: đã xác minh trực quan Q2/2025 trang 5 từ ảnh người dùng; khôi phục COGS Q4/2025 theo doanh thu−lợi nhuận gộp; khôi phục doanh thu, COGS, lợi nhuận gộp, LNTT Q2/2026 từ OCR/chênh lệch YTD với Q1, vẫn để LNST và chi phí mơ hồ null; chuẩn hóa dòng tiền theo quý từ YTD; sửa EPS bị gán nhầm mã số 70; sửa thuế để khớp phương trình LNTT−thuế=LNST. Các kiểm tra tĩnh đạt trên những trường có đủ dữ liệu. Giữ cờ xác minh ảnh ở các kỳ OCR mơ hồ; người dùng hết hạn mức tải ảnh."
       },
       "cashflowAudit": {
         "status": "quarterly_values_reconciled_from_ytd_reports",
@@ -574,11 +574,23 @@
           "2026-Q1 opening cash balance as reported by its own PDF (7,588,239,730,231 VND) differs from Q4/2025 reported closing cash (10,803,153,849,383 VND); source value retained and flagged, not forcibly reconciled.",
           "2026-Q2 cashflow page OCR is unreadable; cash flow amounts remain null. Income statement net profit/tax/detail items also remain null where column alignment is not reliable."
         ]
+      },
+      "qualityChecks": {
+        "checkedAt": "2026-10-25T21:30:00Z",
+        "staticValidation": "passed",
+        "checks": [
+          "total_assets = total_liabilities + equity",
+          "revenue − cost_of_goods_sold = gross_profit",
+          "pretax_profit − income_tax = net_profit",
+          "operating_cash_flow + investing_cash_flow + financing_cash_flow = net_cash_change",
+          "cash_beginning + net_cash_change + foreign_exchange_effect = cash_ending"
+        ],
+        "note": "Chỉ kiểm tra tĩnh trên dữ liệu lưu; không khẳng định các trường OCR chưa xác minh trực quan là chính xác."
       }
     },
     "IDC": {
-      "status": "automated_processing_complete",
-      "completeForAutomation": true,
+      "status": "in_progress_next_symbol",
+      "completeForAutomation": false,
       "manualReviewRemaining": true,
       "periodCount": 10,
       "firstQuarter": "2024-Q1",
@@ -598,8 +610,14 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 3,
-      "updatedAt": "2026-10-23T20:02:47Z",
-      "snapshotFetchedAt": "2026-10-23T19:16:14+00:00"
+      "updatedAt": "2026-10-25T21:30:00Z",
+      "snapshotFetchedAt": "2026-10-23T19:16:14+00:00",
+      "latestManualProgress": {
+        "updatedFile": "data/financials-IDC.json",
+        "commit": null,
+        "periodsTouched": [],
+        "note": "Bắt đầu xử lý mã IDC sau lượt kiểm tra PLX. Dữ liệu hiện có nhiều kỳ trống và các giá trị có dấu hiệu sai đơn vị/OCR; kiểm tra từng archive của VietstockFinance, không yêu cầu ảnh người dùng."
+      }
     },
     "KBC": {
       "status": "automated_processing_complete",
