@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-25T20:30:00Z",
+  "updatedAt": "2026-10-25T20:50:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -46,8 +46,8 @@
   "lastProgress": {
     "symbol": "PLX",
     "status": "partially_reconciled_from_saved_ocr_no_more_uploads",
-    "updatedAt": "2026-10-25T20:30:00Z",
-    "nextAction": "Người dùng đã hết hạn mức tải ảnh; không yêu cầu ảnh mới. Tiếp tục rà dữ liệu PLX từ các PDF VietstockFinance và sidecar OCR đã lưu. Đã cập nhật Q4/2025 bằng đối chiếu phương trình doanh thu thuần − giá vốn = lợi nhuận gộp; sửa dòng tiền Q4 thành lũy kế năm và loại giá trị CFO gán nhầm. Đã phục hồi doanh thu thuần, giá vốn, lợi nhuận gộp, LNTT riêng Q2/2026 bằng OCR cộng đối chiếu chéo với Q1; vẫn để trống LNST/thuế/chi phí không chắc. Tiếp theo rà các kỳ PLX còn lại, đặc biệt các trường dòng tiền đang có nhãn quý nhưng nguồn là lũy kế. Vẫn giữ PLX là mã hiện hành."
+    "updatedAt": "2026-10-25T20:50:00Z",
+    "nextAction": "Không yêu cầu thêm ảnh vì người dùng đã hết hạn mức. Tiếp tục rà chất lượng PLX từ PDF/sidecar OCR đang lưu. Đã chuẩn hóa dòng tiền quý 2024-Q1 đến 2026-Q1 từ số lũy kế của báo cáo, đồng thời giữ dòng tiền Q2/2026 null do OCR không đọc được. Kiểm tra chéo nội bộ đạt: phương trình cân đối tài sản, doanh thu trừ giá vốn bằng lợi nhuận gộp, tổng các dòng tiền bằng biến động tiền thuần và cầu nối tiền đầu-cuối kỳ ở các kỳ có đủ số. Tiếp theo rà các trường chi tiết/ROA-ROE và các chỉ tiêu còn thiếu của PLX; chưa chuyển sang mã khác."
   },
   "symbolStates": {
     "MBB": {
@@ -529,16 +529,51 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 4,
-      "updatedAt": "2026-10-25T20:30:00Z",
+      "updatedAt": "2026-10-25T20:50:00Z",
       "snapshotFetchedAt": "2026-10-23T18:24:32+00:00",
       "latestManualProgress": {
         "updatedFile": "data/financials-PLX.json",
-        "commit": "9fae7ce3c5d2d8fed22f77e00d673a01838b9a82",
+        "commit": "7d416f7f7755cbf3cf2d0cb3bd34db993625a701",
         "periodsTouched": [
+          "2024-Q1",
+          "2024-Q2",
+          "2024-Q3",
+          "2024-Q4",
+          "2025-Q1",
+          "2025-Q2",
+          "2025-Q3",
           "2025-Q4",
+          "2026-Q1",
           "2026-Q2"
         ],
-        "note": "Q4/2025: giá vốn khôi phục bằng doanh thu thuần trừ lợi nhuận gộp; OCR dòng giá vốn cũ sai chữ số đầu. Sửa lỗi gán nhầm PBT thành CFO; báo cáo dòng tiền là YTD cả năm, đã sửa dòng tiền hoạt động YTD từ 3.658.327 thành 4.254.126 triệu VND và để null trường dòng tiền riêng Q4. Q2/2026: khôi phục doanh thu thuần, giá vốn, lợi nhuận gộp và LNTT từ OCR cộng phép đối chiếu với Q1; LNST/thuế/chi phí chi tiết mơ hồ được giữ null. Q2/2025 đã xác minh trực quan từ ảnh người dùng trong commit c543ffa18c42ca56b58f506ae79abd9418e6938b."
+        "note": "Chuẩn hóa dòng tiền toàn chuỗi PLX: đọc số lũy kế từ đúng trang lưu chuyển tiền tệ trong PDF VietstockFinance, lấy chênh lệch YTD để tách ra quý riêng, sửa các trường CFO/FX bị gán nhầm, bổ sung số dư tiền đầu/cuối quý. Capex Q3/Q4 2025 chưa xác định riêng do OCR dòng Q3 bị cắt. Q2/2025 đã trực quan xác minh trang 5 từ ảnh người dùng; Q4/2025 giá vốn được đối chiếu bằng công thức doanh thu thuần − lợi nhuận gộp; Q2/2026 phục hồi doanh thu thuần, giá vốn, lợi nhuận gộp, LNTT nhưng LNST/thuế/chi phí chi tiết còn để null."
+      },
+      "cashflowAudit": {
+        "status": "quarterly_values_reconciled_from_ytd_reports",
+        "updatedAt": "2026-10-25T20:50:00Z",
+        "periodsProcessed": [
+          "2024-Q1",
+          "2024-Q2",
+          "2024-Q3",
+          "2024-Q4",
+          "2025-Q1",
+          "2025-Q2",
+          "2025-Q3",
+          "2025-Q4",
+          "2026-Q1"
+        ],
+        "method": "cashflow quarters after Q1 computed as current YTD minus prior-quarter YTD; Q1 uses reported YTD; ending cash and FX bridges checked where source numbers were available.",
+        "qualityChecks": {
+          "balanceSheetEquation": "passed all 10 PLX periods",
+          "revenueLessCostEqualsGrossProfit": "passed all periods with all three values populated (rounding tolerance <= 1 million VND)",
+          "quarterlyCashFlowComponentsSumToNetChange": "passed all periods with reported quarterly components (rounding tolerance <= 1 million VND)",
+          "quarterlyCashBalanceBridge": "passed all periods with opening, net change, FX, and ending cash populated (rounding tolerance <= 1 million VND)"
+        },
+        "exceptions": [
+          "2025-Q3 and 2025-Q4 standalone capex are null because Q3 source OCR line is truncated/ambiguous; Q4 YTD capex retained from annual report.",
+          "2026-Q1 opening cash balance as reported by its own PDF (7,588,239,730,231 VND) differs from Q4/2025 reported closing cash (10,803,153,849,383 VND); source value retained and flagged, not forcibly reconciled.",
+          "2026-Q2 cashflow page OCR is unreadable; cash flow amounts remain null. Income statement net profit/tax/detail items also remain null where column alignment is not reliable."
+        ]
       }
     },
     "IDC": {
