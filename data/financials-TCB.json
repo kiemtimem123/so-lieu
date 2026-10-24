@@ -143,8 +143,10 @@
         "bank_investment_securities",
         "bank_net_interest_income",
         "bank_net_service_income",
+        "bank_operating_expenses",
         "bank_other_assets",
         "bank_other_liabilities",
+        "bank_pre_provision_operating_profit",
         "bank_provision_expense",
         "bank_service_expense",
         "bank_service_income",
@@ -159,14 +161,15 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/93716712dc18d9e0.pdf",
-      "financial_line_items_updated_at": "2026-10-22T13:32:15+00:00",
+      "financial_line_items_updated_at": "2026-10-24T04:23:54+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
       "operating_cash_flow_calculation": "reported as standalone quarter",
       "investing_cash_flow_calculation": "reported as standalone quarter",
       "financing_cash_flow_calculation": "reported as standalone quarter",
       "net_cash_change_calculation": "reported as standalone quarter",
       "financial_line_items_prior_values": {
-        "income_tax": -1524069
+        "income_tax": -1524069,
+        "bank_provision_expense": -1210972
       },
       "financial_line_items_rejected_values": {
         "operating_cash_flow": {
@@ -238,10 +241,24 @@
       "bank_service_income": 2834555,
       "bank_service_expense": -663404,
       "bank_net_service_income": 2171151,
-      "bank_provision_expense": -1210972,
+      "bank_provision_expense": 1210972,
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T13:32:11+00:00",
-      "bank_net_service_income_calculation": "Thu nhập dịch vụ + chi phí dịch vụ (chi phí giữ dấu âm)."
+      "financial_line_items_schema_updated_at": "2026-10-24T04:23:43+00:00",
+      "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
+      "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
+      "core_financial_extraction_evidence_fingerprint": "19247e985f81e3b44a537841810c7e137a3916745aeb49122ad68f5550f21efd",
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "bank_operating_expenses": -3249136,
+      "bank_pre_provision_operating_profit": 9012631,
+      "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động - |chi phí hoạt động| theo BCTC ngân hàng.",
+      "financial_line_items_value_corrections": {
+        "bank_provision_expense": {
+          "previous_value": -1210972,
+          "new_value": 1210972,
+          "reason": "derived from reconciled pre-provision operating profit minus reported quarterly PBT"
+        }
+      },
+      "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC."
     },
     {
       "symbol": "TCB",
@@ -386,11 +403,11 @@
       },
       "fixed_assets": 9626880,
       "retained_earnings": 45331275,
-      "revenue": 43419696,
+      "revenue": 13419696,
       "operating_profit": 9470722,
       "income_tax_current": -1558837,
       "income_tax": 1556541,
-      "operating_cash_flow_ytd": 9358754,
+      "operating_cash_flow_ytd": 26451909,
       "investing_cash_flow_ytd": -280255,
       "cashflow_period_basis": "quarterly_reported",
       "financial_line_items_extracted_fields": [
@@ -405,6 +422,7 @@
         "bank_investment_securities_net",
         "bank_net_interest_income",
         "bank_net_service_income",
+        "bank_operating_expenses",
         "bank_other_assets",
         "bank_other_liabilities",
         "bank_pre_provision_operating_profit",
@@ -426,7 +444,7 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/84aa1591e3505ab7.pdf",
-      "financial_line_items_updated_at": "2026-10-22T13:32:15+00:00",
+      "financial_line_items_updated_at": "2026-10-24T04:23:54+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
       "operating_cash_flow": 9358754,
       "operating_cash_flow_calculation": "reported as standalone quarter",
@@ -434,7 +452,9 @@
       "investing_cash_flow_calculation": "reported as standalone quarter",
       "financial_line_items_prior_values": {
         "income_tax": -1558837,
-        "bank_provision_expense": 9470722
+        "bank_provision_expense": 9470722,
+        "operating_cash_flow_ytd": 9358754,
+        "revenue": 43419696
       },
       "financial_line_items_rejected_values": {},
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
@@ -456,19 +476,35 @@
       "bank_investment_securities_net": 646934,
       "bank_dividend_and_capital_income": 58051,
       "bank_pre_provision_operating_profit": 9470722,
-      "bank_provision_expense": -1644213,
+      "bank_provision_expense": 1644213,
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T13:32:11+00:00",
+      "financial_line_items_schema_updated_at": "2026-10-24T04:23:44+00:00",
       "bank_net_service_income": 2461472,
-      "bank_net_service_income_calculation": "Thu nhập dịch vụ + chi phí dịch vụ (chi phí giữ dấu âm).",
+      "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
       "financial_line_items_value_corrections": {
         "bank_provision_expense": {
-          "previous_value": 9470722,
-          "new_value": -1644213,
-          "reason": "derived from verified quarterly PBT minus reconciled pre-provision operating profit"
+          "previous_value": -1644213,
+          "new_value": 1644213,
+          "reason": "derived from reconciled pre-provision operating profit minus reported quarterly PBT"
+        },
+        "operating_cash_flow_ytd": {
+          "previous_value": 9358754,
+          "new_value": 26451909,
+          "reason": "Reparsed from net operating cash flow after changes in operating assets and liabilities, not the subtotal before working-capital changes."
+        },
+        "revenue": {
+          "previous_value": 43419696,
+          "new_value": 13419696,
+          "reason": "derived from reported pre-provision operating profit plus positive operating expenses"
         }
       },
-      "bank_provision_expense_calculation": "Lợi nhuận trước thuế - lợi nhuận trước dự phòng; chi phí dự phòng giữ dấu âm."
+      "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
+      "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
+      "core_financial_extraction_evidence_fingerprint": "79923dfeb6be40903dcf56736e051861b1ce9073e2bf64c881faa4a39427e4e9",
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "bank_operating_expenses": -3948974,
+      "revenue_calculation": "Lợi nhuận trước dự phòng + chi phí hoạt động; đối chiếu theo tổng phụ BCTC ngân hàng.",
+      "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động - |chi phí hoạt động| theo BCTC ngân hàng."
     },
     {
       "symbol": "TCB",
@@ -607,7 +643,7 @@
       "revenue": 11754335,
       "income_tax_current": -1422429,
       "income_tax": 1421146,
-      "operating_cash_flow_ytd": 18759943,
+      "operating_cash_flow_ytd": 40950948,
       "investing_cash_flow_ytd": -566668,
       "cashflow_period_basis": "quarterly_reported",
       "financial_line_items_extracted_fields": [
@@ -621,8 +657,10 @@
         "bank_investment_securities",
         "bank_investment_securities_net",
         "bank_net_interest_income",
+        "bank_operating_expenses",
         "bank_other_assets",
         "bank_other_liabilities",
+        "bank_pre_provision_operating_profit",
         "bank_provision_expense",
         "bank_service_income",
         "bank_trading_securities",
@@ -638,14 +676,16 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/eadd37345b7f5f57.pdf",
-      "financial_line_items_updated_at": "2026-10-21T11:46:23+00:00",
+      "financial_line_items_updated_at": "2026-10-24T04:23:54+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
       "operating_cash_flow": 18759943,
       "operating_cash_flow_calculation": "reported as standalone quarter",
       "investing_cash_flow": -566668,
       "investing_cash_flow_calculation": "reported as standalone quarter",
       "financial_line_items_prior_values": {
-        "income_tax": -1422429
+        "income_tax": -1422429,
+        "operating_cash_flow_ytd": 18759943,
+        "bank_provision_expense": 8323433
       },
       "financial_line_items_rejected_values": {},
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
@@ -664,9 +704,28 @@
       "bank_service_income": 2675088,
       "bank_investment_securities_net": 389242,
       "bank_dividend_and_capital_income": 6406,
-      "bank_provision_expense": 8323433,
+      "bank_provision_expense": 1109265,
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T13:32:11+00:00"
+      "financial_line_items_schema_updated_at": "2026-10-24T04:23:45+00:00",
+      "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
+      "core_financial_extraction_evidence_fingerprint": "93c552c00b373e5177b0e6e107e2395d6867cd2cafd086a95ee90bfac4832588",
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "bank_operating_expenses": -3430902,
+      "financial_line_items_value_corrections": {
+        "operating_cash_flow_ytd": {
+          "previous_value": 18759943,
+          "new_value": 40950948,
+          "reason": "Reparsed from net operating cash flow after changes in operating assets and liabilities, not the subtotal before working-capital changes."
+        },
+        "bank_provision_expense": {
+          "previous_value": 8323433,
+          "new_value": 1109265,
+          "reason": "derived from reconciled pre-provision operating profit minus reported quarterly PBT"
+        }
+      },
+      "bank_pre_provision_operating_profit": 8323433,
+      "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động - |chi phí hoạt động| theo BCTC ngân hàng.",
+      "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC."
     },
     {
       "symbol": "TCB",
@@ -843,6 +902,7 @@
         "bank_investment_securities_net",
         "bank_net_interest_income",
         "bank_net_service_income",
+        "bank_operating_expenses",
         "bank_other_assets",
         "bank_other_liabilities",
         "bank_pre_provision_operating_profit",
@@ -862,7 +922,7 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/5b7558b29eb7fb82.pdf",
-      "financial_line_items_updated_at": "2026-10-22T13:32:15+00:00",
+      "financial_line_items_updated_at": "2026-10-24T04:23:54+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
       "operating_cash_flow_calculation": "reported as standalone quarter",
       "investing_cash_flow_calculation": "reported as standalone quarter",
@@ -946,18 +1006,24 @@
       "bank_investment_securities_net": 249851,
       "bank_dividend_and_capital_income": 23633,
       "bank_pre_provision_operating_profit": 4813876,
-      "bank_provision_expense": -117844,
+      "bank_provision_expense": 117844,
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T13:32:12+00:00",
-      "bank_net_service_income_calculation": "Thu nhập dịch vụ + chi phí dịch vụ (chi phí giữ dấu âm).",
+      "financial_line_items_schema_updated_at": "2026-10-24T04:23:47+00:00",
+      "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
       "financial_line_items_value_corrections": {
         "bank_provision_expense": {
-          "previous_value": 4813876,
-          "new_value": -117844,
-          "reason": "derived from verified quarterly PBT minus reconciled pre-provision operating profit"
+          "previous_value": -117844,
+          "new_value": 117844,
+          "reason": "derived from reconciled pre-provision operating profit minus reported quarterly PBT"
         }
       },
-      "bank_provision_expense_calculation": "Lợi nhuận trước thuế - lợi nhuận trước dự phòng; chi phí dự phòng giữ dấu âm."
+      "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
+      "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
+      "core_financial_extraction_evidence_fingerprint": "cea6e7b354eda584b26a79b55c34c209fb9c63c5c03330749a1d10bdbab77174",
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "bank_operating_expenses": -4740723,
+      "revenue_calculation": "Lợi nhuận trước dự phòng + chi phí hoạt động; đối chiếu theo tổng phụ BCTC ngân hàng.",
+      "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động - |chi phí hoạt động| theo BCTC ngân hàng."
     },
     {
       "symbol": "TCB",
@@ -1087,7 +1153,7 @@
       "retained_earnings": 48167266,
       "revenue": 11611198,
       "operating_profit": 8326283,
-      "operating_cash_flow_ytd": 1088680,
+      "operating_cash_flow_ytd": 14066961,
       "investing_cash_flow_ytd": -35503,
       "net_cash_change_ytd": -11050434,
       "cash_beginning": 147484415,
@@ -1105,6 +1171,7 @@
         "bank_investment_securities_net",
         "bank_net_interest_income",
         "bank_net_service_income",
+        "bank_operating_expenses",
         "bank_other_assets",
         "bank_other_liabilities",
         "bank_pre_provision_operating_profit",
@@ -1127,7 +1194,7 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/c66142b157f47512.pdf",
-      "financial_line_items_updated_at": "2026-10-22T13:32:15+00:00",
+      "financial_line_items_updated_at": "2026-10-24T04:23:54+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại.",
       "operating_cash_flow": 1088680,
       "operating_cash_flow_calculation": "reported as standalone quarter",
@@ -1136,7 +1203,8 @@
       "net_cash_change": -11050434,
       "net_cash_change_calculation": "reported as standalone quarter",
       "financial_line_items_prior_values": {
-        "bank_provision_expense": 8326283
+        "bank_provision_expense": 8326283,
+        "operating_cash_flow_ytd": 1088680
       },
       "financial_line_items_rejected_values": {},
       "income_tax": 1222717,
@@ -1158,9 +1226,9 @@
       "bank_investment_securities_net": 450449,
       "bank_dividend_and_capital_income": 11611198,
       "bank_pre_provision_operating_profit": 8326283,
-      "bank_provision_expense": -1090055,
+      "bank_provision_expense": 1090055,
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T13:32:12+00:00",
+      "financial_line_items_schema_updated_at": "2026-10-24T04:23:48+00:00",
       "financial_line_items_rejected_fields": [
         "income_tax_current_tax_reconciliation_check",
         "income_tax_deferred_tax_reconciliation_check",
@@ -1168,15 +1236,26 @@
       ],
       "financial_line_items_rejected_updated_at": "2026-10-22T13:32:13+00:00",
       "bank_net_service_income": 1828132,
-      "bank_net_service_income_calculation": "Thu nhập dịch vụ + chi phí dịch vụ (chi phí giữ dấu âm).",
+      "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
       "financial_line_items_value_corrections": {
         "bank_provision_expense": {
-          "previous_value": 8326283,
-          "new_value": -1090055,
-          "reason": "derived from verified quarterly PBT minus reconciled pre-provision operating profit"
+          "previous_value": -1090055,
+          "new_value": 1090055,
+          "reason": "derived from reconciled pre-provision operating profit minus reported quarterly PBT"
+        },
+        "operating_cash_flow_ytd": {
+          "previous_value": 1088680,
+          "new_value": 14066961,
+          "reason": "Reparsed from net operating cash flow after changes in operating assets and liabilities, not the subtotal before working-capital changes."
         }
       },
-      "bank_provision_expense_calculation": "Lợi nhuận trước thuế - lợi nhuận trước dự phòng; chi phí dự phòng giữ dấu âm."
+      "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
+      "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
+      "core_financial_extraction_evidence_fingerprint": "925a989c6b7bb4cd7f591604171ac49e447a7b115db13e66dc0cc63f858e8470",
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "bank_operating_expenses": -3284915,
+      "revenue_calculation": "Lợi nhuận trước dự phòng + chi phí hoạt động; đối chiếu theo tổng phụ BCTC ngân hàng.",
+      "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động - |chi phí hoạt động| theo BCTC ngân hàng."
     },
     {
       "symbol": "TCB",
@@ -1316,7 +1395,7 @@
       "operating_profit": 8912338,
       "income_tax_current": -1549782,
       "income_tax": 1550978,
-      "operating_cash_flow_ytd": 9328880,
+      "operating_cash_flow_ytd": 30284838,
       "financing_cash_flow_ytd": 1376714,
       "net_cash_change_ytd": -17696026,
       "cash_beginning": 147484415,
@@ -1334,6 +1413,7 @@
         "bank_investment_securities_net",
         "bank_net_interest_income",
         "bank_net_service_income",
+        "bank_operating_expenses",
         "bank_other_assets",
         "bank_other_liabilities",
         "bank_pre_provision_operating_profit",
@@ -1358,7 +1438,7 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/ed276f17363405f3.pdf",
-      "financial_line_items_updated_at": "2026-10-22T13:32:15+00:00",
+      "financial_line_items_updated_at": "2026-10-24T04:23:54+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
       "operating_cash_flow": 9328880,
       "operating_cash_flow_calculation": "reported as standalone quarter",
@@ -1368,7 +1448,8 @@
       "net_cash_change_calculation": "reported as standalone quarter",
       "financial_line_items_prior_values": {
         "income_tax": -1549782,
-        "bank_provision_expense": 8912338
+        "bank_provision_expense": 8912338,
+        "operating_cash_flow_ytd": 9328880
       },
       "financial_line_items_rejected_values": {},
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
@@ -1390,19 +1471,30 @@
       "bank_investment_securities_net": 599870,
       "bank_dividend_and_capital_income": 31518,
       "bank_pre_provision_operating_profit": 8912338,
-      "bank_provision_expense": -1013750,
+      "bank_provision_expense": 1013750,
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T13:32:13+00:00",
+      "financial_line_items_schema_updated_at": "2026-10-24T04:23:49+00:00",
       "bank_net_service_income": 2106991,
-      "bank_net_service_income_calculation": "Thu nhập dịch vụ + chi phí dịch vụ (chi phí giữ dấu âm).",
+      "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
       "financial_line_items_value_corrections": {
         "bank_provision_expense": {
-          "previous_value": 8912338,
-          "new_value": -1013750,
-          "reason": "derived from verified quarterly PBT minus reconciled pre-provision operating profit"
+          "previous_value": -1013750,
+          "new_value": 1013750,
+          "reason": "derived from reconciled pre-provision operating profit minus reported quarterly PBT"
+        },
+        "operating_cash_flow_ytd": {
+          "previous_value": 9328880,
+          "new_value": 30284838,
+          "reason": "Reparsed from net operating cash flow after changes in operating assets and liabilities, not the subtotal before working-capital changes."
         }
       },
-      "bank_provision_expense_calculation": "Lợi nhuận trước thuế - lợi nhuận trước dự phòng; chi phí dự phòng giữ dấu âm."
+      "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
+      "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
+      "core_financial_extraction_evidence_fingerprint": "b35816c86c3e80c3a72f69ab0ce6c38deaa7550f59e234e7ee941ada7dd5f200",
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "bank_operating_expenses": -3830693,
+      "revenue_calculation": "Lợi nhuận trước dự phòng + chi phí hoạt động; đối chiếu theo tổng phụ BCTC ngân hàng.",
+      "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động - |chi phí hoạt động| theo BCTC ngân hàng."
     },
     {
       "symbol": "TCB",
@@ -1657,7 +1749,10 @@
       "bank_valuable_papers": 181742521,
       "bank_other_liabilities": 24913117,
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T13:32:13+00:00"
+      "financial_line_items_schema_updated_at": "2026-10-22T13:32:13+00:00",
+      "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
+      "core_financial_extraction_evidence_fingerprint": "2f22dd0861b33f98daf5a95b12faaf610cae29123d0c37a428f7b5373ebd9742",
+      "core_financial_extraction_evidence_attempt_count": 0
     },
     {
       "symbol": "TCB",
@@ -1809,8 +1904,10 @@
         "bank_investment_securities_net",
         "bank_net_interest_income",
         "bank_net_service_income",
+        "bank_operating_expenses",
         "bank_other_assets",
         "bank_other_liabilities",
+        "bank_pre_provision_operating_profit",
         "bank_provision_expense",
         "bank_service_expense",
         "bank_service_income",
@@ -1826,14 +1923,15 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/c1df78d8d31faa60.pdf",
-      "financial_line_items_updated_at": "2026-10-22T13:32:15+00:00",
+      "financial_line_items_updated_at": "2026-10-24T04:23:54+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
       "operating_cash_flow_calculation": "reported as standalone quarter",
       "investing_cash_flow_calculation": "reported as standalone quarter",
       "financing_cash_flow_calculation": "reported as standalone quarter",
       "net_cash_change_calculation": "reported as standalone quarter",
       "financial_line_items_prior_values": {
-        "income_tax": -2136120
+        "income_tax": -2136120,
+        "bank_provision_expense": -817564
       },
       "financial_line_items_rejected_values": {
         "operating_cash_flow": {
@@ -1906,10 +2004,24 @@
       "bank_net_service_income": 2570935,
       "bank_investment_securities_net": 736643,
       "bank_dividend_and_capital_income": 1303,
-      "bank_provision_expense": -817564,
+      "bank_provision_expense": 817564,
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T13:32:14+00:00",
-      "bank_net_service_income_calculation": "Thu nhập dịch vụ + chi phí dịch vụ (chi phí giữ dấu âm)."
+      "financial_line_items_schema_updated_at": "2026-10-24T04:23:51+00:00",
+      "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
+      "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
+      "core_financial_extraction_evidence_fingerprint": "c3f922a919d4f77ecb31da75c5bc7eb596c9117a7c6e186f17a126d679cde63f",
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "bank_operating_expenses": -4823975,
+      "bank_pre_provision_operating_profit": 9970798,
+      "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động - |chi phí hoạt động| theo BCTC ngân hàng.",
+      "financial_line_items_value_corrections": {
+        "bank_provision_expense": {
+          "previous_value": -817564,
+          "new_value": 817564,
+          "reason": "derived from reconciled pre-provision operating profit minus reported quarterly PBT"
+        }
+      },
+      "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC."
     },
     {
       "symbol": "TCB",
@@ -2052,6 +2164,7 @@
         "bank_investment_securities",
         "bank_net_interest_income",
         "bank_net_service_income",
+        "bank_operating_expenses",
         "bank_other_assets",
         "bank_other_liabilities",
         "bank_pre_provision_operating_profit",
@@ -2071,7 +2184,7 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/7e7749fd534f2767.pdf",
-      "financial_line_items_updated_at": "2026-10-22T13:32:15+00:00",
+      "financial_line_items_updated_at": "2026-10-24T04:23:54+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
       "operating_cash_flow_calculation": "reported as standalone quarter",
       "investing_cash_flow_calculation": "reported as standalone quarter",
@@ -2153,18 +2266,24 @@
       "bank_fx_net_income": 583817,
       "bank_trading_securities_net": 42771,
       "bank_pre_provision_operating_profit": 9805262,
-      "bank_provision_expense": -935292,
+      "bank_provision_expense": 935292,
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T13:32:14+00:00",
-      "bank_net_service_income_calculation": "Thu nhập dịch vụ + chi phí dịch vụ (chi phí giữ dấu âm).",
+      "financial_line_items_schema_updated_at": "2026-10-24T04:23:52+00:00",
+      "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
       "financial_line_items_value_corrections": {
         "bank_provision_expense": {
-          "previous_value": 9805262,
-          "new_value": -935292,
-          "reason": "derived from verified quarterly PBT minus reconciled pre-provision operating profit"
+          "previous_value": -935292,
+          "new_value": 935292,
+          "reason": "derived from reconciled pre-provision operating profit minus reported quarterly PBT"
         }
       },
-      "bank_provision_expense_calculation": "Lợi nhuận trước thuế - lợi nhuận trước dự phòng; chi phí dự phòng giữ dấu âm."
+      "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
+      "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
+      "core_financial_extraction_evidence_fingerprint": "c4c1c9cb3eeae6a02e273db63bbfed40097bfd7342669a9960b76c879f17cad0",
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "bank_operating_expenses": -3869012,
+      "revenue_calculation": "Lợi nhuận trước dự phòng + chi phí hoạt động; đối chiếu theo tổng phụ BCTC ngân hàng.",
+      "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động - |chi phí hoạt động| theo BCTC ngân hàng."
     },
     {
       "symbol": "TCB",
@@ -2342,7 +2461,7 @@
       "operating_profit": 10321654,
       "income_tax_current": -1948060,
       "income_tax": 1943374,
-      "operating_cash_flow_ytd": 17899356,
+      "operating_cash_flow_ytd": 41386089,
       "net_cash_change_ytd": -21579919,
       "cash_beginning": 191827343,
       "cash_ending": 170247424,
@@ -2358,6 +2477,7 @@
         "bank_investment_securities_net",
         "bank_net_interest_income",
         "bank_net_service_income",
+        "bank_operating_expenses",
         "bank_other_assets",
         "bank_other_liabilities",
         "bank_pre_provision_operating_profit",
@@ -2381,7 +2501,7 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/50b860c97df7b698.pdf",
-      "financial_line_items_updated_at": "2026-10-22T13:32:15+00:00",
+      "financial_line_items_updated_at": "2026-10-24T04:23:54+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
       "operating_cash_flow": 17899356,
       "operating_cash_flow_calculation": "reported as standalone quarter",
@@ -2389,7 +2509,8 @@
       "net_cash_change_calculation": "reported as standalone quarter",
       "financial_line_items_prior_values": {
         "income_tax": -1948060,
-        "bank_provision_expense": 10321654
+        "bank_provision_expense": 10321654,
+        "operating_cash_flow_ytd": 17899356
       },
       "financial_line_items_rejected_values": {},
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
@@ -2411,18 +2532,29 @@
       "bank_investment_securities_net": 81770,
       "bank_dividend_and_capital_income": 4899,
       "bank_pre_provision_operating_profit": 10321654,
-      "bank_provision_expense": -651638,
+      "bank_provision_expense": 651638,
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T13:32:14+00:00",
-      "bank_net_service_income_calculation": "Thu nhập dịch vụ + chi phí dịch vụ (chi phí giữ dấu âm).",
+      "financial_line_items_schema_updated_at": "2026-10-24T04:23:53+00:00",
+      "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
       "financial_line_items_value_corrections": {
         "bank_provision_expense": {
-          "previous_value": 10321654,
-          "new_value": -651638,
-          "reason": "derived from verified quarterly PBT minus reconciled pre-provision operating profit"
+          "previous_value": -651638,
+          "new_value": 651638,
+          "reason": "derived from reconciled pre-provision operating profit minus reported quarterly PBT"
+        },
+        "operating_cash_flow_ytd": {
+          "previous_value": 17899356,
+          "new_value": 41386089,
+          "reason": "Reparsed from net operating cash flow after changes in operating assets and liabilities, not the subtotal before working-capital changes."
         }
       },
-      "bank_provision_expense_calculation": "Lợi nhuận trước thuế - lợi nhuận trước dự phòng; chi phí dự phòng giữ dấu âm."
+      "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
+      "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
+      "core_financial_extraction_evidence_fingerprint": "55469a8122cecac525acd4a4fa9e596dfb474f96e657892eaa80656cdbcf04b1",
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "bank_operating_expenses": -4620127,
+      "revenue_calculation": "Lợi nhuận trước dự phòng + chi phí hoạt động; đối chiếu theo tổng phụ BCTC ngân hàng.",
+      "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động - |chi phí hoạt động| theo BCTC ngân hàng."
     },
     {
       "symbol": "TCB",
@@ -2520,7 +2652,7 @@
         "revenue"
       ],
       "financial_line_items_source": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%203/TCB_Baocaotaichinh_Q3_2026_Hopnhat.pdf",
-      "financial_line_items_updated_at": "2026-10-22T13:32:15+00:00",
+      "financial_line_items_updated_at": "2026-10-24T04:23:54+00:00",
       "financial_line_items_note": "Chỉ tiêu chi tiết trích xuất tự động từ PDF VietstockFinance; cần đối chiếu trực quan. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
       "published_at": "2026-10-20",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
@@ -2529,7 +2661,7 @@
       "net_cash_change_calculation": "reported as standalone quarter",
       "financial_line_items_prior_values": {},
       "financial_line_items_rejected_values": {},
-      "bank_net_service_income_calculation": "Thu nhập dịch vụ + chi phí dịch vụ (chi phí giữ dấu âm).",
+      "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
       "income_tax": 2038082,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có."
     }
