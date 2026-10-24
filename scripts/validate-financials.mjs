@@ -90,7 +90,7 @@ for (const symbol of symbols) {
     const status = item.verification_status || "missing_status";
     statusCounts[status] = (statusCounts[status] || 0) + 1;
 
-    const pendingExtraction = status === "auto_pending_extraction" || status === "manual_review_required_pending_extraction";
+    const pendingExtraction = status === "auto_pending_extraction" || status === "manual_review_required_pending_extraction" || status === "auto_extracted_pending_visual_review" || status === "ocr_pending_visual_review";
     // A quarter may have a separately published correction/quarterly income
     // statement while the linked full consolidated report is still unavailable.
     // Permit only the three balance-sheet fields to remain blank in that
