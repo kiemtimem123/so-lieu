@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-25T20:50:00Z",
+  "updatedAt": "2026-10-25T21:00:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -45,9 +45,9 @@
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "PLX",
-    "status": "partially_reconciled_from_saved_ocr_no_more_uploads",
-    "updatedAt": "2026-10-25T20:50:00Z",
-    "nextAction": "Không yêu cầu thêm ảnh vì người dùng đã hết hạn mức. Tiếp tục rà chất lượng PLX từ PDF/sidecar OCR đang lưu. Đã chuẩn hóa dòng tiền quý 2024-Q1 đến 2026-Q1 từ số lũy kế của báo cáo, đồng thời giữ dòng tiền Q2/2026 null do OCR không đọc được. Kiểm tra chéo nội bộ đạt: phương trình cân đối tài sản, doanh thu trừ giá vốn bằng lợi nhuận gộp, tổng các dòng tiền bằng biến động tiền thuần và cầu nối tiền đầu-cuối kỳ ở các kỳ có đủ số. Tiếp theo rà các trường chi tiết/ROA-ROE và các chỉ tiêu còn thiếu của PLX; chưa chuyển sang mã khác."
+    "status": "partially_reconciled_ratios_added_no_more_uploads",
+    "updatedAt": "2026-10-25T21:00:00Z",
+    "nextAction": "Đã thêm ROA/ROE thường niên hóa cho 2024-Q1–2026-Q1 khi có LNST và số dư đầu/cuối đủ; Q2/2026 giữ null do chưa có LNST quý đáng tin cậy. Dòng tiền quý cũng đã phân rã từ số YTD ở báo cáo gốc và qua kiểm tra cộng dòng tiền/cầu nối tiền; một số trường OCR vẫn null có chủ đích. Tiếp tục kiểm tra chi tiết PLX còn thiếu và chạy xác thực kho dữ liệu, không yêu cầu người dùng tải ảnh vì họ hết hạn mức."
   },
   "symbolStates": {
     "MBB": {
@@ -506,7 +506,7 @@
       "snapshotFetchedAt": "2026-10-23T18:00:37+00:00"
     },
     "PLX": {
-      "status": "partially_reconciled_from_saved_ocr_no_more_uploads",
+      "status": "partially_reconciled_ratios_added_no_more_uploads",
       "completeForAutomation": true,
       "manualReviewRemaining": true,
       "periodCount": 10,
@@ -529,11 +529,11 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 4,
-      "updatedAt": "2026-10-25T20:50:00Z",
+      "updatedAt": "2026-10-25T21:00:00Z",
       "snapshotFetchedAt": "2026-10-23T18:24:32+00:00",
       "latestManualProgress": {
         "updatedFile": "data/financials-PLX.json",
-        "commit": "7d416f7f7755cbf3cf2d0cb3bd34db993625a701",
+        "commit": "981f785e509795e1954db5c36b0c8e6f05bc2798",
         "periodsTouched": [
           "2024-Q1",
           "2024-Q2",
@@ -546,7 +546,7 @@
           "2026-Q1",
           "2026-Q2"
         ],
-        "note": "Chuẩn hóa dòng tiền toàn chuỗi PLX: đọc số lũy kế từ đúng trang lưu chuyển tiền tệ trong PDF VietstockFinance, lấy chênh lệch YTD để tách ra quý riêng, sửa các trường CFO/FX bị gán nhầm, bổ sung số dư tiền đầu/cuối quý. Capex Q3/Q4 2025 chưa xác định riêng do OCR dòng Q3 bị cắt. Q2/2025 đã trực quan xác minh trang 5 từ ảnh người dùng; Q4/2025 giá vốn được đối chiếu bằng công thức doanh thu thuần − lợi nhuận gộp; Q2/2026 phục hồi doanh thu thuần, giá vốn, lợi nhuận gộp, LNTT nhưng LNST/thuế/chi phí chi tiết còn để null."
+        "note": "Đã tính ROA/ROE thường niên hóa cho 9 kỳ có LNST quý và số dư đầu-cuối đủ: 2024-Q1 đến 2026-Q1; công thức dùng LNST hợp nhất quý × 4 / số dư tài sản hoặc VCSH bình quân. Q2/2026 để null vì LNST quý còn chưa xác định. Tiếp tục giữ PLX, không yêu cầu thêm ảnh."
       },
       "cashflowAudit": {
         "status": "quarterly_values_reconciled_from_ytd_reports",
