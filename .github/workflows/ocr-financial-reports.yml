@@ -152,11 +152,17 @@ jobs:
               return False
 
           checkpoint = load_json(Path("reports/processing-checkpoint.json")) or {}
+          checkpoint_states = checkpoint.get("symbolStates") or {}
           completed_symbols = {
-              str(value).strip().upper()
-              for value in checkpoint.get("completedSymbols", [])
-              if str(value).strip()
+              str(symbol).strip().upper()
+              for symbol, state in checkpoint_states.items()
+              if isinstance(state, dict) and state.get("completeForAutomation") is True
           }
+          # Also retain completion from the latest checkpoint record if older
+          # checkpoints do not yet have the per-symbol state map.
+          latest = checkpoint.get("lastProgress") or {}
+          if latest.get("completeForAutomation") is True and latest.get("symbol"):
+              completed_symbols.add(str(latest["symbol"]).strip().upper())
           requested = os.environ.get("REQUESTED_SYMBOL", "").strip().upper()
           bootstrap_symbol = ""
           if requested:
