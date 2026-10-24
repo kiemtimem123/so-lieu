@@ -386,10 +386,10 @@
         "investing_cash_flow_ytd",
         "net_cash_change",
         "net_cash_change_ytd",
+        "net_profit_attributable",
         "non_current_assets_asset_total_check",
         "operating_cash_flow",
-        "operating_cash_flow_ytd",
-        "net_profit_attributable"
+        "operating_cash_flow_ytd"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-24T10:50:00Z",
       "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. LNST thuộc cổ đông công ty mẹ Q4/2024 bị ẩn do giá trị OCR 996.628 triệu VND vượt LNST hợp nhất 130.159 triệu VND; cần đối chiếu PDF VietstockFinance trước khi khôi phục.",
@@ -428,7 +428,6 @@
         "interest_expense",
         "inventory",
         "long_term_liabilities",
-        "net_profit_attributable",
         "operating_profit",
         "retained_earnings",
         "revenue",
@@ -439,7 +438,7 @@
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-23T17:41:21+00:00",
       "financial_line_items_source": "reports/raw/DPG/auto-dpg-20261021/3aa7242f4becaec4.pdf",
-      "financial_line_items_updated_at": "2026-10-23T17:41:22+00:00",
+      "financial_line_items_updated_at": "2026-10-24T12:28:41+00:00",
       "operating_cash_flow_calculation": "reported as standalone quarter",
       "investing_cash_flow_calculation": "reported as standalone quarter",
       "financing_cash_flow_calculation": "reported as standalone quarter",
@@ -704,8 +703,8 @@
       "total_assets": null,
       "total_liabilities": null,
       "equity": null,
-      "pretax_profit": 111120,
-      "net_profit": 102572,
+      "pretax_profit": null,
+      "net_profit": null,
       "net_profit_attributable": 70426,
       "revenue": 1141523,
       "roa": null,
@@ -745,8 +744,8 @@
         "net_profit",
         "pretax_profit"
       ],
-      "core_financial_extraction_status": "pending_full_consolidated_report_archive_and_extraction",
-      "core_financial_extraction_note": "BCTC đầy đủ Q2/2025 chưa được lưu/trích xuất; tệp hiện có là công văn đính chính 3 trang chỉ có KQKD quý. Giữ trống tài sản, nợ phải trả và vốn chủ sở hữu cho đến khi trích xuất từ BCTC hợp nhất đầy đủ trên VietstockFinance.",
+      "core_financial_extraction_status": "manual_review_required_pending_extraction",
+      "core_financial_extraction_note": "Đã có đủ trang nguồn mục tiêu nhưng hai lượt phân tích trên cùng văn bản vẫn không tạo được bộ chỉ tiêu lõi cân đối. Các số OCR chưa cân đối được lưu riêng để đối chiếu; chỉ tiêu chính chưa xác minh được để trống.",
       "verification_status_note": "Cần đối chiếu trực quan với PDF VietstockFinance trước khi công bố các chỉ tiêu lõi.",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "be2e8c0b34732a7824ca87dfc2505ea6cb9eb6ddc59c9cdc640f4860dfbe3abb",
@@ -794,8 +793,8 @@
       },
       "financial_line_items_rejected_values": {},
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "core_financial_extraction_stable_evidence_count": 2,
-      "core_financial_extraction_stable_evidence_updated_at": "2026-10-23T17:59:28+00:00",
+      "core_financial_extraction_stable_evidence_count": 3,
+      "core_financial_extraction_stable_evidence_updated_at": "2026-10-24T12:28:37+00:00",
       "core_financial_extraction_manual_terminal": true,
       "balance_sheet_source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%202/DPG_Baocaotaichinh_Q2_2025_Hopnhat.pdf",
       "balance_sheet_source_note": "Bản lưu hiện tại source_archive_file là công văn đính chính 3 trang, chỉ có bảng KQKD riêng quý và không chứa bảng cân đối kế toán. URL này là đường dẫn BCTC hợp nhất Q2/2025 liên kết từ VietstockFinance cần lấy/trích xuất để bổ sung tài sản, nợ phải trả và vốn chủ sở hữu; chưa xác minh các số dư nên để null.",
@@ -1001,6 +1000,8 @@
         "cash_beginning",
         "cash_ending",
         "cost_of_goods_sold_gross_profit_equation_check",
+        "current_assets",
+        "current_assets_current_assets_too_small",
         "financing_cash_flow",
         "financing_cash_flow_ytd",
         "fixed_assets_fixed_asset_parent_check",
@@ -1009,18 +1010,18 @@
         "investing_cash_flow_ytd",
         "net_cash_change",
         "net_cash_change_ytd",
+        "non_current_assets",
+        "non_current_assets_asset_total_check",
         "operating_cash_flow",
         "operating_cash_flow_ytd",
         "revenue_gross_profit_equation_check"
       ],
-      "financial_line_items_rejected_updated_at": "2026-10-23T17:52:12+00:00",
-      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần.",
-      "current_assets": 0,
+      "financial_line_items_rejected_updated_at": "2026-10-24T12:28:39+00:00",
+      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Tài sản ngắn hạn/dài hạn bị ẩn do tổng không khớp tổng tài sản.",
       "cash_and_equivalents": 796256,
       "short_term_investments": 63902,
       "short_term_receivables": 1418700,
       "inventory": 2211082,
-      "non_current_assets": 125575,
       "current_liabilities": 2477134,
       "long_term_liabilities": 2724626,
       "retained_earnings": 1153425,
@@ -1035,16 +1036,15 @@
         "admin_expense",
         "cash_and_equivalents",
         "cashflow_period_basis",
-        "current_assets",
         "current_liabilities",
         "financial_expense",
         "financial_income",
         "foreign_exchange_effect_ytd",
+        "income_tax",
         "interest_expense",
         "inventory",
         "long_term_liabilities",
         "net_profit_attributable",
-        "non_current_assets",
         "operating_profit",
         "retained_earnings",
         "short_term_investments",
@@ -1054,7 +1054,7 @@
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-23T17:52:12+00:00",
       "financial_line_items_source": "reports/raw/DPG/auto-dpg-20261021/f0c79bde449da23c.pdf",
-      "financial_line_items_updated_at": "2026-10-23T17:52:13+00:00",
+      "financial_line_items_updated_at": "2026-10-24T12:28:41+00:00",
       "operating_cash_flow_calculation": "reported as standalone quarter",
       "investing_cash_flow_calculation": "reported as standalone quarter",
       "financing_cash_flow_calculation": "reported as standalone quarter",
@@ -1111,11 +1111,21 @@
         "cash_ending": {
           "value": 796256,
           "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "current_assets": {
+          "value": 0,
+          "reason": "asset subtotals do not reconcile"
+        },
+        "non_current_assets": {
+          "value": 125575,
+          "reason": "asset subtotals do not reconcile"
         }
       },
       "core_financial_extraction_stable_evidence_count": 1,
       "core_financial_extraction_stable_evidence_updated_at": "2026-10-23T17:59:30+00:00",
-      "core_financial_extraction_manual_terminal": true
+      "core_financial_extraction_manual_terminal": true,
+      "income_tax": 13293,
+      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có."
     },
     {
       "symbol": "DPG",
@@ -1183,6 +1193,10 @@
         "capital_expenditure_ytd",
         "cash_and_equivalents_current_asset_component_check",
         "cost_of_goods_sold_gross_profit_equation_check",
+        "current_assets",
+        "current_assets_asset_total_check",
+        "current_liabilities",
+        "current_liabilities_liability_total_check",
         "financing_cash_flow",
         "financing_cash_flow_ytd",
         "fixed_assets_fixed_asset_parent_check",
@@ -1190,20 +1204,20 @@
         "inventory_current_asset_component_check",
         "investing_cash_flow",
         "investing_cash_flow_ytd",
+        "long_term_liabilities",
+        "long_term_liabilities_liability_total_check",
         "net_cash_change",
         "net_cash_change_ytd",
+        "non_current_assets",
+        "non_current_assets_asset_total_check",
         "operating_cash_flow",
         "operating_cash_flow_ytd",
         "revenue_gross_profit_equation_check",
         "short_term_investments_current_asset_component_check",
         "short_term_receivables_current_asset_component_check"
       ],
-      "financial_line_items_rejected_updated_at": "2026-10-23T17:59:31+00:00",
-      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần.",
-      "current_assets": 205137,
-      "non_current_assets": 129165,
-      "current_liabilities": 2654990,
-      "long_term_liabilities": 1,
+      "financial_line_items_rejected_updated_at": "2026-10-24T12:28:40+00:00",
+      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Tài sản ngắn hạn/dài hạn bị ẩn do tổng không khớp tổng tài sản. Nợ ngắn hạn/dài hạn bị ẩn do tổng không khớp nợ phải trả.",
       "retained_earnings": 1216758,
       "financial_income": 9262,
       "financial_expense": 353093,
@@ -1217,9 +1231,9 @@
       "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
         "admin_expense",
+        "cash_beginning",
+        "cash_ending",
         "cashflow_period_basis",
-        "current_assets",
-        "current_liabilities",
         "diluted_eps",
         "financial_expense",
         "financial_income",
@@ -1227,17 +1241,15 @@
         "income_tax",
         "income_tax_current",
         "interest_expense",
-        "long_term_liabilities",
         "net_profit_attributable",
-        "non_current_assets",
         "operating_profit",
         "retained_earnings"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-23T17:59:31+00:00",
+      "financial_line_items_schema_updated_at": "2026-10-24T12:28:40+00:00",
       "financial_line_items_source": "reports/raw/DPG/auto-dpg-20261021/7f4aca59275675d3.pdf",
-      "financial_line_items_updated_at": "2026-10-23T17:59:33+00:00",
+      "financial_line_items_updated_at": "2026-10-24T12:28:41+00:00",
       "operating_cash_flow_calculation": "Q1 equals YTD Q1",
       "investing_cash_flow_calculation": "Q1 equals YTD Q1",
       "financing_cash_flow_calculation": "Q1 equals YTD Q1",
@@ -1287,9 +1299,27 @@
         "capital_expenditure_ytd": {
           "value": -505060,
           "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "current_assets": {
+          "value": 205137,
+          "reason": "asset subtotals do not reconcile"
+        },
+        "non_current_assets": {
+          "value": 129165,
+          "reason": "asset subtotals do not reconcile"
+        },
+        "current_liabilities": {
+          "value": 2654990,
+          "reason": "liability subtotals do not reconcile"
+        },
+        "long_term_liabilities": {
+          "value": 1,
+          "reason": "liability subtotals do not reconcile"
         }
       },
-      "core_financial_extraction_manual_terminal": true
+      "core_financial_extraction_manual_terminal": true,
+      "cash_beginning": 796256,
+      "cash_ending": 34166
     },
     {
       "symbol": "DPG",
@@ -1300,7 +1330,7 @@
       "pretax_profit": 149613,
       "net_profit": 130813,
       "net_profit_attributable": null,
-      "revenue": 1858765,
+      "revenue": 209302,
       "roa": 5.4,
       "roe": 14.34,
       "unit": "triệu VND",
@@ -1357,27 +1387,33 @@
         "capital_expenditure_ytd",
         "cash_and_equivalents_current_asset_component_check",
         "cash_beginning",
+        "cost_of_goods_sold_gross_profit_equation_check",
+        "current_assets",
+        "current_assets_asset_total_check",
+        "current_liabilities",
+        "current_liabilities_liability_total_check",
         "dividends_paid_ytd",
         "financing_cash_flow",
         "financing_cash_flow_ytd",
+        "gross_profit_gross_profit_equation_check",
         "income_tax_tax_reconciliation_check",
         "inventory_current_asset_component_check",
         "investing_cash_flow",
         "investing_cash_flow_ytd",
+        "long_term_liabilities",
+        "long_term_liabilities_liability_total_check",
         "net_cash_change",
         "net_cash_change_ytd",
+        "non_current_assets",
+        "non_current_assets_asset_total_check",
         "operating_cash_flow",
         "operating_cash_flow_ytd",
         "short_term_receivables_current_asset_component_check"
       ],
-      "financial_line_items_rejected_updated_at": "2026-10-23T17:59:32+00:00",
-      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần.",
-      "current_assets": 407329,
+      "financial_line_items_rejected_updated_at": "2026-10-24T12:28:41+00:00",
+      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Doanh thu được tái lập từ lợi nhuận gộp và giá vốn do số OCR không khớp; cần đối chiếu trực quan. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Tài sản ngắn hạn/dài hạn bị ẩn do tổng không khớp tổng tài sản. Nợ ngắn hạn/dài hạn bị ẩn do tổng không khớp nợ phải trả.",
       "short_term_investments": 390406,
-      "non_current_assets": 175914,
       "fixed_assets": 185,
-      "current_liabilities": 616,
-      "long_term_liabilities": 3494820,
       "retained_earnings": 1254007,
       "cost_of_goods_sold": 13223,
       "gross_profit": 196079,
@@ -1393,8 +1429,6 @@
         "admin_expense",
         "cashflow_period_basis",
         "cost_of_goods_sold",
-        "current_assets",
-        "current_liabilities",
         "financial_expense",
         "financial_income",
         "fixed_assets",
@@ -1402,10 +1436,9 @@
         "gross_profit",
         "income_tax",
         "interest_expense",
-        "long_term_liabilities",
-        "non_current_assets",
         "operating_profit",
         "retained_earnings",
+        "revenue",
         "selling_expense",
         "short_term_investments"
       ],
@@ -1413,7 +1446,7 @@
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-23T17:59:32+00:00",
       "financial_line_items_source": "reports/raw/DPG/auto-dpg-20261021/cebeec54de24c812.pdf",
-      "financial_line_items_updated_at": "2026-10-23T17:59:33+00:00",
+      "financial_line_items_updated_at": "2026-10-24T12:28:41+00:00",
       "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "financing_cash_flow_calculation": "current YTD minus previous quarter YTD",
@@ -1422,7 +1455,10 @@
       "foreign_exchange_effect": 15345,
       "foreign_exchange_effect_calculation": "current YTD minus previous quarter YTD",
       "cash_beginning_calculation": "previous quarter closing cash",
-      "financial_line_items_prior_values": {},
+      "financial_line_items_prior_values": {
+        "revenue": 1858765,
+        "income_tax": 129702
+      },
       "financial_line_items_rejected_values": {
         "operating_cash_flow": {
           "value": -106865,
@@ -1471,11 +1507,35 @@
         "cash_beginning": {
           "value": 34166,
           "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "current_assets": {
+          "value": 407329,
+          "reason": "asset subtotals do not reconcile"
+        },
+        "non_current_assets": {
+          "value": 175914,
+          "reason": "asset subtotals do not reconcile"
+        },
+        "current_liabilities": {
+          "value": 616,
+          "reason": "liability subtotals do not reconcile"
+        },
+        "long_term_liabilities": {
+          "value": 3494820,
+          "reason": "liability subtotals do not reconcile"
         }
       },
-      "income_tax": 129702,
+      "income_tax": 18800,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "core_financial_extraction_manual_terminal": true
+      "core_financial_extraction_manual_terminal": true,
+      "cash_beginning": 34166,
+      "revenue_calculation": "Lợi nhuận gộp + |giá vốn hàng bán|; tái lập từ hai dòng của BCTC do doanh thu OCR không khớp.",
+      "financial_line_items_revenue_reconciliation": {
+        "previous_value": 1858765,
+        "reconstructed_value": 209302,
+        "formula": "gross_profit + abs(cost_of_goods_sold)",
+        "difference_from_parsed_value": 1649463
+      }
     },
     {
       "symbol": "DPG",
