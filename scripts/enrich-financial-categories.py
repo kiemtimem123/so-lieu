@@ -916,9 +916,9 @@ def extract_fields(item,symbol,pages):
   is_ytd=bool(
    re.search(r"\b01\s*/\s*01\s*/?\s*20\d{2}\b",cft)
    or "tu ngay 01 thang 01" in cft
-   or re.search(r"\\btu ngay 0?1 thang 0?1 nam 20\\d{2}\\b",cft)
-   or re.search(r"\\bgiai doan tai chinh tu ngay 0?1 thang 0?1 nam 20\\d{2}\\b",cft)
-   or re.search(r"\\b(?:cho )?ky(?: ke toan)? (?:6|9|12|sau|chin|muoi hai) thang ket thuc ngay\\b",cft)
+   or re.search(r"\btu ngay 0?1 thang 0?1 nam 20\d{2}\b",cft)
+   or re.search(r"\bgiai doan tai chinh tu ngay 0?1 thang 0?1 nam 20\d{2}\b",cft)
+   or re.search(r"\b(?:cho )?ky(?: ke toan)? (?:6|9|12|sau|chin|muoi hai) thang ket thuc ngay\b",cft)
    or "luy ke tu dau nam" in cft
    or "giai doan tu 01/01" in cft
    or re.search(r"\b(?:cho )?ky (?:6|9|12) thang ket thuc ngay\b",cft)
