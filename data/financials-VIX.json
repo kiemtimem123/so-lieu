@@ -9,7 +9,7 @@
       "total_assets": 18217832,
       "total_liabilities": 2285291,
       "equity": 15932541,
-      "pretax_profit": null,
+      "pretax_profit": 0,
       "net_profit": 265385,
       "net_profit_attributable": null,
       "revenue": 553758,
@@ -47,12 +47,12 @@
       "eps": 674,
       "core_financial_extracted_fields": [
         "eps",
+        "equity",
+        "net_profit",
         "pretax_profit",
         "revenue",
-        "net_profit",
         "total_assets",
-        "total_liabilities",
-        "equity"
+        "total_liabilities"
       ],
       "core_financial_extraction_source": "reports/raw/VIX/auto-vix-20261021/f856e48e1532d399.pdf",
       "core_financial_extraction_pages": [
@@ -62,17 +62,21 @@
         6,
         7,
         8,
-        9
+        9,
+        18
       ],
       "core_financial_extraction_status": "auto_extracted_pending_visual_review",
-      "core_financial_extraction_updated_at": "2026-10-25T15:26:38.403Z",
-      "core_financial_extraction_note": "BCTC riêng VIX từ PDF VietstockFinance: tổng tài sản 18.217.831.729.322 VND, nợ phải trả 2.285.291.193.646 VND, vốn chủ sở hữu 15.932.540.535.676 VND; phương trình cân đối khớp. Doanh thu hoạt động 553.758 triệu VND; LNST quý III 265.385.146.552 VND theo giải trình VietstockFinance. Giá trị LNTT OCR bằng 0 không đáng tin cậy nên để null. Chưa xác minh trực quan ảnh PDF.",
+      "core_financial_extraction_updated_at": "2026-10-25T15:57:30+00:00",
+      "core_financial_extraction_note": "Chỉ tiêu lõi được trích xuất từ văn bản PDF/ZIP đã lưu; chưa xác minh thủ công trên bản PDF.",
       "financial_line_items_rejected_fields": [
         "fixed_assets_fixed_asset_parent_check",
+        "income_tax_current_tax_reconciliation_check",
+        "income_tax_deferred_tax_reconciliation_check",
+        "income_tax_tax_reconciliation_check",
         "pretax_profit"
       ],
-      "financial_line_items_rejected_updated_at": "2026-10-23T10:00:08+00:00",
-      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
+      "financial_line_items_rejected_updated_at": "2026-10-25T15:57:30+00:00",
+      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
       "current_assets": 18170499,
       "cash_and_equivalents": 4152906,
       "non_current_assets": 333,
@@ -98,7 +102,7 @@
       "broker_interest_expense": 58824,
       "income_tax_current": 0,
       "income_tax_deferred": 0,
-      "income_tax": 0,
+      "income_tax": -265385,
       "cash_beginning": 327296,
       "cash_ending": 0,
       "cashflow_period_basis": "year_to_date",
@@ -134,14 +138,15 @@
         "retained_earnings",
         "revenue"
       ],
-      "financial_line_items_status": "manual_review_required",
+      "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-23T10:00:08+00:00",
       "financial_line_items_source": "reports/raw/VIX/auto-vix-20261021/f856e48e1532d399.pdf",
-      "financial_line_items_updated_at": "2026-10-25T21:00:00+07:00",
+      "financial_line_items_updated_at": "2026-10-25T15:57:43+00:00",
       "financial_line_items_prior_values": {
         "pretax_profit": 0,
-        "revenue": 400809
+        "revenue": 400809,
+        "income_tax": 0
       },
       "financial_line_items_rejected_values": {
         "pretax_profit": {
@@ -170,7 +175,8 @@
       "core_financial_extraction_attempt_count": 1,
       "core_financial_extraction_stable_evidence_count": 1,
       "core_financial_extraction_stable_evidence_updated_at": "2026-10-25T15:11:48+00:00",
-      "core_financial_extraction_manual_terminal": true
+      "core_financial_extraction_manual_terminal": true,
+      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có."
     },
     {
       "symbol": "VIX",
@@ -239,8 +245,6 @@
       "cash_and_equivalents": 693528,
       "non_current_assets": 0,
       "fixed_assets": 24644,
-      "current_liabilities": 0,
-      "long_term_liabilities": 89057,
       "retained_earnings": 1165123,
       "broker_lending_assets": 5773917,
       "broker_receivables": 142868,
@@ -280,13 +284,11 @@
         "broker_trading_expense",
         "cash_and_equivalents",
         "cashflow_period_basis",
-        "current_liabilities",
         "financial_expense",
         "fixed_assets",
         "income_tax",
         "income_tax_current",
         "income_tax_deferred",
-        "long_term_liabilities",
         "non_current_assets",
         "operating_cash_flow_ytd",
         "retained_earnings",
@@ -297,8 +299,8 @@
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-25T15:10:09+00:00",
       "financial_line_items_source": "reports/raw/VIX/auto-vix-20261021/af449a42efd129e7.pdf",
-      "financial_line_items_updated_at": "2026-10-25T15:10:09+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
+      "financial_line_items_updated_at": "2026-10-25T15:57:43+00:00",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Nợ ngắn hạn/dài hạn bị ẩn do tổng không khớp nợ phải trả.",
       "financial_line_items_prior_values": {
         "revenue": 360779
       },
@@ -306,9 +308,22 @@
         "revenue": {
           "value": 360779,
           "reason": "Giá trị cũ không khớp dòng tổng doanh thu hoạt động và/hoặc sai đơn vị; Doanh thu hoạt động lấy từ dòng Cộng doanh thu hoạt động; LNST đối chiếu thông báo giải trình Q4/2024."
+        },
+        "current_liabilities": {
+          "value": 0,
+          "reason": "liability subtotals do not reconcile"
+        },
+        "long_term_liabilities": {
+          "value": 89057,
+          "reason": "liability subtotals do not reconcile"
         }
       },
-      "financial_line_items_rejected_fields": [],
+      "financial_line_items_rejected_fields": [
+        "current_liabilities",
+        "current_liabilities_liability_total_check",
+        "long_term_liabilities",
+        "long_term_liabilities_liability_total_check"
+      ],
       "core_financial_extraction_unverified_values": {
         "total_assets": 19606325,
         "total_liabilities": 3561584,
@@ -327,12 +342,13 @@
       "cash_beginning_calculation": "previous quarter closing cash",
       "core_financial_extraction_stable_evidence_count": 1,
       "core_financial_extraction_stable_evidence_updated_at": "2026-10-25T15:11:49+00:00",
-      "core_financial_extraction_manual_terminal": true
+      "core_financial_extraction_manual_terminal": true,
+      "financial_line_items_rejected_updated_at": "2026-10-25T15:57:32+00:00"
     },
     {
       "symbol": "VIX",
       "period": "2025-Q1",
-      "total_assets": null,
+      "total_assets": 20610739,
       "total_liabilities": 4193721,
       "equity": 16417018,
       "pretax_profit": 465205,
@@ -374,11 +390,14 @@
         "current_liabilities",
         "current_liabilities_liability_total_check",
         "fixed_assets_fixed_asset_parent_check",
+        "income_tax_current_tax_reconciliation_check",
+        "income_tax_deferred_tax_reconciliation_check",
+        "income_tax_tax_reconciliation_check",
         "long_term_liabilities",
         "long_term_liabilities_liability_total_check"
       ],
-      "financial_line_items_rejected_updated_at": "2026-10-25T15:08:22+00:00",
-      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Nợ ngắn hạn/dài hạn bị ẩn do tổng không khớp nợ phải trả.",
+      "financial_line_items_rejected_updated_at": "2026-10-25T15:57:33+00:00",
+      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Nợ ngắn hạn/dài hạn bị ẩn do tổng không khớp nợ phải trả. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
       "cash_and_equivalents": 487051,
       "non_current_assets": 1,
       "retained_earnings": 1537400,
@@ -437,10 +456,11 @@
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-25T15:11:50+00:00",
       "financial_line_items_source": "reports/raw/VIX/auto-vix-20261021/216fe041cc81154b.pdf",
-      "financial_line_items_updated_at": "2026-10-25T15:11:50+00:00",
+      "financial_line_items_updated_at": "2026-10-25T15:57:43+00:00",
       "financial_line_items_prior_values": {
         "revenue": 979684,
-        "total_assets": 20610739
+        "total_assets": 20610739,
+        "income_tax": 0
       },
       "financial_line_items_rejected_values": {
         "revenue": {
@@ -461,15 +481,15 @@
         }
       },
       "core_financial_extraction_status": "auto_extracted_pending_visual_review",
-      "core_financial_extraction_note": "BCTC riêng VIX từ PDF VietstockFinance: nợ phải trả 4.193.720.690.957 VND và vốn chủ sở hữu 16.417.017.839.209 VND. Dòng tổng tài sản OCR chưa đáng tin cậy nên cách ly giá trị tổng tài sản đã lưu, không suy ra từ phép cộng. Doanh thu hoạt động 979.684 triệu VND; LNTT 465.205 triệu VND; LNST 372.276.939.771 VND theo giải trình VietstockFinance. Chưa xác minh trực quan ảnh PDF.",
-      "core_financial_extraction_updated_at": "2026-10-25T15:26:38.404Z",
+      "core_financial_extraction_note": "Chỉ tiêu lõi được trích xuất từ văn bản PDF/ZIP đã lưu; chưa xác minh thủ công trên bản PDF.",
+      "core_financial_extraction_updated_at": "2026-10-25T15:57:33+00:00",
       "core_financial_extracted_fields": [
         "equity",
+        "net_profit",
         "pretax_profit",
         "revenue",
         "total_assets",
-        "total_liabilities",
-        "net_profit"
+        "total_liabilities"
       ],
       "core_financial_extraction_unverified_values": {
         "net_profit": 372277
@@ -495,7 +515,7 @@
       "core_financial_extraction_attempt_count": 1,
       "income_tax_current": 0,
       "income_tax_deferred": 0,
-      "income_tax": 0,
+      "income_tax": 92928,
       "operating_cash_flow_ytd": 465205,
       "investing_cash_flow_ytd": 780,
       "financing_cash_flow_ytd": 1125500,
@@ -508,7 +528,8 @@
       "investing_cash_flow_calculation": "Q1 equals YTD Q1",
       "financing_cash_flow": 1125500,
       "financing_cash_flow_calculation": "Q1 equals YTD Q1",
-      "core_financial_extraction_manual_terminal": true
+      "core_financial_extraction_manual_terminal": true,
+      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có."
     },
     {
       "symbol": "VIX",
@@ -608,11 +629,12 @@
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-25T15:11:52+00:00",
       "financial_line_items_source": "reports/raw/VIX/auto-vix-20261021/1131acc3cfefeb0a.pdf",
-      "financial_line_items_updated_at": "2026-10-25T15:11:52+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
+      "financial_line_items_updated_at": "2026-10-25T15:57:43+00:00",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
       "financial_line_items_prior_values": {
         "revenue": 1698203,
-        "pretax_profit": 1602476
+        "pretax_profit": 1602476,
+        "income_tax": 201204
       },
       "financial_line_items_rejected_values": {
         "revenue": {
@@ -627,7 +649,11 @@
       "core_financial_extraction_status": "auto_extracted_pending_visual_review",
       "core_financial_extraction_note": "BCTC riêng VIX từ PDF VietstockFinance: tổng tài sản 24.385.197.959.515 VND, nợ phải trả 6.666.569.152.664 VND, vốn chủ sở hữu 17.718.628.806.851 VND; phương trình cân đối khớp. Doanh thu hoạt động quý II 1.976.150.333.018 VND; LNTT 1.602.475.526.579 VND; LNST 1.301.610.967.642 VND theo báo cáo/giải trình VietstockFinance. Chưa xác minh trực quan ảnh PDF. LNTT được giữ ở 1.602.507 triệu VND theo dòng LNTT đã trích xuất; không dùng 1.602.475 triệu là dòng kết quả hoạt động.",
       "core_financial_extraction_updated_at": "2026-10-25T15:26:38.404Z",
-      "financial_line_items_rejected_fields": [],
+      "financial_line_items_rejected_fields": [
+        "income_tax_current_tax_reconciliation_check",
+        "income_tax_deferred_tax_reconciliation_check",
+        "income_tax_tax_reconciliation_check"
+      ],
       "core_financial_extracted_fields": [
         "pretax_profit",
         "revenue",
@@ -663,14 +689,16 @@
       "core_financial_extraction_attempt_count": 1,
       "income_tax_current": 0,
       "income_tax_deferred": 201204,
-      "income_tax": 201204,
+      "income_tax": 300896,
       "operating_cash_flow_ytd": 2067712,
       "cash_beginning": 889333,
       "cashflow_period_basis": "year_to_date",
       "operating_cash_flow": 1602507,
       "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "cash_beginning_calculation": "previous quarter closing cash",
-      "core_financial_extraction_manual_terminal": true
+      "core_financial_extraction_manual_terminal": true,
+      "financial_line_items_rejected_updated_at": "2026-10-25T15:57:34+00:00",
+      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có."
     },
     {
       "symbol": "VIX",
@@ -691,7 +719,7 @@
       "report_type": "BCTC riêng VIX 2025-Q3 — phạm vi xác nhận từ PDF VietstockFinance",
       "source_pages": "BCTC riêng VIX từ PDF VietstockFinance: tổng tài sản 31.534.673 triệu VND, nợ phải trả 11.366.621 triệu VND, vốn chủ sở hữu 20.168.052 triệu VND; phương trình cân đối khớp. Doanh thu hoạt động quý III 3.221.825 triệu VND; LNST 2.449.423.347.569 VND theo văn bản giải trình trang 3. Chưa xác minh trực quan ảnh PDF.",
       "quarter_profit_basis": "Không đưa số liệu vào chuỗi hợp nhất cho đến khi xác nhận đúng phạm vi báo cáo và cột phát sinh riêng của quý.",
-      "verification_status": "auto_extracted_pending_visual_review",
+      "verification_status": "manual_review_required_pending_extraction",
       "source_validation": {
         "reviewed_at": "2026-10-25T15:28:00Z",
         "single_source_policy": "Chỉ danh mục VietstockFinance và tệp do danh mục đó liên kết.",
@@ -713,12 +741,8 @@
       "source_archive_source": "VietstockFinance document index",
       "source_archive_title": "Báo cáo tài chính quý 3 năm 2025 Báo cáo tài chính quý 3 năm 2025  ",
       "source_archive_linked_at": "2026-10-23T09:44:28.547668+00:00",
-      "current_assets": 31490793258294,
       "cash_and_equivalents": 909902606614,
-      "non_current_assets": 43879779569,
       "fixed_assets": 20594334057,
-      "current_liabilities": 10735210958329,
-      "long_term_liabilities": 631409925114,
       "retained_earnings": 4559267268958,
       "broker_lending_assets": 16142608032169,
       "broker_receivables": 1083479370610,
@@ -762,21 +786,21 @@
         "broker_trading_expense",
         "broker_underwriting_revenue",
         "cash_and_equivalents",
-        "current_assets",
-        "current_liabilities",
+        "cashflow_period_basis",
         "financial_expense",
         "financial_income",
         "fixed_assets",
-        "long_term_liabilities",
-        "non_current_assets",
+        "income_tax",
+        "income_tax_current",
+        "income_tax_deferred",
         "retained_earnings"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-23T10:06:47+00:00",
+      "financial_line_items_schema_updated_at": "2026-10-25T15:57:35+00:00",
       "financial_line_items_source": "reports/raw/VIX/auto-vix-20261021/e6b35015581bb224.pdf",
-      "financial_line_items_updated_at": "2026-10-25T15:08:32+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
+      "financial_line_items_updated_at": "2026-10-25T15:57:43+00:00",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Tài sản ngắn hạn/dài hạn bị ẩn do tổng không khớp tổng tài sản. Nợ ngắn hạn/dài hạn bị ẩn do tổng không khớp nợ phải trả.",
       "financial_line_items_prior_values": {
         "revenue": 2751202607528
       },
@@ -784,27 +808,83 @@
         "revenue": {
           "value": 2751202607528,
           "reason": "Giá trị cũ là lợi nhuận từ tài sản tài chính FVTPL tính bằng VND, không phải tổng doanh thu hoạt động và sai đơn vị của trường revenue. Đã thay bằng tổng doanh thu hoạt động 3.221.825 triệu VND theo trang 13."
+        },
+        "current_assets": {
+          "value": 31490793258294,
+          "reason": "asset subtotals do not reconcile"
+        },
+        "non_current_assets": {
+          "value": 43879779569,
+          "reason": "asset subtotals do not reconcile"
+        },
+        "current_liabilities": {
+          "value": 10735210958329,
+          "reason": "liability subtotals do not reconcile"
+        },
+        "long_term_liabilities": {
+          "value": 631409925114,
+          "reason": "liability subtotals do not reconcile"
         }
       },
-      "core_financial_extraction_status": "auto_extracted_pending_visual_review",
-      "core_financial_extraction_note": "BCTC riêng VIX từ PDF VietstockFinance: tổng tài sản 31.534.673 triệu VND, nợ phải trả 11.366.621 triệu VND, vốn chủ sở hữu 20.168.052 triệu VND; phương trình cân đối khớp. Doanh thu hoạt động quý III 3.221.825 triệu VND; LNST 2.449.423.347.569 VND theo văn bản giải trình trang 3. Chưa xác minh trực quan ảnh PDF.",
-      "core_financial_extraction_updated_at": "2026-10-25T15:26:38.404Z",
+      "core_financial_extraction_status": "manual_review_required_pending_extraction",
+      "core_financial_extraction_note": "Không còn trang PDF/ZIP đang chờ trích xuất tự động nhưng bộ chỉ tiêu lõi vẫn thiếu hoặc chưa cân đối. Giữ trống chỉ tiêu chưa xác minh và yêu cầu đối chiếu trực quan với báo cáo VietstockFinance.",
+      "core_financial_extraction_updated_at": "2026-10-25T15:57:44Z",
       "financial_line_items_rejected_fields": [
+        "admin_expense_magnitude",
+        "broker_admin_expenses_magnitude",
+        "broker_brokerage_expense_magnitude",
+        "broker_custody_expense_magnitude",
+        "broker_custody_revenue_magnitude",
+        "broker_customer_deposits_magnitude",
+        "broker_financial_expense_magnitude",
+        "broker_financial_income_magnitude",
+        "broker_fvtpl_loss_magnitude",
+        "broker_held_to_maturity_income_magnitude",
+        "broker_lending_assets_magnitude",
+        "broker_lending_income_magnitude",
+        "broker_operating_expenses_magnitude",
+        "broker_receivables_magnitude",
+        "broker_short_term_borrowings_magnitude",
+        "broker_total_operating_expenses_magnitude",
+        "broker_total_operating_revenue_magnitude",
+        "broker_trading_expense_magnitude",
+        "broker_underwriting_revenue_magnitude",
+        "cash_and_equivalents_magnitude",
+        "cash_beginning_magnitude",
+        "current_assets",
+        "current_assets_magnitude",
+        "current_liabilities",
+        "current_liabilities_magnitude",
+        "financial_expense_magnitude",
+        "financial_income_magnitude",
+        "financing_cash_flow_ytd_magnitude",
+        "fixed_assets_magnitude",
+        "long_term_liabilities",
+        "long_term_liabilities_magnitude",
+        "non_current_assets",
+        "non_current_assets_magnitude",
+        "operating_cash_flow_ytd_magnitude",
+        "retained_earnings_magnitude",
         "revenue"
       ],
       "core_financial_extracted_fields": [
-        "revenue",
+        "eps",
+        "equity",
         "net_profit",
+        "revenue",
         "total_assets",
-        "total_liabilities",
-        "equity"
+        "total_liabilities"
       ],
       "core_financial_extraction_source": "reports/raw/VIX/auto-vix-20261021/e6b35015581bb224.pdf",
       "core_financial_extraction_pages": [
         8,
         9,
         10,
-        13
+        11,
+        12,
+        13,
+        14,
+        15
       ],
       "core_financial_extraction_unverified_values": {
         "total_assets": 31534673,
@@ -815,10 +895,20 @@
       "core_financial_extraction_unverified_values_parser_version": "legacy-parser-before-ngan-vnd-unit-fix",
       "verification_status_note": "Số liệu lấy từ PDF/giải trình trong tài liệu do danh mục VietstockFinance liên kết; cần rà soát trực quan ảnh PDF.",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
-      "core_financial_extraction_evidence_fingerprint": "02a308053984c99ae98b2b4cd0c13ad29fd14d450060da6c135b3ae9c1d8bcdd",
-      "core_financial_extraction_evidence_attempt_count": 0,
+      "core_financial_extraction_evidence_fingerprint": "a1f5d8178d2bab3913c426f7637f5353aba5cdc17cb56cd72baa79769411d58d",
+      "core_financial_extraction_evidence_attempt_count": 1,
       "core_financial_extraction_stable_evidence_count": 2,
       "core_financial_extraction_stable_evidence_updated_at": "2026-10-25T15:11:53+00:00",
+      "eps": 2692,
+      "core_financial_extraction_calculations": {
+        "balance_totals_withheld": "asset/liability/equity totals did not fully reconcile"
+      },
+      "core_financial_extraction_attempt_count": 1,
+      "financial_line_items_rejected_updated_at": "2026-10-25T15:57:35+00:00",
+      "income_tax_current": 1001,
+      "income_tax_deferred": 1002,
+      "income_tax": 2003,
+      "cashflow_period_basis": "quarterly_reported",
       "core_financial_extraction_manual_terminal": true
     },
     {
@@ -827,7 +917,7 @@
       "total_assets": null,
       "total_liabilities": null,
       "equity": null,
-      "pretax_profit": null,
+      "pretax_profit": 1601368,
       "net_profit": null,
       "net_profit_attributable": null,
       "revenue": 1664395,
@@ -910,32 +1000,63 @@
         "broker_trading_expense",
         "broker_underwriting_revenue",
         "cash_and_equivalents",
+        "cashflow_period_basis",
         "current_liabilities",
         "financial_expense",
         "financial_income",
+        "financing_cash_flow_ytd",
+        "income_tax",
+        "income_tax_current",
+        "income_tax_deferred",
+        "investing_cash_flow_ytd",
         "long_term_liabilities",
         "non_current_assets",
+        "operating_cash_flow_ytd",
         "retained_earnings",
         "revenue"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-23T10:08:56+00:00",
+      "financial_line_items_schema_updated_at": "2026-10-25T15:57:37+00:00",
       "financial_line_items_source": "reports/raw/VIX/auto-vix-20261021/eb378ead40b9d808.zip",
-      "financial_line_items_updated_at": "2026-10-23T10:08:56+00:00",
+      "financial_line_items_updated_at": "2026-10-25T15:57:37+00:00",
       "financial_line_items_prior_values": {},
       "financial_line_items_rejected_values": {},
       "core_financial_extraction_status": "manual_review_required_pending_extraction",
-      "core_financial_extraction_note": "Đã có đủ trang nguồn mục tiêu nhưng hai lượt phân tích trên cùng văn bản vẫn không tạo được bộ chỉ tiêu lõi cân đối. Các số OCR chưa cân đối được lưu riêng để đối chiếu; chỉ tiêu chính chưa xác minh được để trống.",
-      "core_financial_extraction_updated_at": "2026-10-23T10:17:33Z",
+      "core_financial_extraction_note": "Không còn trang PDF/ZIP đang chờ trích xuất tự động nhưng bộ chỉ tiêu lõi vẫn thiếu hoặc chưa cân đối. Giữ trống chỉ tiêu chưa xác minh và yêu cầu đối chiếu trực quan với báo cáo VietstockFinance.",
+      "core_financial_extraction_updated_at": "2026-10-25T15:57:44Z",
       "core_financial_extraction_unverified_values": {},
-      "core_financial_extracted_fields": [],
+      "core_financial_extracted_fields": [
+        "pretax_profit"
+      ],
       "verification_status_note": "Cần đối chiếu trực quan với PDF VietstockFinance trước khi công bố các chỉ tiêu lõi.",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
-      "core_financial_extraction_evidence_fingerprint": "3fc10d1824c6b40f4fe5ee375a0d7e3b9e006e1f951190799dbb8ecfe35401c4",
-      "core_financial_extraction_evidence_attempt_count": 0,
+      "core_financial_extraction_evidence_fingerprint": "4986c48ce8375080dacce0e3863ab3334a77ca55c46574f594c483bb994dd30d",
+      "core_financial_extraction_evidence_attempt_count": 1,
       "core_financial_extraction_stable_evidence_count": 2,
       "core_financial_extraction_stable_evidence_updated_at": "2026-10-25T15:11:54+00:00",
+      "core_financial_extraction_source": "reports/raw/VIX/auto-vix-20261021/eb378ead40b9d808.zip",
+      "core_financial_extraction_pages": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "core_financial_extraction_calculations": {
+        "balance_totals_withheld": "asset/liability/equity totals did not fully reconcile"
+      },
+      "core_financial_extraction_attempt_count": 1,
+      "income_tax_current": 0,
+      "income_tax_deferred": 0,
+      "income_tax": 0,
+      "operating_cash_flow_ytd": 7119095,
+      "investing_cash_flow_ytd": -15491,
+      "financing_cash_flow_ytd": 8487000,
+      "cashflow_period_basis": "year_to_date",
       "core_financial_extraction_manual_terminal": true
     },
     {
@@ -1050,8 +1171,8 @@
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "3ebb8d274176ae455d7a4a92d84faa0d87649cc58141697acafc13ea03f4ea93",
       "core_financial_extraction_evidence_attempt_count": 0,
-      "core_financial_extraction_stable_evidence_count": 2,
-      "core_financial_extraction_stable_evidence_updated_at": "2026-10-25T15:11:54+00:00",
+      "core_financial_extraction_stable_evidence_count": 3,
+      "core_financial_extraction_stable_evidence_updated_at": "2026-10-25T15:57:38+00:00",
       "core_financial_extraction_manual_terminal": true
     },
     {
@@ -1166,8 +1287,8 @@
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "a3b99d40c5bdcb8c2fcdbc9c173af18d920226e6022f9bc65384de3e806d169a",
       "core_financial_extraction_evidence_attempt_count": 0,
-      "core_financial_extraction_stable_evidence_count": 2,
-      "core_financial_extraction_stable_evidence_updated_at": "2026-10-25T15:11:55+00:00",
+      "core_financial_extraction_stable_evidence_count": 3,
+      "core_financial_extraction_stable_evidence_updated_at": "2026-10-25T15:57:39+00:00",
       "core_financial_extraction_manual_terminal": true
     },
     {
@@ -1259,7 +1380,7 @@
       },
       "core_financial_extraction_status": "manual_review_required_pending_extraction",
       "core_financial_extraction_note": "Đã có đủ trang nguồn mục tiêu nhưng hai lượt phân tích trên cùng văn bản vẫn không tạo được bộ chỉ tiêu lõi cân đối. Các số OCR chưa cân đối được lưu riêng để đối chiếu; chỉ tiêu chính chưa xác minh được để trống.",
-      "core_financial_extraction_updated_at": "2026-10-25T15:08:28+00:00",
+      "core_financial_extraction_updated_at": "2026-10-25T15:57:39+00:00",
       "financial_line_items_rejected_fields": [
         "current_liabilities",
         "current_liabilities_liability_total_check",
@@ -1290,8 +1411,8 @@
         14
       ],
       "financial_line_items_rejected_updated_at": "2026-10-25T15:08:28+00:00",
-      "core_financial_extraction_stable_evidence_count": 2,
-      "core_financial_extraction_stable_evidence_updated_at": "2026-10-25T15:11:56+00:00",
+      "core_financial_extraction_stable_evidence_count": 3,
+      "core_financial_extraction_stable_evidence_updated_at": "2026-10-25T15:57:39+00:00",
       "core_financial_extraction_manual_terminal": true
     },
     {
@@ -1300,7 +1421,7 @@
       "total_assets": 10280917,
       "total_liabilities": 1289473,
       "equity": 8991445,
-      "pretax_profit": null,
+      "pretax_profit": 201836,
       "net_profit": 161948,
       "net_profit_attributable": null,
       "revenue": 360595,
@@ -1340,12 +1461,12 @@
       "source_archive_title": "Báo cáo tài chính quý 1 năm 2024 Báo cáo tài chính quý 1 năm 2024  ",
       "source_archive_linked_at": "2026-10-23T09:41:22.567123+00:00",
       "core_financial_extracted_fields": [
+        "equity",
+        "net_profit",
         "pretax_profit",
         "revenue",
-        "net_profit",
         "total_assets",
-        "total_liabilities",
-        "equity"
+        "total_liabilities"
       ],
       "core_financial_extraction_source": "reports/raw/VIX/auto-vix-20261021/8b30c15936e778b7.pdf",
       "core_financial_extraction_pages": [
@@ -1359,8 +1480,8 @@
         18
       ],
       "core_financial_extraction_status": "auto_extracted_pending_visual_review",
-      "core_financial_extraction_updated_at": "2026-10-25T15:26:38.403Z",
-      "core_financial_extraction_note": "BCTC riêng VIX từ PDF VietstockFinance: tổng tài sản 10.280.917.289.416 VND, nợ phải trả 1.289.472.625.598 VND, vốn chủ sở hữu 8.991.444.663.818 VND; phương trình cân đối khớp. Doanh thu hoạt động 360.595 triệu VND; LNST quý I 161.947.503.111 VND theo BCTC/giải trình VietstockFinance. Chưa xác minh trực quan ảnh PDF.",
+      "core_financial_extraction_updated_at": "2026-10-25T15:57:41+00:00",
+      "core_financial_extraction_note": "Chỉ tiêu lõi được trích xuất từ văn bản PDF/ZIP đã lưu; chưa xác minh thủ công trên bản PDF.",
       "cash_and_equivalents": 707346,
       "non_current_assets": 45439,
       "fixed_assets": 22463,
@@ -1386,7 +1507,7 @@
       "broker_interest_expense": 14095,
       "income_tax_current": 47452,
       "income_tax_deferred": 0,
-      "income_tax": 47452,
+      "income_tax": 39888,
       "operating_cash_flow_ytd": 201836,
       "cash_ending": 970914,
       "cashflow_period_basis": "year_to_date",
@@ -1422,16 +1543,17 @@
         "retained_earnings",
         "revenue"
       ],
-      "financial_line_items_status": "manual_review_required",
+      "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-23T09:57:01+00:00",
       "financial_line_items_source": "reports/raw/VIX/auto-vix-20261021/8b30c15936e778b7.pdf",
-      "financial_line_items_updated_at": "2026-10-25T21:00:00+07:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
+      "financial_line_items_updated_at": "2026-10-25T15:57:43+00:00",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
       "operating_cash_flow": 201836,
       "operating_cash_flow_calculation": "Q1 equals YTD Q1",
       "financial_line_items_prior_values": {
-        "revenue": 204353
+        "revenue": 204353,
+        "income_tax": 47452
       },
       "financial_line_items_rejected_values": {
         "revenue": {
@@ -1457,7 +1579,8 @@
       },
       "core_financial_extraction_stable_evidence_count": 2,
       "core_financial_extraction_stable_evidence_updated_at": "2026-10-25T15:11:58+00:00",
-      "core_financial_extraction_manual_terminal": true
+      "core_financial_extraction_manual_terminal": true,
+      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có."
     },
     {
       "symbol": "VIX",
@@ -1465,7 +1588,7 @@
       "total_assets": 10607614,
       "total_liabilities": 1492382,
       "equity": 9115232,
-      "pretax_profit": null,
+      "pretax_profit": 154887,
       "net_profit": 123787,
       "net_profit_attributable": null,
       "revenue": 378837,
@@ -1507,12 +1630,12 @@
       "eps": 80,
       "core_financial_extracted_fields": [
         "eps",
+        "equity",
+        "net_profit",
         "pretax_profit",
         "revenue",
-        "net_profit",
         "total_assets",
-        "total_liabilities",
-        "equity"
+        "total_liabilities"
       ],
       "core_financial_extraction_source": "reports/raw/VIX/auto-vix-20261021/1eaae0e7c4b84269.pdf",
       "core_financial_extraction_pages": [
@@ -1526,14 +1649,10 @@
         18
       ],
       "core_financial_extraction_status": "auto_extracted_pending_visual_review",
-      "core_financial_extraction_updated_at": "2026-10-25T15:26:38.403Z",
-      "core_financial_extraction_note": "BCTC riêng VIX từ PDF VietstockFinance: tổng tài sản 10.607.613.965.563 VND, nợ phải trả 1.492.382.356.439 VND, vốn chủ sở hữu 9.115.231.609.124 VND; phương trình cân đối khớp. Doanh thu hoạt động 378.836.549.181 VND; LNST quý II 123.786.945.306 VND theo văn bản giải trình cùng gói PDF. Chưa xác minh trực quan ảnh PDF.",
-      "current_assets": 10559450,
+      "core_financial_extraction_updated_at": "2026-10-25T15:57:43+00:00",
+      "core_financial_extraction_note": "Chỉ tiêu lõi được trích xuất từ văn bản PDF/ZIP đã lưu; chưa xác minh thủ công trên bản PDF.",
       "cash_and_equivalents": 571174,
-      "non_current_assets": 2104220423012,
       "fixed_assets": 24906,
-      "current_liabilities": 0,
-      "long_term_liabilities": 67053,
       "retained_earnings": 1456917,
       "broker_receivables": 215,
       "broker_customer_deposits": 570938,
@@ -1553,7 +1672,7 @@
       "broker_interest_expense": 19904,
       "income_tax_current": 27184,
       "income_tax_deferred": 0,
-      "income_tax": 27184,
+      "income_tax": 31100,
       "investing_cash_flow_ytd": -7232,
       "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
@@ -1571,8 +1690,6 @@
         "broker_trading_expense",
         "cash_and_equivalents",
         "cashflow_period_basis",
-        "current_assets",
-        "current_liabilities",
         "financial_expense",
         "financial_income",
         "fixed_assets",
@@ -1581,30 +1698,54 @@
         "income_tax_deferred",
         "interest_expense",
         "investing_cash_flow_ytd",
-        "long_term_liabilities",
-        "non_current_assets",
         "retained_earnings",
         "revenue",
         "selling_expense"
       ],
-      "financial_line_items_status": "manual_review_required",
+      "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-23T09:57:02+00:00",
       "financial_line_items_source": "reports/raw/VIX/auto-vix-20261021/1eaae0e7c4b84269.pdf",
-      "financial_line_items_updated_at": "2026-10-25T21:05:00+07:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
+      "financial_line_items_updated_at": "2026-10-25T15:57:43+00:00",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Tài sản ngắn hạn/dài hạn bị ẩn do tổng không khớp tổng tài sản. Nợ ngắn hạn/dài hạn bị ẩn do tổng không khớp nợ phải trả.",
       "cash_beginning": 970914,
       "cash_beginning_calculation": "previous quarter closing cash",
       "financial_line_items_prior_values": {
-        "revenue": 222379
+        "revenue": 222379,
+        "income_tax": 27184
       },
       "financial_line_items_rejected_values": {
         "revenue": {
           "value": 222379,
           "reason": "Giá trị cũ không khớp dòng tổng doanh thu hoạt động trong PDF; chuẩn hóa theo dòng tổng doanh thu hoạt động Q2/2024 là 378.836.549.181 VND."
+        },
+        "current_assets": {
+          "value": 10559450,
+          "reason": "asset subtotals do not reconcile"
+        },
+        "non_current_assets": {
+          "value": 2104220423012,
+          "reason": "asset subtotals do not reconcile"
+        },
+        "current_liabilities": {
+          "value": 0,
+          "reason": "liability subtotals do not reconcile"
+        },
+        "long_term_liabilities": {
+          "value": 67053,
+          "reason": "liability subtotals do not reconcile"
         }
       },
-      "financial_line_items_rejected_fields": [],
+      "financial_line_items_rejected_fields": [
+        "current_assets",
+        "current_assets_asset_total_check",
+        "current_liabilities",
+        "current_liabilities_liability_total_check",
+        "long_term_liabilities",
+        "long_term_liabilities_liability_total_check",
+        "non_current_assets",
+        "non_current_assets_magnitude"
+      ],
       "core_financial_extraction_unverified_values": {
         "pretax_profit": 154887,
         "net_profit": 123787
@@ -1619,7 +1760,9 @@
       },
       "core_financial_extraction_stable_evidence_count": 2,
       "core_financial_extraction_stable_evidence_updated_at": "2026-10-25T15:12:00+00:00",
-      "core_financial_extraction_manual_terminal": true
+      "core_financial_extraction_manual_terminal": true,
+      "financial_line_items_rejected_updated_at": "2026-10-25T15:57:43+00:00",
+      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có."
     }
   ],
   "sync_status": "records_found",
