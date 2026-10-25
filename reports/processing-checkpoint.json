@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-25T06:01:26Z",
+  "updatedAt": "2026-10-25T06:10:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -61,7 +61,9 @@
     "terminalManualReviewPeriods": [],
     "pendingDetailPeriods": [],
     "staleDetailSchemaPeriods": [],
-    "statementPagesPending": true
+    "statementPagesPending": true,
+    "reconciliationToleranceMillionVnd": 10,
+    "reconciliationPolicyUpdatedAt": "2026-10-25T06:10:00Z"
   },
   "symbolStates": {
     "MBB": {
@@ -1409,5 +1411,11 @@
       ]
     },
     "note": "Continue DPG source collection only. Four collector batches succeeded; the queue still reports 10 candidate URLs remaining. Finish archiving this symbol, then trigger its one-report-at-a-time OCR/extraction. Do not advance to the next symbol yet."
+  },
+  "reconciliationPolicy": {
+    "acceptedAbsoluteDifferenceMillionVnd": 10,
+    "unit": "million VND",
+    "rule": "Accept and use reported data when an arithmetic reconciliation difference is <= 10 million VND; do not alter source values to force reconciliation. Differences > 10 million VND require review. Missing source pages or insufficient period basis remain unresolved regardless of this tolerance.",
+    "updatedAt": "2026-10-25T06:10:00Z"
   }
 }
