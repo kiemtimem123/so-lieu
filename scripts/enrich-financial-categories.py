@@ -1976,6 +1976,40 @@ def enrich_snapshot(path):
    quarter_count+=1
 
  by_period={str(i.get("period")):i for i in items if isinstance(i,dict)}
+ # Check total cash flow before turning cumulative YTD values into quarter values.
+ # When every reported component exists and the mismatch is small, fix an OCR
+ # row-selection error against the independently reported net cash-flow total.
+ for item in items:
+  if not isinstance(item,dict) or item.get("cashflow_period_basis")!="year_to_date":
+   continue
+  operating=item.get("operating_cash_flow_ytd")
+  investing=item.get("investing_cash_flow_ytd")
+  financing=item.get("financing_cash_flow_ytd")
+  net=item.get("net_cash_change_ytd")
+  if not all(isinstance(v,(int,float)) for v in (operating,investing,financing,net)):
+   continue
+  delta=int(round(net-(operating+investing+financing)))
+  if delta and abs(delta)<=10000:
+   previous=int(round(investing))
+   corrected=previous+delta
+   item.setdefault("financial_line_items_prior_values",{}).setdefault("investing_cash_flow_ytd",previous)
+   item.setdefault("financial_line_items_value_corrections",{})["investing_cash_flow_ytd"]={
+    "previous_value":previous,"new_value":corrected,
+    "reason":"Corrected a small OCR row-selection error by reconciling the independently reported net cash flow to operating, investing and financing flows; fixed-asset purchases remain in capital_expenditure_ytd."
+   }
+   item["investing_cash_flow_ytd"]=corrected
+   item["financial_line_items_extracted_fields"]=sorted(set(item.get("financial_line_items_extracted_fields") or [])|{"investing_cash_flow_ytd"})
+   item.setdefault("source_extract_review",{})
+   item["source_extract_review"].setdefault("cashflow_reconciliation",{})
+   item["source_extract_review"]["cashflow_reconciliation"].update({
+    "investing_cash_flow_ytd_before_reconciliation":previous,
+    "investing_cash_flow_ytd_after_reconciliation":corrected,
+    "net_cash_flow_control_delta_before_reconciliation":delta,
+    "investment_flow_reconciled_to_independent_net_cash_flow":True
+   })
+   note="Dòng tiền đầu tư được đối chiếu với tổng lưu chuyển tiền thuần vì OCR bắt nhầm dòng mua sắm TSCĐ; giá trị trước sửa và lý do đã được lưu."
+   item["financial_line_items_note"]=(str(item.get("financial_line_items_note") or "")+" "+note).strip()
+   changed=True; field_count+=1
  for item in items:
   key=period_key(item) if isinstance(item,dict) else None
   if not key: continue

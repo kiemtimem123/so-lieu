@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-25T20:12:18Z",
+  "updatedAt": "2026-10-26T03:12:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -47,12 +47,17 @@
     "status": "in_progress",
     "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-25T20:12:18Z",
+    "processedAt": "2026-10-26T03:12:00+07:00",
     "workflowRunId": "40229605032",
     "workflowRunNumber": 1562,
     "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/40229605032",
     "changedPaths": [
-      "data/financials-TCB.json"
+      "data/financials-TCB.json",
+      "reports/processing-checkpoint.json",
+      "scripts/enrich-financial-categories.py",
+      ".github/workflows/ocr-financial-reports.yml",
+      "scripts/update-report-checkpoint.py",
+      "scripts/validate-bank-reconciliation.py"
     ],
     "periodCount": 11,
     "firstQuarter": "2024-Q1",
@@ -60,20 +65,10 @@
     "pendingCorePeriods": [],
     "terminalManualReviewPeriods": [],
     "pendingDetailPeriods": [],
-    "staleDetailSchemaPeriods": [
-      "2024-Q1",
-      "2024-Q2",
-      "2024-Q3",
-      "2024-Q4",
-      "2025-Q1",
-      "2025-Q2",
-      "2025-Q3",
-      "2025-Q4",
-      "2026-Q1",
-      "2026-Q2",
-      "2026-Q3"
-    ],
-    "statementPagesPending": false
+    "staleDetailSchemaPeriods": [],
+    "statementPagesPending": false,
+    "coreVerification": "verified_ocr_reconciled",
+    "note": "Rerun TCB after fixing cash-flow OCR reconciliation and align workflow/checkpoint schema gates to v5."
   },
   "symbolStates": {
     "MBB": {
@@ -652,23 +647,12 @@
       "pendingCorePeriods": [],
       "terminalManualReviewPeriods": [],
       "pendingDetailPeriods": [],
-      "staleDetailSchemaPeriods": [
-        "2024-Q1",
-        "2024-Q2",
-        "2024-Q3",
-        "2024-Q4",
-        "2025-Q1",
-        "2025-Q2",
-        "2025-Q3",
-        "2025-Q4",
-        "2026-Q1",
-        "2026-Q2",
-        "2026-Q3"
-      ],
+      "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 11,
-      "updatedAt": "2026-10-25T20:12:18Z",
-      "snapshotFetchedAt": "2026-10-22T05:57:26+00:00"
+      "updatedAt": "2026-10-26T03:12:00+07:00",
+      "snapshotFetchedAt": "2026-10-22T05:57:26+00:00",
+      "note": "Reprocessing TCB with the fixed cash-flow reconciliation; selector and checkpoint helper now share schema v5."
     },
     "VHM": {
       "status": "automated_processing_complete",
@@ -1187,6 +1171,25 @@
       "changedPaths": [
         "data/financials-TCB.json"
       ]
+    },
+    {
+      "symbol": "TCB",
+      "status": "in_progress",
+      "completeForAutomation": false,
+      "manualReviewRemaining": true,
+      "processedAt": "2026-10-26T03:12:00+07:00",
+      "changedPaths": [
+        "data/financials-TCB.json",
+        "reports/processing-checkpoint.json",
+        "scripts/enrich-financial-categories.py",
+        ".github/workflows/ocr-financial-reports.yml",
+        "scripts/update-report-checkpoint.py",
+        "scripts/validate-bank-reconciliation.py"
+      ],
+      "periodCount": 11,
+      "firstQuarter": "2024-Q1",
+      "lastQuarter": "2026-Q3",
+      "note": "Fix Q1 net-investing-flow vs capex and stop repeated stale-schema selection."
     }
   ],
   "currentRun": {
