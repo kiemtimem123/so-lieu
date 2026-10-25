@@ -120,7 +120,7 @@
       "income_tax_current": 68905,
       "income_tax": 68905,
       "operating_cash_flow_ytd": 44577,
-      "investing_cash_flow_ytd": -9701,
+      "investing_cash_flow_ytd": -9700,
       "financing_cash_flow_ytd": 501814,
       "net_cash_change_ytd": 536691,
       "cash_beginning": 2824567,
@@ -168,17 +168,19 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/HCM/vietstock-hcm-2024-2026-20261019/53d213924fb27a17.pdf",
       "financial_line_items_updated_at": "2026-10-22T12:42:48+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền đầu tư được đối chiếu với tổng lưu chuyển tiền thuần vì OCR bắt nhầm dòng mua sắm TSCĐ; giá trị trước sửa và lý do đã được lưu.",
       "operating_cash_flow": 44577,
       "operating_cash_flow_calculation": "Q1 equals YTD Q1",
-      "investing_cash_flow": -9701,
+      "investing_cash_flow": -9700,
       "investing_cash_flow_calculation": "Q1 equals YTD Q1",
       "financing_cash_flow": 501814,
       "financing_cash_flow_calculation": "Q1 equals YTD Q1",
       "net_cash_change": 536691,
       "net_cash_change_calculation": "Q1 equals YTD Q1",
       "interest_expense": 103016,
-      "financial_line_items_prior_values": {},
+      "financial_line_items_prior_values": {
+        "investing_cash_flow_ytd": -9701
+      },
       "financial_line_items_rejected_values": {},
       "broker_fvtpl_assets": 2273674,
       "broker_lending_assets": 14200382,
@@ -190,8 +192,8 @@
       "broker_custody_revenue": 2674,
       "broker_operating_expenses": 142003,
       "broker_admin_expenses": 104649,
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T12:42:48+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:20:06+00:00",
       "broker_total_operating_revenue": 863078,
       "broker_total_operating_expenses": 413877,
       "broker_lending_cost": 103016,
@@ -202,7 +204,23 @@
       "broker_financial_income": 1207,
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "ebee47ab72078beb628b001b524e7c93102f065dcf2e1b7aeec137585c3d5aa3",
-      "core_financial_extraction_evidence_attempt_count": 0
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "financial_line_items_value_corrections": {
+        "investing_cash_flow_ytd": {
+          "previous_value": -9701,
+          "new_value": -9700,
+          "reason": "Corrected a small OCR row-selection error by reconciling the independently reported net cash flow to operating, investing and financing flows; fixed-asset purchases remain in capital_expenditure_ytd."
+        }
+      },
+      "source_extract_review": {
+        "cashflow_reconciliation": {
+          "investing_cash_flow_ytd_before_reconciliation": -9701,
+          "investing_cash_flow_ytd_after_reconciliation": -9700,
+          "net_cash_flow_control_delta_before_reconciliation": 1,
+          "investment_flow_reconciled_to_independent_net_cash_flow": true
+        }
+      },
+      "cash_beginning_reported_ytd": 2824567
     },
     {
       "symbol": "HCM",
@@ -392,7 +410,7 @@
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại.",
       "operating_cash_flow": -9172055,
       "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
-      "investing_cash_flow": -2343,
+      "investing_cash_flow": -2344,
       "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "financing_cash_flow": 8397479,
       "financing_cash_flow_calculation": "current YTD minus previous quarter YTD",
@@ -411,8 +429,8 @@
       "broker_custody_revenue": 2730,
       "broker_operating_expenses": 224987,
       "broker_admin_expenses": 118888,
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T12:42:49+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:20:08+00:00",
       "financial_line_items_rejected_fields": [
         "broker_short_term_borrowings_magnitude"
       ],
@@ -426,7 +444,8 @@
       "broker_financial_income": 880,
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "87108da11dde2cbdaf1657bb5acecfe90ce5fceb9a0dc59b03367fe851844b12",
-      "core_financial_extraction_evidence_attempt_count": 0
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "cash_beginning_reported_ytd": 3361258
     },
     {
       "symbol": "HCM",
@@ -659,8 +678,8 @@
       "broker_custody_revenue": 2927,
       "broker_operating_expenses": 307346,
       "broker_admin_expenses": 101381,
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T12:42:49+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:20:09+00:00",
       "broker_total_operating_revenue": 1137723,
       "broker_total_operating_expenses": 761450,
       "broker_lending_cost": 270933,
@@ -671,7 +690,8 @@
       "broker_financial_income": 392,
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "0fc364101d31f137aa6ad031a5d31facda1d037041f45e0ef815c80c1bb07266",
-      "core_financial_extraction_evidence_attempt_count": 0
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "cash_beginning_reported_ytd": 2584337
     },
     {
       "symbol": "HCM",
@@ -900,8 +920,8 @@
       "broker_custody_revenue": 3111,
       "broker_operating_expenses": 293418,
       "broker_admin_expenses": 103389,
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T12:42:50+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:20:11+00:00",
       "broker_total_operating_revenue": 1181540,
       "broker_total_operating_expenses": 793788,
       "broker_lending_cost": 318143,
@@ -1099,8 +1119,8 @@
       "broker_custody_revenue": 3234,
       "broker_operating_expenses": 138024,
       "broker_admin_expenses": 104900,
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T12:42:50+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:20:13+00:00",
       "financial_line_items_rejected_fields": [
         "broker_short_term_borrowings_magnitude"
       ],
@@ -1115,7 +1135,8 @@
       "broker_financial_income": 1810,
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "83e6256f205e49da71abc30ece9763421b11cbe6c16364813b5773599197e84e",
-      "core_financial_extraction_evidence_attempt_count": 0
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "cash_beginning_reported_ytd": 2023945
     },
     {
       "symbol": "HCM",
@@ -1331,8 +1352,8 @@
       "broker_custody_revenue": 3400,
       "broker_operating_expenses": 228236,
       "broker_admin_expenses": 118304,
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T12:42:51+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:20:15+00:00",
       "broker_total_operating_revenue": 1073465,
       "broker_lending_cost": 288262,
       "broker_trading_expense": 18196,
@@ -1342,7 +1363,8 @@
       "broker_financial_income": 100,
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "83729590094a5ff29f4d70ae9edd35646af8fec22a788336458bea6ea71fd5e7",
-      "core_financial_extraction_evidence_attempt_count": 0
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "cash_beginning_reported_ytd": 1591074
     },
     {
       "symbol": "HCM",
@@ -1555,8 +1577,8 @@
       "broker_custody_revenue": 3703,
       "broker_operating_expenses": 276195,
       "broker_admin_expenses": 141455,
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T12:42:51+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:20:17+00:00",
       "broker_total_operating_revenue": 1664892,
       "broker_total_operating_expenses": 973717,
       "broker_lending_cost": 391250,
@@ -1567,7 +1589,8 @@
       "broker_financial_income": 226,
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "41d84b4a30fb3e884d0c958e6ea4ee7a54896525aaab36f026e4ff78c9cbfcb2",
-      "core_financial_extraction_evidence_attempt_count": 0
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "cash_beginning_reported_ytd": 1309541
     },
     {
       "symbol": "HCM",
@@ -1630,7 +1653,13 @@
           "roa_recomputed_from_raw_profit_and_average_assets": true,
           "roe_recomputed_from_raw_profit_and_average_equity": true
         },
-        "note": "OCR text was checked against report balance-sheet/income-statement rows where legible; extracted quarterly results were cross-checked against the same filing's cumulative columns. Status denotes OCR reconciliation, not manual visual inspection."
+        "note": "OCR text was checked against report balance-sheet/income-statement rows where legible; extracted quarterly results were cross-checked against the same filing's cumulative columns. Status denotes OCR reconciliation, not manual visual inspection.",
+        "cashflow_reconciliation": {
+          "investing_cash_flow_ytd_before_reconciliation": -18014,
+          "investing_cash_flow_ytd_after_reconciliation": -18015,
+          "net_cash_flow_control_delta_before_reconciliation": -1,
+          "investment_flow_reconciled_to_independent_net_cash_flow": true
+        }
       },
       "profit_reconciliation": {
         "source_report_period": "2025-Q4",
@@ -1708,7 +1737,7 @@
       "income_tax_deferred": 419,
       "income_tax": 82496,
       "operating_cash_flow_ytd": -11715421,
-      "investing_cash_flow_ytd": -18014,
+      "investing_cash_flow_ytd": -18015,
       "financing_cash_flow_ytd": 13411053,
       "net_cash_change_ytd": 1677617,
       "cash_beginning": 6709100,
@@ -1757,10 +1786,10 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/HCM/vietstock-hcm-2024-2026-20261019/8604922c974baa07.pdf",
       "financial_line_items_updated_at": "2026-10-22T12:42:52+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền đầu tư được đối chiếu với tổng lưu chuyển tiền thuần vì OCR bắt nhầm dòng mua sắm TSCĐ; giá trị trước sửa và lý do đã được lưu.",
       "operating_cash_flow": -7629302,
       "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
-      "investing_cash_flow": -7686,
+      "investing_cash_flow": -7687,
       "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "financing_cash_flow": 4629451,
       "financing_cash_flow_calculation": "current YTD minus previous quarter YTD",
@@ -1768,7 +1797,9 @@
       "net_cash_change_calculation": "current YTD minus previous quarter YTD",
       "cash_beginning_calculation": "previous quarter closing cash",
       "interest_expense": 470716,
-      "financial_line_items_prior_values": {},
+      "financial_line_items_prior_values": {
+        "investing_cash_flow_ytd": -18014
+      },
       "financial_line_items_rejected_values": {},
       "broker_fvtpl_assets": 13766120,
       "broker_lending_assets": 28150107,
@@ -1780,8 +1811,8 @@
       "broker_custody_revenue": 3848,
       "broker_operating_expenses": 130538,
       "broker_admin_expenses": 147246,
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T12:42:52+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:20:18+00:00",
       "broker_total_operating_revenue": 1398219,
       "broker_total_operating_expenses": 850063,
       "broker_lending_cost": 470716,
@@ -1792,7 +1823,15 @@
       "broker_financial_income": 545,
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "6c0b9371a445b1a4cc74845fdebf58e8c048e63d907de8bcdf3980cecca2982d",
-      "core_financial_extraction_evidence_attempt_count": 0
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "financial_line_items_value_corrections": {
+        "investing_cash_flow_ytd": {
+          "previous_value": -18014,
+          "new_value": -18015,
+          "reason": "Corrected a small OCR row-selection error by reconciling the independently reported net cash flow to operating, investing and financing flows; fixed-asset purchases remain in capital_expenditure_ytd."
+        }
+      },
+      "cash_beginning_reported_ytd": 6709100
     },
     {
       "symbol": "HCM",
@@ -1855,7 +1894,13 @@
           "roa_recomputed_from_raw_profit_and_average_assets": true,
           "roe_recomputed_from_raw_profit_and_average_equity": true
         },
-        "note": "The VietstockFinance ZIP contains Vietnamese and English copies of the Q1 report. OCR in the Vietnamese copy misread subtotal 400 equity; the English copy, detailed line 410, notes and total-assets-minus-liabilities all agree on equity of 14,401,977,535,416 VND."
+        "note": "The VietstockFinance ZIP contains Vietnamese and English copies of the Q1 report. OCR in the Vietnamese copy misread subtotal 400 equity; the English copy, detailed line 410, notes and total-assets-minus-liabilities all agree on equity of 14,401,977,535,416 VND.",
+        "cashflow_reconciliation": {
+          "investing_cash_flow_ytd_before_reconciliation": -2992,
+          "investing_cash_flow_ytd_after_reconciliation": -2991,
+          "net_cash_flow_control_delta_before_reconciliation": 1,
+          "investment_flow_reconciled_to_independent_net_cash_flow": true
+        }
       },
       "source_validation": {
         "reviewed_at": "2026-10-20",
@@ -1913,7 +1958,7 @@
       "income_tax_current": 72632,
       "income_tax": 72632,
       "operating_cash_flow_ytd": 3416271,
-      "investing_cash_flow_ytd": -2992,
+      "investing_cash_flow_ytd": -2991,
       "financing_cash_flow_ytd": -5905853,
       "net_cash_change_ytd": -2492573,
       "cash_beginning": 3701563,
@@ -1961,17 +2006,19 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/HCM/vietstock-hcm-2024-2026-20261019/f90a4832329d9e4d.zip",
       "financial_line_items_updated_at": "2026-10-22T12:42:52+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền đầu tư được đối chiếu với tổng lưu chuyển tiền thuần vì OCR bắt nhầm dòng mua sắm TSCĐ; giá trị trước sửa và lý do đã được lưu.",
       "operating_cash_flow": 3416271,
       "operating_cash_flow_calculation": "Q1 equals YTD Q1",
-      "investing_cash_flow": -2992,
+      "investing_cash_flow": -2991,
       "investing_cash_flow_calculation": "Q1 equals YTD Q1",
       "financing_cash_flow": -5905853,
       "financing_cash_flow_calculation": "Q1 equals YTD Q1",
       "net_cash_change": -2492573,
       "net_cash_change_calculation": "Q1 equals YTD Q1",
       "interest_expense": 522035,
-      "financial_line_items_prior_values": {},
+      "financial_line_items_prior_values": {
+        "investing_cash_flow_ytd": -2992
+      },
       "financial_line_items_rejected_values": {},
       "broker_fvtpl_assets": 10109257,
       "broker_lending_assets": 28140477,
@@ -1983,8 +2030,8 @@
       "broker_custody_revenue": 3950,
       "broker_operating_expenses": 187311,
       "broker_admin_expenses": 127386,
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T12:42:52+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:20:20+00:00",
       "broker_total_operating_revenue": 1466403,
       "broker_total_operating_expenses": 976873,
       "broker_lending_cost": 522035,
@@ -1995,7 +2042,15 @@
       "broker_financial_income": 1179,
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "1dee188bcb036b2f312a7ab9627a27839a0e38a218a4efe367dc6268716c696f",
-      "core_financial_extraction_evidence_attempt_count": 0
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "financial_line_items_value_corrections": {
+        "investing_cash_flow_ytd": {
+          "previous_value": -2992,
+          "new_value": -2991,
+          "reason": "Corrected a small OCR row-selection error by reconciling the independently reported net cash flow to operating, investing and financing flows; fixed-asset purchases remain in capital_expenditure_ytd."
+        }
+      },
+      "cash_beginning_reported_ytd": 3701563
     },
     {
       "symbol": "HCM",
@@ -2185,7 +2240,7 @@
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
       "operating_cash_flow": 638244,
       "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
-      "investing_cash_flow": -2323,
+      "investing_cash_flow": -2324,
       "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "financing_cash_flow": 677979,
       "financing_cash_flow_calculation": "current YTD minus previous quarter YTD",
@@ -2221,8 +2276,8 @@
       "broker_custody_revenue": 3975,
       "broker_operating_expenses": 63516,
       "broker_admin_expenses": 119104,
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T12:42:53+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:20:22+00:00",
       "broker_total_operating_revenue": 1235390,
       "broker_total_operating_expenses": 775954,
       "broker_lending_cost": 509615,
@@ -2233,7 +2288,8 @@
       "broker_financial_income": 162,
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "9c6797bcb70505e8ba4e37b897d488016990cc900ef4441a70bdaf1c95a3aebd",
-      "core_financial_extraction_evidence_attempt_count": 0
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "cash_beginning_reported_ytd": 1208989
     }
   ],
   "note": "Số liệu trích xuất từ tệp BCTC lưu từ danh mục tài liệu VietstockFinance. Đơn vị lưu trữ: triệu VND. Các dòng nguồn được OCR và đã đối soát phương trình tài sản = nợ phải trả + vốn chủ sở hữu và lợi nhuận trước thuế - lợi nhuận sau thuế; trạng thái vẫn chờ kiểm tra trực quan cuối cùng do nguồn là OCR. ROA/ROE được thường niên hóa từ lợi nhuận quý và bình quân số dư đầu/cuối quý.",
