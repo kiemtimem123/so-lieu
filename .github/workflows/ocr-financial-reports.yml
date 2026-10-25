@@ -631,7 +631,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/workflows/ocr-financial-reports.yml/dispatches" -f ref=main
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/workflows/ocr-financial-reports.yml/dispatches" -f ref=main -f inputs[max_pages]=18
 
   handoff-to-collector:
     needs: [select-ticker, ocr]
