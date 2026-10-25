@@ -90,6 +90,33 @@ jobs:
               except (OSError, json.JSONDecodeError):
                   return None
 
+          skip_through_by_symbol = {
+              str(item.get("symbol") or "").strip().upper(): str(item.get("skipUnconfirmedThroughPeriod") or "").strip()
+              for item in config.get("securities", [])
+              if isinstance(item, dict) and item.get("symbol") and item.get("skipUnconfirmedThroughPeriod")
+          }
+
+          def latest_quarter(snapshot):
+              if not isinstance(snapshot, dict):
+                  return ""
+              periods = [
+                  str(item.get("period") or "")
+                  for item in (snapshot.get("items") or [])
+                  if isinstance(item, dict) and re.fullmatch(r"20\\d{2}-Q[1-4]", str(item.get("period") or ""))
+              ]
+              return max(periods, default="")
+
+          def should_skip_unconfirmed(symbol, snapshot, saved_state=None):
+              latest = latest_quarter(snapshot)
+              configured_limit = skip_through_by_symbol.get(symbol, "")
+              if configured_limit and (not latest or latest <= configured_limit):
+                  return True
+              if isinstance(saved_state, dict) and saved_state.get("skipUnconfirmedAutomation") is True:
+                  state_limit = str(saved_state.get("skipUnconfirmedThroughPeriod") or saved_state.get("lastQuarter") or "").strip()
+                  if state_limit and (not latest or latest <= state_limit):
+                      return True
+              return False
+
           def payload_needs_pages(payload):
               if not isinstance(payload, dict):
                   return False
@@ -183,7 +210,9 @@ jobs:
               active_hint = str(checkpoint.get("activeSymbol") or checkpoint.get("resumeSymbolHint") or "").strip().upper()
               if active_hint in symbols and active_hint not in completed_symbols:
                   active_snapshot = load_json(Path("data") / f"financials-{active_hint}.json")
-                  if active_snapshot is not None:
+                  if active_snapshot is not None and should_skip_unconfirmed(active_hint, active_snapshot, checkpoint_states.get(active_hint)):
+                      print(f"Skipping active ticker {active_hint}: unconfirmed items are held for manual review through {skip_through_by_symbol.get(active_hint) or (checkpoint_states.get(active_hint) or {}).get('lastQuarter')}.")
+                  elif active_snapshot is not None:
                       selected = active_hint
                       print(f"Resuming active checkpoint ticker first: {active_hint}.")
               for symbol in ([] if selected else symbols):
@@ -194,16 +223,19 @@ jobs:
                       # configured symbols have completed their extraction/review state.
                       bootstrap_symbol = symbol
                       break
+                  # Skip only through the explicitly closed period. A later quarter
+                  # releases the ticker back into the normal queue automatically.
+                  saved_state = checkpoint_states.get(symbol)
+                  if should_skip_unconfirmed(symbol, snapshot, saved_state):
+                      limit = skip_through_by_symbol.get(symbol) or (saved_state or {}).get("skipUnconfirmedThroughPeriod") or (saved_state or {}).get("lastQuarter") or ""
+                      print(f"Skipping {symbol}: unresolved values remain blank for manual review through {limit}.")
+                      continue
                   # Use the durable ticker checkpoint as the queue cursor. Existing snapshots
                   # can be present before the ticker has completed its one-at-a-time OCR pass.
                   if symbol not in completed_symbols:
                       selected = symbol
                       print(f"Selected {symbol} from the persisted completion queue.")
                       break
-                  saved_state = checkpoint_states.get(symbol)
-                  if isinstance(saved_state, dict) and saved_state.get("skipUnconfirmedAutomation") is True:
-                      print(f"Skipping {symbol}: unresolved extraction items remain saved for manual review.")
-                      continue
                   # "complete_needs_manual_review" is not enough to skip a ticker
                   # when some quarters still have no core figures or statement pages.
                   if snapshot.get("bootstrap_status") == "complete":
