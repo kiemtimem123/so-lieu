@@ -798,7 +798,8 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
   out["net_profit"]=net
  parent_profit=value_by_label(
   profit_pages,
-  ["loi nhuan thuan co dong ngan hang","loi nhuan thuan cua co dong cua",\n   "loi nhuan sau thue cua co dong cong ty me",
+  ["loi nhuan thuan co dong ngan hang","loi nhuan thuan cua co dong cua",
+   "loi nhuan sau thue cua co dong cong ty me",
    "loi nhuan sau thue cua co dong cua cong ty me","loi nhuan thuoc ve co dong cong ty me"],
   factor
  ) if profit_pages else None
