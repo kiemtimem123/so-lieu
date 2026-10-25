@@ -968,9 +968,27 @@
       }
       if (tableBody) tableBody.innerHTML = '';
     };
+    // Scope-blocked/unconfirmed reports may retain source OCR values for audit, but
+    // never let those values enter public charts, comparisons, overview KPIs, or tables.
+    const scopeUnverifiedMetricField = /^(?:revenue|cost_of_goods_sold|gross_profit|financial_income|financial_expense|interest_expense|selling_expense|admin_expense|operating_profit|income_tax(?:_current|_deferred)?|pretax_profit|net_profit(?:_attributable)?|total_assets|total_liabilities|equity|roa|roe|pb|pe|eps|price|market_cap|enterprise_value|ev_ebitda|current_assets|non_current_assets|short_term_.*|current_liabilities|long_term_liabilities|fixed_assets|inventory|cash(?:_.*)?|retained_earnings|capital_expenditure(?:_ytd)?|dividends_paid(?:_ytd)?|operating_cash_flow(?:_ytd)?|investing_cash_flow(?:_ytd)?|financing_cash_flow(?:_ytd)?|bank_.*|broker_.*)$/i;
+    const hasUnverifiedReportScope = item =>
+      item?.source_validation?.scope_validation_required === true ||
+      item?.source_validation?.manual_review_blocking_automatic_extraction === true;
     const rowsFor = ticker => {
       const snapshot = snapshots.get(ticker);
-      return (snapshot?.items || []).filter(item => item && validPeriod(item.period)).slice().sort((a,b)=>a.period.localeCompare(b.period));
+      return (snapshot?.items || []).filter(item => item && validPeriod(item.period)).map(item => {
+        if (!hasUnverifiedReportScope(item)) return item;
+        const safe = { ...item };
+        Object.keys(safe).forEach(key => {
+          if (scopeUnverifiedMetricField.test(key) && validNumber(safe[key])) safe[key] = null;
+        });
+        safe.report_type = 'BCTC quý ' + ticker + ' ' + safe.period + ' (phạm vi hợp nhất chưa xác nhận; số liệu tạm ẩn)';
+        safe.verification_status = 'manual_review_required_pending_extraction';
+        safe.core_financial_extraction_status = 'manual_review_required_pending_extraction';
+        safe.financial_line_items_status = 'manual_review_required';
+        safe.verification_status_note = String(item?.source_validation?.manual_review_reason || 'Phạm vi báo cáo chưa được VietstockFinance xác nhận là hợp nhất.') + ' Các số liệu chưa xác minh không hiển thị.';
+        return safe;
+      }).slice().sort((a,b)=>a.period.localeCompare(b.period));
     };
     const hasNumericFinancialData = item => ['revenue','pretax_profit','net_profit','total_assets','total_liabilities','equity','roa','roe','pb'].some(field => validNumber(item?.[field]));
     const verificationBadge = item => {
@@ -1151,9 +1169,9 @@
     const rowsForBasis = ticker => {
       const basis = basisSelect?.value || 'consolidated';
       return rowsFor(ticker).filter(item => {
-        // Never mix a report whose consolidated/standalone scope has not been verified
-        // into either basis. Keep the source PDF available for manual review.
-        if (item?.source_validation?.scope_validation_required === true) return false;
+        // Keep scope-blocked source rows visible in consolidated mode for audit,
+        // but their financial values are blanked by rowsFor until the scope is verified.
+        if (hasUnverifiedReportScope(item)) return basis !== 'separate';
         const description = String(item.report_type || '').toLowerCase();
         if (basis === 'separate') return /riêng lẻ|riêng/.test(description) && !/hợp nhất/.test(description);
         return !/riêng lẻ|riêng/.test(description);
