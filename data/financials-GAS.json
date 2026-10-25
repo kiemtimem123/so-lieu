@@ -527,7 +527,7 @@
       "total_liabilities": null,
       "equity": null,
       "pretax_profit": null,
-      "net_profit": 3416067182678,
+      "net_profit": null,
       "net_profit_attributable": null,
       "revenue": null,
       "roa": null,
@@ -559,12 +559,12 @@
       "source_archive_source": "VietstockFinance document index",
       "source_archive_title": "Báo cáo tài chính Hợp nhất quý 2 năm 2024 Báo cáo tài chính Hợp nhất quý 2 năm 2024  ",
       "source_archive_linked_at": "2026-10-23T18:17:07.075465+00:00",
-      "core_financial_extraction_unverified_values": {},
-      "core_financial_extracted_fields": [
-        "net_profit"
-      ],
+      "core_financial_extraction_unverified_values": {
+        "net_profit": 3416067182678
+      },
+      "core_financial_extracted_fields": [],
       "core_financial_extraction_status": "manual_review_required_pending_extraction",
-      "core_financial_extraction_note": "Không còn trang PDF/ZIP đang chờ trích xuất tự động nhưng bộ chỉ tiêu lõi vẫn thiếu hoặc chưa cân đối. Giữ trống chỉ tiêu chưa xác minh và yêu cầu đối chiếu trực quan với báo cáo VietstockFinance.",
+      "core_financial_extraction_note": "Đã loại net_profit khỏi trường lõi được hiển thị vì giá trị chưa được xác minh và có dấu hiệu không thống nhất đơn vị; giữ giá trị cũ trong core_financial_extraction_unverified_values để truy vết. Các chỉ tiêu lõi khác vẫn chờ đối chiếu PDF VietstockFinance.",
       "verification_status_note": "Đang kiểm tra lại đơn vị Ngàn/Nghìn VND với PDF/ZIP gốc VietstockFinance.",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "98477a2cd8ee0e02ea6347f6a85304082686ddd1df85505eff2c107aac437d0c",
@@ -581,7 +581,7 @@
         "revenue_gross_profit_equation_check"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-23T18:23:33+00:00",
-      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
+      "financial_line_items_note": "OCR trang 5–6 có nhận diện một số chỉ tiêu nhưng chưa được kiểm tra trực quan; không sử dụng các giá trị có dấu hiệu sai đơn vị/cột. Đối chiếu PDF VietstockFinance trước khi đưa vào biểu đồ.",
       "cash_and_equivalents": 534602,
       "current_liabilities": 24245956554701,
       "long_term_liabilities": 24245956554701,
@@ -622,7 +622,12 @@
       "financial_line_items_source": "reports/raw/GAS/auto-gas-20261021/ab8b96c598a426f6.pdf",
       "financial_line_items_updated_at": "2026-10-23T18:23:33+00:00",
       "financial_line_items_prior_values": {},
-      "financial_line_items_rejected_values": {},
+      "financial_line_items_rejected_values": {
+        "net_profit": {
+          "value": 3416067182678,
+          "reason": "Giữ lại để rà soát: số đang lưu không thống nhất với unit='triệu VND' và kỳ vẫn manual_review_required_pending_extraction; chưa xác minh được trực quan từ báo cáo gốc."
+        }
+      },
       "core_financial_extraction_manual_terminal": true,
       "core_financial_extraction_stable_evidence_count": 1,
       "core_financial_extraction_stable_evidence_updated_at": "2026-10-24T13:49:19+00:00"
