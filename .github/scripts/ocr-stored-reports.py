@@ -22,7 +22,7 @@ ROOT = Path(__file__).resolve().parents[2]
 REPORTS = ROOT / "reports/raw"
 QUEUE_PATH = ROOT / "config/report-queue.json"
 # Include statement continuation pages in long consolidated reports.
-MAX_PAGES = min(max(1, int(os.getenv("REPORT_OCR_MAX_PAGES", "14"))), 14)  # bounded statement-page extraction
+MAX_PAGES = min(max(1, int(os.getenv("REPORT_OCR_MAX_PAGES", "18"))), 18)  # bounded statement-page extraction
 MAX_REPORTS = min(max(1, int(os.getenv("REPORT_OCR_MAX_REPORTS", "1"))), 3)
 # A small batch may contain two reports, but every run remains restricted to exactly
 # one ticker. The next ticker is never selected until the active ticker is complete
@@ -346,7 +346,7 @@ def ocr_pdf(path: Path, max_pages: int = MAX_PAGES, page_numbers=None):
                 # Alternate layouts are expensive. Use them only when the
                 # primary pass is below the same quality threshold used by the
                 # rescan selector; good native OCR output avoids 3 extra passes.
-                if 8 <= page_number <= 14 and _ocr_quality(text) < 0.34:
+                if 8 <= page_number <= 18 and _ocr_quality(text) < 0.34:
                     for psm in ("4", "11", "12"):
                         try:
                             alternate = subprocess.run(
