@@ -1151,6 +1151,9 @@
     const rowsForBasis = ticker => {
       const basis = basisSelect?.value || 'consolidated';
       return rowsFor(ticker).filter(item => {
+        // Never mix a report whose consolidated/standalone scope has not been verified
+        // into either basis. Keep the source PDF available for manual review.
+        if (item?.source_validation?.scope_validation_required === true) return false;
         const description = String(item.report_type || '').toLowerCase();
         if (basis === 'separate') return /riêng lẻ|riêng/.test(description) && !/hợp nhất/.test(description);
         return !/riêng lẻ|riêng/.test(description);
