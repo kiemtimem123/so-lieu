@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-25T21:07:50Z",
+  "updatedAt": "2026-10-25T21:09:06Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -36,48 +36,42 @@
     "KBC",
     "GEG",
     "VIX",
-    "TCB"
+    "TCB",
+    "VCI"
   ],
-  "lastCompletedSymbol": "BID",
-  "activeSymbol": "VCI",
-  "resumeSymbolHint": "VCI",
-  "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
+  "lastCompletedSymbol": "VCI",
+  "activeSymbol": null,
+  "resumeSymbolHint": "VCK",
+  "resumeRule": "Read reports/session-resume.md and reports/processing-checkpoint.json first. Load only the current ticker snapshot and that ticker's reports/raw sidecars; skip unconfirmed periods marked terminal for manual review. Future quarters beyond a ticker's skip-through period automatically re-open its queue.",
   "lastProgress": {
     "symbol": "VCI",
-    "status": "in_progress",
-    "completeForAutomation": false,
+    "status": "terminal_needs_manual_review",
+    "completeForAutomation": true,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-25T21:07:50Z",
-    "workflowRunId": "40233629867",
-    "workflowRunNumber": 1589,
-    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/40233629867",
+    "processedAt": "2026-10-25T21:09:06Z",
+    "workflowRunId": null,
+    "workflowRunNumber": null,
+    "workflowRunUrl": null,
     "changedPaths": [
-      "data/financials-VCI.json",
-      "reports/raw/VCI/auto-vci-20261021/ceeef626c2647bcb.pdf.extracted.json"
+      "data/financials-VCI.json"
     ],
     "periodCount": 11,
     "firstQuarter": "2024-Q1",
     "lastQuarter": "2026-Q3",
-    "pendingCorePeriods": [
-      "2024-Q2"
-    ],
+    "pendingCorePeriods": [],
     "terminalManualReviewPeriods": [
       "2024-Q1",
+      "2024-Q2",
       "2024-Q3",
       "2024-Q4",
-      "2025-Q1",
-      "2025-Q2",
-      "2025-Q3",
-      "2025-Q4",
-      "2026-Q1",
-      "2026-Q2",
-      "2026-Q3"
+      "2025-Q1"
     ],
     "pendingDetailPeriods": [],
     "staleDetailSchemaPeriods": [],
     "statementPagesPending": true,
-    "skipUnconfirmedAutomation": false,
-    "skipUnconfirmedReason": null
+    "skipUnconfirmedAutomation": true,
+    "skipUnconfirmedThroughPeriod": "2026-Q3",
+    "skipUnconfirmedReason": "User-directed skip of unconfirmed historical values. Q2/2024 has an explicit VietstockFinance consolidation-scope blocker; values stay blank. Resume automatic processing when a quarter later than 2026-Q3 is present."
   },
   "symbolStates": {
     "MBB": {
@@ -317,35 +311,29 @@
       "snapshotFetchedAt": "2026-10-23T04:27:50+00:00"
     },
     "VCI": {
-      "status": "in_progress",
-      "completeForAutomation": false,
+      "status": "terminal_needs_manual_review",
+      "completeForAutomation": true,
       "manualReviewRemaining": true,
       "periodCount": 11,
       "firstQuarter": "2024-Q1",
       "lastQuarter": "2026-Q3",
-      "pendingCorePeriods": [
-        "2024-Q2"
-      ],
+      "pendingCorePeriods": [],
       "terminalManualReviewPeriods": [
         "2024-Q1",
+        "2024-Q2",
         "2024-Q3",
         "2024-Q4",
-        "2025-Q1",
-        "2025-Q2",
-        "2025-Q3",
-        "2025-Q4",
-        "2026-Q1",
-        "2026-Q2",
-        "2026-Q3"
+        "2025-Q1"
       ],
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": true,
-      "skipUnconfirmedAutomation": false,
-      "skipUnconfirmedReason": null,
+      "skipUnconfirmedAutomation": true,
+      "skipUnconfirmedReason": "User-directed skip of unconfirmed historical values. Q2/2024 has an explicit VietstockFinance consolidation-scope blocker; values stay blank. Resume automatic processing when a quarter later than 2026-Q3 is present.",
       "sourceArchivesChecked": 1,
-      "updatedAt": "2026-10-25T21:07:50Z",
-      "snapshotFetchedAt": "2026-10-23T07:18:58+00:00"
+      "updatedAt": "2026-10-25T21:09:06Z",
+      "snapshotFetchedAt": "2026-10-23T07:18:58+00:00",
+      "skipUnconfirmedThroughPeriod": "2026-Q3"
     },
     "VCK": {
       "status": "automated_processing_complete",
@@ -708,16 +696,6 @@
     }
   },
   "progressHistory": [
-    {
-      "symbol": "TCB",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-10-25T19:51:26Z",
-      "workflowRunId": "40227955735",
-      "changedPaths": [
-        "data/financials-TCB.json"
-      ]
-    },
     {
       "symbol": "TCB",
       "status": "in_progress",
@@ -1221,6 +1199,17 @@
       "changedPaths": [
         "data/financials-VCI.json",
         "reports/raw/VCI/auto-vci-20261021/ceeef626c2647bcb.pdf.extracted.json"
+      ]
+    },
+    {
+      "symbol": "VCI",
+      "status": "terminal_needs_manual_review",
+      "completeForAutomation": true,
+      "processedAt": "2026-10-25T21:09:06Z",
+      "workflowRunId": null,
+      "changedPaths": [
+        "data/financials-VCI.json",
+        "reports/processing-checkpoint.json"
       ]
     }
   ],
