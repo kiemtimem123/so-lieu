@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-25T05:25:00Z",
+  "updatedAt": "2026-10-25T09:10:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -45,9 +45,9 @@
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "KBC",
-    "status": "income_statement_details_extended_unit_audit_needed",
-    "updatedAt": "2026-10-25T05:25:00Z",
-    "nextAction": "KBC remains active. Added detailed income-statement fields for 2025-Q1/Q2/Q3 and 2026-Q1/Q2/Q3; filled Q1-2024 current/deferred tax and EPS, corrected Q3-2024 deferred-tax sign and EPS. Before any ticker switch, audit cash-flow field units: several existing operating/investing/financing cash-flow values appear stored in raw VND while financials records use million VND. Normalize only after confirming each source field and calculations, then extract missing cash-flow fields and run complete KBC checks."
+    "status": "cashflow_unit_and_period_basis_audit_in_progress",
+    "updatedAt": "2026-10-25T09:10:00Z",
+    "nextAction": "Đã kiểm tra trực tiếp OCR sidecar BCTC hợp nhất VietstockFinance cho KBC từ 2024-Q2 đến 2026-Q3: báo cáo lưu chuyển tiền tệ ghi đơn vị đồng Việt Nam; các báo cáo Q2/Q3/Q4 trình bày số lũy kế 6/9/12 tháng, không phải riêng quý. Các trường cash-flow hiện có trong data/financials-KBC.json đang có số nguyên cỡ nghìn tỷ nhưng unit lại ghi triệu VND, một số trường còn không khớp dòng báo cáo (ví dụ Q3/2024 CFO lũy kế 5.006.411.104.567 VND, Q2/2024 CFO lũy kế 4.989.536.872.101 VND; CFO riêng Q3 là chênh lệch 16.874.232.466 VND = 16.874,232 triệu VND). Không dùng các trường hiện tại cho biểu đồ trước khi chuẩn hóa. Bước kế: trích đúng dòng 20/30/40/50/60/70 trên các trang cash-flow của từng sidecar; quy đổi VND sang triệu VND; chuyển YTD sang số riêng quý bằng chênh lệch với kỳ lũy kế trước; đối chiếu net cash change = CFO+CFI+CFF và cash opening+net change=closing. Với Q1 dùng trực tiếp số 3 tháng. Giữ KBC active, chưa chuyển mã khác và không điền số khi OCR chưa đủ tin cậy."
   },
   "symbolStates": {
     "MBB": {
@@ -626,9 +626,9 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 1,
-      "updatedAt": "2026-10-25T05:25:00Z",
+      "updatedAt": "2026-10-25T09:10:00Z",
       "snapshotFetchedAt": "2026-10-23T20:04:29+00:00",
-      "note": "Đã bổ sung chỉ tiêu KQKD chi tiết cho 2025-Q1/Q2/Q3 và 2026-Q1/Q2/Q3; bổ sung thuế và EPS Q1/2024, chỉnh dấu thuế hoãn lại và EPS Q3/2024 theo OCR. Phát hiện một số trường lưu chuyển tiền tệ cũ có vẻ đang lưu VND nguyên trong khi đơn vị bản ghi là triệu VND; phải kiểm tra nguồn và công thức trước khi chuẩn hóa. Chưa hoàn tất mã, PDF chưa xác minh trực quan."
+      "note": "Cash-flow audit confirmed that source reports are in VND and interim Q2/Q3 figures are cumulative YTD. Existing cash-flow values in financials-KBC.json have unit/basis inconsistencies; normalize from saved OCR sidecars and reconcile cash bridge before marking complete. OCR remains unverified visually."
     },
     "GEG": {
       "status": "automated_processing_complete",
