@@ -308,6 +308,37 @@ def value_by_label(pages,labels,factor,threshold=1000,exclude_terms=None):
      if vals: return int(round(vals[0]*factor))
  return None
 
+
+def value_by_label_with_note_reference(pages, labels, factor):
+ # Some bank income lines (notably income from capital contributions and shares)
+ # are legitimately below VND 1,000 million. The generic parser suppresses small
+ # values to avoid reading note numbers as amounts, so parse the statement row
+ # explicitly and discard the leading note reference when a row has three cells.
+ for label in labels:
+  target=norm(label)
+  for page in pages:
+   lines=str(page.get("text","")).splitlines()
+   for start in range(len(lines)):
+    parts=[]
+    for end in range(start,min(start+4,len(lines))):
+     if end>start and is_statement_row_start(lines[end]): break
+     parts.append(lines[end])
+     combined=norm(" ".join(parts))
+     position=combined.find(target)
+     if position < 0: continue
+     tail=combined[position+len(target):]
+     vals=[]
+     for token in NUMBER_RE.findall(tail):
+      parsed=parse_amount(token)
+      if parsed is not None and not (1900 <= abs(parsed) <= 2100):
+       vals.append(parsed)
+     if len(vals)>=3 and 1<=abs(vals[0])<=99:
+      vals=vals[1:]
+     if vals:
+      return int(round(vals[0]*factor))
+ return None
+
+
 def value_by_code(pages,code,factor,threshold=1000):
  token=re.compile(r"(?<!\d)"+re.escape(code)+r"(?!\d)")
  for page in pages:
@@ -838,6 +869,8 @@ def extract_fields(item,symbol,pages):
     val=value_by_label(inc,["chi phi hoat dong"],scale,exclude_terms=["chi phi hoat dong dich vu","chi phi hoat dong khac","chi phi hoat dong tai chinh"])
    elif field in {"bank_net_interest_income","bank_net_service_income"}:
     val=None
+   elif field=="bank_dividend_and_capital_income":
+    val=value_by_label_with_note_reference(inc,labels,scale)
    else:
     val=value_by_label(inc,labels,scale)
    if val is not None: out[field]=val
@@ -1191,6 +1224,22 @@ def reconcile_detail_items(items,symbol):
      rejected_values.pop(field,None)
      period_changed=True; changed_fields+=1
 
+   # Store bank expense magnitudes as positive values for consistent reconciliation,
+   # even when the PDF prints the expense in parentheses.
+   provision_value=item.get("bank_provision_expense")
+   if isinstance(provision_value,(int,float)) and provision_value<0:
+    item.setdefault("financial_line_items_prior_values",{}).setdefault("bank_provision_expense",provision_value)
+    item.setdefault("financial_line_items_value_corrections",{})["bank_provision_expense"]={
+     "previous_value":provision_value,
+     "new_value":abs(int(round(provision_value))),
+     "reason":"Normalized the report's parenthesized credit-provision expense to the positive expense convention used throughout bank-category calculations."
+    }
+    item["bank_provision_expense"]=abs(int(round(provision_value)))
+    fields.add("bank_provision_expense")
+    rejected.discard("bank_provision_expense")
+    rejected_values.pop("bank_provision_expense",None)
+    period_changed=True; changed_fields+=1
+
    interest_income=item.get("bank_interest_income")
    interest_expense=item.get("bank_interest_expense")
    if (
@@ -1282,10 +1331,11 @@ def reconcile_detail_items(items,symbol):
      "derived from total operating income minus operating expense",
     )
 
-   # PBT = PPOP - positive credit-provision expense. Derive only when both
-   # the quarterly PPOP and the snapshot's reported PBT are available.
+   # PBT = PPOP - positive credit-provision expense. Prefer a reported PPOP;
+   # if it is missing, rebuild it from the reported PBT and normalized expense.
    ppop=item.get("bank_pre_provision_operating_profit")
    pbt=item.get("pretax_profit")
+   provision=item.get("bank_provision_expense")
    if isinstance(ppop,(int,float)) and isinstance(pbt,(int,float)):
     derived_provision=int(round(ppop-pbt))
     set_derived(
@@ -1293,6 +1343,24 @@ def reconcile_detail_items(items,symbol):
      "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
      "derived from reconciled pre-provision operating profit minus reported quarterly PBT",
     )
+   elif not isinstance(ppop,(int,float)) and isinstance(pbt,(int,float)) and isinstance(provision,(int,float)) and provision>=0:
+    set_derived(
+     "bank_pre_provision_operating_profit",pbt+provision,
+     "Lợi nhuận trước thuế + chi phí dự phòng tín dụng dương; khôi phục tổng phụ trước dự phòng.",
+     "derived from reported quarterly PBT plus normalized positive provision expense",
+    )
+
+   ppop=item.get("bank_pre_provision_operating_profit")
+   revenue=item.get("revenue")
+   op_expense=item.get("bank_operating_expenses")
+   if isinstance(ppop,(int,float)) and isinstance(revenue,(int,float)) and not isinstance(op_expense,(int,float)):
+    derived_op_expense=int(round(revenue-ppop))
+    if derived_op_expense>=0:
+     set_derived(
+      "bank_operating_expenses",derived_op_expense,
+      "Tổng thu nhập hoạt động - lợi nhuận trước dự phòng; chi phí hoạt động lưu dương.",
+      "derived from reported total operating income minus reconciled pre-provision operating profit",
+     )
 
    ppop=item.get("bank_pre_provision_operating_profit")
    provision=item.get("bank_provision_expense")
@@ -1742,6 +1810,25 @@ def enrich_snapshot(path):
    if field.startswith("__"): continue
    if item.get(field) is None:
     item[field]=value; new_fields.append(field)
+   elif (
+    symbol in BANKS
+    and field=="bank_dividend_and_capital_income"
+    and field in set(item.get("financial_line_items_extracted_fields") or [])
+    and isinstance(item.get(field),(int,float))
+    and isinstance(item.get("revenue"),(int,float))
+    and item.get(field)==item.get("revenue")
+    and isinstance(value,(int,float))
+    and value!=item.get(field)
+   ):
+    previous_value=item[field]
+    item.setdefault("financial_line_items_prior_values",{}).setdefault(field,previous_value)
+    item.setdefault("financial_line_items_value_corrections",{})[field]={
+     "previous_value":previous_value,
+     "new_value":int(round(value)),
+     "reason":"Corrected a legacy extraction that duplicated total operating income into the separately labelled income-from-capital-contributions row; value reparsed from the archived VietstockFinance statement."
+    }
+    item[field]=int(round(value))
+    new_fields.append(field)
    elif (
     symbol in BANKS
     and field in {"bank_customer_loans","bank_net_service_income","operating_cash_flow_ytd","financing_cash_flow_ytd","cash_beginning","cash_ending"}
