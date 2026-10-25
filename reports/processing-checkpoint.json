@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-25T09:02:18Z",
+  "updatedAt": "2026-10-25T09:03:54Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -10,7 +10,6 @@
     "VCI",
     "VCK",
     "VIX",
-    "SSI",
     "VDS",
     "KDH",
     "NVL",
@@ -40,31 +39,34 @@
     "BID"
   ],
   "lastCompletedSymbol": "BID",
-  "activeSymbol": null,
-  "resumeSymbolHint": "VCI",
+  "activeSymbol": "SSI",
+  "resumeSymbolHint": "SSI",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
-    "symbol": "BID",
-    "status": "automated_processing_complete",
-    "completeForAutomation": true,
+    "symbol": "SSI",
+    "status": "in_progress",
+    "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-25T09:02:18Z",
-    "workflowRunId": "40178858832",
-    "workflowRunNumber": 1379,
-    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/40178858832",
+    "processedAt": "2026-10-25T09:03:54Z",
+    "workflowRunId": "40179023130",
+    "workflowRunNumber": 1380,
+    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/40179023130",
     "changedPaths": [
-      "data/financials-BID.json",
-      "reports/raw/BID/auto-bid-20261021/187ace9c81d22437.pdf.extracted.json",
-      "reports/raw/BID/auto-bid-20261021/73d9ead38e4e60b2.pdf.extracted.json"
+      "data/financials-SSI.json",
+      "reports/raw/SSI/auto-ssi-20261021/4ec878bd2cccf150.pdf.extracted.json",
+      "reports/raw/SSI/auto-ssi-20261021/b63772e0ab45f7d6.pdf.extracted.json"
     ],
     "periodCount": 10,
     "firstQuarter": "2024-Q1",
     "lastQuarter": "2026-Q2",
-    "pendingCorePeriods": [],
+    "pendingCorePeriods": [
+      "2025-Q4",
+      "2026-Q1"
+    ],
     "terminalManualReviewPeriods": [],
     "pendingDetailPeriods": [],
     "staleDetailSchemaPeriods": [],
-    "statementPagesPending": false
+    "statementPagesPending": true
   },
   "symbolStates": {
     "MBB": {
@@ -370,23 +372,23 @@
       "snapshotFetchedAt": "2026-10-23T09:38:33+00:00"
     },
     "SSI": {
-      "status": "automated_processing_complete",
-      "completeForAutomation": true,
+      "status": "in_progress",
+      "completeForAutomation": false,
       "manualReviewRemaining": true,
       "periodCount": 10,
       "firstQuarter": "2024-Q1",
       "lastQuarter": "2026-Q2",
-      "pendingCorePeriods": [],
-      "terminalManualReviewPeriods": [
+      "pendingCorePeriods": [
+        "2025-Q4",
         "2026-Q1"
       ],
+      "terminalManualReviewPeriods": [],
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
-      "statementPagesPending": false,
-      "sourceArchivesChecked": 10,
-      "updatedAt": "2026-10-24T09:00:00Z",
-      "snapshotFetchedAt": "2026-10-23T10:46:00+00:00",
-      "note": "Đã bổ sung ROA/ROE cho đủ 10 kỳ SSI từ 2024-Q1 đến 2026-Q2. Các tỷ lệ dùng lợi nhuận sau thuế phân bổ cho chủ sở hữu (dòng 201) và bình quân tài sản/vốn đầu-cuối quý từ BCTC hợp nhất VietstockFinance. Cân đối dữ liệu sau làm tròn đơn vị triệu VND khớp ở cả 10 kỳ; riêng Q1/2026 có điều chỉnh làm tròn 1 triệu để phương trình khớp, đã ghi chú trong bản ghi. Tất cả tỷ lệ còn chờ đối chiếu trực quan PDF."
+      "statementPagesPending": true,
+      "sourceArchivesChecked": 3,
+      "updatedAt": "2026-10-25T09:03:54Z",
+      "snapshotFetchedAt": "2026-10-23T10:46:00+00:00"
     },
     "VDS": {
       "status": "automated_processing_complete",
@@ -741,18 +743,6 @@
     }
   },
   "progressHistory": [
-    {
-      "symbol": "HCM",
-      "status": "automated_processing_complete",
-      "completeForAutomation": true,
-      "processedAt": "2026-10-25T07:30:24Z",
-      "workflowRunId": "40172899648",
-      "changedPaths": [
-        "data/financials-HCM.json",
-        "reports/raw/HCM/vietstock-hcm-2024-2026-20261019/6948ea8ee558ef92.pdf.extracted.json",
-        "reports/raw/HCM/vietstock-hcm-2024-2026-20261019/f90a4832329d9e4d.zip.extracted.json"
-      ]
-    },
     {
       "symbol": "VND",
       "status": "in_progress",
@@ -1337,6 +1327,18 @@
         "data/financials-BID.json",
         "reports/raw/BID/auto-bid-20261021/187ace9c81d22437.pdf.extracted.json",
         "reports/raw/BID/auto-bid-20261021/73d9ead38e4e60b2.pdf.extracted.json"
+      ]
+    },
+    {
+      "symbol": "SSI",
+      "status": "in_progress",
+      "completeForAutomation": false,
+      "processedAt": "2026-10-25T09:03:54Z",
+      "workflowRunId": "40179023130",
+      "changedPaths": [
+        "data/financials-SSI.json",
+        "reports/raw/SSI/auto-ssi-20261021/4ec878bd2cccf150.pdf.extracted.json",
+        "reports/raw/SSI/auto-ssi-20261021/b63772e0ab45f7d6.pdf.extracted.json"
       ]
     }
   ],
