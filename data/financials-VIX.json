@@ -9,7 +9,7 @@
       "total_assets": null,
       "total_liabilities": null,
       "equity": null,
-      "pretax_profit": 0,
+      "pretax_profit": null,
       "net_profit": null,
       "net_profit_attributable": null,
       "revenue": 400809,
@@ -66,7 +66,8 @@
         "balance_totals_withheld": "asset/liability/equity totals did not fully reconcile"
       },
       "financial_line_items_rejected_fields": [
-        "fixed_assets_fixed_asset_parent_check"
+        "fixed_assets_fixed_asset_parent_check",
+        "pretax_profit"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-23T10:00:08+00:00",
       "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
@@ -131,13 +132,20 @@
         "retained_earnings",
         "revenue"
       ],
-      "financial_line_items_status": "auto_extracted_pending_visual_review",
+      "financial_line_items_status": "manual_review_required",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-23T10:00:08+00:00",
       "financial_line_items_source": "reports/raw/VIX/auto-vix-20261021/f856e48e1532d399.pdf",
-      "financial_line_items_updated_at": "2026-10-23T10:00:08+00:00",
-      "financial_line_items_prior_values": {},
-      "financial_line_items_rejected_values": {},
+      "financial_line_items_updated_at": "2026-10-25T20:20:00+07:00",
+      "financial_line_items_prior_values": {
+        "pretax_profit": 0
+      },
+      "financial_line_items_rejected_values": {
+        "pretax_profit": {
+          "value": 0,
+          "reason": "Giá trị 0 chưa được đối chiếu trực quan với báo cáo gốc; phạm vi báo cáo riêng/hợp nhất chưa xác minh."
+        }
+      },
       "core_financial_extraction_manual_terminal": true
     },
     {
@@ -484,7 +492,7 @@
       "pretax_profit": null,
       "net_profit": null,
       "net_profit_attributable": null,
-      "revenue": 2751202607528,
+      "revenue": null,
       "roa": null,
       "roe": null,
       "unit": "triệu VND",
@@ -575,18 +583,28 @@
         "retained_earnings",
         "revenue"
       ],
-      "financial_line_items_status": "auto_extracted_pending_visual_review",
+      "financial_line_items_status": "manual_review_required",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-23T10:06:47+00:00",
       "financial_line_items_source": "reports/raw/VIX/auto-vix-20261021/e6b35015581bb224.pdf",
-      "financial_line_items_updated_at": "2026-10-23T10:06:47+00:00",
+      "financial_line_items_updated_at": "2026-10-25T20:20:00+07:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
-      "financial_line_items_prior_values": {},
-      "financial_line_items_rejected_values": {},
+      "financial_line_items_prior_values": {
+        "revenue": 2751202607528
+      },
+      "financial_line_items_rejected_values": {
+        "revenue": {
+          "value": 2751202607528,
+          "reason": "Giá trị 2751202607528 có dấu hiệu lỗi OCR/ghép chữ số so với thang số các kỳ lân cận; chưa xác minh trực quan PDF."
+        }
+      },
       "core_financial_extraction_status": "manual_review_required_pending_extraction",
       "core_financial_extraction_manual_terminal": true,
       "core_financial_extraction_note": "Tệp hiện liên kết chưa chứng minh phạm vi hợp nhất; không tự điền chỉ tiêu lõi. Chờ xác minh tài liệu hợp nhất từ danh mục VietstockFinance.",
-      "core_financial_extraction_updated_at": "2026-10-23T10:17:33Z"
+      "core_financial_extraction_updated_at": "2026-10-23T10:17:33Z",
+      "financial_line_items_rejected_fields": [
+        "revenue"
+      ]
     },
     {
       "symbol": "VIX",
