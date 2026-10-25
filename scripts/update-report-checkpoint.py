@@ -145,6 +145,7 @@ def main() -> int:
         for value in os.environ.get("REPORT_OCR_RESCAN_PAGES", "").split(",")
         if value.strip().isdigit()
     }
+    force_manual_skip = os.environ.get("REPORT_OCR_SKIP_UNCONFIRMED", "").strip().lower() in {"1", "true", "yes"}
 
     quarter_items: list[dict[str, Any]] = []
     if isinstance(snapshot, dict):
@@ -242,11 +243,11 @@ def main() -> int:
             break
 
     snapshot_changed = False
-    if isinstance(snapshot, dict) and not statement_pages_pending:
-        # Once no linked report has any tracked pages left to OCR, remaining
-        # unresolved core fields cannot progress automatically on the same
-        # evidence. Mark them terminal for automation but retain blanks and
-        # require visual review; never manufacture balancing figures.
+    if isinstance(snapshot, dict) and (force_manual_skip or not statement_pages_pending):
+        # Once automatic extraction is closed for this ticker, unresolved core
+        # fields remain blank and are explicitly retained for visual review.
+        # A user-directed skip may close the queue even if a sidecar still
+        # reports missing pages; it must never manufacture figures.
         for item in quarter_items:
             if item.get("verification_status") not in CORE_PENDING:
                 continue
@@ -255,11 +256,18 @@ def main() -> int:
             item["verification_status"] = "manual_review_required_pending_extraction"
             item["core_financial_extraction_status"] = "manual_review_required_pending_extraction"
             item["core_financial_extraction_manual_terminal"] = True
-            item["core_financial_extraction_note"] = (
-                "Không còn trang PDF/ZIP đang chờ trích xuất tự động nhưng bộ chỉ tiêu lõi "
-                "vẫn thiếu hoặc chưa cân đối. Giữ trống chỉ tiêu chưa xác minh và yêu cầu "
-                "đối chiếu trực quan với báo cáo VietstockFinance."
-            )
+            if force_manual_skip:
+                item["core_financial_extraction_note"] = (
+                    "Theo yêu cầu tiếp tục hàng đợi, phần chưa xác minh được được để trống "
+                    "và chuyển sang rà soát thủ công. Không tự suy diễn số liệu; tài liệu "
+                    "VietstockFinance và trạng thái thiếu trang còn lại được giữ nguyên."
+                )
+            else:
+                item["core_financial_extraction_note"] = (
+                    "Không còn trang PDF/ZIP đang chờ trích xuất tự động nhưng bộ chỉ tiêu lõi "
+                    "vẫn thiếu hoặc chưa cân đối. Giữ trống chỉ tiêu chưa xác minh và yêu cầu "
+                    "đối chiếu trực quan với báo cáo VietstockFinance."
+                )
             item["core_financial_extraction_updated_at"] = utc_now()
             snapshot_changed = True
         if snapshot_changed:
@@ -337,6 +345,11 @@ def main() -> int:
             )
         )
     )
+    if force_manual_skip and isinstance(snapshot, dict):
+        # Close the automated queue only; keep unresolved entries flagged.
+        status = "terminal_needs_manual_review"
+        complete_for_automation = True
+        manual_review_remaining = True
 
     now = utc_now()
     states = checkpoint.get("symbolStates")
@@ -354,6 +367,11 @@ def main() -> int:
         "pendingDetailPeriods": details_pending_periods,
         "staleDetailSchemaPeriods": stale_detail_periods,
         "statementPagesPending": statement_pages_pending,
+        "skipUnconfirmedAutomation": force_manual_skip,
+        "skipUnconfirmedReason": (
+            "User-directed skip; unverified figures remain blank for manual review."
+            if force_manual_skip else None
+        ),
         "sourceArchivesChecked": len(checked_archives),
         "updatedAt": now,
         "snapshotFetchedAt": snapshot.get("fetchedAt") if isinstance(snapshot, dict) else None,
@@ -412,6 +430,11 @@ def main() -> int:
             "pendingDetailPeriods": details_pending_periods,
             "staleDetailSchemaPeriods": stale_detail_periods,
             "statementPagesPending": statement_pages_pending,
+            "skipUnconfirmedAutomation": force_manual_skip,
+            "skipUnconfirmedReason": (
+                "User-directed skip; unverified figures remain blank for manual review."
+                if force_manual_skip else None
+            ),
         },
         "symbolStates": states,
     })

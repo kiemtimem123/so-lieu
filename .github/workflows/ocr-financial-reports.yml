@@ -200,6 +200,10 @@ jobs:
                       selected = symbol
                       print(f"Selected {symbol} from the persisted completion queue.")
                       break
+                  saved_state = checkpoint_states.get(symbol)
+                  if isinstance(saved_state, dict) and saved_state.get("skipUnconfirmedAutomation") is True:
+                      print(f"Skipping {symbol}: unresolved extraction items remain saved for manual review.")
+                      continue
                   # "complete_needs_manual_review" is not enough to skip a ticker
                   # when some quarters still have no core figures or statement pages.
                   if snapshot.get("bootstrap_status") == "complete":
@@ -550,13 +554,13 @@ jobs:
             git add -A -- "reports/raw/${REPORT_OCR_SYMBOL}"
           fi
           if git diff --cached --quiet; then
-            echo "No OCR or detail-field changes for ${REPORT_OCR_SYMBOL}; stop the chain and let the scheduled retry revisit only unfinished data."
-            echo "saved=false" >> "$GITHUB_OUTPUT"
-            exit 0
+            echo "No new OCR/detail fields for ${REPORT_OCR_SYMBOL}; close unresolved items for manual review and advance the queue."
+            REPORT_OCR_SKIP_UNCONFIRMED=true REPORT_OCR_CHANGED_PATHS="" \
+              python scripts/update-report-checkpoint.py "${REPORT_OCR_SYMBOL}"
+          else
+            REPORT_OCR_CHANGED_PATHS="$(git diff --cached --name-only)" \
+              python scripts/update-report-checkpoint.py "${REPORT_OCR_SYMBOL}"
           fi
-
-          REPORT_OCR_CHANGED_PATHS="$(git diff --cached --name-only)" \
-            python scripts/update-report-checkpoint.py "${REPORT_OCR_SYMBOL}"
           git add -A -- "data/financials-${REPORT_OCR_SYMBOL}.json"
           git add -- reports/processing-checkpoint.json
 
@@ -566,7 +570,11 @@ jobs:
             tar -czf "/tmp/selected-ticker-raw-${REPORT_OCR_SYMBOL}.tar.gz" "reports/raw/${REPORT_OCR_SYMBOL}"
           fi
 
-          git commit -m "OCR and enrich ${REPORT_OCR_SYMBOL} financial reports"
+          if git diff --cached --name-only | grep -qv '^reports/processing-checkpoint\.json$'; then
+            git commit -m "OCR and enrich ${REPORT_OCR_SYMBOL} financial reports"
+          else
+            git commit -m "Advance checkpoint for ${REPORT_OCR_SYMBOL} financial reports"
+          fi
           pushed=false
           for attempt in 1 2 3 4 5; do
             git fetch origin main
@@ -592,16 +600,20 @@ jobs:
                 git add -A -- "reports/raw/${REPORT_OCR_SYMBOL}"
               fi
               if git diff --cached --quiet; then
-                echo "No additional safe fields found after recomputing ${REPORT_OCR_SYMBOL}; stop the immediate chain."
-                echo "saved=false" >> "$GITHUB_OUTPUT"
-                pushed=true
-                break
+                echo "No additional safe fields for ${REPORT_OCR_SYMBOL}; close unresolved items for manual review and advance the queue."
+                REPORT_OCR_SKIP_UNCONFIRMED=true REPORT_OCR_CHANGED_PATHS="" \
+                  python scripts/update-report-checkpoint.py "${REPORT_OCR_SYMBOL}"
+              else
+                REPORT_OCR_CHANGED_PATHS="$(git diff --cached --name-only)" \
+                  python scripts/update-report-checkpoint.py "${REPORT_OCR_SYMBOL}"
               fi
-              REPORT_OCR_CHANGED_PATHS="$(git diff --cached --name-only)" \
-                python scripts/update-report-checkpoint.py "${REPORT_OCR_SYMBOL}"
               git add -A -- "data/financials-${REPORT_OCR_SYMBOL}.json"
               git add -- reports/processing-checkpoint.json
-              git commit -m "Reconcile ${REPORT_OCR_SYMBOL} financial report details"
+              if git diff --cached --name-only | grep -qv '^reports/processing-checkpoint\.json$'; then
+                git commit -m "Reconcile ${REPORT_OCR_SYMBOL} financial report details"
+              else
+                git commit -m "Advance checkpoint for ${REPORT_OCR_SYMBOL} financial reports"
+              fi
             fi
             sleep $((attempt * 2))
           done
