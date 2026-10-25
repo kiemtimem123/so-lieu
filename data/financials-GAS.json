@@ -578,13 +578,17 @@
       "financial_line_items_rejected_fields": [
         "cost_of_goods_sold_gross_profit_equation_check",
         "gross_profit_gross_profit_equation_check",
-        "revenue_gross_profit_equation_check"
+        "revenue_gross_profit_equation_check",
+        "net_profit",
+        "current_liabilities",
+        "long_term_liabilities",
+        "cash_beginning"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-23T18:23:33+00:00",
-      "financial_line_items_note": "OCR trang 5–6 có nhận diện một số chỉ tiêu nhưng chưa được kiểm tra trực quan; không sử dụng các giá trị có dấu hiệu sai đơn vị/cột. Đối chiếu PDF VietstockFinance trước khi đưa vào biểu đồ.",
+      "financial_line_items_note": "Đã loại các giá trị chi tiết có dấu hiệu sai cột/đơn vị khỏi dữ liệu sử dụng: nợ ngắn hạn và nợ dài hạn trùng tổng nợ phải trả; số dư tiền đầu kỳ có dấu hiệu sai chữ số. Giá trị cũ được giữ trong financial_line_items_prior_values/financial_line_items_rejected_values để truy vết. Cần rà soát trực quan PDF VietstockFinance trước khi phục hồi.",
       "cash_and_equivalents": 534602,
-      "current_liabilities": 24245956554701,
-      "long_term_liabilities": 24245956554701,
+      "current_liabilities": null,
+      "long_term_liabilities": null,
       "retained_earnings": 18866449070100,
       "financial_income": 444796020763,
       "financial_expense": 229062513900,
@@ -596,36 +600,49 @@
       "income_tax": 815940185954,
       "dividends_paid_ytd": 84645516061,
       "net_cash_change_ytd": 1946829150446,
-      "cash_beginning": 54668895214949,
+      "cash_beginning": null,
       "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
         "admin_expense",
         "cash_and_equivalents",
-        "cash_beginning",
         "cashflow_period_basis",
-        "current_liabilities",
         "dividends_paid_ytd",
         "financial_expense",
         "financial_income",
         "income_tax",
         "income_tax_current",
         "interest_expense",
-        "long_term_liabilities",
         "net_cash_change_ytd",
         "operating_profit",
         "retained_earnings",
         "selling_expense"
       ],
-      "financial_line_items_status": "auto_extracted_pending_visual_review",
+      "financial_line_items_status": "manual_review_required",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-23T18:23:33+00:00",
       "financial_line_items_source": "reports/raw/GAS/auto-gas-20261021/ab8b96c598a426f6.pdf",
       "financial_line_items_updated_at": "2026-10-23T18:23:33+00:00",
-      "financial_line_items_prior_values": {},
+      "financial_line_items_prior_values": {
+        "current_liabilities": 24245956554701,
+        "long_term_liabilities": 24245956554701,
+        "cash_beginning": 54668895214949
+      },
       "financial_line_items_rejected_values": {
         "net_profit": {
           "value": 3416067182678,
           "reason": "Giữ lại để rà soát: số đang lưu không thống nhất với unit='triệu VND' và kỳ vẫn manual_review_required_pending_extraction; chưa xác minh được trực quan từ báo cáo gốc."
+        },
+        "current_liabilities": {
+          "value": 24245956554701,
+          "reason": "Giữ lại để rà soát: giá trị đang trùng tổng nợ phải trả trong cùng kỳ; chưa xác minh được cột/nội dung chỉ tiêu từ PDF gốc."
+        },
+        "long_term_liabilities": {
+          "value": 24245956554701,
+          "reason": "Giữ lại để rà soát: giá trị đang trùng tổng nợ phải trả và trùng current_liabilities, không hợp lý để dùng làm nợ dài hạn."
+        },
+        "cash_beginning": {
+          "value": 54668895214949,
+          "reason": "Giữ lại để rà soát: giá trị 54,668,895,294,949 có dấu hiệu lệch chữ số/đơn vị so với các dòng tiền khác trong kỳ; cần đối chiếu trực quan PDF."
         }
       },
       "core_financial_extraction_manual_terminal": true,
