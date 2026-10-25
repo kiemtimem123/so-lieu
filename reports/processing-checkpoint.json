@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-25T21:24:17Z",
+  "updatedAt": "2026-10-25T21:25:06Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -346,7 +346,7 @@
       "skipUnconfirmedThroughPeriod": "2026-Q3"
     },
     "VCK": {
-      "status": "automated_processing_complete",
+      "status": "terminal_needs_manual_review",
       "completeForAutomation": true,
       "manualReviewRemaining": true,
       "periodCount": 7,
@@ -358,17 +358,19 @@
         "2025-Q2",
         "2025-Q3",
         "2025-Q4",
+        "2026-Q1",
         "2026-Q2",
         "2026-Q3"
       ],
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
-      "skipUnconfirmedAutomation": false,
-      "skipUnconfirmedReason": null,
+      "skipUnconfirmedAutomation": true,
+      "skipUnconfirmedReason": "User-directed skip: VietstockFinance source titles do not confirm consolidated scope. VCK financial values are withheld from display and preserved only in scope_unverified_financial_values until scope is verified; resume automatically when a quarter newer than 2026-Q3 appears.",
       "sourceArchivesChecked": 1,
-      "updatedAt": "2026-10-25T21:15:28Z",
-      "snapshotFetchedAt": "2026-10-23T09:38:19.594Z"
+      "updatedAt": "2026-10-25T21:25:06Z",
+      "snapshotFetchedAt": "2026-10-23T09:38:19.594Z",
+      "skipUnconfirmedThroughPeriod": "2026-Q3"
     },
     "VIX": {
       "status": "automated_processing_complete",
@@ -703,16 +705,6 @@
     }
   },
   "progressHistory": [
-    {
-      "symbol": "TCB",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-10-25T19:59:15Z",
-      "workflowRunId": "40228562858",
-      "changedPaths": [
-        "data/financials-TCB.json"
-      ]
-    },
     {
       "symbol": "TCB",
       "status": "in_progress",
@@ -1228,6 +1220,19 @@
         "reports/raw/NVL/auto-nvl-20261021/9d49491bdfe583a2.pdf.extracted.json",
         "reports/raw/NVL/auto-nvl-20261021/d681b23603197198.pdf.extracted.json"
       ]
+    },
+    {
+      "symbol": "VCK",
+      "status": "terminal_needs_manual_review",
+      "completeForAutomation": true,
+      "processedAt": "2026-10-25T21:25:06Z",
+      "workflowRunId": null,
+      "changedPaths": [
+        "data/financials-VCK.json",
+        "reports/processing-checkpoint.json"
+      ],
+      "manualScopeSkipThroughPeriod": "2026-Q3",
+      "note": "Financial metrics withheld from display because consolidated scope is unconfirmed."
     }
   ],
   "currentRun": {
