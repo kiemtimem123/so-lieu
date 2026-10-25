@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-24T20:35:57Z",
+  "updatedAt": "2026-10-25T22:45:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -39,32 +39,15 @@
     "DPG",
     "GAS"
   ],
-  "lastCompletedSymbol": "IDC",
-  "activeSymbol": null,
+  "lastCompletedSymbol": "PLX",
+  "activeSymbol": "KBC",
   "resumeSymbolHint": "KBC",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
-    "symbol": "IDC",
-    "status": "automated_processing_complete",
-    "completeForAutomation": true,
-    "manualReviewRemaining": true,
-    "processedAt": "2026-10-24T20:35:57Z",
-    "workflowRunId": "40130430823",
-    "workflowRunNumber": 1222,
-    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/40130430823",
-    "changedPaths": [
-      "data/financials-IDC.json"
-    ],
-    "periodCount": 10,
-    "firstQuarter": "2024-Q1",
-    "lastQuarter": "2026-Q2",
-    "pendingCorePeriods": [],
-    "terminalManualReviewPeriods": [
-      "2026-Q2"
-    ],
-    "pendingDetailPeriods": [],
-    "staleDetailSchemaPeriods": [],
-    "statementPagesPending": false
+    "symbol": "KBC",
+    "status": "in_progress_after_PLX_audit",
+    "updatedAt": "2026-10-25T22:45:00Z",
+    "nextAction": "PLX current pass checked: 46 static consistency checks passed; unresolved visual-review flags preserved and no more image uploads requested. KBC is now the active ticker. Normalize its existing data from saved VietstockFinance OCR sidecars, reconcile core equations, and keep ambiguous fields blank."
   },
   "symbolStates": {
     "MBB": {
@@ -546,7 +529,7 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 4,
-      "updatedAt": "2026-10-25T21:30:00Z",
+      "updatedAt": "2026-10-25T22:45:00Z",
       "snapshotFetchedAt": "2026-10-23T18:24:32+00:00",
       "latestManualProgress": {
         "updatedFile": "data/financials-PLX.json",
@@ -593,16 +576,12 @@
         ]
       },
       "qualityChecks": {
-        "checkedAt": "2026-10-25T21:30:00Z",
-        "staticValidation": "passed",
-        "checks": [
-          "total_assets = total_liabilities + equity",
-          "revenue − cost_of_goods_sold = gross_profit",
-          "pretax_profit − income_tax = net_profit",
-          "operating_cash_flow + investing_cash_flow + financing_cash_flow = net_cash_change",
-          "cash_beginning + net_cash_change + foreign_exchange_effect = cash_ending"
-        ],
-        "note": "Chỉ kiểm tra tĩnh trên dữ liệu lưu; không khẳng định các trường OCR chưa xác minh trực quan là chính xác."
+        "checkedAt": "2026-10-25T22:00:00Z",
+        "sourceFile": "data/financials-PLX.json",
+        "checkedBlobSha": "c7f5fdcb71450dd4d241d73715218c42cfa4f8b3",
+        "checkCount": 46,
+        "failures": 0,
+        "summary": "46 checks passed on available values: balance sheet, gross-profit, tax/net-profit, cashflow sums and cash balance bridge. Manual visual-review flags remain."
       }
     },
     "IDC": {
@@ -624,8 +603,8 @@
       "snapshotFetchedAt": "2026-10-25T23:45:00Z"
     },
     "KBC": {
-      "status": "automated_processing_complete",
-      "completeForAutomation": true,
+      "status": "in_progress",
+      "completeForAutomation": false,
       "manualReviewRemaining": true,
       "periodCount": 11,
       "firstQuarter": "2024-Q1",
@@ -647,8 +626,9 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 1,
-      "updatedAt": "2026-10-23T20:43:22Z",
-      "snapshotFetchedAt": "2026-10-23T20:04:29+00:00"
+      "updatedAt": "2026-10-25T22:45:00Z",
+      "snapshotFetchedAt": "2026-10-23T20:04:29+00:00",
+      "note": "Next active ticker. Existing KBC JSON has mixed-unit OCR values that are being normalized from the saved VietstockFinance-linked PDFs. Keep visual-review status because source PDFs have not been reviewed as images."
     },
     "GEG": {
       "status": "automated_processing_complete",
