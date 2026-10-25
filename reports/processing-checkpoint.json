@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-25T04:35:00Z",
+  "updatedAt": "2026-10-25T04:50:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -45,9 +45,9 @@
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "KBC",
-    "status": "balance_sheet_and_profit_fields_extracted_from_saved_ocr",
-    "updatedAt": "2026-10-25T04:35:00Z",
-    "nextAction": "KBC remains active. Revenue/cost/gross profit and balance-sheet totals plus pretax/net profit have been extracted for 2025-Q1/Q2/Q3 and 2026-Q1/Q2/Q3. Re-open saved OCR sidecars to check quarterly-vs-YTD column alignment and reconcile Q2/Q3 quarterly profit fields, then review remaining 2024 quarters and financial ratios. Keep visual-review caveat and do not switch ticker until KBC audit is complete."
+    "status": "core_financials_and_ratios_reconciled_ocr_only",
+    "updatedAt": "2026-10-25T04:50:00Z",
+    "nextAction": "KBC remains active. Core quarterly fields (revenue, cost of goods sold, gross profit, assets, liabilities, equity, pretax profit, net profit) are populated for all 11 periods 2024-Q1 through 2026-Q3. ROA/ROE calculated or retained for all periods. Automated checks show balance-sheet differences no greater than 1 million VND and gross-profit equation differences no greater than 1 million VND. Continue by extracting missing detailed income statement/cash-flow fields from the saved OCR sidecars and reviewing source column alignment; retain manual visual-review caveat and do not switch ticker until KBC is audited."
   },
   "symbolStates": {
     "MBB": {
@@ -626,9 +626,9 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 1,
-      "updatedAt": "2026-10-25T04:35:00Z",
+      "updatedAt": "2026-10-25T04:50:00Z",
       "snapshotFetchedAt": "2026-10-23T20:04:29+00:00",
-      "note": "Đã trích xuất doanh thu, giá vốn, lợi nhuận gộp, tổng tài sản, nợ phải trả, vốn chủ sở hữu, LNTT và LNST cho 2025-Q1/Q2/Q3 và 2026-Q1/Q2/Q3 từ OCR sidecar đã lưu. Phương trình bảng cân đối lệch tối đa 1 triệu VND do làm tròn. Cần kiểm tra cột lợi nhuận riêng quý so với lũy kế, rà soát các quý 2024 và tỷ số tài chính. PDF chưa xác minh trực quan; chưa chuyển mã."
+      "note": "Đã hoàn thiện các trường lõi cho đủ 11 quý 2024-Q1 đến 2026-Q3: doanh thu, giá vốn, lợi nhuận gộp, tổng tài sản, nợ phải trả, vốn chủ sở hữu, LNTT, LNST; ROA/ROE đã có hoặc được tính từ LNST quý và số dư bình quân đầu/cuối kỳ. Kiểm tra tự động: lệch bảng cân đối tối đa 1 triệu VND, phương trình lợi nhuận gộp lệch tối đa 1 triệu VND. Còn thiếu một số chỉ tiêu chi tiết và cần rà soát trực quan PDF; không tự điền số mơ hồ."
     },
     "GEG": {
       "status": "automated_processing_complete",
