@@ -990,14 +990,15 @@
         "eps",
         "equity",
         "net_profit",
+        "pretax_profit",
         "total_assets",
         "total_liabilities"
       ],
       "core_financial_extraction_status": "auto_extracted_pending_visual_review",
       "core_financial_extraction_note": "BCTC hợp nhất Q3/2025 OCR: tài sản 7.209.578.182.530 VND; nợ 4.404.605.815.813 VND; vốn chủ 2.804.972.366.717 VND; doanh thu 1.176.004.267.697 VND; LNTT 98.690.379.149 VND; LNST 83.212.528.914 VND suy từ LNTT và thuế. Chờ đối chiếu PDF trực quan; ROA/ROE để trống do thiếu số dư đầu kỳ.",
-      "verification_status_note": "Đang kiểm tra lại đơn vị Ngàn/Nghìn VND với PDF/ZIP gốc VietstockFinance.",
+      "verification_status_note": "Các chỉ tiêu lõi đã được trích xuất tự động từ BCTC hợp nhất VietstockFinance; cần đối chiếu trực quan trước khi coi là xác minh.",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
-      "core_financial_extraction_evidence_fingerprint": "c617aa7fe385e6bdc636fa89e5171a8951e0c8db858f2e8d10ac9fc5e90bfdbb",
+      "core_financial_extraction_evidence_fingerprint": "31ddef0a26ee5f8b2b4e9ebd876289bc277daf9f0197b401c53d2e6a1e7767bc",
       "core_financial_extraction_evidence_attempt_count": 0,
       "eps": 70,
       "core_financial_extraction_source": "reports/raw/DPG/auto-dpg-20261021/1758b055a5648cab.pdf",
@@ -1009,7 +1010,7 @@
         9,
         10
       ],
-      "core_financial_extraction_updated_at": "2026-10-23T17:59:33Z",
+      "core_financial_extraction_updated_at": "2026-10-25T09:41:38+00:00",
       "core_financial_extraction_calculations": {
         "total_liabilities": "total_assets minus reported equity; total sources matched total assets"
       },
@@ -1055,6 +1056,7 @@
         "financial_expense",
         "financing_cash_flow_ytd",
         "fixed_assets",
+        "foreign_exchange_effect_ytd",
         "income_tax",
         "income_tax_current",
         "interest_expense",
@@ -1073,15 +1075,16 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-23T17:52:11+00:00",
+      "financial_line_items_schema_updated_at": "2026-10-25T09:41:38+00:00",
       "financial_line_items_source": "reports/raw/DPG/auto-dpg-20261021/1758b055a5648cab.pdf",
-      "financial_line_items_updated_at": "2026-10-23T17:52:11+00:00",
+      "financial_line_items_updated_at": "2026-10-25T09:41:38+00:00",
       "financial_line_items_prior_values": {},
       "financial_line_items_rejected_values": {},
-      "core_financial_extraction_stable_evidence_count": 1,
       "core_financial_extraction_stable_evidence_updated_at": "2026-10-23T17:59:29+00:00",
-      "core_financial_extraction_manual_terminal": true,
-      "cash_beginning_calculation": "previous quarter closing cash"
+      "cash_beginning_calculation": "previous quarter closing cash",
+      "foreign_exchange_effect_ytd": 0,
+      "foreign_exchange_effect": -174,
+      "foreign_exchange_effect_calculation": "current YTD minus previous quarter YTD"
     },
     {
       "symbol": "DPG",
@@ -1122,13 +1125,17 @@
       "core_financial_extraction_unverified_values": {},
       "core_financial_extracted_fields": [
         "eps",
-        "net_profit"
+        "equity",
+        "net_profit",
+        "pretax_profit",
+        "total_assets",
+        "total_liabilities"
       ],
       "core_financial_extraction_status": "auto_extracted_pending_visual_review",
       "core_financial_extraction_note": "Số dư cuối kỳ được trích xuất từ BCTC hợp nhất Q4/2025: tổng tài sản 8.125.816.055.123 VND; nợ phải trả 5.201.759.901.200 VND; vốn chủ sở hữu 2.924.056.153.923 VND. Giá trị LNST cũ 1.133 triệu chưa có căn cứ OCR rõ ràng nên đã để trống, không dùng để tính tỷ lệ.",
-      "verification_status_note": "Đang kiểm tra lại đơn vị Ngàn/Nghìn VND với PDF/ZIP gốc VietstockFinance.",
+      "verification_status_note": "Các chỉ tiêu lõi đã được trích xuất tự động từ BCTC hợp nhất VietstockFinance; cần đối chiếu trực quan trước khi coi là xác minh.",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
-      "core_financial_extraction_evidence_fingerprint": "a6d53d68cefa9ecd79e69be7f0070afa6a1593920228427dc1a0b7064fcf01a1",
+      "core_financial_extraction_evidence_fingerprint": "3be2920446fdd370c7173a047e7eafe82fc8aef36facbe2f65d71aa81ce362ac",
       "core_financial_extraction_evidence_attempt_count": 0,
       "eps": 1153,
       "core_financial_extraction_source": "reports/raw/DPG/auto-dpg-20261021/f0c79bde449da23c.pdf",
@@ -1140,7 +1147,7 @@
         9,
         10
       ],
-      "core_financial_extraction_updated_at": "2026-10-23T17:59:33Z",
+      "core_financial_extraction_updated_at": "2026-10-25T09:41:39+00:00",
       "core_financial_extraction_calculations": {
         "balance_totals_withheld": "asset/liability/equity totals did not fully reconcile"
       },
@@ -1181,7 +1188,7 @@
       "admin_expense": 29992,
       "operating_profit": 72,
       "foreign_exchange_effect_ytd": 11,
-      "cashflow_period_basis": "quarterly_reported",
+      "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
         "admin_expense",
         "cash_and_equivalents",
@@ -1203,9 +1210,9 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-24T12:32:31+00:00",
+      "financial_line_items_schema_updated_at": "2026-10-25T09:41:39+00:00",
       "financial_line_items_source": "reports/raw/DPG/auto-dpg-20261021/f0c79bde449da23c.pdf",
-      "financial_line_items_updated_at": "2026-10-24T12:32:31+00:00",
+      "financial_line_items_updated_at": "2026-10-25T09:41:39+00:00",
       "operating_cash_flow_calculation": "reported as standalone quarter",
       "investing_cash_flow_calculation": "reported as standalone quarter",
       "financing_cash_flow_calculation": "reported as standalone quarter",
@@ -1272,12 +1279,12 @@
           "reason": "asset subtotals do not reconcile"
         }
       },
-      "core_financial_extraction_stable_evidence_count": 1,
       "core_financial_extraction_stable_evidence_updated_at": "2026-10-23T17:59:30+00:00",
-      "core_financial_extraction_manual_terminal": true,
       "income_tax": 13293,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "fixed_assets": 2058116
+      "fixed_assets": 2058116,
+      "cash_beginning": 605411,
+      "cash_beginning_calculation": "previous quarter closing cash"
     },
     {
       "symbol": "DPG",
@@ -1612,7 +1619,7 @@
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-24T12:32:33+00:00",
       "financial_line_items_source": "reports/raw/DPG/auto-dpg-20261021/cebeec54de24c812.pdf",
-      "financial_line_items_updated_at": "2026-10-25T09:39:48+00:00",
+      "financial_line_items_updated_at": "2026-10-25T09:41:42+00:00",
       "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "financing_cash_flow_calculation": "current YTD minus previous quarter YTD",
