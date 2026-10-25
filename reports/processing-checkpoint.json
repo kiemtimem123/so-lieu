@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-25T17:11:12Z",
+  "updatedAt": "2026-10-25T17:49:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -48,13 +48,13 @@
     "status": "automated_processing_complete",
     "completeForAutomation": true,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-25T17:11:12Z",
+    "processedAt": "2026-10-25T17:49:00Z",
     "workflowRunId": "40214727172",
     "workflowRunNumber": 1433,
     "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/40214727172",
     "changedPaths": [
       "data/financials-TCB.json",
-      "reports/raw/TCB/repair-tcb-2026q3-full-report/fd82d64db310dbdb.pdf.extracted.json"
+      "reports/processing-checkpoint.json"
     ],
     "periodCount": 11,
     "firstQuarter": "2024-Q1",
@@ -63,7 +63,10 @@
     "terminalManualReviewPeriods": [],
     "pendingDetailPeriods": [],
     "staleDetailSchemaPeriods": [],
-    "statementPagesPending": false
+    "statementPagesPending": false,
+    "reconciliationCommitPending": true,
+    "coreVerification": "verified_ocr_reconciled",
+    "note": "Hoàn tất đối chiếu chỉ tiêu lõi Q3/2026; các line-items chi tiết vẫn giữ cờ chờ rà soát trực quan."
   },
   "symbolStates": {
     "MBB": {
@@ -645,8 +648,11 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 11,
-      "updatedAt": "2026-10-25T17:11:12Z",
-      "snapshotFetchedAt": "2026-10-22T05:57:26+00:00"
+      "updatedAt": "2026-10-25T17:49:00Z",
+      "snapshotFetchedAt": "2026-10-22T05:57:26+00:00",
+      "coreReconciledThrough": "2026-Q3",
+      "coreVerification": "verified_ocr_reconciled",
+      "note": "Đã khép các chỉ tiêu lõi Q3/2026 từ PDF VietstockFinance đã lưu. Bảng cân đối chênh 0; doanh thu, PBT, LNST và lợi nhuận thuộc cổ đông ngân hàng mẹ quý Q1-Q3 khớp tổng lũy kế 9 tháng. Chỉ các line-items chi tiết vẫn chờ rà soát trực quan."
     },
     "VHM": {
       "status": "automated_processing_complete",
@@ -1257,6 +1263,22 @@
         "data/financials-TCB.json",
         "reports/raw/TCB/repair-tcb-2026q3-full-report/fd82d64db310dbdb.pdf.extracted.json"
       ]
+    },
+    {
+      "symbol": "TCB",
+      "status": "automated_processing_complete",
+      "completeForAutomation": true,
+      "manualReviewRemaining": true,
+      "processedAt": "2026-10-25T17:49:00Z",
+      "changedPaths": [
+        "data/financials-TCB.json",
+        "reports/processing-checkpoint.json"
+      ],
+      "periodCount": 11,
+      "firstQuarter": "2024-Q1",
+      "lastQuarter": "2026-Q3",
+      "coreVerification": "verified_ocr_reconciled",
+      "note": "Q3/2026 parent profit, profitability ratios, balance equation, and Q1-Q3-to-nine-month totals reconciled; continue from saved hint VHM."
     }
   ],
   "currentRun": {
