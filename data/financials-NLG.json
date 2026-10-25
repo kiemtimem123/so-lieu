@@ -649,9 +649,9 @@
       "total_assets": 30307990,
       "total_liabilities": 15741777,
       "equity": 14566213,
-      "pretax_profit": 1747110,
-      "net_profit": 1327233,
-      "net_profit_attributable": 496724,
+      "pretax_profit": 1655465,
+      "net_profit": 1272769,
+      "net_profit_attributable": 491244,
       "roa": 17.66,
       "roe": 38.18,
       "unit": "triệu VND",
@@ -664,13 +664,13 @@
       "report_signed_at": "2025-01-23",
       "publication_date_basis": "Ngày cập nhật tài liệu trên danh mục VietstockFinance qua API /data/getdocument; ngày ký báo cáo lưu riêng.",
       "report_type": "BCTC hợp nhất Quý IV/2024; cột phát sinh Q4 trong báo cáo năm",
-      "source_pages": "Bảng cân đối: báo cáo tình hình tài chính hợp nhất; KQKD: mẫu B02a-DN/HN/B02-DN/HN, dòng 50 LNTT và dòng 60 LNST; các cột lũy kế dùng để kiểm tra số quý riêng.",
+      "source_pages": "Bảng cân đối: báo cáo tình hình tài chính hợp nhất; KQKD: mẫu B02a-DN/HN/B02-DN/HN, dòng 50 LNTT và dòng 60 LNST; các cột lũy kế dùng để kiểm tra số quý riêng. Đã hiệu chỉnh riêng Q4/2024: PDF báo cáo năm 2024 trang 6–7 chứa số lũy kế cả năm (doanh thu thuần 6.368.541 triệu VND; LNTT 1.747.110 triệu; LNST 1.327.233 triệu; LNST cổ đông mẹ 496.724 triệu). Số Q4 được tính bằng số năm trừ Q1, Q2, Q3 tương ứng; không hiển thị số lũy kế cả năm như số riêng quý IV. Nguồn là PDF hợp nhất được liên kết từ VietstockFinance; cần kiểm tra trực quan ảnh PDF.",
       "quarter_profit_basis": "Lấy LNTT và LNST hợp nhất phát sinh riêng trong quý; không dùng LNST thuộc cổ đông công ty mẹ thay cho LNST hợp nhất. Đối chiếu lũy kế trừ lũy kế kỳ trước khi báo cáo cung cấp các cột đó.",
       "average_total_assets": 30068610.012776,
       "average_equity": 13905339.2309455,
       "roa_formula": "Lợi nhuận sau thuế hợp nhất quý / bình quân tổng tài sản đầu và cuối quý × 4 × 100",
       "roe_formula": "Lợi nhuận sau thuế hợp nhất quý / bình quân vốn chủ sở hữu đầu và cuối quý × 4 × 100",
-      "verification_status": "verified_ocr_reconciled",
+      "verification_status": "ocr_reconciled_pending_visual_review",
       "reconciliation": {
         "assets_minus_liabilities_equity_vnd": 0,
         "assets_minus_liabilities_equity": 0,
@@ -781,7 +781,7 @@
       "inventory": 508,
       "non_current_assets": 2758769,
       "fixed_assets": 142915,
-      "revenue": 6368541,
+      "revenue": 5541032,
       "cost_of_goods_sold": -3644053,
       "gross_profit": 2724488,
       "financial_income": 39611,
@@ -819,7 +819,10 @@
         "retained_earnings",
         "revenue",
         "selling_expense",
-        "short_term_investments"
+        "short_term_investments",
+        "pretax_profit",
+        "net_profit",
+        "net_profit_attributable"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/NLG/vietstock-nlg-retry-missing-20261019/9ecc6541b0d870d2.pdf",
@@ -832,9 +835,30 @@
       "net_cash_change": 90,
       "net_cash_change_calculation": "reported as standalone quarter",
       "financial_line_items_prior_values": {
-        "income_tax": -325228
+        "income_tax": -325228,
+        "revenue": 6368541,
+        "pretax_profit": 1747110,
+        "net_profit": 1327233,
+        "net_profit_attributable": 496724
       },
-      "financial_line_items_rejected_values": {},
+      "financial_line_items_rejected_values": {
+        "revenue": {
+          "prior_value": 6368541,
+          "reason": "Giá trị cũ là số lũy kế cả năm từ báo cáo năm 2024, không phải riêng Q4. Đã tính số quý IV bằng số cả năm (6368541 triệu VND) trừ tổng Q1–Q3 (827509 triệu VND), dùng các kỳ quý đã lưu từ BCTC hợp nhất VietstockFinance."
+        },
+        "pretax_profit": {
+          "prior_value": 1747110,
+          "reason": "Giá trị cũ là số lũy kế cả năm từ báo cáo năm 2024, không phải riêng Q4. Đã tính số quý IV bằng số cả năm (1747110 triệu VND) trừ tổng Q1–Q3 (91645 triệu VND), dùng các kỳ quý đã lưu từ BCTC hợp nhất VietstockFinance."
+        },
+        "net_profit": {
+          "prior_value": 1327233,
+          "reason": "Giá trị cũ là số lũy kế cả năm từ báo cáo năm 2024, không phải riêng Q4. Đã tính số quý IV bằng số cả năm (1327233 triệu VND) trừ tổng Q1–Q3 (54464 triệu VND), dùng các kỳ quý đã lưu từ BCTC hợp nhất VietstockFinance."
+        },
+        "net_profit_attributable": {
+          "prior_value": 496724,
+          "reason": "Giá trị cũ là số lũy kế cả năm từ báo cáo năm 2024, không phải riêng Q4. Đã tính số quý IV bằng số cả năm (496724 triệu VND) trừ tổng Q1–Q3 (5480 triệu VND), dùng các kỳ quý đã lưu từ BCTC hợp nhất VietstockFinance."
+        }
+      },
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-24T04:22:07+00:00",
@@ -849,7 +873,16 @@
       "short_term_investments": 648,
       "current_liabilities": 10147774,
       "long_term_liabilities": 5594002,
-      "retained_earnings": 3165748
+      "retained_earnings": 3165748,
+      "core_financial_extracted_fields": [
+        "revenue",
+        "pretax_profit",
+        "net_profit",
+        "net_profit_attributable"
+      ],
+      "verification_status_note": "Các số Q4 được tách khỏi số lũy kế cả năm bằng cách trừ Q1–Q3; cần rà soát trực quan PDF.",
+      "core_financial_extraction_note": "Bảng cân đối: báo cáo tình hình tài chính hợp nhất; KQKD: mẫu B02a-DN/HN/B02-DN/HN, dòng 50 LNTT và dòng 60 LNST; các cột lũy kế dùng để kiểm tra số quý riêng. Đã hiệu chỉnh riêng Q4/2024: PDF báo cáo năm 2024 trang 6–7 chứa số lũy kế cả năm (doanh thu thuần 6.368.541 triệu VND; LNTT 1.747.110 triệu; LNST 1.327.233 triệu; LNST cổ đông mẹ 496.724 triệu). Số Q4 được tính bằng số năm trừ Q1, Q2, Q3 tương ứng; không hiển thị số lũy kế cả năm như số riêng quý IV. Nguồn là PDF hợp nhất được liên kết từ VietstockFinance; cần kiểm tra trực quan ảnh PDF.",
+      "core_financial_extraction_updated_at": "2026-10-25T15:37:43.650Z"
     },
     {
       "symbol": "NLG",
