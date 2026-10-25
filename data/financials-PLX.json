@@ -244,7 +244,7 @@
       "equity": 29302259,
       "pretax_profit": 760182,
       "net_profit": 612081,
-      "net_profit_attributable": 545471,
+      "net_profit_attributable": 254,
       "revenue": 71037772,
       "roa": 3.23,
       "roe": 8.45,
@@ -290,7 +290,7 @@
       "core_financial_extraction_note": "Chỉ tiêu lõi được trích xuất từ văn bản PDF/ZIP đã lưu; chưa xác minh thủ công trên bản PDF.",
       "verification_status_note": "Số liệu lõi đối chiếu từ văn bản OCR của PDF VietstockFinance; cần xem trực tiếp trang PDF để hoàn tất xác minh trực quan.",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
-      "core_financial_extraction_evidence_fingerprint": "4191b05a7cc70fbff4df0af0715c4286b9715e81be04c069f6774ed9dca08ea8",
+      "core_financial_extraction_evidence_fingerprint": "8ced3ddedde2ca25d019a5dcaf117c746189d40b754962a4415e3cf4ebfb0edb",
       "core_financial_extraction_evidence_attempt_count": 0,
       "eps": 70,
       "core_financial_extraction_source": "reports/raw/PLX/auto-plx-20261021/b80662485ac3e19f.pdf",
@@ -372,16 +372,18 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-25T09:45:57+00:00",
+      "financial_line_items_schema_updated_at": "2026-10-25T09:48:15+00:00",
       "financial_line_items_source": "reports/raw/PLX/auto-plx-20261021/b80662485ac3e19f.pdf",
-      "financial_line_items_updated_at": "2026-10-25T09:46:10+00:00",
+      "financial_line_items_updated_at": "2026-10-25T09:48:15+00:00",
       "operating_cash_flow_calculation": "current quarter = reported YTD operating cash flow minus prior quarter YTD",
       "investing_cash_flow_calculation": "current quarter = reported YTD investing cash flow minus prior quarter YTD",
       "financing_cash_flow_calculation": "current quarter = reported YTD financing cash flow minus prior quarter YTD",
       "net_cash_change_calculation": "current quarter = reported YTD net cash change minus prior quarter YTD; cross-checks against quarterly cash-flow components",
       "foreign_exchange_effect": 0,
       "foreign_exchange_effect_calculation": "current quarter = reported or reconciled YTD FX effect minus prior quarter YTD",
-      "financial_line_items_prior_values": {},
+      "financial_line_items_prior_values": {
+        "net_profit_attributable": 545471
+      },
       "financial_line_items_rejected_values": {
         "operating_cash_flow": {
           "value": 3960150,
@@ -483,7 +485,14 @@
       "ratio_source_basis": "VietstockFinance consolidated quarterly statements; locally derived from quarterly net profit and average balance sheet totals.",
       "eps_source_note": "OCR dòng EPS chỉ đọc rõ một giá trị lũy kế 1.706; không xác định đáng tin cậy EPS riêng quý IV nên để null.",
       "income_tax_current": 157143,
-      "income_tax_note": "Chi phí thuế TNDN tổng hợp từ dòng hiện hành 157.142.773.836 VND và hoãn lại -9.040.994.846 VND; tổng làm tròn 148.102 triệu VND, phù hợp LNTT − LNST trong khoảng làm tròn."
+      "income_tax_note": "Chi phí thuế TNDN tổng hợp từ dòng hiện hành 157.142.773.836 VND và hoãn lại -9.040.994.846 VND; tổng làm tròn 148.102 triệu VND, phù hợp LNTT − LNST trong khoảng làm tròn.",
+      "financial_line_items_value_corrections": {
+        "net_profit_attributable": {
+          "previous_value": 545471,
+          "new_value": 254,
+          "reason": "reparsed with corrected VND unit scale after detecting an OCR-corrupted statement unit header"
+        }
+      }
     },
     {
       "symbol": "PLX",
@@ -719,7 +728,7 @@
       "core_financial_extraction_note": "Trang 5 đã được xác minh trực quan từ ảnh người dùng cung cấp; các dòng doanh thu thuần, giá vốn và lợi nhuận gộp khớp số học. Đơn vị lưu triệu VND, làm tròn gần nhất.",
       "verification_status_note": "Đã xác minh trực quan trang 5 từ ảnh người dùng cung cấp; các giá trị KQKD quý II/2025 được lấy từ cột Quý 2 - Năm nay, không nhầm với số lũy kế.",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
-      "core_financial_extraction_evidence_fingerprint": "e043bc4766302ccb083d7e310dc69831f9063acfd12285f58a5204c921c3496d",
+      "core_financial_extraction_evidence_fingerprint": "372f24e0927583315591227fe7f449ca07526a0a756ed20fa922b26a32cd7842",
       "core_financial_extraction_evidence_attempt_count": 1,
       "core_financial_extraction_source": "User-provided image of VietstockFinance-linked PLX Q2 2025 consolidated income statement, page 5",
       "core_financial_extraction_pages": [
@@ -1049,7 +1058,7 @@
       "equity": 29476397,
       "pretax_profit": 886091,
       "net_profit": 696928,
-      "net_profit_attributable": 585651,
+      "net_profit_attributable": 254,
       "revenue": 81892813,
       "roa": 3.14,
       "roe": 9.55,
@@ -1141,9 +1150,11 @@
         "short_term_receivables"
       ],
       "financial_line_items_source": "reports/raw/PLX/auto-plx-20261021/35a0f637ffbb0ecf.pdf",
-      "financial_line_items_updated_at": "2026-10-25T09:46:05+00:00",
+      "financial_line_items_updated_at": "2026-10-25T09:48:23+00:00",
       "financial_line_items_note": "Doanh thu thuần, giá vốn và lợi nhuận gộp được đối chiếu bằng phương trình trên trang 5; OCR đọc sai giá vốn 71.082.243 triệu VND nhưng số hợp lệ theo doanh thu thuần trừ lợi nhuận gộp là 77.082.243 triệu VND. Trang 6–7 là báo cáo lưu chuyển tiền tệ lũy kế năm 2025, không phải dòng tiền riêng quý IV; chỉ lưu ở các trường _ytd, để null các trường dòng tiền riêng quý. Dòng tiền được chuẩn hóa theo kỳ quý: PDF VietstockFinance trình bày lũy kế từ đầu năm; trường quý được tính bằng YTD kỳ hiện tại trừ YTD quý liền trước.  Đối chiếu dòng tiền thuần = lưu chuyển kinh doanh + đầu tư + tài chính. Các giá trị chưa đọc chắc (capex Q3/Q4 2025) để null; chưa xác minh trực quan ảnh PDF. EPS đã được đối chiếu lại với dòng lãi cơ bản trên cổ phiếu của báo cáo KQKD; không dùng mã số chỉ tiêu 70 làm giá trị EPS. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
-      "financial_line_items_prior_values": {},
+      "financial_line_items_prior_values": {
+        "net_profit_attributable": 585651
+      },
       "financial_line_items_rejected_values": {
         "cost_of_goods_sold": {
           "value": 71082243,
@@ -1155,7 +1166,7 @@
         }
       },
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-25T09:46:05+00:00",
+      "financial_line_items_schema_updated_at": "2026-10-25T09:48:23+00:00",
       "eps": 350,
       "core_financial_extraction_source": "reports/raw/PLX/auto-plx-20261021/35a0f637ffbb0ecf.pdf",
       "core_financial_extraction_pages": [
@@ -1236,7 +1247,14 @@
       "cash_and_equivalents": 10803154,
       "ratio_calculation_note": "ROA = LNST hợp nhất quý × 4 / bình quân tổng tài sản đầu-cuối quý × 100; ROE = LNST hợp nhất quý × 4 / bình quân vốn chủ sở hữu đầu-cuối quý × 100. Số dư đầu kỳ: 91574911 triệu VND tài sản, 28899660 triệu VND vốn chủ sở hữu (previous quarter's reported balance in stored PLX series). Tỷ lệ làm tròn 2 chữ số; số gốc lấy từ dữ liệu quý đã trích xuất, chưa được xác minh trực quan toàn bộ nên các tỷ lệ cũng không được coi là xác minh thủ công.",
       "ratio_calculation_status": "derived_from_quarterly_net_profit_and_average_balances",
-      "ratio_source_basis": "VietstockFinance consolidated quarterly statements; locally derived from quarterly net profit and average balance sheet totals."
+      "ratio_source_basis": "VietstockFinance consolidated quarterly statements; locally derived from quarterly net profit and average balance sheet totals.",
+      "financial_line_items_value_corrections": {
+        "net_profit_attributable": {
+          "previous_value": 585651,
+          "new_value": 254,
+          "reason": "reparsed with corrected VND unit scale after detecting an OCR-corrupted statement unit header"
+        }
+      }
     },
     {
       "symbol": "PLX",
@@ -1309,14 +1327,17 @@
         "income_tax_current",
         "income_tax_deferred",
         "interest_expense",
+        "inventory",
         "long_term_liabilities",
         "net_profit_attributable",
         "operating_profit",
         "retained_earnings",
-        "selling_expense"
+        "selling_expense",
+        "short_term_investments",
+        "short_term_receivables"
       ],
       "financial_line_items_source": "reports/raw/PLX/auto-plx-20261021/158547073d7cd10f.pdf",
-      "financial_line_items_updated_at": "2026-10-25T09:46:10+00:00",
+      "financial_line_items_updated_at": "2026-10-25T09:48:24+00:00",
       "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Dòng tiền được chuẩn hóa theo kỳ quý: PDF VietstockFinance trình bày lũy kế từ đầu năm; trường quý được tính bằng YTD kỳ hiện tại trừ YTD quý liền trước. Q1: số quý trùng số lũy kế. Đối chiếu dòng tiền thuần = lưu chuyển kinh doanh + đầu tư + tài chính. Các giá trị chưa đọc chắc (capex Q3/Q4 2025) để null; chưa xác minh trực quan ảnh PDF. EPS Q1/2026 đã để null vì OCR chưa đọc chắc giá trị; không dùng mã chỉ tiêu 70 làm số EPS. Tài sản ngắn hạn/dài hạn bị ẩn do tổng không khớp tổng tài sản.",
       "financial_line_items_prior_values": {},
       "financial_line_items_rejected_values": {
@@ -1374,7 +1395,7 @@
         }
       },
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-25T09:46:06+00:00",
+      "financial_line_items_schema_updated_at": "2026-10-25T09:48:24+00:00",
       "eps": 70,
       "core_financial_extraction_source": "reports/raw/PLX/auto-plx-20261021/158547073d7cd10f.pdf",
       "core_financial_extraction_pages": [
@@ -1468,7 +1489,10 @@
       "ratio_calculation_status": "derived_from_quarterly_net_profit_and_average_balances",
       "ratio_source_basis": "VietstockFinance consolidated quarterly statements; locally derived from quarterly net profit and average balance sheet totals.",
       "income_tax_note": "Đọc lại thứ tự cột OCR và đối chiếu phương trình LNTT − LNST: thuế hiện hành khoảng 189.397.913.651 VND, thuế hoãn lại -22.735.839.740 VND, tổng thuế khoảng 166.662 triệu VND; khớp LNTT -495.815 triệu trừ LNST -662.477 triệu.",
-      "eps_source_note": "OCR dòng EPS ở báo cáo Q1/2026 chưa xác định được giá trị trong cột năm nay; số 70 là mã chỉ tiêu trên mẫu B02, không dùng làm EPS."
+      "eps_source_note": "OCR dòng EPS ở báo cáo Q1/2026 chưa xác định được giá trị trong cột năm nay; số 70 là mã chỉ tiêu trên mẫu B02, không dùng làm EPS.",
+      "short_term_investments": 6431219,
+      "short_term_receivables": 19662069,
+      "inventory": 29753883
     },
     {
       "symbol": "PLX",
