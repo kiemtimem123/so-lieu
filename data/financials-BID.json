@@ -78,8 +78,8 @@
       "bank_other_liabilities": 47346159,
       "operating_profit": 11778628,
       "bank_service_income": 3298301,
-      "bank_operating_expenses": -5392606,
-      "bank_provision_expense": -4388714,
+      "bank_operating_expenses": 5392606,
+      "bank_provision_expense": 4388714,
       "income_tax": 1474335,
       "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
@@ -93,6 +93,7 @@
         "bank_operating_expenses",
         "bank_other_assets",
         "bank_other_liabilities",
+        "bank_pre_provision_operating_profit",
         "bank_provision_expense",
         "bank_service_income",
         "bank_trading_securities",
@@ -103,17 +104,19 @@
         "operating_profit"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-23T04:39:59+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:43:41+00:00",
       "financial_line_items_source": "reports/raw/BID/auto-bid-20261021/c987344424e1a5a6.pdf",
-      "financial_line_items_updated_at": "2026-10-23T04:40:02+00:00",
+      "financial_line_items_updated_at": "2026-10-25T20:44:14+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần.",
       "operating_cash_flow_calculation": "Q1 equals YTD Q1",
       "investing_cash_flow_calculation": "Q1 equals YTD Q1",
       "financing_cash_flow_calculation": "Q1 equals YTD Q1",
       "net_cash_change_calculation": "Q1 equals YTD Q1",
       "financial_line_items_prior_values": {
-        "income_tax": -1474335
+        "income_tax": -1474335,
+        "bank_operating_expenses": -5392606,
+        "bank_provision_expense": -4388714
       },
       "financial_line_items_rejected_values": {
         "operating_cash_flow": {
@@ -188,7 +191,21 @@
       "core_financial_extraction_calculations": {
         "source_total_match": "Source-total row matches total-assets row in column 1 after OCR separator normalization",
         "total_liabilities": "total_assets minus reported equity; total sources matched total assets"
-      }
+      },
+      "financial_line_items_value_corrections": {
+        "bank_operating_expenses": {
+          "previous_value": -5392606,
+          "new_value": 5392606,
+          "reason": "Normalized bank operating expenses to the positive expense convention used in subtotal reconciliation."
+        },
+        "bank_provision_expense": {
+          "previous_value": -4388714,
+          "new_value": 4388714,
+          "reason": "Normalized the report's parenthesized credit-provision expense to the positive expense convention used throughout bank-category calculations."
+        }
+      },
+      "bank_pre_provision_operating_profit": 11778628,
+      "bank_pre_provision_operating_profit_calculation": "Lợi nhuận trước thuế + chi phí dự phòng tín dụng dương; khôi phục tổng phụ trước dự phòng."
     },
     {
       "symbol": "BID",
@@ -267,7 +284,7 @@
       "operating_profit": 13516733,
       "bank_service_income": 3780603,
       "bank_service_expense": -1841559,
-      "bank_operating_expenses": -6708164,
+      "bank_operating_expenses": 6708164,
       "bank_pre_provision_operating_profit": 13516733,
       "bank_provision_expense": 5357739,
       "bank_non_controlling_profit": -165104,
@@ -304,14 +321,15 @@
         "revenue"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-23T04:36:22+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:43:44+00:00",
       "financial_line_items_source": "reports/raw/BID/auto-bid-20261021/9c516a5225816e53.pdf",
-      "financial_line_items_updated_at": "2026-10-23T04:40:02+00:00",
+      "financial_line_items_updated_at": "2026-10-25T20:44:14+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần.",
       "financial_line_items_prior_values": {
         "bank_provision_expense": 13516733,
-        "income_tax": -1624998
+        "income_tax": -1624998,
+        "bank_operating_expenses": -6708164
       },
       "financial_line_items_rejected_values": {
         "operating_cash_flow": {
@@ -356,6 +374,11 @@
           "previous_value": 13516733,
           "new_value": 5357739,
           "reason": "derived from reconciled pre-provision operating profit minus reported quarterly PBT"
+        },
+        "bank_operating_expenses": {
+          "previous_value": -6708164,
+          "new_value": 6708164,
+          "reason": "Normalized bank operating expenses to the positive expense convention used in subtotal reconciliation."
         }
       },
       "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
@@ -477,7 +500,7 @@
       "bank_other_liabilities": 47223613,
       "operating_profit": 10951408,
       "bank_service_income": 3013677,
-      "bank_operating_expenses": -6307180,
+      "bank_operating_expenses": 6307180,
       "bank_non_controlling_profit": -62548,
       "income_tax": 1284413,
       "cashflow_period_basis": "year_to_date",
@@ -502,13 +525,14 @@
         "operating_profit"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-23T04:32:36+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:43:47+00:00",
       "financial_line_items_source": "reports/raw/BID/auto-bid-20261021/15b81c1d1cacbc67.zip",
-      "financial_line_items_updated_at": "2026-10-23T04:36:24+00:00",
+      "financial_line_items_updated_at": "2026-10-25T20:44:14+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần.",
       "financial_line_items_prior_values": {
-        "income_tax": -1284413
+        "income_tax": -1284413,
+        "bank_operating_expenses": -6307180
       },
       "financial_line_items_rejected_values": {
         "operating_cash_flow": {
@@ -591,6 +615,13 @@
       "core_financial_extraction_calculations": {
         "source_total_match": "Source-total row matches total-assets row in column 2 after OCR separator normalization",
         "total_liabilities": "total_assets minus reported equity; total sources matched total assets"
+      },
+      "financial_line_items_value_corrections": {
+        "bank_operating_expenses": {
+          "previous_value": -6307180,
+          "new_value": 6307180,
+          "reason": "Normalized bank operating expenses to the positive expense convention used in subtotal reconciliation."
+        }
       }
     },
     {
@@ -658,14 +689,15 @@
         "retained_earnings"
       ],
       "financial_line_items_source": "reports/raw/BID/auto-bid-20261021/c561427b10b44c34.pdf",
-      "financial_line_items_updated_at": "2026-10-23T04:43:31+00:00",
+      "financial_line_items_updated_at": "2026-10-25T20:44:14+00:00",
       "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
       "financial_line_items_prior_values": {
-        "income_tax": -1872191
+        "income_tax": -1872191,
+        "bank_operating_expenses": -9382068
       },
       "financial_line_items_rejected_values": {},
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-23T04:43:31+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:43:50+00:00",
       "core_financial_extracted_fields": [
         "equity",
         "net_profit",
@@ -700,7 +732,7 @@
       "bank_other_liabilities": 50784338,
       "operating_profit": 17023262,
       "bank_service_income": 3371618,
-      "bank_operating_expenses": -9382068,
+      "bank_operating_expenses": 9382068,
       "bank_non_controlling_profit": -135792,
       "income_tax": 1872191,
       "operating_cash_flow_ytd": 39837126,
@@ -737,6 +769,13 @@
       "core_financial_extraction_calculations": {
         "source_total_match": "Source-total row matches total-assets row in column 1 after OCR separator normalization",
         "total_liabilities": "total_assets minus reported equity; total sources matched total assets"
+      },
+      "financial_line_items_value_corrections": {
+        "bank_operating_expenses": {
+          "previous_value": -9382068,
+          "new_value": 9382068,
+          "reason": "Normalized bank operating expenses to the positive expense convention used in subtotal reconciliation."
+        }
       }
     },
     {
@@ -809,8 +848,8 @@
       "bank_other_liabilities": 48034216,
       "operating_profit": 11991592,
       "bank_service_income": 2849210,
-      "bank_operating_expenses": -5906818,
-      "bank_provision_expense": -4578467,
+      "bank_operating_expenses": 5906818,
+      "bank_provision_expense": 4578467,
       "income_tax": 1457863,
       "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
@@ -824,6 +863,7 @@
         "bank_operating_expenses",
         "bank_other_assets",
         "bank_other_liabilities",
+        "bank_pre_provision_operating_profit",
         "bank_provision_expense",
         "bank_service_income",
         "bank_trading_securities",
@@ -834,17 +874,19 @@
         "operating_profit"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-23T04:49:06+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:43:54+00:00",
       "financial_line_items_source": "reports/raw/BID/auto-bid-20261021/52b8a37dc84ef8d8.pdf",
-      "financial_line_items_updated_at": "2026-10-23T04:49:07+00:00",
+      "financial_line_items_updated_at": "2026-10-25T20:44:14+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần.",
       "operating_cash_flow_calculation": "Q1 equals YTD Q1",
       "investing_cash_flow_calculation": "Q1 equals YTD Q1",
       "financing_cash_flow_calculation": "Q1 equals YTD Q1",
       "net_cash_change_calculation": "Q1 equals YTD Q1",
       "financial_line_items_prior_values": {
-        "income_tax": -1457863
+        "income_tax": -1457863,
+        "bank_operating_expenses": -5906818,
+        "bank_provision_expense": -4578467
       },
       "financial_line_items_rejected_values": {
         "operating_cash_flow": {
@@ -924,7 +966,21 @@
       "core_financial_extraction_calculations": {
         "source_total_match": "Source-total row matches total-assets row in column 1 after OCR separator normalization",
         "total_liabilities": "total_assets minus reported equity; total sources matched total assets"
-      }
+      },
+      "financial_line_items_value_corrections": {
+        "bank_operating_expenses": {
+          "previous_value": -5906818,
+          "new_value": 5906818,
+          "reason": "Normalized bank operating expenses to the positive expense convention used in subtotal reconciliation."
+        },
+        "bank_provision_expense": {
+          "previous_value": -4578467,
+          "new_value": 4578467,
+          "reason": "Normalized the report's parenthesized credit-provision expense to the positive expense convention used throughout bank-category calculations."
+        }
+      },
+      "bank_pre_provision_operating_profit": 11991592,
+      "bank_pre_provision_operating_profit_calculation": "Lợi nhuận trước thuế + chi phí dự phòng tín dụng dương; khôi phục tổng phụ trước dự phòng."
     },
     {
       "symbol": "BID",
@@ -1012,8 +1068,8 @@
         "income_tax"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-23T04:46:24+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:43:57+00:00",
       "financial_line_items_source": "reports/raw/BID/auto-bid-20261021/2a8b37a8a21df04f.pdf",
       "financial_line_items_updated_at": "2026-10-23T04:49:07+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần.",
@@ -1163,14 +1219,15 @@
         "operating_profit"
       ],
       "financial_line_items_source": "reports/raw/BID/auto-bid-20261021/5283ee384a660d7b.pdf",
-      "financial_line_items_updated_at": "2026-10-23T04:56:46+00:00",
+      "financial_line_items_updated_at": "2026-10-25T20:44:14+00:00",
       "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
       "financial_line_items_prior_values": {
-        "income_tax": -1506866
+        "income_tax": -1506866,
+        "bank_operating_expenses": -7374522
       },
       "financial_line_items_rejected_values": {},
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-23T04:56:46+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:44:00+00:00",
       "core_financial_extracted_fields": [
         "equity",
         "net_profit",
@@ -1202,7 +1259,7 @@
       "bank_other_liabilities": 53667677,
       "operating_profit": 13779661,
       "bank_service_income": 3152717,
-      "bank_operating_expenses": -7374522,
+      "bank_operating_expenses": 7374522,
       "income_tax_current": -1512842,
       "income_tax_deferred": 5976,
       "income_tax": 1506866,
@@ -1237,6 +1294,13 @@
       "core_financial_extraction_calculations": {
         "source_total_match": "Source-total row matches total-assets row in column 1 after OCR separator normalization",
         "total_liabilities": "total_assets minus reported equity; total sources matched total assets"
+      },
+      "financial_line_items_value_corrections": {
+        "bank_operating_expenses": {
+          "previous_value": -7374522,
+          "new_value": 7374522,
+          "reason": "Normalized bank operating expenses to the positive expense convention used in subtotal reconciliation."
+        }
       }
     },
     {
@@ -1309,7 +1373,7 @@
       "bank_funding_and_trust_liabilities": 12043069,
       "bank_other_liabilities": 59820146,
       "bank_service_income": 3557867,
-      "bank_operating_expenses": -9817720,
+      "bank_operating_expenses": 9817720,
       "income_tax": 2687869,
       "operating_cash_flow_ytd": 54096862,
       "investing_cash_flow_ytd": -1638693,
@@ -1339,10 +1403,10 @@
         "operating_cash_flow_ytd"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-23T04:58:22+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:44:03+00:00",
       "financial_line_items_source": "reports/raw/BID/auto-bid-20261021/b7accd1729cac489.pdf",
-      "financial_line_items_updated_at": "2026-10-23T04:58:22+00:00",
+      "financial_line_items_updated_at": "2026-10-25T20:44:14+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
       "operating_cash_flow": 17800224,
       "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
@@ -1351,7 +1415,8 @@
       "net_cash_change": 80710752,
       "net_cash_change_calculation": "current YTD minus previous quarter YTD",
       "financial_line_items_prior_values": {
-        "income_tax": -2687869
+        "income_tax": -2687869,
+        "bank_operating_expenses": -9817720
       },
       "financial_line_items_rejected_values": {},
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
@@ -1381,6 +1446,13 @@
       "core_financial_extraction_calculations": {
         "source_total_match": "Source-total row matches total-assets row in column 1 after OCR separator normalization",
         "total_liabilities": "total_assets minus reported equity; total sources matched total assets"
+      },
+      "financial_line_items_value_corrections": {
+        "bank_operating_expenses": {
+          "previous_value": -9817720,
+          "new_value": 9817720,
+          "reason": "Normalized bank operating expenses to the positive expense convention used in subtotal reconciliation."
+        }
       }
     },
     {
@@ -1432,6 +1504,7 @@
         "bank_operating_expenses",
         "bank_other_assets",
         "bank_other_liabilities",
+        "bank_pre_provision_operating_profit",
         "bank_provision_expense",
         "bank_service_income",
         "bank_trading_securities",
@@ -1443,10 +1516,12 @@
         "retained_earnings"
       ],
       "financial_line_items_source": "reports/raw/BID/auto-bid-20261021/187ace9c81d22437.pdf",
-      "financial_line_items_updated_at": "2026-10-23T05:00:16+00:00",
+      "financial_line_items_updated_at": "2026-10-25T20:44:14+00:00",
       "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần.",
       "financial_line_items_prior_values": {
-        "income_tax": -1692822
+        "income_tax": -1692822,
+        "bank_operating_expenses": -6627973,
+        "bank_provision_expense": -5497973
       },
       "financial_line_items_rejected_values": {
         "operating_cash_flow": {
@@ -1482,8 +1557,8 @@
           "reason": "cash-flow components do not reconcile to reported net cash change"
         }
       },
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-23T05:00:16+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:44:07+00:00",
       "core_financial_extracted_fields": [
         "equity",
         "net_profit",
@@ -1518,8 +1593,8 @@
       "bank_other_liabilities": 18426995,
       "operating_profit": 14069589,
       "bank_service_income": 3213905,
-      "bank_operating_expenses": -6627973,
-      "bank_provision_expense": -5497973,
+      "bank_operating_expenses": 6627973,
+      "bank_provision_expense": 5497973,
       "income_tax": 1692822,
       "cashflow_period_basis": "year_to_date",
       "operating_cash_flow_calculation": "Q1 equals YTD Q1",
@@ -1564,7 +1639,21 @@
       "core_financial_extraction_calculations": {
         "source_total_match": "Source-total row matches total-assets row in column 1 after OCR separator normalization",
         "total_liabilities": "total_assets minus reported equity; total sources matched total assets"
-      }
+      },
+      "financial_line_items_value_corrections": {
+        "bank_operating_expenses": {
+          "previous_value": -6627973,
+          "new_value": 6627973,
+          "reason": "Normalized bank operating expenses to the positive expense convention used in subtotal reconciliation."
+        },
+        "bank_provision_expense": {
+          "previous_value": -5497973,
+          "new_value": 5497973,
+          "reason": "Normalized the report's parenthesized credit-provision expense to the positive expense convention used throughout bank-category calculations."
+        }
+      },
+      "bank_pre_provision_operating_profit": 14069589,
+      "bank_pre_provision_operating_profit_calculation": "Lợi nhuận trước thuế + chi phí dự phòng tín dụng dương; khôi phục tổng phụ trước dự phòng."
     },
     {
       "symbol": "BID",
@@ -1638,7 +1727,7 @@
       "operating_profit": 16153206,
       "bank_service_income": 3614586,
       "bank_service_expense": -1654803,
-      "bank_operating_expenses": -7484712,
+      "bank_operating_expenses": 7484712,
       "bank_pre_provision_operating_profit": 16153206,
       "bank_provision_expense": 5820288,
       "income_tax_current": -2038020,
@@ -1681,14 +1770,15 @@
         "revenue"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-23T05:01:54+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:44:11+00:00",
       "financial_line_items_source": "reports/raw/BID/auto-bid-20261021/73d9ead38e4e60b2.pdf",
-      "financial_line_items_updated_at": "2026-10-23T05:01:54+00:00",
+      "financial_line_items_updated_at": "2026-10-25T20:44:14+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
       "financial_line_items_prior_values": {
         "bank_provision_expense": 16153206,
-        "income_tax": -2032370
+        "income_tax": -2032370,
+        "bank_operating_expenses": -7484712
       },
       "financial_line_items_rejected_values": {},
       "bank_net_service_income": 1959783,
@@ -1700,6 +1790,11 @@
           "previous_value": 16153206,
           "new_value": 5820288,
           "reason": "derived from reconciled pre-provision operating profit minus reported quarterly PBT"
+        },
+        "bank_operating_expenses": {
+          "previous_value": -7484712,
+          "new_value": 7484712,
+          "reason": "Normalized bank operating expenses to the positive expense convention used in subtotal reconciliation."
         }
       },
       "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
