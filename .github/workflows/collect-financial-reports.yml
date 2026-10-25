@@ -127,6 +127,25 @@ jobs:
                       }
                   )
                   return not terminal_empty
+              # A newly published consolidated quarter can already have core numbers
+              # but still lack its durable PDF archive link. Collect that exact
+              # VietstockFinance URL before treating the ticker as done.
+              missing_source_archive = any(
+                  isinstance(item, dict)
+                  and re.fullmatch(r"20\d{2}-Q[1-4]", str(item.get("period") or ""))
+                  and not str(item.get("source_archive_file") or "").strip()
+                  and bool(re.match(
+                      rf"^https://static[12]\.vietstock\.vn/data/.*/bctc/vn/{re.escape(symbol)}_.*\.pdf(?:\?.*)?$",
+                      str(item.get("source_url") or "").strip(),
+                      re.I,
+                  ))
+                  and not re.search(
+                      r"công\s*mẹ|cong\s*ty\s*me|riêng\s*lẻ|rieng\s*le|parent\s+company|separate",
+                      " ".join(str(item.get(k) or "") for k in ("report_type","report_label","title")),
+                      re.I,
+                  )
+                  for item in items
+              )
               # Do not let a known missing full report disappear from the collection queue
               # merely because OCR has reached its retry limit on a shorter correction PDF.
               balance_sheet_pending = any(
@@ -169,7 +188,7 @@ jobs:
                   and item.get("financial_line_items_schema_version") != "2026-10-22-bank-statement-qc-v4"
                   for item in items
               )
-              return balance_sheet_pending or core_pending or details_pending or stale_details or snapshot.get("bootstrap_status") not in {"complete", "complete_needs_manual_review"}
+              return missing_source_archive or balance_sheet_pending or core_pending or details_pending or stale_details or snapshot.get("bootstrap_status") not in {"complete", "complete_needs_manual_review"}
 
           if requested:
               if requested not in symbols:

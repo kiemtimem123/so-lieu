@@ -768,6 +768,40 @@ def ticker_has_source_page_gap(items: list[dict], max_pages: int = 14) -> bool:
     return False
 
 
+def item_needs_vietstock_archive(symbol: str, item: object) -> bool:
+    """True when a quarter has a direct consolidated Vietstock PDF URL but no stored archive."""
+    if not isinstance(item, dict) or not re.fullmatch(r"20\d{2}-Q[1-4]", str(item.get("period") or "")):
+        return False
+    source_url = str(item.get("source_url") or "").strip()
+    parsed = urlparse(source_url)
+    host = (parsed.hostname or "").lower()
+    path = unquote(parsed.path or "").lower()
+    filename = Path(unquote(parsed.path or "")).name.lower()
+    symbol = str(symbol or "").strip().upper()
+    if (
+        parsed.scheme != "https"
+        or host not in {"static1.vietstock.vn", "static2.vietstock.vn"}
+        or "/bctc/vn/" not in path
+        or not path.endswith(".pdf")
+        or not filename.startswith(symbol.lower() + "_")
+    ):
+        return False
+    title = " ".join(str(item.get(key) or "") for key in ("report_type", "report_label", "source_archive_title", "title"))
+    if re.search(r"công\s*ty\s*mẹ|cong\s*ty\s*me|riêng\s*lẻ|rieng\s*le|parent\s+company|separate", title + " " + filename, re.I):
+        return False
+    if not re.search(r"hợp\s*nhất|hop\s*nhat|consolidated", title + " " + filename, re.I):
+        return False
+    existing = str(item.get("source_archive_file") or "").strip()
+    if not existing:
+        return True
+    archive = (ROOT / existing).resolve()
+    try:
+        archive.relative_to((ROOT / "reports" / "raw").resolve())
+    except ValueError:
+        return True
+    return not archive.is_file()
+
+
 def first_incomplete_symbol(securities: dict) -> str | None:
     for security in securities.get("securities", []):
         if not isinstance(security, dict) or security.get("enabled") is False:
@@ -783,6 +817,13 @@ def first_incomplete_symbol(securities: dict) -> str | None:
         except (OSError, json.JSONDecodeError):
             return symbol
 
+        items = snapshot.get("items") or []
+        # A report can be fully published on VietstockFinance after the last
+        # catalog scan, even though this ticker is otherwise complete. Archive
+        # that exact quarter PDF before skipping the completed ticker.
+        if any(item_needs_vietstock_archive(symbol, item) for item in items):
+            return symbol
+
         # The sync/OCR pipeline intentionally closes a ticker as
         # complete_needs_manual_review when automated extraction has reached a
         # terminal limit. Do not let the collector queue loop back to that
@@ -790,8 +831,6 @@ def first_incomplete_symbol(securities: dict) -> str | None:
         # manual_review_required_pending_extraction.
         if snapshot.get("bootstrap_status") in {"complete", "complete_needs_manual_review"}:
             continue
-
-        items = snapshot.get("items") or []
         if not items:
             try:
                 attempts = int(snapshot.get("bootstrap_attempt_count") or 0)
@@ -1065,14 +1104,22 @@ def main():
         for item in snapshot.get("items", []) if isinstance(snapshot, dict) else []:
             if not isinstance(item, dict):
                 continue
-            if item.get("balance_sheet_extraction_status") != "pending_full_report_archive_and_extraction":
+            balance_sheet_pending = item.get("balance_sheet_extraction_status") == "pending_full_report_archive_and_extraction"
+            source_archive_pending = item_needs_vietstock_archive(active_symbol, item)
+            if not balance_sheet_pending and not source_archive_pending:
                 continue
-            source_url = str(item.get("balance_sheet_source_url") or "").strip()
+            source_url = str(
+                (item.get("balance_sheet_source_url") if balance_sheet_pending else item.get("source_url")) or ""
+            ).strip()
             period = str(item.get("period") or "").strip().upper()
             if not source_url or not re.fullmatch(r"20\d{2}-Q[1-4]", period):
                 continue
             validation = item.get("source_validation")
-            if isinstance(validation, dict) and validation.get("full_report_present_in_archive") is True:
+            if (
+                isinstance(validation, dict)
+                and validation.get("full_report_present_in_archive") is True
+                and not source_archive_pending
+            ):
                 continue
             repair_id = f"repair-{active_symbol.lower()}-{period.lower().replace('-', '')}-full-report"
             existing = next((job for job in jobs if job.get("id") == repair_id), None)
@@ -1209,11 +1256,20 @@ def main():
                 dependency_still_pending = any(
                     isinstance(item, dict)
                     and str(item.get("period") or "").upper() == requested_period
-                    and item.get("balance_sheet_extraction_status") == "pending_full_report_archive_and_extraction"
-                    and str(item.get("balance_sheet_source_url") or "").strip() == requested_url
+                    and (
+                        (
+                            item.get("balance_sheet_extraction_status") == "pending_full_report_archive_and_extraction"
+                            and str(item.get("balance_sheet_source_url") or "").strip() == requested_url
+                        )
+                        or (
+                            str(item.get("source_url") or "").strip() == requested_url
+                            and item_needs_vietstock_archive(active_symbol, item)
+                        )
+                    )
                     and not (
                         isinstance(item.get("source_validation"), dict)
                         and item["source_validation"].get("full_report_present_in_archive") is True
+                        and not item_needs_vietstock_archive(active_symbol, item)
                     )
                     for item in (snapshot.get("items") or [])
                 ) if isinstance(snapshot, dict) else False
