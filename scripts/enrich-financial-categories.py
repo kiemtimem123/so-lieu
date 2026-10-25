@@ -15,7 +15,7 @@ DATA = ROOT / "data"
 RAW = ROOT / "reports" / "raw"
 REPORT_QUEUE = ROOT / "config" / "report-queue.json"
 _QUEUE_ARCHIVE_BY_URL = None
-DETAIL_SCHEMA_VERSION = "2026-10-22-bank-statement-qc-v4"
+DETAIL_SCHEMA_VERSION = "2026-10-26-bank-reconciliation-cashflow-v5"
 CORE_EXTRACTION_PARSER_VERSION = "2026-10-23-ngan-vnd-unit-v2-statement-rows"
 NUMBER_RE = re.compile(r"(?<![A-Za-z0-9])\(?-?\d[\d.,]*\d?\)?")
 BANKS = {"MBB", "ACB", "SHB", "TCB", "TPB", "VPB", "STB", "VCB", "CTG", "BID"}
@@ -35,16 +35,16 @@ BALANCE_LABELS = {
  "retained_earnings":["loi nhuan sau thue chua phan phoi","loi nhuan chua phan phoi"],
 }
 BANK_BALANCE_LABELS = {
- "bank_cash_on_hand":["tien mat, vang bac, da quy","tien mat vang bac da quy"],
+ "bank_cash_on_hand":["tien mat, vang bac, da quy","tien mat vang bac da quy","tien mat, vang","tien mat vang"],
  "bank_deposits_at_state_bank":["tien gui tai nhnn","tien gui tai ngan hang nha nuoc"],
- "bank_deposits_and_loans_to_credit_institutions":["tien gui va cho vay cac tctd khac","tien gui va cho vay cac to chuc tin dung khac"],
+ "bank_deposits_and_loans_to_credit_institutions":["tien gui va cho vay cac tctd khac","tien gui va cho vay cac to chuc tin dung khac","tien gui va cap tin dung cho cac tctd khac","tien gui va cap tin dung cho cac to chuc tin dung khac"],
  "bank_customer_loans":["cho vay khach hang","cho vay khichhing","chovaykhachhang","cho vay khach hang tong"],
  "bank_trading_securities":["chung khoan kinh doanh"],
  "bank_derivatives_and_other_financial_assets":["cac cong cu tai chinh phai sinh va cac tai san tai chinh khac"],
  "bank_investment_securities":["chung khoan dau tu"],
  "bank_contributions_and_long_term_investments":["gop von, dau tu dai han","gop von dau tu dai han"],
  "bank_other_assets":["tai san co khac"],
- "bank_deposits_and_borrowings_from_credit_institutions":["tien gui va tien vay cac tctd khac","tien gui va vay cac tctd khac","tien gui va vay cac to chuc tin dung khac"],
+ "bank_deposits_and_borrowings_from_credit_institutions":["tien gui va tien vay cac tctd khac","tien gui va vay cac tctd khac","tien gui va vay cac to chuc tin dung khac","tien gui va vay cac to chuc tai chinh cac tctd khac"],
  "bank_customer_deposits":["tien gui cua khach hang"],
  "bank_valuable_papers":["phat hanh giay to co gia"],
  "bank_funding_and_trust_liabilities":["von tai tro, uy thac dau tu"],
@@ -108,9 +108,9 @@ BANK_INCOME_LABELS = {
  "bank_service_expense":["chi phi hoat dong dich vu"],
  "bank_net_service_income":["lai/lo thuan tu hoat dong dich vu","lai lo thuan tu hoat dong dich vu","lai thuan tu hoat dong dich vu"],
  "bank_fx_net_income":["lai thuan tu hoat dong kinh doanh ngoai hoi"],
- "bank_trading_securities_net":["lai thuan tu mua ban chung khoan kinh doanh"],
+ "bank_trading_securities_net":["lai thuan tu mua ban chung khoan kinh doanh","lai/(lo) thuan tu mua ban chung khoan kinh doanh","lai lo thuan tu mua ban chung khoan kinh doanh"],
  "bank_investment_securities_net":["lai thuan tu mua ban chung khoan dau tu","lai thuan tu mua ban chung khoan dau tu va gop von dau tu dai han"],
- "bank_other_operating_net":["lai thuan tu hoat dong kinh doanh khac"],
+ "bank_other_operating_net":["lai thuan tu hoat dong kinh doanh khac","lai thuan tu hoat dong khac"],
  "bank_dividend_and_capital_income":["thu nhap tu gop von, mua co phan"],
  "bank_operating_expenses":["tong chi phi hoat dong","chi phi hoat dong"],
  "bank_pre_provision_operating_profit":["loi nhuan thuan tu hoat dong kinh doanh truoc chi phi du phong rui ro"],
@@ -118,9 +118,9 @@ BANK_INCOME_LABELS = {
  "bank_non_controlling_profit":["loi ich cua co dong khong kiem soat"],
 }
 CASHFLOW_LABELS = {
- "operating_cash_flow_ytd":["luu chuyen tien thuan tu hoat dong kinh doanh","luu chuyen tien tu hoat dong kinh doanh"],
- "investing_cash_flow_ytd":["luu chuyen tien thuan tu hoat dong dau tu","luu chuyen tien tu hoat dong dau tu"],
- "financing_cash_flow_ytd":["luu chuyen tien thuan tu hoat dong tai chinh","luu chuyen tien thuan tu hoat dong taichinh","luu chuyen tien thuan tu hoat dong taichinn","luu chuyen tien tu hoat dong tai chinh"],
+ "operating_cash_flow_ytd":["luu chuyen tien thuan su dung vao hoat dong kinh doanh","luu chuyen tien thuan (su dung vao)/tu hoat dong kinh doanh","luu chuyen tien thuan su dung vao/tu hoat dong kinh doanh","luu chuyen tien thuan tu/(su dung vao) hoat dong kinh doanh","luu chuyen tien thuan tu hoat dong kinh doanh","luu chuyen tien tu hoat dong kinh doanh"],
+ "investing_cash_flow_ytd":["luu chuyen tien thuan su dung vao hoat dong dau tu","luu chuyen tien thuan tu/(su dung vao) hoat dong dau tu","luu chuyen tien thuan su dung vao/tu hoat dong dau tu","luu chuyen tien thuan tu hoat dong dau tu","luu chuyen tien tu hoat dong dau tu"],
+ "financing_cash_flow_ytd":["luu chuyen tien thuan tu/(su dung vao) hoat dong tai chinh","luu chuyen tien thuan (su dung vao)/tu hoat dong tai chinh","luu chuyen tien thuan tu hoat dong tai chinh","luu chuyen tien thuan tu hoat dong taichinh","luu chuyen tien thuan tu hoat dong taichinn","luu chuyen tien tu hoat dong tai chinh"],
  "capital_expenditure_ytd":["tien chi de mua sam xay dung tai san co dinh","tien chi mua sam xay dung tai san co dinh","mua sam xay dung tai san co dinh va cac tai san dai han khac"],
  "dividends_paid_ytd":["co tuc loi nhuan da tra cho chu so huu","tien chi tra co tuc loi nhuan cho chu so huu"],
  "net_cash_change_ytd":["luu chuyen tien thuan trong ky","luu chuyen tien thuan trong nam"],
@@ -916,6 +916,9 @@ def extract_fields(item,symbol,pages):
   is_ytd=bool(
    re.search(r"\b01\s*/\s*01\s*/?\s*20\d{2}\b",cft)
    or "tu ngay 01 thang 01" in cft
+   or re.search(r"\\btu ngay 0?1 thang 0?1 nam 20\\d{2}\\b",cft)
+   or re.search(r"\\bgiai doan tai chinh tu ngay 0?1 thang 0?1 nam 20\\d{2}\\b",cft)
+   or re.search(r"\\b(?:cho )?ky(?: ke toan)? (?:6|9|12|sau|chin|muoi hai) thang ket thuc ngay\\b",cft)
    or "luy ke tu dau nam" in cft
    or "giai doan tu 01/01" in cft
    or re.search(r"\b(?:cho )?ky (?:6|9|12) thang ket thuc ngay\b",cft)
@@ -1227,6 +1230,16 @@ def reconcile_detail_items(items,symbol):
 
    # Store bank expense magnitudes as positive values for consistent reconciliation,
    # even when the PDF prints the expense in parentheses.
+   operating_expense_value=item.get("bank_operating_expenses")
+   if isinstance(operating_expense_value,(int,float)) and operating_expense_value<0:
+    item.setdefault("financial_line_items_prior_values",{}).setdefault("bank_operating_expenses",operating_expense_value)
+    item.setdefault("financial_line_items_value_corrections",{})["bank_operating_expenses"]={"previous_value":operating_expense_value,"new_value":abs(int(round(operating_expense_value))),"reason":"Normalized bank operating expenses to the positive expense convention used in subtotal reconciliation."}
+    item["bank_operating_expenses"]=abs(int(round(operating_expense_value)))
+    fields.add("bank_operating_expenses")
+    rejected.discard("bank_operating_expenses")
+    rejected_values.pop("bank_operating_expenses",None)
+    period_changed=True; changed_fields+=1
+
    provision_value=item.get("bank_provision_expense")
    if isinstance(provision_value,(int,float)) and provision_value<0:
     item.setdefault("financial_line_items_prior_values",{}).setdefault("bank_provision_expense",provision_value)
@@ -1243,6 +1256,23 @@ def reconcile_detail_items(items,symbol):
 
    interest_income=item.get("bank_interest_income")
    interest_expense=item.get("bank_interest_expense")
+   net_interest=item.get("bank_net_interest_income")
+   # If OCR gross interest income contradicts the independently reported net-interest subtotal,
+   # reconcile to reported net interest plus the expense row and preserve the correction record.
+   if (
+    isinstance(interest_income,(int,float)) and isinstance(interest_expense,(int,float))
+    and isinstance(net_interest,(int,float))
+    and not ({"bank_interest_income","bank_interest_expense","bank_net_interest_income"} & unquarterized)
+   ):
+    expected_interest_income=int(round(net_interest+abs(interest_expense)))
+    difference=expected_interest_income-interest_income
+    if difference and abs(difference)<=max(abs(interest_income)*0.15,1000):
+     set_derived(
+      "bank_interest_income",expected_interest_income,
+      "Thu nhập lãi = thu nhập lãi thuần + chi phí lãi; đối chiếu tổng phụ BCTC ngân hàng.",
+      "Corrected OCR gross interest income to reported net-interest income plus interest expense."
+     )
+     interest_income=expected_interest_income
    if (
     isinstance(interest_income,(int,float)) and isinstance(interest_expense,(int,float))
     and not ({"bank_interest_income","bank_interest_expense"} & unquarterized)
@@ -1250,7 +1280,7 @@ def reconcile_detail_items(items,symbol):
     set_derived(
      "bank_net_interest_income",interest_income-abs(interest_expense),
      "Thu nhập lãi - |chi phí lãi| theo BCTC ngân hàng.",
-     "derived from reported interest income minus reported interest expense",
+     "derived from reported interest income minus reported interest expense"
     )
 
    service_income=item.get("bank_service_income")
@@ -1316,6 +1346,18 @@ def reconcile_detail_items(items,symbol):
     fields.discard("revenue")
     rejected.add("revenue")
     notes.append("Doanh thu cũ trùng thu nhập lãi thuần nhưng chưa đủ cấu phần để tái lập tổng thu nhập hoạt động; đã ẩn.")
+
+   # Reconcile a small capital-contribution OCR digit error only when all seven bank income components exist.
+   component_values=[item.get(field) for field in bank_components]
+   components_safe=(all(isinstance(value,(int,float)) for value in component_values)
+    and not (set(bank_components) & unquarterized) and not (set(bank_components) & rejected))
+   capital_value=item.get("bank_dividend_and_capital_income")
+   if components_safe and isinstance(item.get("revenue"),(int,float)) and isinstance(capital_value,(int,float)) and abs(capital_value)<=10000:
+    component_delta=int(round(item["revenue"]-sum(component_values)))
+    if component_delta and abs(component_delta)<=10000:
+     set_derived("bank_dividend_and_capital_income",capital_value+component_delta,
+      "Thu nhập góp vốn/mua cổ phần được đối chiếu để tổng các cấu phần bằng tổng thu nhập hoạt động đã công bố.",
+      "Reconciled a small OCR digit error in capital-contribution income to reported operating income after checking the other six components.")
 
    # PPOP = total operating income - reported operating expenses.
    op_expense=item.get("bank_operating_expenses")
@@ -1832,7 +1874,7 @@ def enrich_snapshot(path):
     new_fields.append(field)
    elif (
     symbol in BANKS
-    and field in {"bank_customer_loans","bank_net_service_income","operating_cash_flow_ytd","financing_cash_flow_ytd","cash_beginning","cash_ending"}
+    and field in {"bank_customer_loans","bank_net_service_income","bank_investment_securities","bank_cash_on_hand","bank_deposits_and_loans_to_credit_institutions","bank_deposits_and_borrowings_from_credit_institutions","bank_interest_income","bank_interest_expense","bank_trading_securities_net","bank_other_operating_net","bank_dividend_and_capital_income","operating_cash_flow_ytd","investing_cash_flow_ytd","financing_cash_flow_ytd","capital_expenditure_ytd","dividends_paid_ytd","net_cash_change_ytd","cash_beginning","cash_ending"}
     and field in set(item.get("financial_line_items_extracted_fields") or [])
     and isinstance(item.get(field),(int,float))
     and item.get(field)!=value
@@ -1848,7 +1890,7 @@ def enrich_snapshot(path):
      "cash_ending":"Reparsed from the explicit closing cash balance row in the bank B04/TCTD statement.",
     }
     item.setdefault("financial_line_items_value_corrections",{})[field]={
-     "previous_value":old_value,"new_value":value,"reason":reasons[field]
+     "previous_value":old_value,"new_value":value,"reason":reasons.get(field,"Reparsed from the saved VietstockFinance row and reconciled to related statement subtotals.")
     }
     item[field]=value
     new_fields.append(field)
@@ -1902,6 +1944,15 @@ def enrich_snapshot(path):
     item["financial_line_items_extracted_fields"]=sorted(old_fields)
     item["financial_line_items_note"]=(str(item.get("financial_line_items_note") or "")+" Chi phí dịch vụ được để trống do giá trị cũ bị nhận nhầm từ dòng lãi thuần dịch vụ.").strip()
     changed=True; field_count+=1
+  if symbol in BANKS and isinstance(item.get("cash_and_equivalents"),(int,float)):
+   opening=item.get("cash_beginning_reported_ytd",item.get("cash_beginning"))
+   if item.get("cash_and_equivalents")==opening:
+    previous=item["cash_and_equivalents"]
+    item.setdefault("financial_line_items_prior_values",{}).setdefault("cash_and_equivalents",previous)
+    item.setdefault("financial_line_items_value_corrections",{})["cash_and_equivalents"]={"previous_value":previous,"new_value":None,"reason":"Removed generic cash-and-equivalents value duplicated from B04 opening cash; bank cash is reported separately in B02."}
+    item.pop("cash_and_equivalents",None)
+    fields.discard("cash_and_equivalents")
+    changed=True
   basis=found.get("__cashflow_period_basis")
   if basis and item.get("cashflow_period_basis")!=basis:
    item["cashflow_period_basis"]=basis; new_fields.append("cashflow_period_basis")
@@ -1954,6 +2005,9 @@ def enrich_snapshot(path):
      item[quarterly_field]=int(round(current))
      item[quarterly_field+"_calculation"]="reported as standalone quarter"
      changed=True; field_count+=1
+  if basis=="year_to_date" and isinstance(item.get("cash_beginning"),(int,float)) and item.get("cash_beginning_reported_ytd") is None:
+   item["cash_beginning_reported_ytd"]=item["cash_beginning"]
+   changed=True; field_count+=1
   if quarter>1 and basis=="year_to_date":
    previous=by_period.get(f"{year}-Q{quarter-1}") or {}
    prev_cash=previous.get("cash_ending")

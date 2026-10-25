@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-25T17:52:16Z",
+  "updatedAt": "2026-10-26T01:20:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -21,7 +21,6 @@
     "VND",
     "SHS",
     "NLG",
-    "TCB",
     "TPB",
     "VPB",
     "STB",
@@ -40,19 +39,22 @@
     "VIX"
   ],
   "lastCompletedSymbol": "TCB",
-  "activeSymbol": null,
-  "resumeSymbolHint": "VHM",
+  "activeSymbol": "TCB",
+  "resumeSymbolHint": "TCB",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "TCB",
-    "status": "automated_processing_complete",
-    "completeForAutomation": true,
+    "status": "in_progress",
+    "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-25T17:49:00Z",
+    "processedAt": "2026-10-26T01:20:00+07:00",
     "workflowRunId": "40214727172",
     "workflowRunNumber": 1433,
     "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/40214727172",
     "changedPaths": [
+      "scripts/enrich-financial-categories.py",
+      "scripts/validate-bank-reconciliation.py",
+      ".github/workflows/validate-financials.yml",
       "data/financials-TCB.json",
       "reports/processing-checkpoint.json"
     ],
@@ -61,12 +63,16 @@
     "lastQuarter": "2026-Q3",
     "pendingCorePeriods": [],
     "terminalManualReviewPeriods": [],
-    "pendingDetailPeriods": [],
+    "pendingDetailPeriods": [
+      "2026-Q1",
+      "2026-Q2",
+      "2026-Q3"
+    ],
     "staleDetailSchemaPeriods": [],
     "statementPagesPending": false,
     "reconciliationCommitPending": false,
     "coreVerification": "verified_ocr_reconciled",
-    "note": "Đã khép các chỉ tiêu lõi Q3/2026; số liệu đối chiếu cân đối và cộng dồn 9 tháng đã được xác thực. Checkpoint commit đã lưu; các chi tiết tự OCR vẫn giữ cờ rà soát trực quan.",
+    "note": "Reprocess TCB using the corrected bank income and YTD cash-flow parser; regression checks must pass before marking complete.",
     "reconciliationCommit": "13d37d9a0bf9539f7d041057ae92f1f087c7ee68",
     "validationRuns": [
       {
@@ -651,23 +657,27 @@
       "snapshotFetchedAt": "2026-10-19T16:47:07.375Z"
     },
     "TCB": {
-      "status": "automated_processing_complete",
-      "completeForAutomation": true,
+      "status": "in_progress",
+      "completeForAutomation": false,
       "manualReviewRemaining": true,
       "periodCount": 11,
       "firstQuarter": "2024-Q1",
       "lastQuarter": "2026-Q3",
       "pendingCorePeriods": [],
       "terminalManualReviewPeriods": [],
-      "pendingDetailPeriods": [],
+      "pendingDetailPeriods": [
+        "2026-Q1",
+        "2026-Q2",
+        "2026-Q3"
+      ],
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 11,
-      "updatedAt": "2026-10-25T17:49:00Z",
+      "updatedAt": "2026-10-26T01:20:00+07:00",
       "snapshotFetchedAt": "2026-10-22T05:57:26+00:00",
       "coreReconciledThrough": "2026-Q3",
       "coreVerification": "verified_ocr_reconciled",
-      "note": "Đã khép các chỉ tiêu lõi Q3/2026 từ PDF VietstockFinance đã lưu. Bảng cân đối chênh 0; doanh thu, PBT, LNST và lợi nhuận thuộc cổ đông ngân hàng mẹ quý Q1-Q3 khớp tổng lũy kế 9 tháng. Chỉ các line-items chi tiết vẫn chờ rà soát trực quan."
+      "note": "TCB reprocessing in progress after fixing income OCR reconciliation and YTD-vs-quarter cash-flow parsing; validation gates added."
     },
     "VHM": {
       "status": "automated_processing_complete",
@@ -1294,6 +1304,24 @@
       "lastQuarter": "2026-Q3",
       "coreVerification": "verified_ocr_reconciled",
       "note": "Q3/2026 parent profit, profitability ratios, balance equation, and Q1-Q3-to-nine-month totals reconciled; continue from saved hint VHM."
+    },
+    {
+      "symbol": "TCB",
+      "status": "in_progress",
+      "completeForAutomation": false,
+      "manualReviewRemaining": true,
+      "processedAt": "2026-10-26T01:20:00+07:00",
+      "changedPaths": [
+        "scripts/enrich-financial-categories.py",
+        "scripts/validate-bank-reconciliation.py",
+        ".github/workflows/validate-financials.yml",
+        "data/financials-TCB.json",
+        "reports/processing-checkpoint.json"
+      ],
+      "periodCount": 11,
+      "firstQuarter": "2024-Q1",
+      "lastQuarter": "2026-Q3",
+      "note": "Added regression tests for statement subtotals, cumulative cash flows, and OCR errors; rerun TCB before advancing."
     }
   ],
   "currentRun": {
