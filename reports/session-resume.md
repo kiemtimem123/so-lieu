@@ -18,3 +18,10 @@
 - Các kỳ VCI còn chờ tự động trích xuất trong checkpoint lúc đó: `2024-Q2`, `2024-Q3`, `2024-Q4`. Nếu chúng không thể xác minh tự động, giữ trống dữ liệu thiếu, đóng ở trạng thái rà soát thủ công rồi chuyển sang mã kế tiếp (VCK theo thứ tự cấu hình hiện tại).
 
 Ghi chú này chỉ là chỉ dẫn rút gọn; trạng thái hiện tại luôn phải được lấy từ `reports/processing-checkpoint.json` và workflow mới nhất, không dựa vào các mốc tham chiếu cũ phía trên.
+
+## Latest continuation policy (2026-10-26 local time)
+
+- VCI is configured with `skipUnconfirmedThroughPeriod: 2026-Q3` in `config/securities.json`. The selector skips unresolved VCI history through Q3/2026, but will re-open VCI automatically when a quarter later than Q3/2026 appears in its snapshot.
+- The selector's quarter matcher was corrected in commit [4872ef5](https://github.com/kiemtimem123/so-lieu/commit/4872ef577892672f6919984a530ce3c977b8c795); the skip-through policy is in [c7317a0](https://github.com/kiemtimem123/so-lieu/commit/c7317a07140005eca4ebe1046fde13e8b737006c).
+- Latest checkpoint read during this session (2026-10-25 21:02:49 UTC): VCI was still the only ticker incomplete for automation; `2024-Q2` was the remaining pending core period, while Q3/Q4 2024 and later periods were marked for manual review. Follow the live checkpoint/workflow, because the in-flight OCR pass may have changed this since.
+- All other configured tickers were already marked `completeForAutomation: true`. With the user's instruction to skip unconfirmed values, do not reopen completed tickers just to repeat manual-review-only periods. The next new automatic work is triggered by a newer quarterly report or a genuinely incomplete checkpoint.
