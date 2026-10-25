@@ -98,7 +98,7 @@ INCOME_LABELS = {
  "admin_expense":["chi phi quan ly doanh nghiep","chi phi quan ly cong ty"],
  "operating_profit":["loi nhuan thuan tu hoat dong kinh doanh","loi nhuan tu hoat dong kinh doanh"],
  "income_tax":["chi phi thue thu nhap doanh nghiep trong ky","chi phi thue thu nhap doanh nghiep","chi phi thue tndn"],
- "net_profit_attributable":["loi nhuan sau thue cua co dong cong ty me","loi nhuan sau thue cua co dong cua cong ty me","loi nhuan thuoc ve co dong cong ty me","loi nhuan thuan co dong ngan hang"],
+ "net_profit_attributable":["loi nhuan sau thue cua co dong cong ty me","loi nhuan sau thue cua co dong cua cong ty me","loi nhuan thuoc ve co dong cong ty me","loi nhuan thuan co dong ngan hang","loi nhuan thuan cua co dong cua"],
 }
 BANK_INCOME_LABELS = {
  "bank_interest_income":["thu nhap lai va cac khoan thu nhap tuong tu"],
@@ -798,7 +798,7 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
   out["net_profit"]=net
  parent_profit=value_by_label(
   profit_pages,
-  ["loi nhuan thuan co dong ngan hang","loi nhuan sau thue cua co dong cong ty me",
+  ["loi nhuan thuan co dong ngan hang","loi nhuan thuan cua co dong cua",\n   "loi nhuan sau thue cua co dong cong ty me",
    "loi nhuan sau thue cua co dong cua cong ty me","loi nhuan thuoc ve co dong cong ty me"],
   factor
  ) if profit_pages else None

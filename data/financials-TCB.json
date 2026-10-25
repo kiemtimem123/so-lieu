@@ -2588,7 +2588,7 @@
       "equity": 197324622,
       "pretax_profit": 10375368,
       "net_profit": 8337286,
-      "net_profit_attributable": null,
+      "net_profit_attributable": 7942932,
       "revenue": 16587715,
       "roa": null,
       "roe": null,
@@ -2742,6 +2742,7 @@
       "core_financial_extracted_fields": [
         "equity",
         "net_profit",
+        "net_profit_attributable",
         "pretax_profit",
         "total_assets",
         "total_liabilities"
@@ -2771,10 +2772,32 @@
       "operating_cash_flow": 64357391,
       "operating_cash_flow_calculation": "reported as standalone quarter",
       "financing_cash_flow": 8320,
-      "financing_cash_flow_calculation": "reported as standalone quarter"
+      "financing_cash_flow_calculation": "reported as standalone quarter",
+      "source_review": {
+        "checks": {
+          "parent_net_profit_matches_reported_million": true,
+          "net_profit_minus_non_controlling_interest_matches_parent_million": true,
+          "parent_profit_formula_difference_million_vnd": 0,
+          "non_controlling_interest_million_vnd": 394354,
+          "parent_attributable_profit_million_vnd": 7942932
+        },
+        "parent_profit_row_label": "Lợi nhuận thuần của cổ đông của Ngân hàng",
+        "parent_profit_source_pages": {
+          "pdf_page": 10,
+          "printed_page": 6
+        },
+        "parent_profit_extraction_note": "Cột phát sinh riêng quý III năm 2026 trên BCTC hợp nhất. LNST hợp nhất 8.337.286 trừ lợi ích cổ đông không kiểm soát 394.354 = 7.942.932 triệu đồng. OCR đã đối chiếu số học; chưa xác nhận bằng ảnh trực quan của trang PDF.",
+        "manually_visual_reviewed": false,
+        "note": "Đã bổ sung lợi nhuận thuộc cổ đông ngân hàng từ dòng kết quả kinh doanh Q3/2026 và đối chiếu số học khớp 0 triệu đồng. Các chỉ tiêu vẫn giữ trạng thái chờ rà soát trực quan bản PDF."
+      },
+      "net_profit_attributable_correction": {
+        "previous_value": null,
+        "new_value": 7942932,
+        "reason": "Recovered from the parent-attributable profit row on the Q3 2026 consolidated income statement linked by the VietstockFinance TCB document catalog; reconciles exactly with consolidated net profit less non-controlling interest."
+      }
     }
   ],
-  "note": "TCB: 10 kỳ BCTC hợp nhất Q1/2024–Q2/2026, nguồn duy nhất VietstockFinance. Số quý được đối chiếu với cột lũy kế để tránh lấy nhầm số lũy kế thành lợi nhuận quý. Q4/2024, Q3/2025 và Q2/2026 đã kiểm tra trực quan PDF; các kỳ còn lại được kiểm tra bằng văn bản trích xuất/OCR và phép tính. Ở các kỳ chưa kiểm tra trực quan, tổng nợ trong snapshot vẫn là giá trị suy ra từ tổng tài sản trừ vốn chủ, được ghi rõ trong source_extract_review.",
+  "note": "TCB: 11 kỳ BCTC hợp nhất Q1/2024–Q3/2026, nguồn duy nhất là danh mục VietstockFinance và PDF/ZIP được liên kết. Báo cáo hợp nhất Q3/2026 đã được lưu; lợi nhuận thuộc cổ đông ngân hàng là 7.942.932 triệu đồng, khớp LNST hợp nhất trừ lợi ích cổ đông không kiểm soát. Các chỉ tiêu OCR vẫn chờ rà soát trực quan trên bản PDF.",
   "sync_status": "records_found",
   "bootstrap_last_attempt_at": "2026-10-22T05:57:26+00:00",
   "bootstrap_attempt_count": 1,
