@@ -386,7 +386,7 @@
       "core_financial_extraction_note": "Q1/2025 báo cáo hợp nhất phục hồi từ sidecar OCR VietstockFinance; số liệu kết quả kinh doanh và dòng tiền theo quý khớp số học.",
       "verification_status_note": "Đã trích xuất lại Q1/2025 từ sidecar OCR PDF hợp nhất VietstockFinance. Bảng cân đối, doanh thu−giá vốn=lợi nhuận gộp, LNTT−thuế ròng=LNST và cầu nối dòng tiền khớp trong sai số làm tròn. Chưa xác minh trực quan.",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
-      "core_financial_extraction_evidence_fingerprint": "a6bbfc8c87ed3abe837c556cd2cf591478cf2b1093a94758b5096bc418cd24be",
+      "core_financial_extraction_evidence_fingerprint": "69fb7571bba76cbcac7c5af5f008a479e506c0444f971578b00c18c227e0d06b",
       "core_financial_extraction_evidence_attempt_count": 1,
       "core_financial_extraction_source": "reports/raw/IDC/auto-idc-20261021/5b3809b3492cb8ac.pdf.extracted.json",
       "core_financial_extraction_pages": [
@@ -1279,8 +1279,8 @@
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
       "financial_line_items_prior_values": {},
       "financial_line_items_rejected_values": {},
-      "core_financial_extraction_stable_evidence_count": 5,
-      "core_financial_extraction_stable_evidence_updated_at": "2026-10-24T20:35:52+00:00",
+      "core_financial_extraction_stable_evidence_count": 6,
+      "core_financial_extraction_stable_evidence_updated_at": "2026-10-25T09:54:17+00:00",
       "core_financial_extraction_manual_terminal": true
     },
     {
@@ -1453,7 +1453,7 @@
       "equity": 6138053,
       "pretax_profit": 737419,
       "net_profit": 583871,
-      "net_profit_attributable": 432485,
+      "net_profit_attributable": 26,
       "revenue": 2148489,
       "roa": 13.37,
       "roe": 36.98,
@@ -1513,7 +1513,7 @@
       "core_financial_extraction_note": "Các tổng bảng cân đối và KQKD riêng Q2/2024 khôi phục từ sidecar OCR của PDF hợp nhất trong ZIP VietstockFinance. Dòng tiền trong báo cáo là YTD 6 tháng; không coi là quý II riêng.",
       "verification_status_note": "Các chỉ tiêu lõi đã được trích xuất tự động từ BCTC hợp nhất VietstockFinance; cần đối chiếu trực quan trước khi coi là xác minh.",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
-      "core_financial_extraction_evidence_fingerprint": "6802b1fd746579705fe831e2ada6cb61ebac320fb29809483085060f3750a5c8",
+      "core_financial_extraction_evidence_fingerprint": "5bc01c20f62c345da1c63c3da3dbf8931aeaddb55969274c1f587262d0d87191",
       "core_financial_extraction_evidence_attempt_count": 0,
       "eps": 1311,
       "core_financial_extraction_source": "reports/raw/IDC/auto-idc-20261021/ecbef46d7d1d9ff3.zip.extracted.json",
@@ -1553,10 +1553,12 @@
       "operating_cash_flow_ytd": 2296007,
       "investing_cash_flow_ytd": -313269,
       "capital_expenditure_ytd": -313269,
-      "cashflow_period_basis": "quarterly_reported",
+      "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
         "admin_expense",
         "cash_and_equivalents",
+        "cash_beginning",
+        "cash_ending",
         "cashflow_period_basis",
         "cost_of_goods_sold",
         "current_assets",
@@ -1565,7 +1567,9 @@
         "equity",
         "financial_expense",
         "financial_income",
+        "financing_cash_flow_ytd",
         "fixed_assets",
+        "foreign_exchange_effect_ytd",
         "gross_profit",
         "income_tax",
         "income_tax_current",
@@ -1573,6 +1577,7 @@
         "interest_expense",
         "inventory",
         "long_term_liabilities",
+        "net_cash_change_ytd",
         "net_profit",
         "net_profit_attributable",
         "non_current_assets",
@@ -1588,16 +1593,18 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-24T20:35:57+00:00",
+      "financial_line_items_schema_updated_at": "2026-10-25T09:54:22+00:00",
       "financial_line_items_source": "reports/raw/IDC/auto-idc-20261021/ecbef46d7d1d9ff3.zip",
-      "financial_line_items_updated_at": "2026-10-24T20:35:57+00:00",
+      "financial_line_items_updated_at": "2026-10-25T09:54:22+00:00",
       "operating_cash_flow": 2296007,
       "operating_cash_flow_calculation": "reported as standalone quarter",
       "investing_cash_flow": -313269,
       "investing_cash_flow_calculation": "reported as standalone quarter",
       "capital_expenditure": -313269,
       "capital_expenditure_calculation": "reported as standalone quarter",
-      "financial_line_items_prior_values": {},
+      "financial_line_items_prior_values": {
+        "net_profit_attributable": 432485
+      },
       "financial_line_items_rejected_values": {
         "net_profit_attributable": {
           "value": 26,
@@ -1615,7 +1622,19 @@
       "current_assets": 6040235,
       "income_tax_deferred": -21177,
       "financing_cash_flow": null,
-      "net_cash_change": null
+      "net_cash_change": null,
+      "financial_line_items_value_corrections": {
+        "net_profit_attributable": {
+          "previous_value": 432485,
+          "new_value": 26,
+          "reason": "reparsed with corrected VND unit scale after detecting an OCR-corrupted statement unit header"
+        }
+      },
+      "financing_cash_flow_ytd": 1194577,
+      "net_cash_change_ytd": -323408,
+      "cash_beginning": 1333593,
+      "cash_ending": 1010417,
+      "foreign_exchange_effect_ytd": 233
     }
   ],
   "sync_status": "records_found",
