@@ -1,13 +1,12 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-25T21:09:39Z",
+  "updatedAt": "2026-10-25T21:11:08Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
   "quarterRetentionTarget": 12,
   "completedSymbols": [
     "TCX",
-    "VCK",
     "NVL",
     "BSR",
     "VHM",
@@ -40,44 +39,40 @@
     "VCI"
   ],
   "lastCompletedSymbol": "VCI",
-  "activeSymbol": null,
+  "activeSymbol": "VCK",
   "resumeSymbolHint": "VCK",
-  "resumeRule": "Read reports/session-resume.md and reports/processing-checkpoint.json first. Load only the current ticker snapshot and that ticker's reports/raw sidecars; skip unconfirmed periods marked terminal for manual review. Future quarters beyond a ticker's skip-through period automatically re-open its queue.",
+  "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
-    "symbol": "VCI",
-    "status": "terminal_needs_manual_review",
-    "completeForAutomation": true,
+    "symbol": "VCK",
+    "status": "in_progress",
+    "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-25T21:09:06Z",
-    "workflowRunId": null,
-    "workflowRunNumber": null,
-    "workflowRunUrl": null,
+    "processedAt": "2026-10-25T21:11:08Z",
+    "workflowRunId": "40234049778",
+    "workflowRunNumber": 1593,
+    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/40234049778",
     "changedPaths": [
-      "data/financials-VCI.json"
+      "data/financials-VCK.json",
+      "reports/raw/VCK/auto-vck-20261021/1a4bc7a4a1c431c7.pdf.extracted.json",
+      "reports/raw/VCK/auto-vck-20261021/216190297d90a38c.pdf.extracted.json"
     ],
-    "periodCount": 11,
-    "firstQuarter": "2024-Q1",
+    "periodCount": 7,
+    "firstQuarter": "2025-Q1",
     "lastQuarter": "2026-Q3",
     "pendingCorePeriods": [],
     "terminalManualReviewPeriods": [
-      "2024-Q1",
-      "2024-Q2",
-      "2024-Q3",
-      "2024-Q4",
       "2025-Q1",
       "2025-Q2",
       "2025-Q3",
       "2025-Q4",
-      "2026-Q1",
       "2026-Q2",
       "2026-Q3"
     ],
     "pendingDetailPeriods": [],
     "staleDetailSchemaPeriods": [],
     "statementPagesPending": true,
-    "skipUnconfirmedAutomation": true,
-    "skipUnconfirmedThroughPeriod": "2026-Q3",
-    "skipUnconfirmedReason": "User-directed skip of unconfirmed historical values. Q2/2024 has an explicit VietstockFinance consolidation-scope blocker; values stay blank. Resume automatic processing when a quarter later than 2026-Q3 is present."
+    "skipUnconfirmedAutomation": false,
+    "skipUnconfirmedReason": null
   },
   "symbolStates": {
     "MBB": {
@@ -348,8 +343,8 @@
       "skipUnconfirmedThroughPeriod": "2026-Q3"
     },
     "VCK": {
-      "status": "automated_processing_complete",
-      "completeForAutomation": true,
+      "status": "in_progress",
+      "completeForAutomation": false,
       "manualReviewRemaining": true,
       "periodCount": 7,
       "firstQuarter": "2025-Q1",
@@ -360,27 +355,17 @@
         "2025-Q2",
         "2025-Q3",
         "2025-Q4",
-        "2026-Q1",
         "2026-Q2",
         "2026-Q3"
       ],
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
-      "statementPagesPending": false,
-      "sourceArchivesChecked": 0,
-      "updatedAt": "2026-10-23T10:33:05.766Z",
-      "snapshotFetchedAt": "2026-10-23T09:35:23.748Z",
-      "startPeriod": "2025-Q1",
-      "note": "2024 VPSS/OTC reports are excluded from VCK active series. The seven periods from 2025-Q1 onward are closed for automatic extraction because the linked reports do not yet establish consolidated scope; numeric values remain held for manual review.",
-      "coverageStart": "2025-Q1",
-      "coverageEnd": "2026-Q3",
-      "excludedPeriods": [
-        "2024-Q1",
-        "2024-Q2",
-        "2024-Q3",
-        "2024-Q4"
-      ],
-      "coverageReason": "Company started listing in 2025; 2024 reporting periods are not expected for this dashboard according to the user."
+      "statementPagesPending": true,
+      "skipUnconfirmedAutomation": false,
+      "skipUnconfirmedReason": null,
+      "sourceArchivesChecked": 1,
+      "updatedAt": "2026-10-25T21:11:08Z",
+      "snapshotFetchedAt": "2026-10-23T09:38:19.594Z"
     },
     "VIX": {
       "status": "automated_processing_complete",
@@ -708,16 +693,6 @@
     }
   },
   "progressHistory": [
-    {
-      "symbol": "TCB",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-10-25T19:52:09Z",
-      "workflowRunId": "40228023824",
-      "changedPaths": [
-        "data/financials-TCB.json"
-      ]
-    },
     {
       "symbol": "TCB",
       "status": "in_progress",
@@ -1222,6 +1197,18 @@
       "changedPaths": [
         "data/financials-VCI.json",
         "reports/processing-checkpoint.json"
+      ]
+    },
+    {
+      "symbol": "VCK",
+      "status": "in_progress",
+      "completeForAutomation": false,
+      "processedAt": "2026-10-25T21:11:08Z",
+      "workflowRunId": "40234049778",
+      "changedPaths": [
+        "data/financials-VCK.json",
+        "reports/raw/VCK/auto-vck-20261021/1a4bc7a4a1c431c7.pdf.extracted.json",
+        "reports/raw/VCK/auto-vck-20261021/216190297d90a38c.pdf.extracted.json"
       ]
     }
   ],
