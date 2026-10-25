@@ -66,7 +66,7 @@ jobs:
         id: pick
         env:
           REQUESTED_SYMBOL: ${{ github.event.inputs.symbol || '' }}
-          TARGET_MAX_PAGES: ${{ github.event.inputs.max_pages || '14' }}
+          TARGET_MAX_PAGES: ${{ github.event.inputs.max_pages || (github.event_name == 'push' && '18') || '14' }}
           TARGET_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || '' }}
         shell: bash
         run: |
@@ -387,7 +387,7 @@ jobs:
         id: ocr_preflight
         env:
           REPORT_OCR_SYMBOL: ${{ needs['select-ticker'].outputs.symbol }}
-          REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || '14' }}
+          REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || (github.event_name == 'push' && '18') || '14' }}
           REPORT_OCR_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || '' }}
         shell: bash
         run: |
@@ -517,7 +517,7 @@ jobs:
         id: run_ocr
         env:
           REPORT_OCR_SYMBOL: ${{ needs['select-ticker'].outputs.symbol }}
-          REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || '14' }}
+          REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || (github.event_name == 'push' && '18') || '14' }}
           REPORT_OCR_MAX_REPORTS: "2"
           REPORT_OCR_DPI: "240"
           REPORT_OCR_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || '' }}
@@ -538,7 +538,7 @@ jobs:
         id: save_selected_ticker
         env:
           REPORT_OCR_SYMBOL: ${{ needs['select-ticker'].outputs.symbol }}
-          REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || '14' }}
+          REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || (github.event_name == 'push' && '18') || '14' }}
           REPORT_OCR_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || '' }}
         shell: bash
         run: |
