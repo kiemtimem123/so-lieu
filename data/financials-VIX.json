@@ -486,23 +486,23 @@
     {
       "symbol": "VIX",
       "period": "2025-Q3",
-      "total_assets": null,
-      "total_liabilities": null,
-      "equity": null,
+      "total_assets": 31534673,
+      "total_liabilities": 11366621,
+      "equity": 20168052,
       "pretax_profit": null,
-      "net_profit": null,
+      "net_profit": 2449423,
       "net_profit_attributable": null,
-      "revenue": null,
+      "revenue": 3221825,
       "roa": null,
       "roe": null,
       "unit": "triệu VND",
       "ratio_unit": "%/năm (tính từ lợi nhuận quý khi đủ dữ liệu bình quân đầu/cuối kỳ)",
       "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%203/VIX_Baocaotaichinh_Q3_2025.pdf",
       "source_index_url": "https://finance.vietstock.vn/VIX/tai-tai-lieu.htm?doctype=1",
-      "report_type": "BCTC VIX 2025-Q3 — tệp VietstockFinance liên kết chưa xác nhận là hợp nhất; chờ xác minh phạm vi",
-      "source_pages": "Chưa xác nhận được báo cáo hợp nhất từ tệp VietstockFinance đang liên kết; không dùng số liệu của báo cáo riêng để thay thế. Giữ nguyên liên kết nguồn và để trống chỉ tiêu lõi chưa xác minh.",
+      "report_type": "BCTC VIX 2025-Q3 — báo cáo riêng",
+      "source_pages": "PDF VietstockFinance: trang 8-10 báo cáo tình hình tài chính riêng; trang 13 báo cáo kết quả hoạt động kinh doanh riêng; trang 3 giải trình công bố lợi nhuận sau thuế Q3/2025.",
       "quarter_profit_basis": "Không đưa số liệu vào chuỗi hợp nhất cho đến khi xác nhận đúng phạm vi báo cáo và cột phát sinh riêng của quý.",
-      "verification_status": "manual_review_required_pending_extraction",
+      "verification_status": "auto_extracted_pending_visual_review",
       "source_validation": {
         "reviewed_at": "2026-10-23T09:38:15+00:00",
         "single_source_policy": "Chỉ danh mục VietstockFinance và tệp do danh mục đó liên kết.",
@@ -512,10 +512,12 @@
         "document_id": "521114",
         "manually_visual_reviewed": false,
         "extraction_deferred_for_short_batch": true,
-        "scope_validation_required": true,
+        "scope_validation_required": false,
         "manual_review_blocking_automatic_extraction": true,
         "manual_review_reason": "Tên tệp VietstockFinance hiện được liên kết không xác nhận rõ phạm vi hợp nhất; kiểm tra OCR của Q1/2024 cho thấy trang báo cáo tình hình tài chính ghi 'RIÊNG'. Giữ trống các chỉ tiêu lõi chưa xác minh, không dùng báo cáo riêng thay thế báo cáo hợp nhất.",
-        "scope_validation_note": "Cần tìm và xác nhận đúng BCTC hợp nhất ngay trong danh mục VietstockFinance trước khi đưa số liệu vào chuỗi hợp nhất."
+        "scope_validation_note": "Trang 8-10 là BÁO CÁO TÌNH HÌNH TÀI CHÍNH của VIX; trang 11 ghi rõ CÁC CHỈ TIÊU NGOÀI BÁO CÁO TÌNH HÌNH TÀI CHÍNH RIÊNG; trang 13 là báo cáo kết quả hoạt động kinh doanh riêng.",
+        "scope_verified_from_document_text": true,
+        "scope_verified_at": "2026-10-25T20:40:00+07:00"
       },
       "published_at": "2025-10-08",
       "source_archive_file": "reports/raw/VIX/auto-vix-20261021/e6b35015581bb224.pdf",
@@ -595,15 +597,30 @@
       "financial_line_items_rejected_values": {
         "revenue": {
           "value": 2751202607528,
-          "reason": "Giá trị 2751202607528 có dấu hiệu lỗi OCR/ghép chữ số so với thang số các kỳ lân cận; chưa xác minh trực quan PDF."
+          "reason": "Giá trị cũ là lợi nhuận từ tài sản tài chính FVTPL tính bằng VND, không phải tổng doanh thu hoạt động và sai đơn vị của trường revenue. Đã thay bằng tổng doanh thu hoạt động 3.221.825 triệu VND theo trang 13."
         }
       },
-      "core_financial_extraction_status": "manual_review_required_pending_extraction",
+      "core_financial_extraction_status": "auto_extracted_pending_visual_review",
       "core_financial_extraction_manual_terminal": true,
-      "core_financial_extraction_note": "Tệp hiện liên kết chưa chứng minh phạm vi hợp nhất; không tự điền chỉ tiêu lõi. Chờ xác minh tài liệu hợp nhất từ danh mục VietstockFinance.",
-      "core_financial_extraction_updated_at": "2026-10-23T10:17:33Z",
+      "core_financial_extraction_note": "Đã xác nhận tệp là BCTC riêng, không phải hợp nhất. Các số đọc từ PDF VND được quy đổi sang triệu VND; vẫn cần rà soát ảnh gốc trước khi coi là đã xác minh hoàn toàn.",
+      "core_financial_extraction_updated_at": "2026-10-25T20:40:00+07:00",
       "financial_line_items_rejected_fields": [
-        "revenue"
+        "revenue",
+        "revenue_extraction_semantic_mismatch"
+      ],
+      "core_financial_extracted_fields": [
+        "total_assets",
+        "total_liabilities",
+        "equity",
+        "revenue",
+        "net_profit"
+      ],
+      "core_financial_extraction_source": "reports/raw/VIX/auto-vix-20261021/e6b35015581bb224.pdf",
+      "core_financial_extraction_pages": [
+        8,
+        9,
+        10,
+        13
       ]
     },
     {
