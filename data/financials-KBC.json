@@ -275,7 +275,7 @@
         "short_term_receivables_magnitude"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-25T05:37:22+00:00",
-      "financial_line_items_note": "Đã sửa đơn vị và lấy chỉ tiêu riêng quý IV; lãi vay riêng không được giữ do OCR không tin cậy. Dòng tiền cần tái đối chiếu riêng. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
+      "financial_line_items_note": "Đã sửa đơn vị và lấy chỉ tiêu riêng quý IV; lãi vay riêng không được giữ do OCR không tin cậy. Dòng tiền cần tái đối chiếu riêng. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý.",
       "short_term_receivables": 11547148,
       "non_current_assets": 10426700,
       "current_liabilities": 7403883,
@@ -289,11 +289,9 @@
       "financing_cash_flow_ytd": 6379563.615,
       "capital_expenditure_ytd": null,
       "net_cash_change_ytd": 5724731.707,
-      "cash_beginning": 7652229.856,
       "cashflow_period_basis": "quarterly_reported",
       "financial_line_items_extracted_fields": [
         "capital_expenditure_ytd",
-        "cash_beginning",
         "cashflow_period_basis",
         "current_liabilities",
         "financial_expense",
@@ -311,16 +309,18 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-25T05:37:22+00:00",
+      "financial_line_items_schema_updated_at": "2026-10-25T05:38:08+00:00",
       "financial_line_items_source": "reports/raw/KBC/auto-kbc-20261021/13f70b708b575b20.pdf",
-      "financial_line_items_updated_at": "2026-10-25T05:37:22+00:00",
+      "financial_line_items_updated_at": "2026-10-25T05:38:08+00:00",
       "financing_cash_flow": 4090473.263,
       "financing_cash_flow_calculation": "reported as standalone quarter",
       "capital_expenditure": null,
       "capital_expenditure_calculation": "reported as standalone quarter",
       "net_cash_change": -1086193.692,
       "net_cash_change_calculation": "reported as standalone quarter",
-      "financial_line_items_prior_values": {},
+      "financial_line_items_prior_values": {
+        "cash_beginning": 7652229.856
+      },
       "financial_line_items_rejected_values": {},
       "income_tax": 101035,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
@@ -349,12 +349,19 @@
       "ratio_calculation_note": "ROA/ROE annualized from standalone quarter net profit and average balances. OCR-based, not visually verified.",
       "cash_beginning_ytd": 841304.458,
       "cashflow_unit_audit_status": "reconciled_from_saved_ocr_text_not_visual",
-      "financial_line_items_cash_check": "quarter_flow_sum_difference_million_vnd=0.001; cash_bridge_difference_million_vnd=-0.011",
+      "financial_line_items_cash_check": "opening/closing cash hidden because the cash bridge did not reconcile",
       "cashflow_source_file": "reports/raw/KBC/auto-kbc-20261021/13f70b708b575b20.pdf",
       "cashflow_source_unit": "VND",
       "cashflow_conversion_note": "Source cash flow table in VND; YTD flows converted to million VND; standalone quarters derived by difference between cumulative report periods where available. OCR text not visually verified.",
       "capital_expenditure_audit_note": "Tạm để trống: dòng chi mua sắm TSCĐ trong OCR chưa được đối chiếu theo cột và cơ sở lũy kế; không dùng số chưa xác minh.",
-      "cashflow_ytd_basis": "year_to_date"
+      "cashflow_ytd_basis": "year_to_date",
+      "financial_line_items_value_corrections": {
+        "cash_beginning": {
+          "previous_value": 7652229.856,
+          "new_value": 5742,
+          "reason": "reparsed with corrected VND unit scale after detecting an OCR-corrupted statement unit header"
+        }
+      }
     },
     {
       "symbol": "KBC",
@@ -1017,7 +1024,7 @@
         "total_liabilities": "total_assets minus reported equity; total sources matched total assets"
       },
       "current_assets": 55217134,
-      "cash_and_equivalents": 8386548,
+      "cash_and_equivalents": 8386,
       "short_term_investments": 1916936,
       "short_term_receivables": 17431129,
       "inventory": 26954820,
@@ -1055,15 +1062,17 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-25T05:37:25+00:00",
+      "financial_line_items_schema_updated_at": "2026-10-25T05:38:11+00:00",
       "financial_line_items_source": "reports/raw/KBC/auto-kbc-20261021/cc8416858d0b46fc.pdf",
-      "financial_line_items_updated_at": "2026-10-25T05:37:25+00:00",
+      "financial_line_items_updated_at": "2026-10-25T05:38:11+00:00",
       "financial_line_items_note": "Đã sửa các trường trộn đơn vị và khôi phục số lợi nhuận thuần quý IV thay vì số lũy kế. Trường dòng tiền để null tới khi tái đối chiếu trang lưu chuyển tiền tệ. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
       "financing_cash_flow": 1115197.707,
       "financing_cash_flow_calculation": "reported as standalone quarter",
       "net_cash_change": -1032030.073,
       "net_cash_change_calculation": "reported as standalone quarter",
-      "financial_line_items_prior_values": {},
+      "financial_line_items_prior_values": {
+        "cash_and_equivalents": 8386548
+      },
       "financial_line_items_rejected_values": {},
       "income_tax": 175934,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
@@ -1112,7 +1121,14 @@
       ],
       "capital_expenditure_audit_note": "Tạm để trống: dòng chi mua sắm TSCĐ trong OCR chưa được đối chiếu theo cột và cơ sở lũy kế; không dùng số chưa xác minh.",
       "cashflow_ytd_basis": "year_to_date",
-      "financial_line_items_rejected_updated_at": "2026-10-25T05:37:25+00:00"
+      "financial_line_items_rejected_updated_at": "2026-10-25T05:37:25+00:00",
+      "financial_line_items_value_corrections": {
+        "cash_and_equivalents": {
+          "previous_value": 8386548,
+          "new_value": 8386,
+          "reason": "reparsed with corrected VND unit scale after detecting an OCR-corrupted statement unit header"
+        }
+      }
     },
     {
       "symbol": "KBC",
@@ -1770,7 +1786,7 @@
       "core_financial_extraction_calculations": {
         "balance_totals_withheld": "asset/liability/equity totals did not fully reconcile"
       },
-      "short_term_receivables": 9573305,
+      "short_term_receivables": 471,
       "non_current_assets": 8530885,
       "fixed_assets": 431680,
       "current_liabilities": 6606427,
@@ -1809,12 +1825,13 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-25T05:37:28+00:00",
+      "financial_line_items_schema_updated_at": "2026-10-25T05:38:13+00:00",
       "financial_line_items_source": "reports/raw/KBC/auto-kbc-20261021/051ae68dfe5073dc.pdf",
-      "financial_line_items_updated_at": "2026-10-25T05:37:28+00:00",
+      "financial_line_items_updated_at": "2026-10-25T05:38:13+00:00",
       "financial_line_items_note": "Các giá trị cũ trộn đơn vị được thay bằng số OCR đã chuẩn hóa. Dòng chi phí riêng lẻ còn có thể sai lệch cột; tiếp tục rà soát. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
       "financial_line_items_prior_values": {
-        "income_tax": -47127
+        "income_tax": -47127,
+        "short_term_receivables": 9573305
       },
       "financial_line_items_rejected_values": {},
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
@@ -1849,7 +1866,14 @@
         "capital_expenditure"
       ],
       "capital_expenditure_audit_note": "Tạm để trống: dòng chi mua sắm TSCĐ trong OCR chưa được đối chiếu theo cột và cơ sở lũy kế; không dùng số chưa xác minh.",
-      "cashflow_ytd_basis": "year_to_date"
+      "cashflow_ytd_basis": "year_to_date",
+      "financial_line_items_value_corrections": {
+        "short_term_receivables": {
+          "previous_value": 9573305,
+          "new_value": 471,
+          "reason": "reparsed with corrected VND unit scale after detecting an OCR-corrupted statement unit header"
+        }
+      }
     },
     {
       "symbol": "KBC",
