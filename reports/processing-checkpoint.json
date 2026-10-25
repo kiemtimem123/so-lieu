@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-26T03:12:00+07:00",
+  "updatedAt": "2026-10-25T20:13:20Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -36,28 +36,24 @@
     "IDC",
     "KBC",
     "GEG",
-    "VIX"
+    "VIX",
+    "TCB"
   ],
   "lastCompletedSymbol": "TCB",
-  "activeSymbol": "TCB",
-  "resumeSymbolHint": "TCB",
+  "activeSymbol": null,
+  "resumeSymbolHint": "VHM",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "TCB",
-    "status": "in_progress",
-    "completeForAutomation": false,
+    "status": "automated_processing_complete",
+    "completeForAutomation": true,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-26T03:12:00+07:00",
-    "workflowRunId": "40229605032",
-    "workflowRunNumber": 1562,
-    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/40229605032",
+    "processedAt": "2026-10-25T20:13:20Z",
+    "workflowRunId": "40229674706",
+    "workflowRunNumber": 1563,
+    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/40229674706",
     "changedPaths": [
-      "data/financials-TCB.json",
-      "reports/processing-checkpoint.json",
-      "scripts/enrich-financial-categories.py",
-      ".github/workflows/ocr-financial-reports.yml",
-      "scripts/update-report-checkpoint.py",
-      "scripts/validate-bank-reconciliation.py"
+      "data/financials-TCB.json"
     ],
     "periodCount": 11,
     "firstQuarter": "2024-Q1",
@@ -66,9 +62,7 @@
     "terminalManualReviewPeriods": [],
     "pendingDetailPeriods": [],
     "staleDetailSchemaPeriods": [],
-    "statementPagesPending": false,
-    "coreVerification": "verified_ocr_reconciled",
-    "note": "Rerun TCB after fixing cash-flow OCR reconciliation and align workflow/checkpoint schema gates to v5."
+    "statementPagesPending": false
   },
   "symbolStates": {
     "MBB": {
@@ -638,8 +632,8 @@
       "snapshotFetchedAt": "2026-10-19T16:47:07.375Z"
     },
     "TCB": {
-      "status": "in_progress",
-      "completeForAutomation": false,
+      "status": "automated_processing_complete",
+      "completeForAutomation": true,
       "manualReviewRemaining": true,
       "periodCount": 11,
       "firstQuarter": "2024-Q1",
@@ -650,9 +644,8 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 11,
-      "updatedAt": "2026-10-26T03:12:00+07:00",
-      "snapshotFetchedAt": "2026-10-22T05:57:26+00:00",
-      "note": "Reprocessing TCB with the fixed cash-flow reconciliation; selector and checkpoint helper now share schema v5."
+      "updatedAt": "2026-10-25T20:13:20Z",
+      "snapshotFetchedAt": "2026-10-22T05:57:26+00:00"
     },
     "VHM": {
       "status": "automated_processing_complete",
@@ -672,26 +665,6 @@
     }
   },
   "progressHistory": [
-    {
-      "symbol": "TCB",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-10-25T19:30:39Z",
-      "workflowRunId": "40226310389",
-      "changedPaths": [
-        "data/financials-TCB.json"
-      ]
-    },
-    {
-      "symbol": "TCB",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-10-25T19:31:27Z",
-      "workflowRunId": "40226386309",
-      "changedPaths": [
-        "data/financials-TCB.json"
-      ]
-    },
     {
       "symbol": "TCB",
       "status": "in_progress",
@@ -1190,6 +1163,16 @@
       "firstQuarter": "2024-Q1",
       "lastQuarter": "2026-Q3",
       "note": "Fix Q1 net-investing-flow vs capex and stop repeated stale-schema selection."
+    },
+    {
+      "symbol": "TCB",
+      "status": "automated_processing_complete",
+      "completeForAutomation": true,
+      "processedAt": "2026-10-25T20:13:20Z",
+      "workflowRunId": "40229674706",
+      "changedPaths": [
+        "data/financials-TCB.json"
+      ]
     }
   ],
   "currentRun": {
