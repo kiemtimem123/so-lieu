@@ -501,13 +501,13 @@
       "published_at": "2024-10-22",
       "publication_date_basis": "Ngày cập nhật tài liệu trên danh mục VietstockFinance (API /data/getdocument).",
       "report_type": "BCTC SHS theo mẫu báo cáo công ty chứng khoán (CTCK); Vietstock không ghi nhãn hợp nhất/riêng lẻ cho tệp này.",
-      "source_pages": "Bảng cân đối: PDF trong ZIP trang 2–4; KQKD Q3/2024 đối chiếu cột so sánh trong BCTC Q3/2025 trang 10–11.",
+      "source_pages": "Bảng cân đối: PDF trong ZIP trang 2–4; KQKD Q3/2024 đối chiếu cột so sánh trong BCTC Q3/2025 trang 10–11. Doanh thu hoạt động quý III/2024 lấy từ cột so sánh “Quý III năm trước” trên B02-CTCK trang 10–11 của BCTC Q3/2025: 276.103.690.675 VND. Đơn vị lưu triệu VND, làm tròn gần nhất; chưa kiểm tra trực quan ảnh PDF.",
       "quarter_profit_basis": "Lấy số phát sinh riêng của quý; khi báo cáo có số lũy kế, kiểm tra chéo bằng số lũy kế hiện tại trừ số lũy kế của kỳ quý trước.",
       "roa_formula": "Lợi nhuận sau thuế quý / bình quân tổng tài sản đầu và cuối quý × 4 × 100",
       "roe_formula": "Lợi nhuận sau thuế quý / bình quân vốn chủ sở hữu đầu và cuối quý × 4 × 100",
       "average_total_assets": 12590633,
       "average_equity": 11003961.5,
-      "verification_status": "verified_ocr_reconciled",
+      "verification_status": "ocr_reconciled_pending_visual_review",
       "reconciliation": {
         "assets_minus_liabilities_equity_vnd": 0,
         "assets_minus_liabilities_equity": 0,
@@ -643,7 +643,8 @@
         "long_term_liabilities",
         "non_current_assets",
         "operating_cash_flow_ytd",
-        "retained_earnings"
+        "retained_earnings",
+        "revenue"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/e6d456f3b0aa85a5.zip",
@@ -654,8 +655,15 @@
       "foreign_exchange_effect_ytd": 989144,
       "foreign_exchange_effect": 17405,
       "foreign_exchange_effect_calculation": "current YTD minus previous quarter YTD",
-      "financial_line_items_prior_values": {},
-      "financial_line_items_rejected_values": {},
+      "financial_line_items_prior_values": {
+        "revenue": null
+      },
+      "financial_line_items_rejected_values": {
+        "revenue": {
+          "prior_value": null,
+          "reason": "Trường doanh thu chưa có giá trị; bổ sung theo cột so sánh Quý III năm trước trên B02-CTCK trong BCTC Q3/2025 do VietstockFinance liên kết."
+        }
+      },
       "income_tax": 5056,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
       "broker_fvtpl_assets": 0,
@@ -683,7 +691,14 @@
       "investing_cash_flow_ytd": -5707,
       "cash_ending": 440474,
       "operating_cash_flow": -1977421,
-      "operating_cash_flow_calculation": "current YTD minus previous quarter YTD"
+      "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "revenue": 276104,
+      "core_financial_extracted_fields": [
+        "revenue"
+      ],
+      "verification_status_note": "Doanh thu quý III/2024 đối chiếu với cột so sánh trên B02-CTCK trong báo cáo quý III/2025; vẫn cần kiểm tra trực quan PDF.",
+      "core_financial_extraction_note": "Bổ sung doanh thu hoạt động quý III/2024 từ cột so sánh của BCTC Q3/2025 do VietstockFinance liên kết.",
+      "core_financial_extraction_updated_at": "2026-10-25T15:34:22.455Z"
     },
     {
       "symbol": "SHS",
