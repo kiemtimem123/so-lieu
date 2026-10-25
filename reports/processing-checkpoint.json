@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-25T09:43:47Z",
+  "updatedAt": "2026-10-25T09:46:11Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -11,7 +11,6 @@
     "VCK",
     "VIX",
     "NVL",
-    "PLX",
     "IDC",
     "GEG",
     "BSR",
@@ -40,22 +39,22 @@
     "DPG"
   ],
   "lastCompletedSymbol": "DPG",
-  "activeSymbol": null,
-  "resumeSymbolHint": "GAS",
+  "activeSymbol": "PLX",
+  "resumeSymbolHint": "PLX",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
-    "symbol": "DPG",
-    "status": "automated_processing_complete",
-    "completeForAutomation": true,
+    "symbol": "PLX",
+    "status": "in_progress",
+    "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-25T09:43:47Z",
-    "workflowRunId": "40181717864",
-    "workflowRunNumber": 1401,
-    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/40181717864",
+    "processedAt": "2026-10-25T09:46:11Z",
+    "workflowRunId": "40181861177",
+    "workflowRunNumber": 1402,
+    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/40181861177",
     "changedPaths": [
-      "data/financials-DPG.json",
-      "reports/raw/DPG/auto-dpg-20261021/7f4aca59275675d3.pdf.extracted.json",
-      "reports/raw/DPG/auto-dpg-20261021/cebeec54de24c812.pdf.extracted.json"
+      "data/financials-PLX.json",
+      "reports/raw/PLX/auto-plx-20261021/01400b120484d2c7.pdf.extracted.json",
+      "reports/raw/PLX/auto-plx-20261021/1cf87f21b5f884ad.pdf.extracted.json"
     ],
     "periodCount": 10,
     "firstQuarter": "2024-Q1",
@@ -64,7 +63,7 @@
     "terminalManualReviewPeriods": [],
     "pendingDetailPeriods": [],
     "staleDetailSchemaPeriods": [],
-    "statementPagesPending": false
+    "statementPagesPending": true
   },
   "symbolStates": {
     "MBB": {
@@ -525,83 +524,20 @@
       "snapshotFetchedAt": "2026-10-23T18:00:37+00:00"
     },
     "PLX": {
-      "status": "processing_pass_reconciled_manual_visual_flags_preserved",
-      "completeForAutomation": true,
+      "status": "in_progress",
+      "completeForAutomation": false,
       "manualReviewRemaining": true,
       "periodCount": 10,
       "firstQuarter": "2024-Q1",
       "lastQuarter": "2026-Q2",
       "pendingCorePeriods": [],
-      "terminalManualReviewPeriods": [
-        "2024-Q1",
-        "2024-Q2",
-        "2024-Q3",
-        "2024-Q4",
-        "2025-Q1",
-        "2025-Q2",
-        "2025-Q3",
-        "2025-Q4",
-        "2026-Q1",
-        "2026-Q2"
-      ],
+      "terminalManualReviewPeriods": [],
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
-      "statementPagesPending": false,
-      "sourceArchivesChecked": 4,
-      "updatedAt": "2026-10-25T22:45:00Z",
-      "snapshotFetchedAt": "2026-10-23T18:24:32+00:00",
-      "latestManualProgress": {
-        "updatedFile": "data/financials-PLX.json",
-        "commit": "1a8c805924175ceeeff4e7f00d2ddd9ef768a8",
-        "periodsTouched": [
-          "2024-Q1",
-          "2024-Q2",
-          "2024-Q3",
-          "2024-Q4",
-          "2025-Q1",
-          "2025-Q2",
-          "2025-Q3",
-          "2025-Q4",
-          "2026-Q1",
-          "2026-Q2"
-        ],
-        "note": "Hoàn tất lượt kiểm tra PLX bằng OCR lưu trữ và đối chiếu số học: đã xác minh trực quan Q2/2025 trang 5 từ ảnh người dùng; khôi phục COGS Q4/2025 theo doanh thu−lợi nhuận gộp; khôi phục doanh thu, COGS, lợi nhuận gộp, LNTT Q2/2026 từ OCR/chênh lệch YTD với Q1, vẫn để LNST và chi phí mơ hồ null; chuẩn hóa dòng tiền theo quý từ YTD; sửa EPS bị gán nhầm mã số 70; sửa thuế để khớp phương trình LNTT−thuế=LNST. Các kiểm tra tĩnh đạt trên những trường có đủ dữ liệu. Giữ cờ xác minh ảnh ở các kỳ OCR mơ hồ; người dùng hết hạn mức tải ảnh."
-      },
-      "cashflowAudit": {
-        "status": "quarterly_values_reconciled_from_ytd_reports",
-        "updatedAt": "2026-10-25T20:50:00Z",
-        "periodsProcessed": [
-          "2024-Q1",
-          "2024-Q2",
-          "2024-Q3",
-          "2024-Q4",
-          "2025-Q1",
-          "2025-Q2",
-          "2025-Q3",
-          "2025-Q4",
-          "2026-Q1"
-        ],
-        "method": "cashflow quarters after Q1 computed as current YTD minus prior-quarter YTD; Q1 uses reported YTD; ending cash and FX bridges checked where source numbers were available.",
-        "qualityChecks": {
-          "balanceSheetEquation": "passed all 10 PLX periods",
-          "revenueLessCostEqualsGrossProfit": "passed all periods with all three values populated (rounding tolerance <= 1 million VND)",
-          "quarterlyCashFlowComponentsSumToNetChange": "passed all periods with reported quarterly components (rounding tolerance <= 1 million VND)",
-          "quarterlyCashBalanceBridge": "passed all periods with opening, net change, FX, and ending cash populated (rounding tolerance <= 1 million VND)"
-        },
-        "exceptions": [
-          "2025-Q3 and 2025-Q4 standalone capex are null because Q3 source OCR line is truncated/ambiguous; Q4 YTD capex retained from annual report.",
-          "2026-Q1 opening cash balance as reported by its own PDF (7,588,239,730,231 VND) differs from Q4/2025 reported closing cash (10,803,153,849,383 VND); source value retained and flagged, not forcibly reconciled.",
-          "2026-Q2 cashflow page OCR is unreadable; cash flow amounts remain null. Income statement net profit/tax/detail items also remain null where column alignment is not reliable."
-        ]
-      },
-      "qualityChecks": {
-        "checkedAt": "2026-10-25T22:00:00Z",
-        "sourceFile": "data/financials-PLX.json",
-        "checkedBlobSha": "c7f5fdcb71450dd4d241d73715218c42cfa4f8b3",
-        "checkCount": 46,
-        "failures": 0,
-        "summary": "46 checks passed on available values: balance sheet, gross-profit, tax/net-profit, cashflow sums and cash balance bridge. Manual visual-review flags remain."
-      }
+      "statementPagesPending": true,
+      "sourceArchivesChecked": 2,
+      "updatedAt": "2026-10-25T09:46:11Z",
+      "snapshotFetchedAt": "2026-10-25T21:25:00Z"
     },
     "IDC": {
       "status": "automated_processing_complete",
@@ -737,18 +673,6 @@
     }
   },
   "progressHistory": [
-    {
-      "symbol": "TPB",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-10-25T08:16:05Z",
-      "workflowRunId": "40175865272",
-      "changedPaths": [
-        "data/financials-TPB.json",
-        "reports/raw/TPB/auto-tpb-20261021/3849167a56b8ea2a.pdf.extracted.json",
-        "reports/raw/TPB/auto-tpb-20261021/b30bb9d09e613f27.pdf.extracted.json"
-      ]
-    },
     {
       "symbol": "TPB",
       "status": "in_progress",
@@ -1334,6 +1258,18 @@
         "data/financials-DPG.json",
         "reports/raw/DPG/auto-dpg-20261021/7f4aca59275675d3.pdf.extracted.json",
         "reports/raw/DPG/auto-dpg-20261021/cebeec54de24c812.pdf.extracted.json"
+      ]
+    },
+    {
+      "symbol": "PLX",
+      "status": "in_progress",
+      "completeForAutomation": false,
+      "processedAt": "2026-10-25T09:46:11Z",
+      "workflowRunId": "40181861177",
+      "changedPaths": [
+        "data/financials-PLX.json",
+        "reports/raw/PLX/auto-plx-20261021/01400b120484d2c7.pdf.extracted.json",
+        "reports/raw/PLX/auto-plx-20261021/1cf87f21b5f884ad.pdf.extracted.json"
       ]
     }
   ],
