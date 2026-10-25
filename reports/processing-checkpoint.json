@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-25T05:45:00Z",
+  "updatedAt": "2026-10-25T05:37:29Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -44,9 +44,24 @@
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "KBC",
-    "status": "cashflow_audit_two_exceptions_preserved_q1_2024_page_missing",
-    "updatedAt": "2026-10-25T05:45:00Z",
-    "nextAction": "Tìm cách OCR/trích xuất trang lưu chuyển tiền tệ Q1/2024 từ PDF VietstockFinance đã lưu; xác minh trực quan chênh lệch tiền đầu kỳ Q1/2026 và sai lệch tổng lưu chuyển Q3/2026 trước khi đóng KBC."
+    "status": "in_progress",
+    "completeForAutomation": false,
+    "manualReviewRemaining": true,
+    "processedAt": "2026-10-25T05:37:29Z",
+    "workflowRunId": "40166181378",
+    "workflowRunNumber": 1229,
+    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/40166181378",
+    "changedPaths": [
+      "data/financials-KBC.json"
+    ],
+    "periodCount": 11,
+    "firstQuarter": "2024-Q1",
+    "lastQuarter": "2026-Q3",
+    "pendingCorePeriods": [],
+    "terminalManualReviewPeriods": [],
+    "pendingDetailPeriods": [],
+    "staleDetailSchemaPeriods": [],
+    "statementPagesPending": true
   },
   "symbolStates": {
     "MBB": {
@@ -602,26 +617,20 @@
       "snapshotFetchedAt": "2026-10-25T23:45:00Z"
     },
     "KBC": {
-      "status": "in_progress_manual_cashflow_review",
+      "status": "in_progress",
       "completeForAutomation": false,
       "manualReviewRemaining": true,
       "periodCount": 11,
       "firstQuarter": "2024-Q1",
       "lastQuarter": "2026-Q3",
       "pendingCorePeriods": [],
-      "terminalManualReviewPeriods": [
-        "2024-Q1",
-        "2024-Q2",
-        "2026-Q1",
-        "2026-Q3"
-      ],
+      "terminalManualReviewPeriods": [],
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": true,
-      "sourceArchivesChecked": 11,
-      "updatedAt": "2026-10-25T05:45:00Z",
-      "snapshotFetchedAt": "2026-10-23T20:04:29+00:00",
-      "note": "Đã đọc OCR sidecar của Q4/2025, Q1/2026, Q3/2026. Q1/2026: báo cáo Q4/2025 ghi tiền cuối kỳ 8.386.548,063 triệu VND, báo cáo Q1/2026 ghi tiền đầu kỳ 8.368.534,552 triệu VND; chênh 18.013,511 triệu VND, giữ nguyên hai số theo từng báo cáo và gắn cờ kiểm tra. Q3/2026: tiền cuối kỳ chuẩn hóa 5.144.490,879 triệu VND; biến động tiền khớp số dư đầu/cuối nhưng CFO+CFI+CFF lũy kế lệch chỉ tiêu biến động tiền 2.999,999 triệu VND; không tự suy đoán dòng sai. Q1/2024 sidecar OCR hiện chỉ có trang đến KQKD, chưa có trang lưu chuyển tiền tệ; Q2/2024 chỉ có YTD nên chưa tạo số riêng quý. KBC chưa hoàn tất và không chuyển mã tiếp theo cho đến khi giải quyết các trang/ngoại lệ."
+      "sourceArchivesChecked": 1,
+      "updatedAt": "2026-10-25T05:37:29Z",
+      "snapshotFetchedAt": "2026-10-25T09:45:00Z"
     },
     "GEG": {
       "status": "automated_processing_complete",
@@ -723,18 +732,6 @@
     }
   },
   "progressHistory": [
-    {
-      "symbol": "DPG",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-10-23T17:36:15Z",
-      "workflowRunId": "39995897239",
-      "changedPaths": [
-        "data/financials-DPG.json",
-        "reports/raw/DPG/auto-dpg-20261021/21f3661caf47da6f.pdf.extracted.json",
-        "reports/raw/DPG/auto-dpg-20261021/dfb396fb770d9d4a.pdf.extracted.json"
-      ]
-    },
     {
       "symbol": "DPG",
       "status": "in_progress",
@@ -1263,6 +1260,16 @@
       "workflowRunId": "40130430823",
       "changedPaths": [
         "data/financials-IDC.json"
+      ]
+    },
+    {
+      "symbol": "KBC",
+      "status": "in_progress",
+      "completeForAutomation": false,
+      "processedAt": "2026-10-25T05:37:29Z",
+      "workflowRunId": "40166181378",
+      "changedPaths": [
+        "data/financials-KBC.json"
       ]
     }
   ],
