@@ -1589,7 +1589,10 @@
           "stored_roa_matches": true,
           "stored_roe_matches": true,
           "pretax_cumulative_reconciliation": true,
-          "net_profit_cumulative_reconciliation": true
+          "net_profit_cumulative_reconciliation": true,
+          "revenue_quarter_value_confirmed_from_report_table": true,
+          "revenue_quarter_million_vnd": 14242123,
+          "revenue_ytd_million_vnd": 38596352
         },
         "note": "Đã xem trực tiếp PDF VietstockFinance, trang in 3–4 và 6: tài sản 1.129.570.458; nợ 950.139.865; vốn chủ 179.430.593; PBT riêng Q3 8.250.016; LNST 6.613.525. Cột lũy kế 9 tháng trừ H1 cho cùng kết quả."
       },
@@ -1626,7 +1629,8 @@
           "equity",
           "pretax_profit",
           "net_profit",
-          "net_profit_attributable"
+          "net_profit_attributable",
+          "revenue"
         ],
         "accounting_equation_difference_million_vnd": 0,
         "accounting_equation_matches": true,
@@ -1645,8 +1649,10 @@
           "matches_after_rounding": true
         },
         "review_method": "manual_visual_review_of_VietstockFinance_linked_PDF",
-        "manually_visual_reviewed": true,
-        "known_anomalies": [],
+        "manually_visual_reviewed": false,
+        "known_anomalies": [
+          "OCR trang 9 chất lượng trung bình; số Tổng thu nhập hoạt động quý III đọc được 14.242.123 triệu đồng, lũy kế 9T là 38.596.352 triệu đồng."
+        ],
         "visual_review_pages": [
           "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%203/TCB_Baocaotaichinh_Q3_2025_Hopnhat.pdf#page=5",
           "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%203/TCB_Baocaotaichinh_Q3_2025_Hopnhat.pdf#page=6",
@@ -1678,13 +1684,14 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/791460cc8f49996a.pdf",
       "financial_line_items_updated_at": "2026-10-21T11:46:25+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
+      "financial_line_items_note": "Doanh thu hoạt động ngân hàng lấy từ dòng Tổng thu nhập hoạt động, cột Quý III, trang 9 PDF báo cáo hợp nhất 9T/2025 VietstockFinance. Đã phân biệt số quý 14.242.123 với số lũy kế 9T 38.596.352; cần đối chiếu ảnh PDF do OCR trang có chất lượng trung bình.",
       "operating_cash_flow_calculation": "reported as standalone quarter",
       "investing_cash_flow_calculation": "reported as standalone quarter",
       "financing_cash_flow_calculation": "reported as standalone quarter",
       "net_cash_change_calculation": "reported as standalone quarter",
       "financial_line_items_prior_values": {
-        "income_tax": -1636587
+        "income_tax": -1636587,
+        "revenue": null
       },
       "financial_line_items_rejected_values": {
         "operating_cash_flow": {
@@ -1754,7 +1761,15 @@
       "financial_line_items_schema_updated_at": "2026-10-22T13:32:13+00:00",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "ab5272837759ca6d1a59a3ab48513ac64dc640267f4a74af7c8380506a580dbf",
-      "core_financial_extraction_evidence_attempt_count": 0
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "revenue": 14242123,
+      "financial_line_items_value_corrections": {
+        "revenue": {
+          "previous_value": null,
+          "new_value": 14242123,
+          "reason": "Đối chiếu trực tiếp trang 9 BCTC hợp nhất 9T/2025 do VietstockFinance liên kết: cột Quý III, dòng Tổng thu nhập hoạt động = 14.242.123 triệu đồng; không dùng số lũy kế 38.596.352."
+        }
+      }
     },
     {
       "symbol": "TCB",
@@ -2580,7 +2595,7 @@
       "quarter_profit_basis": "Tự trích xuất cột phát sinh riêng của quý; không dùng số lũy kế.",
       "verification_status": "auto_extracted_pending_visual_review",
       "average_total_assets": 1295621029.5,
-      "average_equity": 193160886.0,
+      "average_equity": 193160886,
       "roa_formula": "LNST quý / bình quân tổng tài sản đầu và cuối quý × 4 × 100",
       "roe_formula": "LNST quý / bình quân vốn chủ sở hữu đầu và cuối quý × 4 × 100",
       "reconciliation": {
