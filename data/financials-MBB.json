@@ -86,8 +86,8 @@
       "financial_line_items_rejected_values": {},
       "income_tax": 1171095,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-24T04:19:08+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:13:52+00:00",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "4d8236b7680ee10aa49b88103067776e13c1554957e2ca8b0be791599815b3fb",
       "core_financial_extraction_evidence_attempt_count": 0,
@@ -166,7 +166,7 @@
       "bank_investment_securities_net": 346241,
       "bank_other_operating_net": 1035400,
       "bank_dividend_and_capital_income": 21761,
-      "bank_operating_expenses": -4490504,
+      "bank_operating_expenses": 4490504,
       "bank_non_controlling_profit": 75234,
       "income_tax_current": -1535537,
       "income_tax_deferred": 4519,
@@ -223,7 +223,7 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/MBB/vietstock-mbb-20261019/8c9e5134bed45c0c.pdf",
-      "financial_line_items_updated_at": "2026-10-25T06:56:12+00:00",
+      "financial_line_items_updated_at": "2026-10-25T20:14:23+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Tổng thu nhập hoạt động ngân hàng được tính từ bảy cấu phần thuần; cần đối chiếu trực quan. Lợi nhuận trước dự phòng và chi phí dự phòng OCR không khớp lợi nhuận trước thuế; hai chỉ tiêu chi tiết được ẩn.",
       "operating_cash_flow": 12386261,
       "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
@@ -232,12 +232,13 @@
         "revenue": 14129248,
         "bank_net_interest_income": 40531113,
         "operating_cash_flow_ytd": 10717048,
-        "bank_provision_expense": -2005743
+        "bank_provision_expense": -2005743,
+        "bank_operating_expenses": -4490504
       },
       "financial_line_items_rejected_values": {},
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-24T04:19:09+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:13:55+00:00",
       "financial_line_items_value_corrections": {
         "revenue": {
           "previous_value": 44129248,
@@ -258,6 +259,11 @@
           "previous_value": -2005743,
           "new_value": 2005743,
           "reason": "derived from reconciled pre-provision operating profit minus reported quarterly PBT"
+        },
+        "bank_operating_expenses": {
+          "previous_value": -4490504,
+          "new_value": 4490504,
+          "reason": "Normalized bank operating expenses to the positive expense convention used in subtotal reconciliation."
         }
       },
       "revenue_calculation": "Tổng bảy cấu phần thu nhập hoạt động thuần được báo cáo cho ngân hàng.",
@@ -275,7 +281,8 @@
       "core_financial_extraction_evidence_fingerprint": "bb09dd06c67c1bc24da0da0409e022b8b06278f8a010c135d73ae41d3300bc37",
       "core_financial_extraction_evidence_attempt_count": 0,
       "cash_beginning": 109095118,
-      "cash_ending": 98166725
+      "cash_ending": 98166725,
+      "cash_beginning_reported_ytd": 109095118
     },
     {
       "symbol": "MBB",
@@ -338,7 +345,7 @@
       "bank_investment_securities_net": -172432,
       "bank_other_operating_net": 677927,
       "bank_dividend_and_capital_income": 6993,
-      "bank_operating_expenses": -3755899,
+      "bank_operating_expenses": 3755899,
       "bank_non_controlling_profit": 53287,
       "income_tax_current": -1465240,
       "income_tax_deferred": 3647,
@@ -386,7 +393,7 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/MBB/vietstock-mbb-20261019/e22d0b238691da5e.pdf",
-      "financial_line_items_updated_at": "2026-10-25T06:56:00+00:00",
+      "financial_line_items_updated_at": "2026-10-25T20:14:23+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Lợi nhuận trước dự phòng và chi phí dự phòng OCR không khớp lợi nhuận trước thuế; hai chỉ tiêu chi tiết được ẩn.",
       "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
@@ -395,7 +402,8 @@
       "financial_line_items_prior_values": {
         "income_tax": -1461593,
         "bank_provision_expense": -1639970,
-        "cash_beginning": 98166725
+        "cash_beginning": 98166725,
+        "bank_operating_expenses": -3755899
       },
       "financial_line_items_rejected_values": {
         "operating_cash_flow": {
@@ -450,8 +458,8 @@
         "operating_cash_flow",
         "operating_cash_flow_ytd"
       ],
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-25T06:56:00+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:14:00+00:00",
       "bank_pre_provision_operating_profit": 8947866,
       "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động - |chi phí hoạt động| theo BCTC ngân hàng.",
       "bank_provision_expense": 1639970,
@@ -475,8 +483,14 @@
           "previous_value": 98166725,
           "new_value": 409095118,
           "reason": "Reparsed from the explicit opening cash balance row in the bank B04/TCTD statement."
+        },
+        "bank_operating_expenses": {
+          "previous_value": -3755899,
+          "new_value": 3755899,
+          "reason": "Normalized bank operating expenses to the positive expense convention used in subtotal reconciliation."
         }
-      }
+      },
+      "cash_beginning_reported_ytd": 409095118
     },
     {
       "symbol": "MBB",
@@ -561,8 +575,8 @@
       "financial_line_items_rejected_values": {},
       "income_tax": 1711498,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-24T04:19:11+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:14:00+00:00",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "af9e3e197de73fe2dd07479347aebebfb4f0b79ee84fe0c1b921cce418abaf8c",
       "core_financial_extraction_evidence_attempt_count": 0,
@@ -575,7 +589,8 @@
       },
       "cash_ending": 1357407,
       "cash_beginning": 77542854,
-      "cash_beginning_calculation": "previous quarter closing cash"
+      "cash_beginning_calculation": "previous quarter closing cash",
+      "cash_beginning_reported_ytd": 77542854
     },
     {
       "symbol": "MBB",
@@ -655,8 +670,8 @@
       "financial_line_items_rejected_values": {},
       "income_tax": 1711446,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-24T04:19:12+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:14:03+00:00",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "b36183c99c05d2331afd08448a18cd2704f22196a7ae03e103fa0d20167bff03",
       "core_financial_extraction_evidence_attempt_count": 0,
@@ -754,8 +769,8 @@
       "financial_line_items_rejected_values": {},
       "income_tax": 1498285,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-24T04:19:13+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:14:06+00:00",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "d84ea3cb4e0af5001d2679811f9695d6564692b9a88b46ef6a573a0508aa8e72",
       "core_financial_extraction_evidence_attempt_count": 0,
@@ -849,8 +864,8 @@
       "financial_line_items_rejected_values": {},
       "income_tax": 1449479,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-24T04:19:15+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:14:10+00:00",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "3b4e9f9ba6d11e3c116122f3de17379f6cae7e2f19d437c69257d9dd24a3c867",
       "core_financial_extraction_evidence_attempt_count": 0,
@@ -946,8 +961,8 @@
       "financial_line_items_rejected_values": {},
       "income_tax": 2226170,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-24T04:19:16+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:14:14+00:00",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "69dd5e9c4daf5ead729df256a580d0c9fe72fade0b702b42c0855a849ccf011e",
       "core_financial_extraction_evidence_attempt_count": 0,
@@ -1041,8 +1056,8 @@
       "financial_line_items_rejected_values": {},
       "income_tax": 1925666,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-24T04:19:17+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:14:17+00:00",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "5179a5c18590f3db6bcfe22d074a3c209124aeb1315b7c147dc9bfd2e245cdc0",
       "core_financial_extraction_evidence_attempt_count": 0,
@@ -1130,8 +1145,8 @@
       "financial_line_items_rejected_values": {},
       "income_tax": 2114399,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-24T04:19:18+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:14:20+00:00",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "07f7396faa878e1be9cd34f8998a2f700136a2289926eb582b60e2da51a8bb41",
       "core_financial_extraction_evidence_attempt_count": 0,
