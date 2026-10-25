@@ -1,13 +1,12 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-25T20:44:14Z",
+  "updatedAt": "2026-10-25T20:46:23Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
   "quarterRetentionTarget": 12,
   "completedSymbols": [
     "TCX",
-    "VCI",
     "VCK",
     "NVL",
     "BSR",
@@ -40,29 +39,44 @@
     "TCB"
   ],
   "lastCompletedSymbol": "BID",
-  "activeSymbol": null,
+  "activeSymbol": "VCI",
   "resumeSymbolHint": "VCI",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
-    "symbol": "BID",
-    "status": "automated_processing_complete",
-    "completeForAutomation": true,
+    "symbol": "VCI",
+    "status": "in_progress",
+    "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-25T20:44:14Z",
-    "workflowRunId": "40232090011",
-    "workflowRunNumber": 1582,
-    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/40232090011",
+    "processedAt": "2026-10-25T20:46:23Z",
+    "workflowRunId": "40232187352",
+    "workflowRunNumber": 1583,
+    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/40232187352",
     "changedPaths": [
-      "data/financials-BID.json"
+      "data/financials-VCI.json",
+      "reports/raw/VCI/auto-vci-20261021/a8ace83efcd5049c.pdf.extracted.json",
+      "reports/raw/VCI/auto-vci-20261021/bcc25fca52409b54.pdf.extracted.json"
     ],
-    "periodCount": 10,
+    "periodCount": 11,
     "firstQuarter": "2024-Q1",
-    "lastQuarter": "2026-Q2",
-    "pendingCorePeriods": [],
-    "terminalManualReviewPeriods": [],
+    "lastQuarter": "2026-Q3",
+    "pendingCorePeriods": [
+      "2024-Q1",
+      "2024-Q2"
+    ],
+    "terminalManualReviewPeriods": [
+      "2024-Q3",
+      "2024-Q4",
+      "2025-Q1",
+      "2025-Q2",
+      "2025-Q3",
+      "2025-Q4",
+      "2026-Q1",
+      "2026-Q2",
+      "2026-Q3"
+    ],
     "pendingDetailPeriods": [],
     "staleDetailSchemaPeriods": [],
-    "statementPagesPending": false,
+    "statementPagesPending": true,
     "skipUnconfirmedAutomation": false,
     "skipUnconfirmedReason": null
   },
@@ -304,16 +318,17 @@
       "snapshotFetchedAt": "2026-10-23T04:27:50+00:00"
     },
     "VCI": {
-      "status": "terminal_needs_manual_review",
-      "completeForAutomation": true,
+      "status": "in_progress",
+      "completeForAutomation": false,
       "manualReviewRemaining": true,
       "periodCount": 11,
       "firstQuarter": "2024-Q1",
       "lastQuarter": "2026-Q3",
-      "pendingCorePeriods": [],
-      "terminalManualReviewPeriods": [
+      "pendingCorePeriods": [
         "2024-Q1",
-        "2024-Q2",
+        "2024-Q2"
+      ],
+      "terminalManualReviewPeriods": [
         "2024-Q3",
         "2024-Q4",
         "2025-Q1",
@@ -326,11 +341,12 @@
       ],
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
-      "statementPagesPending": false,
+      "statementPagesPending": true,
+      "skipUnconfirmedAutomation": false,
+      "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 2,
-      "updatedAt": "2026-10-23T08:39:32.174Z",
-      "snapshotFetchedAt": "2026-10-23T07:18:58+00:00",
-      "note": "Completed automatic processing; all 11 periods that lack reliable consolidated scope/values are retained with source links and need manual review. No unsupported figures were filled."
+      "updatedAt": "2026-10-25T20:46:23Z",
+      "snapshotFetchedAt": "2026-10-23T07:18:58+00:00"
     },
     "VCK": {
       "status": "automated_processing_complete",
@@ -693,16 +709,6 @@
     }
   },
   "progressHistory": [
-    {
-      "symbol": "TCB",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-10-25T19:46:25Z",
-      "workflowRunId": "40227556810",
-      "changedPaths": [
-        "data/financials-TCB.json"
-      ]
-    },
     {
       "symbol": "TCB",
       "status": "in_progress",
@@ -1199,6 +1205,18 @@
       "workflowRunId": "40232090011",
       "changedPaths": [
         "data/financials-BID.json"
+      ]
+    },
+    {
+      "symbol": "VCI",
+      "status": "in_progress",
+      "completeForAutomation": false,
+      "processedAt": "2026-10-25T20:46:23Z",
+      "workflowRunId": "40232187352",
+      "changedPaths": [
+        "data/financials-VCI.json",
+        "reports/raw/VCI/auto-vci-20261021/a8ace83efcd5049c.pdf.extracted.json",
+        "reports/raw/VCI/auto-vci-20261021/bcc25fca52409b54.pdf.extracted.json"
       ]
     }
   ],
