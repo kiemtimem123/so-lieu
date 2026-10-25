@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-25T05:10:00Z",
+  "updatedAt": "2026-10-25T05:25:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -45,9 +45,9 @@
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "KBC",
-    "status": "quarterly_core_and_income_statement_details_updated",
-    "updatedAt": "2026-10-25T05:10:00Z",
-    "nextAction": "KBC remains active. Detailed income statement fields (financial income/expense, interest expense, selling/admin expense, operating profit, current/deferred tax and EPS) were added for 2025-Q1/Q2/Q3 and 2026-Q1/Q2/Q3 from saved OCR. Next reconcile tax-to-net-profit equations and extract missing detailed income/cash-flow fields for the remaining 2024 quarters and 2025-Q4; then run full KBC validation. OCR-derived figures remain pending visual PDF review; do not switch ticker until the KBC audit is complete."
+    "status": "income_statement_details_extended_unit_audit_needed",
+    "updatedAt": "2026-10-25T05:25:00Z",
+    "nextAction": "KBC remains active. Added detailed income-statement fields for 2025-Q1/Q2/Q3 and 2026-Q1/Q2/Q3; filled Q1-2024 current/deferred tax and EPS, corrected Q3-2024 deferred-tax sign and EPS. Before any ticker switch, audit cash-flow field units: several existing operating/investing/financing cash-flow values appear stored in raw VND while financials records use million VND. Normalize only after confirming each source field and calculations, then extract missing cash-flow fields and run complete KBC checks."
   },
   "symbolStates": {
     "MBB": {
@@ -626,9 +626,9 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 1,
-      "updatedAt": "2026-10-25T05:10:00Z",
+      "updatedAt": "2026-10-25T05:25:00Z",
       "snapshotFetchedAt": "2026-10-23T20:04:29+00:00",
-      "note": "Đã cập nhật thêm doanh thu tài chính, chi phí tài chính, chi phí lãi vay, chi phí bán hàng/quản lý, lợi nhuận hoạt động, thuế hiện hành/hoãn lại và EPS cho 2025-Q1/Q2/Q3, 2026-Q1/Q2/Q3 từ OCR sidecar. Cần đối chiếu công thức thuế-LNST và trích xuất chi tiết cho các quý còn lại, sau đó kiểm tra toàn bộ mã. PDF chưa xác minh trực quan."
+      "note": "Đã bổ sung chỉ tiêu KQKD chi tiết cho 2025-Q1/Q2/Q3 và 2026-Q1/Q2/Q3; bổ sung thuế và EPS Q1/2024, chỉnh dấu thuế hoãn lại và EPS Q3/2024 theo OCR. Phát hiện một số trường lưu chuyển tiền tệ cũ có vẻ đang lưu VND nguyên trong khi đơn vị bản ghi là triệu VND; phải kiểm tra nguồn và công thức trước khi chuẩn hóa. Chưa hoàn tất mã, PDF chưa xác minh trực quan."
     },
     "GEG": {
       "status": "automated_processing_complete",
