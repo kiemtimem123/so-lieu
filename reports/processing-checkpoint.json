@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-25T22:45:00Z",
+  "updatedAt": "2026-10-25T03:05:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -45,9 +45,9 @@
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "KBC",
-    "status": "in_progress_after_PLX_audit",
-    "updatedAt": "2026-10-25T22:45:00Z",
-    "nextAction": "PLX current pass checked: 46 static consistency checks passed; unresolved visual-review flags preserved and no more image uploads requested. KBC is now the active ticker. Normalize its existing data from saved VietstockFinance OCR sidecars, reconcile core equations, and keep ambiguous fields blank."
+    "status": "in_progress_pnl_normalized_from_saved_ocr",
+    "updatedAt": "2026-10-25T03:05:00Z",
+    "nextAction": "KBC remains active. Normalized quarterly revenue, cost of goods sold and gross profit for 2025-Q1, 2025-Q2, 2025-Q3, 2026-Q1, 2026-Q2 and 2026-Q3 from saved VietstockFinance-linked OCR pages; equations reconcile within 1 million VND rounding. Continue KBC only: extract/reconcile missing balance-sheet totals and pretax/net profit from archived sidecars, keep ambiguous values blank, then run consistency checks before moving to another ticker."
   },
   "symbolStates": {
     "MBB": {
@@ -626,9 +626,9 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 1,
-      "updatedAt": "2026-10-25T22:45:00Z",
+      "updatedAt": "2026-10-25T03:05:00Z",
       "snapshotFetchedAt": "2026-10-23T20:04:29+00:00",
-      "note": "Next active ticker. Existing KBC JSON has mixed-unit OCR values that are being normalized from the saved VietstockFinance-linked PDFs. Keep visual-review status because source PDFs have not been reviewed as images."
+      "note": "Đã chuẩn hóa doanh thu, giá vốn và lợi nhuận gộp cho 2025-Q1/Q2/Q3 và 2026-Q1/Q2/Q3 từ OCR sidecar đã lưu; các phương trình khớp trong sai số làm tròn 1 triệu VND. Chưa hoàn tất: tiếp tục trích xuất bảng cân đối, lợi nhuận trước thuế và lợi nhuận sau thuế còn thiếu. PDF chưa được xác minh trực quan; không tự điền số mơ hồ."
     },
     "GEG": {
       "status": "automated_processing_complete",
