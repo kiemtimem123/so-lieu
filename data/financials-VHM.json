@@ -67,23 +67,15 @@
       "operating_profit": 1450546,
       "income_tax_current": -510166,
       "income_tax": 512102,
-      "financing_cash_flow_ytd": 1000,
-      "net_cash_change_ytd": -4578562,
-      "cash_beginning": 14103181,
-      "cash_ending": 9524619,
       "cashflow_period_basis": "quarterly_reported",
       "financial_line_items_extracted_fields": [
         "admin_expense",
-        "capital_expenditure_ytd",
         "cash_and_equivalents",
-        "cash_beginning",
-        "cash_ending",
         "cashflow_period_basis",
         "cost_of_goods_sold",
         "current_liabilities",
         "financial_expense",
         "financial_income",
-        "financing_cash_flow_ytd",
         "fixed_assets",
         "gross_profit",
         "income_tax",
@@ -91,8 +83,6 @@
         "interest_expense",
         "inventory",
         "long_term_liabilities",
-        "net_cash_change_ytd",
-        "operating_cash_flow_ytd",
         "operating_profit",
         "retained_earnings",
         "revenue",
@@ -102,22 +92,82 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/aefb062e66e22d80.pdf",
-      "financial_line_items_updated_at": "2026-10-24T04:24:29+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại.",
-      "financing_cash_flow": 1000,
+      "financial_line_items_updated_at": "2026-10-25T20:27:45+00:00",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần.",
       "financing_cash_flow_calculation": "reported as standalone quarter",
-      "net_cash_change": -4578562,
       "net_cash_change_calculation": "reported as standalone quarter",
       "financial_line_items_prior_values": {
-        "income_tax": -510166
+        "income_tax": -510166,
+        "financing_cash_flow_ytd": 1000
       },
-      "financial_line_items_rejected_values": {},
+      "financial_line_items_rejected_values": {
+        "operating_cash_flow": {
+          "value": 10000,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "investing_cash_flow": {
+          "value": -5925725,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "financing_cash_flow": {
+          "value": 1000,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "net_cash_change": {
+          "value": -4578562,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "capital_expenditure": {
+          "value": 10000,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "operating_cash_flow_ytd": {
+          "value": 10000,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "investing_cash_flow_ytd": {
+          "value": -5925725,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "financing_cash_flow_ytd": {
+          "value": 5920845,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "net_cash_change_ytd": {
+          "value": -4578562,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "capital_expenditure_ytd": {
+          "value": 10000,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "cash_beginning": {
+          "value": 14103181,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "cash_ending": {
+          "value": 9524619,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        }
+      },
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-24T04:24:29+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:27:36+00:00",
       "financial_line_items_rejected_fields": [
+        "capital_expenditure",
+        "capital_expenditure_ytd",
+        "cash_beginning",
+        "cash_ending",
         "current_assets_asset_total_check",
-        "non_current_assets_asset_total_check"
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
+        "non_current_assets_asset_total_check",
+        "operating_cash_flow",
+        "operating_cash_flow_ytd"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-22T13:35:33+00:00",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
@@ -146,12 +196,16 @@
       "current_liabilities": 214974936,
       "long_term_liabilities": 53293517,
       "retained_earnings": 136335857,
-      "operating_cash_flow_ytd": 10000,
-      "capital_expenditure_ytd": 10000,
-      "operating_cash_flow": 10000,
       "operating_cash_flow_calculation": "reported as standalone quarter",
-      "capital_expenditure": 10000,
-      "capital_expenditure_calculation": "reported as standalone quarter"
+      "capital_expenditure_calculation": "reported as standalone quarter",
+      "financial_line_items_value_corrections": {
+        "financing_cash_flow_ytd": {
+          "previous_value": 1000,
+          "new_value": 5920845,
+          "reason": "reparsed with corrected VND unit scale after detecting an OCR-corrupted statement unit header"
+        }
+      },
+      "investing_cash_flow_calculation": "reported as standalone quarter"
     },
     {
       "symbol": "VHM",
@@ -205,28 +259,14 @@
       "short_term_investments": 3674058,
       "short_term_receivables": 137014156,
       "inventory": 56310972,
-      "investing_cash_flow_ytd": 370673,
-      "financing_cash_flow_ytd": 16700,
-      "capital_expenditure_ytd": 715718,
-      "dividends_paid_ytd": 3536,
-      "net_cash_change_ytd": 3077019,
-      "cash_beginning": 14103181,
-      "cash_ending": 17180200,
       "cashflow_period_basis": "quarterly_reported",
       "financial_line_items_extracted_fields": [
-        "capital_expenditure_ytd",
         "cash_and_equivalents",
-        "cash_beginning",
-        "cash_ending",
         "cashflow_period_basis",
         "current_assets",
-        "dividends_paid_ytd",
-        "financing_cash_flow_ytd",
         "fixed_assets",
         "income_tax",
         "inventory",
-        "investing_cash_flow_ytd",
-        "net_cash_change_ytd",
         "non_current_assets",
         "retained_earnings",
         "short_term_investments",
@@ -234,29 +274,95 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/a3ee2e3b187518a7.pdf",
-      "financial_line_items_updated_at": "2026-10-24T04:24:29+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại.",
-      "investing_cash_flow": 370673,
+      "financial_line_items_updated_at": "2026-10-25T20:27:45+00:00",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần.",
       "investing_cash_flow_calculation": "reported as standalone quarter",
-      "financing_cash_flow": 16700,
       "financing_cash_flow_calculation": "reported as standalone quarter",
-      "capital_expenditure": 715718,
       "capital_expenditure_calculation": "reported as standalone quarter",
-      "dividends_paid": 3536,
       "dividends_paid_calculation": "reported as standalone quarter",
-      "net_cash_change": 3077019,
       "net_cash_change_calculation": "reported as standalone quarter",
       "financial_line_items_prior_values": {},
-      "financial_line_items_rejected_values": {},
+      "financial_line_items_rejected_values": {
+        "operating_cash_flow": {
+          "value": 6474315,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "investing_cash_flow": {
+          "value": 370673,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "financing_cash_flow": {
+          "value": 16700,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "net_cash_change": {
+          "value": 3077019,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "capital_expenditure": {
+          "value": 715718,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "dividends_paid": {
+          "value": 3536,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "operating_cash_flow_ytd": {
+          "value": 6474315,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "investing_cash_flow_ytd": {
+          "value": 370673,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "financing_cash_flow_ytd": {
+          "value": 16700,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "net_cash_change_ytd": {
+          "value": 3077019,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "capital_expenditure_ytd": {
+          "value": 715718,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "dividends_paid_ytd": {
+          "value": 3536,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "cash_beginning": {
+          "value": 14103181,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "cash_ending": {
+          "value": 17180200,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        }
+      },
       "income_tax": 1626919,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-24T04:24:29+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:27:37+00:00",
       "financial_line_items_rejected_fields": [
+        "capital_expenditure",
+        "capital_expenditure_ytd",
+        "cash_beginning",
+        "cash_ending",
         "current_assets_asset_total_check",
         "current_liabilities_liability_total_check",
+        "dividends_paid",
+        "dividends_paid_ytd",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
         "long_term_liabilities_liability_total_check",
-        "non_current_assets_asset_total_check"
+        "net_cash_change",
+        "net_cash_change_ytd",
+        "non_current_assets_asset_total_check",
+        "operating_cash_flow",
+        "operating_cash_flow_ytd"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-22T13:35:33+00:00",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
@@ -265,7 +371,8 @@
       "current_assets": 249057928,
       "non_current_assets": 245402822,
       "fixed_assets": 12519280,
-      "retained_earnings": 146584496
+      "retained_earnings": 146584496,
+      "operating_cash_flow_calculation": "reported as standalone quarter"
     },
     {
       "symbol": "VHM",
@@ -390,8 +497,8 @@
       },
       "income_tax": 1856501,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-24T04:24:30+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:27:37+00:00",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "2fb6313338d468531c2d7d4dc218eb42fa0db4a303ac1403dd8075cad66bcb67",
       "core_financial_extraction_evidence_attempt_count": 0,
@@ -481,10 +588,6 @@
       "selling_expense": -3791457,
       "admin_expense": -4593011,
       "operating_profit": 40942908,
-      "operating_cash_flow_ytd": 401462,
-      "financing_cash_flow_ytd": 11691977,
-      "dividends_paid_ytd": 1800478,
-      "net_cash_change_ytd": 14676942,
       "cashflow_period_basis": "quarterly_reported",
       "financial_line_items_extracted_fields": [
         "admin_expense",
@@ -494,20 +597,16 @@
         "current_assets",
         "current_liabilities",
         "diluted_eps",
-        "dividends_paid_ytd",
         "eps",
         "financial_expense",
         "financial_income",
-        "financing_cash_flow_ytd",
         "fixed_assets",
         "gross_profit",
         "income_tax",
         "interest_expense",
         "inventory",
         "long_term_liabilities",
-        "net_cash_change_ytd",
         "non_current_assets",
-        "operating_cash_flow_ytd",
         "operating_profit",
         "retained_earnings",
         "revenue",
@@ -517,34 +616,82 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/1c9a7eccea051e6b.pdf",
-      "financial_line_items_updated_at": "2026-10-24T04:24:30+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại.",
-      "operating_cash_flow": 401462,
+      "financial_line_items_updated_at": "2026-10-25T20:27:45+00:00",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần.",
       "operating_cash_flow_calculation": "reported as standalone quarter",
-      "financing_cash_flow": 11691977,
       "financing_cash_flow_calculation": "reported as standalone quarter",
-      "dividends_paid": 1800478,
       "dividends_paid_calculation": "reported as standalone quarter",
-      "net_cash_change": 14676942,
       "net_cash_change_calculation": "reported as standalone quarter",
       "eps": 7348,
       "diluted_eps": 7348,
       "financial_line_items_prior_values": {},
-      "financial_line_items_rejected_values": {},
+      "financial_line_items_rejected_values": {
+        "operating_cash_flow": {
+          "value": 401462,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "investing_cash_flow": {
+          "value": 25384515,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "financing_cash_flow": {
+          "value": 11691977,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "net_cash_change": {
+          "value": 14676942,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "dividends_paid": {
+          "value": 1800478,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "operating_cash_flow_ytd": {
+          "value": 401462,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "investing_cash_flow_ytd": {
+          "value": 25384515,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "financing_cash_flow_ytd": {
+          "value": 11691977,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "net_cash_change_ytd": {
+          "value": 14676942,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        },
+        "dividends_paid_ytd": {
+          "value": 1800478,
+          "reason": "cash-flow components do not reconcile to reported net cash change"
+        }
+      },
       "income_tax": 1779741,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-24T04:24:30+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:27:38+00:00",
       "financial_line_items_rejected_fields": [
+        "dividends_paid",
+        "dividends_paid_ytd",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
         "income_tax_current_tax_reconciliation_check",
         "income_tax_deferred_tax_reconciliation_check",
-        "income_tax_tax_reconciliation_check"
+        "income_tax_tax_reconciliation_check",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
+        "operating_cash_flow",
+        "operating_cash_flow_ytd"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-22T13:35:34+00:00",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "6587ab592bb1b3f41f259b0b96f6a717042dd7a0f64dc51f25ccdccf29f7f1fb",
       "core_financial_extraction_evidence_attempt_count": 0,
-      "retained_earnings": 167205815
+      "retained_earnings": 167205815,
+      "investing_cash_flow_calculation": "reported as standalone quarter"
     },
     {
       "symbol": "VHM",
@@ -660,8 +807,8 @@
       "financial_line_items_rejected_values": {},
       "income_tax": 1187445,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-24T04:24:31+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:27:38+00:00",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "3fca976bc614aa5ec04f76664a69be8a58b4fa444485d8ca8d8d8ff9914f5839",
       "core_financial_extraction_evidence_attempt_count": 0,
@@ -810,8 +957,8 @@
       ],
       "cash_beginning": 28780123,
       "cash_ending": 48674124,
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-22T13:35:34+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:27:39+00:00",
       "financial_line_items_rejected_updated_at": "2026-10-24T04:24:32+00:00",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "f692c36c56312ce9d036391e1657b00e5470e1cedef20f3ecf948bc1711781f3",
@@ -909,8 +1056,8 @@
       "financial_line_items_rejected_values": {},
       "income_tax": 984732,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-24T04:24:33+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:27:40+00:00",
       "financial_line_items_rejected_fields": [
         "cost_of_goods_sold_gross_profit_equation_check",
         "current_assets_current_assets_too_small",
@@ -1022,8 +1169,8 @@
       "financial_line_items_rejected_values": {},
       "income_tax": 6187838,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-24T04:24:33+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:27:42+00:00",
       "financial_line_items_rejected_fields": [
         "current_assets_asset_total_check",
         "income_tax_current_tax_reconciliation_check",
@@ -1104,8 +1251,8 @@
       "financial_line_items_rejected_values": {},
       "income_tax": 10330897,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-24T04:24:34+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:27:43+00:00",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "f5856f0e934bd2e42529383e5fee1542738fe1e1545b05ff608f0efe2f339f35",
       "core_financial_extraction_evidence_attempt_count": 0,
@@ -1246,8 +1393,8 @@
       "financial_line_items_rejected_values": {},
       "income_tax": 5101438,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
-      "financial_line_items_schema_updated_at": "2026-10-24T04:24:35+00:00",
+      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
+      "financial_line_items_schema_updated_at": "2026-10-25T20:27:44+00:00",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "f6b5ef3b05147a719f4bb6a106e256d3e14b826416b76687b55a51440cbe49b5",
       "core_financial_extraction_evidence_attempt_count": 0,
