@@ -35,3 +35,12 @@
 - Validate Site and Data #966 đã thành công: https://github.com/kiemtimem123/so-lieu/actions/runs/40235725000
 
 Ghi chú này là lối tắt tiếp nối, không thay thế checkpoint sống. Khi có công việc mới, đọc checkpoint và workflow mới nhất, rồi chỉ nạp dữ liệu của mã đang được chọn.
+
+## 2026-10-26 checkpoint refresh
+
+- Latest checked branch HEAD: `2c8f7fc3594056ec37ba5c688b9d2038e1071218`.
+- Live checkpoint: `updatedAt=2026-10-25T21:31:22Z`, `lastCompletedSymbol=GEG`, `activeSymbol=null`, `resumeSymbolHint=null`.
+- All 32 enabled symbols in `config/securities.json` are already `completeForAutomation=true` or listed in the checkpoint's completed set; no next configured ticker remains in the current queue. The most recent completed OCR pass is [#1611](https://github.com/kiemtimem123/so-lieu/actions/runs/40236304580), success.
+- Last completed symbol in checkpoint: `GEG`; period coverage: 2024-Q1–2026-Q2.
+- The two explicit skip-through policies remain VCI and VCK through `2026-Q3`. Unverified figures remain blank in public fields; VCK values are preserved under audit metadata and hidden from the front-end whenever the source scope flag is set.
+- Resume efficiently: read only this note, `reports/processing-checkpoint.json`, `config/securities.json`, and the latest workflow run list. Do not reopen historical ticker data unless a newer quarter appears, a new ticker is added, or validation reveals a specific issue.
