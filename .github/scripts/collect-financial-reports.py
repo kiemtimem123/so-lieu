@@ -910,6 +910,16 @@ def retry_url_key(value: object):
     return canonical_document_url(value) or str(value or "").strip()
 
 
+def all_candidates_already_archived(candidates: list[dict], successful_url_keys: set) -> bool:
+    """True only when every discovered candidate URL is already archived successfully."""
+    keys = {
+        retry_url_key(candidate.get("url"))
+        for candidate in candidates
+        if isinstance(candidate, dict) and candidate.get("url")
+    }
+    return bool(keys) and keys.issubset(successful_url_keys)
+
+
 def failed_url_retry_state(jobs: list[dict], symbol: str, now: datetime | None = None):
     """Return URL states with a rolling retry budget.
 
@@ -1379,6 +1389,7 @@ def main():
                     already_downloaded_urls.discard(requested_key)
 
         before_dedup = len(candidates)
+        discovered_candidates = list(candidates)
         filtered_candidates = []
         seen_candidate_urls = set()
         for candidate in candidates:
@@ -1410,6 +1421,26 @@ def main():
                     "job": job["id"], "symbol": job["symbol"],
                     "status": job["status"], "event": "ticker_archive_batch_complete",
                     "downloaded_total": len(previous_files),
+                }, ensure_ascii=False))
+                continue
+            if all_candidates_already_archived(discovered_candidates, successful_url_keys):
+                # The same documents have already been fetched by another job
+                # for this ticker. Treat this stale queue job as covered rather
+                # than reporting a false error or re-downloading the PDF/ZIP.
+                job["downloadedFiles"] = previous_files
+                job["status"] = "needs_review"
+                job["resumeDownload"] = False
+                job["lastError"] = None
+                job["processedAt"] = NOW
+                summary["jobs_processed"] += 1
+                summary["needs_review"] += 1
+                print(json.dumps({
+                    "job": job["id"],
+                    "symbol": job["symbol"],
+                    "status": job["status"],
+                    "event": "candidate_urls_already_archived_for_ticker",
+                    "candidate_count": len(discovered_candidates),
+                    "note": "Every discovered source URL already has a successful archive record for this ticker.",
                 }, ensure_ascii=False))
                 continue
             job["downloadedFiles"] = previous_files
