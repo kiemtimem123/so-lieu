@@ -1,0 +1,173 @@
+name: Smoke Test Vietstock Public PDF Download
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/smoke-test-vietstock-download.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: so-lieu-vietstock-download-smoke
+  cancel-in-progress: false
+
+jobs:
+  public-pdf-download:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout source and existing report archive
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install the production collector dependencies
+        run: pip install -r .github/scripts/requirements-report-worker.txt
+
+      - name: Discover a free public Vietstock filing and download through the production code
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          import re
+          import runpy
+          import shutil
+          from pathlib import Path
+          from urllib.parse import unquote, urlparse
+
+          root = Path.cwd()
+          temp_dir = root / "reports" / ".vietstock-download-smoke"
+          summary_path = Path(os.environ["RUNNER_TEMP"]) / "vietstock-download-smoke.json"
+          module = runpy.run_path(".github/scripts/collect-financial-reports.py")
+          discover = module["discover_for_job"]
+          download = module["download_candidate"]
+          canonical_url = module["canonical_document_url"]
+          allowed_domains = module["ALLOWED_DOMAINS"]
+
+          snapshot = json.loads((root / "data/financials-TPB.json").read_text(encoding="utf-8"))
+          item = next(
+              (row for row in snapshot.get("items", []) if row.get("period") == "2024-Q1"),
+              None,
+          )
+          if not item:
+              raise SystemExit("Không tìm thấy TPB 2024-Q1 trong snapshot để kiểm thử.")
+
+          validation = item.get("source_validation") or {}
+          catalog_url = validation.get("source_catalog_url") or "https://finance.vietstock.vn/TPB/tai-tai-lieu.htm?doctype=1"
+          source_url = item.get("source_url") or validation.get("source_document_url")
+          archive_rel = item.get("source_archive_file")
+          if not source_url or not archive_rel:
+              raise SystemExit("Thiếu URL nguồn hoặc đường dẫn PDF đã lưu trong kho.")
+
+          archive_path = root / archive_rel
+          if not archive_path.is_file():
+              raise SystemExit(f"Không tìm thấy bản lưu hiện có: {archive_rel}")
+          archive_bytes = archive_path.read_bytes()
+          if b"%PDF-" not in archive_bytes[:1024]:
+              raise SystemExit(f"Tệp lưu hiện có không có chữ ký PDF: {archive_rel}")
+
+          job = {
+              "id": "smoke-test-tpb-2024-q1",
+              "symbol": "TPB",
+              "startYear": 2024,
+              "reportType": "consolidated",
+              "quarterly_only": True,
+          }
+          candidates = discover(job, allowed_domains)
+          document_id = str(validation.get("document_id") or "")
+          filename = Path(unquote(urlparse(source_url).path)).name.lower()
+
+          candidate = next(
+              (c for c in candidates if document_id and str(c.get("document_id") or "") == document_id),
+              None,
+          )
+          if candidate is None:
+              candidate = next(
+                  (c for c in candidates if canonical_url(c.get("url")) == canonical_url(source_url)),
+                  None,
+              )
+          if candidate is None:
+              candidate = next(
+                  (c for c in candidates
+                   if Path(unquote(urlparse(str(c.get("url") or "")).path)).name.lower() == filename),
+                  None,
+              )
+          if candidate is None:
+              preview = [
+                  {"period": c.get("period"), "title": c.get("title"), "url": c.get("url"), "document_id": c.get("document_id")}
+                  for c in candidates[:12]
+              ]
+              raise SystemExit(
+                  "Danh mục Vietstock đã được truy vấn nhưng không tìm thấy bản ghi TPB Q1/2024 cần kiểm thử. "
+                  + json.dumps({"candidate_count": len(candidates), "sample": preview}, ensure_ascii=False)
+              )
+
+          temp_dir.mkdir(parents=True, exist_ok=True)
+          result = download(candidate, temp_dir)
+          downloaded_path = root / result["file"] if result.get("file") else None
+          if result.get("status") != "downloaded_needs_review" or not downloaded_path or not downloaded_path.is_file():
+              raise SystemExit(
+                  "Tải tài liệu từ URL công khai thất bại: "
+                  + json.dumps(result, ensure_ascii=False)
+              )
+          downloaded_bytes = downloaded_path.read_bytes()
+          if b"%PDF-" not in downloaded_bytes[:1024]:
+              raise SystemExit("Bản tải mới không có chữ ký PDF hợp lệ.")
+          if not result.get("pages"):
+              raise SystemExit(
+                  "PDF đã tải nhưng bộ trích xuất không xác nhận được số trang: "
+                  + json.dumps(result, ensure_ascii=False)
+              )
+
+          summary = {
+              "test": "VietstockFinance catalog -> public PDF download -> PDF validation -> native extraction",
+              "symbol": "TPB",
+              "period": "2024-Q1",
+              "catalog_url": catalog_url,
+              "source_url_discovered": candidate.get("url"),
+              "document_id": candidate.get("document_id"),
+              "status": result.get("status"),
+              "http_host": result.get("host"),
+              "content_type": result.get("content_type"),
+              "download_bytes": result.get("bytes"),
+              "extracted_pages": result.get("pages"),
+              "extraction_method": result.get("extraction"),
+              "existing_archive_path": archive_rel,
+              "existing_archive_bytes": len(archive_bytes),
+              "download_hash_matches_existing_archive": hashlib.sha256(downloaded_bytes).hexdigest() == hashlib.sha256(archive_bytes).hexdigest(),
+              "archive_was_modified": False,
+              "test_download_committed": False,
+          }
+          summary_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
+          print(json.dumps(summary, ensure_ascii=False, indent=2))
+          shutil.rmtree(temp_dir, ignore_errors=True)
+          PY
+
+      - name: Compile the archive processor and validate the report queue
+        run: |
+          python -m py_compile .github/scripts/collect-financial-reports.py .github/scripts/ocr-stored-reports.py scripts/enrich-financial-categories.py
+          node .github/scripts/validate-report-queue.cjs
+
+      - name: Upload smoke-test result
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: vietstock-public-pdf-download-smoke-test
+          path: ${{ runner.temp }}/vietstock-download-smoke.json
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Remove temporary download if a previous step failed
+        if: always()
+        run: rm -rf reports/.vietstock-download-smoke
