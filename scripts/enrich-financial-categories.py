@@ -2076,9 +2076,9 @@ def enrich_snapshot(path):
  field_count+=reconciled_fields
  if changed:
   # Record processing time separately from fetchedAt (source-download time).
-   # The browser can now choose the newest processed snapshot across origins.
-   snapshot["processedAt"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
-   path.write_text(json.dumps(snapshot,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+  # The browser can now choose the newest processed snapshot across origins.
+  snapshot["processedAt"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
+  path.write_text(json.dumps(snapshot,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
  return changed,quarter_count,field_count
 
 def main():
