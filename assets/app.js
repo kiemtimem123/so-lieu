@@ -1706,7 +1706,7 @@
       if (statementHead) statementHead.innerHTML = '<tr><th class="statement-first-col">' + (activeStatement === 'peers' ? 'Mã chứng khoán' : 'Chỉ tiêu') + '</th>' +
         periods.map(period => {
           const report = sourceRows.find(item => item.period === period);
-          const pdfUrl = report && typeof report.source_url === 'string' && /\\.pdf(?:$|[?#])/i.test(report.source_url)
+          const pdfUrl = report && typeof report.source_url === 'string' && /\.pdf(?:$|[?#])/i.test(report.source_url)
             ? report.source_url
             : '';
           const pdfLink = pdfUrl
