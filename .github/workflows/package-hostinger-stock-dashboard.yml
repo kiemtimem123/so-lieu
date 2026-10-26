@@ -1,0 +1,60 @@
+name: Package Hostinger Stock Dashboard
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "index.html"
+      - "assets/app.js"
+      - "assets/styles.css"
+      - "data/financials-*.json"
+      - ".github/workflows/package-hostinger-stock-dashboard.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout current website and financial snapshots
+        uses: actions/checkout@v5
+
+      - name: Build Hostinger upload bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p deploy-bundle/assets deploy-bundle/data
+          cp index.html deploy-bundle/index.html
+          cp assets/app.js assets/styles.css deploy-bundle/assets/
+          cp data/financials-*.json deploy-bundle/data/
+          cat > deploy-bundle/README-HOSTINGER.txt <<'EOF'
+          CAP NHAT DANH MUC CHUNG KHOAN - HOSTINGER
+
+          1. Sao luu index.html cu, assets/app.js cu va data/financials-*.json cu neu can.
+          2. Giai nen goi nay va tai len public_html, giu nguyen thu muc:
+               index.html
+               assets/app.js
+               assets/styles.css
+               data/financials-<MA>.json
+          3. Cho phep ghi de cac tep trung ten. Khong xoa cac tep khac cua website.
+          4. Mo https://solieutaichinh.online/#co-phieu, nhan Ctrl+F5 hoac Ctrl+Shift+R.
+          5. Bam "Tai lai du lieu" neu can. Giao dien se nap ma dang chon truoc, sau do nap dan cac ma de so sanh.
+
+          Luu y:
+          - Cac diem danh dau can trich xuat/xac minh thu cong duoc de trong, khong noi suy.
+          - Cac truong gia co phieu va chi so dinh gia van de trong neu snapshot chua co du lieu thi truong co nguon.
+          - Du lieu snapshot tai thoi diem dong goi; khi co bao cao moi, giao dien van co the doc ban moi nhat tu GitHub neu trinh duyet truy cap duoc raw.githubusercontent.com.
+          EOF
+          (cd deploy-bundle && zip -qr ../so-lieu-stock-dashboard-hostinger.zip .)
+          echo "Bundle bytes: $(wc -c < so-lieu-stock-dashboard-hostinger.zip)"
+          echo "Financial snapshots packaged: $(find deploy-bundle/data -name 'financials-*.json' | wc -l)"
+
+      - name: Upload deploy bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: so-lieu-stock-dashboard-hostinger
+          path: so-lieu-stock-dashboard-hostinger.zip
+          if-no-files-found: error
+          retention-days: 30
