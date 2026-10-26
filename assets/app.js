@@ -1021,6 +1021,29 @@
       yearSelect.value = String(newestYear > priorYear ? newestYear : (years.includes(priorYear) ? priorYear : maxYear));
     }
 
+    // Enriched snapshots can be processed after their original download time. Use
+    // processing/reconciliation timestamps first so a newer extraction is not hidden
+    // by an older or stale Hostinger copy with a later fetchedAt value.
+    function snapshotProcessingTimestamp(snapshot) {
+      const timestamps = [];
+      const add = value => {
+        if (!value) return;
+        const parsed = Date.parse(String(value));
+        if (Number.isFinite(parsed)) timestamps.push(parsed);
+      };
+      add(snapshot?.processedAt);
+      add(snapshot?.dataUpdatedAt);
+      for (const item of Array.isArray(snapshot?.items) ? snapshot.items : []) {
+        if (!item || typeof item !== 'object') continue;
+        add(item.financial_line_items_schema_updated_at);
+        add(item.financial_line_items_updated_at);
+        add(item.core_financial_extraction_updated_at);
+        add(item.source_validation?.reviewed_at);
+        add(item.visual_review?.checked_at);
+      }
+      return timestamps.length ? Math.max(...timestamps) : 0;
+    }
+
     async function fetchLatestFinancialSnapshot(ticker) {
       const filename = 'financials-' + ticker + '.json';
       const cacheBust = Date.now();
@@ -1043,6 +1066,9 @@
         throw new Error(reasons || 'Không tải được snapshot từ website hoặc GitHub');
       }
       usable.sort((a, b) => {
+        const processedA = snapshotProcessingTimestamp(a.snapshot);
+        const processedB = snapshotProcessingTimestamp(b.snapshot);
+        if (processedA !== processedB && (processedA || processedB)) return processedB - processedA;
         const timeA = Date.parse(a.snapshot.fetchedAt || '') || 0;
         const timeB = Date.parse(b.snapshot.fetchedAt || '') || 0;
         if (timeA !== timeB) return timeB - timeA;
