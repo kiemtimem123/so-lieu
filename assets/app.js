@@ -26,27 +26,38 @@
     return new Intl.NumberFormat('vi-VN', { maximumFractionDigits }).format(Number(value));
   };
 
+  const DATA_CDN_BASE = 'https://cdn.jsdelivr.net/gh/kiemtimem123/so-lieu@main/data/';
   const DATA_FALLBACK_BASE = 'https://raw.githubusercontent.com/kiemtimem123/so-lieu/main/data/';
 
-  // Hostinger can occasionally serve a stale deployment or its index.html for a
-  // missing JSON path. Prefer same-origin snapshots, then fall back to the
-  // current public snapshot committed in this repository.
+  // Some shared-hosting configurations return index.html with HTTP 200 for a
+  // missing JSON file. Validate the body, not only the status/content-type,
+  // before accepting a same-origin snapshot. Then try two public repo mirrors.
   async function fetchDataFile(filename) {
-    const localUrl = 'data/' + filename;
-    try {
-      const local = await fetch(localUrl, { cache: 'no-store' });
-      const contentType = (local.headers.get('content-type') || '').toLowerCase();
-      if (local.ok && (!contentType || contentType.includes('json'))) return local;
-      console.warn('[data-fallback]', filename, 'Local snapshot unavailable; trying repository copy.', local.status, contentType);
-    } catch (error) {
-      console.warn('[data-fallback]', filename, 'Local snapshot request failed; trying repository copy.', error);
+    const candidates = [
+      { url: 'data/' + filename + '?v=20261027', label: 'website' },
+      { url: DATA_CDN_BASE + encodeURIComponent(filename) + '?v=20261027', label: 'GitHub CDN' },
+      { url: DATA_FALLBACK_BASE + encodeURIComponent(filename) + '?v=20261027', label: 'GitHub Raw' }
+    ];
+    const failures = [];
+    for (const candidate of candidates) {
+      try {
+        const response = await fetch(candidate.url, { cache: 'no-store' });
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        const contentType = (response.headers.get('content-type') || '').toLowerCase();
+        const body = await response.clone().text();
+        const trimmed = body.trimStart();
+        const looksLikeJson = trimmed.startsWith('{') || trimmed.startsWith('[');
+        if (contentType.includes('text/html') || !looksLikeJson) {
+          throw new Error('Phản hồi không phải JSON (' + (contentType || 'không rõ content-type') + ')');
+        }
+        console.info('[data-loaded]', filename, 'from', candidate.label);
+        return response;
+      } catch (error) {
+        failures.push(candidate.label + ': ' + (error?.message || error));
+        console.warn('[data-fallback]', filename, candidate.label, error);
+      }
     }
-
-    const remote = await fetch(DATA_FALLBACK_BASE + encodeURIComponent(filename), { cache: 'no-store' });
-    if (!remote.ok) throw new Error('HTTP ' + remote.status + ' loading ' + filename + ' from repository fallback');
-    const remoteType = (remote.headers.get('content-type') || '').toLowerCase();
-    if (remoteType.includes('text/html')) throw new Error('Repository fallback returned HTML instead of JSON for ' + filename);
-    return remote;
+    throw new Error('Không tải được ' + filename + '. ' + failures.join(' | '));
   }
 
   const dateFmt = value => {
