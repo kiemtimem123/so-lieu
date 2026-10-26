@@ -1833,6 +1833,35 @@
         console.error('[financial-dashboard] statement table render failed for ' + ticker, error);
       }
 
+      // Last-resort numeric table: if a specialized statement renderer fails or
+      // produces an empty body despite loaded numeric rows, keep verified core
+      // figures visible instead of leaving only the column headings.
+      const hasVisibleBodyRows = Boolean(tableBody && tableBody.querySelector('tr'));
+      const hasRenderablePeriods = Array.isArray(tableResult?.periods) && tableResult.periods.length > 0;
+      if ((!hasVisibleBodyRows || !hasRenderablePeriods) && sourceRows.some(hasNumericFinancialData)) {
+        const fallbackRows = sourceRows.slice().sort((a, b) => b.period.localeCompare(a.period)).slice(0, statementPageSize);
+        if (tableWrap) tableWrap.classList.remove('hidden');
+        if (stateBox) stateBox.classList.add('hidden');
+        if (statementHead) statementHead.innerHTML = '<tr><th class="statement-first-col">Chỉ tiêu</th>' +
+          fallbackRows.map(item => '<th class="statement-period">' + escapeHtml(displayPeriod(item.period)) + '</th>').join('') + '</tr>';
+        const fallbackFields = [
+          ['Tổng tài sản', 'total_assets'], ['Nợ phải trả', 'total_liabilities'], ['Vốn chủ sở hữu', 'equity'],
+          ['Lợi nhuận trước thuế', 'pretax_profit'], ['Lợi nhuận sau thuế', 'net_profit'], ['ROA (%)', 'roa'], ['ROE (%)', 'roe']
+        ];
+        if (tableBody) tableBody.innerHTML = fallbackFields.map(([label, key]) =>
+          '<tr><td class="statement-row-label">' + escapeHtml(label) + '</td>' +
+          fallbackRows.map(item => {
+            const value = item[key];
+            if (!validNumber(value)) return '<td>—</td>';
+            const ratio = key === 'roa' || key === 'roe';
+            const shown = statementNumber(value, item, ratio);
+            return '<td>' + shown + (ratio && shown !== '—' ? '%' : '') + '</td>';
+          }).join('') + '</tr>'
+        ).join('');
+        tableResult = { periods: fallbackRows.map(item => item.period), rows: sourceRows };
+        console.warn('[financial-dashboard] rendered core-metric fallback table for ' + ticker);
+      }
+
       const populated = sourceRows.filter(hasNumericFinancialData).length;
       const waiting = sourceRows.filter(item => !hasNumericFinancialData(item)).length;
       const review = sourceRows.filter(item => hasNumericFinancialData(item) && verificationBadge(item).kind !== 'ready').length;
