@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Dữ liệu kinh tế Việt Nam, thị trường hàng hóa và báo cáo tài chính doanh nghiệp từ nguồn có thể kiểm chứng.">
   <title>Dữ Liệu Kinh Tế Việt Nam</title>
-  <link rel="stylesheet" href="assets/styles.css?v=20261021-financial-fit-3">
+  <link rel="stylesheet" href="assets/styles.css?v=20261027-widata-financial-table-layout-1">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js" defer></script>
-  <script src="assets/app.js?v=financial-line-items-17-stock-dashboard-refresh-1" defer></script>
+  <script src="assets/app.js?v=financial-line-items-18-widata-financial-table-layout-1" defer></script>
 </head>
 <body>
   <aside class="site-sidebar" id="siteSidebar">
@@ -223,6 +223,61 @@
         <span class="section-index">02 / COMPANY</span>
       </div>
       <div class="financial-terminal" id="financialTerminal">
+        <div class="statement-topbar">
+          <label class="statement-basis-label" aria-label="Loại báo cáo">
+            <select id="stockReportBasis">
+              <option value="consolidated">Báo cáo hợp nhất</option>
+              <option value="separate">Báo cáo riêng lẻ</option>
+            </select>
+          </label>
+          <nav class="statement-tabs" id="stockStatementTabs" aria-label="Loại báo cáo tài chính" role="tablist">
+            <button type="button" role="tab" aria-selected="true" class="is-active" data-statement="balance">Cân đối kế toán</button>
+            <button type="button" role="tab" aria-selected="false" data-statement="income">Kết quả kinh doanh</button>
+            <button type="button" role="tab" aria-selected="false" data-statement="cashflow">Lưu chuyển tiền tệ</button>
+            <button type="button" role="tab" aria-selected="false" data-statement="ratios">Chỉ số tài chính</button>
+            <button type="button" role="tab" aria-selected="false" data-statement="valuation">Định giá</button>
+            <button type="button" role="tab" aria-selected="false" data-statement="peers">So sánh cùng ngành</button>
+            <button type="button" role="tab" aria-selected="false" data-statement="notes">Thuyết minh &amp; nguồn</button>
+          </nav>
+        </div>
+        <div class="statement-toolbar">
+          <div class="statement-paging" role="group" aria-label="Chuyển khoảng kỳ báo cáo">
+            <button type="button" id="stockPeriodFirst" aria-label="Đến các kỳ mới nhất" title="Các kỳ mới nhất">≪</button>
+            <button type="button" id="stockPeriodPrev" aria-label="Kỳ mới hơn" title="Kỳ mới hơn">‹</button>
+            <span id="stockPeriodRange" aria-live="polite">Đang tải kỳ báo cáo…</span>
+            <button type="button" id="stockPeriodNext" aria-label="Kỳ cũ hơn" title="Kỳ cũ hơn">›</button>
+            <button type="button" id="stockPeriodLast" aria-label="Đến các kỳ cũ nhất" title="Các kỳ cũ nhất">≫</button>
+          </div>
+          <div class="statement-filters">
+            <label class="visually-hidden" for="stockUnit">Đơn vị</label>
+            <select id="stockUnit" aria-label="Đơn vị hiển thị"><option value="billion">Tỷ đồng</option><option value="million">Triệu đồng</option></select>
+            <label class="visually-hidden" for="stockFrequency">Chu kỳ</label>
+            <select id="stockFrequency" aria-label="Chu kỳ"><option value="quarter">Quý</option><option value="year" disabled>Năm (chưa có bảng năm)</option></select>
+            <label class="statement-symbol-select" for="stockSymbol">Mã<select id="stockSymbol">
+              <option value="MBB">MBB</option><option value="ACB">ACB</option><option value="FPT">FPT</option><option value="SHB">SHB</option><option value="TCX">TCX</option><option value="HCM">HCM</option><option value="VND">VND</option><option value="SHS">SHS</option><option value="NLG">NLG</option><option value="BSR">BSR</option><option value="TCB">TCB</option><option value="VHM">VHM</option>
+            <option value="TPB">TPB</option><option value="VPB">VPB</option><option value="STB">STB</option><option value="VCB">VCB</option><option value="CTG">CTG</option><option value="BID">BID</option><option value="VCI">VCI</option><option value="VCK">VCK</option><option value="VIX">VIX</option><option value="SSI">SSI</option><option value="VDS">VDS</option><option value="KDH">KDH</option><option value="NVL">NVL</option><option value="HHV">HHV</option><option value="DPG">DPG</option><option value="GAS">GAS</option><option value="PLX">PLX</option><option value="IDC">IDC</option><option value="KBC">KBC</option><option value="GEG">GEG</option></select></label>
+            <button class="statement-export" id="stockExportExcel" type="button">▧ Xuất Excel</button>
+            <button class="statement-refresh" id="loadStock" type="button" title="Tải lại dữ liệu" aria-label="Tải lại dữ liệu">↻</button>
+          </div>
+        </div>
+        <div class="statement-peer-options" id="stockPeerOptions" hidden>
+          <label for="stockTableCompareMetric">Chỉ tiêu so sánh
+            <select id="stockTableCompareMetric"><option value="net_profit">Lợi nhuận sau thuế</option><option value="pretax_profit">Lợi nhuận trước thuế</option><option value="revenue">Doanh thu</option><option value="total_assets">Tổng tài sản</option><option value="total_liabilities">Nợ phải trả</option><option value="equity">Vốn chủ sở hữu</option><option value="roa">ROA (%)</option><option value="roe">ROE (%)</option><option value="pb">P/B (lần)</option></select>
+          </label>
+          <label for="stockPeerIndustry">Phạm vi ngành<select id="stockPeerIndustry"><option value="same">Cùng ngành với mã đang chọn</option><option value="all">Tất cả ngành</option></select></label>
+          <span>Nhóm ngành được gán theo lĩnh vực hoạt động phổ biến của các mã đang cấu hình. P/B chỉ hiện khi dữ liệu nguồn có trường pb.</span>
+        </div>
+        <div class="empty-state hidden" id="stockState"><div class="empty-icon">▤</div><h3>Đang tải báo cáo tài chính</h3><p>Đang tìm snapshot VietstockFinance mới nhất. Trường chưa có trong dữ liệu sẽ để trống.</p></div>
+        <div class="table-scroll hidden" id="stockTableWrap">
+          <table class="statement-table" aria-label="Bảng báo cáo tài chính theo quý">
+            <thead id="stockStatementHead"><tr><th>Chỉ tiêu</th></tr></thead>
+            <tbody id="stockTableBody"></tbody>
+          </table>
+        </div>
+        <p id="stockSourceStatus" class="small statement-status" role="status" aria-live="polite">Đang nạp dữ liệu báo cáo tài chính…</p>
+        <p id="stockSyncSummary" class="small statement-summary"></p>
+        <p id="stockStatementHint" class="statement-hint">Đơn vị mặc định là tỷ đồng. Dữ liệu trống không được suy diễn; mở liên kết PDF để kiểm tra báo cáo gốc.</p>
+      </div>
         <section class="financial-overview" aria-label="Thống kê chính doanh nghiệp">
           <div class="financial-overview-heading">
             <div>
@@ -315,65 +370,12 @@
           </div>
           <div class="financial-overview-source"><span id="stockStatsSourceNote">Nguồn và trạng thái kiểm chứng sẽ hiển thị sau khi tải dữ liệu.</span><a id="stockStatsSource" href="#" target="_blank" rel="noopener noreferrer" hidden>Mở báo cáo gốc ↗</a></div>
         </section>
-        <div class="statement-topbar">
-          <label class="statement-basis-label" aria-label="Loại báo cáo">
-            <select id="stockReportBasis">
-              <option value="consolidated">Báo cáo hợp nhất</option>
-              <option value="separate">Báo cáo riêng lẻ</option>
-            </select>
-          </label>
-          <nav class="statement-tabs" id="stockStatementTabs" aria-label="Loại báo cáo tài chính" role="tablist">
-            <button type="button" role="tab" aria-selected="true" class="is-active" data-statement="balance">Cân đối kế toán</button>
-            <button type="button" role="tab" aria-selected="false" data-statement="income">Kết quả kinh doanh</button>
-            <button type="button" role="tab" aria-selected="false" data-statement="cashflow">Lưu chuyển tiền tệ</button>
-            <button type="button" role="tab" aria-selected="false" data-statement="ratios">Chỉ số tài chính</button>
-            <button type="button" role="tab" aria-selected="false" data-statement="valuation">Định giá</button>
-            <button type="button" role="tab" aria-selected="false" data-statement="peers">So sánh cùng ngành</button>
-            <button type="button" role="tab" aria-selected="false" data-statement="notes">Thuyết minh &amp; nguồn</button>
-          </nav>
-        </div>
-        <div class="statement-toolbar">
-          <div class="statement-paging" role="group" aria-label="Chuyển khoảng kỳ báo cáo">
-            <button type="button" id="stockPeriodFirst" aria-label="Đến các kỳ mới nhất" title="Các kỳ mới nhất">≪</button>
-            <button type="button" id="stockPeriodPrev" aria-label="Kỳ mới hơn" title="Kỳ mới hơn">‹</button>
-            <span id="stockPeriodRange" aria-live="polite">Đang tải kỳ báo cáo…</span>
-            <button type="button" id="stockPeriodNext" aria-label="Kỳ cũ hơn" title="Kỳ cũ hơn">›</button>
-            <button type="button" id="stockPeriodLast" aria-label="Đến các kỳ cũ nhất" title="Các kỳ cũ nhất">≫</button>
-          </div>
-          <div class="statement-filters">
-            <label class="visually-hidden" for="stockUnit">Đơn vị</label>
-            <select id="stockUnit" aria-label="Đơn vị hiển thị"><option value="billion">Tỷ đồng</option><option value="million">Triệu đồng</option></select>
-            <label class="visually-hidden" for="stockFrequency">Chu kỳ</label>
-            <select id="stockFrequency" aria-label="Chu kỳ"><option value="quarter">Quý</option><option value="year" disabled>Năm (chưa có bảng năm)</option></select>
-            <label class="statement-symbol-select" for="stockSymbol">Mã<select id="stockSymbol">
-              <option value="MBB">MBB</option><option value="ACB">ACB</option><option value="FPT">FPT</option><option value="SHB">SHB</option><option value="TCX">TCX</option><option value="HCM">HCM</option><option value="VND">VND</option><option value="SHS">SHS</option><option value="NLG">NLG</option><option value="BSR">BSR</option><option value="TCB">TCB</option><option value="VHM">VHM</option>
-            <option value="TPB">TPB</option><option value="VPB">VPB</option><option value="STB">STB</option><option value="VCB">VCB</option><option value="CTG">CTG</option><option value="BID">BID</option><option value="VCI">VCI</option><option value="VCK">VCK</option><option value="VIX">VIX</option><option value="SSI">SSI</option><option value="VDS">VDS</option><option value="KDH">KDH</option><option value="NVL">NVL</option><option value="HHV">HHV</option><option value="DPG">DPG</option><option value="GAS">GAS</option><option value="PLX">PLX</option><option value="IDC">IDC</option><option value="KBC">KBC</option><option value="GEG">GEG</option></select></label>
-            <button class="statement-export" id="stockExportExcel" type="button">▧ Xuất Excel</button>
-            <button class="statement-refresh" id="loadStock" type="button" title="Tải lại dữ liệu" aria-label="Tải lại dữ liệu">↻</button>
-          </div>
-        </div>
-        <div class="statement-peer-options" id="stockPeerOptions" hidden>
-          <label for="stockTableCompareMetric">Chỉ tiêu so sánh
-            <select id="stockTableCompareMetric"><option value="net_profit">Lợi nhuận sau thuế</option><option value="pretax_profit">Lợi nhuận trước thuế</option><option value="revenue">Doanh thu</option><option value="total_assets">Tổng tài sản</option><option value="total_liabilities">Nợ phải trả</option><option value="equity">Vốn chủ sở hữu</option><option value="roa">ROA (%)</option><option value="roe">ROE (%)</option><option value="pb">P/B (lần)</option></select>
-          </label>
-          <label for="stockPeerIndustry">Phạm vi ngành<select id="stockPeerIndustry"><option value="same">Cùng ngành với mã đang chọn</option><option value="all">Tất cả ngành</option></select></label>
-          <span>Nhóm ngành được gán theo lĩnh vực hoạt động phổ biến của các mã đang cấu hình. P/B chỉ hiện khi dữ liệu nguồn có trường pb.</span>
-        </div>
-        <div class="empty-state hidden" id="stockState"><div class="empty-icon">▤</div><h3>Đang tải báo cáo tài chính</h3><p>Đang tìm snapshot VietstockFinance mới nhất. Trường chưa có trong dữ liệu sẽ để trống.</p></div>
-        <div class="table-scroll hidden" id="stockTableWrap">
-          <table class="statement-table" aria-label="Bảng báo cáo tài chính theo quý">
-            <thead id="stockStatementHead"><tr><th>Chỉ tiêu</th></tr></thead>
-            <tbody id="stockTableBody"></tbody>
-          </table>
-        </div>
-        <p id="stockSourceStatus" class="small statement-status" role="status" aria-live="polite">Đang nạp dữ liệu báo cáo tài chính…</p>
-        <p id="stockSyncSummary" class="small statement-summary"></p>
-        <p id="stockStatementHint" class="statement-hint">Đơn vị mặc định là tỷ đồng. Dữ liệu trống không được suy diễn; mở liên kết PDF để kiểm tra báo cáo gốc.</p>
-      </div>
+      <div class="stock-charts-grid" aria-label="Biểu đồ phân tích tài chính">
       <div class="currency-panel stock-chart-panel"><div class="currency-panel-heading"><div><h3>Doanh thu và lợi nhuận theo quý</h3><p class="muted">Chuỗi quý từ snapshot VietstockFinance; các kỳ cần rà soát được ghi trạng thái trong bảng.</p></div></div><div class="chart-canvas-wrap"><canvas id="stockProfitChart" role="img" aria-label="Biểu đồ doanh thu và lợi nhuận theo quý"></canvas></div><p class="muted data-chart-note" id="stockProfitNote">Đang kiểm tra dữ liệu offline.</p></div>
       <div class="currency-panel stock-chart-panel"><div class="currency-panel-heading"><div><h3>Tài sản, nợ và vốn chủ sở hữu</h3><p class="muted">Theo dõi quy mô và cơ cấu nguồn vốn theo từng quý.</p></div></div><div class="chart-canvas-wrap"><canvas id="stockBalanceChart" role="img" aria-label="Biểu đồ tài sản, nợ và vốn chủ sở hữu"></canvas></div><p class="muted data-chart-note" id="stockBalanceNote">Đang kiểm tra dữ liệu offline.</p></div>
       <div class="currency-panel stock-chart-panel"><div class="currency-panel-heading"><div><h3>ROA và ROE theo quý</h3><p class="muted">Tỷ số chỉ hiển thị nếu có trong snapshot và có cơ sở tính được kiểm chứng.</p></div></div><div class="chart-canvas-wrap"><canvas id="stockRatiosChart" role="img" aria-label="Biểu đồ ROA và ROE"></canvas></div><p class="muted data-chart-note" id="stockRatiosNote">Đang kiểm tra dữ liệu offline.</p></div>
       <div class="currency-panel stock-chart-panel"><div class="currency-panel-heading"><div><h3>So sánh các mã cổ phiếu</h3><p class="muted">So sánh cùng kỳ và cùng chỉ tiêu; mã không có dữ liệu sẽ không được tự điền.</p></div></div><div class="stock-controls stock-compare-controls"><label>Chỉ tiêu<select id="stockCompareMetric"><option value="net_profit">Lợi nhuận sau thuế</option><option value="pretax_profit">Lợi nhuận trước thuế</option><option value="revenue">Doanh thu</option><option value="total_assets">Tổng tài sản</option><option value="total_liabilities">Nợ phải trả</option><option value="equity">Vốn chủ sở hữu</option><option value="roa">ROA (%)</option><option value="roe">ROE (%)</option><option value="pb">P/B (lần)</option></select></label><label>Phạm vi ngành<select id="stockCompareIndustry"><option value="all">Tất cả ngành</option><option value="same">Cùng ngành với mã đang chọn</option></select></label><label>Kỳ so sánh<select id="stockComparePeriod"><option value="">Đang tìm kỳ có dữ liệu…</option></select></label></div><div class="chart-canvas-wrap"><canvas id="stockCompareChart" role="img" aria-label="Biểu đồ so sánh các mã cổ phiếu"></canvas></div><p class="muted data-chart-note" id="stockCompareNote">Đang kiểm tra dữ liệu offline.</p><div id="stockCompareTable" class="table-scroll"></div></div>
+      </div>
       <div class="currency-panel research-panel" id="stockResearchPanel">
         <div class="currency-panel-heading"><div><h3>Thư viện báo cáo phân tích &amp; dự báo</h3><p class="muted">Danh mục nghiên cứu riêng biệt; không trộn dự phóng với báo cáo tài chính thực tế.</p></div><span class="status-pill neutral" id="researchStatus">Đang tải danh mục…</span></div>
         <div class="stock-controls research-filters">

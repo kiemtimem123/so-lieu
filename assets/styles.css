@@ -380,3 +380,143 @@ body,button,input,select,textarea{font-family:Arial,"Segoe UI",Tahoma,sans-serif
  #co-phieu .statement-filters select{flex:1 1 85px!important}
 }
 @media(max-width:380px){#co-phieu .financial-stats-grid{grid-template-columns:minmax(0,1fr)!important}}
+
+
+/* 2026-10-27: compact quarterly statements view inspired by WiData's financial reports.
+   Detailed statement first; overview KPIs and charts remain available below. */
+#co-phieu .financial-terminal{
+  display:flex!important;flex-direction:column!important;gap:0!important;
+  background:#fff!important;border:1px solid #e0e5ed!important;border-radius:10px!important;
+  box-shadow:0 2px 10px rgba(22,34,54,.035)!important;padding:12px!important;
+}
+#co-phieu .statement-topbar{
+  order:1!important;display:flex!important;align-items:center!important;gap:8px!important;
+  flex-wrap:wrap!important;padding:2px 0 10px!important;border-bottom:1px solid #e6eaf1!important;
+}
+#co-phieu .statement-basis-label{flex:0 1 175px!important;min-width:140px!important}
+#co-phieu .statement-basis-label select{
+  min-width:0!important;width:100%!important;min-height:34px!important;padding:7px 10px!important;
+  font-size:12px!important;font-weight:700!important;border-radius:6px!important;background:#f7f9fc!important;
+}
+#co-phieu .statement-tabs{
+  flex:1 1 500px!important;min-width:0!important;overflow-x:auto!important;
+  scrollbar-width:thin!important;border-bottom:0!important;gap:2px!important;
+}
+#co-phieu .statement-tabs button{
+  padding:8px 11px!important;font-size:11.5px!important;line-height:1.35!important;
+  border-radius:6px 6px 0 0!important;border-bottom:2px solid transparent!important;
+}
+#co-phieu .statement-tabs button.is-active{
+  background:#edf2fb!important;color:#2458a6!important;border-bottom-color:#376fc4!important;
+}
+#co-phieu .statement-toolbar{
+  order:2!important;display:flex!important;align-items:center!important;justify-content:space-between!important;
+  gap:8px!important;flex-wrap:wrap!important;padding:10px 0!important;margin:0!important;
+  border-bottom:1px solid #e8ecf2!important;
+}
+#co-phieu .statement-paging{gap:3px!important;flex-wrap:nowrap!important}
+#co-phieu .statement-paging button{width:28px!important;height:30px!important;font-size:21px!important;border-radius:5px!important}
+#co-phieu #stockPeriodRange{
+  min-width:145px!important;height:31px!important;margin:0 3px!important;padding:0 8px!important;
+  font-size:11.5px!important;border-color:#e0e5ec!important;border-radius:6px!important;
+}
+#co-phieu .statement-filters{gap:6px!important;flex-wrap:wrap!important}
+#co-phieu .statement-filters select,#co-phieu .statement-peer-options select{
+  height:31px!important;padding:0 24px 0 8px!important;font-size:11.5px!important;border-radius:6px!important;
+}
+#co-phieu .statement-symbol-select{font-size:11px!important;gap:4px!important}
+#co-phieu .statement-symbol-select select{min-width:70px!important}
+#co-phieu .statement-export,#co-phieu .statement-refresh{
+  height:31px!important;padding:0 10px!important;border-radius:6px!important;font-size:11px!important;
+}
+#co-phieu .statement-refresh{width:31px!important;padding:0!important}
+#co-phieu .statement-peer-options{order:3!important;margin:8px 0!important;border-radius:6px!important}
+#co-phieu #stockState{order:4!important;margin-top:12px!important}
+#co-phieu #stockTableWrap{
+  order:5!important;width:100%!important;max-width:100%!important;max-height:620px!important;
+  margin:0!important;overflow:auto!important;border:1px solid #e1e6ee!important;border-radius:0 0 7px 7px!important;
+  scrollbar-color:#c5ccd7 #f4f6f9!important;
+}
+#co-phieu .statement-table{
+  width:max-content!important;min-width:100%!important;border-collapse:separate!important;
+  border-spacing:0!important;font-size:11px!important;white-space:nowrap!important;
+}
+#co-phieu .statement-table th,#co-phieu .statement-table td{
+  height:auto!important;min-width:96px!important;padding:8px 10px!important;
+  border-bottom:1px solid #edf0f4!important;font-size:11px!important;line-height:1.4!important;
+}
+#co-phieu .statement-table thead th{
+  position:sticky!important;top:0!important;z-index:3!important;
+  background:#f2f5f9!important;color:#536176!important;font-weight:700!important;
+}
+#co-phieu .statement-table thead th:first-child{
+  left:0!important;z-index:5!important;min-width:270px!important;max-width:340px!important;
+  background:#f7f9fc!important;text-align:left!important;
+}
+#co-phieu .statement-table th:first-child,#co-phieu .statement-table td:first-child{
+  position:sticky!important;left:0!important;z-index:2!important;
+  min-width:270px!important;max-width:340px!important;padding-left:12px!important;
+  background:#fff!important;text-align:left!important;white-space:normal!important;
+}
+#co-phieu .statement-table tbody tr:hover td{background:#f6f9fd!important}
+#co-phieu .statement-table tbody tr:hover td:first-child{background:#f6f9fd!important}
+#co-phieu .statement-table .statement-section td,
+#co-phieu .statement-table .statement-section td:first-child{
+  background:#f4f7fb!important;color:#2f5d9e!important;font-weight:750!important;
+}
+#co-phieu .statement-table .statement-strong td{font-weight:750!important}
+#co-phieu .statement-status,#co-phieu .statement-summary,#co-phieu .statement-hint{
+  order:6!important;margin:8px 0 0!important;font-size:10px!important;line-height:1.55!important;
+}
+#co-phieu .statement-summary{order:7!important;margin-top:3px!important}
+#co-phieu .statement-hint{order:8!important;padding-top:8px!important;border-top:1px solid #e8ecf2!important}
+#co-phieu .financial-overview{
+  order:9!important;margin:18px 0 0!important;padding:16px 0 4px!important;
+  border-top:2px solid #e4e9f1!important;border-bottom:0!important;
+}
+#co-phieu .financial-overview-heading{margin-bottom:10px!important}
+#co-phieu .financial-overview-heading h3{font-size:16px!important;letter-spacing:0!important}
+#co-phieu .financial-stats-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:9px!important}
+#co-phieu .financial-stat-card{padding:10px!important;border:1px solid #e1e6ee!important;border-radius:7px!important}
+#co-phieu .financial-stat-heading{padding-bottom:5px!important;border-bottom:1px solid #edf0f4!important}
+#co-phieu .financial-stat-heading h4{font-size:11px!important}
+#co-phieu .financial-stat-rows>div{padding:5px 0!important}
+#co-phieu .financial-stat-rows>div>span{font-size:10px!important}
+#co-phieu .financial-stat-rows strong{font-size:10.5px!important}
+#co-phieu .stock-charts-grid{
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:12px!important;margin-top:14px!important;align-items:stretch!important;
+}
+#co-phieu .stock-chart-panel{
+  min-width:0!important;max-width:100%!important;margin:0!important;padding:14px!important;
+  border:1px solid #e0e5ed!important;border-radius:9px!important;background:#fff!important;
+  box-shadow:none!important;overflow:hidden!important;
+}
+#co-phieu .stock-chart-panel .currency-panel-heading{margin-bottom:10px!important}
+#co-phieu .stock-chart-panel h3{font-size:13px!important;line-height:1.4!important}
+#co-phieu .stock-chart-panel .chart-canvas-wrap{height:260px!important;min-height:220px!important}
+#co-phieu .stock-chart-panel .data-chart-note{font-size:10px!important;line-height:1.5!important}
+#co-phieu #stockCompareTable{margin-top:10px!important;max-height:300px!important;overflow:auto!important}
+#co-phieu #stockCompareTable table{min-width:0!important;font-size:10px!important}
+#co-phieu #stockCompareTable th,#co-phieu #stockCompareTable td{padding:7px 8px!important}
+@media(max-width:1120px){
+  #co-phieu .stock-charts-grid{grid-template-columns:1fr!important}
+}
+@media(max-width:760px){
+  #co-phieu .financial-terminal{padding:8px!important}
+  #co-phieu .statement-basis-label{flex:1 1 160px!important}
+  #co-phieu .statement-tabs{flex:1 1 100%!important}
+  #co-phieu .statement-toolbar{align-items:flex-start!important}
+  #co-phieu .statement-paging{max-width:100%!important}
+  #co-phieu .statement-filters{width:100%!important}
+  #co-phieu .statement-filters select{flex:1 1 85px!important}
+  #co-phieu .statement-table th:first-child,#co-phieu .statement-table td:first-child,
+  #co-phieu .statement-table thead th:first-child{min-width:205px!important;max-width:250px!important}
+  #co-phieu .financial-stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #co-phieu .stock-chart-panel{padding:11px!important}
+}
+@media(max-width:420px){
+  #co-phieu .financial-stats-grid{grid-template-columns:1fr!important}
+  #co-phieu .statement-paging{gap:1px!important}
+  #co-phieu #stockPeriodRange{min-width:112px!important;font-size:10px!important}
+}
