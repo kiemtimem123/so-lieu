@@ -1077,24 +1077,31 @@
         if (!snapshot || snapshot.symbol !== ticker || !Array.isArray(snapshot.items)) {
           throw new Error('Snapshot không đúng schema (' + candidate.label + ')');
         }
-        const rows = snapshot.items.filter(item => item && validPeriod(item.period) &&
-          typeof item.source_url === 'string' && /^https?:\/\//i.test(item.source_url));
+        // Keep valid quarter records even when the source PDF link is temporarily
+        // absent; the period and available verified figures must still render.
+        const rows = snapshot.items.filter(item => item && validPeriod(item.period));
         if (!rows.length) throw new Error('Snapshot chưa có kỳ báo cáo hợp lệ (' + candidate.label + ')');
         return { ...snapshot, items: rows, _loadedFrom: candidate.label };
       };
 
       // GitHub holds the workflow-updated snapshots. Load it first so a slow
       // Hostinger path cannot keep all figures and charts in the initial loading state.
+      const cacheKey = Date.now();
       const candidates = [
         {
+          label: 'GitHub CDN',
+          url: 'https://cdn.jsdelivr.net/gh/kiemtimem123/so-lieu@main/data/' + encodeURIComponent(filename) + '?v=' + cacheKey,
+          timeoutMs: 7000
+        },
+        {
           label: 'GitHub',
-          url: DATA_FALLBACK_BASE + encodeURIComponent(filename) + '?v=' + Date.now(),
+          url: DATA_FALLBACK_BASE + encodeURIComponent(filename) + '?v=' + cacheKey,
           timeoutMs: 7000
         },
         {
           label: 'website',
-          url: 'data/' + filename + '?v=' + Date.now(),
-          timeoutMs: 2500
+          url: 'data/' + filename + '?v=' + cacheKey,
+          timeoutMs: 3500
         }
       ];
       const errors = [];
@@ -1872,8 +1879,7 @@
       const task = (async () => {
         try {
           const snapshot = await fetchLatestFinancialSnapshot(ticker);
-          const items = snapshot.items.filter(record => Boolean(record && validPeriod(record.period) &&
-            typeof record.source_url === 'string' && /^https?:\/\//i.test(record.source_url)));
+          const items = snapshot.items.filter(record => Boolean(record && validPeriod(record.period)));
           snapshots.set(ticker, { ...snapshot, items });
           return { ticker, ok: true, count: items.length, loadedFrom: snapshot._loadedFrom };
         } catch (error) {
