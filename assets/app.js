@@ -1931,7 +1931,7 @@
     });
     yearSelect?.addEventListener('change',renderSelected);
     basisSelect?.addEventListener('change', () => { periodOffset = 0; renderSelected(); });
-    unitSelect?.addEventListener('change',renderSelected);
+    unitSelect?.addEventListener('change', () => { renderSelected(); drawComparison(); });
     tableCompareMetric?.addEventListener('change',renderSelected);
     $('#stockPeerIndustry')?.addEventListener('change',renderSelected);
     $('#stockCompareIndustry')?.addEventListener('change',drawComparison);
