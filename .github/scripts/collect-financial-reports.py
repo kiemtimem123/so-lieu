@@ -900,7 +900,9 @@ def canonical_document_url(value: object) -> tuple[str, str] | None:
 
 
 FAILED_URL_RETRY_COOLDOWN_SECONDS = 30 * 60
+FAILED_URL_RETRY_RESET_SECONDS = 24 * 60 * 60
 FAILED_URL_MAX_ATTEMPTS = 3
+CATALOG_REFRESH_INTERVAL_SECONDS = 6 * 60 * 60
 
 
 def retry_url_key(value: object):
@@ -908,13 +910,15 @@ def retry_url_key(value: object):
     return canonical_document_url(value) or str(value or "").strip()
 
 
-def failed_url_retry_state(jobs: list[dict], symbol: str):
-    """Return successful URLs, failed-attempt metadata and URLs eligible for retry.
+def failed_url_retry_state(jobs: list[dict], symbol: str, now: datetime | None = None):
+    """Return URL states with a rolling retry budget.
 
-    Older queue records may not have a timestamp; those get one retry immediately.
-    Subsequent failures wait 30 minutes, and a URL is attempted at most three times.
-    Successful archives always take precedence over any earlier failed download.
+    A failed URL is retried after a cooldown, up to FAILED_URL_MAX_ATTEMPTS
+    within a 24-hour window. Old failures expire instead of banning the source
+    forever. Missing legacy timestamps are treated as expired metadata.
     """
+    current = now or datetime.now(timezone.utc)
+    now_epoch = current.timestamp()
     failures: dict[object, dict] = {}
     successful: set[object] = set()
     for prior_job in jobs:
@@ -933,8 +937,6 @@ def failed_url_retry_state(jobs: list[dict], symbol: str):
                 if status == "downloaded_needs_review":
                     successful.add(key)
                 elif status == "download_error":
-                    state = failures.setdefault(key, {"attempts": 0, "last_attempt": 0.0})
-                    state["attempts"] += 1
                     stamp = record.get("attempted_at") or record.get("failed_at") or record.get("downloaded_at")
                     epoch = 0.0
                     if stamp:
@@ -945,9 +947,17 @@ def failed_url_retry_state(jobs: list[dict], symbol: str):
                             epoch = dt.timestamp()
                         except (TypeError, ValueError, OSError, OverflowError):
                             epoch = 0.0
-                    state["last_attempt"] = max(float(state.get("last_attempt") or 0), epoch)
 
-    now_epoch = datetime.now(timezone.utc).timestamp()
+                    state = failures.setdefault(key, {"attempts": 0, "last_attempt": 0.0})
+                    # The retry budget is rolling: an old failed URL becomes
+                    # eligible again after 24 hours, even if prior attempts hit
+                    # the per-window maximum.
+                    if epoch and now_epoch - epoch >= FAILED_URL_RETRY_RESET_SECONDS:
+                        continue
+                    if epoch:
+                        state["attempts"] += 1
+                        state["last_attempt"] = max(float(state.get("last_attempt") or 0), epoch)
+
     retryable = {
         key for key, state in failures.items()
         if key not in successful
@@ -957,7 +967,33 @@ def failed_url_retry_state(jobs: list[dict], symbol: str):
             or now_epoch - float(state["last_attempt"]) >= FAILED_URL_RETRY_COOLDOWN_SECONDS
         )
     }
+    # A successful archive in any prior job always wins over a failure record.
+    retryable.difference_update(successful)
     return successful, failures, retryable
+
+
+def catalog_refresh_due(
+    job: dict,
+    has_pending_saved_candidates: bool = False,
+    retryable_failed_urls: set | None = None,
+    now: datetime | None = None,
+) -> bool:
+    """Throttle fresh catalog scans for jobs stuck after exhausting saved URLs."""
+    if str(job.get("status") or "") not in {"needs_review", "failed"}:
+        return False
+    if has_pending_saved_candidates or retryable_failed_urls:
+        return False
+    stamp = job.get("lastCatalogRefreshAt")
+    if not stamp:
+        return True
+    try:
+        refreshed = datetime.fromisoformat(str(stamp).replace("Z", "+00:00"))
+        if refreshed.tzinfo is None:
+            refreshed = refreshed.replace(tzinfo=timezone.utc)
+    except (TypeError, ValueError, OSError, OverflowError):
+        return True
+    current = now or datetime.now(timezone.utc)
+    return (current - refreshed).total_seconds() >= CATALOG_REFRESH_INTERVAL_SECONDS
 
 
 def link_quarterly_archive_sources(symbol: str, jobs: list[dict]) -> int:
@@ -1222,15 +1258,32 @@ def main():
             )
             for candidate in stored_candidates
         )
-        # Continue a saved VietstockFinance candidate batch even if its prior
-        # scan was marked needs_review; don't let that status strand unattempted URLs.
+        # Resume unattempted or retryable checkpointed URLs first. If every saved
+        # URL is exhausted, periodically rescan VietstockFinance for new/updated
+        # document links rather than leaving the ticker permanently stranded.
         resume_pending_candidates = (
             job.get("status") == "needs_review" and has_pending_saved_candidates
         )
         retry_failed_only = job.get("status") == "needs_review" and bool(retryable_failed_urls)
-        if job.get("status") not in {"queued", "failed"} and not retry_failed_only and not resume_pending_candidates:
+        refresh_catalog = catalog_refresh_due(
+            job,
+            has_pending_saved_candidates=has_pending_saved_candidates,
+            retryable_failed_urls=retryable_failed_urls,
+        )
+        if (
+            job.get("status") not in {"queued", "failed"}
+            and not retry_failed_only
+            and not resume_pending_candidates
+            and not refresh_catalog
+        ):
             continue
-        if job.get("status") == "failed" and int(job.get("attempts", 0)) >= 5 and job.get("origin") != "missing_full_report_dependency" and not retryable_failed_urls:
+        if (
+            job.get("status") == "failed"
+            and int(job.get("attempts", 0)) >= 5
+            and job.get("origin") != "missing_full_report_dependency"
+            and not retryable_failed_urls
+            and not refresh_catalog
+        ):
             continue
 
         previous_files = list(job.get("downloadedFiles") or [])
@@ -1262,6 +1315,16 @@ def main():
             }, ensure_ascii=False))
         else:
             candidates = discover_for_job(job, ALLOWED_DOMAINS)
+            if not (isinstance(job.get("requestedUrls"), list) and job.get("requestedUrls")):
+                job["lastCatalogRefreshAt"] = NOW
+                if refresh_catalog:
+                    print(json.dumps({
+                        "event": "stuck_job_catalog_refresh",
+                        "symbol": symbol,
+                        "job_id": job.get("id"),
+                        "candidate_count": len(candidates),
+                        "refresh_interval_hours": CATALOG_REFRESH_INTERVAL_SECONDS // 3600,
+                    }, ensure_ascii=False))
 
         # Avoid re-downloading successful archives, but allow bounded retries for
         # failed URLs after the cooldown. attemptedUrls alone must not permanently
