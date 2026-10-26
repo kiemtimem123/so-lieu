@@ -1143,30 +1143,30 @@
         {field:'revenue',label:revenueLabelFor(ticker)},
         {field:'pretax_profit',label:'Lợi nhuận trước thuế'},
         {field:'net_profit',label:'Lợi nhuận sau thuế'}
-      ].map(item=>({ ...item, values:rows.map(row=>validNumber(row[item.field])?Number(row[item.field]):null) }));
+      ].map(item=>({ ...item, values:rows.map(row=>statementNumericValue(row[item.field],row)) }));
       const financialAvailable = financial.filter(series=>series.values.some(value=>value!==null));
       drawChart('profit','stockProfitChart','stockProfitNote',{
         labels, points:financialAvailable.flatMap(s=>s.values.filter(v=>v!==null)),
         datasets:financialAvailable.map(s=>({label:s.label,data:s.values,borderWidth:2,tension:.18,pointRadius:rows.length>32?0:3,spanGaps:false})),
-        note:financialAvailable.length ? 'Nguồn: snapshot báo cáo tài chính. Trạng thái rà soát từng kỳ được ghi trong bảng; điểm chưa trích xuất sẽ để trống, không nội suy.' : '',
+        note:financialAvailable.length ? 'Đơn vị: ' + ((unitSelect?.value || 'billion') === 'billion' ? 'tỷ đồng' : 'triệu đồng') + '. Nguồn: snapshot báo cáo tài chính; kỳ chưa trích xuất hoặc chưa xác minh được để trống, không nội suy.' : '',
         emptyMessage:'Chưa có trường doanh thu hoặc lợi nhuận hợp lệ trong snapshot. Hãy trích xuất từ báo cáo gốc; website không tự ước tính.'
       });
       const balance = [
         {field:'total_assets',label:'Tổng tài sản'},
         {field:'total_liabilities',label:'Nợ phải trả'},
         {field:'equity',label:'Vốn chủ sở hữu'}
-      ].map(item=>({ ...item, values:rows.map(row=>validNumber(row[item.field])?Number(row[item.field]):null) }));
+      ].map(item=>({ ...item, values:rows.map(row=>statementNumericValue(row[item.field],row)) }));
       const balanceAvailable=balance.filter(series=>series.values.some(value=>value!==null));
       drawChart('balance','stockBalanceChart','stockBalanceNote',{
         labels,points:balanceAvailable.flatMap(s=>s.values.filter(v=>v!==null)),
         datasets:balanceAvailable.map(s=>({label:s.label,data:s.values,borderWidth:2,tension:.18,pointRadius:rows.length>32?0:3,spanGaps:false})),
-        note:balanceAvailable.length?'Nguồn: snapshot báo cáo tài chính. Kiểm tra trạng thái kỳ báo cáo và cơ sở hợp nhất/riêng lẻ trong bảng trước khi so sánh.':'',
+        note:balanceAvailable.length?'Đơn vị: ' + ((unitSelect?.value || 'billion') === 'billion' ? 'tỷ đồng' : 'triệu đồng') + '. Kiểm tra trạng thái kỳ báo cáo và cơ sở hợp nhất/riêng lẻ trong bảng trước khi so sánh.':'',
         emptyMessage:'Chưa có số liệu tài sản, nợ hoặc vốn chủ sở hữu hợp lệ.'
       });
       const ratios=[
         {field:'roa',label:'ROA (%)'},
         {field:'roe',label:'ROE (%)'}
-      ].map(item=>({ ...item, values:rows.map(row=>validNumber(row[item.field])?Number(row[item.field]):null) }));
+      ].map(item=>({ ...item, values:rows.map(row=>statementNumericValue(row[item.field],row,true)) }));
       const ratiosAvailable=ratios.filter(series=>series.values.some(value=>value!==null));
       drawChart('ratios','stockRatiosChart','stockRatiosNote',{
         labels,points:ratiosAvailable.flatMap(s=>s.values.filter(v=>v!==null)),
@@ -1188,19 +1188,20 @@
       const compareSymbols = symbols.filter(ticker => compareIndustry === 'all' || industryFor(ticker) === selectedIndustry);
       const values = compareSymbols.map(ticker => {
         const row = rowsFor(ticker).find(item=>item.period===period);
-        return {ticker, value:row && validNumber(row[metric]) ? Number(row[metric]) : null};
+        const isRatio = ['roa','roe','pb'].includes(metric);
+        return {ticker, value:row ? statementNumericValue(row[metric],row,isRatio) : null, row};
       }).filter(item=>item.value!==null);
       drawChart('compare','stockCompareChart','stockCompareNote',{
         type:'bar', labels:values.map(item=>item.ticker), points:values.map(item=>item.value),
         datasets:values.length?[{label:meta.label+((meta.unit==='%'?' (%)':meta.unit==='lần'?' (lần)':'')),data:values.map(item=>item.value),borderWidth:1}]:[],
         beginAtZero:true,
-        note:values.length?'Kỳ '+periodLabel(period)+' · '+meta.label+'. Chỉ so sánh các mã có dữ liệu, cùng đơn vị và cùng cơ sở báo cáo.':'',
+        note:values.length?'Kỳ '+periodLabel(period)+' · '+meta.label+'. Giá trị tiền tệ đã quy đổi sang cùng đơn vị hiển thị; doanh thu có thể khác định nghĩa tùy ngành.':'',
         emptyMessage:'Chưa có dữ liệu đã xác minh cho chỉ tiêu và kỳ so sánh đã chọn.'
       });
       const table = $('#stockCompareTable');
       if (table) {
         table.innerHTML = values.length
-          ? '<table><thead><tr><th>Mã</th><th>Kỳ</th><th>'+escapeHtml(meta.label)+'</th><th>Đơn vị</th></tr></thead><tbody>'+values.map(item=>'<tr><td><strong>'+item.ticker+'</strong></td><td>'+escapeHtml(periodLabel(period))+'</td><td>'+numberOrDash(item.value)+'</td><td>'+escapeHtml((metric==='roa'||metric==='roe')?'%' : metric==='pb'?'lần':(rowsFor(item.ticker).find(row=>row.period===period)?.unit || meta.unit))+'</td></tr>').join('')+'</tbody></table>'
+          ? '<table><thead><tr><th>Mã</th><th>Kỳ</th><th>'+escapeHtml(meta.label)+'</th><th>Đơn vị</th></tr></thead><tbody>'+values.map(item=>'<tr><td><strong>'+item.ticker+'</strong></td><td>'+escapeHtml(periodLabel(period))+'</td><td>'+numberOrDash(item.value)+'</td><td>'+escapeHtml(['roa','roe'].includes(metric)?'%' : ['pb','pe','ev_ebitda'].includes(metric)?'lần':(unitSelect?.value || 'billion')==='billion'?'tỷ đồng':'triệu đồng')+'</td></tr>').join('')+'</tbody></table>'
           : '<div class="empty-state"><h3>Chưa có dữ liệu để so sánh</h3><p>Chỉ những giá trị có nguồn kiểm chứng mới được hiển thị.</p></div>';
       }
     }
@@ -1391,8 +1392,10 @@
         else sourceLink.hidden = true;
       }
     }
-    const statementNumber = (value, item, isRatio = false) => {
-      if (!validNumber(value)) return '—';
+    // Convert source monetary units consistently for tables, KPI cards and all charts.
+    // Ratio fields (ROA/ROE, multiples) are passed with isRatio=true and are not scaled.
+    const statementNumericValue = (value, item, isRatio = false) => {
+      if (!validNumber(value)) return null;
       let numeric = Number(value);
       if (!isRatio) {
         const sourceUnit = String(item?.unit || '').toLowerCase();
@@ -1406,6 +1409,11 @@
           else if (!sourceIsMillion && /vnd|đồng/.test(sourceUnit)) numeric /= 1e6;
         }
       }
+      return Number.isFinite(numeric) ? numeric : null;
+    };
+    const statementNumber = (value, item, isRatio = false) => {
+      const numeric = statementNumericValue(value, item, isRatio);
+      if (numeric === null) return '—';
       return new Intl.NumberFormat('en-US', { maximumFractionDigits: 1, minimumFractionDigits: 0 }).format(numeric);
     };
     const getStatementRows = () => {
