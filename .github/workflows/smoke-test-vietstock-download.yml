@@ -67,6 +67,9 @@ jobs:
           canonical_url = module["canonical_document_url"]
           source_registry = json.loads((root / "config/source-registry.json").read_text(encoding="utf-8"))
           allowed_domains = source_registry.get("allowedDomains", [])
+          # The production script normally initializes this global from main().
+          # Set the same allowlist when invoking its public functions directly.
+          download.__globals__["ALLOWED_DOMAINS"] = allowed_domains
 
           snapshot = json.loads((root / "data/financials-TPB.json").read_text(encoding="utf-8"))
           item = next(
