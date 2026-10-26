@@ -250,11 +250,19 @@ jobs:
         run: node .github/scripts/validate-report-queue.cjs
       - name: Commit report archive and queue log
         shell: bash
+        env:
+          COLLECT_SYMBOL: ${{ needs['select-ticker'].outputs.symbol }}
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add config/report-queue.json reports/ data/analysis-reports.json data/financials-*.json
+          stage_report_changes() {
+            git add config/report-queue.json reports/worker-last-run.json data/analysis-reports.json data/financials-*.json
+            if [ -n "${COLLECT_SYMBOL}" ] && [ -d "reports/raw/${COLLECT_SYMBOL}" ]; then
+              git add "reports/raw/${COLLECT_SYMBOL}/"
+            fi
+          }
+          stage_report_changes
           if git diff --cached --quiet; then
             echo "No report queue/archive changes to commit."
             exit 0
@@ -277,9 +285,9 @@ jobs:
               git fetch origin main
               git reset --hard origin/main
               node .github/scripts/validate-report-queue.cjs
-              python .github/scripts/collect-financial-reports.py
+              REPORT_COLLECT_SYMBOL="${COLLECT_SYMBOL}" python .github/scripts/collect-financial-reports.py
               node .github/scripts/validate-report-queue.cjs
-              git add config/report-queue.json reports/ data/analysis-reports.json data/financials-*.json
+              stage_report_changes
               if git diff --cached --quiet; then
                 echo "No remaining changes after recomputing on latest main."
                 pushed=true
