@@ -695,6 +695,16 @@ def download_candidate(candidate, job_dir):
                 if len(data) > MAX_BYTES: return {"url":url,"status":"skipped_too_large","bytes":len(data)}
             if not data: return {"url":url,"status":"empty"}
             suffix = safe_name(final_url, ctype)
+            if suffix == ".pdf" and b"%PDF-" not in bytes(data[:1024]):
+                return {
+                    "url": url,
+                    "final_url": final_url,
+                    "title": candidate.get("title"),
+                    "status": "download_error",
+                    "content_type": ctype,
+                    "bytes": len(data),
+                    "error": "Phản hồi không có chữ ký PDF trong 1024 byte đầu; từ chối lưu nội dung HTML hoặc tệp không phải PDF.",
+                }
             digest = hashlib.sha256(data).hexdigest()
             name = digest[:16] + suffix
             job_dir.mkdir(parents=True, exist_ok=True)
@@ -1194,8 +1204,31 @@ def main():
             break
         symbol = str(job.get("symbol") or "").strip().upper()
         successful_url_keys, failed_url_states, retryable_failed_urls = failed_url_retry_state(jobs, symbol)
+        stored_candidates = [
+            candidate for candidate in (job.get("sourceCandidates") or [])
+            if isinstance(candidate, dict) and candidate.get("url")
+        ]
+        attempted_candidate_keys = {
+            retry_url_key(url)
+            for url in (job.get("attemptedUrls") or [])
+            if url
+        }
+        has_pending_saved_candidates = any(
+            retry_url_key(candidate.get("url"))
+            and retry_url_key(candidate.get("url")) not in successful_url_keys
+            and (
+                retry_url_key(candidate.get("url")) not in attempted_candidate_keys
+                or retry_url_key(candidate.get("url")) in retryable_failed_urls
+            )
+            for candidate in stored_candidates
+        )
+        # Continue a saved VietstockFinance candidate batch even if its prior
+        # scan was marked needs_review; don't let that status strand unattempted URLs.
+        resume_pending_candidates = (
+            job.get("status") == "needs_review" and has_pending_saved_candidates
+        )
         retry_failed_only = job.get("status") == "needs_review" and bool(retryable_failed_urls)
-        if job.get("status") not in {"queued", "failed"} and not retry_failed_only:
+        if job.get("status") not in {"queued", "failed"} and not retry_failed_only and not resume_pending_candidates:
             continue
         if job.get("status") == "failed" and int(job.get("attempts", 0)) >= 5 and job.get("origin") != "missing_full_report_dependency" and not retryable_failed_urls:
             continue
@@ -1206,11 +1239,11 @@ def main():
         # successful/partial batch. Reusing these URLs avoids re-querying every
         # VietstockFinance year/page before each two-file download batch.
         resume_saved_candidates = (
-            job.get("status") == "queued"
-            and job.get("resumeDownload") is True
-            and isinstance(job.get("sourceCandidates"), list)
-            and bool(job.get("sourceCandidates"))
-        )
+            (
+                job.get("status") == "queued" and job.get("resumeDownload") is True
+            )
+            or resume_pending_candidates
+        ) and isinstance(job.get("sourceCandidates"), list) and bool(job.get("sourceCandidates"))
         saved_candidates = [
             candidate for candidate in (job.get("sourceCandidates") or [])
             if isinstance(candidate, dict) and candidate.get("url")
