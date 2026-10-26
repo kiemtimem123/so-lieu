@@ -65,7 +65,8 @@ jobs:
           discover = module["discover_for_job"]
           download = module["download_candidate"]
           canonical_url = module["canonical_document_url"]
-          allowed_domains = module["ALLOWED_DOMAINS"]
+          source_registry = json.loads((root / "config/source-registry.json").read_text(encoding="utf-8"))
+          allowed_domains = source_registry.get("allowedDomains", [])
 
           snapshot = json.loads((root / "data/financials-TPB.json").read_text(encoding="utf-8"))
           item = next(
