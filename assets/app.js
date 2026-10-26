@@ -1837,8 +1837,13 @@
       // produces an empty body despite loaded numeric rows, keep verified core
       // figures visible instead of leaving only the column headings.
       const hasVisibleBodyRows = Boolean(tableBody && tableBody.querySelector('tr'));
+      const hasVisibleNumericCells = Boolean(tableBody && [...tableBody.querySelectorAll('tr td:not(:first-child)')]
+        .some(cell => {
+          const text = String(cell.textContent || '').trim();
+          return text !== '' && text !== '—' && text !== '-';
+        }));
       const hasRenderablePeriods = Array.isArray(tableResult?.periods) && tableResult.periods.length > 0;
-      if ((!hasVisibleBodyRows || !hasRenderablePeriods) && sourceRows.some(hasNumericFinancialData)) {
+      if ((!hasVisibleBodyRows || !hasVisibleNumericCells || !hasRenderablePeriods) && sourceRows.some(hasNumericFinancialData)) {
         const fallbackRows = sourceRows.slice().sort((a, b) => b.period.localeCompare(a.period)).slice(0, statementPageSize);
         if (tableWrap) tableWrap.classList.remove('hidden');
         if (stateBox) stateBox.classList.add('hidden');
