@@ -16,6 +16,11 @@ on:
   schedule:
     - cron: "*/30 * * * *"
     - cron: "5 3 * * *"
+  # After the collector downloads/commits source PDFs into reports/raw, OCR and reconcile from that archive.
+  workflow_run:
+    workflows: ["Collect Financial Reports"]
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
     inputs:
       symbol:
@@ -41,7 +46,7 @@ concurrency:
 
 jobs:
   select-ticker:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event_name == 'schedule' }}
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') }}
     runs-on: ubuntu-24.04
     outputs:
       symbol: ${{ steps.pick.outputs.symbol }}
@@ -384,7 +389,7 @@ jobs:
     needs: select-ticker
     outputs:
       saved: ${{ steps.save_selected_ticker.outputs.saved }}
-    if: ${{ needs['select-ticker'].outputs.symbol != '' && (github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event_name == 'schedule') }}
+    if: ${{ needs['select-ticker'].outputs.symbol != '' && (github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')) }}
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
@@ -679,7 +684,7 @@ jobs:
 
   handoff-to-collector:
     needs: [select-ticker, ocr]
-    if: ${{ always() && needs['select-ticker'].result == 'success' && needs['select-ticker'].outputs.collector_symbol != '' && (needs.ocr.result == 'skipped' || needs.ocr.outputs.saved != 'true' || needs['select-ticker'].outputs.pause_ocr_chain == 'true') && (github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event_name == 'schedule') }}
+    if: ${{ always() && needs['select-ticker'].result == 'success' && needs['select-ticker'].outputs.collector_symbol != '' && (needs.ocr.result == 'skipped' || needs.ocr.outputs.saved != 'true' || needs['select-ticker'].outputs.pause_ocr_chain == 'true') && (github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')) }}
     runs-on: ubuntu-24.04
     steps:
       - name: Hand the current ticker to the queued collector before advancing OCR
@@ -693,7 +698,7 @@ jobs:
 
   bootstrap-next:
     needs: [select-ticker, ocr]
-    if: ${{ always() && needs['select-ticker'].result == 'success' && needs['select-ticker'].outputs.symbol == '' && needs['select-ticker'].outputs.bootstrap_symbol != '' && needs['select-ticker'].outputs.collector_symbol == '' && (github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event_name == 'schedule') }}
+    if: ${{ always() && needs['select-ticker'].result == 'success' && needs['select-ticker'].outputs.symbol == '' && needs['select-ticker'].outputs.bootstrap_symbol != '' && needs['select-ticker'].outputs.collector_symbol == '' && (github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')) }}
     runs-on: ubuntu-24.04
     steps:
       - name: Bootstrap exactly the next missing ticker
