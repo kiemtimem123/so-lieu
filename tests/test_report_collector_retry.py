@@ -56,6 +56,15 @@ class CollectorRetryTests(unittest.TestCase):
         self.assertEqual(failures[key]["attempts"], 0)
         self.assertIn(key, retryable)
 
+    def test_missing_consolidated_zip_counts_as_missing_archive(self):
+        item = {
+            "period": "2025-Q3",
+            "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%203/TPB_Baocaotaichinh_Q3_2025_Hopnhat.zip",
+            "source_archive_file": "",
+            "report_type": "BCTC hợp nhất TPB 2025-Q3",
+        }
+        self.assertTrue(collector.item_needs_vietstock_archive("TPB", item))
+
     def test_recently_exhausted_urls_wait_for_24_hour_reset(self):
         url = "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%201/TPB_report.pdf"
         now = datetime(2026, 10, 26, 12, tzinfo=timezone.utc)
