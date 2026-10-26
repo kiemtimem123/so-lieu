@@ -977,20 +977,31 @@
     const rowsFor = ticker => {
       const snapshot = snapshots.get(ticker);
       return (snapshot?.items || []).filter(item => item && validPeriod(item.period)).map(item => {
-        if (!hasUnverifiedReportScope(item)) return item;
+        const rawVerification = String(item?.verification_status || '').toLowerCase();
+        const rawCoreStatus = String(item?.core_financial_extraction_status || '').toLowerCase();
+        const blockForManualExtraction = rawVerification === 'manual_review_required_pending_extraction' ||
+          rawCoreStatus === 'manual_review_required_pending_extraction';
+        if (!hasUnverifiedReportScope(item) && !blockForManualExtraction) return item;
+
         const safe = { ...item };
         Object.keys(safe).forEach(key => {
           if (scopeUnverifiedMetricField.test(key) && validNumber(safe[key])) safe[key] = null;
         });
-        safe.report_type = 'BCTC quý ' + ticker + ' ' + safe.period + ' (phạm vi hợp nhất chưa xác nhận; số liệu tạm ẩn)';
+        if (hasUnverifiedReportScope(item)) {
+          safe.report_type = 'BCTC quý ' + ticker + ' ' + safe.period + ' (phạm vi hợp nhất chưa xác nhận; số liệu tạm ẩn)';
+          safe.verification_status_note = String(item?.source_validation?.manual_review_reason || 'Phạm vi báo cáo chưa được VietstockFinance xác nhận là hợp nhất.') + ' Các số liệu chưa xác minh không hiển thị.';
+        } else {
+          safe.report_type = String(item.report_type || ('BCTC quý ' + ticker + ' ' + safe.period)) + ' (chờ trích xuất/xác minh; số liệu tạm ẩn)';
+          safe.verification_status_note = String(item?.verification_status_note || 'Kỳ này được đánh dấu cần rà soát thủ công; số liệu chưa xác minh được ẩn khỏi biểu đồ và thống kê.');
+        }
         safe.verification_status = 'manual_review_required_pending_extraction';
         safe.core_financial_extraction_status = 'manual_review_required_pending_extraction';
         safe.financial_line_items_status = 'manual_review_required';
-        safe.verification_status_note = String(item?.source_validation?.manual_review_reason || 'Phạm vi báo cáo chưa được VietstockFinance xác nhận là hợp nhất.') + ' Các số liệu chưa xác minh không hiển thị.';
         return safe;
       }).slice().sort((a,b)=>a.period.localeCompare(b.period));
     };
     const hasNumericFinancialData = item => ['revenue','pretax_profit','net_profit','total_assets','total_liabilities','equity','roa','roe','pb'].some(field => validNumber(item?.[field]));
+    const hasCoreFinancialData = item => ['pretax_profit','net_profit','total_assets','total_liabilities','equity','roa','roe','pb'].some(field => validNumber(item?.[field]));
     const verificationBadge = item => {
       const detailStatus = String(item?.financial_line_items_status || '').toLowerCase();
       if (detailStatus.includes('pending_visual_review')) return { label: 'Chờ rà soát chỉ tiêu chi tiết', kind: 'review' };
@@ -1261,7 +1272,7 @@
     };
     function renderFinancialOverview(ticker) {
       const allRows = rowsForBasis(ticker);
-      const latest = allRows.slice().reverse().find(hasNumericFinancialData);
+      const latest = allRows.slice().reverse().find(hasCoreFinancialData);
       const setText = (id, value) => {
         const element = document.getElementById(id);
         if (element) element.textContent = value == null || value === '' ? '—' : String(value);
@@ -1889,7 +1900,27 @@
     }
 
     loadButton?.addEventListener('click',loadAll);
-    symbolSelect?.addEventListener('change', () => { periodOffset = 0; renderSelected(); });
+    symbolSelect?.addEventListener('change', async () => {
+      periodOffset = 0;
+      const ticker = String(symbolSelect?.value || symbols[0]).toUpperCase();
+      if (snapshots.has(ticker)) {
+        renderSelected();
+        return;
+      }
+      if (loadSummary && !isLoading) loadSummary.textContent = 'Đang tải dữ liệu ' + ticker + ' và các biểu đồ liên quan…';
+      await loadTickerSnapshot(ticker);
+      if (String(symbolSelect?.value || '').toUpperCase() !== ticker) return;
+      populateYearOptions();
+      populateComparePeriods();
+      renderSelected();
+      drawComparison();
+      if (loadSummary && !isLoading) {
+        const snapshot = snapshots.get(ticker);
+        loadSummary.textContent = snapshot?.items?.length
+          ? 'Đã tải ' + ticker + ' · ' + snapshot.items.length + ' kỳ có liên kết nguồn.'
+          : 'Chưa tải được dữ liệu ' + ticker + ' từ website hoặc GitHub. Bấm “Tải lại dữ liệu” để thử lại.';
+      }
+    });
     yearSelect?.addEventListener('change',renderSelected);
     basisSelect?.addEventListener('change', () => { periodOffset = 0; renderSelected(); });
     unitSelect?.addEventListener('change',renderSelected);
