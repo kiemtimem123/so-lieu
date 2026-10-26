@@ -91,22 +91,6 @@ jobs:
           def snapshot_for(symbol):
               return load(Path("data") / f"financials-{symbol}.json")
 
-          def terminal_manual(item):
-              if not isinstance(item, dict) or item.get("verification_status") != "manual_review_required_pending_extraction":
-                  return False
-              validation = item.get("source_validation")
-              if not isinstance(validation, dict):
-                  validation = {}
-              try:
-                  attempts = int(validation.get("extraction_attempt_count") or 0)
-              except (TypeError, ValueError):
-                  attempts = 0
-              try:
-                  core_attempts = int(item.get("core_financial_extraction_attempt_count") or 0)
-              except (TypeError, ValueError):
-                  core_attempts = 0
-              return validation.get("automatic_extraction_exhausted") is True or attempts >= 3 or core_attempts >= 3
-
           def needs_collection(symbol, snapshot):
               if snapshot is None:
                   return True
@@ -134,7 +118,7 @@ jobs:
                   and re.fullmatch(r"20\d{2}-Q[1-4]", str(item.get("period") or ""))
                   and not str(item.get("source_archive_file") or "").strip()
                   and bool(re.match(
-                      rf"^https://static[12]\.vietstock\.vn/data/.*/bctc/vn/(?:.*/)?{re.escape(symbol)}_.*\.pdf(?:\?.*)?$",
+                      rf"^https://static[12]\.vietstock\.vn/data/.*/bctc/vn/(?:.*/)?{re.escape(symbol)}_.*\.(?:pdf|zip)(?:\?.*)?$",
                       str(item.get("source_url") or "").strip(),
                       re.I,
                   ))
@@ -157,37 +141,7 @@ jobs:
                   )
                   for item in items
               )
-              core_pending = any(
-                  isinstance(item, dict)
-                  and item.get("verification_status") in {
-                      "auto_pending_extraction",
-                      "manual_review_required_pending_extraction",
-                  }
-                  and not terminal_manual(item)
-                  for item in items
-              )
-              detail_review_statuses = {
-                  "manual_review_required",
-                  "manual_review_required_pending_extraction",
-                  "no_detail_fields_matched_pending_manual_review",
-                  "auto_extracted_pending_visual_review",
-              }
-              details_pending = any(
-                  isinstance(item, dict)
-                  and re.fullmatch(r"20\d{2}-Q[1-4]", str(item.get("period") or ""))
-                  and item.get("total_assets") is not None
-                  and item.get("net_profit") is not None
-                  and not item.get("financial_line_items_status")
-                  for item in items
-              )
-              stale_details = any(
-                  isinstance(item, dict)
-                  and item.get("financial_line_items_status")
-                  and item.get("financial_line_items_status") not in detail_review_statuses
-                  and item.get("financial_line_items_schema_version") != "2026-10-22-bank-statement-qc-v4"
-                  for item in items
-              )
-              return missing_source_archive or balance_sheet_pending or core_pending or details_pending or stale_details or snapshot.get("bootstrap_status") not in {"complete", "complete_needs_manual_review"}
+              return missing_source_archive or balance_sheet_pending or snapshot.get("bootstrap_status") not in {"complete", "complete_needs_manual_review"}
 
           if requested:
               if requested not in symbols:
