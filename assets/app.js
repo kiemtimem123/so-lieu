@@ -1057,15 +1057,9 @@
 
     async function fetchLatestFinancialSnapshot(ticker) {
       const filename = 'financials-' + ticker + '.json';
-      const cacheBust = Date.now();
-      const candidates = [
-        { label: 'website', url: 'data/' + filename + '?v=' + cacheBust, priority: 0 },
-        { label: 'GitHub', url: DATA_FALLBACK_BASE + encodeURIComponent(filename) + '?v=' + cacheBust, priority: 1 }
-      ];
-      const settled = await Promise.allSettled(candidates.map(async candidate => {
+      const fetchCandidate = async (candidate) => {
         const controller = new AbortController();
-        const timeoutMs = candidate.label === 'website' ? 3500 : 8000;
-        const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
+        const timeoutId = window.setTimeout(() => controller.abort(), candidate.timeoutMs);
         let response;
         try {
           response = await fetch(candidate.url, {
@@ -1080,25 +1074,38 @@
         const contentType = (response.headers.get('content-type') || '').toLowerCase();
         if (contentType.includes('text/html')) throw new Error('HTML thay vì JSON (' + candidate.label + ')');
         const snapshot = await response.json();
-        if (!snapshot || snapshot.symbol !== ticker || !Array.isArray(snapshot.items)) throw new Error('Snapshot không đúng schema (' + candidate.label + ')');
-        return { ...candidate, snapshot };
-      }));
-      const usable = settled.filter(result => result.status === 'fulfilled').map(result => result.value);
-      if (!usable.length) {
-        const reasons = settled.map(result => result.status === 'rejected' ? result.reason?.message : '').filter(Boolean).join('; ');
-        throw new Error(reasons || 'Không tải được snapshot từ website hoặc GitHub');
+        if (!snapshot || snapshot.symbol !== ticker || !Array.isArray(snapshot.items)) {
+          throw new Error('Snapshot không đúng schema (' + candidate.label + ')');
+        }
+        const rows = snapshot.items.filter(item => item && validPeriod(item.period) &&
+          typeof item.source_url === 'string' && /^https?:\/\//i.test(item.source_url));
+        if (!rows.length) throw new Error('Snapshot chưa có kỳ báo cáo hợp lệ (' + candidate.label + ')');
+        return { ...snapshot, items: rows, _loadedFrom: candidate.label };
+      };
+
+      // GitHub holds the workflow-updated snapshots. Load it first so a slow
+      // Hostinger path cannot keep all figures and charts in the initial loading state.
+      const candidates = [
+        {
+          label: 'GitHub',
+          url: DATA_FALLBACK_BASE + encodeURIComponent(filename) + '?v=' + Date.now(),
+          timeoutMs: 7000
+        },
+        {
+          label: 'website',
+          url: 'data/' + filename + '?v=' + Date.now(),
+          timeoutMs: 2500
+        }
+      ];
+      const errors = [];
+      for (const candidate of candidates) {
+        try {
+          return await fetchCandidate(candidate);
+        } catch (error) {
+          errors.push(error?.message || String(error));
+        }
       }
-      usable.sort((a, b) => {
-        const processedA = snapshotProcessingTimestamp(a.snapshot);
-        const processedB = snapshotProcessingTimestamp(b.snapshot);
-        if (processedA !== processedB && (processedA || processedB)) return processedB - processedA;
-        const timeA = Date.parse(a.snapshot.fetchedAt || '') || 0;
-        const timeB = Date.parse(b.snapshot.fetchedAt || '') || 0;
-        if (timeA !== timeB) return timeB - timeA;
-        if (a.snapshot.items.length !== b.snapshot.items.length) return b.snapshot.items.length - a.snapshot.items.length;
-        return a.priority - b.priority;
-      });
-      return { ...usable[0].snapshot, _loadedFrom: usable[0].label };
+      throw new Error(errors.join('; ') || 'Không tải được snapshot từ GitHub hoặc website');
     }
 
     function drawChart(key, canvasId, noteId, config) {
@@ -1782,22 +1789,53 @@
       const ticker = String(symbolSelect?.value || 'MBB').toUpperCase();
       const snapshot = snapshots.get(ticker);
       const sourceRows = rowsForBasis(ticker);
-      const tableResult = renderStatementTable(ticker);
+
+      // Render overview and charts first. A malformed detail row/table must not
+      // suppress numeric summaries or time-series charts that can already be shown.
+      try {
+        renderFinancialOverview(ticker);
+      } catch (error) {
+        console.error('[financial-dashboard] overview render failed for ' + ticker, error);
+        setTextIfPresent('stockStatsMeta', 'Đã tải snapshot nhưng gặp lỗi khi dựng thống kê: ' + (error?.message || error));
+      }
+      try {
+        drawSelectedCharts(ticker);
+      } catch (error) {
+        console.error('[financial-dashboard] chart render failed for ' + ticker, error);
+        ['stockProfitNote','stockBalanceNote','stockRatiosNote'].forEach(id => {
+          const note = document.getElementById(id);
+          if (note) note.textContent = 'Không dựng được biểu đồ: ' + (error?.message || error);
+        });
+      }
+
+      let tableResult = { periods: [], rows: sourceRows };
+      let tableError = null;
+      try {
+        tableResult = renderStatementTable(ticker);
+      } catch (error) {
+        tableError = error;
+        console.error('[financial-dashboard] statement table render failed for ' + ticker, error);
+      }
+
       const populated = sourceRows.filter(hasNumericFinancialData).length;
       const waiting = sourceRows.filter(item => !hasNumericFinancialData(item)).length;
       const review = sourceRows.filter(item => hasNumericFinancialData(item) && verificationBadge(item).kind !== 'ready').length;
-      const sourceLabel = snapshot?._loadedFrom === 'GitHub' ? 'GitHub mới nhất' : 'website/GitHub';
+      const sourceLabel = snapshot?._loadedFrom === 'GitHub' ? 'GitHub (nguồn đồng bộ)' : 'website dự phòng';
       if (status) {
         status.textContent = (snapshot?.sourceName || 'VietstockFinance snapshot') +
           ' · ' + populated + '/' + sourceRows.length + ' kỳ có số liệu · ' + waiting + ' kỳ đang chờ trích xuất · ' +
           review + ' kỳ có số liệu cần rà soát · Nạp từ: ' + sourceLabel +
-          ' · Đồng bộ: ' + (snapshot?.fetchedAt ? dateFmt(snapshot.fetchedAt) : 'chưa ghi nhận') + '.';
+          ' · Đồng bộ: ' + (snapshot?.fetchedAt ? dateFmt(snapshot.fetchedAt) : 'chưa ghi nhận') +
+          (tableError ? ' · Bảng chi tiết gặp lỗi; thống kê/biểu đồ vẫn được hiển thị.' : '') + '.';
       }
       if (loadSummary) loadSummary.textContent = 'Mã ' + ticker + ' · ' + sourceRows.length + ' kỳ có liên kết nguồn · Chế độ ' +
         (basisSelect?.value === 'separate' ? 'riêng lẻ' : 'hợp nhất') + ' · các kỳ mới sẽ tự xuất hiện sau lần đồng bộ tiếp theo.';
-      renderFinancialOverview(ticker);
-      drawSelectedCharts(ticker);
       return tableResult;
+    }
+
+    function setTextIfPresent(id, value) {
+      const element = document.getElementById(id);
+      if (element) element.textContent = value == null || value === '' ? '—' : String(value);
     }
 
     function populateComparePeriods() {
