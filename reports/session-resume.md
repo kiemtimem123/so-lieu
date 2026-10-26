@@ -38,11 +38,11 @@ Ghi chú này là lối tắt tiếp nối, không thay thế checkpoint sống.
 
 ## 2026-10-26 final checkpoint review
 
-- Latest checked branch HEAD before this note update: `9fd6e960b2505ce07b2ff4379bae5a5cdf8d297d`.
-- Live queue checkpoint: `updatedAt=2026-10-25T21:31:22Z`, `lastCompletedSymbol=GEG`, `activeSymbol=null`, `resumeSymbolHint=null`. All 32 enabled symbols are marked complete in the checkpoint/configured completion set; there is no remaining active ticker in the current configured queue.
+- Branch HEAD at this review: `51fa14a5474de34a8209a6d0a91635e1c0284b13` (message: `Record final VCK manual-review closure and queue status`).
+- Live queue checkpoint at review: `updatedAt=2026-10-25T21:31:22Z`, `lastCompletedSymbol=GEG`, `activeSymbol=null`, `resumeSymbolHint=null`. All 32 enabled symbols are marked complete in the current checkpoint; no ticker remains active.
 - **VCK is closed for automatic extraction**: `status=terminal_needs_manual_review`, `completeForAutomation=true`, `pendingCorePeriods=[]`, all seven periods from `2025-Q1` through `2026-Q3` are terminal manual-review periods, and `statementPagesPending=false`.
 - All seven VCK quarter rows keep the matching VietstockFinance source document and source-scope blocker. Public financial fields are blank (no numeric financial metrics exposed); the extracted candidates remain in `scope_unverified_financial_values` for audit only. Front-end sanitizer hides metrics for any item with `scope_validation_required` or `manual_review_blocking_automatic_extraction`.
 - VCK is configured to skip unresolved extraction through `2026-Q3` and automatically re-open when a quarter newer than `2026-Q3` is added. VCI has the equivalent skip-through rule through `2026-Q3`.
-- Validations already passed after the UI/cache adjustments: [Validate Site and Data #970](https://github.com/kiemtimem123/so-lieu/actions/runs/40238559814), [Validate quarterly financial data #416](https://github.com/kiemtimem123/so-lieu/actions/runs/40235360954). These runs predate the current branch HEAD; a fresh site/data validation is being triggered by this note-only commit.
+- Latest validation for the VCK closure: [Validate Site and Data #971](https://github.com/kiemtimem123/so-lieu/actions/runs/40265424833) passed on the closure commit. The previous financial-data validation also passed: [#416](https://github.com/kiemtimem123/so-lieu/actions/runs/40235360954).
 - The most recent OCR run checked was [#1614](https://github.com/kiemtimem123/so-lieu/actions/runs/40253954933), which succeeded and skipped processing because the current configured queue was already complete. Independent market/economic data sync failures are not VCK financial-report failures.
 - On continuation, read only this note and `reports/processing-checkpoint.json`; load a ticker snapshot only if a new quarter is added or a validator identifies a concrete issue. Never make unverified VCK numbers visible or manufacture missing values.
