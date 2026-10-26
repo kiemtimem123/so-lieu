@@ -419,16 +419,3 @@ jobs:
           set -euo pipefail
           echo "Continue only ticker ${{ steps.continuation.outputs.symbol }} from its committed queue checkpoint."
           gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/workflows/collect-financial-reports.yml/dispatches" -f ref=main -f "inputs[symbol]=${{ steps.continuation.outputs.symbol }}" -f "inputs[max_downloads_per_job]=2"
-
-  trigger-ocr:
-    needs: [collect, advance-collector]
-    if: ${{ needs.collect.result == 'success' && needs['advance-collector'].result == 'success' && needs['advance-collector'].outputs.should_continue != 'true' }}
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Start the next one-report OCR/enrichment run after the collector commits
-        env:
-          GH_TOKEN: ${{ github.token }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/workflows/ocr-financial-reports.yml/dispatches" -f ref=main
