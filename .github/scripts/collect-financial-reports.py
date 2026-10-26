@@ -792,7 +792,7 @@ def item_needs_vietstock_archive(symbol: str, item: object) -> bool:
         parsed.scheme != "https"
         or host not in {"static1.vietstock.vn", "static2.vietstock.vn"}
         or "/bctc/vn/" not in path
-        or not path.endswith(".pdf")
+        or not path.endswith((".pdf", ".zip"))
         or not filename.startswith(symbol.lower() + "_")
     ):
         return False
@@ -1277,9 +1277,12 @@ def main():
             and not refresh_catalog
         ):
             continue
+        # Do not keep rescanning the catalog on every hourly schedule when a
+        # job is failed and no URL is retryable; wait for the catalog refresh
+        # interval, unless a failed URL's cooldown or the 24-hour retry reset
+        # explicitly makes it eligible again.
         if (
             job.get("status") == "failed"
-            and int(job.get("attempts", 0)) >= 5
             and job.get("origin") != "missing_full_report_dependency"
             and not retryable_failed_urls
             and not refresh_catalog
