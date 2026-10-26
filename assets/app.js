@@ -1704,7 +1704,16 @@
       if (stateBox) stateBox.classList.add('hidden');
       if (tableWrap) tableWrap.classList.remove('hidden');
       if (statementHead) statementHead.innerHTML = '<tr><th class="statement-first-col">' + (activeStatement === 'peers' ? 'Mã chứng khoán' : 'Chỉ tiêu') + '</th>' +
-        periods.map(period => '<th class="statement-period">' + escapeHtml(displayPeriod(period)) + '</th>').join('') + '</tr>';
+        periods.map(period => {
+          const report = sourceRows.find(item => item.period === period);
+          const pdfUrl = report && typeof report.source_url === 'string' && /\\.pdf(?:$|[?#])/i.test(report.source_url)
+            ? report.source_url
+            : '';
+          const pdfLink = pdfUrl
+            ? '<a class="statement-source-link statement-period-pdf" href="' + escapeHtml(pdfUrl) + '" target="_blank" rel="noopener noreferrer" title="Mở báo cáo PDF gốc" aria-label="Mở báo cáo PDF ' + escapeHtml(displayPeriod(period)) + '">▧</a>'
+            : '';
+          return '<th class="statement-period">' + pdfLink + escapeHtml(displayPeriod(period)) + '</th>';
+        }).join('') + '</tr>';
 
       let body = '';
       const cashflowFields = ['operating_cash_flow','capital_expenditure','investing_cash_flow','financing_cash_flow','foreign_exchange_effect','dividends_paid','net_cash_change','cash_beginning','cash_ending'];
