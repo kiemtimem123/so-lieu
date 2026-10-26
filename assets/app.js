@@ -1052,7 +1052,19 @@
         { label: 'GitHub', url: DATA_FALLBACK_BASE + encodeURIComponent(filename) + '?v=' + cacheBust, priority: 1 }
       ];
       const settled = await Promise.allSettled(candidates.map(async candidate => {
-        const response = await fetch(candidate.url, { cache: 'no-store', headers: { 'Cache-Control': 'no-cache' } });
+        const controller = new AbortController();
+        const timeoutMs = candidate.label === 'website' ? 3500 : 8000;
+        const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
+        let response;
+        try {
+          response = await fetch(candidate.url, {
+            cache: 'no-store',
+            headers: { 'Cache-Control': 'no-cache' },
+            signal: controller.signal
+          });
+        } finally {
+          window.clearTimeout(timeoutId);
+        }
         if (!response.ok) throw new Error('HTTP ' + response.status + ' (' + candidate.label + ')');
         const contentType = (response.headers.get('content-type') || '').toLowerCase();
         if (contentType.includes('text/html')) throw new Error('HTML thay vì JSON (' + candidate.label + ')');
@@ -1787,33 +1799,89 @@
       }
     }
 
+    const tickerLoadPromises = new Map();
+
+    async function loadTickerSnapshot(ticker) {
+      if (tickerLoadPromises.has(ticker)) return tickerLoadPromises.get(ticker);
+      const task = (async () => {
+        try {
+          const snapshot = await fetchLatestFinancialSnapshot(ticker);
+          const items = snapshot.items.filter(record => Boolean(record && validPeriod(record.period) &&
+            typeof record.source_url === 'string' && /^https?:\/\//i.test(record.source_url)));
+          snapshots.set(ticker, { ...snapshot, items });
+          return { ticker, ok: true, count: items.length, loadedFrom: snapshot._loadedFrom };
+        } catch (error) {
+          snapshots.set(ticker, { symbol: ticker, items: [], sourceName: 'Không tải được snapshot', fetchedAt: null });
+          console.warn('[financial-dashboard]', ticker, error);
+          return { ticker, ok: false, count: 0, loadedFrom: '' };
+        } finally {
+          tickerLoadPromises.delete(ticker);
+        }
+      })();
+      tickerLoadPromises.set(ticker, task);
+      return task;
+    }
+
     async function loadAll() {
       if (isLoading) return;
       isLoading = true;
       if (loadButton) { loadButton.disabled = true; loadButton.textContent = 'Đang tải…'; }
-      if (loadSummary) loadSummary.textContent = 'Đang kiểm tra snapshot trên website và bản mới nhất trên GitHub…';
+      if (loadSummary) loadSummary.textContent = 'Đang tải mã đang chọn trước; các mã so sánh sẽ nạp tiếp theo từng nhóm…';
+      const resultByTicker = new Map();
       try {
-        const results = await Promise.all(symbols.map(async ticker => {
-          try {
-            const snapshot = await fetchLatestFinancialSnapshot(ticker);
-            const items = snapshot.items.filter(record => Boolean(record && validPeriod(record.period) &&
-              typeof record.source_url === 'string' && /^https?:\/\//i.test(record.source_url)));
-            snapshots.set(ticker, { ...snapshot, items });
-            return { ticker, ok: true, count: items.length, loadedFrom: snapshot._loadedFrom };
-          } catch (error) {
-            snapshots.set(ticker, { symbol: ticker, items: [], sourceName: 'Không tải được snapshot', fetchedAt: null });
-            console.warn('[financial-dashboard]', ticker, error);
-            return { ticker, ok: false, count: 0, loadedFrom: '' };
-          }
-        }));
+        const selectedTicker = symbols.includes(String(symbolSelect?.value || '').toUpperCase())
+          ? String(symbolSelect.value).toUpperCase()
+          : symbols[0];
+
+        // Render the selected stock as soon as its two candidate snapshots resolve.
+        // Do not block visible statistics/charts on 30+ peer-ticker network requests.
+        const first = await loadTickerSnapshot(selectedTicker);
+        resultByTicker.set(selectedTicker, first);
         populateYearOptions();
         populateComparePeriods();
         renderSelected();
         drawComparison();
+        if (loadSummary) {
+          loadSummary.textContent = first.ok
+            ? 'Đã tải ' + selectedTicker + ' (' + first.count + ' kỳ có nguồn); đang nạp dần các mã dùng cho so sánh…'
+            : 'Chưa tải được snapshot ' + selectedTicker + '; đang thử các mã còn lại. Kiểm tra kết nối nguồn nếu lỗi tiếp diễn.';
+        }
+
+        const peers = symbols.filter(ticker => ticker !== selectedTicker);
+        const batchSize = 8;
+        for (let start = 0; start < peers.length; start += batchSize) {
+          const batch = peers.slice(start, start + batchSize);
+          const results = await Promise.all(batch.map(loadTickerSnapshot));
+          results.forEach(result => resultByTicker.set(result.ticker, result));
+
+          // Keep comparison options fresh while peer data arrives, but never clear
+          // the selected ticker's already-rendered figures in the meantime.
+          populateYearOptions();
+          populateComparePeriods();
+          if (resultByTicker.has(String(symbolSelect?.value || '').toUpperCase())) renderSelected();
+          drawComparison();
+
+          if (loadSummary) {
+            const completed = resultByTicker.size;
+            const totalPeriods = [...resultByTicker.values()].reduce((sum, result) => sum + result.count, 0);
+            loadSummary.textContent = 'Đã nạp ' + completed + '/' + symbols.length + ' mã · ' +
+              totalPeriods + ' kỳ có liên kết nguồn · tiếp tục cập nhật bảng so sánh…';
+          }
+        }
+
+        populateYearOptions();
+        populateComparePeriods();
+        renderSelected();
+        drawComparison();
+        const results = [...resultByTicker.values()];
         const total = results.reduce((sum, item) => sum + item.count, 0);
         const failed = results.filter(item => !item.ok).length;
         if (loadSummary) loadSummary.textContent = 'Đã kiểm tra ' + results.length + ' mã · ' + total +
-          ' kỳ có liên kết nguồn · ' + failed + ' mã không tải được snapshot. Bản mới nhất được chọn giữa website và GitHub; trạng thái từng kỳ hiển thị trong bảng.';
+          ' kỳ có liên kết nguồn · ' + failed + ' mã không tải được snapshot. Mã đang chọn và biểu đồ được hiển thị trước khi nạp xong toàn bộ danh sách.';
+      } catch (error) {
+        console.error('[financial-dashboard] loadAll failed', error);
+        if (loadSummary) loadSummary.textContent = 'Lỗi khi nạp dữ liệu chứng khoán: ' + String(error?.message || error);
+        renderSelected();
       } finally {
         isLoading = false;
         if (loadButton) { loadButton.disabled = false; loadButton.textContent = 'Tải lại dữ liệu'; }
