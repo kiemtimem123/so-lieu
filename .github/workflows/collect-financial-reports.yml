@@ -57,6 +57,20 @@ jobs:
             /config/securities.json
             /data/financials-*.json
             /reports/processing-checkpoint.json
+            /.github/scripts/collect-financial-reports.py
+            /.github/scripts/requirements-report-worker.txt
+            /tests/test_report_collector_retry.py
+      - name: Set up Python for collector regression tests
+        if: ${{ github.event_name != 'schedule' }}
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Install collector test dependencies
+        if: ${{ github.event_name != 'schedule' }}
+        run: pip install -r .github/scripts/requirements-report-worker.txt
+      - name: Test URL retry reset, stuck-job refresh and ZIP archive detection
+        if: ${{ github.event_name != 'schedule' }}
+        run: python -m unittest discover -s tests -p 'test_report_collector_retry.py' -v
       - name: Select exactly one resumable ticker
         id: pick
         env:
@@ -195,7 +209,6 @@ jobs:
             /data/financials-*.json
             /reports/worker-last-run.json
             /reports/raw/${{ needs['select-ticker'].outputs.symbol }}/**
-            /tests/test_report_collector_retry.py
       - name: Setup Python
         uses: actions/setup-python@v6
         with:
@@ -204,8 +217,6 @@ jobs:
         run: python -m py_compile .github/scripts/collect-financial-reports.py
       - name: Install collector dependencies
         run: pip install -r .github/scripts/requirements-report-worker.txt
-      - name: Test report URL retry expiry and stuck-job catalog refresh
-        run: python -m unittest discover -s tests -p 'test_report_collector_retry.py' -v
       - name: Validate queue and registry before run
         run: node .github/scripts/validate-report-queue.cjs
       - name: Run report discovery, download and extraction worker
