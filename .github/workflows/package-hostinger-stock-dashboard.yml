@@ -18,8 +18,16 @@ jobs:
   package:
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout current website and financial snapshots
+      - name: Checkout only website files and financial snapshots
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /index.html
+            /assets/app.js
+            /assets/styles.css
+            /data/financials-*.json
 
       - name: Build Hostinger upload bundle
         shell: bash
