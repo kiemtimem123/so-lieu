@@ -56,6 +56,26 @@ class CollectorRetryTests(unittest.TestCase):
         self.assertEqual(failures[key]["attempts"], 0)
         self.assertIn(key, retryable)
 
+    def test_stale_queue_urls_are_covered_by_successful_archive_in_another_job(self):
+        archived = "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%203/TCX_Baocaotaichinh_Q3_2026.zip"
+        success = {collector.retry_url_key(archived)}
+        candidates = [
+            {"url": archived},
+            {"url": archived + "?ver=changed"},
+        ]
+        self.assertTrue(collector.all_candidates_already_archived(candidates, success))
+
+    def test_do_not_mark_candidates_archived_when_any_url_is_not_successful(self):
+        archived = "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%203/TCX_Baocaotaichinh_Q3_2026.zip"
+        missing = "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%204/TCX_Baocaotaichinh_Q4_2026.zip"
+        success = {collector.retry_url_key(archived)}
+        self.assertFalse(
+            collector.all_candidates_already_archived(
+                [{"url": archived}, {"url": missing}],
+                success,
+            )
+        )
+
     def test_missing_consolidated_zip_counts_as_missing_archive(self):
         item = {
             "period": "2025-Q3",
