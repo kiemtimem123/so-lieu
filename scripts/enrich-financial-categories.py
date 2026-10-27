@@ -15,7 +15,7 @@ DATA = ROOT / "data"
 RAW = ROOT / "reports" / "raw"
 REPORT_QUEUE = ROOT / "config" / "report-queue.json"
 _QUEUE_ARCHIVE_BY_URL = None
-DETAIL_SCHEMA_VERSION = "2026-10-27-note-reference-dash-guards-v6"
+DETAIL_SCHEMA_VERSION = "2026-10-27-note-reference-and-aggregate-guards-v7"
 CORE_EXTRACTION_PARSER_VERSION = "2026-10-23-ngan-vnd-unit-v2-statement-rows"
 NUMBER_RE = re.compile(r"(?<![A-Za-z0-9])\(?-?\d[\d.,]*\d?\)?")
 BANKS = {"MBB", "ACB", "SHB", "TCB", "TPB", "VPB", "STB", "VCB", "CTG", "BID"}
@@ -850,7 +850,12 @@ def extract_fields(item,symbol,pages):
   if val is not None: out[field]=val
  if symbol in BANKS and bal:
   for field,labels in BANK_BALANCE_LABELS.items():
-   val=value_by_label(bal,labels,scale)
+   # "Các khoản nợ khác" is a total. Do not match its child line
+   # "Dự phòng các khoản nợ khác" just because the shorter label is contained.
+   if field=="bank_other_liabilities":
+    val=value_by_label(bal,labels,scale,exclude_terms=["du phong cac khoan no khac"])
+   else:
+    val=value_by_label(bal,labels,scale)
    if val is not None: out[field]=val
  if symbol in BROKERS and bal:
   for field,labels in BROKER_BALANCE_LABELS.items():
@@ -1891,6 +1896,14 @@ def enrich_snapshot(path):
    if field.startswith("__"): continue
    if item.get(field) is None:
     item[field]=value; new_fields.append(field)
+   elif (
+    field in set(item.get("financial_line_items_manually_verified_fields") or [])
+    and isinstance(item.get(field),(int,float))
+    and not isinstance(item.get(field),bool)
+   ):
+    # Once a value has been explicitly verified against its source, automatic
+    # OCR migrations may not replace it with a numerically plausible child row.
+    pass
    elif (
     detail_schema_migration
     and field in set(item.get("financial_line_items_extracted_fields") or [])
