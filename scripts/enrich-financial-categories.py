@@ -121,9 +121,9 @@ BANK_INCOME_LABELS = {
 }
 CASHFLOW_LABELS = {
  "operating_cash_flow_ytd":["luu chuyen tien thuan su dung vao hoat dong kinh doanh","luu chuyen tien thuan (su dung vao)/tu hoat dong kinh doanh","luu chuyen tien thuan su dung vao/tu hoat dong kinh doanh","luu chuyen tien thuan tu/(su dung vao) hoat dong kinh doanh","luu chuyen tien thuan tu hoat dong kinh doanh","luu chuyen tien tu hoat dong kinh doanh"],
- "investing_cash_flow_ytd":["luu chuyen tien thuan su dung vao hoat dong dau tu","luu chuyen tien thuan tu/(su dung vao) hoat dong dau tu","luu chuyen tien thuan su dung vao/tu hoat dong dau tu","luu chuyen tien thuan tu hoat dong dau tu","luu chuyen tien tu hoat dong dau tu"],
+ "investing_cash_flow_ytd":["luu chuyen tien thuan su dung vao hoat dong dau tu","luu chuyen tien thuan su dung trong hoat dong dau tu","luu chuyen tien thuan tu/(su dung vao) hoat dong dau tu","luu chuyen tien thuan su dung vao/tu hoat dong dau tu","luu chuyen tien thuan tu hoat dong dau tu","luu chuyen tien tu hoat dong dau tu"],
  "financing_cash_flow_ytd":["luu chuyen tien thuan tu/(su dung vao) hoat dong tai chinh","luu chuyen tien thuan (su dung vao)/tu hoat dong tai chinh","luu chuyen tien thuan tu hoat dong tai chinh","luu chuyen tien thuan tu hoat dong taichinh","luu chuyen tien thuan tu hoat dong taichinn","luu chuyen tien tu hoat dong tai chinh"],
- "capital_expenditure_ytd":["tien chi de mua sam xay dung tai san co dinh","tien chi mua sam xay dung tai san co dinh","mua sam xay dung tai san co dinh va cac tai san dai han khac"],
+ "capital_expenditure_ytd":["tien chi de mua sam xay dung tai san co dinh","tien chi mua sam xay dung tai san co dinh","mua sam tai san co dinh","mua sam xay dung tai san co dinh va cac tai san dai han khac"],
  "dividends_paid_ytd":["co tuc loi nhuan da tra cho chu so huu","tien chi tra co tuc loi nhuan cho chu so huu"],
  "net_cash_change_ytd":["luu chuyen tien thuan trong ky","luu chuyen tien thuan trong nam"],
  "cash_beginning":[
@@ -841,6 +841,57 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
  return out
 
 
+def extract_bank_split_column_income(pages, factor):
+ """Recover a bank income statement when OCR serializes the current-period value column separately.
+
+ Some Vietstock PDFs extract all labels first, then all figures in visual column
+ order. In that case label matching cannot pair the rows. Only accept the known
+ 22-row bank income layout when the figures are one-per-line; interleaved
+ multi-column lines are rejected rather than guessed.
+ """
+ expected_fields = [
+  "bank_interest_income", "bank_interest_expense", "bank_net_interest_income",
+  "bank_service_income", "bank_service_expense", "bank_net_service_income",
+  "bank_fx_net_income", "bank_trading_securities_net",
+  "bank_investment_securities_net", "bank_other_operating_net",
+  "bank_dividend_and_capital_income", "revenue", "bank_operating_expenses",
+  "bank_pre_provision_operating_profit", "bank_provision_expense",
+  "pretax_profit", "income_tax_current", "income_tax_deferred", "income_tax",
+  "net_profit", "bank_non_controlling_profit", "net_profit_attributable",
+ ]
+ for page in pages:
+  lines=str(page.get("text","")).splitlines()
+  normalized=norm(" ".join(lines))
+  if "bao cao" not in normalized or not any(term in normalized for term in ("ket qua hoat dong","ket qua kinh doanh")):
+   continue
+  marker=next((idx for idx,line in enumerate(lines) if "so phat sinh quy" in norm(line)),None)
+  if marker is None:
+   continue
+  values=[]
+  for line in lines[marker+1:]:
+   clean=norm(line)
+   if "luy ke tu dau nam" in clean or "luy ke tu" in clean:
+    break
+   parsed=amounts(line,threshold=1000)
+   if len(parsed)>1:
+    values=[]
+    break
+   if parsed:
+    values.extend(parsed)
+    if len(values)>=len(expected_fields):
+     break
+  if len(values)!=len(expected_fields):
+   continue
+  values=[int(round(value*factor)) for value in values]
+  mapped=dict(zip(expected_fields,values))
+  # Expense totals are shown as positive amounts elsewhere in the dashboard;
+  # component expense rows retain the sign printed in the source statement.
+  for key in ("bank_operating_expenses","bank_provision_expense","income_tax"):
+   mapped[key]=abs(mapped[key])
+  return mapped
+ return {}
+
+
 def extract_fields(item,symbol,pages):
  bal=select_statement_pages(pages,"balance")
  inc=select_statement_pages(pages,"income")
@@ -894,6 +945,12 @@ def extract_fields(item,symbol,pages):
    else:
     val=value_by_label(inc,labels,scale)
    if val is not None: out[field]=val
+  # Fall back to the explicit statement-column order only if OCR has separated
+  # all labels from the numeric value columns. Never overwrite a value parsed
+  # from a paired row, and never accept multi-value/interleaved lines here.
+  for field,value in extract_bank_split_column_income(inc,scale).items():
+   if field not in out:
+    out[field]=value
  if symbol in BROKERS and inc:
   for field,labels in BROKER_INCOME_LABELS.items():
    val=value_by_label(inc,labels,scale)
