@@ -1521,6 +1521,7 @@
         "financing_cash_flow",
         "financing_cash_flow_ytd",
         "fixed_assets",
+        "foreign_exchange_effect",
         "income_tax",
         "income_tax_current",
         "income_tax_deferred",
@@ -1534,8 +1535,8 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/c66142b157f47512.pdf",
-      "financial_line_items_updated_at": "2026-10-27T17:04:29.060Z",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Số liệu dẫn xuất từ LNST hợp nhất trừ LNST thuộc cổ đông ngân hàng mẹ; cần đối chiếu trực quan từng dòng nếu muốn đánh dấu xác minh thủ công. Nguồn VietstockFinance-linked PDF trang 9 (trang in 6), BCTC KQKD hợp nhất Q1/2025.",
+      "financial_line_items_updated_at": "2026-10-27T17:05:29.928Z",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Số liệu dẫn xuất từ LNST hợp nhất trừ LNST thuộc cổ đông ngân hàng mẹ; cần đối chiếu trực quan từng dòng nếu muốn đánh dấu xác minh thủ công. Nguồn VietstockFinance-linked PDF trang 9 (trang in 6), BCTC KQKD hợp nhất Q1/2025. Bổ sung giá trị tỷ giá suy ra bằng 0 từ ba tổng số dư/biến động tiền đã khớp chính xác; đánh dấu công thức dẫn xuất và chờ rà soát trực quan. Nguồn: https://finance.vietstock.vn/TCB/tai-tai-lieu.htm?doctype=1; PDF trang 11.",
       "operating_cash_flow": -11015276,
       "operating_cash_flow_calculation": "Q1 equals YTD Q1",
       "investing_cash_flow": -35158,
@@ -1573,11 +1574,7 @@
       "bank_provision_expense": 1090055,
       "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
       "financial_line_items_schema_updated_at": "2026-10-25T18:30:00+00:00",
-      "financial_line_items_rejected_fields": [
-        "income_tax_current_tax_reconciliation_check",
-        "income_tax_deferred_tax_reconciliation_check",
-        "income_tax_tax_reconciliation_check"
-      ],
+      "financial_line_items_rejected_fields": [],
       "financial_line_items_rejected_updated_at": "2026-10-22T13:32:13+00:00",
       "bank_net_service_income": 1828132,
       "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
@@ -1656,6 +1653,11 @@
           "previous_value": null,
           "new_value": -981,
           "reason": "Chi phí thuế thu nhập doanh nghiệp hoãn lại -981 triệu đồng, cột Quý I/2025."
+        },
+        "foreign_exchange_effect": {
+          "previous_value": null,
+          "new_value": 0,
+          "reason": "Bổ sung giá trị tỷ giá suy ra bằng 0 từ ba tổng số dư/biến động tiền đã khớp chính xác; đánh dấu công thức dẫn xuất và chờ rà soát trực quan."
         }
       },
       "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
@@ -1695,7 +1697,21 @@
       "income_tax_deferred_calculation": "Dòng chi phí thuế TNDN hoãn lại trên BCTC kết quả hoạt động hợp nhất.",
       "income_tax_deferred_source_page": 9,
       "income_tax_deferred_source_note": "Nguồn VietstockFinance-linked PDF trang 9 (trang in 6), BCTC KQKD hợp nhất Q1/2025.",
-      "bank_non_controlling_profit_basis": "derived_same_quarter_net_profit_minus_parent_attributable_profit"
+      "bank_non_controlling_profit_basis": "derived_same_quarter_net_profit_minus_parent_attributable_profit",
+      "foreign_exchange_effect": 0,
+      "foreign_exchange_effect_calculation": "Ảnh hưởng tỷ giá được ghi 0 theo phần dư cầu nối tiền: tiền cuối quý − tiền đầu quý − biến động tiền thuần quý = 0; không thay thế dòng báo cáo nguồn bằng ước tính.",
+      "foreign_exchange_effect_source_page": 11,
+      "foreign_exchange_effect_source_index_url": "https://finance.vietstock.vn/TCB/tai-tai-lieu.htm?doctype=1",
+      "foreign_exchange_effect_source_document_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%201/TCB_Baocaotaichinh_Q1_2025_Hopnhat.pdf",
+      "financial_line_items_rejected_flags_resolved": {
+        "fields": [
+          "income_tax_current_tax_reconciliation_check",
+          "income_tax_deferred_tax_reconciliation_check",
+          "income_tax_tax_reconciliation_check"
+        ],
+        "reason": "Đã bổ sung chi phí thuế hiện hành/hoãn lại từ PDF và xác nhận tổng thuế bằng tổng hai cấu phần.",
+        "resolved_at": "2026-10-27T17:05:29.928Z"
+      }
     },
     {
       "symbol": "TCB",
@@ -3117,8 +3133,10 @@
         "financing_cash_flow",
         "financing_cash_flow_ytd",
         "fixed_assets",
+        "foreign_exchange_effect",
         "income_tax",
         "income_tax_current",
+        "income_tax_deferred",
         "investing_cash_flow",
         "investing_cash_flow_ytd",
         "net_cash_change",
@@ -3131,8 +3149,8 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/7e7749fd534f2767.pdf",
-      "financial_line_items_updated_at": "2026-10-27T17:04:29.060Z",
-      "financial_line_items_note": "Đã đối chiếu dòng thu nhập ngân hàng, tổng phụ lợi nhuận và dòng tiền theo văn bản OCR của PDF VietstockFinance đã lưu. Lưu riêng cả số lũy kế trên B04 và số riêng quý tính bằng chênh lệch lũy kế. Đây là xác minh OCR/số học, không tuyên bố đã kiểm tra trực quan từng pixel. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền đầu tư được đối chiếu với tổng lưu chuyển tiền thuần vì OCR bắt nhầm dòng mua sắm TSCĐ; giá trị trước sửa và lý do đã được lưu. Số liệu dẫn xuất từ LNST hợp nhất trừ LNST thuộc cổ đông ngân hàng mẹ; cần đối chiếu trực quan từng dòng nếu muốn đánh dấu xác minh thủ công.",
+      "financial_line_items_updated_at": "2026-10-27T17:05:29.928Z",
+      "financial_line_items_note": "Đã đối chiếu dòng thu nhập ngân hàng, tổng phụ lợi nhuận và dòng tiền theo văn bản OCR của PDF VietstockFinance đã lưu. Lưu riêng cả số lũy kế trên B04 và số riêng quý tính bằng chênh lệch lũy kế. Đây là xác minh OCR/số học, không tuyên bố đã kiểm tra trực quan từng pixel. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền đầu tư được đối chiếu với tổng lưu chuyển tiền thuần vì OCR bắt nhầm dòng mua sắm TSCĐ; giá trị trước sửa và lý do đã được lưu. Số liệu dẫn xuất từ LNST hợp nhất trừ LNST thuộc cổ đông ngân hàng mẹ; cần đối chiếu trực quan từng dòng nếu muốn đánh dấu xác minh thủ công. Khôi phục thuế hoãn lại Q1/2026; số 67 trong cột quý bị OCR thiếu chữ số 9, giá trị 697 khớp tổng thuế và dòng lũy kế trên PDF. Nguồn: https://finance.vietstock.vn/TCB/tai-tai-lieu.htm?doctype=1; PDF trang 8. Bổ sung giá trị tỷ giá suy ra bằng 0 từ ba tổng số dư/biến động tiền đã khớp chính xác; đánh dấu công thức dẫn xuất và chờ rà soát trực quan. Nguồn: https://finance.vietstock.vn/TCB/tai-tai-lieu.htm?doctype=1; PDF trang 12.",
       "operating_cash_flow_calculation": "reported as standalone quarter",
       "investing_cash_flow_calculation": "Q1 equals YTD Q1",
       "financing_cash_flow_calculation": "reported as standalone quarter",
@@ -3240,6 +3258,16 @@
           "previous_value": null,
           "new_value": 279199,
           "reason": "Tái lập từ hai tổng lợi nhuận cùng kỳ đã lưu trong BCTC hợp nhất VietstockFinance; không lấy trực tiếp dấu trừ của dòng phân bổ lợi nhuận thiểu số."
+        },
+        "income_tax_deferred": {
+          "previous_value": null,
+          "new_value": 697,
+          "reason": "Khôi phục thuế hoãn lại Q1/2026; số 67 trong cột quý bị OCR thiếu chữ số 9, giá trị 697 khớp tổng thuế và dòng lũy kế trên PDF."
+        },
+        "foreign_exchange_effect": {
+          "previous_value": null,
+          "new_value": 0,
+          "reason": "Bổ sung giá trị tỷ giá suy ra bằng 0 từ ba tổng số dư/biến động tiền đã khớp chính xác; đánh dấu công thức dẫn xuất và chờ rà soát trực quan."
         }
       },
       "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
@@ -3275,7 +3303,17 @@
       "bank_non_controlling_profit": 279199,
       "bank_non_controlling_profit_calculation": "Lợi nhuận cổ đông không kiểm soát = lợi nhuận sau thuế hợp nhất − lợi nhuận sau thuế thuộc cổ đông ngân hàng mẹ (cùng kỳ).",
       "bank_non_controlling_profit_source_note": "Số liệu dẫn xuất từ LNST hợp nhất trừ LNST thuộc cổ đông ngân hàng mẹ; cần đối chiếu trực quan từng dòng nếu muốn đánh dấu xác minh thủ công.",
-      "bank_non_controlling_profit_basis": "derived_same_quarter_net_profit_minus_parent_attributable_profit"
+      "bank_non_controlling_profit_basis": "derived_same_quarter_net_profit_minus_parent_attributable_profit",
+      "income_tax_deferred": 697,
+      "income_tax_deferred_calculation": "Thu nhập thuế TNDN hoãn lại quý I/2026: lấy 697 triệu đồng từ cột lũy kế Q1, đồng thời khớp với chi phí thuế hiện hành -1.920.387 và tổng thuế -1.919.690.",
+      "income_tax_deferred_source_page": 8,
+      "income_tax_deferred_source_index_url": "https://finance.vietstock.vn/TCB/tai-tai-lieu.htm?doctype=1",
+      "income_tax_deferred_source_document_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/TCB_Baocaotaichinh_Q1_2026_Hopnhat.pdf",
+      "foreign_exchange_effect": 0,
+      "foreign_exchange_effect_calculation": "Ảnh hưởng tỷ giá được ghi 0 theo phần dư cầu nối tiền: tiền cuối quý − tiền đầu quý − biến động tiền thuần quý = 0; không thay thế dòng báo cáo nguồn bằng ước tính.",
+      "foreign_exchange_effect_source_page": 12,
+      "foreign_exchange_effect_source_index_url": "https://finance.vietstock.vn/TCB/tai-tai-lieu.htm?doctype=1",
+      "foreign_exchange_effect_source_document_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/TCB_Baocaotaichinh_Q1_2026_Hopnhat.pdf"
     },
     {
       "symbol": "TCB",
@@ -3514,6 +3552,7 @@
         "financing_cash_flow",
         "financing_cash_flow_ytd",
         "fixed_assets",
+        "foreign_exchange_effect",
         "income_tax",
         "income_tax_current",
         "income_tax_deferred",
@@ -3529,8 +3568,8 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/50b860c97df7b698.pdf",
-      "financial_line_items_updated_at": "2026-10-27T17:04:29.060Z",
-      "financial_line_items_note": "Đã đối chiếu dòng thu nhập ngân hàng, tổng phụ lợi nhuận và dòng tiền theo văn bản OCR của PDF VietstockFinance đã lưu. Lưu riêng cả số lũy kế trên B04 và số riêng quý tính bằng chênh lệch lũy kế. Đây là xác minh OCR/số học, không tuyên bố đã kiểm tra trực quan từng pixel. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Đã khôi phục số dư tiền đầu/cuối quý theo báo cáo lưu chuyển tiền tệ VietstockFinance sau khi chuẩn hóa số dư đầu quý bằng số dư cuối quý trước; số dư cuối quý lấy trực tiếp từ PDF trang 10. Cầu nối số dư tiền khớp biến động tiền thuần quý. Số liệu dẫn xuất từ LNST hợp nhất trừ LNST thuộc cổ đông ngân hàng mẹ; cần đối chiếu trực quan từng dòng nếu muốn đánh dấu xác minh thủ công.",
+      "financial_line_items_updated_at": "2026-10-27T17:05:29.928Z",
+      "financial_line_items_note": "Đã đối chiếu dòng thu nhập ngân hàng, tổng phụ lợi nhuận và dòng tiền theo văn bản OCR của PDF VietstockFinance đã lưu. Lưu riêng cả số lũy kế trên B04 và số riêng quý tính bằng chênh lệch lũy kế. Đây là xác minh OCR/số học, không tuyên bố đã kiểm tra trực quan từng pixel. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Đã khôi phục số dư tiền đầu/cuối quý theo báo cáo lưu chuyển tiền tệ VietstockFinance sau khi chuẩn hóa số dư đầu quý bằng số dư cuối quý trước; số dư cuối quý lấy trực tiếp từ PDF trang 10. Cầu nối số dư tiền khớp biến động tiền thuần quý. Số liệu dẫn xuất từ LNST hợp nhất trừ LNST thuộc cổ đông ngân hàng mẹ; cần đối chiếu trực quan từng dòng nếu muốn đánh dấu xác minh thủ công. Khôi phục thuế hoãn lại Q2/2026 theo dòng quý riêng, không dùng nhầm số lũy kế 5.383. Nguồn: https://finance.vietstock.vn/TCB/tai-tai-lieu.htm?doctype=1; PDF trang 8. Bổ sung giá trị tỷ giá suy ra bằng 0 từ ba tổng số dư/biến động tiền đã khớp chính xác; đánh dấu công thức dẫn xuất và chờ rà soát trực quan. Nguồn: https://finance.vietstock.vn/TCB/tai-tai-lieu.htm?doctype=1; PDF trang 13.",
       "operating_cash_flow": -4500399,
       "operating_cash_flow_calculation": "reported as standalone quarter",
       "net_cash_change": -9461934,
@@ -3615,6 +3654,11 @@
           "previous_value": null,
           "new_value": 376583,
           "reason": "Tái lập từ hai tổng lợi nhuận cùng kỳ đã lưu trong BCTC hợp nhất VietstockFinance; không lấy trực tiếp dấu trừ của dòng phân bổ lợi nhuận thiểu số."
+        },
+        "foreign_exchange_effect": {
+          "previous_value": null,
+          "new_value": 0,
+          "reason": "Bổ sung giá trị tỷ giá suy ra bằng 0 từ ba tổng số dư/biến động tiền đã khớp chính xác; đánh dấu công thức dẫn xuất và chờ rà soát trực quan."
         }
       },
       "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
@@ -3670,7 +3714,16 @@
       "bank_non_controlling_profit": 376583,
       "bank_non_controlling_profit_calculation": "Lợi nhuận cổ đông không kiểm soát = lợi nhuận sau thuế hợp nhất − lợi nhuận sau thuế thuộc cổ đông ngân hàng mẹ (cùng kỳ).",
       "bank_non_controlling_profit_source_note": "Số liệu dẫn xuất từ LNST hợp nhất trừ LNST thuộc cổ đông ngân hàng mẹ; cần đối chiếu trực quan từng dòng nếu muốn đánh dấu xác minh thủ công.",
-      "bank_non_controlling_profit_basis": "derived_same_quarter_net_profit_minus_parent_attributable_profit"
+      "bank_non_controlling_profit_basis": "derived_same_quarter_net_profit_minus_parent_attributable_profit",
+      "income_tax_deferred_calculation": "Thu nhập thuế TNDN hoãn lại quý II/2026: dòng Quý II trực tiếp trong PDF, đồng thời khớp tổng thuế -1.943.374 và thuế hiện hành -1.948.060.",
+      "income_tax_deferred_source_page": 8,
+      "income_tax_deferred_source_index_url": "https://finance.vietstock.vn/TCB/tai-tai-lieu.htm?doctype=1",
+      "income_tax_deferred_source_document_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/TCB_Baocaotaichinh_Q2_2026_Hopnhat.pdf",
+      "foreign_exchange_effect": 0,
+      "foreign_exchange_effect_calculation": "Ảnh hưởng tỷ giá được ghi 0 theo phần dư cầu nối tiền: tiền cuối quý − tiền đầu quý − biến động tiền thuần quý = 0; không thay thế dòng báo cáo nguồn bằng ước tính.",
+      "foreign_exchange_effect_source_page": 13,
+      "foreign_exchange_effect_source_index_url": "https://finance.vietstock.vn/TCB/tai-tai-lieu.htm?doctype=1",
+      "foreign_exchange_effect_source_document_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/TCB_Baocaotaichinh_Q2_2026_Hopnhat.pdf"
     },
     {
       "symbol": "TCB",
