@@ -1569,6 +1569,62 @@
           formula: 'Lãi thuần dịch vụ = thu nhập dịch vụ − giá trị tuyệt đối của chi phí dịch vụ.'
         };
       }
+
+      // Reverse-map a bank's interest/service income or expense only when the
+      // corresponding net subtotal is also present in the same source row.
+      // Expenses are displayed as negative values by the table's expense style.
+      if (industry === 'banking' && key === 'bank_interest_expense' &&
+          num('bank_interest_income') !== null && num('bank_net_interest_income') !== null) {
+        return {
+          value: num('bank_interest_income') - num('bank_net_interest_income'),
+          formula: 'Chi phí lãi = thu nhập lãi − thu nhập lãi thuần; ba dòng lấy từ cùng kỳ BCTC ngân hàng.'
+        };
+      }
+      if (industry === 'banking' && key === 'bank_interest_income' &&
+          num('bank_net_interest_income') !== null && num('bank_interest_expense') !== null) {
+        return {
+          value: num('bank_net_interest_income') + Math.abs(num('bank_interest_expense')),
+          formula: 'Thu nhập lãi = thu nhập lãi thuần + giá trị tuyệt đối của chi phí lãi.'
+        };
+      }
+      if (industry === 'banking' && key === 'bank_service_expense' &&
+          num('bank_service_income') !== null && num('bank_net_service_income') !== null) {
+        return {
+          value: num('bank_service_income') - num('bank_net_service_income'),
+          formula: 'Chi phí dịch vụ = thu nhập dịch vụ − lãi thuần dịch vụ; ba dòng lấy từ cùng kỳ BCTC ngân hàng.'
+        };
+      }
+      if (industry === 'banking' && key === 'bank_service_income' &&
+          num('bank_net_service_income') !== null && num('bank_service_expense') !== null) {
+        return {
+          value: num('bank_net_service_income') + Math.abs(num('bank_service_expense')),
+          formula: 'Thu nhập dịch vụ = lãi thuần dịch vụ + giá trị tuyệt đối của chi phí dịch vụ.'
+        };
+      }
+
+      // The bank income statement subtotal equals the sum of net interest,
+      // net service, FX, trading/investment securities, other operating income,
+      // and dividend/capital income. Reconstruct one missing component only
+      // when every other component from the same source row is numeric.
+      const bankIncomeComponents = [
+        'bank_net_interest_income','bank_net_service_income','bank_fx_net_income',
+        'bank_trading_securities_net','bank_investment_securities_net',
+        'bank_other_operating_net','bank_dividend_and_capital_income'
+      ];
+      if (industry === 'banking' && bankIncomeComponents.includes(key) && num('revenue') !== null) {
+        const missingComponents = bankIncomeComponents.filter(field => !validNumber(item[field]));
+        if (missingComponents.length === 1 && missingComponents[0] === key) {
+          const otherComponents = bankIncomeComponents.filter(field => field !== key)
+            .map(field => resolveStatementValue(item, field, rows, ticker).value);
+          if (otherComponents.every(validNumber)) {
+            return {
+              value: num('revenue') - otherComponents.reduce((sum, value) => sum + Number(value), 0),
+              formula: 'Chỉ tiêu được tái lập từ tổng thu nhập hoạt động trừ toàn bộ sáu thành phần thu nhập ngân hàng còn lại; mọi thành phần còn lại đều phải có trong cùng kỳ.'
+            };
+          }
+        }
+      }
+
       if (key === 'bank_pre_provision_operating_profit' &&
           num('revenue') !== null && num('bank_operating_expenses') !== null) {
         return {
