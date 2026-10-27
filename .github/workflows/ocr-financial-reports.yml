@@ -304,7 +304,7 @@ jobs:
                       and re.fullmatch(r"20\d{2}-Q[1-4]", str(item.get("period") or ""))
                       and item.get("financial_line_items_status")
                       and item.get("financial_line_items_status") not in {"manual_review_required", "manual_review_required_pending_extraction", "no_detail_fields_matched_pending_manual_review"}
-                      and item.get("financial_line_items_schema_version") != "2026-10-27-note-reference-alias-and-manual-guards-v8"
+                      and item.get("financial_line_items_schema_version") != "2026-10-27-bank-split-column-and-cashflow-statement-v9"
                       for item in items
                   )
                   statement_pages_pending = ticker_has_ocr_gap(symbol, items)
