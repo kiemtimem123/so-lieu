@@ -12,6 +12,7 @@ on:
       - ".github/scripts/ocr-stored-reports.py"
       - "scripts/enrich-financial-categories.py"
       - "config/securities.json"
+      - ".github/workflows/ocr-financial-reports.yml"
   schedule:
     - cron: "*/30 * * * *"
     - cron: "5 3 * * *"
@@ -237,8 +238,9 @@ jobs:
                       break
                   # "complete_needs_manual_review" is not enough to skip a ticker
                   # when some quarters still have no core figures or statement pages.
-                  if snapshot.get("bootstrap_status") == "complete":
-                      continue
+                  # A complete core snapshot can still have stale detail fields.
+                  # Let the detail-schema and statement-page checks below decide
+                  # whether this ticker needs a refresh before skipping it.
                   items = snapshot.get("items") or []
                   if not items:
                       attempts = int(snapshot.get("bootstrap_attempt_count") or 0)
