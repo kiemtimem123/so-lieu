@@ -1998,7 +1998,7 @@ def repair_tcx_2026_source_rows(items,symbol):
    9:[
     "633.894.391.116","26.819.346.924","572.607.934.798","68.014.797.084",
     "145.712.853.246","211.688.437.189","12.145.172.612","21.534.999.999",
-    "1.183.086.304","1.693.601.019.272","34.453.346.343","3.183.666.s13",
+    "1.183.086.304","1.693.601.019.272","34.453.346.343","3.'183.666.s13",
     "63.843.348.722","10.569.839.226","39.232.071.770","151.282.272.574"
    ],
    10:[
@@ -2228,6 +2228,8 @@ def repair_tcx_2026_source_rows(items,symbol):
    for page,tokens in required_tokens.items()
   )
   if source_rows_ok:
+   q2_start_field_count=field_count
+   q2_start_status=str(q2_2024.get("financial_line_items_status") or "")
    q2_2024_values={
     "revenue":2233616.377661,
     "broker_total_operating_revenue":2233616.377661,
@@ -2279,16 +2281,23 @@ def repair_tcx_2026_source_rows(items,symbol):
      q2_2024,field,value,
      f"Re-read and visually checked on the archived VietstockFinance B02a-CTCK statement, PDF page {q2_source_pages[field]}; value is from the current Q2 column and is scaled from VND to million VND."
     )
-   detail_fields=set(q2_2024.get("financial_line_items_extracted_fields") or [])
-   detail_fields.update(q2_2024_values)
-   q2_2024["financial_line_items_extracted_fields"]=sorted(detail_fields)
-   rejected_fields=set(q2_2024.get("financial_line_items_rejected_fields") or [])
-   rejected_fields.difference_update(q2_2024_values)
-   q2_2024["financial_line_items_rejected_fields"]=sorted(rejected_fields)
+   detail_fields_before=set(q2_2024.get("financial_line_items_extracted_fields") or [])
+   detail_fields_after=detail_fields_before|set(q2_2024_values)
+   if detail_fields_after!=detail_fields_before:
+    q2_2024["financial_line_items_extracted_fields"]=sorted(detail_fields_after)
+    changed=True; field_count+=1
+   rejected_fields_before=set(q2_2024.get("financial_line_items_rejected_fields") or [])
+   rejected_fields_after=rejected_fields_before-set(q2_2024_values)
+   if rejected_fields_after!=rejected_fields_before:
+    q2_2024["financial_line_items_rejected_fields"]=sorted(rejected_fields_after)
+    changed=True; field_count+=1
    rejected_values=q2_2024.get("financial_line_items_rejected_values")
    if isinstance(rejected_values,dict):
+    rejected_values_before=dict(rejected_values)
     for field in q2_2024_values:
      rejected_values.pop(field,None)
+    if rejected_values!=rejected_values_before:
+     changed=True; field_count+=1
    visual_evidence={
     "source_policy":"VietstockFinance document catalog and linked PDF only",
     "source_index_url":q2_2024.get("source_index_url"),
@@ -2317,10 +2326,11 @@ def repair_tcx_2026_source_rows(items,symbol):
    if note not in old_note:
     q2_2024["financial_line_items_note"]=(old_note+" "+note).strip()
     changed=True; field_count+=1
-   q2_2024["financial_line_items_status"]="auto_extracted_pending_visual_review"
-   q2_2024["financial_line_items_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
-   changed=True
-   quarter_count+=1
+   if q2_start_field_count<field_count or q2_start_status!="auto_extracted_pending_visual_review":
+    q2_2024["financial_line_items_status"]="auto_extracted_pending_visual_review"
+    q2_2024["financial_line_items_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
+    changed=True
+    quarter_count+=1
   else:
    print("TCX 2024-Q2: source-backed income repair skipped; required visual-source tokens did not all match.")
 
@@ -2380,6 +2390,8 @@ def repair_tcx_2026_source_rows(items,symbol):
   item=by_period.get(period)
   if not isinstance(item,dict):
    continue
+  cash24_start_field_count=field_count
+  cash24_start_status=str(item.get("financial_line_items_status") or "")
   archived=archived_pages(item)
   evidence_ok=bool(archived) and all(
    all(token in archived.get(page,"") for token in tokens)
@@ -2397,21 +2409,33 @@ def repair_tcx_2026_source_rows(items,symbol):
   record_value(item,"cashflow_period_basis","year_to_date",
    "The archived B03a-CTCK reports cash flows cumulatively from 1 January.")
   if period=="2024-Q2":
-   item["cash_beginning_calculation"]="Số dư đầu quý lấy từ số dư tiền cuối Q1/2024 theo B03a-CTCK."
+   cash_beginning_calculation="Số dư đầu quý lấy từ số dư tiền cuối Q1/2024 theo B03a-CTCK."
   else:
-   item["cash_beginning_calculation"]="Số dư tiền đầu năm lấy từ B03a-CTCK; không lấy số dư tiền ký quỹ của khách hàng."
-  item["cash_ending_calculation"]="Số dư tiền và tương đương tiền cuối kỳ lấy trực tiếp từ B03a-CTCK."
-  detail_fields=set(item.get("financial_line_items_extracted_fields") or [])
-  detail_fields.update(spec["values"])
-  detail_fields.add("cashflow_period_basis")
-  item["financial_line_items_extracted_fields"]=sorted(detail_fields)
-  rejected_fields=set(item.get("financial_line_items_rejected_fields") or [])
-  rejected_fields.difference_update(spec["values"])
-  item["financial_line_items_rejected_fields"]=sorted(rejected_fields)
+   cash_beginning_calculation="Số dư tiền đầu năm lấy từ B03a-CTCK; không lấy số dư tiền ký quỹ của khách hàng."
+  cash_ending_calculation="Số dư tiền và tương đương tiền cuối kỳ lấy trực tiếp từ B03a-CTCK."
+  if item.get("cash_beginning_calculation")!=cash_beginning_calculation:
+   item["cash_beginning_calculation"]=cash_beginning_calculation
+   changed=True; field_count+=1
+  if item.get("cash_ending_calculation")!=cash_ending_calculation:
+   item["cash_ending_calculation"]=cash_ending_calculation
+   changed=True; field_count+=1
+  detail_fields_before=set(item.get("financial_line_items_extracted_fields") or [])
+  detail_fields_after=detail_fields_before|set(spec["values"])|{"cashflow_period_basis"}
+  if detail_fields_after!=detail_fields_before:
+   item["financial_line_items_extracted_fields"]=sorted(detail_fields_after)
+   changed=True; field_count+=1
+  rejected_fields_before=set(item.get("financial_line_items_rejected_fields") or [])
+  rejected_fields_after=rejected_fields_before-set(spec["values"])
+  if rejected_fields_after!=rejected_fields_before:
+   item["financial_line_items_rejected_fields"]=sorted(rejected_fields_after)
+   changed=True; field_count+=1
   rejected_values=item.get("financial_line_items_rejected_values")
   if isinstance(rejected_values,dict):
+   rejected_values_before=dict(rejected_values)
    for field in spec["values"]:
     rejected_values.pop(field,None)
+   if rejected_values!=rejected_values_before:
+    changed=True; field_count+=1
   flow_check={
    "source_policy":"VietstockFinance document catalog and linked PDF only",
    "source_index_url":item.get("source_index_url"),
@@ -2439,10 +2463,11 @@ def repair_tcx_2026_source_rows(items,symbol):
   if note not in old_note:
    item["financial_line_items_note"]=(old_note+" "+note).strip()
    changed=True; field_count+=1
-  item["financial_line_items_status"]="auto_extracted_pending_visual_review"
-  item["financial_line_items_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
-  changed=True
-  quarter_count+=1
+  if field_count>cash24_start_field_count or cash24_start_status!="auto_extracted_pending_visual_review":
+   item["financial_line_items_status"]="auto_extracted_pending_visual_review"
+   item["financial_line_items_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
+   changed=True
+   quarter_count+=1
 
  cash_specs={
   "2026-Q1":{
