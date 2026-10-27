@@ -1884,6 +1884,407 @@ def reconcile_detail_items(items,symbol):
  return changed,affected_quarters,changed_fields
 
 
+
+def repair_tcx_2026_source_rows(items,symbol):
+ """Reconcile TCX 2026 quarter cash flows and Q3 statement rows against archived Vietstock PDFs.
+
+ The CTCK cash-flow statement is cumulative YTD while the income statement has
+ separate quarterly and YTD columns. A legacy OCR pass confused PBT with OCF,
+ capex with net investing flow, and a single advisory-revenue row with total
+ operating revenue. Apply these narrowly scoped repairs only when the archived
+ source pages contain the expected reported amounts.
+ """
+ if symbol!="TCX":
+  return False,0,0
+ by_period={
+  str(item.get("period") or ""):item
+  for item in items if isinstance(item,dict) and item.get("period")
+ }
+ changed=False
+ quarter_count=0
+ field_count=0
+
+ def archived_pages(item):
+  archive_rel=str(item.get("source_archive_file") or "").strip()
+  if not archive_rel:
+   return {}
+  sidecar=ROOT/(archive_rel+".extracted.json")
+  payload=load_json(sidecar,{})
+  if not isinstance(payload,dict):
+   return {}
+  documents=[]
+  if payload.get("kind")=="pdf":
+   documents=[payload]
+  elif payload.get("kind")=="zip":
+   documents=[
+    member for member in payload.get("members",[])
+    if isinstance(member,dict) and member.get("kind")=="pdf"
+   ]
+  result={}
+  for document in documents:
+   for page in document.get("pages",[]):
+    if not isinstance(page,dict): continue
+    try:
+     page_num=int(page.get("page"))
+    except (TypeError,ValueError):
+     continue
+    result.setdefault(page_num,[])
+    result[page_num].append(str(page.get("text") or ""))
+  return {number:" ".join(parts) for number,parts in result.items()}
+
+ def record_value(item,field,value,reason):
+  nonlocal changed,field_count
+  previous=item.get(field)
+  if previous==value:
+   return
+  if isinstance(previous,(int,float)) and not isinstance(previous,bool):
+   item.setdefault("financial_line_items_prior_values",{}).setdefault(field,previous)
+  item.setdefault("financial_line_items_value_corrections",{})[field]={
+   "previous_value":previous,"new_value":value,"reason":reason
+  }
+  item[field]=value
+  changed=True
+  field_count+=1
+
+ cash_specs={
+  "2026-Q1":{
+   "evidence":[
+    (12,"5.364.921.379.297"),(13,"7.169.753.162.448"),
+    (13,"2.385.094.712.445"),(13,"5.493.172.934.162")
+   ],
+   "operating_cash_flow_ytd":-5364921.379297,
+   "financing_cash_flow_ytd":7169753.162448,
+   "net_cash_change_ytd":2385094.712445,
+   "cash_beginning_reported_ytd":3108078.221717,
+   "cash_beginning":3108078.221717,
+   "cash_ending":5493172.934162,
+   "capital_expenditure_ytd":-19737.070706,
+   "source_pages":[12,13],
+  },
+  "2026-Q2":{
+   "evidence":[
+    (12,"14.297.190.746.884"),(13,"178.884.893.621"),
+    (13,"17.164.732.877.510"),(13,"3.046.427.024.247"),
+    (13,"6.154.505.245.964")
+   ],
+   "operating_cash_flow_ytd":-14297190.746884,
+   "investing_cash_flow_ytd":178884.893621,
+   "financing_cash_flow_ytd":17164732.877510,
+   "net_cash_change_ytd":3046427.024247,
+   "cash_beginning_reported_ytd":3108078.221717,
+   "cash_beginning":5493172.934162,
+   "cash_ending":6154505.245964,
+   "capital_expenditure_ytd":-35785.929930,
+   "dividends_paid_ytd":-1155791.748000,
+   "source_pages":[12,13],
+  },
+  "2026-Q3":{
+   "evidence":[
+    (12,"10.529.105.661.173"),(13,"141.487.840.021"),
+    (13,"11.531.579.346.989"),(13,"1.143.961.525.837"),
+    (13,"4.252.039.747.554")
+   ],
+   "operating_cash_flow_ytd":-10529105.661173,
+   "investing_cash_flow_ytd":141487.840021,
+   "financing_cash_flow_ytd":11531579.346989,
+   "net_cash_change_ytd":1143961.525837,
+   "cash_beginning_reported_ytd":3108078.221717,
+   "cash_beginning":6154505.245964,
+   "cash_ending":4252039.747554,
+   "capital_expenditure_ytd":-38077.540900,
+   "dividends_paid_ytd":-1155791.748000,
+   "source_pages":[12,13],
+  },
+ }
+
+ for period,spec in cash_specs.items():
+  item=by_period.get(period)
+  if not isinstance(item,dict):
+   continue
+  page_text=archived_pages(item)
+  if not page_text or any(token not in page_text.get(page,"") for page,token in spec["evidence"]):
+   print(f"TCX {period}: source-backed cashflow repair skipped; one or more exact report tokens were not found.")
+   continue
+  # The Q1 cash-flow page OCR misread the net-investing-flow row. Derive it
+  # from the independently printed net cash change, operating flow and financing
+  # flow, all of which reconcile to the reported opening/closing cash balances.
+  corrected=dict(spec)
+  if period=="2026-Q1":
+   corrected["investing_cash_flow_ytd"]=round(
+    corrected["net_cash_change_ytd"]
+    -corrected["operating_cash_flow_ytd"]
+    -corrected["financing_cash_flow_ytd"],6
+   )
+  corrected["cashflow_period_basis"]="year_to_date"
+  for field,value in corrected.items():
+   if field in {"evidence","source_pages"}:
+    continue
+   if field=="cashflow_period_basis":
+    if item.get(field)!=value:
+     item[field]=value; changed=True; field_count+=1
+    continue
+   reason=(
+    "Source-backed correction from VietstockFinance CTCK cash-flow statement; "
+    f"{period}, PDF pages {','.join(map(str,spec['source_pages']))}. "
+    +(
+     "Investing cash flow was derived from the reported net cash change minus the independently reported operating and financing flows because OCR misread the net-investing-flow row."
+     if period=="2026-Q1" and field=="investing_cash_flow_ytd"
+     else "YTD amount is kept separately; the standalone quarterly amount is computed as current YTD minus prior quarter YTD."
+    )
+   )
+   record_value(item,field,value,reason)
+  if period=="2026-Q1":
+   record_value(item,"investing_cash_flow_ytd",corrected["investing_cash_flow_ytd"],
+    "Derived from reported net cash change minus reported operating and financing cash flows; opening/closing cash bridge reconciles exactly.")
+  record_value(item,"cash_and_equivalents",corrected["cash_ending"],
+   "Exact closing cash and cash equivalents from VietstockFinance cash-flow statement (unit: million VND).")
+  fields=set(item.get("financial_line_items_extracted_fields") or [])
+  fields.update({
+   "operating_cash_flow_ytd","investing_cash_flow_ytd","financing_cash_flow_ytd",
+   "net_cash_change_ytd","cashflow_period_basis","cash_beginning_reported_ytd",
+   "cash_beginning","cash_ending","cash_and_equivalents","capital_expenditure_ytd"
+  })
+  if "dividends_paid_ytd" in corrected:
+   fields.add("dividends_paid_ytd")
+  item["financial_line_items_extracted_fields"]=sorted(fields)
+  item["financial_line_items_rejected_fields"]=[
+   field for field in (item.get("financial_line_items_rejected_fields") or [])
+   if field not in {
+    "operating_cash_flow","investing_cash_flow","financing_cash_flow",
+    "net_cash_change","cash_beginning","cash_ending","cash_and_equivalents"
+   }
+  ]
+  rejected_values=item.get("financial_line_items_rejected_values")
+  if isinstance(rejected_values,dict):
+   for field in (
+    "operating_cash_flow","investing_cash_flow","financing_cash_flow",
+    "net_cash_change","cash_beginning","cash_ending","cash_and_equivalents"
+   ):
+    rejected_values.pop(field,None)
+  item.pop("financial_line_items_cash_check",None)
+  item["cashflow_source_reconciliation"]={
+   "source_policy":"VietstockFinance document catalog and linked PDF only",
+   "scope":"standalone CTCK report (B03a-CTCK), not a consolidated report",
+   "period":period,
+   "source_archive_file":item.get("source_archive_file"),
+   "source_index_url":item.get("source_index_url"),
+   "source_document_url":item.get("source_url"),
+   "source_pages":spec["source_pages"],
+   "basis":"year_to_date_report_normalized_to_quarter",
+   "ytd_components_sum_to_reported_net_cash_change":True,
+   "opening_closing_cash_bridge_reconciles":True,
+   "note":(
+    "YTD cash flow is extracted from the original CTCK statement; quarterly values are derived from adjacent YTD periods. "
+    "Q1 investing flow uses the independent net cash total and the two other reported flows because the OCR read the investing-flow row incorrectly."
+   )
+  }
+  old_note=str(item.get("financial_line_items_note") or "")
+  old_note=old_note.replace(
+   "Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần.",""
+  ).replace(
+   "Số dư tiền đầu/cuối kỳ bị ẩn vì không khớp biến động tiền theo quý.",""
+  ).strip()
+  note=(
+   f"Đã đối chiếu LCTT TCX {period} từ báo cáo riêng mẫu B03a-CTCK trên VietstockFinance. "
+   "Dữ liệu gốc lũy kế được lưu riêng; số quý được tính bằng chênh lệch lũy kế và đã đối chiếu với biến động tiền/ số dư tiền."
+  )
+  if period=="2026-Q1":
+   note+=" Dòng đầu tư quý I được suy ra từ biến động tiền thuần trừ dòng tiền kinh doanh và tài chính do OCR nhận nhầm dòng tổng đầu tư; công thức được lưu để truy vết."
+  if note not in old_note:
+   item["financial_line_items_note"]=(old_note+" "+note).strip()
+   changed=True; field_count+=1
+  item["financial_line_items_status"]="auto_extracted_pending_visual_review"
+  item["financial_line_items_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
+  changed=True
+  quarter_count+=1
+
+ # Q3/2026 source text is readable for the main CTCK statements, but the prior
+ # parser confused an advisory-revenue row for total revenue and retained YTD
+ # profit in quarter fields. Restore the values from the explicitly labelled
+ # "Quý 3" columns, and label the report scope accurately as standalone.
+ item=by_period.get("2026-Q3")
+ if isinstance(item,dict):
+  page_text=archived_pages(item)
+  required={
+   5:["B01a-CTCK","93.291.524.374.447","3.682.538.394.785","96.974.062.769.232"],
+   6:["49.568.110.970.833","47.405.951.798.399","43.655.467.758.554","5.912.643.212.279"],
+   9:["B02a-CTCK","3.534.194.399.247","249.734.488.798"],
+   10:["2.152.639.191.936","1.159.965.383.620","201.046.195.357"],
+   11:["2.152.263.245.328","1.747.895.861.879","404.367.383.449","525"],
+  }
+  source_ok=bool(page_text) and all(
+   all(token in page_text.get(page,"") for token in tokens)
+   for page,tokens in required.items()
+  )
+  if source_ok:
+   q2=by_period.get("2026-Q2") or {}
+   q3_values={
+    "total_assets":96974062.769232,
+    "total_liabilities":49568110.970833,
+    "equity":47405951.798399,
+    "current_assets":93291524.374447,
+    "non_current_assets":3682538.394785,
+    "current_liabilities":43655467.758554,
+    "long_term_liabilities":5912643.212279,
+    "fixed_assets":106887.587941,
+    "cash_and_equivalents":4252039.747554,
+    "broker_fvtpl_assets":117174.100300,
+    "broker_held_to_maturity_assets":2148198.577180,
+    "broker_lending_assets":54739637.688044,
+    "broker_afs_assets":30254612.527109,
+    "broker_receivables":1207088.802528,
+    "broker_short_term_borrowings":40489276.680000,
+    "broker_short_term_bonds":568291.779040,
+    "broker_long_term_bonds":3000000.000000,
+    "broker_customer_deposits":6224732.944496,
+    "retained_earnings":5631677.282493,
+    "revenue":3534194.399247,
+    "broker_total_operating_revenue":3534194.399247,
+    "broker_fvtpl_gain":724755.461396,
+    "broker_held_to_maturity_income":30382.148346,
+    "broker_lending_income":1561090.700500,
+    "broker_afs_income":256160.789129,
+    "broker_brokerage_revenue":199454.806412,
+    "broker_underwriting_revenue":737039.362934,
+    "broker_custody_revenue":20640.490118,
+    "broker_financial_advisory_revenue":3332.999998,
+    "broker_other_operating_income":1337.640414,
+    "broker_total_operating_expenses":249734.488798,
+    "broker_operating_expenses":249734.488798,
+    "broker_fvtpl_loss":79578.325668,
+    "broker_brokerage_expense":86730.362590,
+    "broker_custody_expense":19210.886265,
+    "broker_other_operating_expense":68560.143523,
+    "broker_financial_income":229190.860464,
+    "broker_financial_expense":1159965.383620,
+    "broker_interest_expense":875504.605736,
+    "broker_admin_expenses":201046.195357,
+    "financial_income":229190.860464,
+    "financial_expense":1159965.383620,
+    "interest_expense":875504.605736,
+    "admin_expense":201046.195357,
+    "broker_net_operating_profit":2152639.191936,
+    "operating_profit":2152639.191936,
+    "pretax_profit":2152263.245328,
+    "income_tax":404367.383449,
+    "income_tax_current":431918.589958,
+    "income_tax_deferred":-27551.206509,
+    "net_profit":1747895.861879,
+    "eps":525,
+   }
+   source_page_for_field={}
+   for field,value in q3_values.items():
+    source_page_for_field[field]=(
+     5 if field in {"current_assets","non_current_assets","total_assets","cash_and_equivalents","fixed_assets",
+                    "broker_fvtpl_assets","broker_held_to_maturity_assets","broker_lending_assets","broker_afs_assets",
+                    "broker_receivables"}
+     else 6 if field in {"total_liabilities","equity","current_liabilities","long_term_liabilities",
+                         "retained_earnings","broker_short_term_borrowings","broker_short_term_bonds",
+                         "broker_long_term_bonds","broker_customer_deposits"}
+     else 9 if field in {"revenue","broker_total_operating_revenue","broker_fvtpl_gain",
+                         "broker_held_to_maturity_income","broker_lending_income","broker_afs_income",
+                         "broker_brokerage_revenue","broker_underwriting_revenue","broker_custody_revenue",
+                         "broker_financial_advisory_revenue","broker_other_operating_income",
+                         "broker_total_operating_expenses","broker_operating_expenses","broker_fvtpl_loss",
+                         "broker_brokerage_expense","broker_custody_expense","broker_other_operating_expense"}
+     else 10 if field in {"broker_financial_income","broker_financial_expense","broker_interest_expense",
+                          "broker_admin_expenses","financial_income","financial_expense","interest_expense",
+                          "admin_expense","broker_net_operating_profit","operating_profit"}
+     else 11)
+    record_value(
+     item,field,value,
+     f"Re-read from the separately reported Quý 3 column of the archived VietstockFinance CTCK statement, PDF page {source_page_for_field[field]}; not from the YTD column."
+    )
+   # Ratios use quarter profit and average balance sheet values, not nine-month profit.
+   q2_assets=q2.get("total_assets")
+   q2_equity=q2.get("equity")
+   if not isinstance(q2_assets,(int,float)) or not isinstance(q2_equity,(int,float)):
+    q2_assets=100592059.821282
+    q2_equity=45782449.906020
+   average_assets=(q2_assets+q3_values["total_assets"])/2
+   average_equity=(q2_equity+q3_values["equity"])/2
+   ratios={
+    "average_total_assets":average_assets,
+    "average_equity":average_equity,
+    "roa":round(q3_values["net_profit"]/average_assets*400,2),
+    "roe":round(q3_values["net_profit"]/average_equity*400,2),
+   }
+   for field,value in ratios.items():
+    record_value(item,field,value,"Derived from the separately reported Q3 net profit and average opening/closing balance-sheet values; annualized quarter basis.")
+   item["roa_formula"]="LNST quý III / bình quân tổng tài sản đầu và cuối quý × 4 × 100"
+   item["roe_formula"]="LNST quý III / bình quân vốn chủ sở hữu đầu và cuối quý × 4 × 100"
+   item["ratio_calculations"]={
+    "roa":f"LNST riêng Q3/2026 {q3_values['net_profit']} triệu VND / bình quân tổng tài sản {average_assets} triệu VND × 4 × 100.",
+    "roe":f"LNST riêng Q3/2026 {q3_values['net_profit']} triệu VND / bình quân vốn chủ sở hữu {average_equity} triệu VND × 4 × 100."
+   }
+   item["ratio_source_pages"]=[5,6,11]
+   item["report_type"]="BCTC riêng TCX Q3/2026 (mẫu B01a-CTCK/B02a-CTCK; VietstockFinance; chưa soát xét)"
+   validation=item.get("source_validation")
+   if not isinstance(validation,dict):
+    validation={}
+   validation.update({
+    "single_source_policy":"Chỉ danh mục VietstockFinance và tệp do danh mục đó liên kết.",
+    "source_catalog_url":item.get("source_index_url"),
+    "source_document_url":item.get("source_url"),
+    "listing_title":item.get("source_archive_title") or "Báo cáo tài chính quý 3 năm 2026",
+    "report_scope":"standalone",
+    "scope_basis":"Lưu trữ PDF dùng mẫu B01a-CTCK/B02a-CTCK và tên công ty riêng; tiêu đề danh mục VietstockFinance không ghi Hợp nhất. Không gắn nhãn BCTC hợp nhất.",
+    "scope_validation_required":False,
+    "manual_review_blocking_automatic_extraction":False,
+    "manually_visual_reviewed":False,
+    "source_archive_file":item.get("source_archive_file"),
+   })
+   item["source_validation"]=validation
+   item["core_financial_extracted_fields"]=sorted(set(item.get("core_financial_extracted_fields") or [])|{
+    "total_assets","total_liabilities","equity","pretax_profit","net_profit"
+   })
+   item["core_financial_extraction_source"]=str(item.get("source_archive_file") or "")
+   item["core_financial_extraction_pages"]=[5,6,9,10,11]
+   item["core_financial_extraction_status"]="source_text_reconciled_pending_visual_review"
+   item["verification_status"]="source_text_reconciled_pending_visual_review"
+   item["core_financial_extraction_note"]=(
+    "Các tổng tài sản, nợ phải trả và vốn chủ sở hữu được đọc từ BCTC riêng mẫu B01a-CTCK và khớp phương trình cân đối theo số VND gốc. "
+    "Doanh thu hoạt động, lợi nhuận hoạt động, lợi nhuận trước thuế, LNST và EPS lấy từ cột riêng Quý 3 trên B02a-CTCK; không lấy tổng lũy kế 9 tháng. "
+    "Đây là đối chiếu văn bản nguồn và phép tính, chưa xác nhận bằng kiểm tra trực quan toàn bộ trang PDF."
+   )
+   item["verification_status_note"]="BCTC riêng của CTCK TCX; dữ liệu nguồn chưa được gắn nhãn hợp nhất."
+   item.pop("core_financial_extraction_manual_terminal",None)
+   item.pop("core_financial_extraction_stable_evidence_count",None)
+   item.pop("core_financial_extraction_stable_evidence_updated_at",None)
+   item["core_financial_extraction_unverified_values_note"]=(
+    "Giá trị lịch sử nằm riêng trong core_financial_extraction_unverified_values là giá trị của parser cũ; các số lợi nhuận của quý III từng lấy nhầm cột lũy kế 9 tháng. "
+    "Các giá trị hiển thị hiện tại được đọc lại từ cột Quý 3 của báo cáo VietstockFinance."
+   )
+   item["financial_line_items_source"]=str(item.get("source_archive_file") or "")
+   fields=set(item.get("financial_line_items_extracted_fields") or [])
+   fields.update(q3_values.keys())
+   fields.update({"cash_and_equivalents","current_assets","non_current_assets","current_liabilities","long_term_liabilities"})
+   item["financial_line_items_extracted_fields"]=sorted(fields)
+   rejected_fields=set(item.get("financial_line_items_rejected_fields") or [])
+   rejected_fields.difference_update({"current_assets","non_current_assets","current_liabilities","cash_beginning","cash_ending"})
+   item["financial_line_items_rejected_fields"]=sorted(rejected_fields)
+   rejected_values=item.get("financial_line_items_rejected_values")
+   if isinstance(rejected_values,dict):
+    for field in ("current_assets","non_current_assets","current_liabilities","cash_beginning","cash_ending"):
+     rejected_values.pop(field,None)
+   item["financial_line_items_status"]="auto_extracted_pending_visual_review"
+   item["financial_line_items_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
+   note=(
+    "Bổ sung lại các trường trống TCX Q3/2026 từ cột Quý 3 và bảng cân đối BCTC riêng VietstockFinance; "
+    "đã sửa doanh thu tổng bị nhầm thành doanh thu tư vấn 3.333 triệu và lợi nhuận bị nhầm cột lũy kế 9 tháng. "
+    "Phạm vi báo cáo được ghi là BCTC riêng, không phải báo cáo hợp nhất. Giá/PE/PB không được suy ra từ báo cáo kế toán."
+   )
+   old_note=str(item.get("financial_line_items_note") or "")
+   if note not in old_note:
+    item["financial_line_items_note"]=(old_note+" "+note).strip()
+   item["core_financial_extraction_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
+   item["quarter_profit_basis"]="quarter_column_reported"
+   changed=True
+   quarter_count+=1
+   field_count+=len(q3_values)
+  else:
+   print("TCX 2026-Q3: statement-row repair skipped because archived VietstockFinance line-item evidence did not match.")
+
 def enrich_snapshot(path):
  snapshot=json.loads(path.read_text(encoding="utf-8"))
  symbol=str(snapshot.get("symbol") or path.stem.replace("financials-","")).upper()
@@ -2359,6 +2760,10 @@ def enrich_snapshot(path):
   elif rejection_changed:
    quarter_count+=1
 
+ repair_changed,repair_quarters,repair_fields=repair_tcx_2026_source_rows(items,symbol)
+ changed=changed or repair_changed
+ quarter_count+=repair_quarters
+ field_count+=repair_fields
  by_period={str(i.get("period")):i for i in items if isinstance(i,dict)}
  # Check total cash flow before turning cumulative YTD values into quarter values.
  # When every reported component exists and the mismatch is small, fix an OCR
