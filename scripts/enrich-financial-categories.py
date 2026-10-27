@@ -1988,6 +1988,125 @@ def repair_tcx_2026_source_rows(items,symbol):
   changed=True
   field_count+=1
 
+ # Repair TCX Q2/2024 where the older OCR parser mapped the foreign-exchange
+ # row to generic revenue and mapped the finance-income subtotal to the broker's
+ # total operating revenue. These exact values are guarded by the archived
+ # VietstockFinance B02a-CTCK rows on PDF pages 9–11.
+ q2_2024=by_period.get("2024-Q2")
+ if isinstance(q2_2024,dict):
+  page_text=archived_pages(q2_2024)
+  required_tokens={
+   9:[
+    "696.861.698.381","30.229.481.127","637.279.350.434",
+    "162.804.353.720","156.192.251.513","455.377.520.333",
+    "12.332.762.027","81.675.699.999","863.260.127",
+    "616.377.661","152.721.575.174","76.755.135.395",
+    "10.777.990.296","42.114.053.438","22.286.356.185"
+   ],
+   10:["7.960.143.556","352.917.770.484","338.258.357.643","123.231.620.654","1.612.705.554.905"],
+   11:["314.483.853.511","315.222.111.907","738.262.396","1.297.455.468.843"],
+  }
+  source_rows_ok=bool(page_text) and all(
+   all(token in page_text.get(page,"") for token in tokens)
+   for page,tokens in required_tokens.items()
+  )
+  if source_rows_ok:
+   q2_2024_values={
+    "revenue":2233616.377661,
+    "broker_total_operating_revenue":2233616.377661,
+    "broker_fvtpl_gain":696861.698381,
+    "broker_held_to_maturity_income":30229.481127,
+    "broker_lending_income":637279.350434,
+    "broker_afs_income":162804.353720,
+    "broker_brokerage_revenue":156192.251513,
+    "broker_underwriting_revenue":455377.520333,
+    "broker_custody_revenue":12332.762027,
+    "broker_financial_advisory_revenue":81675.699999,
+    "broker_other_operating_income":863.260127,
+    "broker_fvtpl_loss":22286.356185,
+    "broker_brokerage_expense":76755.135395,
+    "broker_custody_expense":10777.990296,
+    "broker_other_operating_expense":42114.053438,
+    "broker_total_operating_expenses":152721.575174,
+    "broker_operating_expenses":152721.575174,
+    "financial_income":7960.143556,
+    "broker_financial_income":7960.143556,
+    "financial_expense":352917.770484,
+    "broker_financial_expense":352917.770484,
+    "interest_expense":338258.357643,
+    "broker_interest_expense":338258.357643,
+    "admin_expense":123231.620654,
+    "broker_admin_expenses":123231.620654,
+    "operating_profit":1612705.554905,
+    "broker_net_operating_profit":1612705.554905,
+    "income_tax":314483.853511,
+    "income_tax_current":315222.111907,
+    "income_tax_deferred":-738.262396,
+   }
+   q2_source_pages={
+    "revenue":9,"broker_total_operating_revenue":9,
+    "broker_fvtpl_gain":9,"broker_held_to_maturity_income":9,"broker_lending_income":9,
+    "broker_afs_income":9,"broker_brokerage_revenue":9,"broker_underwriting_revenue":9,
+    "broker_custody_revenue":9,"broker_financial_advisory_revenue":9,
+    "broker_other_operating_income":9,"broker_fvtpl_loss":9,"broker_brokerage_expense":9,
+    "broker_custody_expense":9,"broker_other_operating_expense":9,
+    "broker_total_operating_expenses":9,"broker_operating_expenses":9,
+    "financial_income":10,"broker_financial_income":10,"financial_expense":10,
+    "broker_financial_expense":10,"interest_expense":10,"broker_interest_expense":10,
+    "admin_expense":10,"broker_admin_expenses":10,"operating_profit":10,
+    "broker_net_operating_profit":10,"income_tax":11,"income_tax_current":11,
+    "income_tax_deferred":11,
+   }
+   for field,value in q2_2024_values.items():
+    record_value(
+     q2_2024,field,value,
+     f"Re-read and visually checked on the archived VietstockFinance B02a-CTCK statement, PDF page {q2_source_pages[field]}; value is from the current Q2 column and is scaled from VND to million VND."
+    )
+   detail_fields=set(q2_2024.get("financial_line_items_extracted_fields") or [])
+   detail_fields.update(q2_2024_values)
+   q2_2024["financial_line_items_extracted_fields"]=sorted(detail_fields)
+   rejected_fields=set(q2_2024.get("financial_line_items_rejected_fields") or [])
+   rejected_fields.difference_update(q2_2024_values)
+   q2_2024["financial_line_items_rejected_fields"]=sorted(rejected_fields)
+   rejected_values=q2_2024.get("financial_line_items_rejected_values")
+   if isinstance(rejected_values,dict):
+    for field in q2_2024_values:
+     rejected_values.pop(field,None)
+   visual_evidence={
+    "source_policy":"VietstockFinance document catalog and linked PDF only",
+    "source_index_url":q2_2024.get("source_index_url"),
+    "source_document_url":q2_2024.get("source_url"),
+    "source_archive_file":q2_2024.get("source_archive_file"),
+    "report_form":"B02a-CTCK",
+    "report_scope":"standalone securities-company financial statement; not consolidated",
+    "pdf_pages":[9,10,11],
+    "manually_visual_reviewed":True,
+    "corrected_fields":sorted(q2_2024_values),
+    "note":"The revenue fields previously matched the financial-income / exchange-difference rows. Replaced them with the reported total operating revenue and reconciled the financial-income, financial-expense, operating-profit and tax rows from the Q2 column."
+   }
+   if q2_2024.get("financial_line_items_source_row_reconciliation")!=visual_evidence:
+    q2_2024["financial_line_items_source_row_reconciliation"]=visual_evidence
+    changed=True; field_count+=1
+   if q2_2024.get("financial_line_items_source_pages")!=[9,10,11]:
+    q2_2024["financial_line_items_source_pages"]=[9,10,11]
+    changed=True; field_count+=1
+   note=(
+    "Đã kiểm tra trực quan các dòng B02a-CTCK trên PDF VietstockFinance trang 9–11: "
+    "tách lại tổng doanh thu hoạt động khỏi doanh thu tài chính; sửa doanh thu/chi phí tài chính, "
+    "chi phí lãi vay, quản lý, lợi nhuận hoạt động và thuế theo cột Quý II. Đơn vị lưu là triệu VND. "
+    "Tổng thuế lấy theo dòng công bố 314.483.853.511 VND; thuế hiện hành cộng thuế hoãn lại lệch 4.000 VND theo văn bản nguồn, nên giữ nguyên từng dòng báo cáo và lưu tổng thuế riêng."
+   )
+   old_note=str(q2_2024.get("financial_line_items_note") or "")
+   if note not in old_note:
+    q2_2024["financial_line_items_note"]=(old_note+" "+note).strip()
+    changed=True; field_count+=1
+   q2_2024["financial_line_items_status"]="auto_extracted_pending_visual_review"
+   q2_2024["financial_line_items_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
+   changed=True
+   quarter_count+=1
+  else:
+   print("TCX 2024-Q2: source-backed income repair skipped; required visual-source tokens did not all match.")
+
  cash_specs={
   "2026-Q1":{
    "evidence":[
