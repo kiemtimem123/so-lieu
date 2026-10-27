@@ -1805,6 +1805,45 @@ def reconcile_detail_items(items,symbol):
       item["cashflow_balance_bridge_recovery"]=recovery
       period_changed=True; changed_fields+=1
 
+  # For securities brokers, the official statement's total operating revenue
+  # is the comparable revenue metric. Generic label matching can accidentally
+  # read a nearby financial-income row into item["revenue"]. If the broker's
+  # explicitly extracted total is available from the same quarterly report,
+  # align the generic revenue field to it and preserve the superseded OCR value.
+  if symbol in BROKERS:
+   broker_revenue=item.get("broker_total_operating_revenue")
+   current_revenue=item.get("revenue")
+   scope_info=item.get("source_validation")
+   if not isinstance(scope_info,dict):
+    scope_info={}
+   if (
+    isinstance(broker_revenue,(int,float))
+    and not isinstance(broker_revenue,bool)
+    and __import__("math").isfinite(broker_revenue)
+    and scope_info.get("scope_validation_required") is not True
+    and (
+     not isinstance(current_revenue,(int,float))
+     or isinstance(current_revenue,bool)
+     or abs(current_revenue-broker_revenue)>max(abs(broker_revenue)*0.001,1000)
+    )
+   ):
+    if isinstance(current_revenue,(int,float)) and not isinstance(current_revenue,bool):
+     prior.setdefault("revenue",current_revenue)
+    item.setdefault("financial_line_items_value_corrections",{})["revenue"]={
+     "previous_value":current_revenue,
+     "new_value":broker_revenue,
+     "reason":"Generic revenue parse disagreed with total operating revenue explicitly extracted from the same VietstockFinance CTCK statement; use the reported broker operating-revenue total.",
+     "source_index_url":item.get("source_index_url"),
+     "source_url":item.get("source_url"),
+     "source_archive_file":item.get("source_archive_file"),
+    }
+    item["revenue"]=broker_revenue
+    item["revenue_calculation"]="Đồng bộ với tổng doanh thu hoạt động được trích xuất trực tiếp từ cùng kỳ BCTC công ty chứng khoán VietstockFinance; không dùng dòng doanh thu tài chính làm doanh thu chính."
+    fields.add("revenue")
+    rejected.discard("revenue")
+    rejected_values.pop("revenue",None)
+    period_changed=True; changed_fields+=1
+
   # Operating + investing + financing cash flows reconcile to net cash change.
   # FX translation is separate and is used only in the cash-balance bridge.
   operating=item.get("operating_cash_flow")
