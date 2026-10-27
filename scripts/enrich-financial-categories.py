@@ -1603,10 +1603,6 @@ def enrich_snapshot(path):
   report_type_text=str(item.get("report_type") or "")
   old_detail_schema=str(item.get("financial_line_items_schema_version") or "")
   detail_schema_migration=bool(item.get("financial_line_items_status") and old_detail_schema != DETAIL_SCHEMA_VERSION)
-  if item.get("financial_line_items_status") and item.get("financial_line_items_schema_version") != DETAIL_SCHEMA_VERSION:
-   item["financial_line_items_schema_version"]=DETAIL_SCHEMA_VERSION
-   item["financial_line_items_schema_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
-   changed=True
   source_norm=norm(item.get("source_url") or "")
   source_index=str(item.get("source_index_url") or "")
   sync_scope_verified=(
@@ -1629,6 +1625,13 @@ def enrich_snapshot(path):
    changed=True
   pages=load_report_pages(item,symbol)
   if not pages: continue
+
+  # Do not mark the detail schema migrated until source pages are available;
+  # otherwise an offline archive would suppress a later safe retry.
+  if item.get("financial_line_items_status") and item.get("financial_line_items_schema_version") != DETAIL_SCHEMA_VERSION:
+   item["financial_line_items_schema_version"]=DETAIL_SCHEMA_VERSION
+   item["financial_line_items_schema_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
+   changed=True
 
   # A parser-version change invalidates only machine-extracted core values.
   # Preserve the old values for audit, clear them from visible metrics, and
