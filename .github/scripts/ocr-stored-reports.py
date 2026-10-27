@@ -232,7 +232,7 @@ def symbol_report_archives(symbol: str) -> list[tuple[str, Path]]:
             and not item.get("financial_line_items_status")
         )
         detail_schema = item.get("financial_line_items_schema_version")
-        stale_detail = bool(item.get("financial_line_items_status")) and detail_schema != "2026-10-22-bank-statement-qc-v4" and item.get("financial_line_items_status") not in TERMINAL_REVIEW_STATUSES
+        stale_detail = bool(item.get("financial_line_items_status")) and detail_schema != "2026-10-27-other-statements-source-fields-v10" and item.get("financial_line_items_status") not in TERMINAL_REVIEW_STATUSES
         priority = 0 if (core_pending or detail_pending or stale_detail) else 1
         return (priority, int(period[:4]), int(period[-1]))
 
