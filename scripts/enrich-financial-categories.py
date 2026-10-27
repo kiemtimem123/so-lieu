@@ -289,7 +289,8 @@ def is_statement_row_start(line):
 def strip_leading_note_reference(text):
  # Vietstock note references can be misread as Roman numerals, digits, or
  # mixed OCR tokens such as III.18, 11.18, 111.20, IIH.48, or 1H.18.
- # They are not amounts and must not allow the parser to slide to the next row.
+ # Remove the entire reference before parsing, then preserve the first/current
+ # column only; this is intentionally independent of the following numbers.
  raw=str(text or "")
  return re.sub(r"^\s*[A-Za-z0-9]{1,6}\s*\.\s*\d{1,2}\s+", " ", raw, count=1, flags=re.IGNORECASE)
 
