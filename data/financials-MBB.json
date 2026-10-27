@@ -1216,7 +1216,7 @@
       "bank_deposits_at_state_bank": 15156039,
       "bank_customer_loans": 1105852151,
       "bank_trading_securities": 5058769,
-      "bank_derivatives_and_other_financial_assets": 1105852151,
+      "bank_derivatives_and_other_financial_assets": 0,
       "bank_investment_securities": 262829936,
       "bank_contributions_and_long_term_investments": 467906,
       "bank_other_assets": 42837663,
@@ -1250,7 +1250,7 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/MBB/manual-mbb-smoke-20261018/eebeda2ebc09b0d4.pdf",
       "financial_line_items_updated_at": "2026-10-27T03:12:59+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng công cụ phái sinh phía tài sản đã được đối chiếu trực quan: kỳ hiện tại là dấu gạch, hiển thị 0; không lấy nhầm số dư cho vay khách hàng.",
       "operating_cash_flow": -64971848,
       "operating_cash_flow_calculation": "Q1 equals YTD Q1",
       "financial_line_items_prior_values": {
@@ -1278,11 +1278,14 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "bank_derivatives_and_other_financial_assets": {
-          "previous_value": 0,
-          "new_value": 1105852151,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": 1105852151,
+          "new_value": 0,
+          "reason": "Manually verified visually against VietstockFinance Q1 2026 consolidated balance sheet, page 3: the current and comparative cells for 'Các công cụ tài chính phái sinh và các tài sản tài chính khác' are dashes. The prior value duplicated the net customer-loan balance."
         }
-      }
+      },
+      "financial_line_items_manually_verified_fields": [
+        "bank_derivatives_and_other_financial_assets"
+      ]
     },
     {
       "symbol": "MBB",
