@@ -1577,6 +1577,39 @@
         };
       }
 
+      if (key === 'bank_non_controlling_profit' && industry === 'banking' &&
+          num('net_profit') !== null && num('net_profit_attributable') !== null) {
+        return {
+          value: num('net_profit') - num('net_profit_attributable'),
+          formula: 'Lợi ích cổ đông không kiểm soát = lợi nhuận sau thuế hợp nhất − lợi nhuận sau thuế thuộc cổ đông công ty mẹ.'
+        };
+      }
+
+      if (key === 'broker_net_operating_profit' && industry === 'securities' &&
+          ['broker_total_operating_revenue','broker_total_operating_expenses','broker_financial_income','broker_financial_expense','broker_admin_expenses'].every(field => num(field) !== null)) {
+        return {
+          value: num('broker_total_operating_revenue') - Math.abs(num('broker_total_operating_expenses')) +
+            num('broker_financial_income') - Math.abs(num('broker_financial_expense')) - Math.abs(num('broker_admin_expenses')),
+          formula: 'Lợi nhuận thuần hoạt động CTCK = doanh thu hoạt động − chi phí hoạt động + doanh thu tài chính − chi phí tài chính − chi phí quản lý CTCK.'
+        };
+      }
+
+      if (key === 'operating_profit' && industry !== 'banking' && industry !== 'securities' &&
+          ['gross_profit','financial_income','financial_expense','selling_expense','admin_expense'].every(field => num(field) !== null)) {
+        return {
+          value: num('gross_profit') + num('financial_income') - Math.abs(num('financial_expense')) -
+            Math.abs(num('selling_expense')) - Math.abs(num('admin_expense')),
+          formula: 'Lợi nhuận hoạt động = lợi nhuận gộp + doanh thu tài chính − chi phí tài chính − chi phí bán hàng − chi phí quản lý doanh nghiệp.'
+        };
+      }
+
+      if (key === 'income_tax' && num('pretax_profit') !== null && num('net_profit') !== null) {
+        return {
+          value: num('pretax_profit') - num('net_profit'),
+          formula: 'Thuế thu nhập doanh nghiệp tổng = lợi nhuận trước thuế − lợi nhuận sau thuế; chỉ tái lập khi cả hai dòng cùng kỳ đều có.'
+        };
+      }
+
       const ytdFields = new Set([
         'operating_cash_flow','capital_expenditure','investing_cash_flow','financing_cash_flow',
         'foreign_exchange_effect','dividends_paid','net_cash_change'
