@@ -140,55 +140,56 @@
         "bank_customer_loans",
         "bank_deposits_at_state_bank",
         "bank_derivatives_and_other_financial_assets",
+        "bank_dividend_and_capital_income",
+        "bank_fx_net_income",
+        "bank_interest_expense",
         "bank_interest_income",
         "bank_investment_securities",
+        "bank_investment_securities_net",
         "bank_net_interest_income",
         "bank_net_service_income",
+        "bank_non_controlling_profit",
         "bank_operating_expenses",
         "bank_other_assets",
         "bank_other_liabilities",
+        "bank_other_operating_net",
         "bank_pre_provision_operating_profit",
         "bank_provision_expense",
         "bank_service_expense",
         "bank_service_income",
         "bank_trading_securities",
-        "bank_valuable_papers",
-        "cashflow_period_basis",
-        "fixed_assets",
-        "income_tax",
-        "income_tax_current",
-        "retained_earnings",
-        "revenue",
-        "bank_interest_expense",
-        "bank_fx_net_income",
         "bank_trading_securities_net",
-        "bank_investment_securities_net",
-        "bank_other_operating_net",
-        "bank_dividend_and_capital_income",
-        "income_tax_deferred",
-        "operating_cash_flow",
-        "operating_cash_flow_ytd",
+        "bank_valuable_papers",
         "capital_expenditure",
         "capital_expenditure_ytd",
-        "investing_cash_flow",
-        "investing_cash_flow_ytd",
-        "financing_cash_flow",
-        "financing_cash_flow_ytd",
-        "foreign_exchange_effect",
-        "foreign_exchange_effect_ytd",
-        "dividends_paid",
-        "dividends_paid_ytd",
-        "net_cash_change",
-        "net_cash_change_ytd",
         "cash_beginning",
         "cash_beginning_reported_ytd",
         "cash_ending",
-        "cash_ending_reported_ytd"
+        "cash_ending_reported_ytd",
+        "cashflow_period_basis",
+        "dividends_paid",
+        "dividends_paid_ytd",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
+        "fixed_assets",
+        "foreign_exchange_effect",
+        "foreign_exchange_effect_ytd",
+        "income_tax",
+        "income_tax_current",
+        "income_tax_deferred",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
+        "operating_cash_flow",
+        "operating_cash_flow_ytd",
+        "retained_earnings",
+        "revenue"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/93716712dc18d9e0.pdf",
-      "financial_line_items_updated_at": "2026-10-25T18:29:53+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Đã đối chiếu sidecar PDF VietstockFinance Q1/2024: bổ sung lãi/lỗ ngoại hối 544.434 triệu, chứng khoán kinh doanh -23.405 triệu, chứng khoán đầu tư 1.073.030 triệu, lãi thuần hoạt động khác -3.024 triệu và thu nhập góp vốn 37 triệu. LCTT Q1 đã khôi phục theo tổng phụ trang 7–8: kinh doanh 13.042.575, đầu tư 657.185, tài chính 0, biến động tiền thuần 13.699.760, tỷ giá -20.133, tiền đầu/cuối kỳ 110.500.219/124.179.846 triệu VND.",
+      "financial_line_items_updated_at": "2026-10-27T17:04:29.060Z",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Đã đối chiếu sidecar PDF VietstockFinance Q1/2024: bổ sung lãi/lỗ ngoại hối 544.434 triệu, chứng khoán kinh doanh -23.405 triệu, chứng khoán đầu tư 1.073.030 triệu, lãi thuần hoạt động khác -3.024 triệu và thu nhập góp vốn 37 triệu. LCTT Q1 đã khôi phục theo tổng phụ trang 7–8: kinh doanh 13.042.575, đầu tư 657.185, tài chính 0, biến động tiền thuần 13.699.760, tỷ giá -20.133, tiền đầu/cuối kỳ 110.500.219/124.179.846 triệu VND. Số liệu dẫn xuất từ LNST hợp nhất trừ LNST thuộc cổ đông ngân hàng mẹ; cần đối chiếu trực quan từng dòng nếu muốn đánh dấu xác minh thủ công.",
       "operating_cash_flow_calculation": "reported as standalone quarter",
       "investing_cash_flow_calculation": "reported as standalone quarter",
       "financing_cash_flow_calculation": "reported as standalone quarter",
@@ -277,6 +278,11 @@
           "previous_value": -3249136,
           "new_value": 3249136,
           "reason": "Normalized bank operating expenses to the positive expense convention used in subtotal reconciliation."
+        },
+        "bank_non_controlling_profit": {
+          "previous_value": null,
+          "new_value": 56006,
+          "reason": "Tái lập từ hai tổng lợi nhuận cùng kỳ đã lưu trong BCTC hợp nhất VietstockFinance; không lấy trực tiếp dấu trừ của dòng phân bổ lợi nhuận thiểu số."
         }
       },
       "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
@@ -306,7 +312,11 @@
       "cash_beginning": 110500219,
       "cash_beginning_reported_ytd": 110500219,
       "cash_ending": 124179846,
-      "cash_ending_reported_ytd": 124179846
+      "cash_ending_reported_ytd": 124179846,
+      "bank_non_controlling_profit": 56006,
+      "bank_non_controlling_profit_calculation": "Lợi nhuận cổ đông không kiểm soát = lợi nhuận sau thuế hợp nhất − lợi nhuận sau thuế thuộc cổ đông ngân hàng mẹ (cùng kỳ).",
+      "bank_non_controlling_profit_source_note": "Số liệu dẫn xuất từ LNST hợp nhất trừ LNST thuộc cổ đông ngân hàng mẹ; cần đối chiếu trực quan từng dòng nếu muốn đánh dấu xác minh thủ công.",
+      "bank_non_controlling_profit_basis": "derived_same_quarter_net_profit_minus_parent_attributable_profit"
     },
     {
       "symbol": "TCB",
@@ -473,6 +483,7 @@
         "bank_investment_securities_net",
         "bank_net_interest_income",
         "bank_net_service_income",
+        "bank_non_controlling_profit",
         "bank_operating_expenses",
         "bank_other_assets",
         "bank_other_liabilities",
@@ -513,8 +524,8 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/84aa1591e3505ab7.pdf",
-      "financial_line_items_updated_at": "2026-10-27T16:51:35.296Z",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Đã sửa ánh xạ dòng tiền theo BCTC lũy kế H1/2024 VietstockFinance: vận hành 19.028.209, đầu tư 514.444, tài chính -5.137.764, biến động tiền thuần 14.404.889, tỷ giá -13.199, chi cổ tức -5.140.017 và tiền cuối kỳ 124.891.909 triệu VND. Số quý II được tính bằng H1 trừ Q1; dòng đầu tư trước đó bị gán nhầm giá trị chi đầu tư TSCĐ -280.255 triệu. Khôi phục dòng tiền quý II/2024 theo số lũy kế H1 trừ Q1 từ BCTC VietstockFinance; số ba hoạt động khớp biến động tiền thuần quý.",
+      "financial_line_items_updated_at": "2026-10-27T17:04:29.060Z",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Đã sửa ánh xạ dòng tiền theo BCTC lũy kế H1/2024 VietstockFinance: vận hành 19.028.209, đầu tư 514.444, tài chính -5.137.764, biến động tiền thuần 14.404.889, tỷ giá -13.199, chi cổ tức -5.140.017 và tiền cuối kỳ 124.891.909 triệu VND. Số quý II được tính bằng H1 trừ Q1; dòng đầu tư trước đó bị gán nhầm giá trị chi đầu tư TSCĐ -280.255 triệu. Khôi phục dòng tiền quý II/2024 theo số lũy kế H1 trừ Q1 từ BCTC VietstockFinance; số ba hoạt động khớp biến động tiền thuần quý. Số liệu dẫn xuất từ LNST hợp nhất trừ LNST thuộc cổ đông ngân hàng mẹ; cần đối chiếu trực quan từng dòng nếu muốn đánh dấu xác minh thủ công.",
       "operating_cash_flow": 5985634,
       "operating_cash_flow_calculation": "Giá trị quý riêng = số lũy kế đến quý hiện tại − số lũy kế đến quý liền trước trong cùng năm; riêng Q1 bằng số lũy kế Q1.",
       "investing_cash_flow": -142741,
@@ -577,6 +588,11 @@
           "previous_value": -3948974,
           "new_value": 3948974,
           "reason": "Normalized bank operating expenses to the positive expense convention used in subtotal reconciliation."
+        },
+        "bank_non_controlling_profit": {
+          "previous_value": null,
+          "new_value": 76607,
+          "reason": "Tái lập từ hai tổng lợi nhuận cùng kỳ đã lưu trong BCTC hợp nhất VietstockFinance; không lấy trực tiếp dấu trừ của dòng phân bổ lợi nhuận thiểu số."
         }
       },
       "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
@@ -633,7 +649,11 @@
         "method": "Report-row extraction and/or reported-YTD delta to standalone-quarter values",
         "reconciled_at": "2026-10-27T16:51:35.296Z",
         "note": "H1/2024 reported operating 19,028,209; investing 514,444; financing -5,137,764; net change 14,404,889; FX -13,199; closing cash 124,891,909. Quarterly amounts are H1 minus Q1."
-      }
+      },
+      "bank_non_controlling_profit": 76607,
+      "bank_non_controlling_profit_calculation": "Lợi nhuận cổ đông không kiểm soát = lợi nhuận sau thuế hợp nhất − lợi nhuận sau thuế thuộc cổ đông ngân hàng mẹ (cùng kỳ).",
+      "bank_non_controlling_profit_source_note": "Số liệu dẫn xuất từ LNST hợp nhất trừ LNST thuộc cổ đông ngân hàng mẹ; cần đối chiếu trực quan từng dòng nếu muốn đánh dấu xác minh thủ công.",
+      "bank_non_controlling_profit_basis": "derived_same_quarter_net_profit_minus_parent_attributable_profit"
     },
     {
       "symbol": "TCB",
@@ -790,6 +810,7 @@
         "bank_investment_securities_net",
         "bank_net_interest_income",
         "bank_net_service_income",
+        "bank_non_controlling_profit",
         "bank_operating_expenses",
         "bank_other_assets",
         "bank_other_liabilities",
@@ -830,8 +851,8 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/eadd37345b7f5f57.pdf",
-      "financial_line_items_updated_at": "2026-10-27T16:51:35.296Z",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Đã sửa LCTT theo BCTC lũy kế 9T/2024 VietstockFinance: kinh doanh 17.342.888, đầu tư 464.211, tài chính -5.208.002, biến động tiền thuần 12.599.097, tỷ giá 10.494, cổ tức -5.210.258 và tiền cuối kỳ 123.109.810 triệu VND. Trường đầu tư trước đó -1.081.112 triệu là giá trị gán nhầm; số dòng mua sắm TSCĐ lũy kế đúng là -566.668 triệu. Quý III hiển thị bằng chênh lệch lũy kế 9T trừ H1. Khôi phục dòng tiền quý III/2024 bằng chênh lệch số lũy kế 9 tháng trừ H1 theo BCTC VietstockFinance.",
+      "financial_line_items_updated_at": "2026-10-27T17:04:29.060Z",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Đã sửa LCTT theo BCTC lũy kế 9T/2024 VietstockFinance: kinh doanh 17.342.888, đầu tư 464.211, tài chính -5.208.002, biến động tiền thuần 12.599.097, tỷ giá 10.494, cổ tức -5.210.258 và tiền cuối kỳ 123.109.810 triệu VND. Trường đầu tư trước đó -1.081.112 triệu là giá trị gán nhầm; số dòng mua sắm TSCĐ lũy kế đúng là -566.668 triệu. Quý III hiển thị bằng chênh lệch lũy kế 9T trừ H1. Khôi phục dòng tiền quý III/2024 bằng chênh lệch số lũy kế 9 tháng trừ H1 theo BCTC VietstockFinance. Số liệu dẫn xuất từ LNST hợp nhất trừ LNST thuộc cổ đông ngân hàng mẹ; cần đối chiếu trực quan từng dòng nếu muốn đánh dấu xác minh thủ công.",
       "operating_cash_flow": -1685321,
       "operating_cash_flow_calculation": "Giá trị quý riêng = số lũy kế đến quý hiện tại − số lũy kế đến quý liền trước trong cùng năm; riêng Q1 bằng số lũy kế Q1.",
       "investing_cash_flow": -50233,
@@ -886,6 +907,11 @@
           "previous_value": null,
           "new_value": 8323433,
           "reason": "Đồng bộ trường lợi nhuận hoạt động chung với tổng lợi nhuận thuần trước dự phòng đã có trong BCTC ngân hàng."
+        },
+        "bank_non_controlling_profit": {
+          "previous_value": null,
+          "new_value": 55517,
+          "reason": "Tái lập từ hai tổng lợi nhuận cùng kỳ đã lưu trong BCTC hợp nhất VietstockFinance; không lấy trực tiếp dấu trừ của dòng phân bổ lợi nhuận thiểu số."
         }
       },
       "bank_pre_provision_operating_profit": 8323433,
@@ -944,7 +970,11 @@
         "note": "9M/2024 reported operating 17,342,888; investing 464,211; financing -5,208,002; net change 12,599,097; FX 10,494; closing cash 123,109,810. Quarterly amounts are 9M minus H1."
       },
       "operating_profit": 8323433,
-      "operating_profit_calculation": "Lợi nhuận hoạt động trên bảng tổng hợp ngân hàng = lợi nhuận thuần trước chi phí dự phòng rủi ro tín dụng theo báo cáo."
+      "operating_profit_calculation": "Lợi nhuận hoạt động trên bảng tổng hợp ngân hàng = lợi nhuận thuần trước chi phí dự phòng rủi ro tín dụng theo báo cáo.",
+      "bank_non_controlling_profit": 55517,
+      "bank_non_controlling_profit_calculation": "Lợi nhuận cổ đông không kiểm soát = lợi nhuận sau thuế hợp nhất − lợi nhuận sau thuế thuộc cổ đông ngân hàng mẹ (cùng kỳ).",
+      "bank_non_controlling_profit_source_note": "Số liệu dẫn xuất từ LNST hợp nhất trừ LNST thuộc cổ đông ngân hàng mẹ; cần đối chiếu trực quan từng dòng nếu muốn đánh dấu xác minh thủ công.",
+      "bank_non_controlling_profit_basis": "derived_same_quarter_net_profit_minus_parent_attributable_profit"
     },
     {
       "symbol": "TCB",
@@ -1132,6 +1162,7 @@
         "bank_investment_securities_net",
         "bank_net_interest_income",
         "bank_net_service_income",
+        "bank_non_controlling_profit",
         "bank_operating_expenses",
         "bank_other_assets",
         "bank_other_liabilities",
@@ -1172,8 +1203,8 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/5b7558b29eb7fb82.pdf",
-      "financial_line_items_updated_at": "2026-10-27T16:51:35.296Z",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Đã bổ sung LCTT lũy kế năm 2024 từ BCTC VietstockFinance: kinh doanh 42.376.555, đầu tư -382.599, tài chính -5.009.760, biến động tiền thuần 36.984.196, tiền đầu/cuối năm 110.500.219/147.484.415 triệu VND; quý IV hiển thị bằng chênh lệch số năm trừ 9T. Lưu ý OCR lũy kế cổ tức 9T -5.210.258 triệu và cả năm -5.210.255 triệu lệch 3 triệu, nên quý IV từ phép trừ cần rà soát PDF trực quan. Khôi phục dòng tiền quý IV/2024 từ số cả năm trừ 9 tháng. Dòng cổ tức lũy kế 9 tháng và cả năm lệch 3 triệu đồng do số nguồn/OCR; không công bố cổ tức riêng Q4 khi chưa xác nhận trực quan.",
+      "financial_line_items_updated_at": "2026-10-27T17:04:29.060Z",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Đã bổ sung LCTT lũy kế năm 2024 từ BCTC VietstockFinance: kinh doanh 42.376.555, đầu tư -382.599, tài chính -5.009.760, biến động tiền thuần 36.984.196, tiền đầu/cuối năm 110.500.219/147.484.415 triệu VND; quý IV hiển thị bằng chênh lệch số năm trừ 9T. Lưu ý OCR lũy kế cổ tức 9T -5.210.258 triệu và cả năm -5.210.255 triệu lệch 3 triệu, nên quý IV từ phép trừ cần rà soát PDF trực quan. Khôi phục dòng tiền quý IV/2024 từ số cả năm trừ 9 tháng. Dòng cổ tức lũy kế 9 tháng và cả năm lệch 3 triệu đồng do số nguồn/OCR; không công bố cổ tức riêng Q4 khi chưa xác nhận trực quan. Số liệu dẫn xuất từ LNST hợp nhất trừ LNST thuộc cổ đông ngân hàng mẹ; cần đối chiếu trực quan từng dòng nếu muốn đánh dấu xác minh thủ công.",
       "operating_cash_flow_calculation": "Giá trị quý riêng = số lũy kế đến quý hiện tại − số lũy kế đến quý liền trước trong cùng năm; riêng Q1 bằng số lũy kế Q1.",
       "investing_cash_flow_calculation": "Giá trị quý riêng = số lũy kế đến quý hiện tại − số lũy kế đến quý liền trước trong cùng năm; riêng Q1 bằng số lũy kế Q1.",
       "financing_cash_flow_calculation": "Giá trị quý riêng = số lũy kế đến quý hiện tại − số lũy kế đến quý liền trước trong cùng năm; riêng Q1 bằng số lũy kế Q1.",
@@ -1255,6 +1286,11 @@
           "previous_value": 110500219,
           "new_value": 123109810,
           "reason": "Replaced the wrongly matched/withheld OCR value with a value reconciled to the VietstockFinance report source (PDF 9–10 (printed pages 7–8))."
+        },
+        "bank_non_controlling_profit": {
+          "previous_value": null,
+          "new_value": 49046,
+          "reason": "Tái lập từ hai tổng lợi nhuận cùng kỳ đã lưu trong BCTC hợp nhất VietstockFinance; không lấy trực tiếp dấu trừ của dòng phân bổ lợi nhuận thiểu số."
         }
       },
       "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
@@ -1311,7 +1347,11 @@
         "method": "Report-row extraction and/or reported-YTD delta to standalone-quarter values",
         "reconciled_at": "2026-10-27T16:51:35.296Z",
         "note": "FY2024 reported operating 42,376,555; investing -382,599; financing -5,009,760; net change 36,984,196; opening/closing cash 110,500,219/147,484,415. Q4 is annual minus 9M; cash-bridge FX residual calculated as -10,494."
-      }
+      },
+      "bank_non_controlling_profit": 49046,
+      "bank_non_controlling_profit_calculation": "Lợi nhuận cổ đông không kiểm soát = lợi nhuận sau thuế hợp nhất − lợi nhuận sau thuế thuộc cổ đông ngân hàng mẹ (cùng kỳ).",
+      "bank_non_controlling_profit_source_note": "Số liệu dẫn xuất từ LNST hợp nhất trừ LNST thuộc cổ đông ngân hàng mẹ; cần đối chiếu trực quan từng dòng nếu muốn đánh dấu xác minh thủ công.",
+      "bank_non_controlling_profit_basis": "derived_same_quarter_net_profit_minus_parent_attributable_profit"
     },
     {
       "symbol": "TCB",
@@ -1461,9 +1501,11 @@
         "bank_investment_securities_net",
         "bank_net_interest_income",
         "bank_net_service_income",
+        "bank_non_controlling_profit",
         "bank_operating_expenses",
         "bank_other_assets",
         "bank_other_liabilities",
+        "bank_other_operating_net",
         "bank_pre_provision_operating_profit",
         "bank_provision_expense",
         "bank_service_expense",
@@ -1480,6 +1522,8 @@
         "financing_cash_flow_ytd",
         "fixed_assets",
         "income_tax",
+        "income_tax_current",
+        "income_tax_deferred",
         "investing_cash_flow",
         "investing_cash_flow_ytd",
         "net_cash_change_ytd",
@@ -1490,8 +1534,8 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/c66142b157f47512.pdf",
-      "financial_line_items_updated_at": "2026-10-27T16:51:35.296Z",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại.",
+      "financial_line_items_updated_at": "2026-10-27T17:04:29.060Z",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Số liệu dẫn xuất từ LNST hợp nhất trừ LNST thuộc cổ đông ngân hàng mẹ; cần đối chiếu trực quan từng dòng nếu muốn đánh dấu xác minh thủ công. Nguồn VietstockFinance-linked PDF trang 9 (trang in 6), BCTC KQKD hợp nhất Q1/2025.",
       "operating_cash_flow": -11015276,
       "operating_cash_flow_calculation": "Q1 equals YTD Q1",
       "investing_cash_flow": -35158,
@@ -1592,6 +1636,26 @@
           "previous_value": null,
           "new_value": -6644631,
           "reason": "Chi phí lãi lấy từ dòng chi phí lãi BCTC; bằng thu nhập lãi 14.950.024 trừ thu nhập lãi thuần 8.305.393."
+        },
+        "bank_non_controlling_profit": {
+          "previous_value": null,
+          "new_value": 65551,
+          "reason": "Tái lập từ hai tổng lợi nhuận cùng kỳ đã lưu trong BCTC hợp nhất VietstockFinance; không lấy trực tiếp dấu trừ của dòng phân bổ lợi nhuận thiểu số."
+        },
+        "bank_other_operating_net": {
+          "previous_value": null,
+          "new_value": 393944,
+          "reason": "Lãi thuần từ hoạt động khác 393.944 triệu đồng trên BCTC kết quả hoạt động hợp nhất, cột Quý I/2025."
+        },
+        "income_tax_current": {
+          "previous_value": null,
+          "new_value": -1221736,
+          "reason": "Chi phí thuế thu nhập doanh nghiệp hiện hành -1.221.736 triệu đồng, cột Quý I/2025."
+        },
+        "income_tax_deferred": {
+          "previous_value": null,
+          "new_value": -981,
+          "reason": "Chi phí thuế thu nhập doanh nghiệp hoãn lại -981 triệu đồng, cột Quý I/2025."
         }
       },
       "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
@@ -1614,7 +1678,24 @@
       "financing_cash_flow_ytd": 0,
       "financing_cash_flow_ytd_calculation": "Q1 bằng YTD Q1; biến động tiền thuần = dòng tiền kinh doanh + đầu tư + tài chính.",
       "bank_interest_expense": -6644631,
-      "bank_interest_expense_calculation": "Chi phí lãi = −(thu nhập lãi − thu nhập lãi thuần); được đối chiếu với dòng chi phí lãi trên PDF trang 9."
+      "bank_interest_expense_calculation": "Chi phí lãi = −(thu nhập lãi − thu nhập lãi thuần); được đối chiếu với dòng chi phí lãi trên PDF trang 9.",
+      "bank_non_controlling_profit": 65551,
+      "bank_non_controlling_profit_calculation": "Lợi nhuận cổ đông không kiểm soát = lợi nhuận sau thuế hợp nhất − lợi nhuận sau thuế thuộc cổ đông ngân hàng mẹ (cùng kỳ).",
+      "bank_non_controlling_profit_source_page": 9,
+      "bank_non_controlling_profit_source_note": "Số liệu dẫn xuất từ LNST hợp nhất trừ LNST thuộc cổ đông ngân hàng mẹ; cần đối chiếu trực quan từng dòng nếu muốn đánh dấu xác minh thủ công.",
+      "bank_other_operating_net": 393944,
+      "bank_other_operating_net_calculation": "Lấy trực tiếp dòng Lãi/(lỗ) thuần từ hoạt động khác, cột Quý I/2025.",
+      "bank_other_operating_net_source_page": 9,
+      "bank_other_operating_net_source_note": "Nguồn VietstockFinance-linked PDF trang 9 (trang in 6), BCTC KQKD hợp nhất Q1/2025.",
+      "income_tax_current": -1221736,
+      "income_tax_current_calculation": "Dòng chi phí thuế TNDN hiện hành trên BCTC kết quả hoạt động hợp nhất.",
+      "income_tax_current_source_page": 9,
+      "income_tax_current_source_note": "Nguồn VietstockFinance-linked PDF trang 9 (trang in 6), BCTC KQKD hợp nhất Q1/2025.",
+      "income_tax_deferred": -981,
+      "income_tax_deferred_calculation": "Dòng chi phí thuế TNDN hoãn lại trên BCTC kết quả hoạt động hợp nhất.",
+      "income_tax_deferred_source_page": 9,
+      "income_tax_deferred_source_note": "Nguồn VietstockFinance-linked PDF trang 9 (trang in 6), BCTC KQKD hợp nhất Q1/2025.",
+      "bank_non_controlling_profit_basis": "derived_same_quarter_net_profit_minus_parent_attributable_profit"
     },
     {
       "symbol": "TCB",
@@ -1774,6 +1855,7 @@
         "bank_investment_securities_net",
         "bank_net_interest_income",
         "bank_net_service_income",
+        "bank_non_controlling_profit",
         "bank_operating_expenses",
         "bank_other_assets",
         "bank_other_liabilities",
@@ -1801,6 +1883,7 @@
         "foreign_exchange_effect_ytd",
         "income_tax",
         "income_tax_current",
+        "income_tax_deferred",
         "investing_cash_flow",
         "investing_cash_flow_ytd",
         "net_cash_change",
@@ -1813,8 +1896,8 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/ed276f17363405f3.pdf",
-      "financial_line_items_updated_at": "2026-10-27T16:51:35.296Z",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Khôi phục các dòng tiền TCB Q2/2025; tổng đầu tư lũy kế H1 -286.252 khác với chi TSCĐ -307.088, hai dòng đã được tách đúng.",
+      "financial_line_items_updated_at": "2026-10-27T17:04:29.060Z",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Khôi phục các dòng tiền TCB Q2/2025; tổng đầu tư lũy kế H1 -286.252 khác với chi TSCĐ -307.088, hai dòng đã được tách đúng. Số liệu dẫn xuất từ LNST hợp nhất trừ LNST thuộc cổ đông ngân hàng mẹ; cần đối chiếu trực quan từng dòng nếu muốn đánh dấu xác minh thủ công. Nguồn VietstockFinance-linked PDF trang 9, cột Quý II/2025.",
       "operating_cash_flow": -7771212,
       "operating_cash_flow_calculation": "Giá trị quý riêng = số lũy kế đến quý hiện tại − số lũy kế đến quý liền trước trong cùng năm; riêng Q1 bằng số lũy kế Q1.",
       "financing_cash_flow": 1376714,
@@ -1878,6 +1961,16 @@
           "previous_value": null,
           "new_value": -7166531,
           "reason": "Chi phí lãi = thu nhập lãi 16.303.607 trừ thu nhập lãi thuần 9.137.076; giá trị được suy ra từ hai tổng phụ trong cùng quý."
+        },
+        "bank_non_controlling_profit": {
+          "previous_value": null,
+          "new_value": 100246,
+          "reason": "Tái lập từ hai tổng lợi nhuận cùng kỳ đã lưu trong BCTC hợp nhất VietstockFinance; không lấy trực tiếp dấu trừ của dòng phân bổ lợi nhuận thiểu số."
+        },
+        "income_tax_deferred": {
+          "previous_value": null,
+          "new_value": -1196,
+          "reason": "Chi phí thuế thu nhập doanh nghiệp hoãn lại -1.196 triệu đồng, cột Quý II/2025."
         }
       },
       "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
@@ -1928,7 +2021,16 @@
         "note": "H1/2025 report: operating -18,786,488; investing -286,252; financing 1,376,714; net cash change -17,696,026; cash close 129,788,389. Q2 is H1 minus Q1; Q1 investing corrected to -35,158 and capex remains -35,503."
       },
       "bank_interest_expense": -7166531,
-      "bank_interest_expense_calculation": "Chi phí lãi = −(thu nhập lãi − thu nhập lãi thuần) theo các dòng tương ứng trong BCTC hợp nhất."
+      "bank_interest_expense_calculation": "Chi phí lãi = −(thu nhập lãi − thu nhập lãi thuần) theo các dòng tương ứng trong BCTC hợp nhất.",
+      "bank_non_controlling_profit": 100246,
+      "bank_non_controlling_profit_calculation": "Lợi nhuận cổ đông không kiểm soát = lợi nhuận sau thuế hợp nhất − lợi nhuận sau thuế thuộc cổ đông ngân hàng mẹ (cùng kỳ).",
+      "bank_non_controlling_profit_source_page": 9,
+      "bank_non_controlling_profit_source_note": "Số liệu dẫn xuất từ LNST hợp nhất trừ LNST thuộc cổ đông ngân hàng mẹ; cần đối chiếu trực quan từng dòng nếu muốn đánh dấu xác minh thủ công.",
+      "income_tax_deferred": -1196,
+      "income_tax_deferred_calculation": "Dòng (chi phí)/thu nhập thuế TNDN hoãn lại trên BCTC kết quả hoạt động hợp nhất.",
+      "income_tax_deferred_source_page": 9,
+      "income_tax_deferred_source_note": "Nguồn VietstockFinance-linked PDF trang 9, cột Quý II/2025.",
+      "bank_non_controlling_profit_basis": "derived_same_quarter_net_profit_minus_parent_attributable_profit"
     },
     {
       "symbol": "TCB",
@@ -2410,7 +2512,8 @@
       "income_tax_deferred": 96,
       "income_tax_deferred_calculation": "Giá trị theo cột Quý III/2025 của BCTC hợp nhất (PDF trang 9, trang in 6); chi phí hoạt động/dự phòng theo chuẩn hiển thị dương.",
       "bank_non_controlling_profit": 194181,
-      "bank_non_controlling_profit_calculation": "Giá trị theo cột Quý III/2025 của BCTC hợp nhất (PDF trang 9, trang in 6); chi phí hoạt động/dự phòng theo chuẩn hiển thị dương."
+      "bank_non_controlling_profit_calculation": "Giá trị theo cột Quý III/2025 của BCTC hợp nhất (PDF trang 9, trang in 6); chi phí hoạt động/dự phòng theo chuẩn hiển thị dương.",
+      "bank_non_controlling_profit_basis": "derived_same_quarter_net_profit_minus_parent_attributable_profit"
     },
     {
       "symbol": "TCB",
@@ -2558,19 +2661,24 @@
         "bank_customer_loans",
         "bank_deposits_at_state_bank",
         "bank_dividend_and_capital_income",
+        "bank_fx_net_income",
+        "bank_interest_expense",
         "bank_interest_income",
         "bank_investment_securities",
         "bank_investment_securities_net",
         "bank_net_interest_income",
         "bank_net_service_income",
+        "bank_non_controlling_profit",
         "bank_operating_expenses",
         "bank_other_assets",
         "bank_other_liabilities",
+        "bank_other_operating_net",
         "bank_pre_provision_operating_profit",
         "bank_provision_expense",
         "bank_service_expense",
         "bank_service_income",
         "bank_trading_securities",
+        "bank_trading_securities_net",
         "bank_valuable_papers",
         "capital_expenditure",
         "capital_expenditure_ytd",
@@ -2588,6 +2696,7 @@
         "foreign_exchange_effect_ytd",
         "income_tax",
         "income_tax_current",
+        "income_tax_deferred",
         "investing_cash_flow",
         "investing_cash_flow_ytd",
         "net_cash_change",
@@ -2600,8 +2709,8 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/c1df78d8d31faa60.pdf",
-      "financial_line_items_updated_at": "2026-10-27T16:51:35.296Z",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Khôi phục LCTT quý IV/2025 bằng số liệu cả năm trừ 9 tháng trên báo cáo VietstockFinance.",
+      "financial_line_items_updated_at": "2026-10-27T17:04:29.060Z",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Khôi phục LCTT quý IV/2025 bằng số liệu cả năm trừ 9 tháng trên báo cáo VietstockFinance. Số liệu dẫn xuất từ LNST hợp nhất trừ LNST thuộc cổ đông ngân hàng mẹ; cần đối chiếu trực quan từng dòng nếu muốn đánh dấu xác minh thủ công. Nguồn VietstockFinance-linked PDF trang 8 (trang in 6), BCTC KQKD hợp nhất Q4/2025.",
       "operating_cash_flow_calculation": "Giá trị quý riêng = số lũy kế đến quý hiện tại − số lũy kế đến quý liền trước trong cùng năm; riêng Q1 bằng số lũy kế Q1.",
       "investing_cash_flow_calculation": "Giá trị quý riêng = số lũy kế đến quý hiện tại − số lũy kế đến quý liền trước trong cùng năm; riêng Q1 bằng số lũy kế Q1.",
       "financing_cash_flow_calculation": "Giá trị quý riêng = số lũy kế đến quý hiện tại − số lũy kế đến quý liền trước trong cùng năm; riêng Q1 bằng số lũy kế Q1.",
@@ -2710,6 +2819,36 @@
           "previous_value": 191262058,
           "new_value": 191262058,
           "reason": "Replaced the wrongly matched/withheld OCR value with a value reconciled to the VietstockFinance report source (PDF 9–10 (printed pages 7–8))."
+        },
+        "bank_non_controlling_profit": {
+          "previous_value": null,
+          "new_value": 304264,
+          "reason": "Tái lập từ hai tổng lợi nhuận cùng kỳ đã lưu trong BCTC hợp nhất VietstockFinance; không lấy trực tiếp dấu trừ của dòng phân bổ lợi nhuận thiểu số."
+        },
+        "bank_interest_expense": {
+          "previous_value": null,
+          "new_value": -8376265,
+          "reason": "Chi phí lãi -8.376.265 triệu đồng, cột Quý IV/2025 trên báo cáo kết quả hoạt động hợp nhất."
+        },
+        "bank_fx_net_income": {
+          "previous_value": null,
+          "new_value": 212818,
+          "reason": "Lãi thuần từ hoạt động kinh doanh ngoại hối 212.818 triệu đồng, cột Quý IV/2025."
+        },
+        "bank_trading_securities_net": {
+          "previous_value": null,
+          "new_value": -8623,
+          "reason": "Lỗ thuần từ mua bán chứng khoán kinh doanh -8.623 triệu đồng, cột Quý IV/2025."
+        },
+        "bank_other_operating_net": {
+          "previous_value": null,
+          "new_value": 493718,
+          "reason": "Lãi thuần từ hoạt động khác 493.718 triệu đồng, cột Quý IV/2025."
+        },
+        "income_tax_deferred": {
+          "previous_value": null,
+          "new_value": -37288,
+          "reason": "Chi phí thuế thu nhập doanh nghiệp hoãn lại -37.288 triệu đồng, cột Quý IV/2025."
         }
       },
       "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
@@ -2758,7 +2897,32 @@
         "method": "Report-row extraction and/or reported-YTD delta to standalone-quarter values",
         "reconciled_at": "2026-10-27T16:51:35.296Z",
         "note": "FY2025 totals: operating 39,358,333; investing -816,440; financing 5,235,750; net change 43,777,643; opening/closing cash 147,484,415/191,262,058. Q4 is FY minus 9M."
-      }
+      },
+      "bank_non_controlling_profit": 304264,
+      "bank_non_controlling_profit_calculation": "Lợi nhuận cổ đông không kiểm soát = lợi nhuận sau thuế hợp nhất − lợi nhuận sau thuế thuộc cổ đông ngân hàng mẹ (cùng kỳ).",
+      "bank_non_controlling_profit_source_page": 8,
+      "bank_non_controlling_profit_source_note": "Số liệu dẫn xuất từ LNST hợp nhất trừ LNST thuộc cổ đông ngân hàng mẹ; cần đối chiếu trực quan từng dòng nếu muốn đánh dấu xác minh thủ công.",
+      "bank_interest_expense": -8376265,
+      "bank_interest_expense_calculation": "Dòng chi phí lãi và các chi phí tương tự, cột Quý IV/2025.",
+      "bank_interest_expense_source_page": 8,
+      "bank_interest_expense_source_note": "Nguồn VietstockFinance-linked PDF trang 8 (trang in 6), BCTC KQKD hợp nhất Q4/2025.",
+      "bank_fx_net_income": 212818,
+      "bank_fx_net_income_calculation": "Dòng lãi/(lỗ) thuần từ hoạt động kinh doanh ngoại hối trên BCTC KQKD hợp nhất.",
+      "bank_fx_net_income_source_page": 8,
+      "bank_fx_net_income_source_note": "Nguồn VietstockFinance-linked PDF trang 8 (trang in 6), BCTC KQKD hợp nhất Q4/2025.",
+      "bank_trading_securities_net": -8623,
+      "bank_trading_securities_net_calculation": "Dòng lãi/(lỗ) thuần từ mua bán chứng khoán kinh doanh trên BCTC KQKD hợp nhất.",
+      "bank_trading_securities_net_source_page": 8,
+      "bank_trading_securities_net_source_note": "Nguồn VietstockFinance-linked PDF trang 8 (trang in 6), BCTC KQKD hợp nhất Q4/2025.",
+      "bank_other_operating_net": 493718,
+      "bank_other_operating_net_calculation": "Dòng lãi/(lỗ) thuần từ hoạt động khác trên BCTC KQKD hợp nhất.",
+      "bank_other_operating_net_source_page": 8,
+      "bank_other_operating_net_source_note": "Nguồn VietstockFinance-linked PDF trang 8 (trang in 6), BCTC KQKD hợp nhất Q4/2025.",
+      "income_tax_deferred": -37288,
+      "income_tax_deferred_calculation": "Dòng (chi phí)/thu nhập thuế TNDN hoãn lại trên BCTC KQKD hợp nhất.",
+      "income_tax_deferred_source_page": 8,
+      "income_tax_deferred_source_note": "Nguồn VietstockFinance-linked PDF trang 8 (trang in 6), BCTC KQKD hợp nhất Q4/2025.",
+      "bank_non_controlling_profit_basis": "derived_same_quarter_net_profit_minus_parent_attributable_profit"
     },
     {
       "symbol": "TCB",
@@ -2930,6 +3094,7 @@
         "bank_investment_securities_net",
         "bank_net_interest_income",
         "bank_net_service_income",
+        "bank_non_controlling_profit",
         "bank_operating_expenses",
         "bank_other_assets",
         "bank_other_liabilities",
@@ -2966,8 +3131,8 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/7e7749fd534f2767.pdf",
-      "financial_line_items_updated_at": "2026-10-25T20:13:18+00:00",
-      "financial_line_items_note": "Đã đối chiếu dòng thu nhập ngân hàng, tổng phụ lợi nhuận và dòng tiền theo văn bản OCR của PDF VietstockFinance đã lưu. Lưu riêng cả số lũy kế trên B04 và số riêng quý tính bằng chênh lệch lũy kế. Đây là xác minh OCR/số học, không tuyên bố đã kiểm tra trực quan từng pixel. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền đầu tư được đối chiếu với tổng lưu chuyển tiền thuần vì OCR bắt nhầm dòng mua sắm TSCĐ; giá trị trước sửa và lý do đã được lưu.",
+      "financial_line_items_updated_at": "2026-10-27T17:04:29.060Z",
+      "financial_line_items_note": "Đã đối chiếu dòng thu nhập ngân hàng, tổng phụ lợi nhuận và dòng tiền theo văn bản OCR của PDF VietstockFinance đã lưu. Lưu riêng cả số lũy kế trên B04 và số riêng quý tính bằng chênh lệch lũy kế. Đây là xác minh OCR/số học, không tuyên bố đã kiểm tra trực quan từng pixel. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền đầu tư được đối chiếu với tổng lưu chuyển tiền thuần vì OCR bắt nhầm dòng mua sắm TSCĐ; giá trị trước sửa và lý do đã được lưu. Số liệu dẫn xuất từ LNST hợp nhất trừ LNST thuộc cổ đông ngân hàng mẹ; cần đối chiếu trực quan từng dòng nếu muốn đánh dấu xác minh thủ công.",
       "operating_cash_flow_calculation": "reported as standalone quarter",
       "investing_cash_flow_calculation": "Q1 equals YTD Q1",
       "financing_cash_flow_calculation": "reported as standalone quarter",
@@ -3070,6 +3235,11 @@
           "previous_value": -35724,
           "new_value": -32965,
           "reason": "Q1 is the first quarter, so standalone investing cash flow equals the reconciled Q1 YTD value."
+        },
+        "bank_non_controlling_profit": {
+          "previous_value": null,
+          "new_value": 279199,
+          "reason": "Tái lập từ hai tổng lợi nhuận cùng kỳ đã lưu trong BCTC hợp nhất VietstockFinance; không lấy trực tiếp dấu trừ của dòng phân bổ lợi nhuận thiểu số."
         }
       },
       "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
@@ -3101,7 +3271,11 @@
       "cash_beginning": 191827343,
       "cash_beginning_reported_ytd": 191827343,
       "cash_ending": 179709358,
-      "bank_net_interest_income_calculation": "Thu nhập lãi - |chi phí lãi| theo BCTC ngân hàng."
+      "bank_net_interest_income_calculation": "Thu nhập lãi - |chi phí lãi| theo BCTC ngân hàng.",
+      "bank_non_controlling_profit": 279199,
+      "bank_non_controlling_profit_calculation": "Lợi nhuận cổ đông không kiểm soát = lợi nhuận sau thuế hợp nhất − lợi nhuận sau thuế thuộc cổ đông ngân hàng mẹ (cùng kỳ).",
+      "bank_non_controlling_profit_source_note": "Số liệu dẫn xuất từ LNST hợp nhất trừ LNST thuộc cổ đông ngân hàng mẹ; cần đối chiếu trực quan từng dòng nếu muốn đánh dấu xác minh thủ công.",
+      "bank_non_controlling_profit_basis": "derived_same_quarter_net_profit_minus_parent_attributable_profit"
     },
     {
       "symbol": "TCB",
@@ -3317,6 +3491,7 @@
         "bank_investment_securities_net",
         "bank_net_interest_income",
         "bank_net_service_income",
+        "bank_non_controlling_profit",
         "bank_operating_expenses",
         "bank_other_assets",
         "bank_other_liabilities",
@@ -3354,8 +3529,8 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/50b860c97df7b698.pdf",
-      "financial_line_items_updated_at": "2026-10-27T16:45:00Z",
-      "financial_line_items_note": "Đã đối chiếu dòng thu nhập ngân hàng, tổng phụ lợi nhuận và dòng tiền theo văn bản OCR của PDF VietstockFinance đã lưu. Lưu riêng cả số lũy kế trên B04 và số riêng quý tính bằng chênh lệch lũy kế. Đây là xác minh OCR/số học, không tuyên bố đã kiểm tra trực quan từng pixel. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Đã khôi phục số dư tiền đầu/cuối quý theo báo cáo lưu chuyển tiền tệ VietstockFinance sau khi chuẩn hóa số dư đầu quý bằng số dư cuối quý trước; số dư cuối quý lấy trực tiếp từ PDF trang 10. Cầu nối số dư tiền khớp biến động tiền thuần quý.",
+      "financial_line_items_updated_at": "2026-10-27T17:04:29.060Z",
+      "financial_line_items_note": "Đã đối chiếu dòng thu nhập ngân hàng, tổng phụ lợi nhuận và dòng tiền theo văn bản OCR của PDF VietstockFinance đã lưu. Lưu riêng cả số lũy kế trên B04 và số riêng quý tính bằng chênh lệch lũy kế. Đây là xác minh OCR/số học, không tuyên bố đã kiểm tra trực quan từng pixel. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Đã khôi phục số dư tiền đầu/cuối quý theo báo cáo lưu chuyển tiền tệ VietstockFinance sau khi chuẩn hóa số dư đầu quý bằng số dư cuối quý trước; số dư cuối quý lấy trực tiếp từ PDF trang 10. Cầu nối số dư tiền khớp biến động tiền thuần quý. Số liệu dẫn xuất từ LNST hợp nhất trừ LNST thuộc cổ đông ngân hàng mẹ; cần đối chiếu trực quan từng dòng nếu muốn đánh dấu xác minh thủ công.",
       "operating_cash_flow": -4500399,
       "operating_cash_flow_calculation": "reported as standalone quarter",
       "net_cash_change": -9461934,
@@ -3435,6 +3610,11 @@
           "previous_value": 92921,
           "new_value": 90162,
           "reason": "Standalone Q2 investing cash flow = six-month YTD 57,197 minus Q1 YTD (-32,965)."
+        },
+        "bank_non_controlling_profit": {
+          "previous_value": null,
+          "new_value": 376583,
+          "reason": "Tái lập từ hai tổng lợi nhuận cùng kỳ đã lưu trong BCTC hợp nhất VietstockFinance; không lấy trực tiếp dấu trừ của dòng phân bổ lợi nhuận thiểu số."
         }
       },
       "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
@@ -3486,7 +3666,11 @@
         "prior_blocked_beginning_value": 191827343,
         "prior_blocked_ending_value": 170247424,
         "note": "Số dư đầu/cuối quý và biến động tiền thuần quý khớp số học."
-      }
+      },
+      "bank_non_controlling_profit": 376583,
+      "bank_non_controlling_profit_calculation": "Lợi nhuận cổ đông không kiểm soát = lợi nhuận sau thuế hợp nhất − lợi nhuận sau thuế thuộc cổ đông ngân hàng mẹ (cùng kỳ).",
+      "bank_non_controlling_profit_source_note": "Số liệu dẫn xuất từ LNST hợp nhất trừ LNST thuộc cổ đông ngân hàng mẹ; cần đối chiếu trực quan từng dòng nếu muốn đánh dấu xác minh thủ công.",
+      "bank_non_controlling_profit_basis": "derived_same_quarter_net_profit_minus_parent_attributable_profit"
     },
     {
       "symbol": "TCB",
@@ -3631,6 +3815,7 @@
         "bank_investment_securities_net",
         "bank_net_interest_income",
         "bank_net_service_income",
+        "bank_non_controlling_profit",
         "bank_operating_expenses",
         "bank_other_assets",
         "bank_other_liabilities",
@@ -3667,8 +3852,8 @@
         "revenue"
       ],
       "financial_line_items_source": "reports/raw/TCB/repair-tcb-2026q3-full-report/fd82d64db310dbdb.pdf",
-      "financial_line_items_updated_at": "2026-10-27T16:45:00Z",
-      "financial_line_items_note": "Đã đối chiếu dòng thu nhập ngân hàng, tổng phụ lợi nhuận và dòng tiền theo văn bản OCR của PDF VietstockFinance đã lưu. Lưu riêng cả số lũy kế trên B04 và số riêng quý tính bằng chênh lệch lũy kế. Đây là xác minh OCR/số học, không tuyên bố đã kiểm tra trực quan từng pixel. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Đã khôi phục số dư tiền đầu/cuối quý theo báo cáo lưu chuyển tiền tệ VietstockFinance sau khi chuẩn hóa số dư đầu quý bằng số dư cuối quý trước; số dư cuối quý lấy trực tiếp từ PDF trang 12. Chênh lệch cầu nối tiền là 20 triệu đồng; giữ số dư cuối kỳ theo báo cáo nguồn, không tự sửa số biến động tiền thuần.",
+      "financial_line_items_updated_at": "2026-10-27T17:04:29.060Z",
+      "financial_line_items_note": "Đã đối chiếu dòng thu nhập ngân hàng, tổng phụ lợi nhuận và dòng tiền theo văn bản OCR của PDF VietstockFinance đã lưu. Lưu riêng cả số lũy kế trên B04 và số riêng quý tính bằng chênh lệch lũy kế. Đây là xác minh OCR/số học, không tuyên bố đã kiểm tra trực quan từng pixel. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Đã khôi phục số dư tiền đầu/cuối quý theo báo cáo lưu chuyển tiền tệ VietstockFinance sau khi chuẩn hóa số dư đầu quý bằng số dư cuối quý trước; số dư cuối quý lấy trực tiếp từ PDF trang 12. Chênh lệch cầu nối tiền là 20 triệu đồng; giữ số dư cuối kỳ theo báo cáo nguồn, không tự sửa số biến động tiền thuần. Số liệu dẫn xuất từ LNST hợp nhất trừ LNST thuộc cổ đông ngân hàng mẹ; cần đối chiếu trực quan từng dòng nếu muốn đánh dấu xác minh thủ công.",
       "published_at": "2026-10-20",
       "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
       "financial_line_items_schema_updated_at": "2026-10-25T20:13:19+00:00",
@@ -3763,6 +3948,11 @@
           "previous_value": null,
           "new_value": 11292473,
           "reason": "Đồng bộ trường lợi nhuận hoạt động chung với tổng lợi nhuận thuần trước dự phòng đã có trong BCTC ngân hàng."
+        },
+        "bank_non_controlling_profit": {
+          "previous_value": null,
+          "new_value": 394354,
+          "reason": "Tái lập từ hai tổng lợi nhuận cùng kỳ đã lưu trong BCTC hợp nhất VietstockFinance; không lấy trực tiếp dấu trừ của dòng phân bổ lợi nhuận thiểu số."
         }
       },
       "bank_pre_provision_operating_profit": 11292473,
@@ -3903,7 +4093,12 @@
         "note": "Số dư tiền cuối kỳ được giữ theo giá trị báo cáo nguồn; chênh lệch 20 triệu đồng so với cầu nối từ biến động tiền thuần nằm trong dung sai 0,05% do số dòng tiền OCR/nguồn chưa khớp tuyệt đối."
       },
       "operating_profit": 11292473,
-      "operating_profit_calculation": "Lợi nhuận hoạt động trên bảng tổng hợp ngân hàng = lợi nhuận thuần trước chi phí dự phòng rủi ro tín dụng theo báo cáo."
+      "operating_profit_calculation": "Lợi nhuận hoạt động trên bảng tổng hợp ngân hàng = lợi nhuận thuần trước chi phí dự phòng rủi ro tín dụng theo báo cáo.",
+      "bank_non_controlling_profit": 394354,
+      "bank_non_controlling_profit_calculation": "Lợi nhuận cổ đông không kiểm soát = lợi nhuận sau thuế hợp nhất − lợi nhuận sau thuế thuộc cổ đông ngân hàng mẹ (cùng kỳ).",
+      "bank_non_controlling_profit_source_page": 10,
+      "bank_non_controlling_profit_source_note": "Số liệu dẫn xuất từ LNST hợp nhất trừ LNST thuộc cổ đông ngân hàng mẹ; cần đối chiếu trực quan từng dòng nếu muốn đánh dấu xác minh thủ công.",
+      "bank_non_controlling_profit_basis": "derived_same_quarter_net_profit_minus_parent_attributable_profit"
     }
   ],
   "note": "TCB: 11 kỳ hợp nhất Q1/2024–Q3/2026, nguồn duy nhất VietstockFinance. Bộ trích xuất được nâng cấp để nhận diện báo cáo dòng tiền lũy kế theo ngày bắt đầu kỳ, phân biệt dòng tiền riêng quý, chuẩn hóa dấu chi phí, đối chiếu thu nhập lãi với lãi thuần và phát hiện sai số OCR nhỏ qua tổng thu nhập hoạt động. Q1–Q3/2026 đã áp dụng và kiểm tra; lệch cash bridge 20 triệu được ghi nhận riêng.",
