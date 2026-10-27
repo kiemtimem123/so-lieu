@@ -2101,6 +2101,169 @@ def repair_tcx_2026_source_rows(items,symbol):
   changed=True
   quarter_count+=1
 
+ # Recover missing headline income-statement values for Q1/Q2 2026 from
+ # clearly labelled statement rows. Q1 was additionally checked against the
+ # PDF page images; Q2 uses source text and exact subtotal arithmetic pending
+ # visual review.
+ income_specs={
+  "2026-Q1":{
+   "evidence":[
+    (9,"2.783.203.426.368"),(9,"432.669.955.217"),
+    (10,"10.790.870.005"),(10,"741.488.168.510"),
+    (10,"688.724.696.403"),(10,"161.180.842.697"),
+    (10,"1.458.655.329.949"),(11,"1.458.425.492.628"),
+    (11,"310.792.063.136"),(11,"311.488.840.262"),
+    (11,"696.777.126"),(11,"1.147.633.429.492"),(11,"497")
+   ],
+   "source_pages":[9,10,11],
+   "values":{
+    "revenue":2783203.426368,
+    "broker_total_operating_revenue":2783203.426368,
+    "broker_total_operating_expenses":432669.955217,
+    "broker_operating_expenses":432669.955217,
+    "broker_financial_income":10790.870005,
+    "financial_income":10790.870005,
+    "broker_financial_expense":741488.168510,
+    "financial_expense":741488.168510,
+    "broker_interest_expense":688724.696403,
+    "interest_expense":688724.696403,
+    "broker_admin_expenses":161180.842697,
+    "admin_expense":161180.842697,
+    "broker_net_operating_profit":1458655.329949,
+    "operating_profit":1458655.329949,
+    "pretax_profit":1458425.492628,
+    "income_tax":310792.063136,
+    "income_tax_current":311488.840262,
+    "income_tax_deferred":-696.777126,
+    "net_profit":1147633.429492,
+    "eps":497
+   }
+  },
+  "2026-Q2":{
+   "evidence":[
+    (10,"494.598.914.337"),(10,"10.177.834.027"),
+    (10,"1.023.448.500.976"),(10,"888.967.633.276"),
+    (10,"140.103.237.495"),(10,"2.096.645.870.954"),
+    (11,"2.096.955.197.698"),(11,"405.061.593.230"),
+    (11,"409.747.556.919"),(11,"4.685.963.689"),
+    (11,"1.691.893.604.468"),(11,"610")
+   ],
+   "source_pages":[10,11],
+   "values":{
+    "broker_total_operating_expenses":494598.914337,
+    "broker_operating_expenses":494598.914337,
+    "broker_financial_income":10177.834027,
+    "financial_income":10177.834027,
+    "broker_financial_expense":1023448.500976,
+    "financial_expense":1023448.500976,
+    "broker_interest_expense":888967.633276,
+    "interest_expense":888967.633276,
+    "broker_admin_expenses":140103.237495,
+    "admin_expense":140103.237495,
+    "broker_net_operating_profit":2096645.870954,
+    "operating_profit":2096645.870954,
+    "revenue":3744618.689735,
+    "broker_total_operating_revenue":3744618.689735,
+    "pretax_profit":2096955.197698,
+    "income_tax":405061.593230,
+    "income_tax_current":409747.556919,
+    "income_tax_deferred":-4685.963689,
+    "net_profit":1691893.604468,
+    "eps":610
+   }
+  }
+ }
+ for period,spec in income_specs.items():
+  item=by_period.get(period)
+  if not isinstance(item,dict):
+   continue
+  page_text=archived_pages(item)
+  if not page_text or any(token not in page_text.get(page,"") for page,token in spec["evidence"]):
+   print(f"TCX {period}: source-backed income repair skipped; a statement-row evidence token was not found.")
+   continue
+  for field,value in spec["values"].items():
+   record_value(
+    item,field,value,
+    f"Re-read from the explicitly labelled CTCK income statement at VietstockFinance, PDF pages {','.join(map(str,spec['source_pages']))}. "
+    +("Page-image visual cross-check for Q1; " if period=="2026-Q1" else "Source-text and statement-equation cross-check for Q2; ")
+    +"monetary values converted from VND to million VND."
+   )
+  item["revenue_calculation"]=(
+   "Q1 reported total operating revenue line 20 in B02a-CTCK, converted from VND to million VND."
+   if period=="2026-Q1"
+   else "Derived from the printed B02a-CTCK subtotal identity: operating result = operating revenue + financial income - operating expenses - financial expenses - administration expenses; source subtotals cross-checked."
+  )
+  fields=set(item.get("financial_line_items_extracted_fields") or [])
+  fields.update(spec["values"].keys())
+  item["financial_line_items_extracted_fields"]=sorted(fields)
+  item["financial_line_items_status"]="auto_extracted_pending_visual_review" if period=="2026-Q2" else "source_text_reconciled_pending_visual_review"
+  if period=="2026-Q1":
+   manually=set(item.get("financial_line_items_manually_verified_fields") or [])
+   manually.update(spec["values"].keys())
+   item["financial_line_items_manually_verified_fields"]=sorted(manually)
+  item["source_validation"]={
+   **(item.get("source_validation") if isinstance(item.get("source_validation"),dict) else {}),
+   "single_source_policy":"Chỉ danh mục VietstockFinance và tệp do danh mục đó liên kết.",
+   "source_catalog_url":item.get("source_index_url"),
+   "source_document_url":item.get("source_url"),
+   "report_scope":"standalone",
+   "scope_validation_required":False,
+   "manual_review_blocking_automatic_extraction":False,
+   "manually_visual_reviewed":period=="2026-Q1"
+  }
+  item["source_extract_review"]={
+   **(item.get("source_extract_review") if isinstance(item.get("source_extract_review"),dict) else {}),
+   "checked_at":datetime.now(timezone.utc).isoformat(timespec="seconds"),
+   "source_index_url":item.get("source_index_url"),
+   "source_report_url":item.get("source_url"),
+   "manually_visual_reviewed":period=="2026-Q1",
+   "method":"Source rows from archived VietstockFinance PDF; Q1 checked against the PDF page images; Q2 source-text/subtotal reconciliation pending visual review.",
+   "source_pages":spec["source_pages"]
+  }
+  # These are standalone CTCK statements. The consolidated-only attribution
+  # line must not be populated with a copy of total net profit.
+  prior_attributable=item.get("net_profit_attributable")
+  if isinstance(prior_attributable,(int,float)):
+   item.setdefault("financial_line_items_prior_values",{}).setdefault("net_profit_attributable",prior_attributable)
+   item.setdefault("financial_line_items_value_corrections",{})["net_profit_attributable"]={
+    "previous_value":prior_attributable,"new_value":None,
+    "reason":"Standalone CTCK statement does not report a parent-company-attributable profit line; do not duplicate total net profit into a consolidated-only metric."
+   }
+  item["net_profit_attributable"]=None
+  item["financial_line_items_extracted_fields"]=[
+   field for field in (item.get("financial_line_items_extracted_fields") or [])
+   if field!="net_profit_attributable"
+  ]
+  item["core_financial_extracted_fields"]=[
+   field for field in (item.get("core_financial_extracted_fields") or [])
+   if field!="net_profit_attributable"
+  ]
+  item["financial_line_items_source"]=str(item.get("source_archive_file") or "")
+  item["financial_line_items_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
+  item["financial_line_items_note"]=(str(item.get("financial_line_items_note") or "")+
+   f" Bổ sung/sửa các tổng doanh thu, chi phí tài chính, lợi nhuận và thuế TCX {period} theo dòng có nhãn trong BCTC riêng VietstockFinance; "+ 
+   ("đã kiểm tra trực quan các trang 9–11 của PDF." if period=="2026-Q1" else "đã đối chiếu phép tính từ các tổng phụ, còn chờ kiểm tra trực quan PDF.")
+  ).strip()
+  changed=True
+  quarter_count+=1
+  field_count+=len(spec["values"])
+ # Q3 is likewise a standalone CTCK report: remove any stale parent-company
+ # attribution value carried forward by a generic parser.
+ q3_attributable=by_period.get("2026-Q3")
+ if isinstance(q3_attributable,dict):
+  old_attributable=q3_attributable.get("net_profit_attributable")
+  if isinstance(old_attributable,(int,float)):
+   q3_attributable.setdefault("financial_line_items_prior_values",{}).setdefault("net_profit_attributable",old_attributable)
+   q3_attributable.setdefault("financial_line_items_value_corrections",{})["net_profit_attributable"]={
+    "previous_value":old_attributable,"new_value":None,
+    "reason":"Standalone CTCK statement does not report a parent-company-attributable profit line; do not duplicate total net profit into a consolidated-only metric."
+   }
+  q3_attributable["net_profit_attributable"]=None
+  q3_attributable["financial_line_items_extracted_fields"]=[
+   field for field in (q3_attributable.get("financial_line_items_extracted_fields") or [])
+   if field!="net_profit_attributable"
+  ]
+
  # Q3/2026 source text is readable for the main CTCK statements, but the prior
  # parser confused an advisory-revenue row for total revenue and retained YTD
  # profit in quarter fields. Restore the values from the explicitly labelled
