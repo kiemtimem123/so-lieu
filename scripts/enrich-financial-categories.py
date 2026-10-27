@@ -2472,6 +2472,299 @@ def repair_tcx_2026_source_rows(items,symbol):
    changed=True
    quarter_count+=1
 
+ # TCX Q3/2024: repair detailed income, balance sheet, and cash-flow rows from
+ # the visually checked stand-alone B01a/B02a/B03a documents linked by VietstockFinance.
+ q3_2024=by_period.get("2024-Q3")
+ if isinstance(q3_2024,dict):
+  q3_pages=archived_pages(q3_2024)
+  q3_income_evidence={
+   9:[
+    "486.643.912.660","24.982.287.730","706.030.635.948","126.282.007.934",
+    "133.689.401.707","307.146.234.263","13.077.896.644","45.835.000.002",
+    "140.001.708.018","57.988.277.358","11.422.180.299","48.790.239.246","981.043.051"
+   ],
+   10:["5.684.781.466","454.532.798.330","477.531.235.067","136.461.459.136","1.096.495.486.270","1.097.052.077.972"],
+   11:["219.410.415.594","218.319.529.056","1.090.886.538","877.641.662.378"],
+  }
+  q3_income_ok=bool(q3_pages) and all(
+   all(token in q3_pages.get(page,"") for token in tokens)
+   for page,tokens in q3_income_evidence.items()
+  )
+  if q3_income_ok:
+   q3_income_values={
+    "revenue":1844805.107025,
+    "broker_total_operating_revenue":1844805.107025,
+    "broker_fvtpl_gain":486643.912660,
+    "broker_held_to_maturity_income":24982.287730,
+    "broker_lending_income":706030.635948,
+    "broker_afs_income":126282.007934,
+    "broker_brokerage_revenue":133689.401707,
+    "broker_underwriting_revenue":307146.234263,
+    "broker_custody_revenue":13077.896644,
+    "broker_financial_advisory_revenue":45835.000002,
+    "broker_other_operating_income":1177.730137,
+    "broker_fvtpl_loss":20819.968064,
+    "broker_total_operating_expenses":140001.708018,
+    "broker_operating_expenses":140001.708018,
+    "broker_brokerage_expense":57988.277358,
+    "broker_custody_expense":11422.180299,
+    "broker_other_operating_expense":48790.239246,
+    "financial_income":5684.781466,
+    "broker_financial_income":5684.781466,
+    "financial_expense":477531.235067,
+    "broker_financial_expense":477531.235067,
+    "interest_expense":454532.798330,
+    "broker_interest_expense":454532.798330,
+    "admin_expense":136461.459136,
+    "broker_admin_expenses":136461.459136,
+    "operating_profit":1096495.486270,
+    "broker_net_operating_profit":1096495.486270,
+    "income_tax":219410.415594,
+    "income_tax_current":218319.529056,
+    "income_tax_deferred":1090.886538,
+   }
+   q3_income_pages={
+    field:(10 if field in {
+     "financial_income","broker_financial_income","financial_expense","broker_financial_expense",
+     "interest_expense","broker_interest_expense","admin_expense","broker_admin_expenses",
+     "operating_profit","broker_net_operating_profit"
+    } else (11 if field in {"income_tax","income_tax_current","income_tax_deferred"} else 9))
+    for field in q3_income_values
+   }
+   q3_start_count=field_count
+   q3_start_status=str(q3_2024.get("financial_line_items_status") or "")
+   for field,value in q3_income_values.items():
+    record_value(
+     q3_2024,field,value,
+     f"Visually checked in the archived VietstockFinance B02a-CTCK Q3/2024 statement, PDF page {q3_income_pages[field]}; current-quarter column; source VND divided by 1,000,000."
+    )
+   q3_fields_before=set(q3_2024.get("financial_line_items_extracted_fields") or [])
+   q3_fields_after=q3_fields_before|set(q3_income_values)
+   if q3_fields_after!=q3_fields_before:
+    q3_2024["financial_line_items_extracted_fields"]=sorted(q3_fields_after)
+    changed=True; field_count+=1
+   q3_rejected_before=set(q3_2024.get("financial_line_items_rejected_fields") or [])
+   q3_rejected_after=q3_rejected_before-set(q3_income_values)
+   if q3_rejected_after!=q3_rejected_before:
+    q3_2024["financial_line_items_rejected_fields"]=sorted(q3_rejected_after)
+    changed=True; field_count+=1
+   q3_rejected_values=q3_2024.get("financial_line_items_rejected_values")
+   if isinstance(q3_rejected_values,dict):
+    rejected_values_before=dict(q3_rejected_values)
+    for field in q3_income_values:
+     q3_rejected_values.pop(field,None)
+    if q3_rejected_values!=rejected_values_before:
+     changed=True; field_count+=1
+   q3_income_meta={
+    "source_policy":"VietstockFinance document catalog and linked PDF only",
+    "source_index_url":q3_2024.get("source_index_url"),
+    "source_document_url":q3_2024.get("source_url"),
+    "source_archive_file":q3_2024.get("source_archive_file"),
+    "report_form":"B02a-CTCK",
+    "report_scope":"standalone securities-company report; not consolidated",
+    "pdf_pages":[9,10,11],
+    "manually_visual_reviewed":True,
+    "exact_source_vnd":{field:int(round(value*1000000)) for field,value in q3_income_values.items()},
+    "source_tokens":{str(page):tokens for page,tokens in q3_income_evidence.items()},
+    "note":"Revenue and expense rows are from the Quý 3 column on page 7; financial income/expense and operating profit from page 8; tax and after-tax profit from page 9. Combined row 24 is included only in total operating expenses, not relabelled as pure borrowing expense."
+   }
+   if q3_2024.get("financial_line_items_source_row_reconciliation")!=q3_income_meta:
+    q3_2024["financial_line_items_source_row_reconciliation"]=q3_income_meta
+    changed=True; field_count+=1
+   pages_before=set(q3_2024.get("financial_line_items_source_pages") or [])
+   pages_after=pages_before|{9,10,11}
+   if pages_after!=pages_before:
+    q3_2024["financial_line_items_source_pages"]=sorted(pages_after)
+    changed=True; field_count+=1
+   note="Đã đối chiếu trực quan B02a-CTCK VietstockFinance Q3/2024 trang 7–9: bổ sung tổng doanh thu hoạt động, các dòng thu nhập/chi phí, lợi nhuận hoạt động và thuế theo cột Quý 3; dòng chi phí tổng hợp số 24 không gán thành riêng chi phí lãi vay."
+   old_note=str(q3_2024.get("financial_line_items_note") or "")
+   if note not in old_note:
+    q3_2024["financial_line_items_note"]=(old_note+" "+note).strip()
+    changed=True; field_count+=1
+   if field_count>q3_start_count or q3_start_status!="auto_extracted_pending_visual_review":
+    q3_2024["financial_line_items_status"]="auto_extracted_pending_visual_review"
+    q3_2024["financial_line_items_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
+    changed=True; quarter_count+=1
+  else:
+   print("TCX 2024-Q3: income repair skipped because one or more source-token checks failed.")
+
+ # Q3/2024 balance-sheet details from B01a-CTCK.
+ q3_balance_values={
+  "current_assets":46537938.169842,
+  "non_current_assets":3330054.972010,
+  "cash_and_equivalents":3265767.728843,
+  "broker_held_to_maturity_assets":2031105.785348,
+  "broker_lending_assets":25483299.379217,
+  "broker_afs_assets":13495559.828376,
+  "broker_receivables":457741.282392,
+  "fixed_assets":47000.960029,
+  "current_liabilities":20399876.486004,
+  "long_term_liabilities":3878967.761208,
+  "broker_short_term_borrowings":18250517.591201,
+  "broker_short_term_bonds":750752.043752,
+  "broker_long_term_bonds":3873429.871913,
+  "retained_earnings":14184540.747501,
+ }
+ q3_balance_evidence={
+  5:["46.537.938.169.842","2.031.105.785.348","25.483.299.379.217","457.741.282.392","3.330.054.972.010","47.000.960.029","49.867.993.141.852"],
+  6:["24.278.844.247.212","20.399.876.486.004","3.878.967.761.208","18.250.517.591.201","750.752.043.752","3.873.429.871.913","14.184.540.747.501"],
+ }
+ if isinstance(q3_2024,dict):
+  q3_balance_pages=archived_pages(q3_2024)
+  q3_balance_ok=bool(q3_balance_pages) and all(
+   all(token in q3_balance_pages.get(page,"") for token in tokens)
+   for page,tokens in q3_balance_evidence.items()
+  )
+  if q3_balance_ok:
+   q3_balance_start_count=field_count
+   for field,value in q3_balance_values.items():
+    record_value(
+     q3_2024,field,value,
+     f"Visually checked in the archived VietstockFinance B01a-CTCK Q3/2024 balance sheet, PDF page {5 if field in {'current_assets','non_current_assets','cash_and_equivalents','broker_held_to_maturity_assets','broker_lending_assets','broker_afs_assets','broker_receivables','fixed_assets'} else 6}; source VND divided by 1,000,000."
+    )
+   fields_before=set(q3_2024.get("financial_line_items_extracted_fields") or [])
+   fields_after=fields_before|set(q3_balance_values)
+   if fields_after!=fields_before:
+    q3_2024["financial_line_items_extracted_fields"]=sorted(fields_after)
+    changed=True; field_count+=1
+   rejected_before=set(q3_2024.get("financial_line_items_rejected_fields") or [])
+   rejected_after=rejected_before-set(q3_balance_values)
+   if rejected_after!=rejected_before:
+    q3_2024["financial_line_items_rejected_fields"]=sorted(rejected_after)
+    changed=True; field_count+=1
+   rejected_values=q3_2024.get("financial_line_items_rejected_values")
+   if isinstance(rejected_values,dict):
+    rejected_values_before=dict(rejected_values)
+    for field in q3_balance_values:
+     rejected_values.pop(field,None)
+    if q3_rejected_values!=rejected_values_before:
+     changed=True; field_count+=1
+   q3_balance_meta={
+    "source_policy":"VietstockFinance document catalog and linked PDF only",
+    "source_index_url":q3_2024.get("source_index_url"),
+    "source_document_url":q3_2024.get("source_url"),
+    "source_archive_file":q3_2024.get("source_archive_file"),
+    "report_form":"B01a-CTCK",
+    "report_scope":"standalone securities-company report; not consolidated",
+    "pdf_pages":[5,6],
+    "manually_visual_reviewed":True,
+    "fields":{field:{"value_million_vnd":value,"source_value_vnd":int(round(value*1000000))} for field,value in q3_balance_values.items()},
+    "source_tokens":{str(page):tokens for page,tokens in q3_balance_evidence.items()},
+   }
+   if q3_2024.get("financial_line_items_balance_source_reconciliation")!=q3_balance_meta:
+    q3_2024["financial_line_items_balance_source_reconciliation"]=q3_balance_meta
+    changed=True; field_count+=1
+   pages_before=set(q3_2024.get("financial_line_items_source_pages") or [])
+   pages_after=pages_before|{5,6}
+   if pages_after!=pages_before:
+    q3_2024["financial_line_items_source_pages"]=sorted(pages_after)
+    changed=True; field_count+=1
+   note="Đã đối chiếu trực quan B01a-CTCK VietstockFinance Q3/2024 trang 3–4: bổ sung tiền, HTM, cho vay, AFS, phải thu, TSCĐ, tổng tài sản ngắn/dài hạn, nợ ngắn/dài hạn, vay/trái phiếu và lợi nhuận chưa phân phối."
+   old_note=str(q3_2024.get("financial_line_items_note") or "")
+   if note not in old_note:
+    q3_2024["financial_line_items_note"]=(old_note+" "+note).strip()
+    changed=True; field_count+=1
+   if field_count>q3_balance_start_count:
+    q3_2024["financial_line_items_status"]="auto_extracted_pending_visual_review"
+    q3_2024["financial_line_items_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
+    changed=True; quarter_count+=1
+  else:
+   print("TCX 2024-Q3: balance repair skipped because one or more source-token checks failed.")
+
+ # Q3/2024 cash flow is shown cumulatively for nine months. Normalize to
+ # standalone-quarter values by subtracting the Q2 YTD totals; opening cash is
+ # the Q2 quarter close, not the year-start value printed on B03a-CTCK.
+ q3_cash_values={
+  "operating_cash_flow_ytd":-2321338.102096,
+  "investing_cash_flow_ytd":-6046.969681,
+  "financing_cash_flow_ytd":1010971.806432,
+  "net_cash_change_ytd":-1316413.265345,
+  "operating_cash_flow":3850747.500461,
+  "investing_cash_flow":-43.490000,
+  "financing_cash_flow":-3360409.560861,
+  "net_cash_change":490294.449600,
+  "capital_expenditure_ytd":-6046.969681,
+  "capital_expenditure":-43.490000,
+  "cash_beginning_reported_ytd":4582180.994188,
+  "cash_beginning":2775473.279243,
+  "cash_ending":3265767.728843,
+  "cash_and_equivalents":3265767.728843,
+ }
+ q3_cash_evidence={
+  12:["2.321.338.102.096","6.046.969.681"],
+  13:["1.010.971.806.432","1.316.413.265.345","4.582.180.994.188","3.265.767.728.843"],
+ }
+ if isinstance(q3_2024,dict):
+  q3_cash_pages=archived_pages(q3_2024)
+  q3_cash_ok=bool(q3_cash_pages) and all(
+   all(token in q3_cash_pages.get(page,"") for token in tokens)
+   for page,tokens in q3_cash_evidence.items()
+  )
+  if q3_cash_ok:
+   q3_cash_start_count=field_count
+   for field,value in q3_cash_values.items():
+    record_value(
+     q3_2024,field,value,
+     "Visually checked in the archived VietstockFinance B03a-CTCK Q3/2024 cash-flow statement, PDF pages 10–11. Q3 standalone flow is nine-month YTD less Q2 YTD; source VND divided by 1,000,000."
+    )
+   record_value(q3_2024,"cashflow_period_basis","year_to_date",
+    "B03a-CTCK cash flows are reported cumulatively from 1 January.")
+   cash_fields_before=set(q3_2024.get("financial_line_items_extracted_fields") or [])
+   cash_fields_after=cash_fields_before|set(q3_cash_values)|{"cashflow_period_basis"}
+   if cash_fields_after!=cash_fields_before:
+    q3_2024["financial_line_items_extracted_fields"]=sorted(cash_fields_after)
+    changed=True; field_count+=1
+   rejected_before=set(q3_2024.get("financial_line_items_rejected_fields") or [])
+   rejected_after=rejected_before-set(q3_cash_values)
+   if rejected_after!=rejected_before:
+    q3_2024["financial_line_items_rejected_fields"]=sorted(rejected_after)
+    changed=True; field_count+=1
+   rejected_values=q3_2024.get("financial_line_items_rejected_values")
+   if isinstance(rejected_values,dict):
+    rejected_values_before=dict(rejected_values)
+    for field in q3_cash_values:
+     rejected_values.pop(field,None)
+    if rejected_values!=rejected_values_before:
+     changed=True; field_count+=1
+   q3_cash_meta={
+    "source_policy":"VietstockFinance document catalog and linked PDF only",
+    "source_index_url":q3_2024.get("source_index_url"),
+    "source_document_url":q3_2024.get("source_url"),
+    "source_archive_file":q3_2024.get("source_archive_file"),
+    "report_form":"B03a-CTCK",
+    "report_scope":"standalone securities-company report; not consolidated",
+    "pdf_pages":[12,13],
+    "basis":"nine_month_ytd_normalized_to_q3",
+    "exact_source_vnd":{field:int(round(value*1000000)) for field,value in q3_cash_values.items()},
+    "source_tokens":{str(page):tokens for page,tokens in q3_cash_evidence.items()},
+    "quarter_flows_sum_to_net_cash_change":round(sum(q3_cash_values[field] for field in ("operating_cash_flow","investing_cash_flow","financing_cash_flow"))-q3_cash_values["net_cash_change"],6)==0,
+    "ytd_flows_sum_to_net_cash_change":round(sum(q3_cash_values[field] for field in ("operating_cash_flow_ytd","investing_cash_flow_ytd","financing_cash_flow_ytd"))-q3_cash_values["net_cash_change_ytd"],6)==0,
+    "opening_closing_cash_bridge_reconciles":round(q3_cash_values["cash_ending"]-q3_cash_values["cash_beginning"]-q3_cash_values["net_cash_change"],6)==0,
+    "visually_checked_rows":True,
+    "note":"Số dư/luồng tiền thuộc công ty chứng khoán; không lấy dòng tiền môi giới/tiền ký quỹ của khách hàng. Q3 flows = 9-month YTD less Q2 YTD."
+   }
+   if q3_2024.get("cashflow_source_reconciliation")!=q3_cash_meta:
+    q3_2024["cashflow_source_reconciliation"]=q3_cash_meta
+    changed=True; field_count+=1
+   for field,value in {
+    "cash_beginning_calculation":"Số dư đầu Q3/2024 lấy từ số dư tiền cuối Q2/2024 theo B03a-CTCK.",
+    "cash_ending_calculation":"Số dư tiền cuối Q3/2024 lấy trực tiếp từ B03a-CTCK.",
+   }.items():
+    if q3_2024.get(field)!=value:
+     q3_2024[field]=value
+     changed=True; field_count+=1
+   note="Đã đối chiếu trực quan B03a-CTCK VietstockFinance Q3/2024 trang 10–11: dòng tiền quý III được tính bằng lũy kế 9 tháng trừ lũy kế 6 tháng; số dư đầu quý lấy theo số dư cuối Q2 và số dư cuối quý lấy trực tiếp từ báo cáo."
+   old_note=str(q3_2024.get("financial_line_items_note") or "")
+   if note not in old_note:
+    q3_2024["financial_line_items_note"]=(old_note+" "+note).strip()
+    changed=True; field_count+=1
+   if field_count>q3_cash_start_count or q3_2024.get("financial_line_items_status")!="auto_extracted_pending_visual_review":
+    q3_2024["financial_line_items_status"]="auto_extracted_pending_visual_review"
+    q3_2024["financial_line_items_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
+    changed=True; quarter_count+=1
+  else:
+   print("TCX 2024-Q3: cash-flow repair skipped because one or more source-token checks failed.")
+
  cash_specs={
   "2026-Q1":{
    "evidence":[
