@@ -28,7 +28,7 @@ DETAIL_REVIEW_STATUSES = {
     "manual_review_required_pending_extraction",
     "no_detail_fields_matched_pending_manual_review",
 }
-DETAIL_SCHEMA_VERSION = "2026-10-27-other-statements-source-fields-v10"
+DETAIL_SCHEMA_VERSION = "2026-10-27-other-statements-source-fields-v11"
 
 
 def utc_now() -> str:
