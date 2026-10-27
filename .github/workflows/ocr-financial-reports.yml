@@ -401,6 +401,7 @@ jobs:
             /.github/scripts/requirements-report-worker.txt
             /.github/scripts/validate-report-queue.cjs
             /scripts/enrich-financial-categories.py
+            /scripts/validate-bank-reconciliation.py
             /scripts/validate-financials.mjs
             /scripts/update-report-checkpoint.py
             /reports/library.json
@@ -415,8 +416,8 @@ jobs:
       - name: Install extraction dependencies
         run: pip install -r .github/scripts/requirements-report-worker.txt
 
-      - name: Compile checkpoint helper
-        run: python -m py_compile scripts/update-report-checkpoint.py
+      - name: Compile financial extraction and validation scripts
+        run: python -m py_compile scripts/enrich-financial-categories.py scripts/validate-bank-reconciliation.py scripts/update-report-checkpoint.py
 
       - name: Preflight the next report for native PDF text
         id: ocr_preflight
