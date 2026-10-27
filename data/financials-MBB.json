@@ -50,7 +50,7 @@
       "bank_customer_deposits": 558826062,
       "bank_valuable_papers": 102482877,
       "bank_funding_and_trust_liabilities": 3456071,
-      "bank_other_liabilities": 47353000,
+      "bank_other_liabilities": 1001,
       "operating_cash_flow_ytd": -25886800,
       "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
@@ -76,27 +76,28 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/MBB/vietstock-mbb-20261019/7412b541b62688da.pdf",
-      "financial_line_items_updated_at": "2026-10-24T04:19:08+00:00",
+      "financial_line_items_updated_at": "2026-10-27T03:06:42+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Đã đối chiếu thủ công một số dòng bảng cân đối trang PDF 3–4; các trường được liệt kê trong financial_line_items_manually_verified_fields. Các trường chi tiết còn lại vẫn chờ rà soát trực quan.",
       "operating_cash_flow": -25886800,
       "operating_cash_flow_calculation": "Q1 equals YTD Q1",
       "financial_line_items_prior_values": {
         "bank_other_liabilities": 35446826,
-        "operating_cash_flow_ytd": 4484806
+        "operating_cash_flow_ytd": 4484806,
+        "income_tax": 1171095
       },
       "financial_line_items_rejected_values": {},
       "income_tax": 1171095,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
-      "financial_line_items_schema_updated_at": "2026-10-25T20:13:52+00:00",
+      "financial_line_items_schema_version": "2026-10-27-note-reference-dash-guards-v6",
+      "financial_line_items_schema_updated_at": "2026-10-27T03:06:21+00:00",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "4d8236b7680ee10aa49b88103067776e13c1554957e2ca8b0be791599815b3fb",
       "core_financial_extraction_evidence_attempt_count": 0,
       "financial_line_items_value_corrections": {
         "bank_other_liabilities": {
-          "previous_value": 1001,
-          "new_value": 47353000,
-          "reason": "Manually checked against aggregate 'Các khoản nợ khác' on VietstockFinance consolidated balance sheet PDF page 4; the prior value 1,001 belongs to a child reserve row."
+          "previous_value": 47353000,
+          "new_value": 1001,
+          "reason": "reparsed with corrected VND unit scale after detecting an OCR-corrupted statement unit header"
         },
         "operating_cash_flow_ytd": {
           "previous_value": 4484806,
@@ -122,6 +123,11 @@
           "previous_value": 11120,
           "new_value": 102482877,
           "reason": "Manually checked against the 'Phát hành giấy tờ có giá' row on VietstockFinance consolidated balance sheet PDF page 4; OCR note code III.20 was incorrectly read as 11,120."
+        },
+        "income_tax": {
+          "previous_value": 1171095,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         }
       },
       "bank_deposits_and_loans_to_credit_institutions": 77809357,
@@ -183,7 +189,7 @@
       "bank_deposits_at_state_bank": 18087252,
       "bank_customer_loans": 662584515,
       "bank_trading_securities": 12308272,
-      "bank_derivatives_and_other_financial_assets": 141294,
+      "bank_derivatives_and_other_financial_assets": 0,
       "bank_investment_securities": 167176283,
       "bank_contributions_and_long_term_investments": 582763,
       "bank_other_assets": 26903897,
@@ -263,7 +269,7 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/MBB/vietstock-mbb-20261019/8c9e5134bed45c0c.pdf",
-      "financial_line_items_updated_at": "2026-10-25T20:14:23+00:00",
+      "financial_line_items_updated_at": "2026-10-27T03:06:42+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Tổng thu nhập hoạt động ngân hàng được tính từ bảy cấu phần thuần; cần đối chiếu trực quan. Lợi nhuận trước dự phòng và chi phí dự phòng OCR không khớp lợi nhuận trước thuế; hai chỉ tiêu chi tiết được ẩn.",
       "operating_cash_flow": 12386261,
       "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
@@ -273,12 +279,15 @@
         "bank_net_interest_income": 40531113,
         "operating_cash_flow_ytd": 10717048,
         "bank_provision_expense": -2005743,
-        "bank_operating_expenses": -4490504
+        "bank_operating_expenses": -4490504,
+        "bank_net_service_income": 1354267,
+        "bank_pre_provision_operating_profit": 9638744,
+        "bank_derivatives_and_other_financial_assets": 141294
       },
       "financial_line_items_rejected_values": {},
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
-      "financial_line_items_schema_updated_at": "2026-10-25T20:13:55+00:00",
+      "financial_line_items_schema_version": "2026-10-27-note-reference-dash-guards-v6",
+      "financial_line_items_schema_updated_at": "2026-10-27T03:06:23+00:00",
       "financial_line_items_value_corrections": {
         "revenue": {
           "previous_value": 44129248,
@@ -286,9 +295,9 @@
           "reason": "derived from the seven net operating-income components reported in the bank statement"
         },
         "bank_net_interest_income": {
-          "previous_value": 40531113,
-          "new_value": 10531113,
-          "reason": "derived from reported interest income plus signed interest expense"
+          "previous_value": 10531113,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "operating_cash_flow_ytd": {
           "previous_value": 10717048,
@@ -296,14 +305,34 @@
           "reason": "Reparsed from net operating cash flow after changes in operating assets and liabilities, not the subtotal before working-capital changes."
         },
         "bank_provision_expense": {
-          "previous_value": -2005743,
-          "new_value": 2005743,
-          "reason": "derived from reconciled pre-provision operating profit minus reported quarterly PBT"
+          "previous_value": 2005743,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "bank_operating_expenses": {
           "previous_value": -4490504,
           "new_value": 4490504,
           "reason": "Normalized bank operating expenses to the positive expense convention used in subtotal reconciliation."
+        },
+        "bank_net_service_income": {
+          "previous_value": 1354267,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "bank_pre_provision_operating_profit": {
+          "previous_value": 9638744,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "bank_derivatives_and_other_financial_assets": {
+          "previous_value": 141294,
+          "new_value": 0,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "income_tax": {
+          "previous_value": 1531018,
+          "new_value": -1531018,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
         }
       },
       "revenue_calculation": "Tổng bảy cấu phần thu nhập hoạt động thuần được báo cáo cho ngân hàng.",
@@ -367,10 +396,10 @@
       "bank_contributions_and_long_term_investments": 578426,
       "bank_other_assets": 27222050,
       "bank_deposits_and_borrowings_from_credit_institutions": 118659598,
-      "bank_customer_deposits": 11117,
-      "bank_valuable_papers": 11120,
+      "bank_customer_deposits": 627567353,
+      "bank_valuable_papers": 119550968,
       "bank_funding_and_trust_liabilities": 3351982,
-      "bank_other_liabilities": 35893971,
+      "bank_other_liabilities": 918796010,
       "revenue": 12703765,
       "interest_expense": -6979985,
       "operating_profit": 8947866,
@@ -433,7 +462,7 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/MBB/vietstock-mbb-20261019/e22d0b238691da5e.pdf",
-      "financial_line_items_updated_at": "2026-10-25T20:14:23+00:00",
+      "financial_line_items_updated_at": "2026-10-27T03:06:42+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Lợi nhuận trước dự phòng và chi phí dự phòng OCR không khớp lợi nhuận trước thuế; hai chỉ tiêu chi tiết được ẩn.",
       "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
@@ -443,7 +472,12 @@
         "income_tax": -1461593,
         "bank_provision_expense": -1639970,
         "cash_beginning": 98166725,
-        "bank_operating_expenses": -3755899
+        "bank_operating_expenses": -3755899,
+        "bank_net_interest_income": 10416635,
+        "bank_net_service_income": 888023,
+        "bank_customer_deposits": 11117,
+        "bank_valuable_papers": 11120,
+        "bank_other_liabilities": 35893971
       },
       "financial_line_items_rejected_values": {
         "operating_cash_flow": {
@@ -498,8 +532,8 @@
         "operating_cash_flow",
         "operating_cash_flow_ytd"
       ],
-      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
-      "financial_line_items_schema_updated_at": "2026-10-25T20:14:00+00:00",
+      "financial_line_items_schema_version": "2026-10-27-note-reference-dash-guards-v6",
+      "financial_line_items_schema_updated_at": "2026-10-27T03:06:25+00:00",
       "bank_pre_provision_operating_profit": 8947866,
       "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động - |chi phí hoạt động| theo BCTC ngân hàng.",
       "bank_provision_expense": 1639970,
@@ -515,19 +549,49 @@
       "cash_beginning_calculation": "previous quarter closing cash",
       "financial_line_items_value_corrections": {
         "bank_provision_expense": {
-          "previous_value": -1639970,
+          "previous_value": 8947866,
           "new_value": 1639970,
           "reason": "derived from reconciled pre-provision operating profit minus reported quarterly PBT"
         },
         "cash_beginning": {
           "previous_value": 98166725,
           "new_value": 409095118,
-          "reason": "Reparsed from the explicit opening cash balance row in the bank B04/TCTD statement."
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
         },
         "bank_operating_expenses": {
           "previous_value": -3755899,
           "new_value": 3755899,
           "reason": "Normalized bank operating expenses to the positive expense convention used in subtotal reconciliation."
+        },
+        "bank_net_interest_income": {
+          "previous_value": 10416635,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "bank_net_service_income": {
+          "previous_value": 888023,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "bank_customer_deposits": {
+          "previous_value": 11117,
+          "new_value": 627567353,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "bank_valuable_papers": {
+          "previous_value": 11120,
+          "new_value": 119550968,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "bank_other_liabilities": {
+          "previous_value": 35893971,
+          "new_value": 918796010,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "income_tax": {
+          "previous_value": 1464453,
+          "new_value": -1461593,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
         }
       },
       "cash_beginning_reported_ytd": 409095118
@@ -571,7 +635,7 @@
       "bank_deposits_at_state_bank": 29825253,
       "bank_customer_loans": 765047985,
       "bank_trading_securities": 7931655,
-      "bank_derivatives_and_other_financial_assets": 141294,
+      "bank_derivatives_and_other_financial_assets": 0,
       "bank_investment_securities": 209637377,
       "bank_contributions_and_long_term_investments": 609477,
       "bank_other_assets": 28998487,
@@ -605,18 +669,20 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/MBB/vietstock-mbb-20261019/6109b2b93c0a8cc9.pdf",
-      "financial_line_items_updated_at": "2026-10-24T04:19:11+00:00",
+      "financial_line_items_updated_at": "2026-10-27T03:06:42+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
       "operating_cash_flow": 12636013,
       "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "financial_line_items_prior_values": {
-        "operating_cash_flow_ytd": 29963896
+        "operating_cash_flow_ytd": 29963896,
+        "income_tax": 1711498,
+        "bank_derivatives_and_other_financial_assets": 141294
       },
       "financial_line_items_rejected_values": {},
       "income_tax": 1711498,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
-      "financial_line_items_schema_updated_at": "2026-10-25T20:14:00+00:00",
+      "financial_line_items_schema_version": "2026-10-27-note-reference-dash-guards-v6",
+      "financial_line_items_schema_updated_at": "2026-10-27T03:06:27+00:00",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "af9e3e197de73fe2dd07479347aebebfb4f0b79ee84fe0c1b921cce418abaf8c",
       "core_financial_extraction_evidence_attempt_count": 0,
@@ -625,6 +691,16 @@
           "previous_value": 29963896,
           "new_value": 68529262,
           "reason": "Reparsed from net operating cash flow after changes in operating assets and liabilities, not the subtotal before working-capital changes."
+        },
+        "income_tax": {
+          "previous_value": 1711498,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "bank_derivatives_and_other_financial_assets": {
+          "previous_value": 141294,
+          "new_value": 0,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
         }
       },
       "cash_ending": 1357407,
@@ -670,11 +746,11 @@
       "bank_deposits_at_state_bank": 18521984,
       "bank_customer_loans": 786486979,
       "bank_trading_securities": 12509220,
-      "bank_derivatives_and_other_financial_assets": 786486979,
+      "bank_derivatives_and_other_financial_assets": 0,
       "bank_investment_securities": 240234807,
       "bank_contributions_and_long_term_investments": 696628,
-      "bank_customer_deposits": 11117,
-      "bank_valuable_papers": 11120,
+      "bank_customer_deposits": 722622450,
+      "bank_valuable_papers": 146597114,
       "bank_other_liabilities": 45981764,
       "operating_cash_flow_ytd": 18186686,
       "investing_cash_flow_ytd": -105882,
@@ -698,20 +774,24 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/MBB/manual-mbb-smoke-20261018/09421ed8d0d7a6dd.pdf",
-      "financial_line_items_updated_at": "2026-10-24T04:19:12+00:00",
+      "financial_line_items_updated_at": "2026-10-27T03:06:42+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
       "operating_cash_flow": 18186686,
       "operating_cash_flow_calculation": "Q1 equals YTD Q1",
       "investing_cash_flow": -105882,
       "investing_cash_flow_calculation": "Q1 equals YTD Q1",
       "financial_line_items_prior_values": {
-        "operating_cash_flow_ytd": 7431718
+        "operating_cash_flow_ytd": 7431718,
+        "income_tax": 1711446,
+        "bank_derivatives_and_other_financial_assets": 786486979,
+        "bank_customer_deposits": 11117,
+        "bank_valuable_papers": 11120
       },
       "financial_line_items_rejected_values": {},
       "income_tax": 1711446,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
-      "financial_line_items_schema_updated_at": "2026-10-25T20:14:03+00:00",
+      "financial_line_items_schema_version": "2026-10-27-note-reference-dash-guards-v6",
+      "financial_line_items_schema_updated_at": "2026-10-27T03:06:30+00:00",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "b36183c99c05d2331afd08448a18cd2704f22196a7ae03e103fa0d20167bff03",
       "core_financial_extraction_evidence_attempt_count": 0,
@@ -720,6 +800,26 @@
           "previous_value": 7431718,
           "new_value": 18186686,
           "reason": "Reparsed from net operating cash flow after changes in operating assets and liabilities, not the subtotal before working-capital changes."
+        },
+        "income_tax": {
+          "previous_value": 1711446,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "bank_derivatives_and_other_financial_assets": {
+          "previous_value": 786486979,
+          "new_value": 0,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "bank_customer_deposits": {
+          "previous_value": 11117,
+          "new_value": 722622450,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "bank_valuable_papers": {
+          "previous_value": 11120,
+          "new_value": 146597114,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
         }
       }
     },
@@ -762,7 +862,7 @@
       "bank_deposits_at_state_bank": 15251535,
       "bank_customer_loans": 867340209,
       "bank_trading_securities": 4585676,
-      "bank_derivatives_and_other_financial_assets": 867340209,
+      "bank_derivatives_and_other_financial_assets": 0,
       "bank_investment_securities": 262474257,
       "bank_contributions_and_long_term_investments": 582898,
       "bank_other_assets": 29912640,
@@ -797,20 +897,22 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/MBB/manual-mbb-smoke-20261018/e9330c616739ff01.pdf",
-      "financial_line_items_updated_at": "2026-10-24T04:19:13+00:00",
+      "financial_line_items_updated_at": "2026-10-27T03:06:42+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
       "operating_cash_flow": -16670148,
       "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "investing_cash_flow": -367940,
       "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "financial_line_items_prior_values": {
-        "operating_cash_flow_ytd": 48756066
+        "operating_cash_flow_ytd": 48756066,
+        "income_tax": 1498285,
+        "bank_derivatives_and_other_financial_assets": 867340209
       },
       "financial_line_items_rejected_values": {},
       "income_tax": 1498285,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
-      "financial_line_items_schema_updated_at": "2026-10-25T20:14:06+00:00",
+      "financial_line_items_schema_version": "2026-10-27-note-reference-dash-guards-v6",
+      "financial_line_items_schema_updated_at": "2026-10-27T03:06:32+00:00",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "d84ea3cb4e0af5001d2679811f9695d6564692b9a88b46ef6a573a0508aa8e72",
       "core_financial_extraction_evidence_attempt_count": 0,
@@ -819,6 +921,16 @@
           "previous_value": 48756066,
           "new_value": 1516538,
           "reason": "Reparsed from net operating cash flow after changes in operating assets and liabilities, not the subtotal before working-capital changes."
+        },
+        "income_tax": {
+          "previous_value": 1498285,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "bank_derivatives_and_other_financial_assets": {
+          "previous_value": 867340209,
+          "new_value": 0,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
         }
       }
     },
@@ -861,13 +973,13 @@
       "bank_deposits_at_state_bank": 47607511,
       "bank_customer_loans": 917699001,
       "bank_trading_securities": 3172173,
-      "bank_derivatives_and_other_financial_assets": 917699001,
+      "bank_derivatives_and_other_financial_assets": 0,
       "bank_investment_securities": 235603615,
       "bank_contributions_and_long_term_investments": 1112379,
       "bank_other_assets": 32902894,
       "bank_deposits_and_borrowings_from_credit_institutions": 154325370,
       "bank_customer_deposits": 788030328,
-      "bank_valuable_papers": 11120,
+      "bank_valuable_papers": 171610852,
       "bank_funding_and_trust_liabilities": 4048717,
       "bank_other_liabilities": 53070721,
       "operating_cash_flow_ytd": 11921585,
@@ -894,18 +1006,21 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/MBB/manual-mbb-smoke-20261018/0526fe8620628e7c.pdf",
-      "financial_line_items_updated_at": "2026-10-24T04:19:15+00:00",
+      "financial_line_items_updated_at": "2026-10-27T03:06:42+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
       "operating_cash_flow": 10405047,
       "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "financial_line_items_prior_values": {
-        "operating_cash_flow_ytd": 28656814
+        "operating_cash_flow_ytd": 28656814,
+        "income_tax": 1449479,
+        "bank_derivatives_and_other_financial_assets": 917699001,
+        "bank_valuable_papers": 11120
       },
       "financial_line_items_rejected_values": {},
       "income_tax": 1449479,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
-      "financial_line_items_schema_updated_at": "2026-10-25T20:14:10+00:00",
+      "financial_line_items_schema_version": "2026-10-27-note-reference-dash-guards-v6",
+      "financial_line_items_schema_updated_at": "2026-10-27T03:06:35+00:00",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "3b4e9f9ba6d11e3c116122f3de17379f6cae7e2f19d437c69257d9dd24a3c867",
       "core_financial_extraction_evidence_attempt_count": 0,
@@ -914,6 +1029,21 @@
           "previous_value": 28656814,
           "new_value": 11921585,
           "reason": "Reparsed from net operating cash flow after changes in operating assets and liabilities, not the subtotal before working-capital changes."
+        },
+        "income_tax": {
+          "previous_value": 1449479,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "bank_derivatives_and_other_financial_assets": {
+          "previous_value": 917699001,
+          "new_value": 0,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "bank_valuable_papers": {
+          "previous_value": 11120,
+          "new_value": 171610852,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
         }
       }
     },
@@ -956,13 +1086,13 @@
       "bank_deposits_at_state_bank": 68494426,
       "bank_customer_loans": 1070868777,
       "bank_trading_securities": 4653229,
-      "bank_derivatives_and_other_financial_assets": 1070868777,
+      "bank_derivatives_and_other_financial_assets": 0,
       "bank_investment_securities": 4295125,
       "bank_contributions_and_long_term_investments": 468396,
       "bank_other_assets": 49831482,
-      "bank_deposits_and_borrowings_from_credit_institutions": 1116,
+      "bank_deposits_and_borrowings_from_credit_institutions": 248017489,
       "bank_customer_deposits": 921368132,
-      "bank_valuable_papers": 11120,
+      "bank_valuable_papers": 187236104,
       "bank_funding_and_trust_liabilities": 3912833,
       "bank_other_liabilities": 65033537,
       "operating_cash_flow_ytd": 139475545,
@@ -991,18 +1121,22 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/MBB/manual-mbb-smoke-20261018/69eb9144555a7b9e.pdf",
-      "financial_line_items_updated_at": "2026-10-24T04:19:16+00:00",
+      "financial_line_items_updated_at": "2026-10-27T03:06:42+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
       "operating_cash_flow": 127553960,
       "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "financial_line_items_prior_values": {
-        "operating_cash_flow_ytd": 39713493
+        "operating_cash_flow_ytd": 39713493,
+        "income_tax": 2226170,
+        "bank_derivatives_and_other_financial_assets": 1070868777,
+        "bank_deposits_and_borrowings_from_credit_institutions": 1116,
+        "bank_valuable_papers": 11120
       },
       "financial_line_items_rejected_values": {},
       "income_tax": 2226170,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
-      "financial_line_items_schema_updated_at": "2026-10-25T20:14:14+00:00",
+      "financial_line_items_schema_version": "2026-10-27-note-reference-dash-guards-v6",
+      "financial_line_items_schema_updated_at": "2026-10-27T03:06:37+00:00",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "69dd5e9c4daf5ead729df256a580d0c9fe72fade0b702b42c0855a849ccf011e",
       "core_financial_extraction_evidence_attempt_count": 0,
@@ -1011,6 +1145,26 @@
           "previous_value": 39713493,
           "new_value": 139475545,
           "reason": "Reparsed from net operating cash flow after changes in operating assets and liabilities, not the subtotal before working-capital changes."
+        },
+        "income_tax": {
+          "previous_value": 2226170,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "bank_derivatives_and_other_financial_assets": {
+          "previous_value": 1070868777,
+          "new_value": 0,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "bank_deposits_and_borrowings_from_credit_institutions": {
+          "previous_value": 1116,
+          "new_value": 248017489,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "bank_valuable_papers": {
+          "previous_value": 11120,
+          "new_value": 187236104,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
         }
       }
     },
@@ -1086,18 +1240,19 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/MBB/manual-mbb-smoke-20261018/eebeda2ebc09b0d4.pdf",
-      "financial_line_items_updated_at": "2026-10-24T04:19:17+00:00",
+      "financial_line_items_updated_at": "2026-10-27T03:06:42+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
       "operating_cash_flow": -64971848,
       "operating_cash_flow_calculation": "Q1 equals YTD Q1",
       "financial_line_items_prior_values": {
-        "operating_cash_flow_ytd": 7697852
+        "operating_cash_flow_ytd": 7697852,
+        "income_tax": 1925666
       },
       "financial_line_items_rejected_values": {},
       "income_tax": 1925666,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
-      "financial_line_items_schema_updated_at": "2026-10-25T20:14:17+00:00",
+      "financial_line_items_schema_version": "2026-10-27-note-reference-dash-guards-v6",
+      "financial_line_items_schema_updated_at": "2026-10-27T03:06:37+00:00",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "5179a5c18590f3db6bcfe22d074a3c209124aeb1315b7c147dc9bfd2e245cdc0",
       "core_financial_extraction_evidence_attempt_count": 0,
@@ -1106,6 +1261,11 @@
           "previous_value": 7697852,
           "new_value": -64971848,
           "reason": "Reparsed from net operating cash flow after changes in operating assets and liabilities, not the subtotal before working-capital changes."
+        },
+        "income_tax": {
+          "previous_value": 1925666,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         }
       }
     },
@@ -1144,12 +1304,12 @@
       },
       "fixed_assets": 5752320,
       "retained_earnings": 40020849,
-      "bank_cash_on_hand": 1114,
+      "bank_cash_on_hand": 5051244,
       "bank_trading_securities": 8853359,
       "bank_investment_securities": 247070731,
       "bank_contributions_and_long_term_investments": 435970,
       "bank_other_assets": 50353641,
-      "bank_deposits_and_borrowings_from_credit_institutions": 1116,
+      "bank_deposits_and_borrowings_from_credit_institutions": 285608719,
       "bank_customer_deposits": 963815357,
       "bank_valuable_papers": 233503982,
       "bank_funding_and_trust_liabilities": 2287529,
@@ -1161,6 +1321,7 @@
         "bank_contributions_and_long_term_investments",
         "bank_customer_deposits",
         "bank_deposits_and_borrowings_from_credit_institutions",
+        "bank_derivatives_and_other_financial_assets",
         "bank_funding_and_trust_liabilities",
         "bank_investment_securities",
         "bank_other_assets",
@@ -1175,18 +1336,21 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/MBB/manual-mbb-smoke-20261018/a86757a449995326.pdf",
-      "financial_line_items_updated_at": "2026-10-24T04:19:18+00:00",
+      "financial_line_items_updated_at": "2026-10-27T03:06:42+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại.",
       "operating_cash_flow": 11770037,
       "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "financial_line_items_prior_values": {
-        "operating_cash_flow_ytd": 23267772
+        "operating_cash_flow_ytd": 23267772,
+        "income_tax": 2114399,
+        "bank_cash_on_hand": 1114,
+        "bank_deposits_and_borrowings_from_credit_institutions": 1116
       },
       "financial_line_items_rejected_values": {},
       "income_tax": 2114399,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
-      "financial_line_items_schema_updated_at": "2026-10-25T20:14:20+00:00",
+      "financial_line_items_schema_version": "2026-10-27-note-reference-dash-guards-v6",
+      "financial_line_items_schema_updated_at": "2026-10-27T03:06:42+00:00",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "07f7396faa878e1be9cd34f8998a2f700136a2289926eb582b60e2da51a8bb41",
       "core_financial_extraction_evidence_attempt_count": 0,
@@ -1200,12 +1364,29 @@
           "previous_value": 23267772,
           "new_value": -53201811,
           "reason": "Reparsed from net operating cash flow after changes in operating assets and liabilities, not the subtotal before working-capital changes."
+        },
+        "income_tax": {
+          "previous_value": 2114399,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "bank_cash_on_hand": {
+          "previous_value": 1114,
+          "new_value": 5051244,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "bank_deposits_and_borrowings_from_credit_institutions": {
+          "previous_value": 1116,
+          "new_value": 285608719,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
         }
-      }
+      },
+      "bank_derivatives_and_other_financial_assets": 0
     }
   ],
   "note": "Đã xác minh thủ công 10 kỳ hợp nhất từ Q1/2024 đến Q2/2026 theo tài liệu trong danh mục VietstockFinance. Đơn vị tiền tệ: triệu VND. Lợi nhuận lấy theo cột phát sinh trong quý, không dùng số lũy kế. ROA/ROE là tỷ suất thường niên hóa tự tính từ lợi nhuận sau thuế quý và bình quân số dư đầu/cuối quý; không phải tỷ lệ được trích nguyên văn từ báo cáo. Chưa có Q3/2026 trong danh mục tài liệu được kiểm tra tại thời điểm này.",
   "bootstrap_status": "complete_needs_manual_review",
   "bootstrap_completed_at": "2026-10-22T13:07:11+00:00",
-  "bootstrap_completion_note": "Đã lưu dữ liệu tự động; các chỉ tiêu được trích xuất cần đối chiếu trực quan. Mã này sẽ không tự tải lại."
+  "bootstrap_completion_note": "Đã lưu dữ liệu tự động; các chỉ tiêu được trích xuất cần đối chiếu trực quan. Mã này sẽ không tự tải lại.",
+  "processedAt": "2026-10-27T03:06:42+00:00"
 }
