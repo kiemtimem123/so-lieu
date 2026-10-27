@@ -1677,6 +1677,17 @@
         }
       }
 
+      if (key === 'cash_ending') {
+        const beginning = resolveStatementValue(item, 'cash_beginning', rows, ticker);
+        const change = resolveStatementValue(item, 'net_cash_change', rows, ticker);
+        if (validNumber(beginning.value) && validNumber(change.value)) {
+          return {
+            value: Number(beginning.value) + Number(change.value),
+            formula: 'Tiền cuối kỳ = tiền đầu kỳ + lưu chuyển tiền thuần trong kỳ; chỉ tính khi cả hai đầu vào cùng kỳ có.'
+          };
+        }
+      }
+
       if ((key === 'roa' || key === 'roe')) {
         const basisText = (String(item.quarter_profit_basis || '') + ' ' + String(item.report_type || '')).toLowerCase();
         const quarterSpecific = /cột phát sinh(?: riêng)? (?:trong )?quý|phát sinh riêng của quý|quý được trích xuất|cột phát sinh riêng/.test(basisText);
