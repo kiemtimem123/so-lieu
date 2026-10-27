@@ -1909,7 +1909,10 @@ def repair_tcx_2026_source_rows(items,symbol):
   if not archive_rel:
    return {}
   sidecar=ROOT/(archive_rel+".extracted.json")
-  payload=load_json(sidecar,{})
+  try:
+   payload=json.loads(sidecar.read_text(encoding="utf-8"))
+  except (OSError,json.JSONDecodeError):
+   payload={}
   if not isinstance(payload,dict):
    return {}
   documents=[]
