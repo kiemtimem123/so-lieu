@@ -1606,6 +1606,33 @@
         }
       }
 
+      if (key === 'cash_beginning') {
+        const periodMatch = String(item.period || '').match(/^(\d{4})-Q([1-4])$/);
+        if (periodMatch) {
+          const year = Number(periodMatch[1]), quarter = Number(periodMatch[2]);
+          if (quarter === 1 &&
+              String(item.cashflow_period_basis || '').toLowerCase() === 'year_to_date' &&
+              num('cash_beginning_reported_ytd') !== null) {
+            return {
+              value: num('cash_beginning_reported_ytd'),
+              formula: 'Tiền đầu kỳ quý I lấy từ số dư đầu kỳ được ghi trong BCTC lũy kế.'
+            };
+          }
+          if (quarter > 1) {
+            const prior = rows.find(row => row.period === year + '-Q' + (quarter - 1));
+            if (prior && !hasUnverifiedReportScope(prior) &&
+                String(prior.verification_status || '').toLowerCase() !== 'manual_review_required_pending_extraction' &&
+                String(prior.core_financial_extraction_status || '').toLowerCase() !== 'manual_review_required_pending_extraction' &&
+                validNumber(prior.cash_ending)) {
+              return {
+                value: Number(prior.cash_ending),
+                formula: 'Tiền đầu quý được đối chiếu bằng tiền và tương đương tiền cuối quý liền trước trong cùng phạm vi báo cáo.'
+              };
+            }
+          }
+        }
+      }
+
       if (key === 'net_cash_change') {
         const flowKeys = ['operating_cash_flow','investing_cash_flow','financing_cash_flow','foreign_exchange_effect'];
         const flows = flowKeys.map(field => resolveStatementValue(item, field, rows, ticker));
