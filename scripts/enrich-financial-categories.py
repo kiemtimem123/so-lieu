@@ -2107,6 +2107,126 @@ def repair_tcx_2026_source_rows(items,symbol):
   else:
    print("TCX 2024-Q2: source-backed income repair skipped; required visual-source tokens did not all match.")
 
+ # Recover TCX Q1/Q2 2024 cash flows from the exact B03a-CTCK YTD totals.
+ # In the older OCR snapshot, the Q1 operating flow was mistakenly populated
+ # with PBT and the opening cash was sometimes read from the client-custody
+ # section. Keep the YTD values separately and derive standalone Q2 by deltas.
+ cash_2024_specs={
+  "2024-Q1":{
+   "evidence":{
+    11:["4.137.298.348.768","2.921.383.874"],
+    12:["1.635.901.377.580","2.504.318.355.062","4.582.180.994.188","2.077.862.639.126"],
+   },
+   "values":{
+    "operating_cash_flow_ytd":-4137298.348768,
+    "investing_cash_flow_ytd":-2921.383874,
+    "financing_cash_flow_ytd":1635901.377580,
+    "net_cash_change_ytd":-2504318.355062,
+    "operating_cash_flow":-4137298.348768,
+    "investing_cash_flow":-2921.383874,
+    "financing_cash_flow":1635901.377580,
+    "net_cash_change":-2504318.355062,
+    "capital_expenditure_ytd":-2921.383874,
+    "capital_expenditure":-2921.383874,
+    "cash_beginning_reported_ytd":4582180.994188,
+    "cash_beginning":4582180.994188,
+    "cash_ending":2077862.639126,
+    "cash_and_equivalents":2077862.639126,
+   },
+   "pages":[11,12],
+  },
+  "2024-Q2":{
+   "evidence":{
+    12:["6.172.085.602.557","6.003.479.681"],
+    13:["4.371.381.367.293","1.806.707.714.945","4.582.180.994.188","2.775.473.279.243"],
+   },
+   "values":{
+    "operating_cash_flow_ytd":-6172085.602557,
+    "investing_cash_flow_ytd":-6003.479681,
+    "financing_cash_flow_ytd":4371381.367293,
+    "net_cash_change_ytd":-1806707.714945,
+    "operating_cash_flow":-2034787.253789,
+    "investing_cash_flow":-3082.095807,
+    "financing_cash_flow":2735479.989713,
+    "net_cash_change":697610.640117,
+    "capital_expenditure_ytd":-6003.479681,
+    "capital_expenditure":-3082.095807,
+    "cash_beginning_reported_ytd":4582180.994188,
+    "cash_beginning":2077862.639126,
+    "cash_ending":2775473.279243,
+    "cash_and_equivalents":2775473.279243,
+   },
+   "pages":[12,13],
+  },
+ }
+ for period,spec in cash_2024_specs.items():
+  item=by_period.get(period)
+  if not isinstance(item,dict):
+   continue
+  archived=archived_pages(item)
+  evidence_ok=bool(archived) and all(
+   all(token in archived.get(page,"") for token in tokens)
+   for page,tokens in spec["evidence"].items()
+  )
+  if not evidence_ok:
+   print(f"TCX {period}: source-backed cash-flow repair skipped; exact B03a-CTCK tokens missing.")
+   continue
+  for field,value in spec["values"].items():
+   record_value(
+    item,field,value,
+    "Source-backed correction from the archived VietstockFinance B03a-CTCK cash-flow statement; "
+    f"{period}, PDF pages {','.join(map(str,spec['pages']))}. YTD reported values retained separately; standalone-quarter values are normalized from adjacent periods."
+   )
+  record_value(item,"cashflow_period_basis","year_to_date",
+   "The archived B03a-CTCK reports cash flows cumulatively from 1 January.")
+  if period=="2024-Q2":
+   item["cash_beginning_calculation"]="Số dư đầu quý lấy từ số dư tiền cuối Q1/2024 theo B03a-CTCK."
+  else:
+   item["cash_beginning_calculation"]="Số dư tiền đầu năm lấy từ B03a-CTCK; không lấy số dư tiền ký quỹ của khách hàng."
+  item["cash_ending_calculation"]="Số dư tiền và tương đương tiền cuối kỳ lấy trực tiếp từ B03a-CTCK."
+  detail_fields=set(item.get("financial_line_items_extracted_fields") or [])
+  detail_fields.update(spec["values"])
+  detail_fields.add("cashflow_period_basis")
+  item["financial_line_items_extracted_fields"]=sorted(detail_fields)
+  rejected_fields=set(item.get("financial_line_items_rejected_fields") or [])
+  rejected_fields.difference_update(spec["values"])
+  item["financial_line_items_rejected_fields"]=sorted(rejected_fields)
+  rejected_values=item.get("financial_line_items_rejected_values")
+  if isinstance(rejected_values,dict):
+   for field in spec["values"]:
+    rejected_values.pop(field,None)
+  flow_check={
+   "source_policy":"VietstockFinance document catalog and linked PDF only",
+   "source_index_url":item.get("source_index_url"),
+   "source_document_url":item.get("source_url"),
+   "source_archive_file":item.get("source_archive_file"),
+   "report_form":"B03a-CTCK",
+   "report_scope":"standalone securities-company report; not consolidated",
+   "period":period,
+   "pdf_pages":spec["pages"],
+   "basis":"year_to_date_report_normalized_to_quarter",
+   "source_tokens":{str(page):tokens for page,tokens in spec["evidence"].items()},
+   "quarter_flows_sum_to_net_cash_change":True,
+   "cash_balance_bridge_reconciles":True,
+   "note":"Q1 operating cash flow is read from row 60, not row 01 (profit before tax). Q2 quarter flows are differences between Q2 YTD and Q1 YTD. Cash balances refer to the company, not customer-custody funds."
+  }
+  if item.get("cashflow_source_reconciliation")!=flow_check:
+   item["cashflow_source_reconciliation"]=flow_check
+   changed=True; field_count+=1
+  note=(
+   f"Đã đối chiếu trực quan B03a-CTCK VietstockFinance {period}, PDF trang "
+   f"{','.join(map(str,spec['pages']))}: khôi phục lưu chuyển tiền kinh doanh/đầu tư/tài chính, biến động tiền thuần và số dư tiền của chính công ty; "
+   "Q2 là chênh lệch số lũy kế giữa Q2 và Q1. Không dùng tiền ký quỹ của khách hàng."
+  )
+  old_note=str(item.get("financial_line_items_note") or "")
+  if note not in old_note:
+   item["financial_line_items_note"]=(old_note+" "+note).strip()
+   changed=True; field_count+=1
+  item["financial_line_items_status"]="auto_extracted_pending_visual_review"
+  item["financial_line_items_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
+  changed=True
+  quarter_count+=1
+
  cash_specs={
   "2026-Q1":{
    "evidence":[
