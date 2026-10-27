@@ -1020,15 +1020,33 @@
             })
             .map(([key]) => key)
         );
+        const extractedDetailFields = new Set(
+          Array.isArray(item?.financial_line_items_extracted_fields)
+            ? item.financial_line_items_extracted_fields.map(String)
+            : []
+        );
+        const rejectedDetailFields = new Set(
+          Array.isArray(item?.financial_line_items_rejected_fields)
+            ? item.financial_line_items_rejected_fields.map(String)
+            : []
+        );
 
         Object.keys(safe).forEach(key => {
           if (!scopeUnverifiedMetricField.test(key) || !validNumber(safe[key])) return;
-          // Unconfirmed report scope is a hard block: never mix separate/unclear
-          // statements into the consolidated series. For a known-scope report
-          // awaiting row-level reconciliation, retain only explicitly verified
-          // fields and fields with a recorded correction + reason. Keep the
-          // row marked for review; do not claim that the entire row is verified.
-          if (!scopeBlocked && (manuallyVerifiedFields.has(key) || explicitCorrectionFields.has(key))) return;
+          // An unconfirmed consolidation/reporting scope remains a hard block.
+          // For a known-scope report awaiting visual review, retain values that
+          // the VietstockFinance PDF extractor explicitly matched to statement
+          // rows, except fields marked rejected. These candidates remain clearly
+          // labelled for review; only manual verification/corrections are
+          // described as verified in the notes. This lets the income/cash-flow
+          // tabs show source-extracted data without inventing missing values.
+          const sourceExtractedAndNotRejected =
+            extractedDetailFields.has(key) && !rejectedDetailFields.has(key);
+          if (!scopeBlocked && (
+            manuallyVerifiedFields.has(key) ||
+            explicitCorrectionFields.has(key) ||
+            sourceExtractedAndNotRejected
+          )) return;
           safe[key] = null;
         });
         if (scopeBlocked) {
