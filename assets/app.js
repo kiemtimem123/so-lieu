@@ -33,10 +33,15 @@
   // missing JSON file. Validate the body, not only the status/content-type,
   // before accepting a same-origin snapshot. Then try two public repo mirrors.
   async function fetchDataFile(filename) {
+    // Always prefer the GitHub snapshot as the source of truth. A fixed cache
+    // key allowed jsDelivr/Hostinger to keep serving an older financial JSON
+    // after the repository had been corrected.
+    const cacheKey = Date.now().toString(36);
+    const encoded = encodeURIComponent(filename);
     const candidates = [
-      { url: 'data/' + filename + '?v=20261027', label: 'website' },
-      { url: DATA_CDN_BASE + encodeURIComponent(filename) + '?v=20261027', label: 'GitHub CDN' },
-      { url: DATA_FALLBACK_BASE + encodeURIComponent(filename) + '?v=20261027', label: 'GitHub Raw' }
+      { url: DATA_CDN_BASE + encoded + '?v=' + cacheKey, label: 'GitHub CDN' },
+      { url: DATA_FALLBACK_BASE + encoded + '?v=' + cacheKey, label: 'GitHub Raw' },
+      { url: 'data/' + encoded + '?v=' + cacheKey, label: 'website fallback' }
     ];
     const failures = [];
     for (const candidate of candidates) {
