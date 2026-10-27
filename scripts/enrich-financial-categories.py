@@ -2502,7 +2502,7 @@ def repair_tcx_2026_source_rows(items,symbol):
     "broker_underwriting_revenue":307146.234263,
     "broker_custody_revenue":13077.896644,
     "broker_financial_advisory_revenue":45835.000002,
-    "broker_other_operating_income":1177.730137,
+    "broker_other_operating_income":1117.730137,
     "broker_fvtpl_loss":20819.968064,
     "broker_total_operating_expenses":140001.708018,
     "broker_operating_expenses":140001.708018,
@@ -2566,7 +2566,8 @@ def repair_tcx_2026_source_rows(items,symbol):
     "manually_visual_reviewed":True,
     "exact_source_vnd":{field:int(round(value*1000000)) for field,value in q3_income_values.items()},
     "source_tokens":{str(page):tokens for page,tokens in q3_income_evidence.items()},
-    "note":"Revenue and expense rows are from the Quý 3 column on page 7; financial income/expense and operating profit from page 8; tax and after-tax profit from page 9. Combined row 24 is included only in total operating expenses, not relabelled as pure borrowing expense."
+    "derived_residual_fields":{"broker_other_operating_income":{"formula":"reported total operating revenue minus the other eight individually reported operating revenue rows","value_million_vnd":1117.730137,"source_page":9}},
+    "note":"Revenue and expense rows are from the Quý 3 column on page 7; financial income/expense and operating profit from page 8; tax and after-tax profit from page 9. The other-operating-income amount is reconciled as the residual to reported total operating revenue after the other eight rows are matched. Combined row 24 is included only in total operating expenses, not relabelled as pure borrowing expense."
    }
    if q3_2024.get("financial_line_items_source_row_reconciliation")!=q3_income_meta:
     q3_2024["financial_line_items_source_row_reconciliation"]=q3_income_meta
