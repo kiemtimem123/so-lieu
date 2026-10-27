@@ -9,6 +9,10 @@ on:
       - "assets/styles.css"
       - "data/financials-*.json"
       - ".github/workflows/package-hostinger-stock-dashboard.yml"
+  # Refresh the upload bundle periodically too: GitHub Actions commits made
+  # with GITHUB_TOKEN do not start downstream push workflows.
+  schedule:
+    - cron: "*/30 * * * *"
   workflow_dispatch:
 
 permissions:
