@@ -1082,7 +1082,7 @@
         try {
           response = await fetch(candidate.url, {
             cache: 'no-store',
-            headers: { 'Cache-Control': 'no-cache' },
+            headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' },
             signal: controller.signal
           });
         } finally {
@@ -1095,46 +1095,73 @@
         if (!snapshot || snapshot.symbol !== ticker || !Array.isArray(snapshot.items)) {
           throw new Error('Snapshot không đúng schema (' + candidate.label + ')');
         }
-        // Keep valid quarter records even when the source PDF link is temporarily
-        // absent; the period and available verified figures must still render.
         const rows = snapshot.items.filter(item => item && validPeriod(item.period));
         if (!rows.length) throw new Error('Snapshot chưa có kỳ báo cáo hợp lệ (' + candidate.label + ')');
-        return { ...snapshot, items: rows, _loadedFrom: candidate.label };
+
+        // Score each valid source by the latest trustworthy file/row timestamp.
+        // That prevents a valid-but-old Hostinger/edge-cache JSON from masking
+        // a newer snapshot that is already available elsewhere.
+        const timestamps = [snapshot.processedAt, snapshot.fetchedAt]
+          .concat(rows.flatMap(item => [
+            item.financial_line_items_updated_at,
+            item.core_financial_extraction_updated_at,
+            item.source_validation?.reviewed_at,
+            item.visual_review?.checked_at
+          ]))
+          .map(value => Date.parse(String(value || '')))
+          .filter(value => Number.isFinite(value) && value > 0);
+        const latestTimestamp = timestamps.length ? Math.max(...timestamps) : 0;
+        return {
+          ...snapshot,
+          items: rows,
+          _loadedFrom: candidate.label,
+          _loadedTimestamp: latestTimestamp,
+          _sourcePriority: candidate.priority
+        };
       };
 
-      // GitHub holds the workflow-updated snapshots. Load it first so a slow
-      // Hostinger path cannot keep all figures and charts in the initial loading state.
-      const cacheKey = Date.now();
+      const cacheKey = Date.now().toString(36);
+      const encoded = encodeURIComponent(filename);
       const candidates = [
         {
           label: 'GitHub Raw',
-          // Use the current main-branch file first; query cache-busting and
-          // no-store prevent a stale CDN snapshot from masking a correction.
-          url: DATA_FALLBACK_BASE + encodeURIComponent(filename) + '?v=' + cacheKey,
-          timeoutMs: 7000
-        },
-        {
-          label: 'website',
-          // The Hostinger bundle is a second source of truth when it has the
-          // latest JSON but the external raw endpoint is unavailable.
-          url: 'data/' + filename + '?v=' + cacheKey,
-          timeoutMs: 3500
+          priority: 0,
+          url: DATA_FALLBACK_BASE + encoded + '?v=' + cacheKey,
+          timeoutMs: 8000
         },
         {
           label: 'GitHub CDN',
-          url: 'https://cdn.jsdelivr.net/gh/kiemtimem123/so-lieu@main/data/' + encodeURIComponent(filename) + '?v=' + cacheKey,
-          timeoutMs: 7000
+          priority: 1,
+          url: DATA_CDN_BASE + encoded + '?v=' + cacheKey,
+          timeoutMs: 8000
+        },
+        {
+          label: 'website',
+          priority: 2,
+          url: 'data/' + encoded + '?v=' + cacheKey,
+          timeoutMs: 5000
         }
       ];
-      const errors = [];
-      for (const candidate of candidates) {
+
+      // Check sources concurrently and choose the newest valid JSON instead of
+      // returning the first valid response, which may be stale but well-formed.
+      const results = await Promise.all(candidates.map(async candidate => {
         try {
-          return await fetchCandidate(candidate);
+          return { ok: true, snapshot: await fetchCandidate(candidate) };
         } catch (error) {
-          errors.push(error?.message || String(error));
+          return { ok: false, message: candidate.label + ': ' + (error?.message || String(error)) };
         }
+      }));
+      const valid = results.filter(result => result.ok).map(result => result.snapshot);
+      if (!valid.length) {
+        throw new Error(results.filter(result => !result.ok).map(result => result.message).join('; ') ||
+          'Không tải được snapshot từ GitHub hoặc website');
       }
-      throw new Error(errors.join('; ') || 'Không tải được snapshot từ GitHub hoặc website');
+      valid.sort((a, b) =>
+        (b._loadedTimestamp - a._loadedTimestamp) ||
+        (a._sourcePriority - b._sourcePriority)
+      );
+      return valid[0];
     }
 
     function drawChart(key, canvasId, noteId, config) {
@@ -1892,12 +1919,15 @@
       const populated = sourceRows.filter(hasNumericFinancialData).length;
       const waiting = sourceRows.filter(item => !hasNumericFinancialData(item)).length;
       const review = sourceRows.filter(item => hasNumericFinancialData(item) && verificationBadge(item).kind !== 'ready').length;
-      const sourceLabel = String(snapshot?._loadedFrom || '').startsWith('GitHub') ? 'GitHub (nguồn đồng bộ)' : 'website dự phòng';
+      const sourceLabel = String(snapshot?._loadedFrom || '').startsWith('GitHub') ? snapshot._loadedFrom : 'website dự phòng';
+      const lastDataTimestamp = Number(snapshot?._loadedTimestamp) > 0
+        ? new Date(Number(snapshot._loadedTimestamp)).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
+        : (snapshot?.processedAt || snapshot?.fetchedAt ? dateFmt(snapshot.processedAt || snapshot.fetchedAt) : 'chưa ghi nhận');
       if (status) {
         status.textContent = (snapshot?.sourceName || 'VietstockFinance snapshot') +
           ' · ' + populated + '/' + sourceRows.length + ' kỳ có số liệu · ' + waiting + ' kỳ đang chờ trích xuất · ' +
-          review + ' kỳ có số liệu cần rà soát · Nạp từ: ' + sourceLabel +
-          ' · Đồng bộ: ' + (snapshot?.fetchedAt ? dateFmt(snapshot.fetchedAt) : 'chưa ghi nhận') +
+          review + ' kỳ có số liệu cần rà soát · Nguồn thực tế: ' + sourceLabel +
+          ' · Bản dữ liệu mới nhất: ' + lastDataTimestamp +
           (tableError ? ' · Bảng chi tiết gặp lỗi; thống kê/biểu đồ vẫn được hiển thị.' : '') + '.';
       }
       if (loadSummary) loadSummary.textContent = 'Mã ' + ticker + ' · ' + sourceRows.length + ' kỳ có liên kết nguồn · Chế độ ' +
