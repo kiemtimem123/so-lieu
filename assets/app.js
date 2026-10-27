@@ -1625,8 +1625,15 @@
           }
           const priorPeriod = year + '-Q' + (quarter - 1);
           const prior = rows.find(row => row.period === priorPeriod);
+          const priorCashflowBasis = String(prior?.cashflow_period_basis || '').toLowerCase();
+          // A Q1 statement may be stored as quarterly_reported rather than YTD.
+          // Since Q1 quarter flow equals Jan–Mar YTD, it is a valid baseline for
+          // deriving Q2 from the H1 statement, provided the Q1 source field exists.
+          const priorQ1IsEquivalentToYtd = quarter === 2 &&
+            prior?.period === year + '-Q1' &&
+            priorCashflowBasis === 'quarterly_reported';
           if (prior &&
-              String(prior.cashflow_period_basis || '').toLowerCase() === 'year_to_date' &&
+              (priorCashflowBasis === 'year_to_date' || priorQ1IsEquivalentToYtd) &&
               !hasUnverifiedReportScope(prior) &&
               String(prior.verification_status || '').toLowerCase() !== 'manual_review_required_pending_extraction' &&
               String(prior.core_financial_extraction_status || '').toLowerCase() !== 'manual_review_required_pending_extraction' &&
