@@ -1885,7 +1885,13 @@
           return text !== '' && text !== '—' && text !== '-';
         }));
       const hasRenderablePeriods = Array.isArray(tableResult?.periods) && tableResult.periods.length > 0;
-      if ((!hasVisibleBodyRows || !hasVisibleNumericCells || !hasRenderablePeriods) && sourceRows.some(hasNumericFinancialData)) {
+      // The compact core-metric fallback belongs only to the balance-sheet
+      // tab. Previously, any tab with legitimately blank detailed fields (most
+      // commonly cash flow or industry-specific rows) was overwritten by the
+      // same seven core metrics, making every tab look identical.
+      const shouldUseCoreFallback = activeStatement === 'balance' &&
+        (!hasVisibleBodyRows || !hasVisibleNumericCells || !hasRenderablePeriods || Boolean(tableError));
+      if (shouldUseCoreFallback && sourceRows.some(hasNumericFinancialData)) {
         const fallbackRows = sourceRows.slice().sort((a, b) => b.period.localeCompare(a.period)).slice(0, statementPageSize);
         if (tableWrap) tableWrap.classList.remove('hidden');
         if (stateBox) stateBox.classList.add('hidden');
