@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-27T11:10:50Z",
+  "updatedAt": "2026-10-27T14:43:11.758Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -39,34 +39,40 @@
     "VCK",
     "MBB"
   ],
-  "lastCompletedSymbol": "VND",
+  "lastCompletedSymbol": "NLG",
   "activeSymbol": null,
-  "resumeSymbolHint": "SHS",
+  "resumeSymbolHint": "BSR",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
-    "symbol": "VND",
+    "symbol": "NLG",
     "status": "automated_processing_complete",
     "completeForAutomation": true,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-27T11:10:50Z",
-    "workflowRunId": "40494091788",
-    "workflowRunNumber": 2043,
-    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/40494091788",
+    "processedAt": "2026-10-27T14:43:11.758Z",
     "changedPaths": [
-      "data/financials-VND.json"
+      "data/financials-NLG.json",
+      "assets/app.js",
+      "index.html"
     ],
-    "periodCount": 11,
+    "periodCount": 10,
     "firstQuarter": "2024-Q1",
-    "lastQuarter": "2026-Q3",
+    "lastQuarter": "2026-Q2",
     "pendingCorePeriods": [],
-    "terminalManualReviewPeriods": [
-      "2026-Q3"
-    ],
+    "terminalManualReviewPeriods": [],
     "pendingDetailPeriods": [],
     "staleDetailSchemaPeriods": [],
     "statementPagesPending": false,
     "skipUnconfirmedAutomation": false,
-    "skipUnconfirmedReason": null
+    "skipUnconfirmedReason": null,
+    "sourceUpdateKind": "partial_vietstock_source_reconciliation",
+    "sourceUpdatePeriods": [
+      "2026-Q1",
+      "2026-Q2"
+    ],
+    "sourceUpdateNotes": [
+      "NLG source reconciliation: Q1/Q2 2026 cash-flow aggregates and Q1 income-field mappings refreshed from VietstockFinance-linked PDFs. Q2 PDF pages were visually checked; Q1 operating_cash_flow remains blank because the OCR line differs from reported net cash flow by VND 100,000,000,000. Q1/Q2 opening-cash discrepancy of about VND 33,084.7 million is retained as a source anomaly."
+    ],
+    "resumeSymbolHint": "BSR"
   },
   "symbolStates": {
     "MBB": {
@@ -673,8 +679,14 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-10-25T20:24:54Z",
-      "snapshotFetchedAt": "2026-10-19T16:19:38.364Z"
+      "updatedAt": "2026-10-27T14:43:11.758Z",
+      "snapshotFetchedAt": "2026-10-19T16:19:38.364Z",
+      "sourceUpdatePeriods": [
+        "2026-Q1",
+        "2026-Q2"
+      ],
+      "sourceUpdateNote": "NLG source reconciliation: Q1/Q2 2026 cash-flow aggregates and Q1 income-field mappings refreshed from VietstockFinance-linked PDFs. Q2 PDF pages were visually checked; Q1 operating_cash_flow remains blank because the OCR line differs from reported net cash flow by VND 100,000,000,000. Q1/Q2 opening-cash discrepancy of about VND 33,084.7 million is retained as a source anomaly.",
+      "sourceUpdateCommit": "ebc7828ae8eaf98d680861a1b6669ea4aa91cf81"
     },
     "BSR": {
       "status": "automated_processing_complete",
@@ -726,14 +738,6 @@
     }
   },
   "progressHistory": [
-    {
-      "symbol": "SHS",
-      "status": "terminal_needs_manual_review",
-      "completeForAutomation": true,
-      "processedAt": "2026-10-27T09:42:12Z",
-      "workflowRunId": "40482675941",
-      "changedPaths": []
-    },
     {
       "symbol": "SHS",
       "status": "terminal_needs_manual_review",
@@ -1147,6 +1151,22 @@
       "changedPaths": [
         "data/financials-VND.json"
       ]
+    },
+    {
+      "symbol": "NLG",
+      "status": "automated_processing_complete",
+      "completeForAutomation": true,
+      "processedAt": "2026-10-27T14:43:11.758Z",
+      "changedPaths": [
+        "data/financials-NLG.json",
+        "assets/app.js",
+        "index.html"
+      ],
+      "sourceUpdatePeriods": [
+        "2026-Q1",
+        "2026-Q2"
+      ],
+      "note": "NLG source reconciliation: Q1/Q2 2026 cash-flow aggregates and Q1 income-field mappings refreshed from VietstockFinance-linked PDFs. Q2 PDF pages were visually checked; Q1 operating_cash_flow remains blank because the OCR line differs from reported net cash flow by VND 100,000,000,000. Q1/Q2 opening-cash discrepancy of about VND 33,084.7 million is retained as a source anomaly."
     }
   ],
   "currentRun": {
