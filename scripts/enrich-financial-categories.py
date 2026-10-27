@@ -1672,7 +1672,6 @@ def reconcile_detail_items(items,symbol):
     previous_period=f"{year}-Q{quarter-1}" if quarter>1 else f"{year-1}-Q4"
     previous_item=period_items.get(previous_period)
     previous_rejected=set(previous_item.get("financial_line_items_rejected_fields") or []) if isinstance(previous_item,dict) else set()
-    previous_rejected_values=previous_item.get("financial_line_items_rejected_values") or {} if isinstance(previous_item,dict) else {}
 
     # Q1 equals its own YTD total. Q2-Q4 equal current YTD less prior-quarter YTD.
     for quarter_field,ytd_field in CASHFLOW_QUARTER_FROM_YTD.items():
@@ -1680,7 +1679,6 @@ def reconcile_detail_items(items,symbol):
      if (
       not isinstance(current_ytd,(int,float))
       or ytd_field in rejected
-      or ytd_field in rejected_values
      ):
       continue
      if quarter==1:
@@ -1690,7 +1688,6 @@ def reconcile_detail_items(items,symbol):
       if (
        not isinstance(prior_ytd,(int,float))
        or ytd_field in previous_rejected
-       or ytd_field in previous_rejected_values
       ):
        continue
       expected=int(round(current_ytd-prior_ytd))
@@ -2126,10 +2123,37 @@ def enrich_snapshot(path):
    continue
   suppressed=set(item.get("financial_line_items_rejected_fields") or [])
   for key in list(found):
-   if not key.startswith("__") and key in suppressed:
+   # Re-test previously rejected rows against source text when the parser schema changes.
+   if not key.startswith("__") and key in suppressed and not detail_schema_migration:
     found.pop(key,None)
   if not found: continue
   found,rejected=sane_fields(item,found,symbol)
+  # Clear old rejection flags only when the new parser re-identifies a numeric row
+  # and the source scope is not explicitly blocked.
+  if detail_schema_migration:
+   scope_info=item.get("source_validation") if isinstance(item.get("source_validation"),dict) else {}
+   if scope_info.get("scope_validation_required") is not True:
+    old_rejections=set(item.get("financial_line_items_rejected_fields") or [])
+    rejected_now=set(rejected)
+    accepted_now={
+     key for key,value in found.items()
+     if not key.startswith("__") and isinstance(value,(int,float))
+     and not isinstance(value,bool) and key not in rejected_now
+    }
+    recovered=old_rejections & accepted_now
+    if recovered:
+     item["financial_line_items_rejected_fields"]=sorted(old_rejections-recovered)
+     rejection_values=item.setdefault("financial_line_items_rejected_values",{})
+     prior_values=item.setdefault("financial_line_items_prior_values",{})
+     for field in recovered:
+      record=rejection_values.pop(field,None)
+      if isinstance(record,dict) and isinstance(record.get("value"),(int,float)):
+       prior_values.setdefault(field,record["value"])
+     item["financial_line_items_rejected_recovered_fields"]=sorted(
+      set(item.get("financial_line_items_rejected_recovered_fields") or [])|recovered
+     )
+     changed=True
+     field_count+=len(recovered)
   rejection_changed=False
   if rejected:
    print(f"{path.name if 'path' in locals() else symbol} {item.get('period')}: skipped implausible extracted values {','.join(rejected)}")
