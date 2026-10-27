@@ -2553,7 +2553,7 @@ def repair_tcx_2026_source_rows(items,symbol):
     rejected_values_before=dict(q3_rejected_values)
     for field in q3_income_values:
      q3_rejected_values.pop(field,None)
-    if q3_rejected_values!=rejected_values_before:
+    if rejected_values!=rejected_values_before:
      changed=True; field_count+=1
    q3_income_meta={
     "source_policy":"VietstockFinance document catalog and linked PDF only",
