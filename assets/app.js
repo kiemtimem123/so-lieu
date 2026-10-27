@@ -1238,7 +1238,7 @@
 
     let activeStatement = 'balance';
     let periodOffset = 0;
-    const statementPageSize = 9;
+    const statementPageSize = 12;
     const statementHead = $('#stockStatementHead');
     const statementHint = $('#stockStatementHint');
     const peerOptions = $('#stockPeerOptions');
