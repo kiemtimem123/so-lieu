@@ -17,7 +17,7 @@ REPORT_QUEUE = ROOT / "config" / "report-queue.json"
 _QUEUE_ARCHIVE_BY_URL = None
 # The checkpoint helper uses the same detail schema so completed extraction
 # does not loop forever on quarters already reprocessed with the note-code guards.
-DETAIL_SCHEMA_VERSION = "2026-10-27-other-statements-source-fields-v10"
+DETAIL_SCHEMA_VERSION = "2026-10-27-other-statements-source-fields-v11"
 CORE_EXTRACTION_PARSER_VERSION = "2026-10-23-ngan-vnd-unit-v2-statement-rows"
 NUMBER_RE = re.compile(r"(?<![A-Za-z0-9])\(?-?\d[\d.,]*\d?\)?")
 BANKS = {"MBB", "ACB", "SHB", "TCB", "TPB", "VPB", "STB", "VCB", "CTG", "BID"}
@@ -1509,6 +1509,76 @@ def reconcile_detail_items(items,symbol):
        period_changed=True; changed_fields+=1
      notes.append("Lợi nhuận trước dự phòng và chi phí dự phòng OCR không khớp lợi nhuận trước thuế; hai chỉ tiêu chi tiết được ẩn.")
 
+  # Recover missing bank subtotals only from matching figures in the same
+  # reported quarter. Never derive when any participating field is unquarterized,
+  # explicitly rejected, or the source report scope is still flagged for review.
+  if symbol in BANKS:
+   unquarterized=set(item.get("financial_line_items_unquarterized_fields") or [])
+   source_validation=item.get("source_validation") if isinstance(item.get("source_validation"),dict) else {}
+   scope_blocked=source_validation.get("scope_validation_required") is True
+   interest_income=item.get("bank_interest_income")
+   interest_expense=item.get("bank_interest_expense")
+   net_interest=item.get("bank_net_interest_income")
+   if not scope_blocked:
+    if (
+     isinstance(interest_income,(int,float))
+     and isinstance(net_interest,(int,float))
+     and not isinstance(interest_expense,(int,float))
+     and not ({"bank_interest_income","bank_net_interest_income","bank_interest_expense"} & unquarterized)
+     and not ({"bank_interest_income","bank_net_interest_income"} & rejected)
+    ):
+     derived_expense=int(round(interest_income-net_interest))
+     if derived_expense>=0:
+      set_derived(
+       "bank_interest_expense",-derived_expense,
+       "Chi phí lãi = −(thu nhập lãi − thu nhập lãi thuần) theo ba dòng cùng kỳ của BCTC ngân hàng.",
+       "derived missing interest expense from same-quarter reported interest income and net interest income",
+      )
+    elif (
+     isinstance(interest_expense,(int,float))
+     and isinstance(net_interest,(int,float))
+     and not isinstance(interest_income,(int,float))
+     and not ({"bank_interest_income","bank_net_interest_income","bank_interest_expense"} & unquarterized)
+     and not ({"bank_net_interest_income","bank_interest_expense"} & rejected)
+    ):
+     derived_income=int(round(net_interest+abs(interest_expense)))
+     if derived_income>=0:
+      set_derived(
+       "bank_interest_income",derived_income,
+       "Thu nhập lãi = thu nhập lãi thuần + |chi phí lãi| theo ba dòng cùng kỳ của BCTC ngân hàng.",
+       "derived missing gross interest income from same-quarter reported net interest income and interest expense",
+      )
+
+    ppop=item.get("bank_pre_provision_operating_profit")
+    generic_op=item.get("operating_profit")
+    if (
+     isinstance(ppop,(int,float))
+     and not isinstance(generic_op,(int,float))
+     and "bank_pre_provision_operating_profit" not in unquarterized
+     and "bank_pre_provision_operating_profit" not in rejected
+    ):
+     set_derived(
+      "operating_profit",int(round(ppop)),
+      "Lợi nhuận hoạt động chung của ngân hàng lấy từ dòng lợi nhuận thuần trước chi phí dự phòng rủi ro tín dụng trong cùng BCTC.",
+      "mirrored the reported bank pre-provision operating-profit subtotal into the generic operating-profit metric",
+     )
+
+    consolidated_net=item.get("net_profit")
+    parent_net=item.get("net_profit_attributable")
+    minority=item.get("bank_non_controlling_profit")
+    if (
+     isinstance(consolidated_net,(int,float))
+     and isinstance(parent_net,(int,float))
+     and not isinstance(minority,(int,float))
+     and not ({"net_profit","net_profit_attributable","bank_non_controlling_profit"} & unquarterized)
+     and not ({"net_profit","net_profit_attributable"} & rejected)
+    ):
+     set_derived(
+      "bank_non_controlling_profit",int(round(consolidated_net-parent_net)),
+      "Lợi nhuận cổ đông không kiểm soát = lợi nhuận sau thuế hợp nhất − lợi nhuận sau thuế thuộc cổ đông ngân hàng mẹ.",
+      "derived non-controlling profit from consolidated net profit minus net profit attributable to parent",
+     )
+
   # Net revenue = gross profit + absolute cost of goods sold. If OCR garbles
   # the revenue digit(s), reconstruct from the two corresponding statement
   # rows and record the derivation instead of retaining a conflicting value.
@@ -1593,105 +1663,140 @@ def reconcile_detail_items(items,symbol):
      fields.discard(key)
      period_changed=True; changed_fields+=1
 
-  # A YTD cash-flow statement reports the opening cash at the start of the
-  # year, while the dashboard displays standalone quarters. For Q2-Q4, normalize
-  # opening cash to the prior quarter's reported close before validating the
-  # current quarter change. Some older runs wrongly withheld the source-reported
-  # closing balance after comparing it to the YTD opening balance.
+  # Normalize YTD statement rows to standalone-quarter values before reconciliation.
+  # Do not use values that remain explicitly rejected by source/scope validation.
   if str(item.get("cashflow_period_basis") or "")=="year_to_date":
-   match=re.fullmatch(r"(20\d{2})-Q([1-4])",str(item.get("period") or ""))
-   if match:
-    year=int(match.group(1)); quarter=int(match.group(2))
+   period_match=re.fullmatch(r"(20\d{2})-Q([1-4])",str(item.get("period") or ""))
+   if period_match:
+    year=int(period_match.group(1)); quarter=int(period_match.group(2))
     previous_period=f"{year}-Q{quarter-1}" if quarter>1 else f"{year-1}-Q4"
     previous_item=period_items.get(previous_period)
-    previous_close=previous_item.get("cash_ending") if isinstance(previous_item,dict) else None
-    if isinstance(previous_close,(int,float)):
-     previous_close=int(round(previous_close))
-     current_begin=item.get("cash_beginning")
-     if "cash_beginning" in rejected or not isinstance(current_begin,(int,float)) or int(round(current_begin))!=previous_close:
-      if isinstance(current_begin,(int,float)) and int(round(current_begin))!=previous_close:
-       prior.setdefault("cash_beginning",current_begin)
-      item["cash_beginning"]=previous_close
+    previous_rejected=set(previous_item.get("financial_line_items_rejected_fields") or []) if isinstance(previous_item,dict) else set()
+    previous_rejected_values=previous_item.get("financial_line_items_rejected_values") or {} if isinstance(previous_item,dict) else {}
+
+    # Q1 equals its own YTD total. Q2-Q4 equal current YTD less prior-quarter YTD.
+    for quarter_field,ytd_field in CASHFLOW_QUARTER_FROM_YTD.items():
+     current_ytd=item.get(ytd_field)
+     if (
+      not isinstance(current_ytd,(int,float))
+      or ytd_field in rejected
+      or ytd_field in rejected_values
+     ):
+      continue
+     if quarter==1:
+      expected=int(round(current_ytd))
+     else:
+      prior_ytd=previous_item.get(ytd_field) if isinstance(previous_item,dict) else None
+      if (
+       not isinstance(prior_ytd,(int,float))
+       or ytd_field in previous_rejected
+       or ytd_field in previous_rejected_values
+      ):
+       continue
+      expected=int(round(current_ytd-prior_ytd))
+
+     old_value=item.get(quarter_field)
+     old_rejected=rejected_values.get(quarter_field)
+     needs_update=(
+      not isinstance(old_value,(int,float))
+      or int(round(old_value))!=expected
+      or quarter_field in rejected
+     )
+     if needs_update:
+      prior_value=old_value if isinstance(old_value,(int,float)) else (
+       old_rejected.get("value") if isinstance(old_rejected,dict) else None
+      )
+      if isinstance(prior_value,(int,float)) and int(round(prior_value))!=expected:
+       prior.setdefault(quarter_field,prior_value)
+       item.setdefault("financial_line_items_value_corrections",{})[quarter_field]={
+        "previous_value":prior_value,
+        "new_value":expected,
+        "reason":f"Normalized YTD {ytd_field} to standalone {quarter_field} using {item.get('period')} minus {previous_period if quarter>1 else 'no prior quarter'}.",
+       }
+      item[quarter_field]=expected
+      item[quarter_field+"_calculation"]=(
+       f"{quarter_field} quý I = giá trị lũy kế quý I ({ytd_field})."
+       if quarter==1 else
+       f"{quarter_field} quý riêng = {ytd_field} kỳ hiện tại − {ytd_field} của {previous_period}."
+      )
+      fields.add(quarter_field)
+      rejected.discard(quarter_field)
+      rejected_values.pop(quarter_field,None)
+      period_changed=True; changed_fields+=1
+
+    # Cash-flow statements show year-opening cash on Q2-Q4 forms; normalize
+    # dashboard opening cash to the previous quarter close.
+    reported_begin=item.get("cash_beginning_reported_ytd")
+    if quarter==1 and isinstance(reported_begin,(int,float)) and "cash_beginning_reported_ytd" not in rejected:
+     expected_begin=int(round(reported_begin))
+    else:
+     prior_close=previous_item.get("cash_ending") if isinstance(previous_item,dict) else None
+     if not isinstance(prior_close,(int,float)) and isinstance(previous_item,dict):
+      prior_close=previous_item.get("cash_ending_reported_ytd")
+     expected_begin=int(round(prior_close)) if isinstance(prior_close,(int,float)) else None
+    if isinstance(expected_begin,(int,float)):
+     old_begin=item.get("cash_beginning")
+     if "cash_beginning" in rejected or not isinstance(old_begin,(int,float)) or int(round(old_begin))!=expected_begin:
+      if isinstance(old_begin,(int,float)) and int(round(old_begin))!=expected_begin:
+       prior.setdefault("cash_beginning",old_begin)
+      elif isinstance(rejected_values.get("cash_beginning"),dict):
+       old_rejected_begin=rejected_values["cash_beginning"].get("value")
+       if isinstance(old_rejected_begin,(int,float)):
+        prior.setdefault("cash_beginning",old_rejected_begin)
+      item["cash_beginning"]=expected_begin
       item["cash_beginning_calculation"]=(
-       f"Số dư đầu quý = số dư cuối quý liền trước ({previous_period}); "
-       "chuẩn hóa từ BCTC lưu chuyển tiền tệ trình bày lũy kế đầu năm."
+       "Số dư tiền đầu quý bằng tiền cuối quý liền trước."
+       if quarter>1 else
+       "Số dư tiền đầu quý I lấy từ dòng tiền và tương đương tiền đầu kỳ trên BCTC VietstockFinance."
       )
       fields.add("cash_beginning")
       rejected.discard("cash_beginning")
       rejected_values.pop("cash_beginning",None)
       period_changed=True; changed_fields+=1
-     else:
-      # Remove an obsolete rejection when the current opening value already
-      # equals the previous quarter's confirmed closing balance.
-      if "cash_beginning" in rejected:
-       rejected.discard("cash_beginning")
-       rejected_values.pop("cash_beginning",None)
-       period_changed=True; changed_fields+=1
 
-     ending_record=rejected_values.get("cash_ending")
-     ending_reason=str(ending_record.get("reason") or "").lower() if isinstance(ending_record,dict) else ""
-     source_end=ending_record.get("value") if isinstance(ending_record,dict) else None
-     net_for_quarter=item.get("net_cash_change")
-     if (
-      "cash balance bridge" in ending_reason
-      and isinstance(source_end,(int,float))
-      and isinstance(net_for_quarter,(int,float))
-     ):
-      source_end=int(round(source_end))
-      fx=item.get("foreign_exchange_effect",0)
-      fx=fx if isinstance(fx,(int,float)) else 0
-      bridge_difference=(source_end-previous_close)-(net_for_quarter+fx)
-      bridge_tolerance=max(5,abs(previous_close)*0.0005,abs(source_end)*0.0005)
-      if abs(bridge_difference)<=bridge_tolerance:
-       current_end=item.get("cash_ending")
-       if not isinstance(current_end,(int,float)) or int(round(current_end))!=source_end:
-        if isinstance(current_end,(int,float)):
-         prior.setdefault("cash_ending",current_end)
-        item["cash_ending"]=source_end
-        period_changed=True; changed_fields+=1
-       item["cash_ending_calculation"]=(
-        "Số dư tiền cuối quý lấy từ giá trị báo cáo nguồn VietstockFinance; "
-        "đối chiếu với số dư đầu quý và biến động tiền riêng quý."
-       )
-       fields.add("cash_ending")
-       rejected.discard("cash_ending")
-       rejected_values.pop("cash_ending",None)
-       recovery={
-        "basis":"year_to_date_report_normalized_to_quarter",
-        "previous_period":previous_period,
-        "cash_beginning":previous_close,
-        "cash_ending_reported":source_end,
-        "quarter_net_cash_change":int(round(net_for_quarter)),
-        "closing_balance_less_opening_and_net_change":int(round(bridge_difference)),
-        "tolerance_used":int(round(bridge_tolerance)),
-        "cash_beginning_ytd_reported":item.get("cash_beginning_reported_ytd"),
-        "source_url":item.get("source_url"),
-        "source_index_url":item.get("source_index_url"),
-        "source_archive_file":item.get("source_archive_file"),
-        "restored_after_reason":ending_reason,
-       }
-       if item.get("cashflow_balance_bridge_recovery")!=recovery:
-        item["cashflow_balance_bridge_recovery"]=recovery
-        period_changed=True; changed_fields+=1
-       old_note=str(item.get("financial_line_items_note") or "")
-       old_note=old_note.replace(
-        "Số dư tiền đầu/cuối kỳ bị ẩn vì không khớp biến động tiền thuần theo quý.",""
-       ).strip()
-       recovery_note=(
-        "Số dư tiền cuối kỳ được khôi phục từ giá trị báo cáo VietstockFinance sau "
-        "khi chuẩn hóa số dư đầu quý bằng số dư cuối quý trước. "
-        + (
-         "Cầu nối số dư tiền khớp biến động tiền thuần quý."
-         if abs(bridge_difference)<0.5
-         else f"Chênh lệch cầu nối {int(round(bridge_difference))} triệu đồng nằm trong dung sai 0,05%; giữ số dư cuối kỳ theo báo cáo nguồn."
-        )
-       )
-       updated_note=(old_note+" "+recovery_note).strip()
-       if updated_note!=str(item.get("financial_line_items_note") or ""):
-        item["financial_line_items_note"]=updated_note
-        period_changed=True; changed_fields+=1
-       # Avoid a stale suppression note/state from hiding values now restored.
-       item["financial_line_items_status"]="auto_extracted_pending_visual_review"
+    reported_end=item.get("cash_ending_reported_ytd")
+    if isinstance(reported_end,(int,float)) and "cash_ending_reported_ytd" not in rejected:
+     expected_end=int(round(reported_end))
+    else:
+     current_end=item.get("cash_ending")
+     expected_end=int(round(current_end)) if isinstance(current_end,(int,float)) and "cash_ending" not in rejected else None
+    if isinstance(expected_end,(int,float)):
+     old_end=item.get("cash_ending")
+     if "cash_ending" in rejected or not isinstance(old_end,(int,float)) or int(round(old_end))!=expected_end:
+      if isinstance(old_end,(int,float)) and int(round(old_end))!=expected_end:
+       prior.setdefault("cash_ending",old_end)
+      elif isinstance(rejected_values.get("cash_ending"),dict):
+       old_rejected_end=rejected_values["cash_ending"].get("value")
+       if isinstance(old_rejected_end,(int,float)):
+        prior.setdefault("cash_ending",old_rejected_end)
+      item["cash_ending"]=expected_end
+      item["cash_ending_calculation"]="Số dư tiền cuối quý lấy từ dòng tiền và tương đương tiền cuối kỳ trong báo cáo VietstockFinance."
+      fields.add("cash_ending")
+      rejected.discard("cash_ending")
+      rejected_values.pop("cash_ending",None)
+      period_changed=True; changed_fields+=1
+
+    # Preserve the cash-balance bridge for future data-quality audits.
+    opening=item.get("cash_beginning"); closing=item.get("cash_ending")
+    quarter_net=item.get("net_cash_change")
+    fx=item.get("foreign_exchange_effect",0)
+    if isinstance(fx,(int,float)) and all(isinstance(v,(int,float)) for v in (opening,closing,quarter_net)):
+     bridge=int(round(closing-opening-quarter_net-fx))
+     recovery={
+      "basis":"year_to_date_report_normalized_to_quarter",
+      "period":item.get("period"),
+      "cash_beginning":int(round(opening)),
+      "cash_ending_reported":int(round(closing)),
+      "quarter_net_cash_change":int(round(quarter_net)),
+      "quarter_foreign_exchange_effect":int(round(fx)),
+      "closing_balance_less_opening_net_cash_change_and_fx":bridge,
+      "source_index_url":item.get("source_index_url"),
+      "source_document_url":item.get("source_url"),
+      "source_archive_file":item.get("source_archive_file"),
+     }
+     if item.get("cashflow_balance_bridge_recovery")!=recovery:
+      item["cashflow_balance_bridge_recovery"]=recovery
+      period_changed=True; changed_fields+=1
 
   # Operating + investing + financing cash flows reconcile to net cash change.
   # FX translation is separate and is used only in the cash-balance bridge.
