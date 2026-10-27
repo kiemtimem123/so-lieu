@@ -1272,7 +1272,7 @@ def reconcile_detail_items(items,symbol):
  period_items={
   str(candidate.get("period") or ""):candidate
   for candidate in items
-  if isinstance(candidate,dict) and re.fullmatch(r"20\\d{2}-Q[1-4]",str(candidate.get("period") or ""))
+  if isinstance(candidate,dict) and re.fullmatch(r"20\d{2}-Q[1-4]",str(candidate.get("period") or ""))
  }
  ordered_items=sorted(
   items,
@@ -1599,7 +1599,7 @@ def reconcile_detail_items(items,symbol):
   # current quarter change. Some older runs wrongly withheld the source-reported
   # closing balance after comparing it to the YTD opening balance.
   if str(item.get("cashflow_period_basis") or "")=="year_to_date":
-   match=re.fullmatch(r"(20\\d{2})-Q([1-4])",str(item.get("period") or ""))
+   match=re.fullmatch(r"(20\d{2})-Q([1-4])",str(item.get("period") or ""))
    if match:
     year=int(match.group(1)); quarter=int(match.group(2))
     previous_period=f"{year}-Q{quarter-1}" if quarter>1 else f"{year-1}-Q4"
