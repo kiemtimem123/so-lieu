@@ -2867,7 +2867,9 @@
         "bank_valuable_papers",
         "capital_expenditure",
         "capital_expenditure_ytd",
+        "cash_beginning",
         "cash_beginning_reported_ytd",
+        "cash_ending",
         "cashflow_period_basis",
         "dividends_paid",
         "dividends_paid_ytd",
@@ -2889,8 +2891,8 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/50b860c97df7b698.pdf",
-      "financial_line_items_updated_at": "2026-10-25T18:30:07+00:00",
-      "financial_line_items_note": "Đã đối chiếu dòng thu nhập ngân hàng, tổng phụ lợi nhuận và dòng tiền theo văn bản OCR của PDF VietstockFinance đã lưu. Lưu riêng cả số lũy kế trên B04 và số riêng quý tính bằng chênh lệch lũy kế. Đây là xác minh OCR/số học, không tuyên bố đã kiểm tra trực quan từng pixel. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Số dư tiền đầu/cuối kỳ bị ẩn vì không khớp biến động tiền thuần theo quý.",
+      "financial_line_items_updated_at": "2026-10-27T16:45:00Z",
+      "financial_line_items_note": "Đã đối chiếu dòng thu nhập ngân hàng, tổng phụ lợi nhuận và dòng tiền theo văn bản OCR của PDF VietstockFinance đã lưu. Lưu riêng cả số lũy kế trên B04 và số riêng quý tính bằng chênh lệch lũy kế. Đây là xác minh OCR/số học, không tuyên bố đã kiểm tra trực quan từng pixel. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Đã khôi phục số dư tiền đầu/cuối quý theo báo cáo lưu chuyển tiền tệ VietstockFinance sau khi chuẩn hóa số dư đầu quý bằng số dư cuối quý trước; số dư cuối quý lấy trực tiếp từ PDF trang 10. Cầu nối số dư tiền khớp biến động tiền thuần quý.",
       "operating_cash_flow": -4500399,
       "operating_cash_flow_calculation": "reported as standalone quarter",
       "net_cash_change": -9461934,
@@ -2906,16 +2908,7 @@
         "cashflow_period_basis": "quarterly_reported",
         "investing_cash_flow": 92921
       },
-      "financial_line_items_rejected_values": {
-        "cash_beginning": {
-          "value": 191827343,
-          "reason": "cash balance bridge does not reconcile to net cash change"
-        },
-        "cash_ending": {
-          "value": 170247424,
-          "reason": "cash balance bridge does not reconcile to net cash change"
-        }
-      },
+      "financial_line_items_rejected_values": {},
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
       "bank_deposits_at_state_bank": 95127975,
       "bank_customer_loans": 835813283,
@@ -2989,10 +2982,7 @@
       "revenue_calculation": "Lợi nhuận trước dự phòng + chi phí hoạt động; đối chiếu theo tổng phụ BCTC ngân hàng.",
       "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động - |chi phí hoạt động| theo BCTC ngân hàng.",
       "bank_cash_on_hand": 3909425,
-      "financial_line_items_rejected_fields": [
-        "cash_beginning",
-        "cash_ending"
-      ],
+      "financial_line_items_rejected_fields": [],
       "bank_deposits_and_loans_to_credit_institutions": 85416520,
       "bank_deposits_and_borrowings_from_credit_institutions": 164019459,
       "bank_interest_expense": -12098340,
@@ -3011,7 +3001,29 @@
       "bank_net_interest_income_calculation": "Thu nhập lãi - |chi phí lãi| theo BCTC ngân hàng.",
       "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "cash_beginning": 179709358,
-      "cash_beginning_calculation": "previous quarter closing cash"
+      "cash_beginning_calculation": "Số dư tiền đầu quý 2026-Q2 = số dư tiền cuối quý liền trước (2026-Q1); chuyển đổi từ báo cáo lưu chuyển tiền tệ trình bày lũy kế đầu năm.",
+      "cash_ending": 170247424,
+      "cash_ending_calculation": "Số dư tiền cuối quý lấy trực tiếp từ BCTC hợp nhất VietstockFinance; PDF trang 10 (trang in 8).",
+      "cash_ending_source_page": 10,
+      "cash_ending_source_printed_page": 8,
+      "cashflow_balance_bridge_recovery": {
+        "basis": "year_to_date_report_normalized_to_quarter",
+        "previous_period": "2026-Q1",
+        "cash_beginning": 179709358,
+        "cash_ending_reported": 170247424,
+        "quarter_net_cash_change": -9461934,
+        "closing_balance_less_opening_and_net_change": 0,
+        "tolerance_used": 89854.679,
+        "cash_beginning_ytd_reported": 191827343,
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/TCB_Baocaotaichinh_Q2_2026_Hopnhat.pdf",
+        "source_index_url": "https://finance.vietstock.vn/TCB/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/50b860c97df7b698.pdf",
+        "source_pdf_page": 10,
+        "source_printed_page": 8,
+        "prior_blocked_beginning_value": 191827343,
+        "prior_blocked_ending_value": 170247424,
+        "note": "Số dư đầu/cuối quý và biến động tiền thuần quý khớp số học."
+      }
     },
     {
       "symbol": "TCB",
@@ -3169,7 +3181,9 @@
         "bank_valuable_papers",
         "capital_expenditure",
         "capital_expenditure_ytd",
+        "cash_beginning",
         "cash_beginning_reported_ytd",
+        "cash_ending",
         "cashflow_period_basis",
         "dividends_paid",
         "dividends_paid_ytd",
@@ -3189,8 +3203,8 @@
         "revenue"
       ],
       "financial_line_items_source": "reports/raw/TCB/repair-tcb-2026q3-full-report/fd82d64db310dbdb.pdf",
-      "financial_line_items_updated_at": "2026-10-25T20:13:19+00:00",
-      "financial_line_items_note": "Đã đối chiếu dòng thu nhập ngân hàng, tổng phụ lợi nhuận và dòng tiền theo văn bản OCR của PDF VietstockFinance đã lưu. Lưu riêng cả số lũy kế trên B04 và số riêng quý tính bằng chênh lệch lũy kế. Đây là xác minh OCR/số học, không tuyên bố đã kiểm tra trực quan từng pixel. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Số dư tiền đầu/cuối kỳ bị ẩn vì không khớp biến động tiền thuần theo quý.",
+      "financial_line_items_updated_at": "2026-10-27T16:45:00Z",
+      "financial_line_items_note": "Đã đối chiếu dòng thu nhập ngân hàng, tổng phụ lợi nhuận và dòng tiền theo văn bản OCR của PDF VietstockFinance đã lưu. Lưu riêng cả số lũy kế trên B04 và số riêng quý tính bằng chênh lệch lũy kế. Đây là xác minh OCR/số học, không tuyên bố đã kiểm tra trực quan từng pixel. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Đã khôi phục số dư tiền đầu/cuối quý theo báo cáo lưu chuyển tiền tệ VietstockFinance sau khi chuẩn hóa số dư đầu quý bằng số dư cuối quý trước; số dư cuối quý lấy trực tiếp từ PDF trang 12. Chênh lệch cầu nối tiền là 20 triệu đồng; giữ số dư cuối kỳ theo báo cáo nguồn, không tự sửa số biến động tiền thuần.",
       "published_at": "2026-10-20",
       "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
       "financial_line_items_schema_updated_at": "2026-10-25T20:13:19+00:00",
@@ -3211,16 +3225,7 @@
         "cashflow_period_basis": "quarterly_reported",
         "cash_and_equivalents": 191827343
       },
-      "financial_line_items_rejected_values": {
-        "cash_beginning": {
-          "value": 191827343,
-          "reason": "cash balance bridge does not reconcile to net cash change"
-        },
-        "cash_ending": {
-          "value": 177278961,
-          "reason": "cash balance bridge does not reconcile to net cash change"
-        }
-      },
+      "financial_line_items_rejected_values": {},
       "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
       "income_tax": 2038082,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
@@ -3387,10 +3392,7 @@
         "reason": "Recovered from the parent-attributable profit row on the Q3 2026 consolidated income statement linked by the VietstockFinance TCB document catalog; reconciles exactly with consolidated net profit less non-controlling interest."
       },
       "bank_cash_on_hand": 3654739,
-      "financial_line_items_rejected_fields": [
-        "cash_beginning",
-        "cash_ending"
-      ],
+      "financial_line_items_rejected_fields": [],
       "bank_deposits_and_loans_to_credit_institutions": 116420534,
       "bank_deposits_and_borrowings_from_credit_institutions": 181660136,
       "bank_interest_expense": -13876424,
@@ -3406,7 +3408,31 @@
       "dividends_paid": -140937,
       "cash_beginning_reported_ytd": 191827343,
       "bank_interest_income_calculation": "Thu nhập lãi = thu nhập lãi thuần + chi phí lãi; đối chiếu tổng phụ BCTC ngân hàng.",
-      "bank_net_interest_income_calculation": "Thu nhập lãi - |chi phí lãi| theo BCTC ngân hàng."
+      "bank_net_interest_income_calculation": "Thu nhập lãi - |chi phí lãi| theo BCTC ngân hàng.",
+      "cash_beginning": 170247424,
+      "cash_ending": 177278961,
+      "cash_beginning_calculation": "Số dư tiền đầu quý 2026-Q3 = số dư tiền cuối quý liền trước (2026-Q2); chuyển đổi từ báo cáo lưu chuyển tiền tệ trình bày lũy kế đầu năm.",
+      "cash_ending_calculation": "Số dư tiền cuối quý lấy trực tiếp từ BCTC hợp nhất VietstockFinance; PDF trang 12 (trang in 8).",
+      "cash_ending_source_page": 12,
+      "cash_ending_source_printed_page": 8,
+      "cashflow_balance_bridge_recovery": {
+        "basis": "year_to_date_report_normalized_to_quarter",
+        "previous_period": "2026-Q2",
+        "cash_beginning": 170247424,
+        "cash_ending_reported": 177278961,
+        "quarter_net_cash_change": 7031557,
+        "closing_balance_less_opening_and_net_change": -20,
+        "tolerance_used": 88639.4805,
+        "cash_beginning_ytd_reported": 191827343,
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%203/TCB_Baocaotaichinh_Q3_2026_Hopnhat.pdf",
+        "source_index_url": "https://finance.vietstock.vn/TCB/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/TCB/repair-tcb-2026q3-full-report/fd82d64db310dbdb.pdf",
+        "source_pdf_page": 12,
+        "source_printed_page": 8,
+        "prior_blocked_beginning_value": 191827343,
+        "prior_blocked_ending_value": 177278961,
+        "note": "Số dư tiền cuối kỳ được giữ theo giá trị báo cáo nguồn; chênh lệch 20 triệu đồng so với cầu nối từ biến động tiền thuần nằm trong dung sai 0,05% do số dòng tiền OCR/nguồn chưa khớp tuyệt đối."
+      }
     }
   ],
   "note": "TCB: 11 kỳ hợp nhất Q1/2024–Q3/2026, nguồn duy nhất VietstockFinance. Bộ trích xuất được nâng cấp để nhận diện báo cáo dòng tiền lũy kế theo ngày bắt đầu kỳ, phân biệt dòng tiền riêng quý, chuẩn hóa dấu chi phí, đối chiếu thu nhập lãi với lãi thuần và phát hiện sai số OCR nhỏ qua tổng thu nhập hoạt động. Q1–Q3/2026 đã áp dụng và kiểm tra; lệch cash bridge 20 triệu được ghi nhận riêng.",
