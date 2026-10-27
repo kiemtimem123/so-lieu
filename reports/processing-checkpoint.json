@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-27T14:43:11.758Z",
+  "updatedAt": "2026-10-27T14:49:20.329Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -39,20 +39,18 @@
     "VCK",
     "MBB"
   ],
-  "lastCompletedSymbol": "NLG",
+  "lastCompletedSymbol": "BSR",
   "activeSymbol": null,
-  "resumeSymbolHint": "BSR",
+  "resumeSymbolHint": "TCB",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
-    "symbol": "NLG",
+    "symbol": "BSR",
     "status": "automated_processing_complete",
     "completeForAutomation": true,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-27T14:43:11.758Z",
+    "processedAt": "2026-10-27T14:49:20.329Z",
     "changedPaths": [
-      "data/financials-NLG.json",
-      "assets/app.js",
-      "index.html"
+      "data/financials-BSR.json"
     ],
     "periodCount": 10,
     "firstQuarter": "2024-Q1",
@@ -70,9 +68,9 @@
       "2026-Q2"
     ],
     "sourceUpdateNotes": [
-      "NLG source reconciliation: Q1/Q2 2026 cash-flow aggregates and Q1 income-field mappings refreshed from VietstockFinance-linked PDFs. Q2 PDF pages were visually checked; Q1 operating_cash_flow remains blank because the OCR line differs from reported net cash flow by VND 100,000,000,000. Q1/Q2 opening-cash discrepancy of about VND 33,084.7 million is retained as a source anomaly."
+      "BSR Q1/Q2 2026 details restored from VietstockFinance-linked PDF/sidecars. Corrected current/non-current assets, fixed assets, short/long-term liabilities, finance income and interest expense; restored the official LCTT totals and YTD fields, enabling Q2 quarterly deltas. Q1 sidecar printed cash-flow page header is inconsistent, though subtotals/ending cash reconcile; detail remains pending visual review."
     ],
-    "resumeSymbolHint": "BSR"
+    "resumeSymbolHint": "TCB"
   },
   "symbolStates": {
     "MBB": {
@@ -701,8 +699,14 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-10-25T20:26:59Z",
-      "snapshotFetchedAt": "2026-10-19T16:47:07.375Z"
+      "updatedAt": "2026-10-27T14:49:20.329Z",
+      "snapshotFetchedAt": "2026-10-19T16:47:07.375Z",
+      "sourceUpdatePeriods": [
+        "2026-Q1",
+        "2026-Q2"
+      ],
+      "sourceUpdateNote": "BSR Q1/Q2 2026 details restored from VietstockFinance-linked PDF/sidecars. Corrected current/non-current assets, fixed assets, short/long-term liabilities, finance income and interest expense; restored the official LCTT totals and YTD fields, enabling Q2 quarterly deltas. Q1 sidecar printed cash-flow page header is inconsistent, though subtotals/ending cash reconcile; detail remains pending visual review.",
+      "sourceUpdateCommit": "9adecc9ce2001704fad630f037818c68991e5a64"
     },
     "TCB": {
       "status": "automated_processing_complete",
@@ -738,14 +742,6 @@
     }
   },
   "progressHistory": [
-    {
-      "symbol": "SHS",
-      "status": "terminal_needs_manual_review",
-      "completeForAutomation": true,
-      "processedAt": "2026-10-27T09:44:06Z",
-      "workflowRunId": "40482921734",
-      "changedPaths": []
-    },
     {
       "symbol": "SHS",
       "status": "terminal_needs_manual_review",
@@ -1167,6 +1163,20 @@
         "2026-Q2"
       ],
       "note": "NLG source reconciliation: Q1/Q2 2026 cash-flow aggregates and Q1 income-field mappings refreshed from VietstockFinance-linked PDFs. Q2 PDF pages were visually checked; Q1 operating_cash_flow remains blank because the OCR line differs from reported net cash flow by VND 100,000,000,000. Q1/Q2 opening-cash discrepancy of about VND 33,084.7 million is retained as a source anomaly."
+    },
+    {
+      "symbol": "BSR",
+      "status": "automated_processing_complete",
+      "completeForAutomation": true,
+      "processedAt": "2026-10-27T14:49:20.329Z",
+      "changedPaths": [
+        "data/financials-BSR.json"
+      ],
+      "sourceUpdatePeriods": [
+        "2026-Q1",
+        "2026-Q2"
+      ],
+      "note": "BSR Q1/Q2 2026 details restored from VietstockFinance-linked PDF/sidecars. Corrected current/non-current assets, fixed assets, short/long-term liabilities, finance income and interest expense; restored the official LCTT totals and YTD fields, enabling Q2 quarterly deltas. Q1 sidecar printed cash-flow page header is inconsistent, though subtotals/ending cash reconcile; detail remains pending visual review."
     }
   ],
   "currentRun": {
