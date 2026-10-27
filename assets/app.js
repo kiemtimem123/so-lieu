@@ -1075,93 +1075,60 @@
 
     async function fetchLatestFinancialSnapshot(ticker) {
       const filename = 'financials-' + ticker + '.json';
-      const fetchCandidate = async (candidate) => {
-        const controller = new AbortController();
-        const timeoutId = window.setTimeout(() => controller.abort(), candidate.timeoutMs);
-        let response;
-        try {
-          response = await fetch(candidate.url, {
-            cache: 'no-store',
-            headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' },
-            signal: controller.signal
-          });
-        } finally {
-          window.clearTimeout(timeoutId);
-        }
-        if (!response.ok) throw new Error('HTTP ' + response.status + ' (' + candidate.label + ')');
-        const contentType = (response.headers.get('content-type') || '').toLowerCase();
-        if (contentType.includes('text/html')) throw new Error('HTML thay vì JSON (' + candidate.label + ')');
-        const snapshot = await response.json();
-        if (!snapshot || snapshot.symbol !== ticker || !Array.isArray(snapshot.items)) {
-          throw new Error('Snapshot không đúng schema (' + candidate.label + ')');
-        }
-        const rows = snapshot.items.filter(item => item && validPeriod(item.period));
-        if (!rows.length) throw new Error('Snapshot chưa có kỳ báo cáo hợp lệ (' + candidate.label + ')');
-
-        // Score each valid source by the latest trustworthy file/row timestamp.
-        // That prevents a valid-but-old Hostinger/edge-cache JSON from masking
-        // a newer snapshot that is already available elsewhere.
-        const timestamps = [snapshot.processedAt, snapshot.fetchedAt]
-          .concat(rows.flatMap(item => [
-            item.financial_line_items_updated_at,
-            item.core_financial_extraction_updated_at,
-            item.source_validation?.reviewed_at,
-            item.visual_review?.checked_at
-          ]))
-          .map(value => Date.parse(String(value || '')))
-          .filter(value => Number.isFinite(value) && value > 0);
-        const latestTimestamp = timestamps.length ? Math.max(...timestamps) : 0;
-        return {
-          ...snapshot,
-          items: rows,
-          _loadedFrom: candidate.label,
-          _loadedTimestamp: latestTimestamp,
-          _sourcePriority: candidate.priority
-        };
-      };
-
       const cacheKey = Date.now().toString(36);
       const encoded = encodeURIComponent(filename);
       const candidates = [
         {
           label: 'GitHub Raw',
-          priority: 0,
           url: DATA_FALLBACK_BASE + encoded + '?v=' + cacheKey,
           timeoutMs: 8000
         },
         {
           label: 'GitHub CDN',
-          priority: 1,
           url: DATA_CDN_BASE + encoded + '?v=' + cacheKey,
           timeoutMs: 8000
         },
         {
           label: 'website',
-          priority: 2,
           url: 'data/' + encoded + '?v=' + cacheKey,
           timeoutMs: 5000
         }
       ];
 
-      // Check sources concurrently and choose the newest valid JSON instead of
-      // returning the first valid response, which may be stale but well-formed.
-      const results = await Promise.all(candidates.map(async candidate => {
+      // Sequential loading keeps a deterministic fallback path. Prefer the
+      // live GitHub file, then its CDN mirror, and use the uploaded Hostinger
+      // snapshot only when both public sources are unavailable.
+      const errors = [];
+      for (const candidate of candidates) {
+        const controller = new AbortController();
+        const timeoutId = window.setTimeout(() => controller.abort(), candidate.timeoutMs);
         try {
-          return { ok: true, snapshot: await fetchCandidate(candidate) };
+          const response = await fetch(candidate.url, {
+            cache: 'no-store',
+            headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' },
+            signal: controller.signal
+          });
+          if (!response.ok) throw new Error('HTTP ' + response.status);
+          const contentType = (response.headers.get('content-type') || '').toLowerCase();
+          if (contentType.includes('text/html')) throw new Error('HTML thay vì JSON');
+          const snapshot = await response.json();
+          if (!snapshot || snapshot.symbol !== ticker || !Array.isArray(snapshot.items)) {
+            throw new Error('Snapshot không đúng cấu trúc');
+          }
+          const rows = snapshot.items.filter(item => item && validPeriod(item.period));
+          if (!rows.length) throw new Error('Không có kỳ báo cáo hợp lệ');
+          return {
+            ...snapshot,
+            items: rows,
+            _loadedFrom: candidate.label
+          };
         } catch (error) {
-          return { ok: false, message: candidate.label + ': ' + (error?.message || String(error)) };
+          errors.push(candidate.label + ': ' + (error?.message || String(error)));
+        } finally {
+          window.clearTimeout(timeoutId);
         }
-      }));
-      const valid = results.filter(result => result.ok).map(result => result.snapshot);
-      if (!valid.length) {
-        throw new Error(results.filter(result => !result.ok).map(result => result.message).join('; ') ||
-          'Không tải được snapshot từ GitHub hoặc website');
       }
-      valid.sort((a, b) =>
-        (b._loadedTimestamp - a._loadedTimestamp) ||
-        (a._sourcePriority - b._sourcePriority)
-      );
-      return valid[0];
+      throw new Error(errors.join('; ') || 'Không tải được snapshot từ GitHub hoặc website');
     }
 
     function drawChart(key, canvasId, noteId, config) {
@@ -1920,14 +1887,11 @@
       const waiting = sourceRows.filter(item => !hasNumericFinancialData(item)).length;
       const review = sourceRows.filter(item => hasNumericFinancialData(item) && verificationBadge(item).kind !== 'ready').length;
       const sourceLabel = String(snapshot?._loadedFrom || '').startsWith('GitHub') ? snapshot._loadedFrom : 'website dự phòng';
-      const lastDataTimestamp = Number(snapshot?._loadedTimestamp) > 0
-        ? new Date(Number(snapshot._loadedTimestamp)).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
-        : (snapshot?.processedAt || snapshot?.fetchedAt ? dateFmt(snapshot.processedAt || snapshot.fetchedAt) : 'chưa ghi nhận');
       if (status) {
         status.textContent = (snapshot?.sourceName || 'VietstockFinance snapshot') +
           ' · ' + populated + '/' + sourceRows.length + ' kỳ có số liệu · ' + waiting + ' kỳ đang chờ trích xuất · ' +
-          review + ' kỳ có số liệu cần rà soát · Nguồn thực tế: ' + sourceLabel +
-          ' · Bản dữ liệu mới nhất: ' + lastDataTimestamp +
+          review + ' kỳ có số liệu cần rà soát · Nạp từ: ' + sourceLabel +
+          ' · Đồng bộ: ' + (snapshot?.processedAt ? dateFmt(snapshot.processedAt) : snapshot?.fetchedAt ? dateFmt(snapshot.fetchedAt) : 'chưa ghi nhận') +
           (tableError ? ' · Bảng chi tiết gặp lỗi; thống kê/biểu đồ vẫn được hiển thị.' : '') + '.';
       }
       if (loadSummary) loadSummary.textContent = 'Mã ' + ticker + ' · ' + sourceRows.length + ' kỳ có liên kết nguồn · Chế độ ' +
