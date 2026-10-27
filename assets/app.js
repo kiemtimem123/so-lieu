@@ -39,8 +39,10 @@
     const cacheKey = Date.now().toString(36);
     const encoded = encodeURIComponent(filename);
     const candidates = [
-      { url: DATA_CDN_BASE + encoded + '?v=' + cacheKey, label: 'GitHub CDN' },
+      // Raw GitHub is checked first so a valid-but-stale jsDelivr response
+      // cannot mask a newer financial/data snapshot.
       { url: DATA_FALLBACK_BASE + encoded + '?v=' + cacheKey, label: 'GitHub Raw' },
+      { url: DATA_CDN_BASE + encoded + '?v=' + cacheKey, label: 'GitHub CDN' },
       { url: 'data/' + encoded + '?v=' + cacheKey, label: 'website fallback' }
     ];
     const failures = [];
@@ -1105,19 +1107,23 @@
       const cacheKey = Date.now();
       const candidates = [
         {
-          label: 'GitHub CDN',
-          url: 'https://cdn.jsdelivr.net/gh/kiemtimem123/so-lieu@main/data/' + encodeURIComponent(filename) + '?v=' + cacheKey,
-          timeoutMs: 7000
-        },
-        {
-          label: 'GitHub',
+          label: 'GitHub Raw',
+          // Use the current main-branch file first; query cache-busting and
+          // no-store prevent a stale CDN snapshot from masking a correction.
           url: DATA_FALLBACK_BASE + encodeURIComponent(filename) + '?v=' + cacheKey,
           timeoutMs: 7000
         },
         {
           label: 'website',
+          // The Hostinger bundle is a second source of truth when it has the
+          // latest JSON but the external raw endpoint is unavailable.
           url: 'data/' + filename + '?v=' + cacheKey,
           timeoutMs: 3500
+        },
+        {
+          label: 'GitHub CDN',
+          url: 'https://cdn.jsdelivr.net/gh/kiemtimem123/so-lieu@main/data/' + encodeURIComponent(filename) + '?v=' + cacheKey,
+          timeoutMs: 7000
         }
       ];
       const errors = [];
@@ -1886,7 +1892,7 @@
       const populated = sourceRows.filter(hasNumericFinancialData).length;
       const waiting = sourceRows.filter(item => !hasNumericFinancialData(item)).length;
       const review = sourceRows.filter(item => hasNumericFinancialData(item) && verificationBadge(item).kind !== 'ready').length;
-      const sourceLabel = snapshot?._loadedFrom === 'GitHub' ? 'GitHub (nguồn đồng bộ)' : 'website dự phòng';
+      const sourceLabel = String(snapshot?._loadedFrom || '').startsWith('GitHub') ? 'GitHub (nguồn đồng bộ)' : 'website dự phòng';
       if (status) {
         status.textContent = (snapshot?.sourceName || 'VietstockFinance snapshot') +
           ' · ' + populated + '/' + sourceRows.length + ' kỳ có số liệu · ' + waiting + ' kỳ đang chờ trích xuất · ' +
