@@ -793,7 +793,7 @@
       "source_archive_file": "reports/raw/MBB/vietstock-mbb-20261019/6109b2b93c0a8cc9.pdf",
       "published_at": "2025-01-25",
       "report_type": "BCTC hợp nhất Quý IV/2024 (cột phát sinh trong quý)",
-      "source_pages": "Bảng cân đối: PDF trang 3–4; kết quả hoạt động: PDF trang 6",
+      "source_pages": "Bảng cân đối: PDF trang 3–4; kết quả hoạt động: PDF trang 6; lưu chuyển tiền tệ: PDF trang 7–8",
       "roa_formula": "Lợi nhuận sau thuế quý / bình quân tổng tài sản đầu và cuối quý × 4 × 100",
       "roe_formula": "Lợi nhuận sau thuế quý / bình quân vốn chủ sở hữu đầu và cuối quý × 4 × 100",
       "average_total_assets": 1078810135,
@@ -823,7 +823,7 @@
       "bank_valuable_papers": 128964033,
       "bank_funding_and_trust_liabilities": 2793453,
       "bank_other_liabilities": 47312101,
-      "operating_cash_flow_ytd": 68529262,
+      "operating_cash_flow_ytd": -17936055,
       "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
         "bank_cash_on_hand",
@@ -834,29 +834,60 @@
         "bank_deposits_and_loans_to_credit_institutions",
         "bank_deposits_at_state_bank",
         "bank_derivatives_and_other_financial_assets",
+        "bank_dividend_and_capital_income",
         "bank_funding_and_trust_liabilities",
+        "bank_fx_net_income",
+        "bank_interest_expense",
+        "bank_interest_income",
         "bank_investment_securities",
+        "bank_investment_securities_net",
+        "bank_net_interest_income",
+        "bank_net_service_income",
+        "bank_operating_expenses",
         "bank_other_assets",
         "bank_other_liabilities",
+        "bank_other_operating_net",
+        "bank_pre_provision_operating_profit",
+        "bank_provision_expense",
+        "bank_service_expense",
+        "bank_service_income",
         "bank_trading_securities",
+        "bank_trading_securities_net",
         "bank_valuable_papers",
+        "capital_expenditure",
+        "capital_expenditure_ytd",
+        "cash_beginning",
+        "cash_beginning_reported_ytd",
         "cash_ending",
         "cashflow_period_basis",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
         "fixed_assets",
         "income_tax",
+        "income_tax_current",
+        "income_tax_deferred",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
+        "operating_cash_flow",
         "operating_cash_flow_ytd",
-        "retained_earnings"
+        "retained_earnings",
+        "revenue"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/MBB/vietstock-mbb-20261019/6109b2b93c0a8cc9.pdf",
-      "financial_line_items_updated_at": "2026-10-27T03:21:14+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
-      "operating_cash_flow": 12636013,
+      "financial_line_items_updated_at": "2026-10-27T09:23:29.969Z",
+      "financial_line_items_note": "Đã bổ sung các dòng kết quả kinh doanh quý IV theo cột phát sinh quý IV (không dùng số lũy kế năm). Đã sửa nhầm lẫn CAPEX với dòng tiền đầu tư thuần và sửa số tiền cuối kỳ bị đọc nhầm sang dòng tăng vốn. Các chi tiết vẫn chờ rà soát trực quan cuối cùng.",
+      "operating_cash_flow": 16054590,
       "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "financial_line_items_prior_values": {
-        "operating_cash_flow_ytd": 29963896,
+        "operating_cash_flow_ytd": 68529262,
         "income_tax": 1711498,
-        "bank_derivatives_and_other_financial_assets": 141294
+        "bank_derivatives_and_other_financial_assets": 141294,
+        "operating_cash_flow": 12636013,
+        "cash_ending": 1357407,
+        "cash_beginning_reported_ytd": 77542854
       },
       "financial_line_items_rejected_values": {},
       "income_tax": 1711498,
@@ -868,9 +899,9 @@
       "core_financial_extraction_evidence_attempt_count": 0,
       "financial_line_items_value_corrections": {
         "operating_cash_flow_ytd": {
-          "previous_value": 29963896,
-          "new_value": 68529262,
-          "reason": "Reparsed from net operating cash flow after changes in operating assets and liabilities, not the subtotal before working-capital changes."
+          "previous_value": 68529262,
+          "new_value": -17936055,
+          "reason": "Reported FY2024 net operating cash flow (17,936,055), PDF page 7."
         },
         "income_tax": {
           "previous_value": 1711498,
@@ -881,13 +912,191 @@
           "previous_value": 141294,
           "new_value": 0,
           "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "revenue": {
+          "previous_value": null,
+          "new_value": 16563511,
+          "reason": "Total operating income from the 'Số phát sinh quý IV' column of the VietstockFinance consolidated income statement, PDF page 6."
+        },
+        "bank_interest_income": {
+          "previous_value": null,
+          "new_value": 18452076,
+          "reason": "Q4 current-period interest income row, PDF page 6."
+        },
+        "bank_interest_expense": {
+          "previous_value": null,
+          "new_value": -7309898,
+          "reason": "Q4 current-period interest expense row, preserving the parenthesized sign, PDF page 6."
+        },
+        "bank_net_interest_income": {
+          "previous_value": null,
+          "new_value": 11142178,
+          "reason": "Reported net interest income subtotal for Q4, PDF page 6."
+        },
+        "bank_service_income": {
+          "previous_value": null,
+          "new_value": 4149237,
+          "reason": "Q4 service income row, PDF page 6."
+        },
+        "bank_service_expense": {
+          "previous_value": null,
+          "new_value": -2968479,
+          "reason": "Q4 service expense row with its report sign, PDF page 6."
+        },
+        "bank_net_service_income": {
+          "previous_value": null,
+          "new_value": 1180758,
+          "reason": "Reported net service income subtotal, PDF page 6."
+        },
+        "bank_fx_net_income": {
+          "previous_value": null,
+          "new_value": 484636,
+          "reason": "Q4 net foreign-exchange operating income, PDF page 6."
+        },
+        "bank_trading_securities_net": {
+          "previous_value": null,
+          "new_value": 118195,
+          "reason": "Q4 net trading securities income, PDF page 6."
+        },
+        "bank_investment_securities_net": {
+          "previous_value": null,
+          "new_value": 2412338,
+          "reason": "Q4 net investment securities and contribution income line, PDF page 6."
+        },
+        "bank_other_operating_net": {
+          "previous_value": null,
+          "new_value": 1203045,
+          "reason": "Q4 net other operating income row, PDF page 6."
+        },
+        "bank_dividend_and_capital_income": {
+          "previous_value": null,
+          "new_value": 22361,
+          "reason": "Q4 income from capital contributions and shares, PDF page 6."
+        },
+        "bank_operating_expenses": {
+          "previous_value": null,
+          "new_value": 5246555,
+          "reason": "Q4 total operating expenses; stored as a positive cost although the PDF prints parentheses, PDF page 6."
+        },
+        "bank_pre_provision_operating_profit": {
+          "previous_value": null,
+          "new_value": 11316956,
+          "reason": "Q4 reported profit before risk provisioning, PDF page 6."
+        },
+        "bank_provision_expense": {
+          "previous_value": null,
+          "new_value": 3223836,
+          "reason": "Q4 provision expense; stored as positive cost although the PDF prints parentheses, PDF page 6."
+        },
+        "income_tax_current": {
+          "previous_value": null,
+          "new_value": -1715348,
+          "reason": "Current corporate tax expense for Q4, preserving the printed negative sign, PDF page 6."
+        },
+        "income_tax_deferred": {
+          "previous_value": null,
+          "new_value": 3850,
+          "reason": "Deferred corporate tax for Q4, preserving the printed sign, PDF page 6."
+        },
+        "operating_cash_flow": {
+          "previous_value": 12636013,
+          "new_value": 16054590,
+          "reason": "Standalone Q4 operating cash flow = FY2024 cumulative -17,936,055 minus Q3 YTD -33,990,645."
+        },
+        "investing_cash_flow_ytd": {
+          "previous_value": null,
+          "new_value": -2238209,
+          "reason": "Reported FY2024 net investing flow, PDF page 7; distinct from the fixed-asset purchase line."
+        },
+        "investing_cash_flow": {
+          "previous_value": null,
+          "new_value": -909022,
+          "reason": "Standalone Q4 investing flow = FY2024 cumulative -2,238,209 minus Q3 YTD -1,329,187."
+        },
+        "capital_expenditure_ytd": {
+          "previous_value": null,
+          "new_value": -2301696,
+          "reason": "Reported FY2024 fixed-asset purchases (-2,301,696), PDF page 7."
+        },
+        "capital_expenditure": {
+          "previous_value": null,
+          "new_value": -910154,
+          "reason": "Standalone Q4 capex = FY2024 capex -2,301,696 minus Q3 YTD capex -1,391,542."
+        },
+        "financing_cash_flow_ytd": {
+          "previous_value": null,
+          "new_value": 8119419,
+          "reason": "Reported FY2024 net financing flow 8,119,419, PDF page 8."
+        },
+        "financing_cash_flow": {
+          "previous_value": null,
+          "new_value": 4351851,
+          "reason": "Standalone Q4 financing flow = FY2024 net financing flow 8,119,419 minus Q3 YTD 3,767,568."
+        },
+        "net_cash_change_ytd": {
+          "previous_value": null,
+          "new_value": -12054845,
+          "reason": "Reported FY2024 net change in cash -12,054,845, PDF page 8."
+        },
+        "net_cash_change": {
+          "previous_value": null,
+          "new_value": 19497419,
+          "reason": "Standalone Q4 net cash change = FY2024 total -12,054,845 minus Q3 YTD -31,552,264."
+        },
+        "cash_ending": {
+          "previous_value": 1357407,
+          "new_value": 97040273,
+          "reason": "Corrected to the actual FY2024 ending cash row (97,040,273); the old 1,357,407 value belongs to 'increase in share capital', not cash ending, PDF page 8."
+        },
+        "cash_beginning_reported_ytd": {
+          "previous_value": 77542854,
+          "new_value": 109095118,
+          "reason": "The year opening cash row should be 109,095,118, consistently reported at Q1-Q3; PDF OCR read the digit incorrectly as 109,098,118."
         }
       },
-      "cash_ending": 1357407,
+      "cash_ending": 97040273,
       "cash_beginning": 77542854,
       "cash_beginning_calculation": "previous quarter closing cash",
-      "cash_beginning_reported_ytd": 77542854,
-      "bank_deposits_and_loans_to_credit_institutions": 76785622
+      "cash_beginning_reported_ytd": 109095118,
+      "bank_deposits_and_loans_to_credit_institutions": 76785622,
+      "revenue": 16563511,
+      "bank_interest_income": 18452076,
+      "bank_interest_expense": -7309898,
+      "bank_net_interest_income": 11142178,
+      "bank_service_income": 4149237,
+      "bank_service_expense": -2968479,
+      "bank_net_service_income": 1180758,
+      "bank_fx_net_income": 484636,
+      "bank_trading_securities_net": 118195,
+      "bank_investment_securities_net": 2412338,
+      "bank_other_operating_net": 1203045,
+      "bank_dividend_and_capital_income": 22361,
+      "bank_operating_expenses": 5246555,
+      "bank_pre_provision_operating_profit": 11316956,
+      "bank_provision_expense": 3223836,
+      "income_tax_current": -1715348,
+      "income_tax_deferred": 3850,
+      "investing_cash_flow_ytd": -2238209,
+      "investing_cash_flow": -909022,
+      "capital_expenditure_ytd": -2301696,
+      "capital_expenditure": -910154,
+      "financing_cash_flow_ytd": 8119419,
+      "financing_cash_flow": 4351851,
+      "net_cash_change_ytd": -12054845,
+      "net_cash_change": 19497419,
+      "financial_line_items_rejected_fields": [],
+      "financial_line_items_page_extraction": {
+        "source": "VietstockFinance consolidated PDF",
+        "income_pages": [
+          6
+        ],
+        "cashflow_pages": [
+          7,
+          8
+        ],
+        "status": "pending_visual_review",
+        "note": "Q4 income values are taken from the separate 'Số phát sinh quý IV' column. Cash-flow quarters are derived by subtracting Q3 YTD figures from FY2024 figures, with OCF + investing + financing = net cash change and cash beginning/ending bridged."
+      }
     },
     {
       "symbol": "MBB",
