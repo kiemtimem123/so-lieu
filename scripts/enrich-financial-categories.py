@@ -1988,6 +1988,223 @@ def repair_tcx_2026_source_rows(items,symbol):
   changed=True
   field_count+=1
 
+ # Q1/2024 source reconciliation: read explicit Quý I B02a-CTCK rows from
+ # the archived VietstockFinance PDF. Keep row 24 (combined provision/impairment
+ # and lending-cost line) in the total but do not mislabel it as pure interest.
+ q1_2024=by_period.get("2024-Q1")
+ if isinstance(q1_2024,dict):
+  q1_pages=archived_pages(q1_2024)
+  q1_income_tokens={
+   9:[
+    "633.894.391.116","26.819.346.924","572.607.934.798","68.014.797.084",
+    "145.712.853.246","211.688.437.189","12.145.172.612","21.534.999.999",
+    "1.183.086.304","1.693.601.019.272","34.453.346.343","3.183.666.s13",
+    "63.843.348.722","10.569.839.226","39.232.071.770","151.282.272.574"
+   ],
+   10:[
+    "6.147.640.648","271.458.788.515","262.319.802.326",
+    "116.669.265.433","1.160.338.333.398","18.843.093",
+    "231.957.680.000","231.112.619.703","845.060.297","928.361.810.305"
+   ],
+  }
+  q1_income_ok=bool(q1_pages) and all(
+   all(token in q1_pages.get(page,"") for token in tokens)
+   for page,tokens in q1_income_tokens.items()
+  )
+  if q1_income_ok:
+   q1_income_values={
+    "revenue":1693601.019272,
+    "broker_total_operating_revenue":1693601.019272,
+    "broker_fvtpl_gain":633894.391116,
+    "broker_held_to_maturity_income":26819.346924,
+    "broker_lending_income":572607.934798,
+    "broker_afs_income":68014.797084,
+    "broker_brokerage_revenue":145712.853246,
+    "broker_underwriting_revenue":211688.437189,
+    "broker_custody_revenue":12145.172612,
+    "broker_financial_advisory_revenue":21534.999999,
+    "broker_other_operating_income":1183.086304,
+    "broker_fvtpl_loss":34453.346343,
+    "broker_brokerage_expense":63843.348722,
+    "broker_custody_expense":10569.839226,
+    "broker_other_operating_expense":39232.071770,
+    "broker_total_operating_expenses":151282.272574,
+    "broker_operating_expenses":151282.272574,
+    "financial_income":6147.640648,
+    "broker_financial_income":6147.640648,
+    "financial_expense":271458.788515,
+    "broker_financial_expense":271458.788515,
+    "interest_expense":262319.802326,
+    "broker_interest_expense":262319.802326,
+    "admin_expense":116669.265433,
+    "broker_admin_expenses":116669.265433,
+    "operating_profit":1160338.333398,
+    "broker_net_operating_profit":1160338.333398,
+    "income_tax":231957.680000,
+    "income_tax_current":231112.619703,
+    "income_tax_deferred":845.060297,
+   }
+   q1_before_fields=field_count
+   for field,value in q1_income_values.items():
+    record_value(
+     q1_2024,field,value,
+     "Source-backed correction from the archived VietstockFinance B02a-CTCK statement; Q1/2024, "
+     f"PDF page {10 if field in {'financial_income','broker_financial_income','financial_expense','broker_financial_expense','interest_expense','broker_interest_expense','admin_expense','broker_admin_expenses','operating_profit','broker_net_operating_profit','income_tax','income_tax_current','income_tax_deferred'} else 9}. "
+     "Current-quarter VND row divided by 1,000,000."
+    )
+   q1_fields_before=set(q1_2024.get("financial_line_items_extracted_fields") or [])
+   q1_fields_after=q1_fields_before|set(q1_income_values)
+   if q1_fields_after!=q1_fields_before:
+    q1_2024["financial_line_items_extracted_fields"]=sorted(q1_fields_after)
+    changed=True; field_count+=1
+   q1_rejected_before=set(q1_2024.get("financial_line_items_rejected_fields") or [])
+   q1_rejected_after=q1_rejected_before-set(q1_income_values)
+   if q1_rejected_after!=q1_rejected_before:
+    q1_2024["financial_line_items_rejected_fields"]=sorted(q1_rejected_after)
+    changed=True; field_count+=1
+   q1_rejected_values=q1_2024.get("financial_line_items_rejected_values")
+   if isinstance(q1_rejected_values,dict):
+    for field in q1_income_values:
+     q1_rejected_values.pop(field,None)
+   q1_income_evidence={
+    "source_policy":"VietstockFinance document catalog and linked PDF only",
+    "source_index_url":q1_2024.get("source_index_url"),
+    "source_document_url":q1_2024.get("source_url"),
+    "source_archive_file":q1_2024.get("source_archive_file"),
+    "report_form":"B02a-CTCK",
+    "report_scope":"standalone securities-company financial statement; not consolidated",
+    "pdf_pages":[9,10],
+    "manually_visual_reviewed":True,
+    "exact_source_vnd":{field:int(round(value*1000000)) for field,value in q1_income_values.items()},
+    "note":"Total operating revenue and expense components were read from the explicit three-month statement. The combined row 24 remains in total operating expenses but is not relabelled as pure borrowing expense."
+   }
+   if q1_2024.get("financial_line_items_source_row_reconciliation")!=q1_income_evidence:
+    q1_2024["financial_line_items_source_row_reconciliation"]=q1_income_evidence
+    changed=True; field_count+=1
+   q1_note=(
+    "Đã đối chiếu trực quan B02a-CTCK VietstockFinance Q1/2024, PDF trang 9–10: sửa tổng doanh thu hoạt động, "
+    "các dòng doanh thu/chi phí, lợi nhuận hoạt động, thuế và tổng chi phí theo cột quý I. "
+    "Dòng chi phí số 24 gồm nhiều khoản tổng hợp nên không gán nhầm thành riêng chi phí lãi vay."
+   )
+   q1_old_note=str(q1_2024.get("financial_line_items_note") or "")
+   if q1_note not in q1_old_note:
+    q1_2024["financial_line_items_note"]=(q1_old_note+" "+q1_note).strip()
+    changed=True; field_count+=1
+   if field_count>q1_before_fields:
+    q1_2024["financial_line_items_status"]="auto_extracted_pending_visual_review"
+    q1_2024["financial_line_items_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
+    changed=True; quarter_count+=1
+  else:
+   print("TCX 2024-Q1: income repair skipped; required B02a-CTCK source tokens did not match.")
+
+ # Balance-sheet recovery for TCX Q1/Q2 2024. These B01a-CTCK values are
+ # standalone company balances, and every accepted field has a source-page
+ # trail. Totals already stored in the core snapshot remain unchanged/rounded.
+ balance_specs={
+  "2024-Q1":{
+   "evidence":{
+    5:["47.184.524.962.757","44.026.431.030.982","3.158.093.931.775","19.838.888.765.755","19.152.369.771.965","2.077.862.639.126","2.352.046.000.000","350.224.486.597","58.067.296.618"],
+    6:["21.911.875.104.076","720.055.351.262","24.552.594.507.419","13.205.484.229.760","20.850.129.455.475","81.102.357.029","714.047.369.s49"],
+   },
+   "values":{
+    "current_assets":44026431.030982,
+    "non_current_assets":3158093.931775,
+    "broker_held_to_maturity_assets":2352046.000000,
+    "broker_lending_assets":19838888.765755,
+    "broker_afs_assets":19152369.771965,
+    "broker_receivables":350224.486597,
+    "fixed_assets":58067.296618,
+    "current_liabilities":21911875.104076,
+    "long_term_liabilities":720055.351262,
+    "broker_short_term_borrowings":20850129.455475,
+    "broker_short_term_bonds":81102.357029,
+    "broker_long_term_bonds":714047.369549,
+    "retained_earnings":13205484.229760,
+   },
+   "pages":[5,6],
+  },
+  "2024-Q2":{
+   "evidence":{
+    5:["52.021.362.358.734","48.861.579.413.303","3.159.782.945.431","24.693.764.239.854","18.783.067.451.386","2.775.473.279.243","1.851.105.785.348","435.100.224.522","52.570.661.540"],
+    6:["24.777.335.661.227","2.600.724.459.312","24.643.302.238.195","13.306.899.085.123","22.348.574.457.637","90.365.281.510","2.596.279.942.814"],
+   },
+   "values":{
+    "current_assets":48861579.413303,
+    "non_current_assets":3159782.945431,
+    "broker_held_to_maturity_assets":1851105.785348,
+    "broker_lending_assets":24693764.239854,
+    "broker_afs_assets":18783067.451386,
+    "broker_receivables":435100.224522,
+    "fixed_assets":52570.661540,
+    "current_liabilities":24777335.661227,
+    "long_term_liabilities":2600724.459312,
+    "broker_short_term_borrowings":22348574.457637,
+    "broker_short_term_bonds":90365.281510,
+    "broker_long_term_bonds":2596279.942814,
+    "retained_earnings":13306899.085123,
+   },
+   "pages":[5,6],
+  },
+ }
+ for period,spec in balance_specs.items():
+  item=by_period.get(period)
+  if not isinstance(item,dict):
+   continue
+  source=archived_pages(item)
+  evidence_ok=bool(source) and all(
+   all(token in source.get(page,"") for token in tokens)
+   for page,tokens in spec["evidence"].items()
+  )
+  if not evidence_ok:
+   print(f"TCX {period}: balance repair skipped; exact B01a-CTCK tokens did not match.")
+   continue
+  before_field_count=field_count
+  for field,value in spec["values"].items():
+   record_value(
+    item,field,value,
+    f"Re-read from the visually checked B01a-CTCK balance sheet linked by VietstockFinance, {period}, PDF page {5 if field in {'current_assets','non_current_assets','broker_held_to_maturity_assets','broker_lending_assets','broker_afs_assets','broker_receivables','fixed_assets'} else 6}; source VND divided by 1,000,000."
+   )
+  fields_before=set(item.get("financial_line_items_extracted_fields") or [])
+  fields_after=fields_before|set(spec["values"])
+  if fields_after!=fields_before:
+   item["financial_line_items_extracted_fields"]=sorted(fields_after)
+   changed=True; field_count+=1
+  rejected_before=set(item.get("financial_line_items_rejected_fields") or [])
+  rejected_after=rejected_before-set(spec["values"])
+  if rejected_after!=rejected_before:
+   item["financial_line_items_rejected_fields"]=sorted(rejected_after)
+   changed=True; field_count+=1
+  rejected_values=item.get("financial_line_items_rejected_values")
+  if isinstance(rejected_values,dict):
+   for field in spec["values"]:
+    rejected_values.pop(field,None)
+  balance_evidence={
+   "source_policy":"VietstockFinance document catalog and linked PDF only",
+   "source_index_url":item.get("source_index_url"),
+   "source_document_url":item.get("source_url"),
+   "source_archive_file":item.get("source_archive_file"),
+   "report_form":"B01a-CTCK",
+   "report_scope":"standalone securities-company balance sheet; not consolidated",
+   "pdf_pages":spec["pages"],
+   "manually_visual_reviewed":True,
+   "fields":{field:{"value_million_vnd":value,"source_value_vnd":int(round(value*1000000))} for field,value in spec["values"].items()},
+  }
+  if item.get("financial_line_items_balance_source_reconciliation")!=balance_evidence:
+   item["financial_line_items_balance_source_reconciliation"]=balance_evidence
+   changed=True; field_count+=1
+  note=(
+   f"Đã đối chiếu trực quan B01a-CTCK VietstockFinance {period}, PDF trang 5–6: khôi phục các dòng tài sản/nợ ngắn hạn, dài hạn, "
+   "đầu tư HTM, cho vay, AFS, phải thu, TSCĐ và lợi nhuận chưa phân phối. Đây là báo cáo riêng CTCK, không phải báo cáo hợp nhất."
+  )
+  old_note=str(item.get("financial_line_items_note") or "")
+  if note not in old_note:
+   item["financial_line_items_note"]=(old_note+" "+note).strip()
+   changed=True; field_count+=1
+  if field_count>before_field_count:
+   item["financial_line_items_status"]="auto_extracted_pending_visual_review"
+   item["financial_line_items_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
+   changed=True; quarter_count+=1
+
  # Repair TCX Q2/2024 where the older OCR parser mapped the foreign-exchange
  # row to generic revenue and mapped the finance-income subtotal to the broker's
  # total operating revenue. These exact values are guarded by the archived
