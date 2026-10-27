@@ -999,18 +999,44 @@
         const rawCoreStatus = String(item?.core_financial_extraction_status || '').toLowerCase();
         const blockForManualExtraction = rawVerification === 'manual_review_required_pending_extraction' ||
           rawCoreStatus === 'manual_review_required_pending_extraction';
-        if (!hasUnverifiedReportScope(item) && !blockForManualExtraction) return item;
+        const scopeBlocked = hasUnverifiedReportScope(item);
+        if (!scopeBlocked && !blockForManualExtraction) return item;
 
         const safe = { ...item };
+        const manuallyVerifiedFields = new Set(
+          Array.isArray(item?.financial_line_items_manually_verified_fields)
+            ? item.financial_line_items_manually_verified_fields.map(String)
+            : []
+        );
+        const explicitCorrectionFields = new Set(
+          Object.entries(item?.financial_line_items_value_corrections || {})
+            .filter(([key, correction]) => {
+              const currentValue = item?.[key];
+              const correctedValue = correction?.new_value;
+              return validNumber(currentValue) &&
+                validNumber(correctedValue) &&
+                Number(currentValue) === Number(correctedValue) &&
+                Boolean(String(correction?.reason || '').trim());
+            })
+            .map(([key]) => key)
+        );
+
         Object.keys(safe).forEach(key => {
-          if (scopeUnverifiedMetricField.test(key) && validNumber(safe[key])) safe[key] = null;
+          if (!scopeUnverifiedMetricField.test(key) || !validNumber(safe[key])) return;
+          // Unconfirmed report scope is a hard block: never mix separate/unclear
+          // statements into the consolidated series. For a known-scope report
+          // awaiting row-level reconciliation, retain only explicitly verified
+          // fields and fields with a recorded correction + reason. Keep the
+          // row marked for review; do not claim that the entire row is verified.
+          if (!scopeBlocked && (manuallyVerifiedFields.has(key) || explicitCorrectionFields.has(key))) return;
+          safe[key] = null;
         });
-        if (hasUnverifiedReportScope(item)) {
+        if (scopeBlocked) {
           safe.report_type = 'BCTC quý ' + ticker + ' ' + safe.period + ' (phạm vi hợp nhất chưa xác nhận; số liệu tạm ẩn)';
           safe.verification_status_note = String(item?.source_validation?.manual_review_reason || 'Phạm vi báo cáo chưa được VietstockFinance xác nhận là hợp nhất.') + ' Các số liệu chưa xác minh không hiển thị.';
         } else {
-          safe.report_type = String(item.report_type || ('BCTC quý ' + ticker + ' ' + safe.period)) + ' (chờ trích xuất/xác minh; số liệu tạm ẩn)';
-          safe.verification_status_note = String(item?.verification_status_note || 'Kỳ này được đánh dấu cần rà soát thủ công; số liệu chưa xác minh được ẩn khỏi biểu đồ và thống kê.');
+          safe.report_type = String(item.report_type || ('BCTC quý ' + ticker + ' ' + safe.period)) + ' (chờ trích xuất/xác minh; trường đã điều chỉnh vẫn hiển thị kèm cảnh báo rà soát)';
+          safe.verification_status_note = String(item?.verification_status_note || 'Kỳ này cần rà soát thủ công. Chỉ trường được đánh dấu kiểm chứng hoặc có bản ghi điều chỉnh kèm lý do mới còn hiển thị; trường chưa xác minh khác được để trống.');
         }
         safe.verification_status = 'manual_review_required_pending_extraction';
         safe.core_financial_extraction_status = 'manual_review_required_pending_extraction';
