@@ -15,7 +15,7 @@ DATA = ROOT / "data"
 RAW = ROOT / "reports" / "raw"
 REPORT_QUEUE = ROOT / "config" / "report-queue.json"
 _QUEUE_ARCHIVE_BY_URL = None
-DETAIL_SCHEMA_VERSION = "2026-10-26-bank-reconciliation-cashflow-v5"
+DETAIL_SCHEMA_VERSION = "2026-10-27-note-reference-dash-guards-v6"
 CORE_EXTRACTION_PARSER_VERSION = "2026-10-23-ngan-vnd-unit-v2-statement-rows"
 NUMBER_RE = re.compile(r"(?<![A-Za-z0-9])\(?-?\d[\d.,]*\d?\)?")
 BANKS = {"MBB", "ACB", "SHB", "TCB", "TPB", "VPB", "STB", "VCB", "CTG", "BID"}
@@ -48,7 +48,7 @@ BANK_BALANCE_LABELS = {
  "bank_customer_deposits":["tien gui cua khach hang"],
  "bank_valuable_papers":["phat hanh giay to co gia"],
  "bank_funding_and_trust_liabilities":["von tai tro, uy thac dau tu"],
- "bank_other_liabilities":["cac khoan no khac","cac khoan ngkhc","no khac"],
+ "bank_other_liabilities":["cac khoan no khac","cac khoan ng khac","cac khoan ngkhac","cac khoan ngkhc"],
 }
 BROKER_BALANCE_LABELS = {
  "broker_fvtpl_assets":["tai san tai chinh ghi nhan thong qua lai lo","tai san tai chinh ghi nhan thong qua lai/lo"],
@@ -286,6 +286,13 @@ def is_statement_row_start(line):
   return True
  return bool(re.match(r"^\s*(?:\|\s*)?\d{1,3}(?:\.\d{1,2})?\s*(?:\||\s+\d{1,3}\s)",raw))
 
+def strip_leading_note_reference(text):
+ # Vietstock note references such as III.18, 11.18 or 111.20 can be
+ # concatenated by OCR to the first reported amount. They are not amounts.
+ raw=str(text or "")
+ return re.sub(r"^\s*(?:(?:[ivxlcdm]{1,6})|(?:\d{1,3}))\s*\.\s*\d{1,2}\s+", " ", raw, count=1, flags=re.IGNORECASE)
+
+
 def value_by_label(pages,labels,factor,threshold=1000,exclude_terms=None):
  excludes=[norm(term) for term in (exclude_terms or [])]
  for label in labels:
@@ -303,7 +310,9 @@ def value_by_label(pages,labels,factor,threshold=1000,exclude_terms=None):
      if any(term and term in combined for term in excludes):
       continue
      # Search after the complete label, including wrapped continuation lines.
-     tail=combined[position+len(target):]
+     tail=strip_leading_note_reference(combined[position+len(target):])
+     # A dash in the first (current) period must not shift a comparative value.
+     if re.match(r"^\s*[-–—](?:\s|$)",tail): return 0
      vals=amounts(tail,threshold=threshold)
      if vals: return int(round(vals[0]*factor))
  return None
@@ -326,7 +335,8 @@ def value_by_label_with_note_reference(pages, labels, factor):
      combined=norm(" ".join(parts))
      position=combined.find(target)
      if position < 0: continue
-     tail=combined[position+len(target):]
+     tail=strip_leading_note_reference(combined[position+len(target):])
+     if re.match(r"^\s*[-–—](?:\s|$)",tail): return 0
      vals=[]
      for token in NUMBER_RE.findall(tail):
       parsed=parse_amount(token)
@@ -1591,6 +1601,8 @@ def enrich_snapshot(path):
  for item in items:
   if not isinstance(item,dict) or not period_key(item): continue
   report_type_text=str(item.get("report_type") or "")
+  old_detail_schema=str(item.get("financial_line_items_schema_version") or "")
+  detail_schema_migration=bool(item.get("financial_line_items_status") and old_detail_schema != DETAIL_SCHEMA_VERSION)
   if item.get("financial_line_items_status") and item.get("financial_line_items_schema_version") != DETAIL_SCHEMA_VERSION:
    item["financial_line_items_schema_version"]=DETAIL_SCHEMA_VERSION
    item["financial_line_items_schema_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
@@ -1845,14 +1857,56 @@ def enrich_snapshot(path):
     changed=True
     field_count+=len(fresh_rejected)
     rejection_changed=True
-  if not found:
-   if rejection_changed: quarter_count+=1
-   continue
+  # On a parser/schema migration, do not keep an old OCR number when the
+  # corrected parser cannot confirm that field from the archived PDF. Blanks
+  # are preferable to displaying a potentially mis-mapped figure.
   new_fields=[]
+  cleared_fields=[]
+  if detail_schema_migration:
+   tracked_fields=set(item.get("financial_line_items_extracted_fields") or [])
+   manually_verified=set(item.get("financial_line_items_manually_verified_fields") or [])
+   for old_field in sorted(tracked_fields-manually_verified):
+    if old_field.startswith("__") or old_field in found: continue
+    old_value=item.get(old_field)
+    if isinstance(old_value,(int,float)) and not isinstance(old_value,bool):
+     item.setdefault("financial_line_items_prior_values",{}).setdefault(old_field,old_value)
+     item.setdefault("financial_line_items_value_corrections",{})[old_field]={
+      "previous_value":old_value,
+      "new_value":None,
+      "reason":"Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+     }
+     item[old_field]=None
+     cleared_fields.append(old_field)
+     changed=True
+     field_count+=1
+   if cleared_fields:
+    item["financial_line_items_extracted_fields"]=sorted(tracked_fields-set(cleared_fields))
+  if not found:
+   if rejection_changed or cleared_fields: quarter_count+=1
+   continue
   for field,value in found.items():
    if field.startswith("__"): continue
    if item.get(field) is None:
     item[field]=value; new_fields.append(field)
+   elif (
+    detail_schema_migration
+    and field in set(item.get("financial_line_items_extracted_fields") or [])
+    and field not in set(item.get("financial_line_items_manually_verified_fields") or [])
+    and isinstance(item.get(field),(int,float))
+    and not isinstance(item.get(field),bool)
+    and isinstance(value,(int,float))
+    and not isinstance(value,bool)
+    and item.get(field)!=value
+   ):
+    previous_value=item[field]
+    item.setdefault("financial_line_items_prior_values",{}).setdefault(field,previous_value)
+    item.setdefault("financial_line_items_value_corrections",{})[field]={
+     "previous_value":previous_value,
+     "new_value":int(round(value)),
+     "reason":"Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+    }
+    item[field]=int(round(value))
+    new_fields.append(field)
    elif (
     symbol in BANKS
     and field=="bank_dividend_and_capital_income"
