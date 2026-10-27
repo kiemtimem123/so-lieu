@@ -15,7 +15,7 @@ DATA = ROOT / "data"
 RAW = ROOT / "reports" / "raw"
 REPORT_QUEUE = ROOT / "config" / "report-queue.json"
 _QUEUE_ARCHIVE_BY_URL = None
-DETAIL_SCHEMA_VERSION = "2026-10-27-note-reference-and-aggregate-guards-v7"
+DETAIL_SCHEMA_VERSION = "2026-10-27-note-reference-alias-and-manual-guards-v8"
 CORE_EXTRACTION_PARSER_VERSION = "2026-10-23-ngan-vnd-unit-v2-statement-rows"
 NUMBER_RE = re.compile(r"(?<![A-Za-z0-9])\(?-?\d[\d.,]*\d?\)?")
 BANKS = {"MBB", "ACB", "SHB", "TCB", "TPB", "VPB", "STB", "VCB", "CTG", "BID"}
@@ -37,7 +37,7 @@ BALANCE_LABELS = {
 BANK_BALANCE_LABELS = {
  "bank_cash_on_hand":["tien mat, vang bac, da quy","tien mat vang bac da quy","tien mat, vang","tien mat vang"],
  "bank_deposits_at_state_bank":["tien gui tai nhnn","tien gui tai ngan hang nha nuoc"],
- "bank_deposits_and_loans_to_credit_institutions":["tien gui va cho vay cac tctd khac","tien gui va cho vay cac to chuc tin dung khac","tien gui va cap tin dung cho cac tctd khac","tien gui va cap tin dung cho cac to chuc tin dung khac"],
+ "bank_deposits_and_loans_to_credit_institutions":["tien gui va cho vay cac tctd khac","tien gui va cho vay cac to chuc tin dung khac","tien gui va cap tin dung cho cac tctd khac","tien gui va cap tin dung cho cac to chuc tin dung khac","tien, vang gui va cho vay cac to chuc tin dung","tien, vang gui va cho vay cac tctd khac","tien vang gui va cho vay cac to chuc tin dung khac","tien vang gui va cho vay cac tctd khac"],
  "bank_customer_loans":["cho vay khach hang","cho vay khichhing","chovaykhachhang","cho vay khach hang tong"],
  "bank_trading_securities":["chung khoan kinh doanh"],
  "bank_derivatives_and_other_financial_assets":["cac cong cu tai chinh phai sinh va cac tai san tai chinh khac"],
@@ -287,10 +287,11 @@ def is_statement_row_start(line):
  return bool(re.match(r"^\s*(?:\|\s*)?\d{1,3}(?:\.\d{1,2})?\s*(?:\||\s+\d{1,3}\s)",raw))
 
 def strip_leading_note_reference(text):
- # Vietstock note references such as III.18, 11.18 or 111.20 can be
- # concatenated by OCR to the first reported amount. They are not amounts.
+ # Vietstock note references can be misread as Roman numerals, digits, or
+ # mixed OCR tokens such as III.18, 11.18, 111.20, IIH.48, or 1H.18.
+ # They are not amounts and must not allow the parser to slide to the next row.
  raw=str(text or "")
- return re.sub(r"^\s*(?:(?:[ivxlcdm]{1,6})|(?:\d{1,3}))\s*\.\s*\d{1,2}\s+", " ", raw, count=1, flags=re.IGNORECASE)
+ return re.sub(r"^\s*[A-Za-z0-9]{1,6}\s*\.\s*\d{1,2}\s+", " ", raw, count=1, flags=re.IGNORECASE)
 
 
 def value_by_label(pages,labels,factor,threshold=1000,exclude_terms=None):
