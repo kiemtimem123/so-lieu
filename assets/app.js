@@ -1575,12 +1575,12 @@
           { label: 'Lãi thuần từ chứng khoán đầu tư', key: 'bank_investment_securities_net', level: 1 },
           { label: 'Lãi thuần từ hoạt động kinh doanh khác', key: 'bank_other_operating_net', level: 1 },
           { label: 'Thu nhập góp vốn, mua cổ phần', key: 'bank_dividend_and_capital_income', level: 1 },
-          { label: 'Tổng chi phí hoạt động', key: 'bank_operating_expenses', level: 1 },
+          { label: 'Tổng chi phí hoạt động', key: 'bank_operating_expenses', level: 1, negativeExpense: true }
           { label: 'Lợi nhuận trước dự phòng rủi ro', key: 'bank_pre_provision_operating_profit', strong: true },
-          { label: 'Chi phí dự phòng rủi ro', key: 'bank_provision_expense', level: 1 },
+          { label: 'Chi phí dự phòng rủi ro', key: 'bank_provision_expense', level: 1, negativeExpense: true }
           { label: 'Lợi nhuận trước thuế', key: 'pretax_profit', strong: true },
-          { label: 'Thuế thu nhập doanh nghiệp (tổng)', key: 'income_tax', level: 1 },
-          { label: 'Thuế TNDN hiện hành', key: 'income_tax_current', level: 1 },
+          { label: 'Thuế thu nhập doanh nghiệp (tổng)', key: 'income_tax', level: 1, negativeExpense: true }
+          { label: 'Thuế TNDN hiện hành', key: 'income_tax_current', level: 1, negativeExpense: true }
           { label: 'Thuế TNDN hoãn lại', key: 'income_tax_deferred', level: 1 },
           { label: 'Lợi nhuận sau thuế', key: 'net_profit', strong: true },
           { label: 'Lợi ích cổ đông không kiểm soát', key: 'bank_non_controlling_profit', level: 1 },
@@ -1602,21 +1602,21 @@
           { label: 'Doanh thu tư vấn tài chính', key: 'broker_financial_advisory_revenue', level: 1 },
           { label: 'Thu nhập hoạt động khác', key: 'broker_other_operating_income', level: 1 },
           { label: 'Tổng chi phí hoạt động theo BCTC CTCK', key: 'broker_total_operating_expenses', level: 1 },
-          { label: 'Chi phí đi vay của các khoản cho vay', key: 'broker_lending_cost', level: 1 },
-          { label: 'Chi phí hoạt động tự doanh', key: 'broker_trading_expense', level: 1 },
-          { label: 'Chi phí tư vấn tài chính', key: 'broker_advisory_expense', level: 1 },
-          { label: 'Lỗ từ tự doanh FVTPL', key: 'broker_fvtpl_loss', level: 1 },
-          { label: 'Chi phí môi giới chứng khoán', key: 'broker_brokerage_expense', level: 1 },
-          { label: 'Chi phí lưu ký chứng khoán', key: 'broker_custody_expense', level: 1 },
-          { label: 'Chi phí hoạt động khác', key: 'broker_other_operating_expense', level: 1 },
-          { label: 'Chi phí hoạt động', key: 'broker_operating_expenses', level: 1 },
+          { label: 'Chi phí đi vay của các khoản cho vay', key: 'broker_lending_cost', level: 1, negativeExpense: true }
+          { label: 'Chi phí hoạt động tự doanh', key: 'broker_trading_expense', level: 1, negativeExpense: true }
+          { label: 'Chi phí tư vấn tài chính', key: 'broker_advisory_expense', level: 1, negativeExpense: true }
+          { label: 'Lỗ từ tự doanh FVTPL', key: 'broker_fvtpl_loss', level: 1, negativeExpense: true }
+          { label: 'Chi phí môi giới chứng khoán', key: 'broker_brokerage_expense', level: 1, negativeExpense: true }
+          { label: 'Chi phí lưu ký chứng khoán', key: 'broker_custody_expense', level: 1, negativeExpense: true }
+          { label: 'Chi phí hoạt động khác', key: 'broker_other_operating_expense', level: 1, negativeExpense: true }
+          { label: 'Chi phí hoạt động', key: 'broker_operating_expenses', level: 1, negativeExpense: true }
           { label: 'Doanh thu hoạt động tài chính', key: 'broker_financial_income', level: 1 },
-          { label: 'Chi phí tài chính', key: 'broker_financial_expense', level: 1 },
-          { label: 'Trong đó: Chi phí lãi vay', key: 'broker_interest_expense', level: 1 },
-          { label: 'Chi phí quản lý công ty chứng khoán', key: 'broker_admin_expenses', level: 1 },
+          { label: 'Chi phí tài chính', key: 'broker_financial_expense', level: 1, negativeExpense: true }
+          { label: 'Trong đó: Chi phí lãi vay', key: 'broker_interest_expense', level: 1, negativeExpense: true }
+          { label: 'Chi phí quản lý công ty chứng khoán', key: 'broker_admin_expenses', level: 1, negativeExpense: true }
           { label: 'Lợi nhuận thuần từ hoạt động kinh doanh', key: 'broker_net_operating_profit', strong: true },
           { label: 'Lợi nhuận trước thuế', key: 'pretax_profit', strong: true },
-          { label: 'Thuế thu nhập doanh nghiệp', key: 'income_tax', level: 1 },
+          { label: 'Thuế thu nhập doanh nghiệp', key: 'income_tax', level: 1, negativeExpense: true }
           { label: 'Lợi nhuận sau thuế', key: 'net_profit', strong: true },
           { label: 'LNST thuộc cổ đông công ty mẹ', key: 'net_profit_attributable', level: 1 },
           { label: 'EPS cơ bản (đồng/cp)', key: 'eps', ratio: true, level: 1 }
@@ -1624,17 +1624,17 @@
         return [
         { label: 'KẾT QUẢ HOẠT ĐỘNG KINH DOANH', type: 'section' },
         { label: revenueRowLabel, key: 'revenue', level: 1 },
-        { label: 'Giá vốn hàng bán', key: 'cost_of_goods_sold', level: 1 },
+        { label: 'Giá vốn hàng bán', key: 'cost_of_goods_sold', level: 1, negativeExpense: true }
         { label: 'Lợi nhuận gộp', key: 'gross_profit', strong: true },
         { label: 'Doanh thu hoạt động tài chính', key: 'financial_income', level: 1 },
-        { label: 'Chi phí tài chính', key: 'financial_expense', level: 1 },
-        { label: 'Trong đó: Chi phí lãi vay', key: 'interest_expense', level: 1 },
-        { label: 'Chi phí bán hàng', key: 'selling_expense', level: 1 },
-        { label: 'Chi phí quản lý doanh nghiệp', key: 'admin_expense', level: 1 },
+        { label: 'Chi phí tài chính', key: 'financial_expense', level: 1, negativeExpense: true }
+        { label: 'Trong đó: Chi phí lãi vay', key: 'interest_expense', level: 1, negativeExpense: true }
+        { label: 'Chi phí bán hàng', key: 'selling_expense', level: 1, negativeExpense: true }
+        { label: 'Chi phí quản lý doanh nghiệp', key: 'admin_expense', level: 1, negativeExpense: true }
         { label: 'Lợi nhuận từ hoạt động kinh doanh', key: 'operating_profit', strong: true },
         { label: 'Lợi nhuận trước thuế', key: 'pretax_profit', strong: true },
-        { label: 'Thuế thu nhập doanh nghiệp (tổng)', key: 'income_tax', level: 1 },
-        { label: 'Thuế TNDN hiện hành', key: 'income_tax_current', level: 1 },
+        { label: 'Thuế thu nhập doanh nghiệp (tổng)', key: 'income_tax', level: 1, negativeExpense: true }
+        { label: 'Thuế TNDN hiện hành', key: 'income_tax_current', level: 1, negativeExpense: true }
         { label: 'Thuế TNDN hoãn lại', key: 'income_tax_deferred', level: 1 },
         { label: 'Lãi cơ bản trên cổ phiếu (EPS)', key: 'eps', ratio: true, level: 1 },
         { label: 'Lợi nhuận sau thuế', key: 'net_profit', strong: true },
@@ -1728,7 +1728,7 @@
             : activeIndustry === 'securities'
               ? 'Báo cáo công ty chứng khoán: doanh thu môi giới, cho vay, tự doanh, bảo lãnh và lưu ký được tách theo mẫu báo cáo CTCK; trường thiếu hoặc chưa khớp sẽ để trống.'
               : 'Kết quả kinh doanh: chỉ tiêu chi tiết lấy từ BCTC quý; doanh thu có thể được tái lập từ lợi nhuận gộp và giá vốn khi OCR sai chữ số, có ghi công thức trong ghi chú.',
-          cashflow: 'Lưu chuyển tiền tệ chỉ hiển thị khi các luồng tiền khớp biến động tiền thuần; kỳ có số OCR mâu thuẫn sẽ để trống và ghi rõ ở ghi chú.',
+          cashflow: 'Bảng hiển thị số phát sinh riêng trong quý; số lũy kế *_ytd không thay thế số quý. Luồng tiền được tái lập từ báo cáo VietstockFinance; ô thiếu hoặc chưa thể đối chiếu vẫn để trống.',
           notes: 'Thông tin nguồn, kỳ công bố và trạng thái kiểm chứng lấy từ bản ghi báo cáo; mở PDF để xem chi tiết gốc.',
           ratios: 'ROA/ROE và P/B chỉ lấy từ trường dữ liệu đã có trong snapshot; không tự tính P/B khi thiếu giá thị trường và giá trị sổ sách trên mỗi cổ phiếu.',
           peers: 'So sánh các mã cùng nhóm ngành đã cấu hình, cùng kỳ và cùng chỉ tiêu. P/B chỉ hiển thị khi snapshot có dữ liệu được cung cấp; không tự suy đoán giá thị trường.'
@@ -1829,7 +1829,8 @@
               return '<td><span class="financial-status financial-status-' + badge.kind + '">' + escapeHtml(badge.label) + '</span></td>';
             }
             if (def.text) return '<td class="statement-text-cell">' + escapeHtml(value || '—') + '</td>';
-            const displayed = statementNumber(value, item, Boolean(def.ratio));
+            const displayValue = def.negativeExpense && validNumber(value) ? -Math.abs(Number(value)) : value;
+            const displayed = statementNumber(displayValue, item, Boolean(def.ratio));
             const ratioSuffix = ['pb','pe','ev_ebitda'].includes(def.key) ? ' lần'
               : def.key === 'eps' ? ' đ/cp'
               : ['price'].includes(def.key) ? ' đ'
