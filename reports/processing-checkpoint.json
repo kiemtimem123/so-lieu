@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-27T18:17:47Z",
+  "updatedAt": "2026-10-27T18:19:05.988Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -40,15 +40,15 @@
     "MBB"
   ],
   "lastCompletedSymbol": "TCX",
-  "activeSymbol": null,
-  "resumeSymbolHint": "HCM",
+  "activeSymbol": "TCX",
+  "resumeSymbolHint": "TCX",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "TCX",
-    "status": "terminal_needs_manual_review",
-    "completeForAutomation": true,
+    "status": "pending_source_mapping_validation",
+    "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-27T18:17:47Z",
+    "processedAt": "2026-10-27T18:19:05.988Z",
     "workflowRunId": "40558485968",
     "workflowRunNumber": 2448,
     "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/40558485968",
@@ -74,7 +74,9 @@
     ],
     "statementPagesPending": false,
     "skipUnconfirmedAutomation": true,
-    "skipUnconfirmedReason": "User-directed skip; unverified figures remain blank for manual review."
+    "skipUnconfirmedReason": "User-directed skip; unverified figures remain blank for manual review.",
+    "resumeSymbolHint": "TCX",
+    "note": "Retry source-backed TCX enrichment after fixing its missing return value; preserve archived VietstockFinance statements."
   },
   "symbolStates": {
     "MBB": {
@@ -150,8 +152,8 @@
       "snapshotFetchedAt": "2026-10-19T13:59:30.066+07:00"
     },
     "TCX": {
-      "status": "terminal_needs_manual_review",
-      "completeForAutomation": true,
+      "status": "pending_source_mapping_validation",
+      "completeForAutomation": false,
       "manualReviewRemaining": true,
       "periodCount": 11,
       "firstQuarter": "2024-Q1",
@@ -173,10 +175,10 @@
         "2026-Q3"
       ],
       "statementPagesPending": false,
-      "skipUnconfirmedAutomation": true,
-      "skipUnconfirmedReason": "User-directed skip; unverified figures remain blank for manual review.",
+      "skipUnconfirmedAutomation": false,
+      "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 11,
-      "updatedAt": "2026-10-27T18:17:47Z",
+      "updatedAt": "2026-10-27T18:19:05.988Z",
       "snapshotFetchedAt": "2026-10-21T15:15:06+00:00"
     },
     "HCM": {
