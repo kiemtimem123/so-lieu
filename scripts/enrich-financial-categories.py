@@ -2450,6 +2450,7 @@ def repair_tcx_2026_source_rows(items,symbol):
    field_count+=len(q3_values)
   else:
    print("TCX 2026-Q3: statement-row repair skipped because archived VietstockFinance line-item evidence did not match.")
+ return changed,quarter_count,field_count
 
 def enrich_snapshot(path):
  snapshot=json.loads(path.read_text(encoding="utf-8"))
