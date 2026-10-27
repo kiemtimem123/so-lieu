@@ -1217,7 +1217,7 @@
         {field:'revenue',label:revenueLabelFor(ticker)},
         {field:'pretax_profit',label:'Lợi nhuận trước thuế'},
         {field:'net_profit',label:'Lợi nhuận sau thuế'}
-      ].map(item=>({ ...item, values:rows.map(row=>statementNumericValue(row[item.field],row)) }));
+      ].map(item=>({ ...item, values:rows.map(row=>statementNumericValue(resolveStatementValue(row,item.field,rows,ticker).value,row)) }));
       const financialAvailable = financial.filter(series=>series.values.some(value=>value!==null));
       drawChart('profit','stockProfitChart','stockProfitNote',{
         labels, points:financialAvailable.flatMap(s=>s.values.filter(v=>v!==null)),
@@ -1240,7 +1240,7 @@
       const ratios=[
         {field:'roa',label:'ROA (%)'},
         {field:'roe',label:'ROE (%)'}
-      ].map(item=>({ ...item, values:rows.map(row=>statementNumericValue(row[item.field],row,true)) }));
+      ].map(item=>({ ...item, values:rows.map(row=>statementNumericValue(resolveStatementValue(row,item.field,rows,ticker).value,row,true)) }));
       const ratiosAvailable=ratios.filter(series=>series.values.some(value=>value!==null));
       drawChart('ratios','stockRatiosChart','stockRatiosNote',{
         labels,points:ratiosAvailable.flatMap(s=>s.values.filter(v=>v!==null)),
@@ -1261,9 +1261,11 @@
       const selectedIndustry = industryFor(String(symbolSelect?.value || 'MBB').toUpperCase());
       const compareSymbols = symbols.filter(ticker => compareIndustry === 'all' || industryFor(ticker) === selectedIndustry);
       const values = compareSymbols.map(ticker => {
-        const row = rowsFor(ticker).find(item=>item.period===period);
+        const tickerRows = rowsFor(ticker);
+        const row = tickerRows.find(item=>item.period===period);
         const isRatio = ['roa','roe','pb'].includes(metric);
-        return {ticker, value:row ? statementNumericValue(row[metric],row,isRatio) : null, row};
+        const resolved = row ? resolveStatementValue(row,metric,tickerRows,ticker).value : null;
+        return {ticker, value:row ? statementNumericValue(resolved,row,isRatio) : null, row};
       }).filter(item=>item.value!==null);
       drawChart('compare','stockCompareChart','stockCompareNote',{
         type:'bar', labels:values.map(item=>item.ticker), points:values.map(item=>item.value),
@@ -1333,14 +1335,18 @@
       element.classList.toggle('is-negative', textValue.startsWith('-'));
       element.classList.toggle('is-positive', textValue !== '—' && textValue !== '' && !textValue.startsWith('-') && !/^0([,.]0+)?%$/.test(textValue));
     };
-    const percentageChange = (field, current, rows) => {
-      if (!current || !validNumber(current[field])) return '—';
+    const percentageChange = (field, current, rows, ticker = String(symbolSelect?.value || 'MBB').toUpperCase()) => {
+      if (!current) return '—';
+      const currentValue = resolveStatementValue(current, field, rows, ticker).value;
+      if (!validNumber(currentValue)) return '—';
       const match = String(current.period || '').match(/^(\d{4})-Q([1-4])$/);
       if (!match) return '—';
       const previousPeriod = (Number(match[1]) - 1) + '-Q' + match[2];
       const previous = rows.find(row => row.period === previousPeriod);
-      if (!previous || !validNumber(previous[field]) || Number(previous[field]) === 0) return '—';
-      const change = (Number(current[field]) - Number(previous[field])) / Math.abs(Number(previous[field])) * 100;
+      if (!previous) return '—';
+      const previousValue = resolveStatementValue(previous, field, rows, ticker).value;
+      if (!validNumber(previousValue) || Number(previousValue) === 0) return '—';
+      const change = (Number(currentValue) - Number(previousValue)) / Math.abs(Number(previousValue)) * 100;
       if (!Number.isFinite(change)) return '—';
       const formatted = new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 1, minimumFractionDigits: 1 }).format(change);
       return (change > 0 ? '+' : '') + formatted + '%';
@@ -1380,12 +1386,13 @@
       const statusBadge = document.getElementById('stockStatStatus');
       setText('stockStatsMeta', period + ' · ' + (basisSelect?.value === 'separate' ? 'Báo cáo riêng lẻ' : 'Báo cáo hợp nhất') + ' · Nguồn: ' + (snapshots.get(ticker)?.sourceName || 'snapshot tài chính'));
       setText('stockStatPeriod', period);
-      setText('stockStatRevenue', overviewMoney(latest.revenue, latest));
+      const latestRevenue = resolveStatementValue(latest, 'revenue', rows, ticker).value;
+      setText('stockStatRevenue', overviewMoney(latestRevenue, latest));
       setText('stockStatRevenueLabel', revenueLabelFor(ticker) + ' kỳ gần nhất');
       setText('stockStatRevenueYoYLabel', revenueLabelFor(ticker) + ' (YoY)');
-      const revenueYoY = percentageChange('revenue', latest, rows);
-      const pretaxYoY = percentageChange('pretax_profit', latest, rows);
-      const netYoY = percentageChange('net_profit', latest, rows);
+      const revenueYoY = percentageChange('revenue', latest, rows, ticker);
+      const pretaxYoY = percentageChange('pretax_profit', latest, rows, ticker);
+      const netYoY = percentageChange('net_profit', latest, rows, ticker);
       setText('stockStatRevenueYoY', revenueYoY);
       setText('stockStatPretax', overviewMoney(latest.pretax_profit, latest));
       setText('stockStatPretaxYoY', pretaxYoY);
@@ -1425,14 +1432,18 @@
         ['stockStatCurrentLiabilities','current_liabilities'],['stockStatLiabilities','total_liabilities'],['stockStatEquity','equity'],
         ['stockStatOperatingCash','operating_cash_flow'],['stockStatInvestingCash','investing_cash_flow'],['stockStatFinancingCash','financing_cash_flow'],
         ['stockStatCapex','capital_expenditure']
-      ]) setText(id, overviewMoney(firstNumber(latest, [key]), latest));
+      ]) setText(id, overviewMoney(resolveStatementValue(latest, key, rows, ticker).value, latest));
 
-      const operatingCash = firstNumber(latest, ['operating_cash_flow']);
-      const capex = firstNumber(latest, ['capital_expenditure']);
+      const operatingCashValue = resolveStatementValue(latest, 'operating_cash_flow', rows, ticker).value;
+      const capexValue = resolveStatementValue(latest, 'capital_expenditure', rows, ticker).value;
+      const operatingCash = validNumber(operatingCashValue) ? Number(operatingCashValue) : null;
+      const capex = validNumber(capexValue) ? Number(capexValue) : null;
       const fcf = operatingCash !== null && capex !== null ? operatingCash - Math.abs(capex) : null;
       setText('stockStatFcf', fcf === null ? '—' : overviewMoney(fcf, latest));
-      const grossProfit = firstNumber(latest, ['gross_profit']);
-      const revenue = firstNumber(latest, ['revenue']);
+      const grossValue = resolveStatementValue(latest, 'gross_profit', rows, ticker).value;
+      const revenueValueForMargin = resolveStatementValue(latest, 'revenue', rows, ticker).value;
+      const grossProfit = validNumber(grossValue) ? Number(grossValue) : null;
+      const revenue = validNumber(revenueValueForMargin) ? Number(revenueValueForMargin) : null;
       const netProfit = firstNumber(latest, ['net_profit']);
       setText('stockStatGrossMargin', grossProfit !== null && revenue !== null && revenue !== 0 ? formatPct(grossProfit/revenue*100) : '—');
       setText('stockStatNetMargin', netProfit !== null && revenue !== null && revenue !== 0 ? formatPct(netProfit/revenue*100) : '—');
@@ -1450,8 +1461,8 @@
       setText('stockStatDebtEquity', debtEquity === null ? '—' : formatPlain(debtEquity) + ' lần');
       setText('stockStatEquityAssets', formatPct(equityAssets));
       setText('stockStatCurrentRatio', currentRatio === null ? '—' : formatPlain(currentRatio) + ' lần');
-      setText('stockStatRoa', overviewNumber(latest.roa, latest, '%'));
-      setText('stockStatRoe', overviewNumber(latest.roe, latest, '%'));
+      setText('stockStatRoa', overviewNumber(resolveStatementValue(latest, 'roa', rows, ticker).value, latest, '%'));
+      setText('stockStatRoe', overviewNumber(resolveStatementValue(latest, 'roe', rows, ticker).value, latest, '%'));
       if (statusBadge) { statusBadge.textContent = statusBadgeData.label; statusBadge.className = 'financial-status financial-status-' + statusBadgeData.kind; }
       const detailReview = latest.financial_line_items_status === 'auto_extracted_pending_visual_review'
         ? ' · Chỉ tiêu chi tiết: trích xuất tự động, chờ đối chiếu PDF'
@@ -1490,6 +1501,137 @@
       if (numeric === null) return '—';
       return new Intl.NumberFormat('en-US', { maximumFractionDigits: 1, minimumFractionDigits: 0 }).format(numeric);
     };
+
+    // Resolve a statement cell from a source field first, then apply only
+    // accounting identities whose required source inputs are present. Derived
+    // values remain presentation-only and carry a tooltip explaining the formula.
+    const resolveStatementValue = (item, key, rows = [], ticker = String(symbolSelect?.value || 'MBB').toUpperCase()) => {
+      if (!item) return { value: null, formula: '' };
+      const industry = industryFor(String(ticker || 'MBB').toUpperCase());
+
+      // For securities companies the official statement's operating-revenue
+      // subtotal is the comparable top-line measure; the generic "revenue"
+      // field may refer to a different extracted line.
+      if (key === 'revenue' && industry === 'securities' && validNumber(item.broker_total_operating_revenue)) {
+        return { value: item.broker_total_operating_revenue, formula: 'Lấy trực tiếp từ trường Tổng doanh thu hoạt động của BCTC công ty chứng khoán.' };
+      }
+      if (validNumber(item[key])) return { value: item[key], formula: '' };
+
+      const verification = String(item.verification_status || '').toLowerCase();
+      const coreStatus = String(item.core_financial_extraction_status || '').toLowerCase();
+      // Never derive additional figures from reports whose consolidation scope
+      // or core extraction is explicitly blocked for manual review.
+      if (hasUnverifiedReportScope(item) ||
+          verification === 'manual_review_required_pending_extraction' ||
+          coreStatus === 'manual_review_required_pending_extraction') {
+        return { value: item[key] ?? null, formula: '' };
+      }
+
+      const num = field => validNumber(item[field]) ? Number(item[field]) : null;
+      if (key === 'revenue') {
+        if (industry === 'banking' &&
+            /lợi nhuận trước dự phòng/i.test(String(item.revenue_calculation || '')) &&
+            num('bank_pre_provision_operating_profit') !== null &&
+            num('bank_operating_expenses') !== null) {
+          return {
+            value: num('bank_pre_provision_operating_profit') + Math.abs(num('bank_operating_expenses')),
+            formula: 'Tính theo ghi chú nguồn: lợi nhuận trước dự phòng + chi phí hoạt động.'
+          };
+        }
+        if (industry !== 'banking' && industry !== 'securities' &&
+            num('gross_profit') !== null && num('cost_of_goods_sold') !== null) {
+          return {
+            value: num('gross_profit') + Math.abs(num('cost_of_goods_sold')),
+            formula: 'Doanh thu tái lập = lợi nhuận gộp + giá vốn hàng bán; hai chỉ tiêu đầu vào lấy từ cùng kỳ báo cáo.'
+          };
+        }
+      }
+
+      if (key === 'gross_profit' && industry !== 'banking' && industry !== 'securities' &&
+          num('revenue') !== null && num('cost_of_goods_sold') !== null) {
+        return {
+          value: num('revenue') - Math.abs(num('cost_of_goods_sold')),
+          formula: 'Lợi nhuận gộp = doanh thu thuần − giá vốn hàng bán; tính từ hai dòng của cùng kỳ.'
+        };
+      }
+
+      if (key === 'bank_net_interest_income' &&
+          num('bank_interest_income') !== null && num('bank_interest_expense') !== null) {
+        return {
+          value: num('bank_interest_income') - Math.abs(num('bank_interest_expense')),
+          formula: 'Thu nhập lãi thuần = thu nhập lãi − giá trị tuyệt đối của chi phí lãi.'
+        };
+      }
+      if (key === 'bank_net_service_income' &&
+          num('bank_service_income') !== null && num('bank_service_expense') !== null) {
+        return {
+          value: num('bank_service_income') - Math.abs(num('bank_service_expense')),
+          formula: 'Lãi thuần dịch vụ = thu nhập dịch vụ − giá trị tuyệt đối của chi phí dịch vụ.'
+        };
+      }
+      if (key === 'bank_pre_provision_operating_profit' &&
+          num('revenue') !== null && num('bank_operating_expenses') !== null) {
+        return {
+          value: num('revenue') - Math.abs(num('bank_operating_expenses')),
+          formula: 'Lợi nhuận trước dự phòng = tổng thu nhập hoạt động − chi phí hoạt động.'
+        };
+      }
+
+      const ytdFields = new Set([
+        'operating_cash_flow','capital_expenditure','investing_cash_flow','financing_cash_flow',
+        'foreign_exchange_effect','dividends_paid','net_cash_change'
+      ]);
+      if (ytdFields.has(key) && String(item.cashflow_period_basis || '').toLowerCase() === 'year_to_date') {
+        const ytdKey = key + '_ytd';
+        const currentYtd = num(ytdKey);
+        const periodMatch = String(item.period || '').match(/^(\d{4})-Q([1-4])$/);
+        if (currentYtd !== null && periodMatch) {
+          const year = Number(periodMatch[1]), quarter = Number(periodMatch[2]);
+          if (quarter === 1) {
+            return { value: currentYtd, formula: 'Số phát sinh quý I bằng số lũy kế quý I theo BCTC VietstockFinance.' };
+          }
+          const priorPeriod = year + '-Q' + (quarter - 1);
+          const prior = rows.find(row => row.period === priorPeriod);
+          if (prior &&
+              String(prior.cashflow_period_basis || '').toLowerCase() === 'year_to_date' &&
+              !hasUnverifiedReportScope(prior) &&
+              String(prior.verification_status || '').toLowerCase() !== 'manual_review_required_pending_extraction' &&
+              String(prior.core_financial_extraction_status || '').toLowerCase() !== 'manual_review_required_pending_extraction' &&
+              validNumber(prior[ytdKey])) {
+            return {
+              value: currentYtd - Number(prior[ytdKey]),
+              formula: 'Số phát sinh quý = số lũy kế kỳ hiện tại − số lũy kế quý liền trước cùng năm.'
+            };
+          }
+        }
+      }
+
+      if (key === 'net_cash_change') {
+        const flowKeys = ['operating_cash_flow','investing_cash_flow','financing_cash_flow','foreign_exchange_effect'];
+        const flows = flowKeys.map(field => resolveStatementValue(item, field, rows, ticker));
+        if (flows.every(result => validNumber(result.value))) {
+          return {
+            value: flows.reduce((sum, result) => sum + Number(result.value), 0),
+            formula: 'Lưu chuyển tiền thuần = lưu chuyển kinh doanh + đầu tư + tài chính + ảnh hưởng tỷ giá.'
+          };
+        }
+      }
+
+      if ((key === 'roa' || key === 'roe')) {
+        const basisText = (String(item.quarter_profit_basis || '') + ' ' + String(item.report_type || '')).toLowerCase();
+        const quarterSpecific = /cột phát sinh(?: riêng)? (?:trong )?quý|phát sinh riêng của quý|quý được trích xuất|cột phát sinh riêng/.test(basisText);
+        const averageKey = key === 'roa' ? 'average_total_assets' : 'average_equity';
+        if (quarterSpecific && num('net_profit') !== null && num(averageKey) !== null && num(averageKey) !== 0) {
+          return {
+            value: num('net_profit') / num(averageKey) * 400,
+            formula: (key.toUpperCase() + ' = lợi nhuận sau thuế riêng quý / số dư bình quân đầu-cuối quý × 4 × 100.')
+          };
+        }
+      }
+
+      return { value: item[key] ?? null, formula: '' };
+    };
+
     const getStatementRows = () => {
       const activeTicker = String(symbolSelect?.value || 'MBB').toUpperCase();
       const activeIndustry = industryFor(activeTicker);
@@ -1606,8 +1748,7 @@
         ];
         if (activeIndustry === 'securities') return [
           { label: 'KẾT QUẢ HOẠT ĐỘNG KINH DOANH CÔNG TY CHỨNG KHOÁN', type: 'section' },
-          { label: 'Doanh thu hoạt động', key: 'revenue', strong: true },
-          { label: 'Tổng doanh thu hoạt động theo BCTC CTCK', key: 'broker_total_operating_revenue', level: 1 },
+          { label: 'Tổng doanh thu hoạt động theo BCTC CTCK', key: 'broker_total_operating_revenue', strong: true },
           { label: 'Lãi/(lỗ) tài sản tài chính FVTPL', key: 'broker_fvtpl_gain', level: 1 },
           { label: 'Lỗ từ tài sản tài chính FVTPL', key: 'broker_fvtpl_loss', level: 1 },
           { label: 'Lãi từ đầu tư nắm giữ đến ngày đáo hạn', key: 'broker_held_to_maturity_income', level: 1 },
@@ -1709,6 +1850,7 @@
         { label: 'Phạm vi trang PDF', key: 'source_pages', text: true },
         { label: 'Cơ sở số liệu lợi nhuận theo quý', key: 'quarter_profit_basis', text: true },
         { label: 'Trạng thái trích xuất chỉ tiêu chi tiết', key: 'financial_line_items_status', text: true },
+        { label: 'Cơ sở dòng tiền theo báo cáo', key: 'cashflow_period_basis', text: true },
         { label: 'Các trường chi tiết đã trích xuất', key: 'financial_line_items_extracted_fields', text: true },
         { label: 'Ghi chú rà soát chỉ tiêu chi tiết', key: 'financial_line_items_note', text: true },
         { label: 'Chỉ tiêu bị ẩn do không khớp', key: 'financial_line_items_rejected_fields', text: true },
@@ -1796,7 +1938,8 @@
 
       let body = '';
       const cashflowFields = ['operating_cash_flow','capital_expenditure','investing_cash_flow','financing_cash_flow','foreign_exchange_effect','dividends_paid','net_cash_change','cash_beginning','cash_ending'];
-      const cashflowAvailable = activeStatement === 'cashflow' && sourceRows.some(row => cashflowFields.some(field => validNumber(row[field])));
+      const cashflowAvailable = activeStatement === 'cashflow' && sourceRows.some(row =>
+        cashflowFields.some(field => validNumber(resolveStatementValue(row, field, sourceRows, ticker).value)));
       if (activeStatement === 'cashflow' && !cashflowAvailable) {
         body = '<tr><td colspan="' + (periods.length + 1) + '" class="statement-no-data">Chưa có trường lưu chuyển tiền tệ đã trích xuất trong snapshot hiện tại. Danh mục chuẩn đã sẵn sàng; các ô chỉ được điền khi bộ trích xuất xác minh được dữ liệu từ báo cáo gốc.</td></tr>';
       } else if (activeStatement === 'peers') {
@@ -1810,7 +1953,8 @@
           return '<tr><td class="statement-row-label"><strong>' + escapeHtml(symbol) + '</strong><small>' + escapeHtml(meta.label) + '</small></td>' +
             periods.map(period => {
               const item = items.find(row => row.period === period);
-              const value = item && validNumber(item[metric]) ? statementNumber(item[metric], item, ['roa','roe','pb'].includes(metric)) + ((metric === 'roa' || metric === 'roe') ? '%' : '') : '—';
+              const resolved = item ? resolveStatementValue(item, metric, items, symbol).value : null;
+              const value = item && validNumber(resolved) ? statementNumber(resolved, item, ['roa','roe','pb'].includes(metric)) + ((metric === 'roa' || metric === 'roe') ? '%' : '') : '—';
               return '<td>' + value + '</td>';
             }).join('') + '</tr>';
         }).join('');
@@ -1828,7 +1972,10 @@
                 : '—') + '</td>';
             }
             if (def.formula && def.formula !== 'total_sources') {
-              const numeric = key => validNumber(item[key]) ? Number(item[key]) : null;
+              const numeric = key => {
+                const resolved = resolveStatementValue(item, key, sourceRows, ticker).value;
+                return validNumber(resolved) ? Number(resolved) : null;
+              };
               const assets = numeric('total_assets'), liabilities = numeric('total_liabilities'), equity = numeric('equity');
               const revenue = numeric('revenue'), grossProfit = numeric('gross_profit'), netProfit = numeric('net_profit');
               const currentAssets = numeric('current_assets'), currentLiabilities = numeric('current_liabilities');
@@ -1859,13 +2006,16 @@
               return '<td><span class="financial-status financial-status-' + badge.kind + '">' + escapeHtml(badge.label) + '</span></td>';
             }
             if (def.text) return '<td class="statement-text-cell">' + escapeHtml(value || '—') + '</td>';
-            const displayValue = def.negativeExpense && validNumber(value) ? -Math.abs(Number(value)) : value;
+            const resolved = resolveStatementValue(item, def.key, sourceRows, ticker);
+            const resolvedValue = resolved.value;
+            const displayValue = def.negativeExpense && validNumber(resolvedValue) ? -Math.abs(Number(resolvedValue)) : resolvedValue;
             const displayed = statementNumber(displayValue, item, Boolean(def.ratio));
+            const derivedTitle = resolved.formula ? ' title="' + escapeHtml(resolved.formula) + '"' : '';
             const ratioSuffix = ['pb','pe','ev_ebitda'].includes(def.key) ? ' lần'
               : def.key === 'eps' ? ' đ/cp'
               : ['price'].includes(def.key) ? ' đ'
               : def.ratio ? '%' : '';
-            return '<td>' + (displayed !== '—' && def.ratio ? displayed + ratioSuffix : displayed) + '</td>';
+            return '<td' + derivedTitle + '>' + (displayed !== '—' && def.ratio ? displayed + ratioSuffix : displayed) + '</td>';
           }).join('');
           return '<tr class="' + rowClass + '">' + label + cells + '</tr>';
         }).join('');
@@ -1988,8 +2138,9 @@
       select.innerHTML = periods.slice().reverse().map(period => '<option value="' + escapeHtml(period) + '">' + escapeHtml(periodLabel(period)) + '</option>').join('');
       const metric = $('#stockCompareMetric')?.value || 'net_profit';
       const hasComparisonValue = period => symbols.some(ticker => {
-        const row = rowsFor(ticker).find(item => item.period === period);
-        return row && validNumber(row[metric]);
+        const tickerRows = rowsFor(ticker);
+        const row = tickerRows.find(item => item.period === period);
+        return row && validNumber(resolveStatementValue(row, metric, tickerRows, ticker).value);
       });
       if (periods.includes(previous) && hasComparisonValue(previous)) select.value = previous;
       else {
