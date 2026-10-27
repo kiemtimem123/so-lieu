@@ -11,7 +11,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
-SCHEMA = "2026-10-27-note-reference-dash-guards-v6"
+SCHEMA = "2026-10-27-note-reference-and-aggregate-guards-v7"
 BANKS = {"MBB","ACB","SHB","TCB","TPB","VPB","STB","VCB","CTG","BID"}
 ERRORS: list[str] = []
 WARNINGS: list[str] = []
