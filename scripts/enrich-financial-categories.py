@@ -17,7 +17,7 @@ REPORT_QUEUE = ROOT / "config" / "report-queue.json"
 _QUEUE_ARCHIVE_BY_URL = None
 # The checkpoint helper uses the same detail schema so completed extraction
 # does not loop forever on quarters already reprocessed with the note-code guards.
-DETAIL_SCHEMA_VERSION = "2026-10-27-note-reference-alias-and-manual-guards-v8"
+DETAIL_SCHEMA_VERSION = "2026-10-27-bank-split-column-and-cashflow-statement-v9"
 CORE_EXTRACTION_PARSER_VERSION = "2026-10-23-ngan-vnd-unit-v2-statement-rows"
 NUMBER_RE = re.compile(r"(?<![A-Za-z0-9])\(?-?\d[\d.,]*\d?\)?")
 BANKS = {"MBB", "ACB", "SHB", "TCB", "TPB", "VPB", "STB", "VCB", "CTG", "BID"}
