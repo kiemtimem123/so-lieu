@@ -1720,6 +1720,11 @@
     };
 
     function renderStatementTable(ticker) {
+      // Resolve the selected ticker's industry in this scope. The tab hint builder
+      // below uses it to choose industry-specific guidance; leaving it undefined
+      // throws before the table body is rendered and leaves stale values from the
+      // previously selected tab on screen.
+      const activeIndustry = industryFor(String(ticker || symbolSelect?.value || 'MBB').toUpperCase());
       const sourceRows = rowsForBasis(ticker);
       const allTablePeriods = activeStatement === 'peers'
         ? allPeriods().slice().reverse()
