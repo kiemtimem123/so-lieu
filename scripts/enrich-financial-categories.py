@@ -1267,7 +1267,18 @@ def reconcile_detail_items(items,symbol):
  changed=False
  affected_quarters=0
  changed_fields=0
- for item in items:
+ # Process chronologically so a restored quarter-end cash balance can safely
+ # become the next quarter's opening balance.
+ period_items={
+  str(candidate.get("period") or ""):candidate
+  for candidate in items
+  if isinstance(candidate,dict) and re.fullmatch(r"20\\d{2}-Q[1-4]",str(candidate.get("period") or ""))
+ }
+ ordered_items=sorted(
+  items,
+  key=lambda candidate:str(candidate.get("period") or "") if isinstance(candidate,dict) else ""
+ )
+ for item in ordered_items:
   if not isinstance(item,dict) or not item.get("financial_line_items_status"):
    continue
   period_changed=False
@@ -1582,6 +1593,106 @@ def reconcile_detail_items(items,symbol):
      fields.discard(key)
      period_changed=True; changed_fields+=1
 
+  # A YTD cash-flow statement reports the opening cash at the start of the
+  # year, while the dashboard displays standalone quarters. For Q2-Q4, normalize
+  # opening cash to the prior quarter's reported close before validating the
+  # current quarter change. Some older runs wrongly withheld the source-reported
+  # closing balance after comparing it to the YTD opening balance.
+  if str(item.get("cashflow_period_basis") or "")=="year_to_date":
+   match=re.fullmatch(r"(20\\d{2})-Q([1-4])",str(item.get("period") or ""))
+   if match:
+    year=int(match.group(1)); quarter=int(match.group(2))
+    previous_period=f"{year}-Q{quarter-1}" if quarter>1 else f"{year-1}-Q4"
+    previous_item=period_items.get(previous_period)
+    previous_close=previous_item.get("cash_ending") if isinstance(previous_item,dict) else None
+    if isinstance(previous_close,(int,float)):
+     previous_close=int(round(previous_close))
+     current_begin=item.get("cash_beginning")
+     if "cash_beginning" in rejected or not isinstance(current_begin,(int,float)) or int(round(current_begin))!=previous_close:
+      if isinstance(current_begin,(int,float)) and int(round(current_begin))!=previous_close:
+       prior.setdefault("cash_beginning",current_begin)
+      item["cash_beginning"]=previous_close
+      item["cash_beginning_calculation"]=(
+       f"Số dư đầu quý = số dư cuối quý liền trước ({previous_period}); "
+       "chuẩn hóa từ BCTC lưu chuyển tiền tệ trình bày lũy kế đầu năm."
+      )
+      fields.add("cash_beginning")
+      rejected.discard("cash_beginning")
+      rejected_values.pop("cash_beginning",None)
+      period_changed=True; changed_fields+=1
+     else:
+      # Remove an obsolete rejection when the current opening value already
+      # equals the previous quarter's confirmed closing balance.
+      if "cash_beginning" in rejected:
+       rejected.discard("cash_beginning")
+       rejected_values.pop("cash_beginning",None)
+       period_changed=True; changed_fields+=1
+
+     ending_record=rejected_values.get("cash_ending")
+     ending_reason=str(ending_record.get("reason") or "").lower() if isinstance(ending_record,dict) else ""
+     source_end=ending_record.get("value") if isinstance(ending_record,dict) else None
+     net_for_quarter=item.get("net_cash_change")
+     if (
+      "cash balance bridge" in ending_reason
+      and isinstance(source_end,(int,float))
+      and isinstance(net_for_quarter,(int,float))
+     ):
+      source_end=int(round(source_end))
+      fx=item.get("foreign_exchange_effect",0)
+      fx=fx if isinstance(fx,(int,float)) else 0
+      bridge_difference=(source_end-previous_close)-(net_for_quarter+fx)
+      bridge_tolerance=max(5,abs(previous_close)*0.0005,abs(source_end)*0.0005)
+      if abs(bridge_difference)<=bridge_tolerance:
+       current_end=item.get("cash_ending")
+       if not isinstance(current_end,(int,float)) or int(round(current_end))!=source_end:
+        if isinstance(current_end,(int,float)):
+         prior.setdefault("cash_ending",current_end)
+        item["cash_ending"]=source_end
+        period_changed=True; changed_fields+=1
+       item["cash_ending_calculation"]=(
+        "Số dư tiền cuối quý lấy từ giá trị báo cáo nguồn VietstockFinance; "
+        "đối chiếu với số dư đầu quý và biến động tiền riêng quý."
+       )
+       fields.add("cash_ending")
+       rejected.discard("cash_ending")
+       rejected_values.pop("cash_ending",None)
+       recovery={
+        "basis":"year_to_date_report_normalized_to_quarter",
+        "previous_period":previous_period,
+        "cash_beginning":previous_close,
+        "cash_ending_reported":source_end,
+        "quarter_net_cash_change":int(round(net_for_quarter)),
+        "closing_balance_less_opening_and_net_change":int(round(bridge_difference)),
+        "tolerance_used":int(round(bridge_tolerance)),
+        "cash_beginning_ytd_reported":item.get("cash_beginning_reported_ytd"),
+        "source_url":item.get("source_url"),
+        "source_index_url":item.get("source_index_url"),
+        "source_archive_file":item.get("source_archive_file"),
+        "restored_after_reason":ending_reason,
+       }
+       if item.get("cashflow_balance_bridge_recovery")!=recovery:
+        item["cashflow_balance_bridge_recovery"]=recovery
+        period_changed=True; changed_fields+=1
+       old_note=str(item.get("financial_line_items_note") or "")
+       old_note=old_note.replace(
+        "Số dư tiền đầu/cuối kỳ bị ẩn vì không khớp biến động tiền thuần theo quý.",""
+       ).strip()
+       recovery_note=(
+        "Số dư tiền cuối kỳ được khôi phục từ giá trị báo cáo VietstockFinance sau "
+        "khi chuẩn hóa số dư đầu quý bằng số dư cuối quý trước. "
+        + (
+         "Cầu nối số dư tiền khớp biến động tiền thuần quý."
+         if abs(bridge_difference)<0.5
+         else f"Chênh lệch cầu nối {int(round(bridge_difference))} triệu đồng nằm trong dung sai 0,05%; giữ số dư cuối kỳ theo báo cáo nguồn."
+        )
+       )
+       updated_note=(old_note+" "+recovery_note).strip()
+       if updated_note!=str(item.get("financial_line_items_note") or ""):
+        item["financial_line_items_note"]=updated_note
+        period_changed=True; changed_fields+=1
+       # Avoid a stale suppression note/state from hiding values now restored.
+       item["financial_line_items_status"]="auto_extracted_pending_visual_review"
+
   # Operating + investing + financing cash flows reconcile to net cash change.
   # FX translation is separate and is used only in the cash-balance bridge.
   operating=item.get("operating_cash_flow")
@@ -1642,6 +1753,9 @@ def reconcile_detail_items(items,symbol):
   if rejected:
    item["financial_line_items_rejected_fields"]=sorted(rejected)
    fields.difference_update(rejected)
+  elif item.get("financial_line_items_rejected_fields"):
+   item["financial_line_items_rejected_fields"]=[]
+   period_changed=True
   if fields!=set(item.get("financial_line_items_extracted_fields") or []):
    item["financial_line_items_extracted_fields"]=sorted(fields)
    period_changed=True
