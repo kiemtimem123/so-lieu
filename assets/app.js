@@ -1751,7 +1751,14 @@
           ratios: 'ROA/ROE và P/B chỉ lấy từ trường dữ liệu đã có trong snapshot; không tự tính P/B khi thiếu giá thị trường và giá trị sổ sách trên mỗi cổ phiếu.',
           peers: 'So sánh các mã cùng nhóm ngành đã cấu hình, cùng kỳ và cùng chỉ tiêu. P/B chỉ hiển thị khi snapshot có dữ liệu được cung cấp; không tự suy đoán giá thị trường.'
         };
-        statementHint.textContent = hints[activeStatement] + ' Đơn vị tiền tệ đang chọn: ' + unitName + '.';
+        const detailReviewNeeded = sourceRows.some(row => {
+          const detailStatus = String(row?.financial_line_items_status || '').toLowerCase();
+          return detailStatus.includes('pending_visual_review') || detailStatus === 'manual_review_required';
+        });
+        const reviewNote = activeStatement !== 'balance' && detailReviewNeeded
+          ? ' Lưu ý: một số dòng đã trích xuất từ báo cáo PDF nhưng vẫn chờ rà soát trực quan; trạng thái và nguồn từng kỳ nằm trong tab Ghi chú.'
+          : '';
+        statementHint.textContent = hints[activeStatement] + ' Đơn vị tiền tệ đang chọn: ' + unitName + '.' + reviewNote;
       }
       if (!periods.length) {
         if (tableWrap) tableWrap.classList.add('hidden');
