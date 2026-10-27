@@ -17,7 +17,7 @@ REPORT_QUEUE = ROOT / "config" / "report-queue.json"
 _QUEUE_ARCHIVE_BY_URL = None
 # The checkpoint helper uses the same detail schema so completed extraction
 # does not loop forever on quarters already reprocessed with the note-code guards.
-DETAIL_SCHEMA_VERSION = "2026-10-27-bank-split-column-and-cashflow-statement-v9"
+DETAIL_SCHEMA_VERSION = "2026-10-27-other-statements-source-fields-v10"
 CORE_EXTRACTION_PARSER_VERSION = "2026-10-23-ngan-vnd-unit-v2-statement-rows"
 NUMBER_RE = re.compile(r"(?<![A-Za-z0-9])\(?-?\d[\d.,]*\d?\)?")
 BANKS = {"MBB", "ACB", "SHB", "TCB", "TPB", "VPB", "STB", "VCB", "CTG", "BID"}
@@ -2146,9 +2146,40 @@ def enrich_snapshot(path):
   if not key: continue
   year,quarter=key
   basis=item.get("cashflow_period_basis")
+  tracked_fields=set(item.get("financial_line_items_extracted_fields") or [])
+  rejected_fields=set(item.get("financial_line_items_rejected_fields") or [])
+  manually_verified=set(item.get("financial_line_items_manually_verified_fields") or [])
+  corrections=item.get("financial_line_items_value_corrections") or {}
+  protected_fields=set(manually_verified)
+  for field,correction in corrections.items():
+   current_value=item.get(field)
+   corrected_value=correction.get("new_value") if isinstance(correction,dict) else None
+   if isinstance(current_value,(int,float)) and isinstance(corrected_value,(int,float)) and current_value==corrected_value and str(correction.get("reason") or "").strip():
+    protected_fields.add(field)
+
+  def track_quarter_field(field,formula):
+   nonlocal changed,field_count
+   if field in rejected_fields or field in protected_fields: return
+   if not isinstance(item.get(field),(int,float)): return
+   if field not in tracked_fields:
+    tracked_fields.add(field)
+    item["financial_line_items_extracted_fields"]=sorted(tracked_fields)
+    item[field+"_calculation"]=formula
+    if not item.get("financial_line_items_status"):
+     item["financial_line_items_status"]="auto_extracted_pending_visual_review"
+    item["financial_line_items_schema_version"]=DETAIL_SCHEMA_VERSION
+    item["financial_line_items_schema_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
+    item["financial_line_items_source"]=str(item.get("source_archive_file") or "")
+    item["financial_line_items_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
+    old_note=str(item.get("financial_line_items_note") or "")
+    formula_note="Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan."
+    if formula_note not in old_note:
+     item["financial_line_items_note"]=(old_note+" "+formula_note).strip()
+    changed=True; field_count+=1
+
   if basis=="year_to_date":
    for quarterly_field,ytd_field in CASHFLOW_QUARTER_FROM_YTD.items():
-    if quarterly_field in set(item.get("financial_line_items_rejected_fields") or []): continue
+    if quarterly_field in rejected_fields or quarterly_field in protected_fields: continue
     current=item.get(ytd_field)
     if not isinstance(current,(int,float)): continue
     if quarter==1:
@@ -2163,22 +2194,28 @@ def enrich_snapshot(path):
      item[quarterly_field]=value
      item[quarterly_field+"_calculation"]=formula
      changed=True; field_count+=1
+    track_quarter_field(quarterly_field,formula)
   elif basis=="quarterly_reported":
    for quarterly_field,ytd_field in CASHFLOW_QUARTER_FROM_YTD.items():
+    if quarterly_field in rejected_fields or quarterly_field in protected_fields: continue
     current=item.get(ytd_field)
     if isinstance(current,(int,float)) and item.get(quarterly_field) is None:
      item[quarterly_field]=int(round(current))
      item[quarterly_field+"_calculation"]="reported as standalone quarter"
      changed=True; field_count+=1
+    track_quarter_field(quarterly_field,"reported as standalone quarter")
   if basis=="year_to_date" and isinstance(item.get("cash_beginning"),(int,float)) and item.get("cash_beginning_reported_ytd") is None:
    item["cash_beginning_reported_ytd"]=item["cash_beginning"]
    changed=True; field_count+=1
   if quarter>1 and basis=="year_to_date":
    previous=by_period.get(f"{year}-Q{quarter-1}") or {}
    prev_cash=previous.get("cash_ending")
-   if isinstance(prev_cash,(int,float)) and item.get("cash_beginning")!=prev_cash:
+   if isinstance(prev_cash,(int,float)) and item.get("cash_beginning")!=prev_cash and "cash_beginning" not in protected_fields:
     item["cash_beginning"]=prev_cash
     item["cash_beginning_calculation"]="previous quarter closing cash"
+    if "cash_beginning" not in rejected_fields and "cash_beginning" not in tracked_fields:
+     tracked_fields.add("cash_beginning")
+     item["financial_line_items_extracted_fields"]=sorted(tracked_fields)
     changed=True; field_count+=1
  # Hide auto-extracted cash beginning/ending balances when their bridge to
  # the separately reported quarterly cash change does not reconcile.
