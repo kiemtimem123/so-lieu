@@ -1569,7 +1569,11 @@ def reconcile_detail_items(items,symbol):
     if (
      isinstance(consolidated_net,(int,float))
      and isinstance(parent_net,(int,float))
-     and not isinstance(minority,(int,float))
+     and (
+      not isinstance(minority,(int,float))
+      or int(round(minority))!=int(round(consolidated_net-parent_net))
+     )
+     and "bank_non_controlling_profit" not in set(item.get("financial_line_items_manually_verified_fields") or [])
      and not ({"net_profit","net_profit_attributable","bank_non_controlling_profit"} & unquarterized)
      and not ({"net_profit","net_profit_attributable"} & rejected)
     ):
@@ -1665,7 +1669,13 @@ def reconcile_detail_items(items,symbol):
 
   # Normalize YTD statement rows to standalone-quarter values before reconciliation.
   # Do not use values that remain explicitly rejected by source/scope validation.
-  if str(item.get("cashflow_period_basis") or "")=="year_to_date":
+  if (
+   str(item.get("cashflow_period_basis") or "")=="year_to_date"
+   and not (
+    isinstance(item.get("source_validation"),dict)
+    and item.get("source_validation",{}).get("scope_validation_required") is True
+   )
+  ):
    period_match=re.fullmatch(r"(20\d{2})-Q([1-4])",str(item.get("period") or ""))
    if period_match:
     year=int(period_match.group(1)); quarter=int(period_match.group(2))
