@@ -11,7 +11,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
-SCHEMA = "2026-10-26-bank-reconciliation-cashflow-v5"
+SCHEMA = "2026-10-27-note-reference-dash-guards-v6"
 BANKS = {"MBB","ACB","SHB","TCB","TPB","VPB","STB","VCB","CTG","BID"}
 ERRORS: list[str] = []
 WARNINGS: list[str] = []
@@ -208,6 +208,32 @@ def main():
                 ERRORS.append("TCB 2026-Q2: six-month investing YTD regression value must be 57,197")
             if q3.get("investing_cash_flow_ytd") != -411649:
                 ERRORS.append("TCB 2026-Q3: nine-month investing YTD regression value must be -411,649")
+    # VietstockFinance PDF regression for the manually reconciled MBB Q1 2024 balance sheet.
+    # Values are in million VND and were visually cross-checked against PDF pages 3-4.
+    mbb_path = DATA_DIR / "financials-MBB.json"
+    if mbb_path.exists():
+        mbb = json.loads(mbb_path.read_text(encoding="utf-8"))
+        q1_2024 = next(
+            (row for row in (mbb.get("items") or [])
+             if isinstance(row, dict) and row.get("period") == "2024-Q1"),
+            None,
+        )
+        expected_mbb_q1 = {
+            "fixed_assets": 5043795,
+            "bank_deposits_and_loans_to_credit_institutions": 77809357,
+            "bank_derivatives_and_other_financial_assets": 0,
+            "bank_valuable_papers": 102482877,
+            "bank_other_liabilities": 47353000,
+        }
+        if not isinstance(q1_2024, dict):
+            ERRORS.append("MBB 2024-Q1: missing VietstockFinance source-backed regression row")
+        else:
+            for field, expected in expected_mbb_q1.items():
+                actual = q1_2024.get(field)
+                if actual != expected:
+                    ERRORS.append(
+                        f"MBB 2024-Q1: {field} must be {expected} million VND, got {actual!r}"
+                    )
     print("Bank financial reconciliation regression checks")
     print(f"Bank snapshots checked: {symbols_checked}; rows on current schema: {audited_rows}")
     print(f"Errors: {len(ERRORS)}; warnings: {len(WARNINGS)}")
