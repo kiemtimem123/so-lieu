@@ -1593,12 +1593,12 @@
           { label: 'Lãi thuần từ chứng khoán đầu tư', key: 'bank_investment_securities_net', level: 1 },
           { label: 'Lãi thuần từ hoạt động kinh doanh khác', key: 'bank_other_operating_net', level: 1 },
           { label: 'Thu nhập góp vốn, mua cổ phần', key: 'bank_dividend_and_capital_income', level: 1 },
-          { label: 'Tổng chi phí hoạt động', key: 'bank_operating_expenses', level: 1, negativeExpense: true }
+          { label: 'Tổng chi phí hoạt động', key: 'bank_operating_expenses', level: 1, negativeExpense: true },
           { label: 'Lợi nhuận trước dự phòng rủi ro', key: 'bank_pre_provision_operating_profit', strong: true },
-          { label: 'Chi phí dự phòng rủi ro', key: 'bank_provision_expense', level: 1, negativeExpense: true }
+          { label: 'Chi phí dự phòng rủi ro', key: 'bank_provision_expense', level: 1, negativeExpense: true },
           { label: 'Lợi nhuận trước thuế', key: 'pretax_profit', strong: true },
-          { label: 'Thuế thu nhập doanh nghiệp (tổng)', key: 'income_tax', level: 1, negativeExpense: true }
-          { label: 'Thuế TNDN hiện hành', key: 'income_tax_current', level: 1, negativeExpense: true }
+          { label: 'Thuế thu nhập doanh nghiệp (tổng)', key: 'income_tax', level: 1, negativeExpense: true },
+          { label: 'Thuế TNDN hiện hành', key: 'income_tax_current', level: 1, negativeExpense: true },
           { label: 'Thuế TNDN hoãn lại', key: 'income_tax_deferred', level: 1 },
           { label: 'Lợi nhuận sau thuế', key: 'net_profit', strong: true },
           { label: 'Lợi ích cổ đông không kiểm soát', key: 'bank_non_controlling_profit', level: 1 },
@@ -1620,21 +1620,21 @@
           { label: 'Doanh thu tư vấn tài chính', key: 'broker_financial_advisory_revenue', level: 1 },
           { label: 'Thu nhập hoạt động khác', key: 'broker_other_operating_income', level: 1 },
           { label: 'Tổng chi phí hoạt động theo BCTC CTCK', key: 'broker_total_operating_expenses', level: 1 },
-          { label: 'Chi phí đi vay của các khoản cho vay', key: 'broker_lending_cost', level: 1, negativeExpense: true }
-          { label: 'Chi phí hoạt động tự doanh', key: 'broker_trading_expense', level: 1, negativeExpense: true }
-          { label: 'Chi phí tư vấn tài chính', key: 'broker_advisory_expense', level: 1, negativeExpense: true }
-          { label: 'Lỗ từ tự doanh FVTPL', key: 'broker_fvtpl_loss', level: 1, negativeExpense: true }
-          { label: 'Chi phí môi giới chứng khoán', key: 'broker_brokerage_expense', level: 1, negativeExpense: true }
-          { label: 'Chi phí lưu ký chứng khoán', key: 'broker_custody_expense', level: 1, negativeExpense: true }
-          { label: 'Chi phí hoạt động khác', key: 'broker_other_operating_expense', level: 1, negativeExpense: true }
-          { label: 'Chi phí hoạt động', key: 'broker_operating_expenses', level: 1, negativeExpense: true }
+          { label: 'Chi phí đi vay của các khoản cho vay', key: 'broker_lending_cost', level: 1, negativeExpense: true },
+          { label: 'Chi phí hoạt động tự doanh', key: 'broker_trading_expense', level: 1, negativeExpense: true },
+          { label: 'Chi phí tư vấn tài chính', key: 'broker_advisory_expense', level: 1, negativeExpense: true },
+          { label: 'Lỗ từ tự doanh FVTPL', key: 'broker_fvtpl_loss', level: 1, negativeExpense: true },
+          { label: 'Chi phí môi giới chứng khoán', key: 'broker_brokerage_expense', level: 1, negativeExpense: true },
+          { label: 'Chi phí lưu ký chứng khoán', key: 'broker_custody_expense', level: 1, negativeExpense: true },
+          { label: 'Chi phí hoạt động khác', key: 'broker_other_operating_expense', level: 1, negativeExpense: true },
+          { label: 'Chi phí hoạt động', key: 'broker_operating_expenses', level: 1, negativeExpense: true },
           { label: 'Doanh thu hoạt động tài chính', key: 'broker_financial_income', level: 1 },
-          { label: 'Chi phí tài chính', key: 'broker_financial_expense', level: 1, negativeExpense: true }
-          { label: 'Trong đó: Chi phí lãi vay', key: 'broker_interest_expense', level: 1, negativeExpense: true }
-          { label: 'Chi phí quản lý công ty chứng khoán', key: 'broker_admin_expenses', level: 1, negativeExpense: true }
+          { label: 'Chi phí tài chính', key: 'broker_financial_expense', level: 1, negativeExpense: true },
+          { label: 'Trong đó: Chi phí lãi vay', key: 'broker_interest_expense', level: 1, negativeExpense: true },
+          { label: 'Chi phí quản lý công ty chứng khoán', key: 'broker_admin_expenses', level: 1, negativeExpense: true },
           { label: 'Lợi nhuận thuần từ hoạt động kinh doanh', key: 'broker_net_operating_profit', strong: true },
           { label: 'Lợi nhuận trước thuế', key: 'pretax_profit', strong: true },
-          { label: 'Thuế thu nhập doanh nghiệp', key: 'income_tax', level: 1, negativeExpense: true }
+          { label: 'Thuế thu nhập doanh nghiệp', key: 'income_tax', level: 1, negativeExpense: true },
           { label: 'Lợi nhuận sau thuế', key: 'net_profit', strong: true },
           { label: 'LNST thuộc cổ đông công ty mẹ', key: 'net_profit_attributable', level: 1 },
           { label: 'EPS cơ bản (đồng/cp)', key: 'eps', ratio: true, level: 1 }
@@ -1642,17 +1642,17 @@
         return [
         { label: 'KẾT QUẢ HOẠT ĐỘNG KINH DOANH', type: 'section' },
         { label: revenueRowLabel, key: 'revenue', level: 1 },
-        { label: 'Giá vốn hàng bán', key: 'cost_of_goods_sold', level: 1, negativeExpense: true }
+        { label: 'Giá vốn hàng bán', key: 'cost_of_goods_sold', level: 1, negativeExpense: true },
         { label: 'Lợi nhuận gộp', key: 'gross_profit', strong: true },
         { label: 'Doanh thu hoạt động tài chính', key: 'financial_income', level: 1 },
-        { label: 'Chi phí tài chính', key: 'financial_expense', level: 1, negativeExpense: true }
-        { label: 'Trong đó: Chi phí lãi vay', key: 'interest_expense', level: 1, negativeExpense: true }
-        { label: 'Chi phí bán hàng', key: 'selling_expense', level: 1, negativeExpense: true }
-        { label: 'Chi phí quản lý doanh nghiệp', key: 'admin_expense', level: 1, negativeExpense: true }
+        { label: 'Chi phí tài chính', key: 'financial_expense', level: 1, negativeExpense: true },
+        { label: 'Trong đó: Chi phí lãi vay', key: 'interest_expense', level: 1, negativeExpense: true },
+        { label: 'Chi phí bán hàng', key: 'selling_expense', level: 1, negativeExpense: true },
+        { label: 'Chi phí quản lý doanh nghiệp', key: 'admin_expense', level: 1, negativeExpense: true },
         { label: 'Lợi nhuận từ hoạt động kinh doanh', key: 'operating_profit', strong: true },
         { label: 'Lợi nhuận trước thuế', key: 'pretax_profit', strong: true },
-        { label: 'Thuế thu nhập doanh nghiệp (tổng)', key: 'income_tax', level: 1, negativeExpense: true }
-        { label: 'Thuế TNDN hiện hành', key: 'income_tax_current', level: 1, negativeExpense: true }
+        { label: 'Thuế thu nhập doanh nghiệp (tổng)', key: 'income_tax', level: 1, negativeExpense: true },
+        { label: 'Thuế TNDN hiện hành', key: 'income_tax_current', level: 1, negativeExpense: true },
         { label: 'Thuế TNDN hoãn lại', key: 'income_tax_deferred', level: 1 },
         { label: 'Lãi cơ bản trên cổ phiếu (EPS)', key: 'eps', ratio: true, level: 1 },
         { label: 'Lợi nhuận sau thuế', key: 'net_profit', strong: true },
