@@ -1786,7 +1786,7 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/904a7efc81bdc8a9.pdf",
-      "financial_line_items_updated_at": "2026-10-27T20:22:07.429Z",
+      "financial_line_items_updated_at": "2026-10-27T20:25:35.164Z",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Đã đối chiếu trực quan B02a-CTCK VietstockFinance Q3/2024 trang 7–9: bổ sung tổng doanh thu hoạt động, các dòng thu nhập/chi phí, lợi nhuận hoạt động và thuế theo cột Quý 3; dòng chi phí tổng hợp số 24 không gán thành riêng chi phí lãi vay. Đã đối chiếu trực quan B01a-CTCK VietstockFinance Q3/2024 trang 3–4: bổ sung tiền, HTM, cho vay, AFS, phải thu, TSCĐ, tổng tài sản ngắn/dài hạn, nợ ngắn/dài hạn, vay/trái phiếu và lợi nhuận chưa phân phối. Đã đối chiếu trực quan B03a-CTCK VietstockFinance Q3/2024 trang 10–11: dòng tiền quý III được tính bằng lũy kế 9 tháng trừ lũy kế 6 tháng; số dư đầu quý lấy theo số dư cuối Q2 và số dư cuối quý lấy trực tiếp từ báo cáo.",
       "investing_cash_flow": -43.49,
       "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
@@ -1803,7 +1803,8 @@
         "investing_cash_flow": -44,
         "financing_cash_flow": -3360409,
         "cash_beginning_reported_ytd": 2775473,
-        "cash_ending": 3265768
+        "cash_ending": 3265768,
+        "broker_other_operating_income": 1177.730137
       },
       "financial_line_items_rejected_values": {},
       "financial_line_items_schema_version": "2026-10-27-other-statements-source-fields-v10",
@@ -1891,11 +1892,12 @@
           "source_value_vnd": 45835000002
         },
         "broker_other_operating_income": {
-          "previous_value": null,
-          "new_value": 1177.730137,
-          "reason": "Visually checked in the archived VietstockFinance B02a-CTCK Q3/2024, PDF page 7–9; current-quarter values stored as source VND / 1,000,000.",
+          "previous_value": 1177.730137,
+          "new_value": 1117.730137,
+          "reason": "Đối chiếu tổng doanh thu hoạt động báo cáo với 8 dòng doanh thu riêng đã khớp; dòng thu nhập hoạt động khác được tính là phần còn lại để tổng thành 1.844.805,107025 triệu VND.",
           "source_page": 9,
-          "source_value_vnd": 1177730137
+          "formula": "reported total operating revenue minus the other eight individually reported operating revenue rows",
+          "source_total_vnd": 1844805107025
         },
         "broker_fvtpl_loss": {
           "previous_value": null,
@@ -2223,7 +2225,7 @@
       "broker_underwriting_revenue": 307146.234263,
       "broker_custody_revenue": 13077.896644,
       "broker_financial_advisory_revenue": 45835.000002,
-      "broker_other_operating_income": 1177.730137,
+      "broker_other_operating_income": 1117.730137,
       "broker_fvtpl_loss": 20819.968064,
       "broker_total_operating_expenses": 140001.708018,
       "broker_operating_expenses": 140001.708018,
@@ -2276,7 +2278,7 @@
         "source_document_url": "https://static2.vietstock.vn/data/KHAC/2024/BCTC/VN/QUY%203/TCBS_Baocaotaichinh_Q3_2024.pdf",
         "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/904a7efc81bdc8a9.pdf",
         "report_form": "B02a-CTCK",
-        "report_scope": "BCTC riêng công ty chứng khoán; không phải BCTC hợp nhất",
+        "report_scope": "standalone securities-company report; not consolidated",
         "pdf_pages": [
           9,
           10,
@@ -2294,7 +2296,7 @@
           "broker_underwriting_revenue": 307146234263,
           "broker_custody_revenue": 13077896644,
           "broker_financial_advisory_revenue": 45835000002,
-          "broker_other_operating_income": 1177730137,
+          "broker_other_operating_income": 1117730137,
           "broker_fvtpl_loss": 20819968064,
           "broker_total_operating_expenses": 140001708018,
           "broker_operating_expenses": 140001708018,
@@ -2325,11 +2327,16 @@
             "307.146.234.263",
             "13.077.896.644",
             "45.835.000.002",
-            "140.001.708.018",
-            "57.988.277.358",
-            "11.422.180.299",
-            "48.790.239.246",
-            "981.043.051"
+            "149.045.700.000",
+            "3.164.076.568",
+            "5.772.022.503.958",
+            "77.559.670.592",
+            "77.559.670.592",
+            "4.952.749.424",
+            "198.586.761.475",
+            "32.770.009.821",
+            "130.136.364.454",
+            "140.001.708.018"
           ],
           "10": [
             "5.684.781.466",
@@ -2346,7 +2353,14 @@
             "877.641.662.378"
           ]
         },
-        "note": "Revenue and expense rows are from the Quý 3 column on page 7; financial income/expense and operating profit from page 8; tax and after-tax profit from page 9. Combined row 24 is included only in total operating expenses, not relabelled as pure borrowing expense."
+        "note": "Revenue and expense rows are from the Quý 3 column on page 7; financial income/expense and operating profit from page 8; tax and after-tax profit from page 9. The other-operating-income amount is reconciled as the residual to reported total operating revenue after the other eight rows are matched. Combined row 24 is included only in total operating expenses, not relabelled as pure borrowing expense.",
+        "derived_residual_fields": {
+          "broker_other_operating_income": {
+            "formula": "reported total operating revenue minus the other eight individually reported operating revenue rows",
+            "value_million_vnd": 1117.730137,
+            "source_page": 9
+          }
+        }
       },
       "financial_line_items_balance_source_reconciliation": {
         "source_policy": "VietstockFinance document catalog and linked PDF only",
