@@ -11,7 +11,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
-SCHEMA = "2026-10-27-note-reference-and-aggregate-guards-v7"
+SCHEMA = "2026-10-27-note-reference-alias-and-manual-guards-v8"
 BANKS = {"MBB","ACB","SHB","TCB","TPB","VPB","STB","VCB","CTG","BID"}
 ERRORS: list[str] = []
 WARNINGS: list[str] = []
@@ -233,6 +233,39 @@ def main():
                 if actual != expected:
                     ERRORS.append(
                         f"MBB 2024-Q1: {field} must be {expected} million VND, got {actual!r}"
+                    )
+    # Cross-quarter regressions for OCR note-reference, comparator-column,
+    # child-row and total/subcategory mix-ups confirmed against VietstockFinance PDFs.
+    expected_mbb_period_controls = {
+        "2024-Q3": {
+            "bank_customer_deposits": 627567353,
+            "bank_valuable_papers": 119550968,
+            "bank_other_liabilities": 44719121,
+        },
+        "2025-Q4": {
+            "bank_investment_securities": 225574850,
+        },
+        "2026-Q1": {
+            "bank_derivatives_and_other_financial_assets": 0,
+        },
+    }
+    if mbb_path.exists():
+        mbb = json.loads(mbb_path.read_text(encoding="utf-8"))
+        mbb_rows = {
+            str(row.get("period")): row
+            for row in (mbb.get("items") or [])
+            if isinstance(row, dict)
+        }
+        for period, controls in expected_mbb_period_controls.items():
+            row = mbb_rows.get(period)
+            if not isinstance(row, dict):
+                ERRORS.append(f"MBB {period}: missing source-backed regression row")
+                continue
+            for field, expected in controls.items():
+                actual = row.get(field)
+                if actual != expected:
+                    ERRORS.append(
+                        f"MBB {period}: {field} must be {expected} million VND, got {actual!r}"
                     )
     print("Bank financial reconciliation regression checks")
     print(f"Bank snapshots checked: {symbols_checked}; rows on current schema: {audited_rows}")
