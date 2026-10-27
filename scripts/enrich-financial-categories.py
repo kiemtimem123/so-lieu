@@ -2446,10 +2446,13 @@ def repair_tcx_2026_source_rows(items,symbol):
    "period":period,
    "pdf_pages":spec["pages"],
    "basis":"year_to_date_report_normalized_to_quarter",
+   "exact_source_vnd":{field:int(round(value*1000000)) for field,value in spec["values"].items()},
    "source_tokens":{str(page):tokens for page,tokens in spec["evidence"].items()},
-   "quarter_flows_sum_to_net_cash_change":True,
-   "cash_balance_bridge_reconciles":True,
-   "note":"Q1 operating cash flow is read from row 60, not row 01 (profit before tax). Q2 quarter flows are differences between Q2 YTD and Q1 YTD. Cash balances refer to the company, not customer-custody funds."
+   "quarter_flows_sum_to_net_cash_change":round(sum(item.get(field,0) for field in ("operating_cash_flow","investing_cash_flow","financing_cash_flow"))-item.get("net_cash_change",0),6)==0,
+   "ytd_flows_sum_to_net_cash_change":round(sum(item.get(field,0) for field in ("operating_cash_flow_ytd","investing_cash_flow_ytd","financing_cash_flow_ytd"))-item.get("net_cash_change_ytd",0),6)==0,
+   "opening_closing_cash_bridge_reconciles":round(item.get("cash_ending",0)-item.get("cash_beginning",0)-item.get("net_cash_change",0),6)==0,
+   "visually_checked_rows":True,
+   "note":"Số dư/luồng tiền thuộc công ty chứng khoán; không lấy dòng tiền môi giới/tiền ký quỹ của khách hàng. Q2 flows = Q2 YTD trừ Q1 YTD."
   }
   if item.get("cashflow_source_reconciliation")!=flow_check:
    item["cashflow_source_reconciliation"]=flow_check
