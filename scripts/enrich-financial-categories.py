@@ -862,8 +862,8 @@ def extract_bank_split_column_income(pages, factor):
  for page in pages:
   lines=str(page.get("text","")).splitlines()
   normalized=norm(" ".join(lines))
-  if "bao cao" not in normalized or not any(term in normalized for term in ("ket qua hoat dong","ket qua kinh doanh")):
-   continue
+  # These are already selected as income-statement pages by extract_fields();
+  # avoid a second heading test because OCR often corrupts the title line.
   marker=next((idx for idx,line in enumerate(lines) if "so phat sinh quy" in norm(line)),None)
   if marker is None:
    continue
