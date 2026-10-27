@@ -1904,6 +1904,19 @@
       } catch (error) {
         tableError = error;
         console.error('[financial-dashboard] statement table render failed for ' + ticker, error);
+
+        // Never leave the previous tab's table visible after a render exception.
+        // The balance-sheet fallback below may still recover verified core values;
+        // other tabs must show an explicit error state instead of stale figures.
+        if (tableBody) tableBody.innerHTML = '';
+        if (statementHead) statementHead.innerHTML = '<tr><th>Chỉ tiêu</th></tr>';
+        if (tableWrap) tableWrap.classList.add('hidden');
+        if (stateBox) {
+          stateBox.classList.remove('hidden');
+          const heading = $('h3', stateBox), paragraph = $('p', stateBox);
+          if (heading) heading.textContent = 'Không thể dựng bảng báo cáo này';
+          if (paragraph) paragraph.textContent = 'Đã phát hiện lỗi khi dựng tab ' + activeStatement + '. Bảng cũ đã được xóa để tránh hiển thị nhầm số liệu; xem nhật ký trình duyệt để biết chi tiết.';
+        }
       }
 
       // Last-resort numeric table: if a specialized statement renderer fails or
