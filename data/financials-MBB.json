@@ -2212,7 +2212,7 @@
         "prior_period": "2024-Q4",
         "prior_closing_cash": 97040273,
         "q1_opening_cash": 97040275,
-        "opening_minus_prior_closing_residual": 2000000,
+        "opening_minus_prior_closing_residual": 2,
         "q1_net_cash_change": -24053403,
         "q1_closing_cash": 72986872,
         "q1_internal_bridge_residual": 0,
@@ -2252,7 +2252,8 @@
           "visually_checked": true
         },
         "status": "NEEDS_MANUAL_REVIEW_CROSS_PERIOD_CONTINUITY_2_MILLION",
-        "note": "Q1 statement and Q1/2026 comparative agree internally, while later FY2024 comparison in Q4/2025 reports a 2-million lower opening balance. No balancing amount is invented."
+        "note": "Q1 statement and Q1/2026 comparative agree internally, while later FY2024 comparison in Q4/2025 reports a 2-million lower opening balance. No balancing amount is invented. Residual is stored in snapshot units (triệu VND): +2 means +2 million VND, not +2,000,000 million VND.",
+        "units": "triệu VND"
       }
     },
     {
@@ -2618,13 +2619,13 @@
           "q1_source_closing_cash": 72986872,
           "h1_later_comparative_opening_cash": 97040273,
           "q1_to_h1_source_baseline_difference": -2,
-          "prior_year_end_to_q1_opening_residual": 2000000,
+          "prior_year_end_to_q1_opening_residual": 2,
           "q2_balance_change_from_quarter_end_balances": 30867528,
           "q2_derived_quarter_net_cash_change": 30867530,
           "q2_quarter_bridge_residual": -2
         },
         "status": "NEEDS_MANUAL_REVIEW_CROSS_REPORT_CASH_BASIS_2_MILLION",
-        "notes": "Use latest comparative column in VietstockFinance Q2/2026 report PDF pages 7-8 (visually checked): H1/2025 CFO 1516540, investing -400976, financing 5698563, net 6814127, opening cash 97040273, closing cash 103854400. Q2 standalone flows = revised H1 YTD minus Q1/2025 own-report YTD. YTD cash bridge and flow components reconcile, but cross-quarter cash balance bridge has -2 million VND residual; keep source numbers, do not plug. Recheck 2026-10-28: the -2 million Q2 bridge residual is part of a connected cross-report opening-cash inconsistency: Q4/2025 comparative FY2024 close 97,040,273, Q1/2025 and its Q1/2026 comparator opening 97,040,275, while Q2/2026 H1/2025 comparator uses 97,040,273. The values are source-backed and visually checked; no balancing plug is permitted.",
+        "notes": "Use latest comparative column in VietstockFinance Q2/2026 report PDF pages 7-8 (visually checked): H1/2025 CFO 1516540, investing -400976, financing 5698563, net 6814127, opening cash 97040273, closing cash 103854400. Q2 standalone flows = revised H1 YTD minus Q1/2025 own-report YTD. YTD cash bridge and flow components reconcile, but cross-quarter cash balance bridge has -2 million VND residual; keep source numbers, do not plug. Recheck 2026-10-28: the -2 million Q2 bridge residual is part of a connected cross-report opening-cash inconsistency: Q4/2025 comparative FY2024 close 97,040,273, Q1/2025 and its Q1/2026 comparator opening 97,040,275, while Q2/2026 H1/2025 comparator uses 97,040,273. The values are source-backed and visually checked; no balancing plug is permitted. Residual metadata is in triệu VND; +2 is 2 million VND.",
         "verified_at": "2026-10-28"
       },
       "cashflow_balance_bridge_recovery": {
@@ -2699,7 +2700,8 @@
           }
         ],
         "status": "NEEDS_MANUAL_REVIEW_CROSS_REPORT_CASH_BASIS_2_MILLION",
-        "note": "Review must treat this as a connected Q4/2024 -> Q1/2025 -> H1/2025 comparability issue, not only a single Q2/2025 row residual."
+        "note": "Review must treat this as a connected Q4/2024 -> Q1/2025 -> H1/2025 comparability issue, not only a single Q2/2025 row residual. All bridge residuals are stored in snapshot units (triệu VND). The Q4/2024→Q1/2025 opening discontinuity is +2, not 2,000,000; the Q2/2025 standalone cash bridge residual is -2.",
+        "units": "triệu VND"
       },
       "financing_cash_flow_calculation": "Quý riêng = số lũy kế 2025 kỳ hiện tại trừ số lũy kế quý liền trước trong cùng năm; đối chiếu trong cashflow_source_reconciliation.",
       "net_cash_change_calculation": "Quý riêng = số lũy kế 2025 kỳ hiện tại trừ số lũy kế quý liền trước trong cùng năm; đối chiếu trong cashflow_source_reconciliation.",
