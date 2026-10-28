@@ -45,6 +45,17 @@ def require_close(symbol, period, label, actual, expected, tolerance=EPS):
             f"{label}: actual={actual}, expected={expected}, diff={actual-expected}"
         )
 
+def cash_bridge_delta(item):
+    """Return closing - opening - net flow - FX effect, or None if core inputs are absent."""
+    required = ("cash_beginning", "cash_ending", "net_cash_change")
+    if not all(number(item.get(key)) for key in required):
+        return None
+    fx_effect = item.get("foreign_exchange_effect")
+    if not number(fx_effect):
+        fx_effect = 0
+    return item["cash_ending"] - item["cash_beginning"] - item["net_cash_change"] - fx_effect
+
+
 def audit_item(symbol, item, by_period):
     global ACTIVE_DETAILS_PENDING_REVIEW
     period = str(item.get("period") or "")
@@ -140,11 +151,7 @@ def audit_item(symbol, item, by_period):
         # net_cash_change itself is the sum of operating, investing and financing flows;
         # do not mistake FX translation for an OCR/accounting error.
         fx_available = number(item.get("foreign_exchange_effect"))
-        fx_effect = item["foreign_exchange_effect"] if fx_available else 0
-        bridge_delta = (
-            item["cash_ending"] - item["cash_beginning"] -
-            item["net_cash_change"] - fx_effect
-        )
+        bridge_delta = cash_bridge_delta(item)
         bridge_label = "cash opening/closing bridge after FX" if fx_available else "cash opening/closing bridge (FX unavailable)"
         if abs(bridge_delta) > 50:
             reconciliation_issue(
