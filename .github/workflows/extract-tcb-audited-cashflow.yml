@@ -1,0 +1,52 @@
+name: Extract TCB Audited Cash-Flow Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/extract-tcb-audited-cashflow.py"
+      - ".github/workflows/extract-tcb-audited-cashflow.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: so-lieu-tcb-audited-cashflow-extraction
+  cancel-in-progress: false
+
+jobs:
+  extract:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout only the TCB archived evidence and helper
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /scripts/extract-tcb-audited-cashflow.py
+            /reports/raw/TCB/vietstock-tcb-2024-2026-20261019/553195cdc772f58a.pdf
+            /reports/raw/TCB/vietstock-tcb-2024-2026-20261019/553195cdc772f58a.pdf.extracted.json
+      - name: Install PDF text extraction and OCR tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils tesseract-ocr tesseract-ocr-vie
+          python -m pip install --upgrade pip
+          pip install pypdf
+      - name: Extract audited statement pages 10-11
+        run: python scripts/extract-tcb-audited-cashflow.py
+      - name: Commit source-page extraction sidecar
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/raw/TCB/vietstock-tcb-2024-2026-20261019/553195cdc772f58a.pdf.extracted.json
+          if git diff --cached --quiet; then
+            echo "No sidecar changes to commit."
+            exit 0
+          fi
+          git commit -m "data: extract TCB audited FY2025 cash-flow statement pages"
+          git push
