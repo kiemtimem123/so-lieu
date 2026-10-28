@@ -243,3 +243,18 @@ Kiểm thử `tests/test_cashflow_bridge.py` nay bao phủ phép tính phát sin
 Trong lượt test continuity MBB, phát hiện một lỗi ghi metadata: snapshot báo cáo dùng **triệu VND**, nhưng hai trường `opening_minus_prior_closing_residual` và `prior_year_end_to_q1_opening_residual` đã lưu giá trị `2.000.000` trong khi phép trừ trên dữ liệu snapshot là `97.040.275 − 97.040.273 = 2`. Đã sửa cả hai trường về **2** và gắn `units: "triệu VND"`; các số dư nguồn không đổi. Đã quét đệ quy các trường tên residual/bridge trong snapshot MBB và TCB: không còn residual metadata nào có trị tuyệt đối lớn hơn 1.000 mà có vẻ bị phóng đại đơn vị.
 
 Quy tắc chuẩn hóa: mọi phép chênh và residual phải ở **đúng đơn vị của các trường đầu vào**. Với snapshot dùng triệu VND, residual `2` nghĩa là 2 triệu VND; không nhân thêm 1.000.000. Bài test hồi quy xác nhận giá trị ở cả metadata của Q1 và Q2, đồng thời vẫn giữ hai dấu khác nhau của cùng bất nhất: +2 ở điểm chuyển Q4/2024→Q1/2025 và -2 ở cầu nối Q2/2025 riêng. Không quy đổi sang VND nguyên nếu không khai báo đơn vị và chuyển đổi tường minh.
+
+
+## Lượt chuẩn hóa ACB — lưu chuyển tiền tệ (2026-10-28)
+
+### Sửa nguyên nhân gốc của dòng tiền kinh doanh bị ẩn/sai
+- Snapshot: `data/financials-ACB.json`, 10 kỳ từ 2024-Q1 đến 2026-Q2.
+- Trước khi sửa, một số bản ghi dùng dòng **“Lưu chuyển tiền thuần từ hoạt động kinh doanh trước những thay đổi của tài sản và công nợ hoạt động”** như thể đó là lưu chuyển tiền kinh doanh thuần. Đây là subtotal trước biến động vốn lưu động, không phải dòng cuối nhóm; phải luôn lấy dòng `I. Lưu chuyển tiền thuần từ hoạt động kinh doanh`.
+- Đối với từng kỳ, chuẩn hóa đủ ba nhóm lưu chuyển tiền và biến động tiền thuần theo cột YTD trên PDF; tiền đầu/cuối kỳ và ảnh hưởng tỷ giá được ghi theo báo cáo. Giá trị quý riêng được tính bằng YTD hiện tại trừ YTD quý trước trong cùng năm.
+- Ưu tiên so sánh mới hơn ngay trong danh mục VietstockFinance: dùng FY2024 so sánh từ BCTC Q4/2025 (CFO YTD 8.370.231; CFI YTD -733.310; net change 3.752.870) thay cho số trích xuất cũ của Q4/2024; dùng Q1/2026 comparison cho Q1/2025; dùng Q2/2026 comparison cho H1/2025. Q4/2024 có chênh dịch chuyển 1 triệu đồng giữa CFO và CFI, tổng biến động tiền thuần không đổi.
+- Nguồn Q2/2026 trên PDF trang 8 xác nhận tiền cuối kỳ là **116.533.043 triệu đồng**, không phải 416.533.043 do OCR đọc nhầm chữ số đầu; cấu phần tiền tương đương tiền cũng cộng thành 116.533.043.
+- Q2/2026 comparison được dùng để đặt lại cơ sở YTD H1/2025. Các số quý riêng Q2/Q3/2025 được tính lại bằng chênh lệch YTD trên cùng cơ sở đã chọn; tuyệt đối không chèn một khoản “plug” để khớp cầu nối.
+- Đối chiếu trực quan các trang nguồn đã hoàn thành cho Q1/2024, H1/2024, Q3/2024, FY2024 comparison trong Q4/2025, Q3/2025, FY2025, H1/2025 comparison trong Q2/2026 và Q2/2026. Q1/2025 comparative trong Q1/2026 và một số trang nguồn còn lại vẫn được đánh dấu chờ rà soát hình ảnh; việc tổng số học khớp không đồng nghĩa toàn bộ trường đã được xác minh trực quan.
+- Kiểm tra trong snapshot sau chuẩn hóa: cả 10/10 kỳ đều có tổng CFO+CFI+CFF bằng net cash change; cả 10/10 kỳ YTD cũng khớp; cầu nối số dư tiền YTD và theo quý (có FX) đều dư 0; mọi luồng tiền quý bằng hiệu YTD liên tiếp; các trường LCTT được thêm vào danh sách `financial_line_items_extracted_fields` và gỡ khỏi danh sách trường bị loại.
+- Bộ kiểm thử dùng lại: `tests/test_cashflow_bridge.py`, bổ sung regression riêng ACB cho 10 kỳ, FX, cầu nối, so sánh mới hơn và điều chỉnh OCR Q2/2026.
+- Trạng thái: **PASS về số học và nguồn dòng chính; còn rà soát trực quan hạn chế ở các kỳ được ghi trạng thái pending**. Không đánh dấu toàn bộ ACB đã xác minh thủ công.
