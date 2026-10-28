@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-28T17:47:00+07:00",
+  "updatedAt": "2026-10-28T17:48:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -1409,8 +1409,8 @@
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
     "activeSymbol": "MBB",
-    "status": "awaiting_regression_ci_after_metadata_unit_fix",
-    "lastUpdatedAt": "2026-10-28T17:47:00+07:00",
+    "status": "terminal_manual_review_cross_period_cash_basis",
+    "lastUpdatedAt": "2026-10-28T17:48:00+07:00",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1452,12 +1452,18 @@
       "Fixed metadata unit bug in MBB bridge residuals: corrected 2000000 to 2, because snapshot values are in million VND. No source balances or cash-flow amounts changed.",
       "Recursive residual metadata audit across MBB and TCB found no residual-like metadata value with absolute magnitude above 1000 after the unit fix.",
       "Generic missing-FX test now uses synthetic values rather than the previous OCR value for TCB.",
-      "Standard procedure updated with adjacent-quarter continuity checks and consistent residual units."
+      "Standard procedure updated with adjacent-quarter continuity checks and consistent residual units.",
+      "Validate Site and Data run 40675436879 SUCCESS after residual unit fix; cash-flow bridge regression and JSON validation PASS.",
+      "Validate Site and Data run 40675544350 SUCCESS after standard-document update; cash-flow bridge regression, JavaScript syntax and JSON snapshot validation PASS.",
+      "Validate Site and Data run 40675638202 SUCCESS after checkpoint update; cash-flow bridge regression, JavaScript syntax and JSON snapshot validation PASS.",
+      "Validate quarterly financial data run 40675379509 SUCCESS; quarterly financial snapshot validation and bank statement reconciliation regression checks PASS.",
+      "Package Hostinger Stock Dashboard run 40675379532 SUCCESS.",
+      "Residual-unit check completed: MBB Q4-to-Q1 continuity residual is +2 in the snapshot's million-VND unit, not 2000000; Q2 standalone bridge remains -2 in the same unit."
     ],
     "unresolved": [
-      "MBB connected source discrepancy (units: million VND): Q4/2024 close 97040273; Q1/2025 and Q1/2026 comparator show open 97040275, net change -24053403, close 72986872; Q2/2026 H1/2025 comparator shows open 97040273, net change 6814127, close 103854400. This yields +2 at Q4-to-Q1 opening continuity and -2 on the Q2/2025 standalone cash bridge. Each individual report's own totals and internal bridge reconcile. Do not add a balancing plug."
+      "TERMINAL MANUAL REVIEW — MBB connected cross-report cash basis discrepancy in million VND: Q4/2024 comparative closing cash=97040273; Q1/2025 original and Q1/2026 comparative opening=97040275, net change=-24053403, closing=72986872; Q2/2026 H1/2025 comparative opening=97040273, net change=6814127, ending=103854400. This creates +2 continuity residual across Q4/2024→Q1/2025 and -2 residual in standalone Q2/2025 derived from YTD difference. Individual reports internally reconcile; no balancing adjustment is allowed without an amended/corrected source."
     ],
-    "nextStep": "Check Validate Site and Data after commit 414c81901b53b4c186493b34550790f6cfe921a1 and subsequent run after 58b3a76c7fa2e4e5a7c9a76109429da72657b5de. If regression fails, fix the actual failing test/data, rerun it, then confirm Validate quarterly financial data. Keep MBB in manual-review for the connected +2/-2 million VND cross-report discrepancy; after successful CI, continue only to the next ticker in the cash-flow domain.",
+    "nextStep": "MBB cash-flow automation and regression checks are complete, with this connected +2/-2 million VND cross-report discrepancy preserved as terminal manual review. Do not modify the printed values or add a plug. At the next continuation, proceed to the next ticker in the same cash-flow domain using reports/financial-data-normalization-standard.md; do not switch to another data domain until cash-flow coverage is progressed ticker-by-ticker.",
     "previousCompletedSymbol": "TCB"
   }
 }
