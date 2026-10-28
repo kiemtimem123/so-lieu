@@ -1290,7 +1290,7 @@ class VHMCashFlowNormalizationTests(unittest.TestCase):
                         self.assertIsInstance(row.get(field), (int, float))
                         self.assertNotIsInstance(row.get(field), bool)
 
-                # VHM reports cash movement in million VND to three decimals.
+                # VHM source amounts under 'Triệu VND' use dot-grouped integer millions; preserve integer-million values exactly.
                 # Preserve reported precision; do not round components independently or add a plug.
                 ytd_component_sum = (
                     row["operating_cash_flow_ytd"] +
@@ -1304,15 +1304,15 @@ class VHMCashFlowNormalizationTests(unittest.TestCase):
                 )
                 rec = row["cashflow_source_reconciliation"]
                 if period == "2026-Q2":
-                    # Source PDF visibly reports line 40 = 68,675.210 and line 50 = 4,092.385.
+                    # Source PDF visibly reports line 40 = 68,675,210 and line 50 = 4,092,385 (Triệu VND).
                     # The >0.01% mismatch is a source-report exception: retain both rows, no plug.
-                    self.assertAlmostEqual(ytd_component_sum - row["net_cash_change_ytd"], -1000.0, places=6)
-                    self.assertAlmostEqual(quarter_component_sum - row["net_cash_change"], -1000.0, places=6)
+                    self.assertAlmostEqual(ytd_component_sum - row["net_cash_change_ytd"], -1000000.0, places=6)
+                    self.assertAlmostEqual(quarter_component_sum - row["net_cash_change"], -1000000.0, places=6)
                     self.assertGreater(rec["ytd_flow_components_relative_difference_percent"], 0.01)
                     self.assertGreater(rec["quarter_flow_components_relative_difference_percent"], 0.01)
                     self.assertEqual(rec["status"], "NEEDS_MANUAL_REVIEW_SOURCE_FLOW_COMPONENT_SUM_GT_0_01_PERCENT")
-                    self.assertEqual(rec["source_component_sum_exception"]["row_40_financing_cash_flow_ytd"], 68675.210)
-                    self.assertEqual(rec["source_component_sum_exception"]["row_50_reported_net_cash_change_ytd"], 4092.385)
+                    self.assertEqual(rec["source_component_sum_exception"]["row_40_financing_cash_flow_ytd"], 68675210)
+                    self.assertEqual(rec["source_component_sum_exception"]["row_50_reported_net_cash_change_ytd"], 4092385)
                 else:
                     self.assertAlmostEqual(ytd_component_sum, row["net_cash_change_ytd"], places=7)
                     self.assertAlmostEqual(quarter_component_sum, row["net_cash_change"], places=7)
@@ -1368,8 +1368,8 @@ class VHMCashFlowNormalizationTests(unittest.TestCase):
         self.assertEqual(rec_2024["status"], "NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT")
         old_2024 = audit_2024["previous_source_values_million_vnd"]
         new_2024 = audit_2024["selected_source_values_million_vnd"]
-        self.assertEqual(old_2024["operating_cash_flow_ytd"], 6474.315)
-        self.assertEqual(new_2024["operating_cash_flow_ytd"], -10945.610)
+        self.assertEqual(old_2024["operating_cash_flow_ytd"], 6474315)
+        self.assertEqual(new_2024["operating_cash_flow_ytd"], -10945610)
         self.assertGreater(audit_2024["relative_differences_percent"]["operating_cash_flow_ytd"]["relative_difference_percent"], 0.01)
         self.assertTrue(within_relative_tolerance(old_2024["net_cash_change_ytd"], new_2024["net_cash_change_ytd"]))
         self.assertTrue(within_relative_tolerance(old_2024["cash_ending_reported_ytd"], new_2024["cash_ending_reported_ytd"]))
@@ -1381,8 +1381,8 @@ class VHMCashFlowNormalizationTests(unittest.TestCase):
         self.assertEqual(rec_2025["status"], "NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT")
         old_2025 = audit_2025["previous_source_values_million_vnd"]
         new_2025 = audit_2025["selected_source_values_million_vnd"]
-        self.assertEqual(old_2025["operating_cash_flow_ytd"], 50458.755)
-        self.assertEqual(new_2025["operating_cash_flow_ytd"], 41093.814)
+        self.assertEqual(old_2025["operating_cash_flow_ytd"], 50458755)
+        self.assertEqual(new_2025["operating_cash_flow_ytd"], 41093814)
         self.assertGreater(audit_2025["relative_differences_percent"]["investing_cash_flow_ytd"]["relative_difference_percent"], 0.01)
         self.assertTrue(within_relative_tolerance(old_2025["net_cash_change_ytd"], new_2025["net_cash_change_ytd"]))
         self.assertTrue(within_relative_tolerance(old_2025["cash_ending_reported_ytd"], new_2025["cash_ending_reported_ytd"]))
@@ -1391,9 +1391,9 @@ class VHMCashFlowNormalizationTests(unittest.TestCase):
         prior = self.rows["2025-Q4"]
         current = self.rows["2026-Q1"]
         rec = current["cashflow_source_reconciliation"]["cross_period_cash_continuity"]
-        self.assertEqual(prior["cash_ending"], 49948.510)
-        self.assertEqual(current["cash_beginning"], 49086.598)
-        self.assertAlmostEqual(rec["residual_million_vnd"], -861.912, places=7)
+        self.assertEqual(prior["cash_ending"], 49948510)
+        self.assertEqual(current["cash_beginning"], 49086598)
+        self.assertAlmostEqual(rec["residual_million_vnd"], -861912, places=7)
         self.assertGreater(rec["relative_difference_percent"], 0.01)
         self.assertEqual(rec["status"], "NEEDS_MANUAL_REVIEW_CROSS_PERIOD_CASH_BASIS_GT_0_01_PERCENT")
         self.assertEqual(
@@ -1405,18 +1405,18 @@ class VHMCashFlowNormalizationTests(unittest.TestCase):
         row = self.rows["2026-Q2"]
         self.assertEqual(row["operating_cash_flow_ytd"], 88467.954)
         self.assertEqual(row["investing_cash_flow_ytd"], -154050.779)
-        self.assertEqual(row["financing_cash_flow_ytd"], 68675.210)
-        self.assertEqual(row["net_cash_change_ytd"], 4092.385)
+        self.assertEqual(row["financing_cash_flow_ytd"], 68675210)
+        self.assertEqual(row["net_cash_change_ytd"], 4092385)
         self.assertEqual(
             row["cashflow_source_reconciliation"]["status"],
             "NEEDS_MANUAL_REVIEW_SOURCE_FLOW_COMPONENT_SUM_GT_0_01_PERCENT",
         )
         self.assertAlmostEqual(
             row["cashflow_source_reconciliation"]["source_component_sum_exception"]["ytd_component_sum_residual_million_vnd"],
-            -1000, places=6
+            -1000000, places=6
         )
-        self.assertEqual(row["cash_beginning_reported_ytd"], 49086.598)
-        self.assertEqual(row["cash_ending_reported_ytd"], 53178.983)
+        self.assertEqual(row["cash_beginning_reported_ytd"], 49086598)
+        self.assertEqual(row["cash_ending_reported_ytd"], 53178983)
         self.assertEqual(row["cashflow_source_reconciliation"]["visual_review"], "visually_checked")
 
 
