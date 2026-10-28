@@ -92,5 +92,57 @@ class CashFlowBridgeTests(unittest.TestCase):
         )
 
 
+    def test_mbb_cashflow_normalization_reconciles_all_periods_except_flagged_q2_2025(self):
+        snapshot = json.loads((ROOT / "data" / "financials-MBB.json").read_text(encoding="utf-8"))
+        rows = {row["period"]: row for row in snapshot["items"]}
+        self.assertEqual(len(rows), 10)
+
+        # Check source-backed totals and both cash bridges for each MBB quarter.
+        for period, row in rows.items():
+            with self.subTest(period=period):
+                self.assertEqual(
+                    row["operating_cash_flow"] + row["investing_cash_flow"] + row["financing_cash_flow"],
+                    row["net_cash_change"],
+                )
+                self.assertEqual(
+                    row["operating_cash_flow_ytd"] + row["investing_cash_flow_ytd"] + row["financing_cash_flow_ytd"],
+                    row["net_cash_change_ytd"],
+                )
+                ytd_bridge = (
+                    row["cash_ending_reported_ytd"]
+                    - row["cash_beginning_reported_ytd"]
+                    - row["net_cash_change_ytd"]
+                )
+                self.assertEqual(ytd_bridge, 0)
+                if period == "2025-Q2":
+                    self.assertEqual(cash_bridge_delta(row), -2)
+                    self.assertEqual(
+                        row["cashflow_source_reconciliation"]["status"],
+                        "NEEDS_MANUAL_REVIEW_CROSS_PERIOD_CASH_BRIDGE_2_MILLION",
+                    )
+                else:
+                    self.assertEqual(cash_bridge_delta(row), 0)
+
+        # Previously blank or mis-mapped source values that must not regress.
+        self.assertEqual(rows["2024-Q1"]["financing_cash_flow"], 1050000)
+        self.assertEqual(rows["2024-Q1"]["cash_ending"], 83716470)
+        self.assertEqual(rows["2024-Q3"]["cash_beginning_reported_ytd"], 109095118)
+        self.assertEqual(rows["2024-Q4"]["operating_cash_flow_ytd"], -18576384)
+        self.assertEqual(rows["2024-Q4"]["financing_cash_flow_ytd"], 8759748)
+        self.assertEqual(rows["2024-Q4"]["cash_ending_reported_ytd"], 97040273)
+        self.assertTrue(rows["2024-Q4"]["cashflow_source_reconciliation"]["reference_sources"][0]["visually_checked"])
+
+        # Latest, visually checked H1/2025 comparative replaces stale values from the Q2/2025 report.
+        q2 = rows["2025-Q2"]
+        self.assertEqual(q2["operating_cash_flow_ytd"], 1516540)
+        self.assertEqual(q2["investing_cash_flow_ytd"], -400976)
+        self.assertEqual(q2["financing_cash_flow_ytd"], 5698563)
+        self.assertEqual(q2["net_cash_change_ytd"], 6814127)
+        self.assertEqual(q2["cash_beginning_reported_ytd"], 97040273)
+        self.assertEqual(q2["cash_ending_reported_ytd"], 103854400)
+        self.assertEqual(q2["cashflow_balance_bridge_recovery"]["closing_balance_less_opening_and_net_change"], -2)
+
+
+
 if __name__ == "__main__":
     unittest.main()
