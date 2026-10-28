@@ -2297,7 +2297,7 @@ def repair_tcx_2026_source_rows(items,symbol):
     "operating_profit":1612705.554905,
     "broker_net_operating_profit":1612705.554905,
     "income_tax":314483.853511,
-    "income_tax_current":315222.111907,
+    "income_tax_current":315222.115907,
     "income_tax_deferred":-738.262396,
    }
    q2_source_pages={
@@ -2358,7 +2358,7 @@ def repair_tcx_2026_source_rows(items,symbol):
     "Đã kiểm tra trực quan các dòng B02a-CTCK trên PDF VietstockFinance trang 9–11: "
     "tách lại tổng doanh thu hoạt động khỏi doanh thu tài chính; sửa doanh thu/chi phí tài chính, "
     "chi phí lãi vay, quản lý, lợi nhuận hoạt động và thuế theo cột Quý II. Đơn vị lưu là triệu VND. "
-    "Tổng thuế lấy theo dòng công bố 314.483.853.511 VND; thuế hiện hành cộng thuế hoãn lại lệch 4.000 VND theo văn bản nguồn, nên giữ nguyên từng dòng báo cáo và lưu tổng thuế riêng."
+    "Tổng thuế 314.483.853.511 VND khớp chính xác thuế hiện hành 315.222.115.907 trừ thu nhập thuế hoãn lại 738.262.396 VND; đơn vị lưu là triệu VND."
    )
    old_note=str(q2_2024.get("financial_line_items_note") or "")
    if note not in old_note:
