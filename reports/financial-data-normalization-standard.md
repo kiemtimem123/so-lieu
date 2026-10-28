@@ -295,3 +295,24 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 - Ngoại lệ liên kỳ còn lại: tiền cuối Q4/2025 là 162.627.663 triệu VND; tiền đầu Q1/2026 được báo cáo là 161.907.719 triệu VND; residual -719.944 triệu VND, tương đương khoảng **0,4427%**, lớn hơn ngưỡng 0,01%. Mỗi báo cáo riêng tự cân đối. Giữ nguyên hai số nguồn, gắn `NEEDS_MANUAL_REVIEW_CROSS_PERIOD_CASH_BASIS_GT_0_01_PERCENT`; không đồng bộ, không tự suy diễn tỷ giá và không thêm khoản bù.
 - Regression mới trong `tests/test_cashflow_bridge.py` bao phủ 10 kỳ, tổng ba luồng tiền, chênh YTD, cầu nối có FX, các cột so sánh được chọn và ngoại lệ Q4/2025→Q1/2026. Validator được mở rộng để chạy schema dữ liệu SHB hiện hành và kiểm tra liên tục số dư qua ranh giới năm bằng ngưỡng tương đối 0,01%.
 - Trạng thái SHB: **PASS phép tính nội kỳ và lựa chọn cơ sở so sánh; NEEDS_MANUAL_REVIEW duy nhất cho residual mở đầu năm 2026 vượt 0,01%**, kèm rà soát trực quan còn lại ở các trang đã đánh dấu pending.
+
+
+## Lượt chuẩn hóa HCM — lưu chuyển tiền tệ (2026-10-28)
+
+### Quy tắc dữ liệu theo báo cáo CTCK
+- Snapshot: `data/financials-HCM.json`, 10 kỳ từ 2024-Q1 đến 2026-Q2.
+- Báo cáo lưu chuyển tiền tệ của HCM dùng mẫu CTCK: dòng 60 là lưu chuyển tiền thuần từ hoạt động kinh doanh, dòng 70 từ đầu tư, dòng 80 từ tài chính, dòng 90 là lưu chuyển tiền thuần trong kỳ, dòng 101 là tiền đầu kỳ và dòng 103 là tiền cuối kỳ. Không lấy subtotal trước thay đổi vốn lưu động và không dùng phần tiền môi giới/ủy thác của khách hàng để thay cho tiền của công ty.
+- Nguồn đã lưu từ danh mục VietstockFinance cho thấy dòng FX không được trình bày riêng trong báo cáo lưu chuyển tiền tệ HCM; vì vậy không tạo `foreign_exchange_effect`.
+- Đơn vị nguồn là VND, snapshot quy đổi sang triệu VND bằng cách làm tròn từng dòng về triệu gần nhất. Do làm tròn độc lập, tổng hoặc cầu nối có thể lệch 1 triệu đồng; chấp nhận khi chênh lệch tương đối không vượt 0,01%. Không thay số nguồn để khớp tuyệt đối.
+- Ưu tiên số so sánh mới hơn:
+  - FY2024 dùng cột so sánh trong BCTC Q4/2025; Q1–Q3/2024 lần lượt được lấy từ cột so sánh trong Q1/Q2/Q3 năm 2025. Các số YTD của 2024 khớp cùng cơ sở so sánh đã chọn.
+  - H1/2025 dùng cột so sánh mới hơn trong BCTC Q2/2026: CFO **-4.154.431**, CFI **-9.068**, CFF **3.273.395**, net change **-890.104**, tiền đầu năm **1.963.445**, tiền cuối kỳ **1.073.341 triệu VND**. Cơ sở này thay thế giá trị H1/2025 trước đó trong snapshot (net change -714.404; opening 2.023.945; closing 1.309.541). Không ghi đè mất dấu vết cơ sở cũ.
+  - Giá trị quý riêng tính bằng YTD mới của kỳ hiện tại trừ YTD kỳ trước trong cùng năm theo cơ sở đã chọn. Nếu cột so sánh mới hơn làm phát sinh mâu thuẫn giữa báo cáo, ghi residual và trạng thái rà soát; không thêm khoản bù.
+- Các báo cáo HCM được lưu ở `reports/raw/HCM/vietstock-hcm-2024-2026-20261019/`. Lượt này dùng sidecar OCR của trang B03(b)a. Công cụ xem PDF trực tiếp không mở được các PDF lớn trong lượt này, nên tất cả trang nguồn vẫn mang trạng thái `ocr_text_reconciled_visual_review_pending`; không tuyên bố đã xác minh hình ảnh trang PDF.
+
+### Ngoại lệ nguồn/basis bắt buộc giữ lại
+- **2025-Q2:** YTD H1/2025 từ so sánh Q2/2026 mở đầu năm **1.963.445** và kết thúc **1.073.341**, trong khi Q1/2025 trước đó kết thúc **1.591.074**. Cầu nối quý riêng theo chênh YTD có residual **-60.500 triệu VND** (vượt 0,01%). Đồng thời opening YTD mới khác closing FY2024 **-60.500 triệu VND**. Giữ cột so sánh mới hơn và gắn cờ; không tự sửa Q1/2025.
+- **2025-Q3:** YTD 9T/2025 theo báo cáo Q3/2025 có kết thúc **6.709.100**; khi lấy chênh so với H1/2025 đã trình bày lại từ Q2/2026, cầu nối Q3 riêng dư **+60.500 triệu VND** (vượt 0,01%). Đây là mâu thuẫn cơ sở giữa báo cáo, không phải lý do để bịa hoặc cắm số cân bằng.
+- **2026-Q2:** YTD H1/2026 tự cân đối theo báo cáo hiện hành với opening **3.381.063**, closing **2.202.389**, net change **-1.178.674 triệu VND**. Tuy nhiên, opening H1/2026 lệch **-320.500 triệu VND** so với closing FY2025 **3.701.563**; cầu nối quý riêng sau chênh YTD dư **-320.499 triệu VND** (relative difference xấp xỉ 12,70%, vượt 0,01%). Giữ nguyên cả hai số của báo cáo, đánh dấu `NEEDS_MANUAL_REVIEW_CROSS_REPORT_BASIS_GT_0_01_PERCENT`, không ép liên tục.
+- Regression bổ sung trong `tests/test_cashflow_bridge.py` kiểm tra đủ 10 kỳ, YTD/quarter sums, quý riêng = YTD delta, cầu nối, cơ sở so sánh mới hơn và cả ba ngoại lệ vượt ngưỡng. Sai lệch làm tròn 1 triệu đồng ở những kỳ khác được chấp nhận theo 0,01%.
+- Trạng thái HCM: **PASS phép tính và ánh xạ dòng tiền cốt lõi trong các kỳ không có mâu thuẫn basis; NEEDS_MANUAL_REVIEW ở Q2/2025, Q3/2025 và Q2/2026**. Trang PDF trực tiếp chưa được xem nên review hình ảnh còn pending cho cả 10 kỳ; các số giữ trạng thái thận trọng.
