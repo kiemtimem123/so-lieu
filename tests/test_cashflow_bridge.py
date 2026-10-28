@@ -238,9 +238,6 @@ class CashFlowBridgeTests(unittest.TestCase):
 
 
 
-if __name__ == "__main__":
-    unittest.main()
-
 
 class ACBCashFlowNormalizationTests(unittest.TestCase):
     """Regression tests for the source-reconciled ACB cash-flow series."""
@@ -798,3 +795,7 @@ class VNDCashFlowNormalizationTests(unittest.TestCase):
         self.assertEqual(row["net_cash_change_ytd"], -296409)
         self.assertEqual(row["cash_beginning_reported_ytd"], 1622127)
         self.assertEqual(row["cash_ending_reported_ytd"], 1325719)
+
+
+if __name__ == "__main__":
+    unittest.main()
