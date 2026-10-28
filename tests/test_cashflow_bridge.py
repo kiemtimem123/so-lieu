@@ -98,7 +98,13 @@ class CashFlowBridgeTests(unittest.TestCase):
         rows = {row["period"]: row for row in snapshot["items"]}
         self.assertEqual(len(rows), 10)
 
-        # Check source-backed totals and both cash bridges for each MBB quarter.
+        # Check source-backed totals, standalone-vs-YTD math and cash bridges.
+        flow_pairs = (
+            ("operating_cash_flow", "operating_cash_flow_ytd"),
+            ("investing_cash_flow", "investing_cash_flow_ytd"),
+            ("financing_cash_flow", "financing_cash_flow_ytd"),
+            ("net_cash_change", "net_cash_change_ytd"),
+        )
         for period, row in rows.items():
             with self.subTest(period=period):
                 self.assertEqual(
@@ -109,6 +115,15 @@ class CashFlowBridgeTests(unittest.TestCase):
                     row["operating_cash_flow_ytd"] + row["investing_cash_flow_ytd"] + row["financing_cash_flow_ytd"],
                     row["net_cash_change_ytd"],
                 )
+                year, qtr = period.split("-Q")
+                if int(qtr) == 1:
+                    for quarterly_field, ytd_field in flow_pairs:
+                        self.assertEqual(row[quarterly_field], row[ytd_field])
+                else:
+                    prior = rows[f"{year}-Q{int(qtr) - 1}"]
+                    for quarterly_field, ytd_field in flow_pairs:
+                        self.assertEqual(row[quarterly_field], row[ytd_field] - prior[ytd_field])
+
                 ytd_bridge = (
                     row["cash_ending_reported_ytd"]
                     - row["cash_beginning_reported_ytd"]
@@ -119,10 +134,41 @@ class CashFlowBridgeTests(unittest.TestCase):
                     self.assertEqual(cash_bridge_delta(row), -2)
                     self.assertEqual(
                         row["cashflow_source_reconciliation"]["status"],
-                        "NEEDS_MANUAL_REVIEW_CROSS_PERIOD_CASH_BRIDGE_2_MILLION",
+                        "NEEDS_MANUAL_REVIEW_CROSS_REPORT_CASH_BASIS_2_MILLION",
                     )
                 else:
                     self.assertEqual(cash_bridge_delta(row), 0)
+
+        # Adjacent-quarter continuity must be tested separately from each row's internal cash bridge.
+        quarter_periods = sorted(rows)
+        continuity_residuals = {}
+        for prior_period, current_period in zip(quarter_periods, quarter_periods[1:]):
+            prior, current = rows[prior_period], rows[current_period]
+            if prior_period[:4] != current_period[:4]:
+                # Quarter-to-quarter cash continuity still applies across a calendar-year boundary.
+                residual = current["cash_beginning"] - prior["cash_ending"]
+            else:
+                residual = current["cash_beginning"] - prior["cash_ending"]
+            continuity_residuals[(prior_period, current_period)] = residual
+        self.assertEqual(
+            {pair: value for pair, value in continuity_residuals.items() if value != 0},
+            {("2024-Q4", "2025-Q1"): 2},
+        )
+        self.assertEqual(
+            rows["2025-Q1"]["cashflow_balance_bridge_recovery"]["opening_minus_prior_closing_residual"],
+            2,
+        )
+        self.assertEqual(
+            rows["2025-Q2"]["cashflow_balance_bridge_recovery"]["q2_quarter_bridge_residual"],
+            -2,
+        )
+        q1_reference_urls = {
+            item["source_url"] for item in rows["2025-Q1"]["cashflow_source_reconciliation"]["reference_sources"]
+        }
+        self.assertIn(
+            "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/MBB_Baocaotaichinh_Q1_2026_Hopnhat.pdf",
+            q1_reference_urls,
+        )
 
         # Previously blank or mis-mapped source values that must not regress.
         self.assertEqual(rows["2024-Q1"]["financing_cash_flow"], 1050000)
