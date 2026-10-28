@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-28T06:05:27Z",
+  "updatedAt": "2026-10-28T07:39:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -1403,5 +1403,25 @@
     "unit": "million VND",
     "rule": "Accept and use reported data when an arithmetic reconciliation difference is <= 10 million VND; do not alter source values to force reconciliation. Differences > 10 million VND require review. Missing source pages or insufficient period basis remain unresolved regardless of this tolerance.",
     "updatedAt": "2026-10-25T06:10:00Z"
+  },
+  "normalizationProgress": {
+    "standardVersion": "1.0",
+    "standardDocument": "reports/financial-data-normalization-standard.md",
+    "activeDataDomain": "cashflow",
+    "activeSymbol": "TCB",
+    "status": "needs_manual_pdf_review",
+    "lastUpdatedAt": "2026-10-28T07:39:00Z",
+    "completedChecks": [
+      "TCB 11 kỳ: tổng operating/investing/financing cash flow khớp net_cash_change",
+      "TCB 11 kỳ: tổng các trường YTD khớp net_cash_change_ytd",
+      "TCB 8 kỳ Q2-Q4 có đủ dữ liệu: số quý khớp chênh lệch YTD cùng năm",
+      "Sửa bộ kiểm định để tính foreign_exchange_effect vào cầu nối tiền",
+      "Thêm kiểm thử hồi quy tests/test_cashflow_bridge.py"
+    ],
+    "unresolved": [
+      "TCB 2026-Q3 thiếu foreign_exchange_effect; cầu nối còn chênh -20 triệu VND, không tự suy đoán",
+      "TCB số dư tiền đầu Q1/2026 là 191827343 triệu VND, khác số dư cuối Q4/2025 là 191262058 triệu VND; cần đối chiếu PDF hai kỳ"
+    ],
+    "nextStep": "Đợi workflow Validate Site and Data chạy xong; sau đó chạy tests/test_cashflow_bridge.py trong CI, đối chiếu PDF VietstockFinance của TCB Q4/2025 và Q1/2026, chỉ cập nhật khi có bằng chứng. Chưa chuyển sang mảng khác."
   }
 }
