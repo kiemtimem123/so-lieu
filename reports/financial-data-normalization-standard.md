@@ -162,3 +162,36 @@ tests/test_cashflow_bridge.py có thêm test nguồn thực kiểm tra số năm
 - [Targeted OCR run 40665985748](https://github.com/kiemtimem123/so-lieu/actions/runs/40665985748): **SUCCESS**; sidecar trang 12 Q3/2026 đã được OCR lại ở 300dpi và giá trị mới đã được kiểm tra bằng test.
 
 Do đó TCB–LCTT không còn sai lệch số học mở: Q4/2025 đã được chuẩn hóa theo BCTC năm đã kiểm toán và Q3/2026 đã sửa sai chữ số do OCR. Trạng thái: **PASS nguồn OCR + đối chiếu số học + CI**; không đồng nghĩa với tuyên bố kiểm tra thủ công từng pixel. Bước kế tiếp theo hàng đợi trong cùng mảng là **MBB**, không chuyển sang tab/mảng khác.
+
+
+## Lượt chuẩn hóa MBB — Lưu chuyển tiền tệ (2026-10-28)
+
+### Cách làm đã chuẩn hóa thêm
+
+- Với PDF BCTC hợp nhất ngân hàng, đọc trang LCTT 7–8; khi trường số bị trống, sai ánh xạ hoặc nghi OCR, chạy OCR mục tiêu 300dpi và ghi sidecar riêng trước khi thay snapshot. Script tái sử dụng: `scripts/extract-mbb-cashflow-pages.py`; workflow: [Extract MBB Cash-Flow Source Pages](https://github.com/kiemtimem123/so-lieu/actions/runs/40666978535).
+- Không coi mọi số trong snapshot trước là đúng: so sánh từng luồng tiền, tổng biến động tiền, số dư đầu/cuối kỳ và số lũy kế. Những trường từng lấy nhầm dòng thu lãi hoặc chi phí đầu tư riêng phải được thay theo dòng tổng lưu chuyển tiền thuần.
+- Nếu BCTC VietstockFinance của kỳ sau có cột so sánh năm trước, chỉ dùng số so sánh mới hơn khi cột đó xác định rõ cùng phạm vi hợp nhất và được kiểm tra trực quan. Lưu cả nguồn tài liệu gốc của kỳ và nguồn so sánh cập nhật; giữ lịch sử giá trị cũ/mới. Không lấy số so sánh từ một PDF khác mà không ghi provenance.
+- Tách rõ ba phép kiểm: (a) tổng ba nhóm tiền = biến động tiền thuần; (b) cầu nối số dư trong riêng quý; (c) cầu nối số dư lũy kế từ đầu năm. Không thay đổi số báo cáo chỉ để làm (b) bằng 0 khi số dư hoặc cột so sánh gốc có chênh lệch; lưu residual và chuyển NEEDS_MANUAL_REVIEW.
+
+### Kết quả MBB đã cập nhật
+
+Đã OCR lại PDF trang 7–8 ở 300dpi cho đủ 10 kỳ từ Q1/2024 đến Q2/2026; workflow hoàn tất 10/10 nguồn, không lỗi. Thay đổi đã lưu trong [snapshot MBB](https://github.com/kiemtimem123/so-lieu/blob/main/data/financials-MBB.json), commit dữ liệu `eaf527a35f2b5a8bae098aebe0d85a94d4ea27cf`.
+
+- Khôi phục trường thiếu LCTT tài chính, biến động tiền thuần và số dư tiền đầu/cuối ở những kỳ nguồn đã xác nhận.
+- Sửa ánh xạ sai ở Q4/2024: `operating_cash_flow_ytd` trước đây lấy nhầm giá trị **68.529.262** từ dòng thu lãi, và `cash_ending` từng là **1.357.407**; thay bằng số LCTT đúng theo cột so sánh mới hơn trong BCTC Q4/2025.
+- Sửa tiền đầu năm Q3/2024 từ OCR nhầm **409.095.118** về **109.095.118** sau kiểm tra trực quan trang 8.
+- Dùng số so sánh H1/2025 từ PDF BCTC hợp nhất Q2/2026 đã kiểm tra trực quan trang 7–8: CFO **1.516.540**, đầu tư **-400.976**, tài chính **5.698.563**, biến động thuần **6.814.127**, tiền đầu/cuối kỳ **97.040.273 / 103.854.400** triệu VND. Số này thay các giá trị cũ của H1/2025 được trích từ báo cáo Q2/2025 trước đó. Số Q3/2025 riêng được tính dựa trên lũy kế H1 đã cập nhật.
+
+### Ngoại lệ còn mở — MBB Q2/2025
+
+Q1/2025 trong báo cáo gốc ghi tiền đầu kỳ **97.040.275**, tiền cuối kỳ **72.986.872**, biến động thuần **-24.053.403**. Cột so sánh H1/2025 trong báo cáo Q2/2026 sau đó ghi tiền đầu kỳ **97.040.273**, cuối kỳ **103.854.400**, biến động thuần **6.814.127**. Cả bộ số Q1 trong nguồn gốc tự cân, và cả bộ số H1 trong nguồn so sánh mới hơn tự cân; ba nhóm LCTT H1 cũng cộng đúng. Tuy nhiên số riêng Q2 tính từ chênh lệch YTD là **30.867.530**, trong khi cầu nối bằng tiền cuối Q2 trừ tiền cuối Q1 là **30.867.528**, chênh **-2 triệu VND**.
+
+Không thay 2 triệu này vào CFO, dòng tài chính hay số dư tiền để làm cho cầu nối khớp giả tạo. Giữ số báo cáo theo nguồn tương ứng, lưu lịch sử và trạng thái `NEEDS_MANUAL_REVIEW_CROSS_PERIOD_CASH_BRIDGE_2_MILLION` ở kỳ 2025-Q2. Đây là ngoại lệ duy nhất còn mở trong 10 kỳ MBB của mảng này; các kỳ còn lại có tổng các luồng và cầu nối quý/YTD khớp.
+
+### CI sau chuẩn hóa MBB
+
+- [Targeted source-page OCR](https://github.com/kiemtimem123/so-lieu/actions/runs/40666978535): PASS, đã xử lý đủ 10/10 archive nguồn.
+- [Validate quarterly financial data](https://github.com/kiemtimem123/so-lieu/actions/runs/40668008382): PASS; quarterly snapshots và bank reconciliation regression checks PASS.
+- [Validate Site and Data, có bài kiểm thử MBB](https://github.com/kiemtimem123/so-lieu/actions/runs/40668224913): PASS; kiểm thử cash-flow bridge và xác nhận JSON snapshots PASS. Bài kiểm thử chặn việc thay 2 triệu đồng như một balancing plug.
+
+**Trạng thái MBB:** dữ liệu tự động đã chuẩn hóa/kiểm tra cho 10/10 kỳ; có 1 residual cross-quarter -2 triệu VND được lưu công khai để rà soát thủ công. Không gắn nhãn “mọi nguồn đã cân tuyệt đối”; các giá trị nguồn được giữ nguyên đúng theo chứng từ.
