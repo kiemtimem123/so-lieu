@@ -67,22 +67,34 @@
       "operating_profit": 1450546,
       "income_tax_current": -510166,
       "income_tax": 512102,
-      "cashflow_period_basis": "quarterly_reported",
+      "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
         "admin_expense",
         "cash_and_equivalents",
+        "cash_beginning",
+        "cash_beginning_reported_ytd",
+        "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
         "cost_of_goods_sold",
         "current_liabilities",
         "financial_expense",
         "financial_income",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
         "fixed_assets",
         "gross_profit",
         "income_tax",
         "income_tax_current",
         "interest_expense",
         "inventory",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
         "long_term_liabilities",
+        "net_cash_change",
+        "net_cash_change_ytd",
+        "operating_cash_flow",
+        "operating_cash_flow_ytd",
         "operating_profit",
         "retained_earnings",
         "revenue",
@@ -93,60 +105,20 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/aefb062e66e22d80.pdf",
       "financial_line_items_updated_at": "2026-10-25T20:27:45+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần.",
-      "financing_cash_flow_calculation": "reported as standalone quarter",
-      "net_cash_change_calculation": "reported as standalone quarter",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. VHM CASHFLOW NORMALIZATION 2026-10-29: selected cash-flow lines are report codes 20/30/40/50/60/70. The source statements present amounts in million VND to three decimals; retain reported precision. The report does not present a separate FX cash bridge line; do not infer one. Quarter standalone = current YTD minus prior quarter YTD. Source pages 12, 13, 14; visual status=ocr_text_reconciled_visual_review_pending.",
+      "financing_cash_flow_calculation": "Reported Q1 statement line in current period; source values preserved to 0.001 million VND.",
+      "net_cash_change_calculation": "Reported Q1 statement line in current period; source values preserved to 0.001 million VND.",
       "financial_line_items_prior_values": {
         "income_tax": -510166,
         "financing_cash_flow_ytd": 1000
       },
       "financial_line_items_rejected_values": {
-        "operating_cash_flow": {
-          "value": 10000,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "investing_cash_flow": {
-          "value": -5925725,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "financing_cash_flow": {
-          "value": 1000,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "net_cash_change": {
-          "value": -4578562,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
         "capital_expenditure": {
           "value": 10000,
           "reason": "cash-flow components do not reconcile to reported net cash change"
         },
-        "operating_cash_flow_ytd": {
-          "value": 10000,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "investing_cash_flow_ytd": {
-          "value": -5925725,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "financing_cash_flow_ytd": {
-          "value": 5920845,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "net_cash_change_ytd": {
-          "value": -4578562,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
         "capital_expenditure_ytd": {
           "value": 10000,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "cash_beginning": {
-          "value": 14103181,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "cash_ending": {
-          "value": 9524619,
           "reason": "cash-flow components do not reconcile to reported net cash change"
         }
       },
@@ -156,18 +128,8 @@
       "financial_line_items_rejected_fields": [
         "capital_expenditure",
         "capital_expenditure_ytd",
-        "cash_beginning",
-        "cash_ending",
         "current_assets_asset_total_check",
-        "financing_cash_flow",
-        "financing_cash_flow_ytd",
-        "investing_cash_flow",
-        "investing_cash_flow_ytd",
-        "net_cash_change",
-        "net_cash_change_ytd",
-        "non_current_assets_asset_total_check",
-        "operating_cash_flow",
-        "operating_cash_flow_ytd"
+        "non_current_assets_asset_total_check"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-22T13:35:33+00:00",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
@@ -196,7 +158,7 @@
       "current_liabilities": 214974936,
       "long_term_liabilities": 53293517,
       "retained_earnings": 136335857,
-      "operating_cash_flow_calculation": "reported as standalone quarter",
+      "operating_cash_flow_calculation": "Reported Q1 statement line in current period; source values preserved to 0.001 million VND.",
       "capital_expenditure_calculation": "reported as standalone quarter",
       "financial_line_items_value_corrections": {
         "financing_cash_flow_ytd": {
@@ -205,7 +167,87 @@
           "reason": "reparsed with corrected VND unit scale after detecting an OCR-corrupted statement unit header"
         }
       },
-      "investing_cash_flow_calculation": "reported as standalone quarter"
+      "investing_cash_flow_calculation": "Reported Q1 statement line in current period; source values preserved to 0.001 million VND.",
+      "operating_cash_flow_ytd": -4573.682,
+      "investing_cash_flow_ytd": -5925.725,
+      "financing_cash_flow_ytd": 5920.845,
+      "net_cash_change_ytd": -4578.562,
+      "cash_beginning_reported_ytd": 14103.181,
+      "cash_ending_reported_ytd": 9524.619,
+      "operating_cash_flow": -4573.682,
+      "investing_cash_flow": -5925.725,
+      "financing_cash_flow": 5920.845,
+      "net_cash_change": -4578.562,
+      "cash_beginning": 14103.181,
+      "cash_ending": 9524.619,
+      "foreign_exchange_effect": null,
+      "foreign_exchange_effect_ytd": null,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%201/VHM_Baocaotaichinh_Q1_2024_Hopnhat.pdf",
+        "selected_source_index_url": "https://finance.vietstock.vn/VHM/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/aefb062e66e22d80.pdf",
+        "source_pdf_pages": [
+          12,
+          13,
+          14
+        ],
+        "source_printed_pages": [
+          10,
+          11,
+          12
+        ],
+        "unit": "triệu VND (source precision preserved to 0.001)",
+        "selected_basis": "Current Q1/2024 consolidated report. Q1/2025 comparison CFI differs by only 0.001 million VND, below 0.01%; original source value retained.",
+        "visual_review": "ocr_text_reconciled_visual_review_pending",
+        "selected_source_values_million_vnd": {
+          "operating_cash_flow_ytd": -4573.682,
+          "investing_cash_flow_ytd": -5925.725,
+          "financing_cash_flow_ytd": 5920.845,
+          "net_cash_change_ytd": -4578.562,
+          "cash_beginning_reported_ytd": 14103.181,
+          "cash_ending_reported_ytd": 9524.619
+        },
+        "previous_source_url": null,
+        "previous_source_archive_file": null,
+        "previous_source_values_million_vnd": null,
+        "relative_differences_percent": null,
+        "source_basis_changed": false,
+        "reason": "H1/2025 uses the later Q2/2026 comparative; CFO/CFI/CFF categories differ from the older H1/2025 source by more than 0.01%, while net movement/ending cash remain within tolerance."
+      },
+      "cashflow_source_reconciliation": {
+        "report_period": "2024-Q1",
+        "units": "triệu VND",
+        "source_index_url": "https://finance.vietstock.vn/VHM/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%201/VHM_Baocaotaichinh_Q1_2024_Hopnhat.pdf",
+        "source_archive_file": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/aefb062e66e22d80.pdf",
+        "source_pdf_pages": [
+          12,
+          13,
+          14
+        ],
+        "source_printed_pages": [
+          10,
+          11,
+          12
+        ],
+        "visual_review": "ocr_text_reconciled_visual_review_pending",
+        "selected_values_not_adjusted_for_tolerance": true,
+        "relative_tolerance_percent": 0.01,
+        "period_basis": "year_to_date",
+        "foreign_exchange_effect_source_status": "not_reported_separately",
+        "ytd_flow_components_residual": 9.094947017729282e-13,
+        "ytd_flow_components_relative_difference_percent": 1.986419975907126e-14,
+        "ytd_cash_bridge_residual": 0,
+        "ytd_cash_bridge_relative_difference_percent": 0,
+        "quarter_flow_components_residual": 9.094947017729282e-13,
+        "quarter_flow_components_relative_difference_percent": 1.986419975907126e-14,
+        "quarter_cash_bridge_residual": 0,
+        "quarter_cash_bridge_relative_difference_percent": 0,
+        "standalone_quarter_derived_from_ytd": "Q1 = YTD (reported quarter statement)",
+        "selected_comparative_source_used": false,
+        "status": "NEEDS_MANUAL_REVIEW_SOURCE_VISUAL_PENDING",
+        "note": "The Q1/2025 comparative differs from original Q1/2024 CFI by 0.001 million VND (<0.01%); original source basis retained and discrepancy accepted."
+      }
     },
     {
       "symbol": "VHM",
@@ -259,15 +301,27 @@
       "short_term_investments": 3674058,
       "short_term_receivables": 137014156,
       "inventory": 56310972,
-      "cashflow_period_basis": "quarterly_reported",
+      "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
         "cash_and_equivalents",
+        "cash_beginning",
+        "cash_beginning_reported_ytd",
+        "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
         "current_assets",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
         "fixed_assets",
         "income_tax",
         "inventory",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
         "non_current_assets",
+        "operating_cash_flow",
+        "operating_cash_flow_ytd",
         "retained_earnings",
         "short_term_investments",
         "short_term_receivables"
@@ -275,30 +329,14 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/a3ee2e3b187518a7.pdf",
       "financial_line_items_updated_at": "2026-10-25T20:27:45+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần.",
-      "investing_cash_flow_calculation": "reported as standalone quarter",
-      "financing_cash_flow_calculation": "reported as standalone quarter",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. VHM CASHFLOW NORMALIZATION 2026-10-29: selected cash-flow lines are report codes 20/30/40/50/60/70. The source statements present amounts in million VND to three decimals; retain reported precision. The report does not present a separate FX cash bridge line; do not infer one. Quarter standalone = current YTD minus prior quarter YTD. Source pages 15, 16; visual status=ocr_text_reconciled_visual_review_pending.",
+      "investing_cash_flow_calculation": "Standalone quarter is derived from selected current YTD minus prior-quarter YTD; source precision is retained.",
+      "financing_cash_flow_calculation": "Standalone quarter is derived from selected current YTD minus prior-quarter YTD; source precision is retained.",
       "capital_expenditure_calculation": "reported as standalone quarter",
       "dividends_paid_calculation": "reported as standalone quarter",
-      "net_cash_change_calculation": "reported as standalone quarter",
+      "net_cash_change_calculation": "Standalone quarter is derived from selected current YTD minus prior-quarter YTD; source precision is retained.",
       "financial_line_items_prior_values": {},
       "financial_line_items_rejected_values": {
-        "operating_cash_flow": {
-          "value": 6474315,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "investing_cash_flow": {
-          "value": 370673,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "financing_cash_flow": {
-          "value": 16700,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "net_cash_change": {
-          "value": 3077019,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
         "capital_expenditure": {
           "value": 715718,
           "reason": "cash-flow components do not reconcile to reported net cash change"
@@ -307,36 +345,12 @@
           "value": 3536,
           "reason": "cash-flow components do not reconcile to reported net cash change"
         },
-        "operating_cash_flow_ytd": {
-          "value": 6474315,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "investing_cash_flow_ytd": {
-          "value": 370673,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "financing_cash_flow_ytd": {
-          "value": 16700,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "net_cash_change_ytd": {
-          "value": 3077019,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
         "capital_expenditure_ytd": {
           "value": 715718,
           "reason": "cash-flow components do not reconcile to reported net cash change"
         },
         "dividends_paid_ytd": {
           "value": 3536,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "cash_beginning": {
-          "value": 14103181,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "cash_ending": {
-          "value": 17180200,
           "reason": "cash-flow components do not reconcile to reported net cash change"
         }
       },
@@ -347,22 +361,12 @@
       "financial_line_items_rejected_fields": [
         "capital_expenditure",
         "capital_expenditure_ytd",
-        "cash_beginning",
-        "cash_ending",
         "current_assets_asset_total_check",
         "current_liabilities_liability_total_check",
         "dividends_paid",
         "dividends_paid_ytd",
-        "financing_cash_flow",
-        "financing_cash_flow_ytd",
-        "investing_cash_flow",
-        "investing_cash_flow_ytd",
         "long_term_liabilities_liability_total_check",
-        "net_cash_change",
-        "net_cash_change_ytd",
-        "non_current_assets_asset_total_check",
-        "operating_cash_flow",
-        "operating_cash_flow_ytd"
+        "non_current_assets_asset_total_check"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-22T13:35:33+00:00",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
@@ -372,7 +376,121 @@
       "non_current_assets": 245402822,
       "fixed_assets": 12519280,
       "retained_earnings": 146584496,
-      "operating_cash_flow_calculation": "reported as standalone quarter"
+      "operating_cash_flow_calculation": "Standalone quarter is derived from selected current YTD minus prior-quarter YTD; source precision is retained.",
+      "operating_cash_flow_ytd": -10945.61,
+      "investing_cash_flow_ytd": 1139.644,
+      "financing_cash_flow_ytd": 12882.761,
+      "net_cash_change_ytd": 3076.795,
+      "cash_beginning_reported_ytd": 14103.181,
+      "cash_ending_reported_ytd": 17179.976,
+      "operating_cash_flow": -6371.928000000001,
+      "investing_cash_flow": 7065.369000000001,
+      "financing_cash_flow": 6961.916,
+      "net_cash_change": 7655.357,
+      "cash_beginning": 9524.619,
+      "cash_ending": 17179.976,
+      "foreign_exchange_effect": null,
+      "foreign_exchange_effect_ytd": null,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%202/VHM_Baocaotaichinh_Q2_2025_Hopnhat.pdf",
+        "selected_source_index_url": "https://finance.vietstock.vn/VHM/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/76ea6eb4368dcfd2.pdf",
+        "source_pdf_pages": [
+          15,
+          16
+        ],
+        "source_printed_pages": [
+          11,
+          12
+        ],
+        "unit": "triệu VND (source precision preserved to 0.001)",
+        "selected_basis": "H1/2024 comparative in the later Q2/2025 consolidated report; supersedes the Q2/2024 basis. Source component categories changed materially, total net movement and ending cash differ by less than 0.01%.",
+        "visual_review": "ocr_text_reconciled_visual_review_pending",
+        "selected_source_values_million_vnd": {
+          "operating_cash_flow_ytd": -10945.61,
+          "investing_cash_flow_ytd": 1139.644,
+          "financing_cash_flow_ytd": 12882.761,
+          "net_cash_change_ytd": 3076.795,
+          "cash_beginning_reported_ytd": 14103.181,
+          "cash_ending_reported_ytd": 17179.976
+        },
+        "previous_source_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%202/VHM_Baocaotaichinh_Q2_2024_Hopnhat.pdf",
+        "previous_source_archive_file": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/a3ee2e3b187518a7.pdf",
+        "previous_source_values_million_vnd": {
+          "operating_cash_flow_ytd": 6474.315,
+          "investing_cash_flow_ytd": -16332.55,
+          "financing_cash_flow_ytd": 12935.254,
+          "net_cash_change_ytd": 3077.019,
+          "cash_beginning_reported_ytd": 14103.181,
+          "cash_ending_reported_ytd": 17180.2
+        },
+        "relative_differences_percent": {
+          "operating_cash_flow_ytd": {
+            "previous_value_million_vnd": 6474.315,
+            "selected_value_million_vnd": -10945.61,
+            "relative_difference_percent": 159.1498783530566
+          },
+          "investing_cash_flow_ytd": {
+            "previous_value_million_vnd": -16332.55,
+            "selected_value_million_vnd": 1139.644,
+            "relative_difference_percent": 106.97774689194277
+          },
+          "financing_cash_flow_ytd": {
+            "previous_value_million_vnd": 12935.254,
+            "selected_value_million_vnd": 12882.761,
+            "relative_difference_percent": 0.40581344595166347
+          },
+          "net_cash_change_ytd": {
+            "previous_value_million_vnd": 3077.019,
+            "selected_value_million_vnd": 3076.795,
+            "relative_difference_percent": 0.0072797730530654945
+          },
+          "cash_beginning_reported_ytd": {
+            "previous_value_million_vnd": 14103.181,
+            "selected_value_million_vnd": 14103.181,
+            "relative_difference_percent": 0
+          },
+          "cash_ending_reported_ytd": {
+            "previous_value_million_vnd": 17180.2,
+            "selected_value_million_vnd": 17179.976,
+            "relative_difference_percent": 0.0013038264979568287
+          }
+        },
+        "source_basis_changed": true,
+        "reason": "Later H1/2024 comparative in Q2/2025 changes CFO/CFI/CFF categories versus original Q2/2024; net movement and ending cash remain within 0.01%."
+      },
+      "cashflow_source_reconciliation": {
+        "report_period": "2024-Q2",
+        "units": "triệu VND",
+        "source_index_url": "https://finance.vietstock.vn/VHM/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%202/VHM_Baocaotaichinh_Q2_2025_Hopnhat.pdf",
+        "source_archive_file": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/76ea6eb4368dcfd2.pdf",
+        "source_pdf_pages": [
+          15,
+          16
+        ],
+        "source_printed_pages": [
+          11,
+          12
+        ],
+        "visual_review": "ocr_text_reconciled_visual_review_pending",
+        "selected_values_not_adjusted_for_tolerance": true,
+        "relative_tolerance_percent": 0.01,
+        "period_basis": "year_to_date",
+        "foreign_exchange_effect_source_status": "not_reported_separately",
+        "ytd_flow_components_residual": 0,
+        "ytd_flow_components_relative_difference_percent": 0,
+        "ytd_cash_bridge_residual": -1.8189894035458565e-12,
+        "ytd_cash_bridge_relative_difference_percent": 2.1175692021291022e-14,
+        "quarter_flow_components_residual": 0,
+        "quarter_flow_components_relative_difference_percent": 0,
+        "quarter_cash_bridge_residual": -1.8189894035458565e-12,
+        "quarter_cash_bridge_relative_difference_percent": 2.1175692021291022e-14,
+        "standalone_quarter_derived_from_ytd": "Current YTD - previous quarter YTD, within fiscal year",
+        "selected_comparative_source_used": true,
+        "status": "NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT",
+        "note": "Later Q2/2025 H1/2024 comparator selected; its operating/investing/financing breakdown differs materially from Q2/2024 original, but net cash movement/closing-cash bridge are within 0.01%. Flag source reclassification without changing either source record."
+      }
     },
     {
       "symbol": "VHM",
@@ -426,72 +544,44 @@
       "current_liabilities": 246563570,
       "long_term_liabilities": 62155048,
       "retained_earnings": 154216100,
-      "cashflow_period_basis": "quarterly_reported",
+      "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
+        "cash_beginning",
+        "cash_beginning_reported_ytd",
+        "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
         "current_assets",
         "current_liabilities",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
         "fixed_assets",
         "income_tax",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
         "long_term_liabilities",
+        "net_cash_change",
+        "net_cash_change_ytd",
+        "operating_cash_flow",
+        "operating_cash_flow_ytd",
         "retained_earnings"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/f9524cbc13fc89c3.pdf",
       "financial_line_items_updated_at": "2026-10-24T04:24:35+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần.",
-      "operating_cash_flow_calculation": "reported as standalone quarter",
-      "financing_cash_flow_calculation": "reported as standalone quarter",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. VHM CASHFLOW NORMALIZATION 2026-10-29: selected cash-flow lines are report codes 20/30/40/50/60/70. The source statements present amounts in million VND to three decimals; retain reported precision. The report does not present a separate FX cash bridge line; do not infer one. Quarter standalone = current YTD minus prior quarter YTD. Source pages 13, 14, 15; visual status=visually_checked.",
+      "operating_cash_flow_calculation": "Standalone quarter is derived from selected current YTD minus prior-quarter YTD; source precision is retained.",
+      "financing_cash_flow_calculation": "Standalone quarter is derived from selected current YTD minus prior-quarter YTD; source precision is retained.",
       "capital_expenditure_calculation": "reported as standalone quarter",
-      "net_cash_change_calculation": "reported as standalone quarter",
+      "net_cash_change_calculation": "Standalone quarter is derived from selected current YTD minus prior-quarter YTD; source precision is retained.",
       "financial_line_items_prior_values": {},
       "financial_line_items_rejected_values": {
-        "operating_cash_flow": {
-          "value": 621483,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "investing_cash_flow": {
-          "value": 12352,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "financing_cash_flow": {
-          "value": 14989837,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "net_cash_change": {
-          "value": 6518302,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
         "capital_expenditure": {
           "value": 206233,
           "reason": "cash-flow components do not reconcile to reported net cash change"
         },
-        "operating_cash_flow_ytd": {
-          "value": 621483,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "investing_cash_flow_ytd": {
-          "value": 12352,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "financing_cash_flow_ytd": {
-          "value": 14989837,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "net_cash_change_ytd": {
-          "value": 6518302,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
         "capital_expenditure_ytd": {
           "value": 206233,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "cash_beginning": {
-          "value": 14103181,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "cash_ending": {
-          "value": 20621483,
           "reason": "cash-flow components do not reconcile to reported net cash change"
         }
       },
@@ -505,22 +595,92 @@
       "financial_line_items_rejected_fields": [
         "capital_expenditure",
         "capital_expenditure_ytd",
-        "cash_beginning",
-        "cash_ending",
         "current_assets_asset_total_check",
-        "financing_cash_flow",
-        "financing_cash_flow_ytd",
-        "investing_cash_flow",
-        "investing_cash_flow_ytd",
-        "net_cash_change",
-        "net_cash_change_ytd",
-        "non_current_assets_asset_total_check",
-        "operating_cash_flow",
-        "operating_cash_flow_ytd"
+        "non_current_assets_asset_total_check"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-24T04:24:30+00:00",
       "fixed_assets": 17352385,
-      "investing_cash_flow_calculation": "reported as standalone quarter"
+      "investing_cash_flow_calculation": "Standalone quarter is derived from selected current YTD minus prior-quarter YTD; source precision is retained.",
+      "operating_cash_flow_ytd": -18637.761,
+      "investing_cash_flow_ytd": 10166.226,
+      "financing_cash_flow_ytd": 14989.837,
+      "net_cash_change_ytd": 6518.302,
+      "cash_beginning_reported_ytd": 14103.181,
+      "cash_ending_reported_ytd": 20621.483,
+      "operating_cash_flow": -7692.150999999998,
+      "investing_cash_flow": 9026.582,
+      "financing_cash_flow": 2107.075999999999,
+      "net_cash_change": 3441.5069999999996,
+      "cash_beginning": 17179.976,
+      "cash_ending": 20621.483,
+      "foreign_exchange_effect": null,
+      "foreign_exchange_effect_ytd": null,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%203/VHM_Baocaotaichinh_Q3_2024_Hopnhat.pdf",
+        "selected_source_index_url": "https://finance.vietstock.vn/VHM/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/f9524cbc13fc89c3.pdf",
+        "source_pdf_pages": [
+          13,
+          14,
+          15
+        ],
+        "source_printed_pages": [
+          11,
+          12,
+          13
+        ],
+        "unit": "triệu VND (source precision preserved to 0.001)",
+        "selected_basis": "Current 9M/2024 consolidated report; its CFO/CFI/CFF/net/cash balances were visually reconciled from the source pages.",
+        "visual_review": "visually_checked",
+        "selected_source_values_million_vnd": {
+          "operating_cash_flow_ytd": -18637.761,
+          "investing_cash_flow_ytd": 10166.226,
+          "financing_cash_flow_ytd": 14989.837,
+          "net_cash_change_ytd": 6518.302,
+          "cash_beginning_reported_ytd": 14103.181,
+          "cash_ending_reported_ytd": 20621.483
+        },
+        "previous_source_url": null,
+        "previous_source_archive_file": null,
+        "previous_source_values_million_vnd": null,
+        "relative_differences_percent": null,
+        "source_basis_changed": false,
+        "reason": "H1/2025 uses the later Q2/2026 comparative; CFO/CFI/CFF categories differ from the older H1/2025 source by more than 0.01%, while net movement/ending cash remain within tolerance."
+      },
+      "cashflow_source_reconciliation": {
+        "report_period": "2024-Q3",
+        "units": "triệu VND",
+        "source_index_url": "https://finance.vietstock.vn/VHM/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%203/VHM_Baocaotaichinh_Q3_2024_Hopnhat.pdf",
+        "source_archive_file": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/f9524cbc13fc89c3.pdf",
+        "source_pdf_pages": [
+          13,
+          14,
+          15
+        ],
+        "source_printed_pages": [
+          11,
+          12,
+          13
+        ],
+        "visual_review": "visually_checked",
+        "selected_values_not_adjusted_for_tolerance": true,
+        "relative_tolerance_percent": 0.01,
+        "period_basis": "year_to_date",
+        "foreign_exchange_effect_source_status": "not_reported_separately",
+        "ytd_flow_components_residual": 1.8189894035458565e-12,
+        "ytd_flow_components_relative_difference_percent": 2.7905877996230553e-14,
+        "ytd_cash_bridge_residual": 0,
+        "ytd_cash_bridge_relative_difference_percent": 0,
+        "quarter_flow_components_residual": 1.8189894035458565e-12,
+        "quarter_flow_components_relative_difference_percent": 5.285444439153707e-14,
+        "quarter_cash_bridge_residual": 1.8189894035458565e-12,
+        "quarter_cash_bridge_relative_difference_percent": 0,
+        "standalone_quarter_derived_from_ytd": "Current YTD - previous quarter YTD, within fiscal year",
+        "selected_comparative_source_used": false,
+        "status": "PASS_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT",
+        "note": null
+      }
     },
     {
       "symbol": "VHM",
@@ -588,10 +748,14 @@
       "selling_expense": -3791457,
       "admin_expense": -4593011,
       "operating_profit": 40942908,
-      "cashflow_period_basis": "quarterly_reported",
+      "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
         "admin_expense",
         "cash_and_equivalents",
+        "cash_beginning",
+        "cash_beginning_reported_ytd",
+        "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
         "cost_of_goods_sold",
         "current_assets",
@@ -600,13 +764,21 @@
         "eps",
         "financial_expense",
         "financial_income",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
         "fixed_assets",
         "gross_profit",
         "income_tax",
         "interest_expense",
         "inventory",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
         "long_term_liabilities",
+        "net_cash_change",
+        "net_cash_change_ytd",
         "non_current_assets",
+        "operating_cash_flow",
+        "operating_cash_flow_ytd",
         "operating_profit",
         "retained_earnings",
         "revenue",
@@ -617,49 +789,17 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/1c9a7eccea051e6b.pdf",
       "financial_line_items_updated_at": "2026-10-25T20:27:45+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần.",
-      "operating_cash_flow_calculation": "reported as standalone quarter",
-      "financing_cash_flow_calculation": "reported as standalone quarter",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. VHM CASHFLOW NORMALIZATION 2026-10-29: selected cash-flow lines are report codes 20/30/40/50/60/70. The source statements present amounts in million VND to three decimals; retain reported precision. The report does not present a separate FX cash bridge line; do not infer one. Quarter standalone = current YTD minus prior quarter YTD. Source pages 18, 19; visual status=visually_checked.",
+      "operating_cash_flow_calculation": "Standalone quarter is derived from selected current YTD minus prior-quarter YTD; source precision is retained.",
+      "financing_cash_flow_calculation": "Standalone quarter is derived from selected current YTD minus prior-quarter YTD; source precision is retained.",
       "dividends_paid_calculation": "reported as standalone quarter",
-      "net_cash_change_calculation": "reported as standalone quarter",
+      "net_cash_change_calculation": "Standalone quarter is derived from selected current YTD minus prior-quarter YTD; source precision is retained.",
       "eps": 7348,
       "diluted_eps": 7348,
       "financial_line_items_prior_values": {},
       "financial_line_items_rejected_values": {
-        "operating_cash_flow": {
-          "value": 401462,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "investing_cash_flow": {
-          "value": 25384515,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "financing_cash_flow": {
-          "value": 11691977,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "net_cash_change": {
-          "value": 14676942,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
         "dividends_paid": {
           "value": 1800478,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "operating_cash_flow_ytd": {
-          "value": 401462,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "investing_cash_flow_ytd": {
-          "value": 25384515,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "financing_cash_flow_ytd": {
-          "value": 11691977,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "net_cash_change_ytd": {
-          "value": 14676942,
           "reason": "cash-flow components do not reconcile to reported net cash change"
         },
         "dividends_paid_ytd": {
@@ -674,24 +814,92 @@
       "financial_line_items_rejected_fields": [
         "dividends_paid",
         "dividends_paid_ytd",
-        "financing_cash_flow",
-        "financing_cash_flow_ytd",
         "income_tax_current_tax_reconciliation_check",
         "income_tax_deferred_tax_reconciliation_check",
-        "income_tax_tax_reconciliation_check",
-        "investing_cash_flow",
-        "investing_cash_flow_ytd",
-        "net_cash_change",
-        "net_cash_change_ytd",
-        "operating_cash_flow",
-        "operating_cash_flow_ytd"
+        "income_tax_tax_reconciliation_check"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-22T13:35:34+00:00",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "6587ab592bb1b3f41f259b0b96f6a717042dd7a0f64dc51f25ccdccf29f7f1fb",
       "core_financial_extraction_evidence_attempt_count": 0,
       "retained_earnings": 167205815,
-      "investing_cash_flow_calculation": "reported as standalone quarter"
+      "investing_cash_flow_calculation": "Standalone quarter is derived from selected current YTD minus prior-quarter YTD; source precision is retained.",
+      "operating_cash_flow_ytd": -22399.55,
+      "investing_cash_flow_ytd": 25384.515,
+      "financing_cash_flow_ytd": 11691.977,
+      "net_cash_change_ytd": 14676.942,
+      "cash_beginning_reported_ytd": 14103.181,
+      "cash_ending_reported_ytd": 28780.123,
+      "operating_cash_flow": -3761.7890000000007,
+      "investing_cash_flow": 15218.288999999999,
+      "financing_cash_flow": -3297.8599999999988,
+      "net_cash_change": 8158.639999999999,
+      "cash_beginning": 20621.483,
+      "cash_ending": 28780.123,
+      "foreign_exchange_effect": null,
+      "foreign_exchange_effect_ytd": null,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/VHM_Baocaotaichinh_Q4_2025_Hopnhat.pdf",
+        "selected_source_index_url": "https://finance.vietstock.vn/VHM/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/767b0c6ded8f9c08.pdf",
+        "source_pdf_pages": [
+          18,
+          19
+        ],
+        "source_printed_pages": [
+          11,
+          12
+        ],
+        "unit": "triệu VND (source precision preserved to 0.001)",
+        "selected_basis": "FY2024 comparative in the later Q4/2025 consolidated report; agrees with the audited FY2024 source.",
+        "visual_review": "visually_checked",
+        "selected_source_values_million_vnd": {
+          "operating_cash_flow_ytd": -22399.55,
+          "investing_cash_flow_ytd": 25384.515,
+          "financing_cash_flow_ytd": 11691.977,
+          "net_cash_change_ytd": 14676.942,
+          "cash_beginning_reported_ytd": 14103.181,
+          "cash_ending_reported_ytd": 28780.123
+        },
+        "previous_source_url": null,
+        "previous_source_archive_file": null,
+        "previous_source_values_million_vnd": null,
+        "relative_differences_percent": null,
+        "source_basis_changed": false,
+        "reason": "H1/2025 uses the later Q2/2026 comparative; CFO/CFI/CFF categories differ from the older H1/2025 source by more than 0.01%, while net movement/ending cash remain within tolerance."
+      },
+      "cashflow_source_reconciliation": {
+        "report_period": "2024-Q4",
+        "units": "triệu VND",
+        "source_index_url": "https://finance.vietstock.vn/VHM/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/VHM_Baocaotaichinh_Q4_2025_Hopnhat.pdf",
+        "source_archive_file": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/767b0c6ded8f9c08.pdf",
+        "source_pdf_pages": [
+          18,
+          19
+        ],
+        "source_printed_pages": [
+          11,
+          12
+        ],
+        "visual_review": "visually_checked",
+        "selected_values_not_adjusted_for_tolerance": true,
+        "relative_tolerance_percent": 0.01,
+        "period_basis": "year_to_date",
+        "foreign_exchange_effect_source_status": "not_reported_separately",
+        "ytd_flow_components_residual": 1.8189894035458565e-12,
+        "ytd_flow_components_relative_difference_percent": 1.2393517692894448e-14,
+        "ytd_cash_bridge_residual": 0,
+        "ytd_cash_bridge_relative_difference_percent": 0,
+        "quarter_flow_components_residual": 0,
+        "quarter_flow_components_relative_difference_percent": 0,
+        "quarter_cash_bridge_residual": 0,
+        "quarter_cash_bridge_relative_difference_percent": 0,
+        "standalone_quarter_derived_from_ytd": "Current YTD - previous quarter YTD, within fiscal year",
+        "selected_comparative_source_used": false,
+        "status": "PASS_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT",
+        "note": null
+      }
     },
     {
       "symbol": "VHM",
@@ -757,18 +965,20 @@
       "selling_expense": -732197,
       "admin_expense": 15697817,
       "operating_profit": 3835055,
-      "financing_cash_flow_ytd": 6609241,
+      "financing_cash_flow_ytd": 6609.241,
       "capital_expenditure_ytd": 138121,
-      "net_cash_change_ytd": -7287417,
-      "cash_beginning": 28780123,
-      "cash_ending": 21492706,
-      "cashflow_period_basis": "quarterly_reported",
+      "net_cash_change_ytd": -7287.417,
+      "cash_beginning": 28780.123,
+      "cash_ending": 21492.706,
+      "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
         "admin_expense",
         "capital_expenditure_ytd",
         "cash_and_equivalents",
         "cash_beginning",
+        "cash_beginning_reported_ytd",
         "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
         "cost_of_goods_sold",
         "current_assets",
@@ -776,14 +986,19 @@
         "eps",
         "financial_expense",
         "financial_income",
+        "financing_cash_flow",
         "financing_cash_flow_ytd",
         "fixed_assets",
         "income_tax",
         "interest_expense",
         "inventory",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
         "long_term_liabilities",
+        "net_cash_change",
         "net_cash_change_ytd",
         "non_current_assets",
+        "operating_cash_flow",
         "operating_cash_flow_ytd",
         "operating_profit",
         "retained_earnings",
@@ -795,13 +1010,13 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/fcdd20d35144219e.pdf",
       "financial_line_items_updated_at": "2026-10-24T04:24:31+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
-      "financing_cash_flow": 6609241,
-      "financing_cash_flow_calculation": "reported as standalone quarter",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. VHM CASHFLOW NORMALIZATION 2026-10-29: selected cash-flow lines are report codes 20/30/40/50/60/70. The source statements present amounts in million VND to three decimals; retain reported precision. The report does not present a separate FX cash bridge line; do not infer one. Quarter standalone = current YTD minus prior quarter YTD. Source pages 12, 13, 14; visual status=visually_checked.",
+      "financing_cash_flow": 6609.241,
+      "financing_cash_flow_calculation": "Reported Q1 statement line in current period; source values preserved to 0.001 million VND.",
       "capital_expenditure": 138121,
       "capital_expenditure_calculation": "reported as standalone quarter",
-      "net_cash_change": -7287417,
-      "net_cash_change_calculation": "reported as standalone quarter",
+      "net_cash_change": -7287.417,
+      "net_cash_change_calculation": "Reported Q1 statement line in current period; source values preserved to 0.001 million VND.",
       "eps": 203,
       "financial_line_items_prior_values": {},
       "financial_line_items_rejected_values": {},
@@ -814,9 +1029,83 @@
       "core_financial_extraction_evidence_attempt_count": 0,
       "current_liabilities": 237524644,
       "long_term_liabilities": 100582905,
-      "operating_cash_flow_ytd": 10090,
-      "operating_cash_flow": 10090,
-      "operating_cash_flow_calculation": "reported as standalone quarter"
+      "operating_cash_flow_ytd": 635.564,
+      "operating_cash_flow": 635.564,
+      "operating_cash_flow_calculation": "Reported Q1 statement line in current period; source values preserved to 0.001 million VND.",
+      "investing_cash_flow_ytd": -14532.222,
+      "cash_beginning_reported_ytd": 28780.123,
+      "cash_ending_reported_ytd": 21492.706,
+      "investing_cash_flow": -14532.222,
+      "foreign_exchange_effect": null,
+      "foreign_exchange_effect_ytd": null,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%201/VHM_Baocaotaichinh_Q1_2025_Hopnhat.pdf",
+        "selected_source_index_url": "https://finance.vietstock.vn/VHM/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/fcdd20d35144219e.pdf",
+        "source_pdf_pages": [
+          12,
+          13,
+          14
+        ],
+        "source_printed_pages": [
+          10,
+          11,
+          12
+        ],
+        "unit": "triệu VND (source precision preserved to 0.001)",
+        "selected_basis": "Current Q1/2025 consolidated report, source pages visually reconciled.",
+        "visual_review": "visually_checked",
+        "selected_source_values_million_vnd": {
+          "operating_cash_flow_ytd": 635.564,
+          "investing_cash_flow_ytd": -14532.222,
+          "financing_cash_flow_ytd": 6609.241,
+          "net_cash_change_ytd": -7287.417,
+          "cash_beginning_reported_ytd": 28780.123,
+          "cash_ending_reported_ytd": 21492.706
+        },
+        "previous_source_url": null,
+        "previous_source_archive_file": null,
+        "previous_source_values_million_vnd": null,
+        "relative_differences_percent": null,
+        "source_basis_changed": false,
+        "reason": "H1/2025 uses the later Q2/2026 comparative; CFO/CFI/CFF categories differ from the older H1/2025 source by more than 0.01%, while net movement/ending cash remain within tolerance."
+      },
+      "cashflow_source_reconciliation": {
+        "report_period": "2025-Q1",
+        "units": "triệu VND",
+        "source_index_url": "https://finance.vietstock.vn/VHM/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%201/VHM_Baocaotaichinh_Q1_2025_Hopnhat.pdf",
+        "source_archive_file": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/fcdd20d35144219e.pdf",
+        "source_pdf_pages": [
+          12,
+          13,
+          14
+        ],
+        "source_printed_pages": [
+          10,
+          11,
+          12
+        ],
+        "visual_review": "visually_checked",
+        "selected_values_not_adjusted_for_tolerance": true,
+        "relative_tolerance_percent": 0.01,
+        "period_basis": "year_to_date",
+        "foreign_exchange_effect_source_status": "not_reported_separately",
+        "ytd_flow_components_residual": 9.094947017729282e-13,
+        "ytd_flow_components_relative_difference_percent": 1.2480343882790408e-14,
+        "ytd_cash_bridge_residual": -9.094947017729282e-13,
+        "ytd_cash_bridge_relative_difference_percent": 0,
+        "quarter_flow_components_residual": 9.094947017729282e-13,
+        "quarter_flow_components_relative_difference_percent": 1.2480343882790408e-14,
+        "quarter_cash_bridge_residual": -9.094947017729282e-13,
+        "quarter_cash_bridge_relative_difference_percent": 0,
+        "standalone_quarter_derived_from_ytd": "Q1 = YTD (reported quarter statement)",
+        "selected_comparative_source_used": false,
+        "status": "PASS_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT",
+        "note": null
+      },
+      "investing_cash_flow_calculation": "Reported Q1 statement line in current period; source values preserved to 0.001 million VND.",
+      "financial_line_items_rejected_fields": []
     },
     {
       "symbol": "VHM",
@@ -870,63 +1159,41 @@
       "short_term_investments": 3437044,
       "fixed_assets": 743975,
       "retained_earnings": 177228,
-      "cashflow_period_basis": "quarterly_reported",
+      "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
         "cash_beginning",
+        "cash_beginning_reported_ytd",
         "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
         "current_assets",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
         "fixed_assets",
         "income_tax",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
+        "operating_cash_flow",
+        "operating_cash_flow_ytd",
         "retained_earnings",
         "short_term_investments"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/76ea6eb4368dcfd2.pdf",
       "financial_line_items_updated_at": "2026-10-21T08:42:16+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại.",
-      "operating_cash_flow_calculation": "reported as standalone quarter",
-      "investing_cash_flow_calculation": "reported as standalone quarter",
-      "financing_cash_flow_calculation": "reported as standalone quarter",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. VHM CASHFLOW NORMALIZATION 2026-10-29: selected cash-flow lines are report codes 20/30/40/50/60/70. The source statements present amounts in million VND to three decimals; retain reported precision. The report does not present a separate FX cash bridge line; do not infer one. Quarter standalone = current YTD minus prior quarter YTD. Source pages 17, 18; visual status=visually_checked.",
+      "operating_cash_flow_calculation": "Standalone quarter is derived from selected current YTD minus prior-quarter YTD; source precision is retained.",
+      "investing_cash_flow_calculation": "Standalone quarter is derived from selected current YTD minus prior-quarter YTD; source precision is retained.",
+      "financing_cash_flow_calculation": "Standalone quarter is derived from selected current YTD minus prior-quarter YTD; source precision is retained.",
       "capital_expenditure_calculation": "reported as standalone quarter",
-      "net_cash_change_calculation": "reported as standalone quarter",
+      "net_cash_change_calculation": "Standalone quarter is derived from selected current YTD minus prior-quarter YTD; source precision is retained.",
       "financial_line_items_cash_check": "opening/closing cash hidden because the cash bridge did not reconcile",
       "financial_line_items_prior_values": {},
       "financial_line_items_rejected_values": {
-        "operating_cash_flow": {
-          "value": 42945102,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "investing_cash_flow": {
-          "value": -38320584,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "financing_cash_flow": {
-          "value": 7753830,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "net_cash_change": {
-          "value": 458755,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
         "capital_expenditure": {
           "value": -3805626,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "operating_cash_flow_ytd": {
-          "value": 42945102,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "investing_cash_flow_ytd": {
-          "value": -38320584,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "financing_cash_flow_ytd": {
-          "value": 7753830,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "net_cash_change_ytd": {
-          "value": 458755,
           "reason": "cash-flow components do not reconcile to reported net cash change"
         },
         "capital_expenditure_ytd": {
@@ -942,27 +1209,131 @@
         "cash_and_equivalents_current_asset_component_check",
         "current_assets_asset_total_check",
         "current_liabilities_liability_total_check",
-        "financing_cash_flow",
-        "financing_cash_flow_ytd",
         "inventory_current_asset_component_check",
-        "investing_cash_flow",
-        "investing_cash_flow_ytd",
         "long_term_liabilities_liability_total_check",
-        "net_cash_change",
-        "net_cash_change_ytd",
         "non_current_assets_asset_total_check",
-        "operating_cash_flow",
-        "operating_cash_flow_ytd",
         "short_term_receivables_magnitude"
       ],
-      "cash_beginning": 28780123,
-      "cash_ending": 48674124,
+      "cash_beginning": 21492.706,
+      "cash_ending": 48671.892,
       "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
       "financial_line_items_schema_updated_at": "2026-10-25T20:27:39+00:00",
       "financial_line_items_rejected_updated_at": "2026-10-24T04:24:32+00:00",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "f692c36c56312ce9d036391e1657b00e5470e1cedef20f3ecf948bc1711781f3",
-      "core_financial_extraction_evidence_attempt_count": 0
+      "core_financial_extraction_evidence_attempt_count": 0,
+      "operating_cash_flow_ytd": 41093.814,
+      "investing_cash_flow_ytd": -30084.34,
+      "financing_cash_flow_ytd": 8882.295,
+      "net_cash_change_ytd": 19891.769,
+      "cash_beginning_reported_ytd": 28780.123,
+      "cash_ending_reported_ytd": 48671.892,
+      "operating_cash_flow": 40458.25,
+      "investing_cash_flow": -15552.118,
+      "financing_cash_flow": 2273.054,
+      "net_cash_change": 27179.186,
+      "foreign_exchange_effect": null,
+      "foreign_exchange_effect_ytd": null,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/VHM_Baocaotaichinh_Q2_2026_Hopnhat.pdf",
+        "selected_source_index_url": "https://finance.vietstock.vn/VHM/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/83a37704311f6c21.pdf",
+        "source_pdf_pages": [
+          17,
+          18
+        ],
+        "source_printed_pages": [
+          10,
+          11
+        ],
+        "unit": "triệu VND (source precision preserved to 0.001)",
+        "selected_basis": "H1/2025 comparative in the later Q2/2026 consolidated report; newer comparator selected. CFO/CFI/CFF category differences versus the original H1/2025 report exceed 0.01%; net movement and ending-cash differences remain within 0.01%.",
+        "visual_review": "visually_checked",
+        "selected_source_values_million_vnd": {
+          "operating_cash_flow_ytd": 41093.814,
+          "investing_cash_flow_ytd": -30084.34,
+          "financing_cash_flow_ytd": 8882.295,
+          "net_cash_change_ytd": 19891.769,
+          "cash_beginning_reported_ytd": 28780.123,
+          "cash_ending_reported_ytd": 48671.892
+        },
+        "previous_source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%202/VHM_Baocaotaichinh_Q2_2025_Hopnhat.pdf",
+        "previous_source_archive_file": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/76ea6eb4368dcfd2.pdf",
+        "previous_source_values_million_vnd": {
+          "operating_cash_flow_ytd": 50458.755,
+          "investing_cash_flow_ytd": -38320.584,
+          "financing_cash_flow_ytd": 7753.83,
+          "net_cash_change_ytd": 19891.001,
+          "cash_beginning_reported_ytd": 28780.123,
+          "cash_ending_reported_ytd": 48674.124
+        },
+        "relative_differences_percent": {
+          "operating_cash_flow_ytd": {
+            "previous_value_million_vnd": 50458.755,
+            "selected_value_million_vnd": 41093.814,
+            "relative_difference_percent": 18.55959585209742
+          },
+          "investing_cash_flow_ytd": {
+            "previous_value_million_vnd": -38320.584,
+            "selected_value_million_vnd": -30084.34,
+            "relative_difference_percent": 21.493002298712362
+          },
+          "financing_cash_flow_ytd": {
+            "previous_value_million_vnd": 7753.83,
+            "selected_value_million_vnd": 8882.295,
+            "relative_difference_percent": 12.704655722423091
+          },
+          "net_cash_change_ytd": {
+            "previous_value_million_vnd": 19891.001,
+            "selected_value_million_vnd": 19891.769,
+            "relative_difference_percent": 0.0038608934177751064
+          },
+          "cash_beginning_reported_ytd": {
+            "previous_value_million_vnd": 28780.123,
+            "selected_value_million_vnd": 28780.123,
+            "relative_difference_percent": 0
+          },
+          "cash_ending_reported_ytd": {
+            "previous_value_million_vnd": 48674.124,
+            "selected_value_million_vnd": 48671.892,
+            "relative_difference_percent": 0.0045855987053893535
+          }
+        },
+        "source_basis_changed": true,
+        "reason": "H1/2025 uses the later Q2/2026 comparative; CFO/CFI/CFF categories differ from the older H1/2025 source by more than 0.01%, while net movement/ending cash remain within tolerance."
+      },
+      "cashflow_source_reconciliation": {
+        "report_period": "2025-Q2",
+        "units": "triệu VND",
+        "source_index_url": "https://finance.vietstock.vn/VHM/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/VHM_Baocaotaichinh_Q2_2026_Hopnhat.pdf",
+        "source_archive_file": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/83a37704311f6c21.pdf",
+        "source_pdf_pages": [
+          17,
+          18
+        ],
+        "source_printed_pages": [
+          10,
+          11
+        ],
+        "visual_review": "visually_checked",
+        "selected_values_not_adjusted_for_tolerance": true,
+        "relative_tolerance_percent": 0.01,
+        "period_basis": "year_to_date",
+        "foreign_exchange_effect_source_status": "not_reported_separately",
+        "ytd_flow_components_residual": 0,
+        "ytd_flow_components_relative_difference_percent": 0,
+        "ytd_cash_bridge_residual": 0,
+        "ytd_cash_bridge_relative_difference_percent": 0,
+        "quarter_flow_components_residual": -3.637978807091713e-12,
+        "quarter_flow_components_relative_difference_percent": 1.3385164688492556e-14,
+        "quarter_cash_bridge_residual": 0,
+        "quarter_cash_bridge_relative_difference_percent": 0,
+        "standalone_quarter_derived_from_ytd": "Current YTD - previous quarter YTD, within fiscal year",
+        "selected_comparative_source_used": true,
+        "status": "NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT",
+        "note": "Later Q2/2026 H1/2025 comparator selected; material component reclassification relative to original Q2/2025 is retained in source audit history. Net movement and close are within 0.01%; no plug."
+      }
     },
     {
       "symbol": "VHM",
@@ -1017,24 +1388,33 @@
       "fixed_assets": 18119708,
       "current_liabilities": 329506258,
       "long_term_liabilities": 203828615,
-      "operating_cash_flow_ytd": 539639,
-      "investing_cash_flow_ytd": -82804418,
-      "financing_cash_flow_ytd": 166226,
+      "operating_cash_flow_ytd": 42908.369,
+      "investing_cash_flow_ytd": -82804.418,
+      "financing_cash_flow_ytd": 59883.54,
       "capital_expenditure_ytd": 208233,
-      "cashflow_period_basis": "quarterly_reported",
+      "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
         "capital_expenditure_ytd",
+        "cash_beginning",
+        "cash_beginning_reported_ytd",
+        "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
         "current_liabilities",
         "financial_expense",
         "financial_income",
+        "financing_cash_flow",
         "financing_cash_flow_ytd",
         "fixed_assets",
         "income_tax",
         "interest_expense",
+        "investing_cash_flow",
         "investing_cash_flow_ytd",
         "long_term_liabilities",
+        "net_cash_change",
+        "net_cash_change_ytd",
         "non_current_assets",
+        "operating_cash_flow",
         "operating_cash_flow_ytd",
         "retained_earnings",
         "selling_expense",
@@ -1043,13 +1423,13 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/a3df7839246ff1ce.pdf",
       "financial_line_items_updated_at": "2026-10-24T04:24:33+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại.",
-      "operating_cash_flow": 539639,
-      "operating_cash_flow_calculation": "reported as standalone quarter",
-      "investing_cash_flow": -82804418,
-      "investing_cash_flow_calculation": "reported as standalone quarter",
-      "financing_cash_flow": 166226,
-      "financing_cash_flow_calculation": "reported as standalone quarter",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. VHM CASHFLOW NORMALIZATION 2026-10-29: selected cash-flow lines are report codes 20/30/40/50/60/70. The source statements present amounts in million VND to three decimals; retain reported precision. The report does not present a separate FX cash bridge line; do not infer one. Quarter standalone = current YTD minus prior quarter YTD. Source pages 18, 19; visual status=visually_checked.",
+      "operating_cash_flow": 1814.5550000000003,
+      "operating_cash_flow_calculation": "Standalone quarter is derived from selected current YTD minus prior-quarter YTD; source precision is retained.",
+      "investing_cash_flow": -52720.07800000001,
+      "investing_cash_flow_calculation": "Standalone quarter is derived from selected current YTD minus prior-quarter YTD; source precision is retained.",
+      "financing_cash_flow": 51001.245,
+      "financing_cash_flow_calculation": "Standalone quarter is derived from selected current YTD minus prior-quarter YTD; source precision is retained.",
       "capital_expenditure": 208233,
       "capital_expenditure_calculation": "reported as standalone quarter",
       "financial_line_items_prior_values": {},
@@ -1074,7 +1454,78 @@
       "financial_income": 633816,
       "financial_expense": 1892,
       "interest_expense": 593399,
-      "selling_expense": 1181
+      "selling_expense": 1181,
+      "net_cash_change_ytd": 19987.491,
+      "cash_beginning_reported_ytd": 28780.123,
+      "cash_ending_reported_ytd": 48767.614,
+      "net_cash_change": 95.72200000000157,
+      "cash_beginning": 48671.892,
+      "cash_ending": 48767.614,
+      "foreign_exchange_effect": null,
+      "foreign_exchange_effect_ytd": null,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%203/VHM_Baocaotaichinh_Q3_2025_Hopnhat.pdf",
+        "selected_source_index_url": "https://finance.vietstock.vn/VHM/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/a3df7839246ff1ce.pdf",
+        "source_pdf_pages": [
+          18,
+          19
+        ],
+        "source_printed_pages": [
+          11,
+          12
+        ],
+        "unit": "triệu VND (source precision preserved to 0.001)",
+        "selected_basis": "Current 9M/2025 consolidated report; source pages visually reconciled.",
+        "visual_review": "visually_checked",
+        "selected_source_values_million_vnd": {
+          "operating_cash_flow_ytd": 42908.369,
+          "investing_cash_flow_ytd": -82804.418,
+          "financing_cash_flow_ytd": 59883.54,
+          "net_cash_change_ytd": 19987.491,
+          "cash_beginning_reported_ytd": 28780.123,
+          "cash_ending_reported_ytd": 48767.614
+        },
+        "previous_source_url": null,
+        "previous_source_archive_file": null,
+        "previous_source_values_million_vnd": null,
+        "relative_differences_percent": null,
+        "source_basis_changed": false,
+        "reason": "H1/2025 uses the later Q2/2026 comparative; CFO/CFI/CFF categories differ from the older H1/2025 source by more than 0.01%, while net movement/ending cash remain within tolerance."
+      },
+      "cashflow_source_reconciliation": {
+        "report_period": "2025-Q3",
+        "units": "triệu VND",
+        "source_index_url": "https://finance.vietstock.vn/VHM/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%203/VHM_Baocaotaichinh_Q3_2025_Hopnhat.pdf",
+        "source_archive_file": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/a3df7839246ff1ce.pdf",
+        "source_pdf_pages": [
+          18,
+          19
+        ],
+        "source_printed_pages": [
+          11,
+          12
+        ],
+        "visual_review": "visually_checked",
+        "selected_values_not_adjusted_for_tolerance": true,
+        "relative_tolerance_percent": 0.01,
+        "period_basis": "year_to_date",
+        "foreign_exchange_effect_source_status": "not_reported_separately",
+        "ytd_flow_components_residual": -7.275957614183426e-12,
+        "ytd_flow_components_relative_difference_percent": 3.6402556049598344e-14,
+        "ytd_cash_bridge_residual": 0,
+        "ytd_cash_bridge_relative_difference_percent": 0,
+        "quarter_flow_components_residual": -7.275957614183426e-12,
+        "quarter_flow_components_relative_difference_percent": 7.60113413236592e-12,
+        "quarter_cash_bridge_residual": 0,
+        "quarter_cash_bridge_relative_difference_percent": 0,
+        "standalone_quarter_derived_from_ytd": "Current YTD - previous quarter YTD, within fiscal year",
+        "selected_comparative_source_used": false,
+        "status": "PASS_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT",
+        "note": null
+      },
+      "net_cash_change_calculation": "Standalone quarter is derived from selected current YTD minus prior-quarter YTD; source precision is retained."
     },
     {
       "symbol": "VHM",
@@ -1130,25 +1581,34 @@
       "fixed_assets": 6159308,
       "current_liabilities": 345174167,
       "long_term_liabilities": 193295482,
-      "operating_cash_flow_ytd": -7519138,
-      "investing_cash_flow_ytd": -82766983,
-      "financing_cash_flow_ytd": 847949,
+      "operating_cash_flow_ytd": 40674.281,
+      "investing_cash_flow_ytd": -82766.983,
+      "financing_cash_flow_ytd": 63261.089,
       "capital_expenditure_ytd": -17829684,
-      "cashflow_period_basis": "quarterly_reported",
+      "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
         "admin_expense",
         "capital_expenditure_ytd",
         "cash_and_equivalents",
+        "cash_beginning",
+        "cash_beginning_reported_ytd",
+        "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
         "current_assets",
         "current_liabilities",
         "financial_expense",
+        "financing_cash_flow",
         "financing_cash_flow_ytd",
         "fixed_assets",
         "gross_profit",
         "income_tax",
+        "investing_cash_flow",
         "investing_cash_flow_ytd",
         "long_term_liabilities",
+        "net_cash_change",
+        "net_cash_change_ytd",
+        "operating_cash_flow",
         "operating_cash_flow_ytd",
         "retained_earnings",
         "short_term_investments"
@@ -1156,13 +1616,13 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/767b0c6ded8f9c08.pdf",
       "financial_line_items_updated_at": "2026-10-24T04:24:33+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại.",
-      "operating_cash_flow": -7519138,
-      "operating_cash_flow_calculation": "reported as standalone quarter",
-      "investing_cash_flow": -82766983,
-      "investing_cash_flow_calculation": "reported as standalone quarter",
-      "financing_cash_flow": 847949,
-      "financing_cash_flow_calculation": "reported as standalone quarter",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. VHM CASHFLOW NORMALIZATION 2026-10-29: selected cash-flow lines are report codes 20/30/40/50/60/70. The source statements present amounts in million VND to three decimals; retain reported precision. The report does not present a separate FX cash bridge line; do not infer one. Quarter standalone = current YTD minus prior quarter YTD. Source pages 18, 19; visual status=visually_checked.",
+      "operating_cash_flow": -2234.087999999996,
+      "operating_cash_flow_calculation": "Standalone quarter is derived from selected current YTD minus prior-quarter YTD; source precision is retained.",
+      "investing_cash_flow": 37.435000000012224,
+      "investing_cash_flow_calculation": "Standalone quarter is derived from selected current YTD minus prior-quarter YTD; source precision is retained.",
+      "financing_cash_flow": 3377.548999999999,
+      "financing_cash_flow_calculation": "Standalone quarter is derived from selected current YTD minus prior-quarter YTD; source precision is retained.",
       "capital_expenditure": -17829684,
       "capital_expenditure_calculation": "reported as standalone quarter",
       "financial_line_items_prior_values": {},
@@ -1186,7 +1646,78 @@
       "retained_earnings": 200768971,
       "gross_profit": 20869,
       "financial_expense": 1018,
-      "admin_expense": 1666
+      "admin_expense": 1666,
+      "net_cash_change_ytd": 21168.387,
+      "cash_beginning_reported_ytd": 28780.123,
+      "cash_ending_reported_ytd": 49948.51,
+      "net_cash_change": 1180.895999999997,
+      "cash_beginning": 48767.614,
+      "cash_ending": 49948.51,
+      "foreign_exchange_effect": null,
+      "foreign_exchange_effect_ytd": null,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/VHM_Baocaotaichinh_Q4_2025_Hopnhat.pdf",
+        "selected_source_index_url": "https://finance.vietstock.vn/VHM/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/767b0c6ded8f9c08.pdf",
+        "source_pdf_pages": [
+          18,
+          19
+        ],
+        "source_printed_pages": [
+          11,
+          12
+        ],
+        "unit": "triệu VND (source precision preserved to 0.001)",
+        "selected_basis": "Current FY2025 consolidated report; source pages visually reconciled.",
+        "visual_review": "visually_checked",
+        "selected_source_values_million_vnd": {
+          "operating_cash_flow_ytd": 40674.281,
+          "investing_cash_flow_ytd": -82766.983,
+          "financing_cash_flow_ytd": 63261.089,
+          "net_cash_change_ytd": 21168.387,
+          "cash_beginning_reported_ytd": 28780.123,
+          "cash_ending_reported_ytd": 49948.51
+        },
+        "previous_source_url": null,
+        "previous_source_archive_file": null,
+        "previous_source_values_million_vnd": null,
+        "relative_differences_percent": null,
+        "source_basis_changed": false,
+        "reason": "H1/2025 uses the later Q2/2026 comparative; CFO/CFI/CFF categories differ from the older H1/2025 source by more than 0.01%, while net movement/ending cash remain within tolerance."
+      },
+      "cashflow_source_reconciliation": {
+        "report_period": "2025-Q4",
+        "units": "triệu VND",
+        "source_index_url": "https://finance.vietstock.vn/VHM/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/VHM_Baocaotaichinh_Q4_2025_Hopnhat.pdf",
+        "source_archive_file": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/767b0c6ded8f9c08.pdf",
+        "source_pdf_pages": [
+          18,
+          19
+        ],
+        "source_printed_pages": [
+          11,
+          12
+        ],
+        "visual_review": "visually_checked",
+        "selected_values_not_adjusted_for_tolerance": true,
+        "relative_tolerance_percent": 0.01,
+        "period_basis": "year_to_date",
+        "foreign_exchange_effect_source_status": "not_reported_separately",
+        "ytd_flow_components_residual": 1.0913936421275139e-11,
+        "ytd_flow_components_relative_difference_percent": 5.155771396883066e-14,
+        "ytd_cash_bridge_residual": 3.637978807091713e-12,
+        "ytd_cash_bridge_relative_difference_percent": 1.4566916238709475e-14,
+        "quarter_flow_components_residual": 1.8189894035458565e-11,
+        "quarter_flow_components_relative_difference_percent": 1.5403468243992976e-12,
+        "quarter_cash_bridge_residual": 3.637978807091713e-12,
+        "quarter_cash_bridge_relative_difference_percent": 1.4566916238709475e-14,
+        "standalone_quarter_derived_from_ytd": "Current YTD - previous quarter YTD, within fiscal year",
+        "selected_comparative_source_used": false,
+        "status": "PASS_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT",
+        "note": null
+      },
+      "net_cash_change_calculation": "Standalone quarter is derived from selected current YTD minus prior-quarter YTD; source precision is retained."
     },
     {
       "symbol": "VHM",
@@ -1238,15 +1769,28 @@
       },
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_extracted_fields": [
+        "cash_beginning",
+        "cash_beginning_reported_ytd",
+        "cash_ending",
+        "cash_ending_reported_ytd",
+        "cashflow_period_basis",
         "financial_expense",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
         "gross_profit",
         "income_tax",
         "interest_expense",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
+        "operating_cash_flow",
+        "operating_cash_flow_ytd",
         "selling_expense"
       ],
       "financial_line_items_source": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/58e9e928c9ce43da.pdf",
       "financial_line_items_updated_at": "2026-10-24T04:24:34+00:00",
-      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
+      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. VHM CASHFLOW NORMALIZATION 2026-10-29: selected cash-flow lines are report codes 20/30/40/50/60/70. The source statements present amounts in million VND to three decimals; retain reported precision. The report does not present a separate FX cash bridge line; do not infer one. Quarter standalone = current YTD minus prior quarter YTD. Source pages 18, 19; visual status=visually_checked.",
       "financial_line_items_prior_values": {},
       "financial_line_items_rejected_values": {},
       "income_tax": 10330897,
@@ -1265,7 +1809,97 @@
       "gross_profit": 26211,
       "financial_expense": 973325,
       "interest_expense": 88858,
-      "selling_expense": 62535
+      "selling_expense": 62535,
+      "operating_cash_flow_ytd": 37220.145,
+      "investing_cash_flow_ytd": -66032.204,
+      "financing_cash_flow_ytd": 15562.997,
+      "net_cash_change_ytd": -13249.062,
+      "cash_beginning_reported_ytd": 49086.598,
+      "cash_ending_reported_ytd": 35837.536,
+      "cashflow_period_basis": "year_to_date",
+      "operating_cash_flow": 37220.145,
+      "investing_cash_flow": -66032.204,
+      "financing_cash_flow": 15562.997,
+      "net_cash_change": -13249.062,
+      "cash_beginning": 49086.598,
+      "cash_ending": 35837.536,
+      "foreign_exchange_effect": null,
+      "foreign_exchange_effect_ytd": null,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/VHM_Baocaotaichinh_Q1_2026_Hopnhat.pdf",
+        "selected_source_index_url": "https://finance.vietstock.vn/VHM/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/58e9e928c9ce43da.pdf",
+        "source_pdf_pages": [
+          18,
+          19
+        ],
+        "source_printed_pages": [
+          10,
+          11
+        ],
+        "unit": "triệu VND (source precision preserved to 0.001)",
+        "selected_basis": "Current Q1/2026 consolidated report; source pages visually reconciled. Reported opening balance differs from FY2025 close by less than 0.01%.",
+        "visual_review": "visually_checked",
+        "selected_source_values_million_vnd": {
+          "operating_cash_flow_ytd": 37220.145,
+          "investing_cash_flow_ytd": -66032.204,
+          "financing_cash_flow_ytd": 15562.997,
+          "net_cash_change_ytd": -13249.062,
+          "cash_beginning_reported_ytd": 49086.598,
+          "cash_ending_reported_ytd": 35837.536
+        },
+        "previous_source_url": null,
+        "previous_source_archive_file": null,
+        "previous_source_values_million_vnd": null,
+        "relative_differences_percent": null,
+        "source_basis_changed": false,
+        "reason": "H1/2025 uses the later Q2/2026 comparative; CFO/CFI/CFF categories differ from the older H1/2025 source by more than 0.01%, while net movement/ending cash remain within tolerance."
+      },
+      "cashflow_source_reconciliation": {
+        "report_period": "2026-Q1",
+        "units": "triệu VND",
+        "source_index_url": "https://finance.vietstock.vn/VHM/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/VHM_Baocaotaichinh_Q1_2026_Hopnhat.pdf",
+        "source_archive_file": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/58e9e928c9ce43da.pdf",
+        "source_pdf_pages": [
+          18,
+          19
+        ],
+        "source_printed_pages": [
+          10,
+          11
+        ],
+        "visual_review": "visually_checked",
+        "selected_values_not_adjusted_for_tolerance": true,
+        "relative_tolerance_percent": 0.01,
+        "period_basis": "year_to_date",
+        "foreign_exchange_effect_source_status": "not_reported_separately",
+        "ytd_flow_components_residual": -1.8189894035458565e-12,
+        "ytd_flow_components_relative_difference_percent": 1.3729193836860725e-14,
+        "ytd_cash_bridge_residual": 1.8189894035458565e-12,
+        "ytd_cash_bridge_relative_difference_percent": 0,
+        "quarter_flow_components_residual": -1.8189894035458565e-12,
+        "quarter_flow_components_relative_difference_percent": 1.3729193836860725e-14,
+        "quarter_cash_bridge_residual": 1.8189894035458565e-12,
+        "quarter_cash_bridge_relative_difference_percent": 0,
+        "standalone_quarter_derived_from_ytd": "Q1 = YTD (reported quarter statement)",
+        "selected_comparative_source_used": false,
+        "status": "PASS_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT",
+        "note": "Reported opening cash 49,086.598 differs from FY2025 reported closing 49,948.510 by -861.912 million VND (~0.00173%); accepted under 0.01% and both source values preserved.",
+        "cross_period_cash_continuity": {
+          "previous_period": "2025-Q4",
+          "previous_closing_cash": 49948.51,
+          "current_reported_opening_cash": 49086.598,
+          "residual_million_vnd": -861.9120000000039,
+          "relative_difference_percent": 1.7256010239344552,
+          "status": "NEEDS_MANUAL_REVIEW",
+          "note": "Source values preserved exactly as reported; continuity residual not plugged."
+        }
+      },
+      "operating_cash_flow_calculation": "Reported Q1 statement line in current period; source values preserved to 0.001 million VND.",
+      "investing_cash_flow_calculation": "Reported Q1 statement line in current period; source values preserved to 0.001 million VND.",
+      "financing_cash_flow_calculation": "Reported Q1 statement line in current period; source values preserved to 0.001 million VND.",
+      "net_cash_change_calculation": "Reported Q1 statement line in current period; source values preserved to 0.001 million VND."
     },
     {
       "symbol": "VHM",
@@ -1360,25 +1994,34 @@
       "current_liabilities": 579131000,
       "long_term_liabilities": 257600048,
       "retained_earnings": 224317013,
-      "net_cash_change_ytd": 4092385,
-      "cash_beginning": 49086596,
-      "cash_ending": 53178983,
-      "cashflow_period_basis": "quarterly_reported",
+      "net_cash_change_ytd": 4092.385,
+      "cash_beginning": 35837.536,
+      "cash_ending": 53178.983,
+      "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
         "admin_expense",
         "cash_and_equivalents",
         "cash_beginning",
+        "cash_beginning_reported_ytd",
         "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
         "current_liabilities",
         "financial_expense",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
         "fixed_assets",
         "income_tax",
         "interest_expense",
         "inventory",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
         "long_term_liabilities",
+        "net_cash_change",
         "net_cash_change_ytd",
         "non_current_assets",
+        "operating_cash_flow",
+        "operating_cash_flow_ytd",
         "operating_profit",
         "retained_earnings",
         "short_term_investments"
@@ -1386,9 +2029,9 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/83a37704311f6c21.pdf",
       "financial_line_items_updated_at": "2026-10-24T04:24:35+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại.",
-      "net_cash_change": 4092385,
-      "net_cash_change_calculation": "reported as standalone quarter",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. VHM CASHFLOW NORMALIZATION 2026-10-29: selected cash-flow lines are report codes 20/30/40/50/60/70. The source statements present amounts in million VND to three decimals; retain reported precision. The report does not present a separate FX cash bridge line; do not infer one. Quarter standalone = current YTD minus prior quarter YTD. Source pages 17, 18; visual status=visually_checked.",
+      "net_cash_change": 17341.447,
+      "net_cash_change_calculation": "Standalone quarter is derived from selected current YTD minus prior-quarter YTD; source precision is retained.",
       "financial_line_items_prior_values": {},
       "financial_line_items_rejected_values": {},
       "income_tax": 5101438,
@@ -1410,11 +2053,87 @@
       "financial_expense": 1850,
       "interest_expense": 342793,
       "admin_expense": 466595,
-      "operating_profit": 344883
+      "operating_profit": 344883,
+      "operating_cash_flow_ytd": 88467.954,
+      "investing_cash_flow_ytd": -154050.779,
+      "financing_cash_flow_ytd": 69675.21,
+      "cash_beginning_reported_ytd": 49086.598,
+      "cash_ending_reported_ytd": 53178.983,
+      "operating_cash_flow": 51247.809,
+      "investing_cash_flow": -88018.57500000001,
+      "financing_cash_flow": 54112.213,
+      "foreign_exchange_effect": null,
+      "foreign_exchange_effect_ytd": null,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/VHM_Baocaotaichinh_Q2_2026_Hopnhat.pdf",
+        "selected_source_index_url": "https://finance.vietstock.vn/VHM/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/83a37704311f6c21.pdf",
+        "source_pdf_pages": [
+          17,
+          18
+        ],
+        "source_printed_pages": [
+          10,
+          11
+        ],
+        "unit": "triệu VND (source precision preserved to 0.001)",
+        "selected_basis": "Current H1/2026 consolidated report. CFO/CFI/CFF 88,467.954/-154,050.779/69,675.210; their sum agrees exactly with net cash movement 4,092.385.",
+        "visual_review": "visually_checked",
+        "selected_source_values_million_vnd": {
+          "operating_cash_flow_ytd": 88467.954,
+          "investing_cash_flow_ytd": -154050.779,
+          "financing_cash_flow_ytd": 69675.21,
+          "net_cash_change_ytd": 4092.385,
+          "cash_beginning_reported_ytd": 49086.598,
+          "cash_ending_reported_ytd": 53178.983
+        },
+        "previous_source_url": null,
+        "previous_source_archive_file": null,
+        "previous_source_values_million_vnd": null,
+        "relative_differences_percent": null,
+        "source_basis_changed": false,
+        "reason": "H1/2025 uses the later Q2/2026 comparative; CFO/CFI/CFF categories differ from the older H1/2025 source by more than 0.01%, while net movement/ending cash remain within tolerance."
+      },
+      "cashflow_source_reconciliation": {
+        "report_period": "2026-Q2",
+        "units": "triệu VND",
+        "source_index_url": "https://finance.vietstock.vn/VHM/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/VHM_Baocaotaichinh_Q2_2026_Hopnhat.pdf",
+        "source_archive_file": "reports/raw/VHM/vietstock-vhm-2024-2026-20261019/83a37704311f6c21.pdf",
+        "source_pdf_pages": [
+          17,
+          18
+        ],
+        "source_printed_pages": [
+          10,
+          11
+        ],
+        "visual_review": "visually_checked",
+        "selected_values_not_adjusted_for_tolerance": true,
+        "relative_tolerance_percent": 0.01,
+        "period_basis": "year_to_date",
+        "foreign_exchange_effect_source_status": "not_reported_separately",
+        "ytd_flow_components_residual": -5.4569682106375694e-12,
+        "ytd_flow_components_relative_difference_percent": 1.3334444854620396e-13,
+        "ytd_cash_bridge_residual": 1.8189894035458565e-12,
+        "ytd_cash_bridge_relative_difference_percent": 0,
+        "quarter_flow_components_residual": -7.275957614183426e-12,
+        "quarter_flow_components_relative_difference_percent": 4.195703861496348e-14,
+        "quarter_cash_bridge_residual": 0,
+        "quarter_cash_bridge_relative_difference_percent": 0,
+        "standalone_quarter_derived_from_ytd": "Current YTD - previous quarter YTD, within fiscal year",
+        "selected_comparative_source_used": false,
+        "status": "PASS_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT",
+        "note": null
+      },
+      "operating_cash_flow_calculation": "Standalone quarter is derived from selected current YTD minus prior-quarter YTD; source precision is retained.",
+      "investing_cash_flow_calculation": "Standalone quarter is derived from selected current YTD minus prior-quarter YTD; source precision is retained.",
+      "financing_cash_flow_calculation": "Standalone quarter is derived from selected current YTD minus prior-quarter YTD; source precision is retained."
     }
   ],
-  "note": "Đã nhập 10 kỳ liên tục Q1/2024–Q2/2026 từ BCTC hợp nhất trên chỉ mục VietstockFinance. Tổng tài sản = nợ phải trả + vốn chủ sở hữu và LNST = LNST cổ đông mẹ + lợi ích CĐ không kiểm soát được kiểm tra theo từng quý. Q2/2024 và Q2/2025 được tính/đối chiếu từ số liệu lũy kế và báo cáo năm; Q1/Q2 2026 đã đối chiếu lại cột lợi nhuận riêng quý với cột lũy kế 6 tháng để tránh nhầm số quý với số lũy kế. Kho báo cáo vẫn giữ needs_review cho bước rà soát trực quan cuối cùng.",
+  "note": "Đã nhập 10 kỳ liên tục Q1/2024–Q2/2026 từ BCTC hợp nhất trên chỉ mục VietstockFinance. Tổng tài sản = nợ phải trả + vốn chủ sở hữu và LNST = LNST cổ đông mẹ + lợi ích CĐ không kiểm soát được kiểm tra theo từng quý. Q2/2024 và Q2/2025 được tính/đối chiếu từ số liệu lũy kế và báo cáo năm; Q1/Q2 2026 đã đối chiếu lại cột lợi nhuận riêng quý với cột lũy kế 6 tháng để tránh nhầm số quý với số lũy kế. Kho báo cáo vẫn giữ needs_review cho bước rà soát trực quan cuối cùng. Cash-flow normalization 2026-10-29: 10 periods from 2024-Q1 to 2026-Q2 mapped from true consolidated cash-flow rows. VHM reports values in million VND to three decimals, so source precision is retained. H1/2024 and H1/2025 latest comparative changes are flagged separately; no balancing plug and no invented FX.",
   "bootstrap_status": "complete_needs_manual_review",
   "bootstrap_completed_at": "2026-10-22T16:41:46+00:00",
-  "bootstrap_completion_note": "Các kỳ báo cáo có thể tự trích xuất đã được lưu; một số kỳ còn cần đối chiếu thủ công."
+  "bootstrap_completion_note": "Các kỳ báo cáo có thể tự trích xuất đã được lưu; một số kỳ còn cần đối chiếu thủ công.",
+  "processedAt": "2026-10-28T19:49:03.338Z"
 }
