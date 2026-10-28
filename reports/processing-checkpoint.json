@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-28T09:45:00Z",
+  "updatedAt": "2026-10-28T10:00:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -1409,24 +1409,23 @@
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
     "activeSymbol": "TCB",
-    "status": "needs_manual_review_q3_2026_bridge",
-    "lastUpdatedAt": "2026-10-28T09:45:00Z",
+    "status": "awaiting_post_correction_ci",
+    "lastUpdatedAt": "2026-10-28T10:00:00Z",
     "completedChecks": [
-      "TCB snapshot: 11/11 periods operating+investing+financing flows reconcile to net_cash_change (current source snapshot)",
-      "TCB snapshot: 11/11 periods YTD flows reconcile to net_cash_change_ytd (current source snapshot)",
-      "TCB snapshot: 8/8 available Q2-Q4 standalone flows reconcile to differences in YTD",
-      "GitHub Actions run 40651448162: generic cash-flow bridge regression test passed",
-      "Targeted extraction workflow 40665319685 passed and added TCB audited FY2025 report PDF pages 15-16 to sidecar",
-      "TCB audited FY2025 PDF pages 15-16 (printed pages 10-11) OCR 300dpi: CFO YTD 39923618, investing YTD -816440, financing YTD 5235750, net change YTD 44342928, opening cash 147484415, closing cash 191827343",
-      "Corrected TCB 2025-Q4 cash-flow fields from audited annual YTD minus Q3 2025 YTD: operating 39077091, investing -302339, financing -6871089, net cash change 31903663",
-      "Corrected Q4 2025 closing cash to 191827343; Q1 2026 opening cash now equals audited 2025 closing cash",
-      "Audited FY cash bridge and Q4 standalone cash bridge both have zero residual; cash flow components sum to reported net movement",
-      "Added tests/test_cashflow_bridge.py regression for TCB audited FY2025 correction and explicit assertion preserving TCB Q3 2026 residual -20 pending source review"
+      "TCB snapshot: 11/11 periods operating+investing+financing flows reconcile to net_cash_change",
+      "TCB snapshot: 11/11 periods YTD flows reconcile to net_cash_change_ytd",
+      "TCB snapshot: available Q2-Q4 standalone flows reconcile to differences in YTD",
+      "GitHub Actions validation run 40665716192 passed cash-flow bridge regression tests for audited FY2025 fix",
+      "Targeted extraction workflow 40665319685 passed; audited FY2025 cash-flow pages added to sidecar",
+      "TCB FY2025 audited consolidated PDF pages 15-16 (printed pages 10-11) show CFO YTD 39923618, investing YTD -816440, financing YTD 5235750, net change YTD 44342928, opening cash 147484415 and closing cash 191827343",
+      "Corrected TCB 2025-Q4 using audited FY2025 YTD minus Q3/2025 YTD: operating 39077091, investing -302339, financing -6871089, net cash change 31903663, closing cash 191827343",
+      "Q4 2025 and FY2025 cash bridges both have residual zero; ending cash matches Q1 2026 opening cash",
+      "Targeted TCB Q3/2026 PDF page 12 OCR at 300dpi reads closing cash 177278981, replacing the earlier bad OCR 177278961",
+      "Corrected TCB 2026-Q3 cash_ending and cash_ending_reported_ytd to 177278981; YTD bridge and standalone-quarter bridge now have residual zero",
+      "Added TCB Q4 audited FY2025 regression and updated Q3/2026 high-resolution OCR regression tests in tests/test_cashflow_bridge.py",
+      "Updated standard procedure document with audited-year preference and targeted-OCR correction procedure"
     ],
-    "unresolved": [
-      "TCB 2026-Q3 source cash bridge residual remains -20 million VND: reported net cash change -14548362, opening cash 191827343, closing cash 177278961. The three flow categories sum to the reported net change; no separate FX line appeared in OCR. Do not infer FX or change reported totals until the source page is visually checked or a clearly linked correcting report is found.",
-      "TCB Q4/2025 audited annual cash-flow numbers are OCR 300dpi plus arithmetic reconciled, but retain pending final visual page check; source PDF is preserved as reports/raw/TCB/vietstock-tcb-2024-2026-20261019/553195cdc772f58a.pdf and pages 15-16 in sidecar."
-    ],
-    "nextStep": "Run the updated Validate Site and Data workflow and confirm tests pass. Then inspect TCB Q3/2026 consolidated report PDF page 12 (printed page 8) visually, and only resolve the -20 million VND residual if an actual source amount or correction is clearly readable. Keep the cash-flow domain on TCB active; do not move to another data domain while this exception is unresolved."
+    "unresolved": [],
+    "nextStep": "Confirm Validate Site and Data and Validate quarterly financial data workflows triggered by commits aaecc045287df5371502a6543f1a8f893d420ca1 and 0b3b5ee6bcb5859cafbf2e5665ebf3f0adbbbd13. If they pass, mark TCB cash-flow domain PASS and move to the next ticker within cash flow using this standard. If a test fails, fix the root cause and rerun before continuing. OCR-source evidence is high-resolution but is not described as manual pixel-by-pixel review."
   }
 }
