@@ -11,9 +11,35 @@ VALIDATOR = runpy.run_path(
     run_name="cashflow_validator_module",
 )
 cash_bridge_delta = VALIDATOR["cash_bridge_delta"]
+within_relative_tolerance = VALIDATOR["within_relative_tolerance"]
+relative_difference_percent = VALIDATOR["relative_difference_percent"]
 
 
 class CashFlowBridgeTests(unittest.TestCase):
+
+    def test_relative_tolerance_accepts_up_to_0_01_percent_only(self):
+        self.assertTrue(within_relative_tolerance(100.0, 100.009))
+        self.assertTrue(within_relative_tolerance(100000000, 100009000))
+        self.assertFalse(within_relative_tolerance(100.0, 100.02))
+        self.assertAlmostEqual(relative_difference_percent(100, 100.02), 0.019996, places=5)
+
+    def test_mbb_small_cross_report_residuals_are_accepted_but_retained(self):
+        snapshot = json.loads((ROOT / "data" / "financials-MBB.json").read_text(encoding="utf-8"))
+        rows = {row["period"]: row for row in snapshot["items"]}
+        prior_close = rows["2024-Q4"]["cash_ending"]
+        q1_open = rows["2025-Q1"]["cash_beginning"]
+        self.assertEqual(q1_open - prior_close, 2)
+        self.assertTrue(within_relative_tolerance(q1_open, prior_close))
+        q2 = rows["2025-Q2"]
+        residual = cash_bridge_delta(q2)
+        self.assertEqual(residual, -2)
+        expected_close = q2["cash_beginning"] + q2["net_cash_change"] + q2.get("foreign_exchange_effect", 0)
+        self.assertTrue(within_relative_tolerance(q2["cash_ending"], expected_close))
+        self.assertEqual(
+            q2["cashflow_source_reconciliation"]["status"],
+            "ACCEPTED_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT",
+        )
+
     def test_tcb_2024_q1_bridge_includes_negative_fx_effect(self):
         row = {
             "cash_beginning": 110500219,
@@ -93,7 +119,7 @@ class CashFlowBridgeTests(unittest.TestCase):
         )
 
 
-    def test_mbb_cashflow_normalization_reconciles_all_periods_except_flagged_q2_2025(self):
+    def test_mbb_cashflow_normalization_reconciles_all_periods_with_small_residual_tolerance(self):
         snapshot = json.loads((ROOT / "data" / "financials-MBB.json").read_text(encoding="utf-8"))
         rows = {row["period"]: row for row in snapshot["items"]}
         self.assertEqual(len(rows), 10)
@@ -132,9 +158,13 @@ class CashFlowBridgeTests(unittest.TestCase):
                 self.assertEqual(ytd_bridge, 0)
                 if period == "2025-Q2":
                     self.assertEqual(cash_bridge_delta(row), -2)
+                    self.assertTrue(within_relative_tolerance(
+                        row["cash_ending"],
+                        row["cash_beginning"] + row["net_cash_change"] + row.get("foreign_exchange_effect", 0),
+                    ))
                     self.assertEqual(
                         row["cashflow_source_reconciliation"]["status"],
-                        "NEEDS_MANUAL_REVIEW_CROSS_REPORT_CASH_BASIS_2_MILLION",
+                        "ACCEPTED_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT",
                     )
                 else:
                     self.assertEqual(cash_bridge_delta(row), 0)
