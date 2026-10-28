@@ -1,6 +1,6 @@
 # Quy trình chuẩn hóa dữ liệu tài chính theo từng mảng
 
-Phiên bản: 2.0  
+Phiên bản: 2.1  
 Ngày thiết lập: 2026-10-28  
 Cập nhật gần nhất: 2026-10-29  
 Phạm vi: `kiemtimem123/so-lieu`, dữ liệu BCTC quý từ 2024-Q1 trở đi.
@@ -522,3 +522,34 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 - Validator `scripts/validate-bank-reconciliation.py` nhận diện schema `2026-10-26-bank-reconciliation-cashflow-v5` của VPB để đưa các kiểm tra này vào chạy CI.
 - Trước CI, 10 kỳ hoàn chỉnh (2024-Q1 đến 2026-Q1 và 2026-Q3 về tổng YTD/các luồng) khớp số học; H1/2026 là ngoại lệ duy nhất có thành phần CFO/CFI/CFF nguồn nhưng dòng net/cash ending chưa được công nhận, vì OCR sai lệch vượt 0,01%.
 - Trạng thái: **automation hoàn tất, manual review còn lại cho H1/2026**. Sau khi checkpoint và CI được lưu, mã kế tiếp là **STB**, vẫn trong mảng cashflow và xử lý một mã mỗi lượt.
+
+
+## Lượt chuẩn hóa STB — lưu chuyển tiền tệ (2026-10-29)
+
+### Áp dụng dung sai tương đối 0,01%
+- Quy tắc được áp dụng cho từng đối chiếu số: `abs(actual - expected) / max(abs(actual), abs(expected), 1) × 100`. Độ lệch **≤ 0,01%** được chấp nhận cho đúng phép đối chiếu đó, không cần điều chỉnh số nguồn. Độ lệch **> 0,01%** phải được ghi nhận và rà soát; không được thay số báo cáo hoặc thêm khoản bù để ép khớp.
+- Khi kiểm tra số dư tiền, mẫu số của tỷ lệ chênh cầu nối là số dư tiền cuối kỳ được báo cáo (so với số cuối kỳ tính được). Khi so sánh hai phiên bản của một dòng BCTC, mẫu số là giá trị lớn hơn về trị tuyệt đối của chính dòng đó. Hai tỷ lệ khác nhau nên phải lưu riêng: một sai lệch nhỏ so với số dư tiền lớn vẫn có thể là thay đổi lớn tương đối với dòng FX nhỏ.
+- Tỷ lệ chênh lệch dùng để quyết định chấp nhận **phép đối chiếu**, không cho phép xóa lịch sử khác biệt nguồn. Nếu một dòng được nguồn sau phân loại lại trên 0,01%, vẫn chọn cơ sở có nguồn phù hợp gần nhất theo quy trình, lưu cả giá trị cũ và mới, và giữ `NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT`.
+
+### Phạm vi và cách chuẩn hóa
+- Snapshot: `data/financials-STB.json`, 10 kỳ từ 2024-Q1 đến 2026-Q2. Danh mục nguồn duy nhất: `https://finance.vietstock.vn/STB/tai-tai-lieu.htm?doctype=1`, cùng PDF/ZIP được liên kết tại đó.
+- BCTC hợp nhất STB dùng mẫu B04/TCTD hoặc B04a/TCTD-HN. Phải lấy dòng tổng cuối nhóm CFO, CFI, CFF và “Lưu chuyển tiền thuần trong kỳ”, không lấy subtotal trước biến động tài sản và vốn lưu động.
+- STB có dòng “Điều chỉnh ảnh hưởng của thay đổi tỷ giá”; trường FX YTD và số FX riêng quý đều được lấy theo báo cáo, với FX quý = FX YTD kỳ hiện tại − FX YTD quý trước. Không mặc định FX bằng 0 và không bỏ dòng này khỏi cầu nối.
+- Số quý riêng = YTD kỳ hiện tại − YTD kỳ trước cùng năm cho CFO, CFI, CFF và net cash. Cầu nối tiền riêng quý dùng số cuối quý trước làm số đầu quý; cầu nối YTD dùng số đầu năm theo báo cáo.
+
+### Cơ sở số liệu đã chọn
+- **Q1/2024:** dùng cột so sánh Q1/2024 trong BCTC hợp nhất Q1/2025; CFO 12.979.972; CFI -197.483; CFF -2.303.904; net 10.478.585; tiền đầu 70.507.716; FX +65.715; tiền cuối 81.052.016 triệu VND. Các dòng tổng khớp số học.
+- **H1/2024:** ưu tiên cột so sánh H1/2024 trong BCTC hợp nhất Q2/2025. CFO 27.113.464; CFI -418.378; CFF -2.267.691; net 24.427.395; tiền đầu 70.507.716; FX -7.606; tiền cuối 94.927.505 triệu VND. So với BCTC Q2/2024 ban đầu, CFO thay đổi +11.679 triệu VND (~0,043%) và CFI thay đổi -11.678 triệu VND (khoảng 2,79% tính theo trị tuyệt đối của dòng CFI), trong khi CFF chỉ khác 1 triệu và net/tiền cuối kỳ không đổi. Hai thay đổi CFO/CFI vượt 0,01%; chọn nguồn so sánh mới hơn nhưng giữ **manual review** và đầy đủ dấu vết cũ/mới.
+- **9M/2024:** dùng cột so sánh 9M/2024 trong BCTC hợp nhất Q3/2025. CFO 17.278.651; CFI -625.096; CFF -2.716.339; net 13.937.216; tiền đầu 70.507.716; FX -8.227; tiền cuối 84.438.705 triệu VND. Cột FX mới hơn là -8.227, khác -6.227 ở báo cáo Q3/2024 ban đầu (chênh 2.000 triệu, lớn hơn 0,01% nếu so riêng dòng FX), nên giữ **manual review nguồn FX**. Cầu nối tiền YTD và riêng quý có residual 2.000 triệu VND, tương đương khoảng **0,00237%** của tiền cuối kỳ; residual của cầu nối nằm trong ngưỡng 0,01% và được chấp nhận nguyên trạng, không tạo plug.
+- **FY2024:** dùng cột so sánh FY2024 trong BCTC Q4/2025. CFO 38.365.249; CFI -1.007.900; CFF -1.459.275; net 35.898.074; tiền đầu 70.507.716; FX +87.265; tiền cuối 106.493.055 triệu VND. So với bản Q4/2024 gốc, CFO/CFF chênh 1 triệu VND mỗi dòng; tỷ lệ chênh của cả hai dòng đều dưới 0,01%, vì vậy dùng cột so sánh mới hơn và ghi lại giá trị cũ nhưng không nâng thành lỗi trọng yếu.
+- **Q1/2025:** dùng cột so sánh Q1/2025 trong BCTC Q1/2026. CFO -4.502.482; CFI -106.676; CFF -1.638.284; net -6.247.442; tiền đầu 106.493.055; FX -10.387; tiền cuối 100.235.226 triệu VND.
+- **H1/2025:** dùng cột so sánh H1/2025 trong BCTC Q2/2026. CFO 22.993.304; CFI -295.309; CFF -3.885.533; net 18.812.462; tiền đầu 106.493.055; FX +184.939; tiền cuối 125.490.456 triệu VND. Giá trị CFO/CFI dùng cơ sở sau soát xét so sánh mới hơn, không giữ dòng subtotal CFO 7.716.659 cũ.
+- **9M/2025:** CFO 34.871.233; CFI -409.902; CFF -3.386.136; net 31.075.195; tiền đầu 106.493.055; FX +166.291; tiền cuối 137.734.541 triệu VND. Trang 6 PDF (trang in 5) đã được xem trực tiếp: FX là **166.291**, không phải 198.218 như OCR cũ; net, số đầu và số cuối khớp sau khi sửa.
+- **FY2025:** CFO 92.478.001; CFI -764.337; CFF -3.818.948; net 87.894.716; tiền đầu 106.493.055; FX +84.812; tiền cuối 194.472.583 triệu VND.
+- **Q1/2026:** CFO -58.545.352; CFI -128.122; CFF -24.412; net -58.697.886; tiền đầu 194.472.583; FX +10.352; tiền cuối 135.785.049 triệu VND.
+- **H1/2026:** các dòng nguồn hiện có CFO -41.480.644; CFI -47.599; CFF -1.468.762; net -43.097.005; tiền đầu 194.472.583; FX -5.701; tiền cuối 151.369.877 triệu VND. Net và cầu nối tiền khớp, nhưng tổng ba thành phần CFO+CFI+CFF = -42.997.005, lệch **100.000 triệu VND** so với net. Sai lệch là **0,2320%** theo tỷ lệ YTD và khoảng **0,6369%** với tổng luồng quý II riêng, đều lớn hơn 0,01%. Giữ nguyên các ứng viên theo dòng báo cáo và trạng thái **`NEEDS_MANUAL_REVIEW_SOURCE_FLOW_COMPONENT_SUM_GT_0_01_PERCENT`**; không tự sửa thành phần nào, không thay net bằng tổng tự tính, không thêm plug. Cần đối chiếu ảnh PDF gốc để xác định dòng OCR sai trước khi đóng.
+  
+### Kiểm thử hồi quy
+- Bổ sung `STBCashFlowNormalizationTests` trong `tests/test_cashflow_bridge.py`, kiểm tra 10 kỳ; nguồn/VietstockFinance; bốn phép kiểm tra YTD/quý riêng/cầu nối YTD/cầu nối quý; FX; quý riêng bằng hiệu số YTD; so sánh sau hơn; lỗi OCR FX 9M/2025; sự khác biệt nguồn H1/2024; và ngoại lệ H1/2026 > 0,01%.
+- Tất cả các kỳ STB đều có luồng tiền riêng quý, lũy kế, số đầu/cuối kỳ và FX được ghi nhận, và các trường đã được đưa vào `financial_line_items_extracted_fields` cho giao diện có thể đọc đúng. Mọi residual cầu nối tiền đều không vượt 0,01%; 2026-Q2 là **ngoại lệ duy nhất ở phép tổng ba luồng tiền** vượt 0,01%, được đánh dấu rõ ràng và không bị tính thành PASS.
+- Trạng thái: **automation hoàn tất; manual review còn lại cho phân loại H1/2024, thay đổi FX nguồn 9M/2024, và tổng luồng tiền H1/2026**. Sau khi CI và checkpoint được lưu, chuyển sang mã **VCB** trong cùng mảng cashflow.
