@@ -29,6 +29,7 @@ jobs:
             /data/
             /index.html
             /scripts/
+            /tests/
 
       - name: Setup PHP for API syntax check
         uses: shivammathur/setup-php@v2
@@ -45,6 +46,9 @@ jobs:
 
       - name: Check report worker syntax
         run: python -m py_compile .github/scripts/collect-financial-reports.py scripts/sync-vietstock-financials.py scripts/enrich-financial-categories.py
+
+      - name: Test cash-flow bridge reconciliation
+        run: python tests/test_cashflow_bridge.py
 
       - name: Check JavaScript syntax
         run: |
