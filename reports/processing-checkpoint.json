@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-28T18:30:00+07:00",
+  "updatedAt": "2026-10-28T19:45:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -1399,18 +1399,20 @@
     "note": "Continue DPG source collection only. Four collector batches succeeded; the queue still reports 10 candidate URLs remaining. Finish archiving this symbol, then trigger its one-report-at-a-time OCR/extraction. Do not advance to the next symbol yet."
   },
   "reconciliationPolicy": {
-    "acceptedAbsoluteDifferenceMillionVnd": 10,
-    "unit": "million VND",
-    "rule": "Accept and use reported data when an arithmetic reconciliation difference is <= 10 million VND; do not alter source values to force reconciliation. Differences > 10 million VND require review. Missing source pages or insufficient period basis remain unresolved regardless of this tolerance.",
-    "updatedAt": "2026-10-25T06:10:00Z"
+    "acceptedRelativeDifferencePercent": 0.01,
+    "formula": "abs(actual - expected) / comparison_scale * 100",
+    "unit": "relative percent; individual snapshot residuals retain the source field unit",
+    "rule": "A relative difference <=0.01% is accepted and retained in residual metadata without altering printed values or inserting a balancing plug. A difference >0.01% requires manual review. Relative tolerance never waives missing source evidence, OCR digit errors, incorrect report scope, or an unreported FX field.",
+    "supersedesPreviousRule": "Replaces the former blanket acceptedAbsoluteDifferenceMillionVnd=10 rule as a standalone acceptance threshold.",
+    "updatedAt": "2026-10-28T19:45:00+07:00"
   },
   "normalizationProgress": {
-    "standardVersion": "1.0",
+    "standardVersion": "1.1",
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
-    "activeSymbol": "ACB",
-    "status": "automation_complete_manual_visual_review_remaining",
-    "lastUpdatedAt": "2026-10-28T18:30:00+07:00",
+    "activeSymbol": "SHB",
+    "status": "ready_to_process_next_symbol_same_domain",
+    "lastUpdatedAt": "2026-10-28T19:45:00+07:00",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1469,14 +1471,24 @@
       "Validate Site and Data run 40679952807 SUCCESS after the ACB normalization-standard documentation update.",
       "Validate Site and Data run 40679998702 SUCCESS on checkpoint commit 5852118325f6eff8f892ea595721cf0730ed5956, including the expanded ACB cash-flow regression tests.",
       "Validate quarterly financial data run 40679854670 SUCCESS after ACB source-page review metadata and OCR correction; quarterly financial snapshot and bank cash-flow reconciliation checks passed.",
-      "Package Hostinger Stock Dashboard run 40679854730 SUCCESS after ACB source-page review metadata and OCR correction."
+      "Package Hostinger Stock Dashboard run 40679854730 SUCCESS after ACB source-page review metadata and OCR correction.",
+      "Rule update accepted from user: differences <=0.01% relative are acceptable; old absolute 10-million-VND threshold is superseded; preserve the residual and never use tolerance to repair OCR/source/scope errors.",
+      "Updated scripts/validate-bank-reconciliation.py with relative_difference_percent(), within_relative_tolerance(), relative-aware require_close(), and a relative cash-bridge check; default blanket absolute EPS is now zero.",
+      "Added regression tests that accept <=0.01% and reject >0.01%, and updated MBB residual checks/status: +2/-2 million VND cross-report differences are accepted within the new threshold while raw values and residuals remain preserved.",
+      "FPT: normalized all 10 periods 2024-Q1 through 2026-Q2 from VietstockFinance consolidated cash-flow statements; registered core flows, FX and reported/derived cash balances in the extracted-field allowlist.",
+      "FPT: FY2024 uses latest Q4/2025 comparative basis; H1/2025 uses latest Q2/2026 comparative basis, with Q2/Q3 2025 standalone flows recalculated from the selected YTD basis.",
+      "FPT: screenshot-confirmed key source pages from Q3/2025, Q4/2025, Q1/2026 and Q2/2026; source balance figures partly obscured by stamp are formula-reconciled and explicitly annotated.",
+      "FPT internal reconciliations pass within 0.01% for all ten periods: quarter and YTD component sums, quarter/YTD cash bridges including FX, and quarter flows calculated as current minus prior YTD.",
+      "FPT remains flagged only for the cross-period cash balance difference Q4/2025 close 10,540,182 vs Q1/2026 opening 10,522,106 million VND (-18,076 million; ~0.17%), above threshold. Preserve both source values; no forced adjustment.",
+      "Validate Site and Data run 40681980928 SUCCESS after FPT regression tests; Validate quarterly financial data run 40681897480 SUCCESS; Package Hostinger Stock Dashboard run 40681897445 SUCCESS.",
+      "MBB cross-report cash basis residuals +2/-2 million VND are now accepted by user rule because relative differences are <=0.01%; values and residual metadata remain for traceability, but no longer block automated processing."
     ],
     "unresolved": [
-      "TERMINAL MANUAL REVIEW — MBB connected cross-report cash basis discrepancy in million VND: Q4/2024 comparative closing cash=97040273; Q1/2025 original and Q1/2026 comparative opening=97040275, net change=-24053403, closing=72986872; Q2/2026 H1/2025 comparative opening=97040273, net change=6814127, ending=103854400. This creates +2 continuity residual across Q4/2024→Q1/2025 and -2 residual in standalone Q2/2025 derived from YTD difference. Individual reports internally reconcile; no balancing adjustment is allowed without an amended/corrected source.",
-      "ACB pending manual visual review remains only for rows marked ocr_text_reconciled_visual_review_pending (including Q1/2025 comparator and Q1/2026 current report); arithmetic checks pass and no unsupported values were inserted."
+      "ACB pending manual visual review remains only for rows marked ocr_text_reconciled_visual_review_pending (including Q1/2025 comparator and Q1/2026 current report); arithmetic checks pass and no unsupported values were inserted.",
+      "FPT NEEDS_MANUAL_REVIEW — FY2025 closing cash 10,540,182 vs Q1/2026 opening cash 10,522,106 million VND, residual -18,076 million VND (~0.17%, above 0.01%). Both reports internally reconcile. Keep each printed value; do not insert a plug or synchronize the figures without a source correction."
     ],
-    "nextStep": "MBB automation complete with unresolved +2/-2 million VND source-basis discrepancy terminally flagged, no balancing adjustment. ACB core cashflow fields restored for 10 periods; all arithmetic/source-line tests pass, with limited source-page visual review still pending as tagged. Next continuation: proceed to FPT in the same cashflow domain, using the standard and one ticker at a time; do not change another data domain.",
-    "previousCompletedSymbol": "MBB",
+    "nextStep": "MBB residuals <=0.01% are accepted and retained in metadata. ACB cash-flow normalization is automated with limited source-page visual review still pending. FPT 10-period cash-flow normalization/tests are complete; preserve its FY2025-close to Q1/2026-opening residual because it exceeds 0.01%. Continue with SHB next in the same cash-flow domain, one ticker at a time; do not switch data domain.",
+    "previousCompletedSymbol": "FPT",
     "validationRuns": [
       {
         "name": "Validate Site and Data",
@@ -1512,7 +1524,29 @@
         "status": "success",
         "commit": "4421ae13aac061bdb76d2c7f5a8eb72ca9ca3cd4",
         "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40679854730"
+      },
+      {
+        "name": "Validate Site and Data",
+        "runId": "40681980928",
+        "status": "success",
+        "commit": "ee305cefbc9e9ad9e870fcbc7da0e92552738591",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40681980928"
+      },
+      {
+        "name": "Validate quarterly financial data",
+        "runId": "40681897480",
+        "status": "success",
+        "commit": "34d6367c83e0d440de5a37f000d635f2405021a8",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40681897480"
+      },
+      {
+        "name": "Package Hostinger Stock Dashboard",
+        "runId": "40681897445",
+        "status": "success",
+        "commit": "34d6367c83e0d440de5a37f000d635f2405021a8",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40681897445"
       }
-    ]
+    ],
+    "lastCompletedSymbol": "FPT"
   }
 }
