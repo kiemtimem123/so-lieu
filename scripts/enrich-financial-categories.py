@@ -3907,7 +3907,12 @@ def main():
   else:
    print(f"{path.name}: no further safe detail fields found.")
  except Exception as exc:
-  print(f"::warning::{path.name}: {exc}")
+  # Do not report a successful run when enrichment failed. The previous
+  # warning-only handler let the workflow mark an unprocessed ticker complete.
+  import traceback
+  traceback.print_exc()
+  print(f"::error::{path.name}: {type(exc).__name__}: {exc}")
+  raise
  return 0
 
 if __name__=="__main__":
