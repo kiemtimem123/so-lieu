@@ -911,10 +911,12 @@ class SHSCashFlowNormalizationTests(unittest.TestCase):
                     self.assertTrue(all(row.get(field) is None for field in self.flows))
                     self.assertTrue(all(field not in row["financial_line_items_extracted_fields"]
                                         for field in self.flows))
-                    self.assertEqual(
-                        rec["status"],
-                        "NEEDS_MANUAL_REVIEW_Q2_BASE_MISSING_FOR_STANDALONE_QUARTER",
+                    expected_status = (
+                        "NEEDS_MANUAL_REVIEW_H1_2024_SOURCE_TOTALS_UNREADABLE"
+                        if period == "2024-Q2"
+                        else "NEEDS_MANUAL_REVIEW_Q2_BASE_MISSING_FOR_STANDALONE_QUARTER"
                     )
+                    self.assertEqual(rec["status"], expected_status)
 
     def test_shs_q1_2024_uses_corrected_cfo_not_pretax_profit(self):
         row = self.rows["2024-Q1"]
