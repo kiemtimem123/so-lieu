@@ -97,3 +97,14 @@ Mỗi mảng phải có hồ sơ riêng ghi quy tắc ánh xạ trường, phép
 - Kiểm thử tự động “Test cash-flow bridge reconciliation” trong GitHub Actions **PASS** ở run [40651448162](https://github.com/kiemtimem123/so-lieu/actions/runs/40651448162). Đây là kiểm thử logic cầu nối, không thay thế xác minh trực quan PDF.
 
 **Kết luận lượt TCB:** phép kiểm tra nội bộ và bài test hồi quy PASS; đối chiếu OCR nguồn đã thực hiện cho Q4/2025, Q1/2026, Q3/2026; trạng thái tổng vẫn **NEEDS_MANUAL_REVIEW** do chênh lệch liên kỳ 565.285 triệu đồng và sai lệch cầu nối 20 triệu đồng. Chỉ đóng các ngoại lệ sau khi kiểm tra ảnh PDF gốc và có căn cứ rõ ràng. Không chuyển sang mảng dữ liệu khác ở bước này.
+
+
+### Xác minh trực quan PDF Q4/2025 và Q1/2026
+
+Đã xem trực tiếp ảnh trang 8 in trên PDF (trang PDF thứ 10) của cả hai báo cáo hợp nhất:
+- [TCB Q4/2025, trang 8](https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/TCB_Baocaotaichinh_Q4_2025_Hopnhat.pdf): dòng tiền cuối kỳ là **191.262.058 triệu đồng**.
+- [TCB Q1/2026, trang 8](https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/TCB_Baocaotaichinh_Q1_2026_Hopnhat.pdf): dòng tiền đầu kỳ là **191.827.343 triệu đồng**.
+
+Như vậy chênh **565.285 triệu đồng được xác nhận bằng hình ảnh PDF gốc**, không phải lỗi OCR. Mỗi báo cáo tự cân đối theo số của chính báo cáo đó, nhưng chưa tìm thấy thuyết minh giải thích khác biệt giữa số cuối Q4 và số đầu Q1. Không sửa dữ liệu tự động; cần kiểm tra thêm thuyết minh số 34 và/hoặc tài liệu điều chỉnh nếu có trong chính danh mục VietstockFinance.
+
+Q3/2026 vẫn còn chênh cầu nối **20 triệu đồng** theo OCR; PDF trực tiếp Q3 chưa được công cụ ảnh mở thành công trong lượt này, nên chưa coi là đã xác minh trực quan.
