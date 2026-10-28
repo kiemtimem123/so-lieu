@@ -413,7 +413,7 @@
         },
         "broker_held_to_maturity_assets": {
           "previous_value": null,
-          "new_value": 2352046.0,
+          "new_value": 2352046,
           "reason": "Re-read from the visually checked B01a-CTCK balance sheet linked by VietstockFinance, 2024-Q1, PDF page 5; source VND divided by 1,000,000."
         },
         "broker_lending_assets": {
@@ -599,7 +599,7 @@
       },
       "current_assets": 44026431.030982,
       "non_current_assets": 3158093.931775,
-      "broker_held_to_maturity_assets": 2352046.0,
+      "broker_held_to_maturity_assets": 2352046,
       "broker_lending_assets": 19838888.765755,
       "broker_afs_assets": 19152369.771965,
       "broker_receivables": 350224.486597,
@@ -632,7 +632,7 @@
             "source_value_vnd": 3158093931775
           },
           "broker_held_to_maturity_assets": {
-            "value_million_vnd": 2352046.0,
+            "value_million_vnd": 2352046,
             "source_value_vnd": 2352046000000
           },
           "broker_lending_assets": {
@@ -2826,7 +2826,7 @@
         }
       },
       "source_archive_sha256": "2441da308c9e6c38dfb024b8bef69fd470647b0893ab78a38bc69bf339e5f7be",
-      "current_assets": 52968968,
+      "current_assets": 52954968.277078,
       "cash_and_equivalents": 2310028,
       "non_current_assets": 3374595,
       "fixed_assets": 50060,
@@ -2878,8 +2878,8 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
-      "financial_line_items_updated_at": "2026-10-28T05:15:03+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan.",
+      "financial_line_items_updated_at": "2026-10-28T05:20:00Z",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. TCX 2025-Q1: tài sản ngắn hạn đã được tái lập từ tổng nợ phải trả + vốn chủ sở hữu trừ tài sản dài hạn do OCR nhận sai chữ số ở dòng 100; số liệu được đối chiếu số học với B01a-CTCK VietstockFinance trang 6–7, còn chờ rà soát trực quan.",
       "investing_cash_flow": -12546,
       "investing_cash_flow_calculation": "Q1 equals YTD Q1",
       "financing_cash_flow": 2651425,
@@ -2930,7 +2930,8 @@
         "operating_cash_flow_ytd": -3193452.873535,
         "operating_profit": 1310685.315274,
         "other_expense": 851.832933,
-        "other_income": 10.733957
+        "other_income": 10.733957,
+        "current_assets": 52968968
       },
       "financial_line_items_rejected_values": {},
       "income_tax": 299193,
@@ -3186,6 +3187,24 @@
           "previous_value": 2310027.768246,
           "new_value": 2310028,
           "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "current_assets": {
+          "previous_value": 52968968,
+          "new_value": 52954968.277078,
+          "reason": "Reconstructed from source-reported totals because OCR's current-assets line has a digit mismatch: total liabilities 29,034,864.968810 + equity 27,294,698.117170 - non-current assets 3,374,594.808902 = 52,954,968.277078 million VND.",
+          "source_pages": [
+            6,
+            7
+          ],
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_values_vnd": {
+            "total_liabilities": 29034864968810,
+            "equity": 27294698117170,
+            "non_current_assets": 3374594808902,
+            "result_current_assets": 52954968277078
+          },
+          "manually_visual_reviewed": false
         }
       },
       "broker_total_operating_revenue": null,
@@ -3353,6 +3372,39 @@
         "opening_closing_cash_bridge_reconciles": true,
         "manually_visual_reviewed": false,
         "note": "Đọc từ văn bản sidecar của B03a-CTCK Q1/2025; số dư đầu quý khớp số dư cuối Q4/2024. Chờ rà soát trực quan PDF."
+      },
+      "current_assets_calculation": "Tài sản ngắn hạn = tổng nợ phải trả + vốn chủ sở hữu - tài sản dài hạn; khôi phục từ các tổng độc lập vì dòng 100 bị OCR nhầm chữ số.",
+      "financial_line_items_balance_source_reconciliation": {
+        "source_policy": "VietstockFinance document catalog and linked PDF only",
+        "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+        "source_document_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+        "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+        "report_form": "B01a-CTCK",
+        "report_scope": "standalone securities-company balance sheet; not consolidated",
+        "pdf_pages": [
+          6,
+          7
+        ],
+        "manually_visual_reviewed": false,
+        "formula": "total_liabilities + equity - non_current_assets",
+        "fields": {
+          "total_liabilities": {
+            "value_million_vnd": 29034864.96881,
+            "source_value_vnd": 29034864968810
+          },
+          "equity": {
+            "value_million_vnd": 27294698.11717,
+            "source_value_vnd": 27294698117170
+          },
+          "non_current_assets": {
+            "value_million_vnd": 3374594.808902,
+            "source_value_vnd": 3374594808902
+          },
+          "current_assets": {
+            "value_million_vnd": 52954968.277078,
+            "source_value_vnd": 52954968277078
+          }
+        }
       }
     },
     {
@@ -5498,8 +5550,8 @@
       "cash_and_equivalents": 5493172.934162,
       "non_current_assets": 3637468,
       "fixed_assets": 99262,
-      "current_liabilities": null,
-      "long_term_liabilities": null,
+      "current_liabilities": 40601152.377163,
+      "long_term_liabilities": 2597305.262557,
       "retained_earnings": 13519678,
       "financial_expense": 741488.16851,
       "interest_expense": 688724.696403,
@@ -5536,6 +5588,7 @@
         "cash_ending_calculation",
         "cashflow_period_basis",
         "current_assets",
+        "current_liabilities",
         "eps",
         "financial_expense",
         "financial_income",
@@ -5548,6 +5601,7 @@
         "interest_expense",
         "investing_cash_flow",
         "investing_cash_flow_ytd",
+        "long_term_liabilities",
         "net_cash_change",
         "net_cash_change_ytd",
         "net_profit",
@@ -5561,8 +5615,8 @@
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2d9437c470319d10.pdf",
-      "financial_line_items_updated_at": "2026-10-28T05:15:03+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Đã khôi phục LCTT 2026-Q1 từ báo cáo riêng VietstockFinance; lưu riêng số lũy kế YTD và số quý tính bằng chênh lệch. Số dư tiền đầu/cuối quý và biến động tiền thuần đã được đối chiếu. Dòng tiền đầu tư được suy ra từ biến động tiền thuần trừ dòng kinh doanh và tài chính vì OCR nhận nhầm dòng đầu tư. Bổ sung/sửa doanh thu hoạt động, chi phí tài chính, lợi nhuận hoạt động, thuế và EPS TCX 2026-Q1 từ BCTC riêng VietstockFinance trang 9, 10, 11; không dùng số lũy kế như số riêng quý. Đã đối chiếu LCTT TCX 2026-Q1 từ báo cáo riêng mẫu B03a-CTCK trên VietstockFinance. Dữ liệu gốc lũy kế được lưu riêng; số quý được tính bằng chênh lệch lũy kế và đã đối chiếu với biến động tiền/ số dư tiền. Dòng đầu tư quý I được suy ra từ biến động tiền thuần trừ dòng tiền kinh doanh và tài chính do OCR nhận nhầm dòng tổng đầu tư; công thức được lưu để truy vết.",
+      "financial_line_items_updated_at": "2026-10-28T05:20:00Z",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Đã khôi phục LCTT 2026-Q1 từ báo cáo riêng VietstockFinance; lưu riêng số lũy kế YTD và số quý tính bằng chênh lệch. Số dư tiền đầu/cuối quý và biến động tiền thuần đã được đối chiếu. Dòng tiền đầu tư được suy ra từ biến động tiền thuần trừ dòng kinh doanh và tài chính vì OCR nhận nhầm dòng đầu tư. Bổ sung/sửa doanh thu hoạt động, chi phí tài chính, lợi nhuận hoạt động, thuế và EPS TCX 2026-Q1 từ BCTC riêng VietstockFinance trang 9, 10, 11; không dùng số lũy kế như số riêng quý. Đã đối chiếu LCTT TCX 2026-Q1 từ báo cáo riêng mẫu B03a-CTCK trên VietstockFinance. Dữ liệu gốc lũy kế được lưu riêng; số quý được tính bằng chênh lệch lũy kế và đã đối chiếu với biến động tiền/ số dư tiền. Dòng đầu tư quý I được suy ra từ biến động tiền thuần trừ dòng tiền kinh doanh và tài chính do OCR nhận nhầm dòng tổng đầu tư; công thức được lưu để truy vết. TCX 2026-Q1: khôi phục nợ ngắn hạn và nợ dài hạn từ các dòng 310/340 B01a-CTCK VietstockFinance trang 6; đã kiểm tra trực quan và hai khoản cộng khớp tổng nợ phải trả.",
       "financing_cash_flow": 7169753,
       "financing_cash_flow_calculation": "Q1 equals YTD Q1",
       "financial_line_items_prior_values": {
@@ -5617,16 +5671,18 @@
       "core_financial_extraction_evidence_attempt_count": 0,
       "operating_profit": 1458655.329949,
       "cash_beginning_reported_ytd": 3108078.221717,
-      "financial_line_items_rejected_fields": [
-        "current_liabilities_liability_total_check",
-        "long_term_liabilities_liability_total_check"
-      ],
+      "financial_line_items_rejected_fields": [],
       "financial_line_items_rejected_updated_at": "2026-10-27T07:51:11+00:00",
       "financial_line_items_value_corrections": {
         "current_liabilities": {
           "previous_value": 40601152,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "new_value": 40601152.377163,
+          "reason": "Restored from the source's explicit B01a-CTCK row 310, visually checked against the archived VietstockFinance PDF page 6; matches total liabilities less long-term liabilities.",
+          "source_page": 6,
+          "source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY 1/TCX_Baocaotaichinh_Q1_2026.pdf",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2d9437c470319d10.pdf",
+          "source_value_vnd": 40601152377163,
+          "manually_visual_reviewed": true
         },
         "income_tax": {
           "previous_value": 310792,
@@ -5640,8 +5696,13 @@
         },
         "long_term_liabilities": {
           "previous_value": 2597305,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "new_value": 2597305.262557,
+          "reason": "Restored from the source's explicit B01a-CTCK row 340, visually checked against the archived VietstockFinance PDF page 6; matches total liabilities less current liabilities.",
+          "source_page": 6,
+          "source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY 1/TCX_Baocaotaichinh_Q1_2026.pdf",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2d9437c470319d10.pdf",
+          "source_value_vnd": 2597305262557,
+          "manually_visual_reviewed": true
         },
         "broker_held_to_maturity_assets": {
           "previous_value": 410000,
@@ -5974,6 +6035,7 @@
         "broker_operating_expenses",
         "broker_total_operating_expenses",
         "broker_total_operating_revenue",
+        "current_liabilities",
         "eps",
         "financial_expense",
         "financial_income",
@@ -5981,6 +6043,7 @@
         "income_tax_current",
         "income_tax_deferred",
         "interest_expense",
+        "long_term_liabilities",
         "net_profit",
         "operating_profit",
         "pretax_profit",
@@ -6001,6 +6064,34 @@
         "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
         "source_document_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY 1/TCX_Baocaotaichinh_Q1_2026.pdf",
         "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2d9437c470319d10.pdf"
+      },
+      "current_liabilities_calculation": "Dòng 310 B01a-CTCK, nợ ngắn hạn được báo cáo trực tiếp; đã kiểm tra trực quan PDF VietstockFinance trang 6.",
+      "long_term_liabilities_calculation": "Dòng 340 B01a-CTCK, nợ dài hạn được báo cáo trực tiếp; đã kiểm tra trực quan PDF VietstockFinance trang 6.",
+      "financial_line_items_balance_source_reconciliation": {
+        "source_policy": "VietstockFinance document catalog and linked PDF only",
+        "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+        "source_document_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY 1/TCX_Baocaotaichinh_Q1_2026.pdf",
+        "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2d9437c470319d10.pdf",
+        "report_form": "B01a-CTCK",
+        "report_scope": "standalone securities-company balance sheet; not consolidated",
+        "pdf_pages": [
+          6
+        ],
+        "manually_visual_reviewed": true,
+        "fields": {
+          "current_liabilities": {
+            "value_million_vnd": 40601152.377163,
+            "source_value_vnd": 40601152377163
+          },
+          "long_term_liabilities": {
+            "value_million_vnd": 2597305.262557,
+            "source_value_vnd": 2597305262557
+          },
+          "total_liabilities": {
+            "value_million_vnd": 43198457.63972,
+            "source_value_vnd": 43198457639720
+          }
+        }
       }
     },
     {
@@ -7231,5 +7322,5 @@
   "bootstrap_status": "complete_needs_manual_review",
   "bootstrap_completed_at": "2026-10-22T13:07:11+00:00",
   "bootstrap_completion_note": "Đã lưu dữ liệu tự động; các chỉ tiêu được trích xuất cần đối chiếu trực quan. Mã này sẽ không tự tải lại.",
-  "processedAt": "2026-10-28T05:15:03+00:00"
+  "processedAt": "2026-10-28T05:20:00Z"
 }
