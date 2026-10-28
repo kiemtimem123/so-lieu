@@ -1,4 +1,5 @@
 """Regression tests for the FX-aware cash-flow bridge in validate-bank-reconciliation.py."""
+import json
 from pathlib import Path
 import runpy
 import unittest
@@ -45,6 +46,41 @@ class CashFlowBridgeTests(unittest.TestCase):
             "cash_beginning": 100,
             "cash_ending": 120,
         }))
+
+
+    def test_tcb_2025_q4_uses_audited_fy2025_cashflow(self):
+        snapshot = json.loads((ROOT / "data" / "financials-TCB.json").read_text(encoding="utf-8"))
+        rows = {row["period"]: row for row in snapshot["items"]}
+        q3 = rows["2025-Q3"]
+        q4 = rows["2025-Q4"]
+
+        # Audited FY2025 report, PDF pages 15-16 (printed pages 10-11).
+        self.assertEqual(q4["cashflow_audit_revision"]["source_archive_file"],
+                         "reports/raw/TCB/vietstock-tcb-2024-2026-20261019/553195cdc772f58a.pdf")
+        self.assertEqual(q4["operating_cash_flow_ytd"], 39923618)
+        self.assertEqual(q4["investing_cash_flow_ytd"], -816440)
+        self.assertEqual(q4["financing_cash_flow_ytd"], 5235750)
+        self.assertEqual(q4["net_cash_change_ytd"], 44342928)
+        self.assertEqual(q4["cash_beginning_reported_ytd"], 147484415)
+        self.assertEqual(q4["cash_ending_reported_ytd"], 191827343)
+
+        # Standalone Q4 = audited FY2025 YTD minus Q3 2025 YTD.
+        self.assertEqual(q4["operating_cash_flow"], 39923618 - q3["operating_cash_flow_ytd"])
+        self.assertEqual(q4["investing_cash_flow"], -816440 - q3["investing_cash_flow_ytd"])
+        self.assertEqual(q4["financing_cash_flow"], 5235750 - q3["financing_cash_flow_ytd"])
+        self.assertEqual(q4["net_cash_change"], 44342928 - q3["net_cash_change_ytd"])
+        self.assertEqual(q4["cash_beginning"], q3["cash_ending"])
+        self.assertEqual(q4["cash_ending"], 191827343)
+        self.assertEqual(
+            q4["operating_cash_flow"] + q4["investing_cash_flow"] + q4["financing_cash_flow"],
+            q4["net_cash_change"],
+        )
+        self.assertEqual(cash_bridge_delta(q4), 0)
+
+    def test_tcb_2026_q3_source_residual_remains_20_million_for_review(self):
+        snapshot = json.loads((ROOT / "data" / "financials-TCB.json").read_text(encoding="utf-8"))
+        q3 = next(row for row in snapshot["items"] if row["period"] == "2026-Q3")
+        self.assertEqual(cash_bridge_delta(q3), -20)
 
 
 if __name__ == "__main__":
