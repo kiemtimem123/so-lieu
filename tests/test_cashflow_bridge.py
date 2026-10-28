@@ -77,10 +77,19 @@ class CashFlowBridgeTests(unittest.TestCase):
         )
         self.assertEqual(cash_bridge_delta(q4), 0)
 
-    def test_tcb_2026_q3_source_residual_remains_20_million_for_review(self):
+    def test_tcb_2026_q3_300dpi_source_rescan_corrects_cash_bridge(self):
         snapshot = json.loads((ROOT / "data" / "financials-TCB.json").read_text(encoding="utf-8"))
         q3 = next(row for row in snapshot["items"] if row["period"] == "2026-Q3")
-        self.assertEqual(cash_bridge_delta(q3), -20)
+        correction = q3["financial_line_items_value_corrections"]["cash_ending"]
+        self.assertEqual(q3["cash_ending"], 177278981)
+        self.assertEqual(q3["cash_ending_reported_ytd"], 177278981)
+        self.assertEqual(correction["source_pdf_page"], 12)
+        self.assertEqual(correction["source_ocr_engine"], "tesseract-vie+eng-psm6-300dpi-targeted-rescan")
+        self.assertEqual(cash_bridge_delta(q3), 0)
+        self.assertEqual(
+            q3["cash_ending_reported_ytd"] - q3["cash_beginning_reported_ytd"] - q3["net_cash_change_ytd"],
+            0,
+        )
 
 
 if __name__ == "__main__":
