@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-29T02:25:00+07:00",
+  "updatedAt": "2026-10-29T00:47:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -654,7 +654,32 @@
       "skipUnconfirmedReason": "User-directed skip; unverified figures remain blank for manual review.",
       "sourceArchivesChecked": 10,
       "updatedAt": "2026-10-27T10:59:36Z",
-      "snapshotFetchedAt": "2026-10-19T22:04:00+07:00"
+      "snapshotFetchedAt": "2026-10-19T22:04:00+07:00",
+      "cashflowNormalization": {
+        "status": "automated_processing_complete_manual_review_remaining",
+        "completeForAutomation": true,
+        "manualReviewRemaining": true,
+        "periodCount": 10,
+        "firstQuarter": "2024-Q1",
+        "lastQuarter": "2026-Q2",
+        "pendingCorePeriods": [],
+        "terminalManualReviewPeriods": [
+          "2024-Q2",
+          "2024-Q3"
+        ],
+        "sourceComparisonReviewPeriods": [
+          "2024-Q4",
+          "2025-Q2"
+        ],
+        "standaloneQuarterFlowsWithheld": [
+          "2024-Q2",
+          "2024-Q3"
+        ],
+        "sourceArchivesChecked": 10,
+        "standardVersion": "1.4",
+        "updatedAt": "2026-10-29T00:47:00+07:00",
+        "validationRunId": "40738493284"
+      }
     },
     "NLG": {
       "status": "automated_processing_complete",
@@ -1407,12 +1432,12 @@
     "updatedAt": "2026-10-28T19:45:00+07:00"
   },
   "normalizationProgress": {
-    "standardVersion": "1.3",
+    "standardVersion": "1.4",
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
-    "activeSymbol": "VND",
-    "status": "automated_processing_complete_manual_review_source_comparator_cff_gt_0_01_percent",
-    "lastUpdatedAt": "2026-10-29T02:25:00+07:00",
+    "activeSymbol": "SHS",
+    "status": "automated_processing_complete_manual_review_remaining",
+    "lastUpdatedAt": "2026-10-29T00:47:00+07:00",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1521,7 +1546,18 @@
       "Added HCM selected_ytd_opening_vs_prior_fy_close audit metadata to 2025-Q2 and 2026-Q2 from existing cross_report_basis_issues. Reported data values were not changed.",
       "Validate Site and Data run 40735388788 SUCCESS at commit 4181b40fc5852c0a05342f31ea71324e605da054: all 25 cash-flow regression tests PASS; JavaScript syntax and JSON/source wiring checks also PASS.",
       "Validate quarterly financial data run 40735314898 SUCCESS and Package Hostinger Stock Dashboard run 40735314578 SUCCESS after adding HCM source-basis audit metadata.",
-      "Normalization standard bumped to v1.3, documenting the 0.01% relative tolerance, test collection guard position, and merge-safe handling of normalized cash-flow fields."
+      "Normalization standard bumped to v1.3, documenting the 0.01% relative tolerance, test collection guard position, and merge-safe handling of normalized cash-flow fields.",
+      "SHS: normalized the 10-period snapshot from 2024-Q1 through 2026-Q2 to B03b-CTCK company statement lines 60/70/80/90/101/102/103/104; brokerage/trust customer cash-flow section excluded.",
+      "SHS: corrected 2024-Q1 CFO mapping from profit-before-tax line 01 to cash-flow line 60 using the visually checked Q1/2025 comparative; original OCR/mapping values and source URL retained in audit metadata.",
+      "SHS: 2024-Q3 YTD flow components and YTD cash bridge reconcile; standalone Q3 flow fields remain blank because the 2024-Q2 YTD base is not reliable and no balancing inference was used.",
+      "SHS: 2024-Q2 flow totals remain blank because original sidecar totals are unreadable and the visually checked Q2/2025 comparative repeats Q1/2024 values; ending cash OCR value 971,739 million VND remains tagged pending direct source review.",
+      "SHS: FY2024 uses the newer Q4/2025 comparative YTD basis; compared with directly visually checked original Q4/2024 values, CFO and CFI differences exceed 0.01%, so selected values and both histories remain flagged for manual review.",
+      "SHS: H1/2025 uses the later Q2/2026 comparative basis; the CFI value differs from original Q2/2025 by about 0.84% relative, exceeding threshold; source history is retained and no balancing plug added.",
+      "SHS: all complete YTD and standalone-quarter flow sums / cash bridges are within 0.01% relative tolerance; 1-million-VND rounding differences are accepted and retained, not plugged.",
+      "SHS: normalized fields preserve the original row-level financial_line_items_source for non-cash fields; cash-flow-selected URLs and archives are stored separately in cashflow_audit_revision.",
+      "SHS regression suite added and now runs 30 tests. Validate Site and Data run 40738493284 SUCCESS at commit e5da950983ea3230f07c0e1b39864d7d0a240bd4: 30 tests PASS, JavaScript syntax, JSON snapshots and source wiring PASS.",
+      "Validate quarterly financial data run 40738359781 SUCCESS and Package Hostinger Stock Dashboard run 40738359767 SUCCESS after the SHS snapshot update.",
+      "Standardization document bumped to v1.4 with SHS source mappings, 0.01% tolerance handling, source-comparison manual-review issues and no-plug rules."
     ],
     "unresolved": [
       "ACB pending manual visual review remains only for rows marked ocr_text_reconciled_visual_review_pending (including Q1/2025 comparator and Q1/2026 current report); arithmetic checks pass and no unsupported values were inserted.",
@@ -1532,10 +1568,14 @@
       "HCM NEEDS_MANUAL_REVIEW — Q2/2026 report's reported YTD opening cash 3,381,063 vs FY2025 closing 3,701,563 million VND yields -320,500 million VND continuity residual; standalone Q2 bridge residual -320,499 million VND. Preserve source figures.",
       "HCM manual visual review pending for all ten periods because source PDFs were not successfully rendered by the direct PDF viewer in this pass; OCR sidecar text retained as evidence.",
       "VND NEEDS_MANUAL_REVIEW — Q2/2024 financing cash-flow comparator: later Q2/2025 comparative OCR candidate 1,078,401.553 million VND vs original Q2/2024 source 1,076,401.553 million VND; difference 2,000 million VND (~0.1857%, >0.01%) and candidate conflicts with total net cash change. Original source retained; no balancing plug; visually inspect the comparative PDF page before changing.",
-      "VND source-page image verification remains pending because the archived PDF viewer could not render these large VietstockFinance PDFs; OCR sidecar text and arithmetic reconciliation are retained but are not claimed as direct visual verification."
+      "VND source-page image verification remains pending because the archived PDF viewer could not render these large VietstockFinance PDFs; OCR sidecar text and arithmetic reconciliation are retained but are not claimed as direct visual verification.",
+      "SHS NEEDS_MANUAL_REVIEW — H1/2024 source flow subtotals remain unreadable in the archived Q2/2024 ZIP sidecar. Q2/2025 comparative was visually checked but duplicates Q1/2024 totals/closing cash, so do not use that comparator; leave Q2/2024 flow fields blank.",
+      "SHS NEEDS_MANUAL_REVIEW — Q3/2024 standalone quarter flows remain blank because the H1/2024 YTD baseline is unresolved; 9M/2024 YTD flows and its cash bridge do reconcile.",
+      "SHS NEEDS_MANUAL_REVIEW — latest FY2024 comparative in Q4/2025 differs from the visually checked original FY2024 CFO/CFI/CFF values by more than 0.01% for CFO/CFI. Keep the later comparative selected for the snapshot with both source bases logged; no balancing plug.",
+      "SHS NEEDS_MANUAL_REVIEW — H1/2025 CFI comparator from Q2/2026 differs from original Q2/2025 by about 0.84% relative, above 0.01%. Latest comparator selected and source history retained; direct image recheck remains pending."
     ],
-    "nextStep": "VND cash-flow normalization is committed for 11 periods, with all arithmetic residuals within the approved relative tolerance <=0.01%. Direct-PDF visual review remains pending. The Q2/2024 CFF OCR comparator conflict (~0.1857%, above tolerance) remains flagged for manual review; original source value retained with no balancing plug. MBB cash-flow data were restored from the last validated snapshot after an OCR-enrichment overwrite regression, and all 25 tests now pass. At next continuation, proceed to SHS in the same cashflow domain, one ticker at a time, using standard v1.3. Do not change other data domains.",
-    "previousCompletedSymbol": "HCM",
+    "nextStep": "SHS automation is complete for supported source values, with H1/2024 core flow totals and Q3/2024 standalone flows withheld pending source review, plus FY2024 and H1/2025 source-comparator differences above 0.01% retained as manual-review items. The 30-test cash-flow suite passes. At the next continuation, proceed to NLG in the cashflow domain, one ticker at a time; do not change other data domains.",
+    "previousCompletedSymbol": "VND",
     "validationRuns": [
       {
         "name": "Validate Site and Data",
@@ -1711,6 +1751,27 @@
         "status": "success",
         "commit": "0b1e249eeef3e716c1e98a03cf10af79892e68c0",
         "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40734979139"
+      },
+      {
+        "name": "Validate Site and Data",
+        "runId": "40738493284",
+        "status": "success",
+        "commit": "e5da950983ea3230f07c0e1b39864d7d0a240bd4",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40738493284"
+      },
+      {
+        "name": "Validate quarterly financial data",
+        "runId": "40738359781",
+        "status": "success",
+        "commit": "aacb800e8b150a685e3a294775a89d45ea623047",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40738359781"
+      },
+      {
+        "name": "Package Hostinger Stock Dashboard",
+        "runId": "40738359767",
+        "status": "success",
+        "commit": "aacb800e8b150a685e3a294775a89d45ea623047",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40738359767"
       }
     ],
     "lastCompletedSymbol": "FPT"
