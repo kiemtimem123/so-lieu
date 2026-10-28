@@ -210,3 +210,101 @@ class CashFlowBridgeTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ACBCashFlowNormalizationTests(unittest.TestCase):
+    """Regression tests for the source-reconciled ACB cash-flow series."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.snapshot = json.loads(
+            (ROOT / "data" / "financials-ACB.json").read_text(encoding="utf-8")
+        )
+        cls.rows = {row["period"]: row for row in cls.snapshot["items"]}
+
+    def test_acb_all_periods_reconcile_with_fx_and_quarter_ytd_basis(self):
+        core_fields = (
+            "operating_cash_flow", "investing_cash_flow", "financing_cash_flow",
+            "net_cash_change", "operating_cash_flow_ytd", "investing_cash_flow_ytd",
+            "financing_cash_flow_ytd", "net_cash_change_ytd", "cash_beginning",
+            "cash_ending", "cash_beginning_reported_ytd", "cash_ending_reported_ytd",
+            "foreign_exchange_effect", "foreign_exchange_effect_ytd",
+        )
+        self.assertEqual(len(self.rows), 10)
+        self.assertEqual(set(self.rows), {
+            "2024-Q1", "2024-Q2", "2024-Q3", "2024-Q4", "2025-Q1",
+            "2025-Q2", "2025-Q3", "2025-Q4", "2026-Q1", "2026-Q2",
+        })
+        for period, row in self.rows.items():
+            with self.subTest(period=period):
+                self.assertTrue(all(isinstance(row.get(field), (int, float))
+                                    and not isinstance(row.get(field), bool)
+                                    for field in core_fields))
+                self.assertEqual(row["operating_cash_flow"] +
+                                 row["investing_cash_flow"] +
+                                 row["financing_cash_flow"], row["net_cash_change"])
+                self.assertEqual(row["operating_cash_flow_ytd"] +
+                                 row["investing_cash_flow_ytd"] +
+                                 row["financing_cash_flow_ytd"], row["net_cash_change_ytd"])
+                self.assertEqual(row["cash_ending_reported_ytd"] -
+                                 row["cash_beginning_reported_ytd"] -
+                                 row["net_cash_change_ytd"] -
+                                 row["foreign_exchange_effect_ytd"], 0)
+                self.assertEqual(row["cash_ending"] - row["cash_beginning"] -
+                                 row["net_cash_change"] -
+                                 row["foreign_exchange_effect"], 0)
+                self.assertEqual(row["cashflow_source_reconciliation"]["ytd_cash_bridge_residual"], 0)
+                self.assertEqual(row["cashflow_source_reconciliation"]["quarter_cash_bridge_residual"], 0)
+                self.assertEqual(row["cashflow_source_reconciliation"]["status"], "PASS_ARITHMETIC_RECONCILED")
+                self.assertEqual(row["unit"], "triệu VND")
+                self.assertTrue(row["source_index_url"].startswith(
+                    "https://finance.vietstock.vn/ACB/tai-tai-lieu.htm?doctype=1"))
+                for field in core_fields:
+                    self.assertIn(field, row["financial_line_items_extracted_fields"])
+                    self.assertNotIn(field, row.get("financial_line_items_rejected_fields", []))
+
+                year, quarter = period.split("-Q")
+                q = int(quarter)
+                if q == 1:
+                    for flow in ("operating_cash_flow", "investing_cash_flow",
+                                 "financing_cash_flow", "net_cash_change"):
+                        self.assertEqual(row[flow], row[flow + "_ytd"])
+                    self.assertEqual(row["foreign_exchange_effect"],
+                                     row["foreign_exchange_effect_ytd"])
+                else:
+                    prior = self.rows[f"{year}-Q{q-1}"]
+                    for flow in ("operating_cash_flow", "investing_cash_flow",
+                                 "financing_cash_flow", "net_cash_change"):
+                        self.assertEqual(row[flow],
+                                         row[flow + "_ytd"] - prior[flow + "_ytd"])
+                    self.assertEqual(row["foreign_exchange_effect"],
+                                     row["foreign_exchange_effect_ytd"] -
+                                     prior["foreign_exchange_effect_ytd"])
+                    self.assertEqual(row["cash_beginning"], prior["cash_ending"])
+
+    def test_acb_uses_later_vietstock_comparative_basis_for_prior_periods(self):
+        q42024 = self.rows["2024-Q4"]
+        self.assertEqual(q42024["operating_cash_flow_ytd"], 8370231)
+        self.assertEqual(q42024["investing_cash_flow_ytd"], -733310)
+        self.assertEqual(q42024["net_cash_change_ytd"], 3752870)
+        self.assertIn("Q4_2025", q42024["cashflow_audit_revision"]["selected_source_url"])
+
+        q12025 = self.rows["2025-Q1"]
+        self.assertEqual(q12025["operating_cash_flow_ytd"], -4309694)
+        self.assertEqual(q12025["net_cash_change_ytd"], -4486631)
+        self.assertIn("Q1_2026", q12025["cashflow_audit_revision"]["selected_source_url"])
+
+        q22025 = self.rows["2025-Q2"]
+        self.assertEqual(q22025["operating_cash_flow_ytd"], -9800290)
+        self.assertEqual(q22025["investing_cash_flow_ytd"], -223472)
+        self.assertEqual(q22025["net_cash_change_ytd"], -14490420)
+        self.assertIn("Q2_2026", q22025["cashflow_audit_revision"]["selected_source_url"])
+
+    def test_acb_q2_2026_cash_balance_ocr_correction_is_source_backed(self):
+        row = self.rows["2026-Q2"]
+        self.assertEqual(row["cash_ending_reported_ytd"], 116533043)
+        correction = row["cashflow_source_reconciliation"]["source_ocr_correction"]
+        self.assertEqual(correction["misread_value"], 416533043)
+        self.assertEqual(correction["corrected_source_value"], 116533043)
+        self.assertEqual(correction["units"], "triệu VND")
+        self.assertEqual(row["cashflow_source_reconciliation"]["ytd_cash_bridge_residual"], 0)
