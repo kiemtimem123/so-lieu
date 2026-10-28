@@ -71,11 +71,19 @@
         "bank_valuable_papers",
         "capital_expenditure",
         "capital_expenditure_ytd",
+        "cash_beginning",
+        "cash_beginning_reported_ytd",
+        "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
         "fixed_assets",
         "income_tax",
         "investing_cash_flow",
         "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
         "operating_cash_flow",
         "operating_cash_flow_ytd",
         "retained_earnings"
@@ -83,9 +91,9 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/MBB/vietstock-mbb-20261019/7412b541b62688da.pdf",
       "financial_line_items_updated_at": "2026-10-28T15:34:13+00:00",
-      "financial_line_items_note": "Bảng cân đối đã có các trường được kiểm tra riêng. Bổ sung ứng viên dữ liệu kết quả hoạt động từ PDF trang 6 và lưu chuyển tiền tệ từ trang 7–8 theo văn bản OCR lưu trữ; các dòng chi tiết mới vẫn chờ rà soát trực quan và không được coi là đã xác minh cuối cùng. Không thay thế số liệu thiếu bằng ước tính. Dữ liệu tab Kết quả kinh doanh đã chuẩn hóa dấu chi phí thuế theo dòng báo cáo; tab Lưu chuyển tiền tệ bổ sung dòng cổ tức đã trả riêng quý từ dòng lũy kế trên PDF trang 8. Các chỉ tiêu chi tiết vẫn mang trạng thái chờ rà soát trực quan. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. NORMALIZED CASH FLOW 2026-10-28: Q1/2024 PDF pages 7-8; 300dpi OCR; cash bridge and flow components reconcile. Các trường LCTT đã được đăng ký rõ trong financial_line_items_extracted_fields để tab LCTT không ẩn dữ liệu đã có bằng chứng nguồn. Trạng thái rà soát trực quan vẫn giữ riêng; không coi việc đưa vào danh sách trường là xác minh thủ công toàn bộ.",
+      "financial_line_items_note": "Bảng cân đối đã có các trường được kiểm tra riêng. Bổ sung ứng viên dữ liệu kết quả hoạt động từ PDF trang 6 và lưu chuyển tiền tệ từ trang 7–8 theo văn bản OCR lưu trữ; các dòng chi tiết mới vẫn chờ rà soát trực quan và không được coi là đã xác minh cuối cùng. Không thay thế số liệu thiếu bằng ước tính. Dữ liệu tab Kết quả kinh doanh đã chuẩn hóa dấu chi phí thuế theo dòng báo cáo; tab Lưu chuyển tiền tệ bổ sung dòng cổ tức đã trả riêng quý từ dòng lũy kế trên PDF trang 8. Các chỉ tiêu chi tiết vẫn mang trạng thái chờ rà soát trực quan. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. NORMALIZED CASH FLOW 2026-10-28: Q1/2024 PDF pages 7-8; 300dpi OCR; cash bridge and flow components reconcile. Các trường LCTT đã được đăng ký rõ trong financial_line_items_extracted_fields để tab LCTT không ẩn dữ liệu đã có bằng chứng nguồn. Trạng thái rà soát trực quan vẫn giữ riêng; không coi việc đưa vào danh sách trường là xác minh thủ công toàn bộ. CASHFLOW REGRESSION REPAIR 2026-10-29: restored source-reconciled cash-flow fields and audit metadata from prior validated snapshot commit 694989992688 after OCR/enrichment commit 8367764 overwrote some cash-flow-only fields with blanks. Non-cash fields from the newer snapshot are retained. Re-run cash-flow regression before further enrichment.",
       "operating_cash_flow": -25886800,
-      "operating_cash_flow_calculation": "Q1 equals YTD Q1",
+      "operating_cash_flow_calculation": "Q1 bằng số lũy kế Q1 theo báo cáo VietstockFinance.",
       "financial_line_items_prior_values": {
         "bank_other_liabilities": 35446826,
         "operating_cash_flow_ytd": 4484806,
@@ -252,14 +260,34 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "cash_beginning": {
-          "previous_value": 109095118,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 109095118,
+          "reason": "MBB 2024-Q1: source normalization. Q1/2024 PDF pages 7-8; 300dpi OCR; cash bridge and flow components reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": {
+            "previous_value": 109095118,
+            "new_value": null,
+            "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          }
         },
         "cash_ending": {
-          "previous_value": 83716470,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 83716470,
+          "reason": "MBB 2024-Q1: source normalization. Q1/2024 PDF pages 7-8; 300dpi OCR; cash bridge and flow components reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": {
+            "previous_value": 83716470,
+            "new_value": null,
+            "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          }
         },
         "dividends_paid_ytd": {
           "previous_value": 0,
@@ -267,14 +295,34 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "financing_cash_flow": {
-          "previous_value": 1050000,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 1050000,
+          "reason": "MBB 2024-Q1: source normalization. Q1/2024 PDF pages 7-8; 300dpi OCR; cash bridge and flow components reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": {
+            "previous_value": 1050000,
+            "new_value": null,
+            "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          }
         },
         "financing_cash_flow_ytd": {
-          "previous_value": 1050000,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 1050000,
+          "reason": "MBB 2024-Q1: source normalization. Q1/2024 PDF pages 7-8; 300dpi OCR; cash bridge and flow components reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": {
+            "previous_value": 1050000,
+            "new_value": null,
+            "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          }
         },
         "income_tax_current": {
           "previous_value": -1172141,
@@ -292,14 +340,34 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "net_cash_change": {
-          "previous_value": -25378648,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": -25378648,
+          "reason": "MBB 2024-Q1: source normalization. Q1/2024 PDF pages 7-8; 300dpi OCR; cash bridge and flow components reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": {
+            "previous_value": -25378648,
+            "new_value": null,
+            "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          }
         },
         "net_cash_change_ytd": {
-          "previous_value": -25378648,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": -25378648,
+          "reason": "MBB 2024-Q1: source normalization. Q1/2024 PDF pages 7-8; 300dpi OCR; cash bridge and flow components reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": {
+            "previous_value": -25378648,
+            "new_value": null,
+            "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          }
         },
         "revenue": {
           "previous_value": 12016698,
@@ -312,14 +380,26 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "cash_beginning_reported_ytd": {
-          "previous_value": 109095118,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 109095118,
+          "reason": "MBB 2024-Q1: source normalization. Q1/2024 PDF pages 7-8; 300dpi OCR; cash bridge and flow components reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "cash_ending_reported_ytd": {
-          "previous_value": 83716470,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 83716470,
+          "reason": "MBB 2024-Q1: source normalization. Q1/2024 PDF pages 7-8; 300dpi OCR; cash bridge and flow components reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         }
       },
       "bank_deposits_and_loans_to_credit_institutions": 77809357,
@@ -363,12 +443,12 @@
       "investing_cash_flow": -541848,
       "capital_expenditure_ytd": -567487,
       "capital_expenditure": -567487,
-      "financing_cash_flow_ytd": null,
-      "financing_cash_flow": null,
-      "net_cash_change_ytd": null,
-      "net_cash_change": null,
-      "cash_beginning": null,
-      "cash_ending": null,
+      "financing_cash_flow_ytd": 1050000,
+      "financing_cash_flow": 1050000,
+      "net_cash_change_ytd": -25378648,
+      "net_cash_change": -25378648,
+      "cash_beginning": 109095118,
+      "cash_ending": 83716470,
       "financial_line_items_page_extraction": {
         "source": "VietstockFinance consolidated PDF",
         "income_pages": [
@@ -383,11 +463,11 @@
       },
       "dividends_paid_ytd": null,
       "dividends_paid": null,
-      "investing_cash_flow_calculation": "Q1 equals YTD Q1",
+      "investing_cash_flow_calculation": "Q1 bằng số lũy kế Q1 theo báo cáo VietstockFinance.",
       "capital_expenditure_calculation": "Q1 equals YTD Q1",
       "bank_non_controlling_profit_calculation": "Lợi nhuận cổ đông không kiểm soát = lợi nhuận sau thuế hợp nhất − lợi nhuận sau thuế thuộc cổ đông ngân hàng mẹ.",
-      "cash_beginning_reported_ytd": null,
-      "cash_ending_reported_ytd": null,
+      "cash_beginning_reported_ytd": 109095118,
+      "cash_ending_reported_ytd": 83716470,
       "cashflow_source_reconciliation": {
         "source_policy": "Only VietstockFinance catalog and linked PDF/ZIP; when later report supplies a visually confirmed comparative restatement, retain it as a traceable reference",
         "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
@@ -440,7 +520,8 @@
       "cash_beginning_calculation": "Số dư đầu kỳ Q1 lấy theo dòng tiền và tương đương tiền đầu kỳ trong BCTC VietstockFinance.",
       "cash_ending_calculation": "Lấy từ dòng tiền và các khoản tương đương tiền cuối kỳ trên PDF LCTT VietstockFinance, không suy ngược nếu nguồn có dòng số dư.",
       "cash_beginning_reported_ytd_calculation": "Số dư đầu kỳ lũy kế lấy từ cột đầu kỳ báo cáo VietstockFinance; nguồn so sánh cập nhật được ghi trong cashflow_source_reconciliation.",
-      "cash_ending_reported_ytd_calculation": "Số dư cuối kỳ lũy kế lấy từ dòng tiền và tương đương tiền cuối kỳ trên PDF LCTT VietstockFinance."
+      "cash_ending_reported_ytd_calculation": "Số dư cuối kỳ lũy kế lấy từ dòng tiền và tương đương tiền cuối kỳ trên PDF LCTT VietstockFinance.",
+      "financial_line_items_rejected_fields": []
     },
     {
       "symbol": "MBB",
@@ -547,8 +628,11 @@
         "capital_expenditure",
         "capital_expenditure_ytd",
         "cash_beginning",
+        "cash_beginning_reported_ytd",
         "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
+        "financing_cash_flow",
         "financing_cash_flow_ytd",
         "fixed_assets",
         "income_tax",
@@ -557,6 +641,7 @@
         "interest_expense",
         "investing_cash_flow",
         "investing_cash_flow_ytd",
+        "net_cash_change",
         "net_cash_change_ytd",
         "operating_cash_flow",
         "operating_cash_flow_ytd",
@@ -567,9 +652,9 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/MBB/vietstock-mbb-20261019/8c9e5134bed45c0c.pdf",
       "financial_line_items_updated_at": "2026-10-28T15:34:13+00:00",
-      "financial_line_items_note": "Các chỉ tiêu kết quả hoạt động hiện có được giữ nguyên. Lưu chuyển tiền tệ được tách riêng CAPEX và luồng tiền đầu tư thuần; số quý II được tính từ số lũy kế 6 tháng trừ quý I theo báo cáo VietstockFinance hợp nhất. Trạng thái chi tiết vẫn chờ rà soát trực quan. Dữ liệu tab Kết quả kinh doanh đã chuẩn hóa dấu chi phí thuế theo dòng báo cáo; tab Lưu chuyển tiền tệ bổ sung dòng cổ tức đã trả riêng quý từ dòng lũy kế trên PDF trang 8. Các chỉ tiêu chi tiết vẫn mang trạng thái chờ rà soát trực quan. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. NORMALIZED CASH FLOW 2026-10-28: Q2/2024 PDF pages 7-8; quarter values = six-month YTD minus Q1 YTD; all bridges reconcile. Các trường LCTT đã được đăng ký rõ trong financial_line_items_extracted_fields để tab LCTT không ẩn dữ liệu đã có bằng chứng nguồn. Trạng thái rà soát trực quan vẫn giữ riêng; không coi việc đưa vào danh sách trường là xác minh thủ công toàn bộ.",
+      "financial_line_items_note": "Các chỉ tiêu kết quả hoạt động hiện có được giữ nguyên. Lưu chuyển tiền tệ được tách riêng CAPEX và luồng tiền đầu tư thuần; số quý II được tính từ số lũy kế 6 tháng trừ quý I theo báo cáo VietstockFinance hợp nhất. Trạng thái chi tiết vẫn chờ rà soát trực quan. Dữ liệu tab Kết quả kinh doanh đã chuẩn hóa dấu chi phí thuế theo dòng báo cáo; tab Lưu chuyển tiền tệ bổ sung dòng cổ tức đã trả riêng quý từ dòng lũy kế trên PDF trang 8. Các chỉ tiêu chi tiết vẫn mang trạng thái chờ rà soát trực quan. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. NORMALIZED CASH FLOW 2026-10-28: Q2/2024 PDF pages 7-8; quarter values = six-month YTD minus Q1 YTD; all bridges reconcile. Các trường LCTT đã được đăng ký rõ trong financial_line_items_extracted_fields để tab LCTT không ẩn dữ liệu đã có bằng chứng nguồn. Trạng thái rà soát trực quan vẫn giữ riêng; không coi việc đưa vào danh sách trường là xác minh thủ công toàn bộ. CASHFLOW REGRESSION REPAIR 2026-10-29: restored source-reconciled cash-flow fields and audit metadata from prior validated snapshot commit 694989992688 after OCR/enrichment commit 8367764 overwrote some cash-flow-only fields with blanks. Non-cash fields from the newer snapshot are retained. Re-run cash-flow regression before further enrichment.",
       "operating_cash_flow": 12386261,
-      "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "operating_cash_flow_calculation": "Quý riêng = số lũy kế 2024 kỳ hiện tại trừ số lũy kế quý liền trước trong cùng năm; đối chiếu trong cashflow_source_reconciliation.",
       "financial_line_items_prior_values": {
         "income_tax": -1531018,
         "revenue": 14129248,
@@ -663,19 +748,49 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "financing_cash_flow": {
-          "previous_value": 2322465,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 2322465,
+          "reason": "MBB 2024-Q2: source normalization. Q2/2024 PDF pages 7-8; quarter values = six-month YTD minus Q1 YTD; all bridges reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": {
+            "previous_value": 2322465,
+            "new_value": null,
+            "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          }
         },
         "net_cash_change": {
-          "previous_value": 14450255,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 14450255,
+          "reason": "MBB 2024-Q2: source normalization. Q2/2024 PDF pages 7-8; quarter values = six-month YTD minus Q1 YTD; all bridges reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": {
+            "previous_value": 14450255,
+            "new_value": null,
+            "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          }
         },
         "cash_beginning": {
-          "previous_value": 83716470,
-          "new_value": 109095118,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": 109095118,
+          "new_value": 83716470,
+          "reason": "MBB 2024-Q2: source normalization. Q2/2024 PDF pages 7-8; quarter values = six-month YTD minus Q1 YTD; all bridges reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": {
+            "previous_value": 83716470,
+            "new_value": 109095118,
+            "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          }
         },
         "dividends_paid": {
           "previous_value": -2643542,
@@ -693,9 +808,15 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "cash_ending_reported_ytd": {
-          "previous_value": 98166725,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 98166725,
+          "reason": "MBB 2024-Q2: source normalization. Q2/2024 PDF pages 7-8; quarter values = six-month YTD minus Q1 YTD; all bridges reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "cash_beginning_reported_ytd": {
           "previous_value": 109095118,
@@ -714,15 +835,15 @@
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "bb09dd06c67c1bc24da0da0409e022b8b06278f8a010c135d73ae41d3300bc37",
       "core_financial_extraction_evidence_attempt_count": 0,
-      "cash_beginning": 109095118,
+      "cash_beginning": 83716470,
       "cash_ending": 98166725,
       "cash_beginning_reported_ytd": 109095118,
       "bank_deposits_and_loans_to_credit_institutions": 90063801,
       "capital_expenditure_ytd": -858808,
       "investing_cash_flow": -258471,
       "capital_expenditure": -291321,
-      "financing_cash_flow": null,
-      "net_cash_change": null,
+      "financing_cash_flow": 2322465,
+      "net_cash_change": 14450255,
       "financial_line_items_page_extraction": {
         "source": "VietstockFinance consolidated PDF",
         "income_pages": [
@@ -737,13 +858,13 @@
       },
       "dividends_paid_ytd": null,
       "dividends_paid": null,
-      "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "investing_cash_flow_calculation": "Quý riêng = số lũy kế 2024 kỳ hiện tại trừ số lũy kế quý liền trước trong cùng năm; đối chiếu trong cashflow_source_reconciliation.",
       "capital_expenditure_calculation": "current YTD minus previous quarter YTD",
       "financial_line_items_rejected_recovered_fields": [
         "bank_pre_provision_operating_profit",
         "bank_provision_expense"
       ],
-      "cash_ending_reported_ytd": null,
+      "cash_ending_reported_ytd": 98166725,
       "cashflow_source_reconciliation": {
         "source_policy": "Only VietstockFinance catalog and linked PDF/ZIP; when later report supplies a visually confirmed comparative restatement, retain it as a traceable reference",
         "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
@@ -897,6 +1018,9 @@
         "capital_expenditure",
         "capital_expenditure_ytd",
         "cash_beginning",
+        "cash_beginning_reported_ytd",
+        "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
         "financing_cash_flow",
         "financing_cash_flow_ytd",
@@ -918,11 +1042,11 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/MBB/vietstock-mbb-20261019/e22d0b238691da5e.pdf",
       "financial_line_items_updated_at": "2026-10-28T15:34:13+00:00",
-      "financial_line_items_note": "Đã đối chiếu lại kết quả kinh doanh Q3 và lưu chuyển tiền tệ từ PDF trang 6–8. Dòng tiền lũy kế và theo quý được tách riêng; CAPEX không còn bị nhầm với tổng luồng tiền đầu tư. Các giá trị chi tiết vẫn chờ rà soát trực quan và chưa được đánh dấu xác minh cuối cùng. Dữ liệu tab Kết quả kinh doanh đã chuẩn hóa dấu chi phí thuế theo dòng báo cáo; tab Lưu chuyển tiền tệ bổ sung dòng cổ tức đã trả riêng quý từ dòng lũy kế trên PDF trang 8. Các chỉ tiêu chi tiết vẫn mang trạng thái chờ rà soát trực quan. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. NORMALIZED CASH FLOW 2026-10-28: Q3/2024 PDF pages 7-8; page 8 visually checked: opening cash 109095118 (not OCR misread 409095118), closing cash 77542854; all bridges reconcile. Các trường LCTT đã được đăng ký rõ trong financial_line_items_extracted_fields để tab LCTT không ẩn dữ liệu đã có bằng chứng nguồn. Trạng thái rà soát trực quan vẫn giữ riêng; không coi việc đưa vào danh sách trường là xác minh thủ công toàn bộ. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý.",
-      "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
-      "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
-      "financing_cash_flow_calculation": "current YTD minus previous quarter YTD",
-      "net_cash_change_calculation": "current YTD minus previous quarter YTD",
+      "financial_line_items_note": "Đã đối chiếu lại kết quả kinh doanh Q3 và lưu chuyển tiền tệ từ PDF trang 6–8. Dòng tiền lũy kế và theo quý được tách riêng; CAPEX không còn bị nhầm với tổng luồng tiền đầu tư. Các giá trị chi tiết vẫn chờ rà soát trực quan và chưa được đánh dấu xác minh cuối cùng. Dữ liệu tab Kết quả kinh doanh đã chuẩn hóa dấu chi phí thuế theo dòng báo cáo; tab Lưu chuyển tiền tệ bổ sung dòng cổ tức đã trả riêng quý từ dòng lũy kế trên PDF trang 8. Các chỉ tiêu chi tiết vẫn mang trạng thái chờ rà soát trực quan. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. NORMALIZED CASH FLOW 2026-10-28: Q3/2024 PDF pages 7-8; page 8 visually checked: opening cash 109095118 (not OCR misread 409095118), closing cash 77542854; all bridges reconcile. Các trường LCTT đã được đăng ký rõ trong financial_line_items_extracted_fields để tab LCTT không ẩn dữ liệu đã có bằng chứng nguồn. Trạng thái rà soát trực quan vẫn giữ riêng; không coi việc đưa vào danh sách trường là xác minh thủ công toàn bộ. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. CASHFLOW REGRESSION REPAIR 2026-10-29: restored source-reconciled cash-flow fields and audit metadata from prior validated snapshot commit 694989992688 after OCR/enrichment commit 8367764 overwrote some cash-flow-only fields with blanks. Non-cash fields from the newer snapshot are retained. Re-run cash-flow regression before further enrichment.",
+      "operating_cash_flow_calculation": "Quý riêng = số lũy kế 2024 kỳ hiện tại trừ số lũy kế quý liền trước trong cùng năm; đối chiếu trong cashflow_source_reconciliation.",
+      "investing_cash_flow_calculation": "Quý riêng = số lũy kế 2024 kỳ hiện tại trừ số lũy kế quý liền trước trong cùng năm; đối chiếu trong cashflow_source_reconciliation.",
+      "financing_cash_flow_calculation": "Quý riêng = số lũy kế 2024 kỳ hiện tại trừ số lũy kế quý liền trước trong cùng năm; đối chiếu trong cashflow_source_reconciliation.",
+      "net_cash_change_calculation": "Quý riêng = số lũy kế 2024 kỳ hiện tại trừ số lũy kế quý liền trước trong cùng năm; đối chiếu trong cashflow_source_reconciliation.",
       "financial_line_items_prior_values": {
         "income_tax": -1461593,
         "bank_provision_expense": -1639970,
@@ -967,7 +1091,7 @@
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "0361cf1fdeea0d024ebf638c21eb30dc7602dd1fc4bb220dd575dbe7d162e91a",
       "core_financial_extraction_evidence_attempt_count": 0,
-      "cash_beginning_calculation": "Số dư tiền đầu quý bằng tiền cuối quý liền trước.",
+      "cash_beginning_calculation": "Số dư đầu quý = số dư cuối quý trước; khi đối chiếu với cột so sánh YTD khác nguồn, giữ riêng chênh lệch liên kỳ và không ép số.",
       "financial_line_items_value_corrections": {
         "bank_provision_expense": {
           "previous_value": 8947866,
@@ -1065,9 +1189,19 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "cash_beginning_reported_ytd": {
-          "previous_value": 109095118,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": 409095118,
+          "new_value": 109095118,
+          "reason": "MBB 2024-Q3: source normalization. Q3/2024 PDF pages 7-8; page 8 visually checked: opening cash 109095118 (not OCR misread 409095118), closing cash 77542854; all bridges reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": {
+            "previous_value": 109095118,
+            "new_value": null,
+            "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          }
         },
         "dividends_paid": {
           "previous_value": 0,
@@ -1080,9 +1214,15 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "cash_ending_reported_ytd": {
-          "previous_value": 77542854,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 77542854,
+          "reason": "MBB 2024-Q3: source normalization. Q3/2024 PDF pages 7-8; page 8 visually checked: opening cash 109095118 (not OCR misread 409095118), closing cash 77542854; all bridges reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "cash_ending": {
           "previous_value": null,
@@ -1096,7 +1236,7 @@
           "prior_correction_record": null
         }
       },
-      "cash_beginning_reported_ytd": 409095118,
+      "cash_beginning_reported_ytd": 109095118,
       "bank_deposits_and_loans_to_credit_institutions": 77398096,
       "operating_cash_flow_ytd": -33990645,
       "operating_cash_flow": -20490106,
@@ -1124,7 +1264,7 @@
       "dividends_paid": null,
       "capital_expenditure_calculation": "current YTD minus previous quarter YTD",
       "financial_line_items_cash_check": "opening/closing cash hidden because the cash bridge did not reconcile",
-      "cash_ending_reported_ytd": null,
+      "cash_ending_reported_ytd": 77542854,
       "cashflow_source_reconciliation": {
         "source_policy": "Only VietstockFinance catalog and linked PDF/ZIP; when later report supplies a visually confirmed comparative restatement, retain it as a traceable reference",
         "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
@@ -1175,7 +1315,8 @@
       "cash_ending_calculation": "Lấy từ dòng tiền và các khoản tương đương tiền cuối kỳ trên PDF LCTT VietstockFinance, không suy ngược nếu nguồn có dòng số dư.",
       "cash_beginning_reported_ytd_calculation": "Số dư đầu kỳ lũy kế lấy từ cột đầu kỳ báo cáo VietstockFinance; nguồn so sánh cập nhật được ghi trong cashflow_source_reconciliation.",
       "cash_ending_reported_ytd_calculation": "Số dư cuối kỳ lũy kế lấy từ dòng tiền và tương đương tiền cuối kỳ trên PDF LCTT VietstockFinance.",
-      "cash_beginning": 98166725
+      "cash_beginning": 98166725,
+      "cash_ending": 77542854
     },
     {
       "symbol": "MBB",
@@ -1225,7 +1366,7 @@
       "bank_valuable_papers": 128964033,
       "bank_funding_and_trust_liabilities": 2793453,
       "bank_other_liabilities": 47312101,
-      "operating_cash_flow_ytd": 68529262,
+      "operating_cash_flow_ytd": -18576384,
       "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
         "bank_cash_on_hand",
@@ -1244,10 +1385,18 @@
         "bank_trading_securities",
         "bank_valuable_papers",
         "cash_beginning",
+        "cash_beginning_reported_ytd",
         "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
         "fixed_assets",
         "income_tax",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
         "operating_cash_flow",
         "operating_cash_flow_ytd",
         "retained_earnings"
@@ -1255,9 +1404,9 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/MBB/vietstock-mbb-20261019/6109b2b93c0a8cc9.pdf",
       "financial_line_items_updated_at": "2026-10-28T15:34:13+00:00",
-      "financial_line_items_note": "Đã bổ sung các dòng kết quả kinh doanh quý IV theo cột phát sinh quý IV (không dùng số lũy kế năm). Đã sửa nhầm lẫn CAPEX với dòng tiền đầu tư thuần và sửa số tiền cuối kỳ bị đọc nhầm sang dòng tăng vốn. Các chi tiết vẫn chờ rà soát trực quan cuối cùng. Dữ liệu tab Kết quả kinh doanh đã chuẩn hóa dấu chi phí thuế theo dòng báo cáo; tab Lưu chuyển tiền tệ bổ sung dòng cổ tức đã trả riêng quý từ dòng lũy kế trên PDF trang 8. Các chỉ tiêu chi tiết vẫn mang trạng thái chờ rà soát trực quan. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. NORMALIZED CASH FLOW 2026-10-28: For FY2024 use the later comparative column in VietstockFinance Q4/2025 report PDF pages 7-8 (visually checked): CFO -18576384, investing -2238209, financing 8759748, net change -12054845, opening cash 109095118, closing cash 97040273. Q4 standalone = later FY comparatives minus Q3/2024 YTD. Original Q4/2024 report reclassified CFO/financing differently but net change and cash balances were same; preserve provenance in source reconciliation. Các trường LCTT đã được đăng ký rõ trong financial_line_items_extracted_fields để tab LCTT không ẩn dữ liệu đã có bằng chứng nguồn. Trạng thái rà soát trực quan vẫn giữ riêng; không coi việc đưa vào danh sách trường là xác minh thủ công toàn bộ.",
-      "operating_cash_flow": 102519907,
-      "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "financial_line_items_note": "Đã bổ sung các dòng kết quả kinh doanh quý IV theo cột phát sinh quý IV (không dùng số lũy kế năm). Đã sửa nhầm lẫn CAPEX với dòng tiền đầu tư thuần và sửa số tiền cuối kỳ bị đọc nhầm sang dòng tăng vốn. Các chi tiết vẫn chờ rà soát trực quan cuối cùng. Dữ liệu tab Kết quả kinh doanh đã chuẩn hóa dấu chi phí thuế theo dòng báo cáo; tab Lưu chuyển tiền tệ bổ sung dòng cổ tức đã trả riêng quý từ dòng lũy kế trên PDF trang 8. Các chỉ tiêu chi tiết vẫn mang trạng thái chờ rà soát trực quan. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. NORMALIZED CASH FLOW 2026-10-28: For FY2024 use the later comparative column in VietstockFinance Q4/2025 report PDF pages 7-8 (visually checked): CFO -18576384, investing -2238209, financing 8759748, net change -12054845, opening cash 109095118, closing cash 97040273. Q4 standalone = later FY comparatives minus Q3/2024 YTD. Original Q4/2024 report reclassified CFO/financing differently but net change and cash balances were same; preserve provenance in source reconciliation. Các trường LCTT đã được đăng ký rõ trong financial_line_items_extracted_fields để tab LCTT không ẩn dữ liệu đã có bằng chứng nguồn. Trạng thái rà soát trực quan vẫn giữ riêng; không coi việc đưa vào danh sách trường là xác minh thủ công toàn bộ. CASHFLOW REGRESSION REPAIR 2026-10-29: restored source-reconciled cash-flow fields and audit metadata from prior validated snapshot commit 694989992688 after OCR/enrichment commit 8367764 overwrote some cash-flow-only fields with blanks. Non-cash fields from the newer snapshot are retained. Re-run cash-flow regression before further enrichment.",
+      "operating_cash_flow": 15414261,
+      "operating_cash_flow_calculation": "Quý riêng = số lũy kế 2024 kỳ hiện tại trừ số lũy kế quý liền trước trong cùng năm; đối chiếu trong cashflow_source_reconciliation.",
       "financial_line_items_prior_values": {
         "operating_cash_flow_ytd": 68529262,
         "income_tax": 1711498,
@@ -1306,9 +1455,19 @@
       "core_financial_extraction_evidence_attempt_count": 0,
       "financial_line_items_value_corrections": {
         "operating_cash_flow_ytd": {
-          "previous_value": -18576384,
-          "new_value": 68529262,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": 68529262,
+          "new_value": -18576384,
+          "reason": "MBB 2024-Q4: source normalization. For FY2024 use the later comparative column in VietstockFinance Q4/2025 report PDF pages 7-8 (visually checked): CFO -18576384, investing -2238209, financing 8759748, net change -12054845, opening cash 109095118, closing cash 97040273. Q4 standalone = later FY comparatives minus Q3/2024 YTD. Original Q4/2024 report reclassified CFO/financing differently but net change and cash balances were same; preserve provenance in source reconciliation.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": {
+            "previous_value": -17936055,
+            "new_value": 68529262,
+            "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          }
         },
         "income_tax": {
           "previous_value": 1711498,
@@ -1406,19 +1565,49 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "operating_cash_flow": {
-          "previous_value": 15414261,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": 102519907,
+          "new_value": 15414261,
+          "reason": "MBB 2024-Q4: source normalization. For FY2024 use the later comparative column in VietstockFinance Q4/2025 report PDF pages 7-8 (visually checked): CFO -18576384, investing -2238209, financing 8759748, net change -12054845, opening cash 109095118, closing cash 97040273. Q4 standalone = later FY comparatives minus Q3/2024 YTD. Original Q4/2024 report reclassified CFO/financing differently but net change and cash balances were same; preserve provenance in source reconciliation.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": {
+            "previous_value": 102519907,
+            "new_value": null,
+            "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          }
         },
         "investing_cash_flow_ytd": {
-          "previous_value": -2238209,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": -2238209,
+          "reason": "MBB 2024-Q4: source normalization. For FY2024 use the later comparative column in VietstockFinance Q4/2025 report PDF pages 7-8 (visually checked): CFO -18576384, investing -2238209, financing 8759748, net change -12054845, opening cash 109095118, closing cash 97040273. Q4 standalone = later FY comparatives minus Q3/2024 YTD. Original Q4/2024 report reclassified CFO/financing differently but net change and cash balances were same; preserve provenance in source reconciliation.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": {
+            "previous_value": -2238209,
+            "new_value": null,
+            "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          }
         },
         "investing_cash_flow": {
-          "previous_value": -909022,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": -909022,
+          "reason": "MBB 2024-Q4: source normalization. For FY2024 use the later comparative column in VietstockFinance Q4/2025 report PDF pages 7-8 (visually checked): CFO -18576384, investing -2238209, financing 8759748, net change -12054845, opening cash 109095118, closing cash 97040273. Q4 standalone = later FY comparatives minus Q3/2024 YTD. Original Q4/2024 report reclassified CFO/financing differently but net change and cash balances were same; preserve provenance in source reconciliation.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": {
+            "previous_value": -909022,
+            "new_value": null,
+            "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          }
         },
         "capital_expenditure_ytd": {
           "previous_value": -2301696,
@@ -1431,34 +1620,94 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "financing_cash_flow_ytd": {
-          "previous_value": 8759748,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 8759748,
+          "reason": "MBB 2024-Q4: source normalization. For FY2024 use the later comparative column in VietstockFinance Q4/2025 report PDF pages 7-8 (visually checked): CFO -18576384, investing -2238209, financing 8759748, net change -12054845, opening cash 109095118, closing cash 97040273. Q4 standalone = later FY comparatives minus Q3/2024 YTD. Original Q4/2024 report reclassified CFO/financing differently but net change and cash balances were same; preserve provenance in source reconciliation.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": {
+            "previous_value": 8119419,
+            "new_value": null,
+            "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          }
         },
         "financing_cash_flow": {
-          "previous_value": 4992180,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 4992180,
+          "reason": "MBB 2024-Q4: source normalization. For FY2024 use the later comparative column in VietstockFinance Q4/2025 report PDF pages 7-8 (visually checked): CFO -18576384, investing -2238209, financing 8759748, net change -12054845, opening cash 109095118, closing cash 97040273. Q4 standalone = later FY comparatives minus Q3/2024 YTD. Original Q4/2024 report reclassified CFO/financing differently but net change and cash balances were same; preserve provenance in source reconciliation.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": {
+            "previous_value": 4351851,
+            "new_value": null,
+            "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          }
         },
         "net_cash_change_ytd": {
-          "previous_value": -12054845,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": -12054845,
+          "reason": "MBB 2024-Q4: source normalization. For FY2024 use the later comparative column in VietstockFinance Q4/2025 report PDF pages 7-8 (visually checked): CFO -18576384, investing -2238209, financing 8759748, net change -12054845, opening cash 109095118, closing cash 97040273. Q4 standalone = later FY comparatives minus Q3/2024 YTD. Original Q4/2024 report reclassified CFO/financing differently but net change and cash balances were same; preserve provenance in source reconciliation.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": {
+            "previous_value": -12054845,
+            "new_value": null,
+            "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          }
         },
         "net_cash_change": {
-          "previous_value": 19497419,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 19497419,
+          "reason": "MBB 2024-Q4: source normalization. For FY2024 use the later comparative column in VietstockFinance Q4/2025 report PDF pages 7-8 (visually checked): CFO -18576384, investing -2238209, financing 8759748, net change -12054845, opening cash 109095118, closing cash 97040273. Q4 standalone = later FY comparatives minus Q3/2024 YTD. Original Q4/2024 report reclassified CFO/financing differently but net change and cash balances were same; preserve provenance in source reconciliation.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": {
+            "previous_value": 19497419,
+            "new_value": null,
+            "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          }
         },
         "cash_ending": {
-          "previous_value": 97040273,
-          "new_value": 1357407,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": 1357407,
+          "new_value": 97040273,
+          "reason": "MBB 2024-Q4: source normalization. For FY2024 use the later comparative column in VietstockFinance Q4/2025 report PDF pages 7-8 (visually checked): CFO -18576384, investing -2238209, financing 8759748, net change -12054845, opening cash 109095118, closing cash 97040273. Q4 standalone = later FY comparatives minus Q3/2024 YTD. Original Q4/2024 report reclassified CFO/financing differently but net change and cash balances were same; preserve provenance in source reconciliation.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": {
+            "previous_value": 97040273,
+            "new_value": 1357407,
+            "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          }
         },
         "cash_beginning_reported_ytd": {
-          "previous_value": 109095118,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": 77542854,
+          "new_value": 109095118,
+          "reason": "MBB 2024-Q4: source normalization. For FY2024 use the later comparative column in VietstockFinance Q4/2025 report PDF pages 7-8 (visually checked): CFO -18576384, investing -2238209, financing 8759748, net change -12054845, opening cash 109095118, closing cash 97040273. Q4 standalone = later FY comparatives minus Q3/2024 YTD. Original Q4/2024 report reclassified CFO/financing differently but net change and cash balances were same; preserve provenance in source reconciliation.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": {
+            "previous_value": 109095118,
+            "new_value": null,
+            "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          }
         },
         "dividends_paid": {
           "previous_value": 0,
@@ -1481,15 +1730,21 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "cash_ending_reported_ytd": {
-          "previous_value": 97040273,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 97040273,
+          "reason": "MBB 2024-Q4: source normalization. For FY2024 use the later comparative column in VietstockFinance Q4/2025 report PDF pages 7-8 (visually checked): CFO -18576384, investing -2238209, financing 8759748, net change -12054845, opening cash 109095118, closing cash 97040273. Q4 standalone = later FY comparatives minus Q3/2024 YTD. Original Q4/2024 report reclassified CFO/financing differently but net change and cash balances were same; preserve provenance in source reconciliation.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         }
       },
-      "cash_ending": 1357407,
+      "cash_ending": 97040273,
       "cash_beginning": 77542854,
-      "cash_beginning_calculation": "previous quarter closing cash",
-      "cash_beginning_reported_ytd": null,
+      "cash_beginning_calculation": "Số dư đầu quý = số dư cuối quý trước; khi đối chiếu với cột so sánh YTD khác nguồn, giữ riêng chênh lệch liên kỳ và không ép số.",
+      "cash_beginning_reported_ytd": 109095118,
       "bank_deposits_and_loans_to_credit_institutions": 76785622,
       "revenue": null,
       "bank_interest_income": null,
@@ -1508,14 +1763,14 @@
       "bank_provision_expense": null,
       "income_tax_current": null,
       "income_tax_deferred": null,
-      "investing_cash_flow_ytd": null,
-      "investing_cash_flow": null,
+      "investing_cash_flow_ytd": -2238209,
+      "investing_cash_flow": -909022,
       "capital_expenditure_ytd": null,
       "capital_expenditure": null,
-      "financing_cash_flow_ytd": null,
-      "financing_cash_flow": null,
-      "net_cash_change_ytd": null,
-      "net_cash_change": null,
+      "financing_cash_flow_ytd": 8759748,
+      "financing_cash_flow": 4992180,
+      "net_cash_change_ytd": -12054845,
+      "net_cash_change": 19497419,
       "financial_line_items_rejected_fields": [],
       "financial_line_items_page_extraction": {
         "source": "VietstockFinance consolidated PDF",
@@ -1533,7 +1788,7 @@
       "dividends_paid": null,
       "bank_non_controlling_profit": 97468,
       "bank_non_controlling_profit_calculation": "Lợi nhuận cổ đông không kiểm soát = lợi nhuận sau thuế hợp nhất − lợi nhuận sau thuế thuộc cổ đông ngân hàng mẹ.",
-      "cash_ending_reported_ytd": null,
+      "cash_ending_reported_ytd": 97040273,
       "cashflow_source_reconciliation": {
         "source_policy": "Only VietstockFinance catalog and linked PDF/ZIP; when later report supplies a visually confirmed comparative restatement, retain it as a traceable reference",
         "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
@@ -1643,7 +1898,7 @@
       "bank_customer_deposits": 722622450,
       "bank_valuable_papers": 146597114,
       "bank_other_liabilities": 45981764,
-      "operating_cash_flow_ytd": 18186686,
+      "operating_cash_flow_ytd": -26075011,
       "investing_cash_flow_ytd": -176955,
       "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
@@ -1661,11 +1916,18 @@
         "capital_expenditure",
         "capital_expenditure_ytd",
         "cash_beginning",
+        "cash_beginning_reported_ytd",
+        "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
         "fixed_assets",
         "income_tax",
         "investing_cash_flow",
         "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
         "operating_cash_flow",
         "operating_cash_flow_ytd",
         "retained_earnings"
@@ -1673,11 +1935,11 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/MBB/manual-mbb-smoke-20261018/09421ed8d0d7a6dd.pdf",
       "financial_line_items_updated_at": "2026-10-28T15:34:13+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. NORMALIZED CASH FLOW 2026-10-28: Q1/2025 own report PDF pages 7-8; current-year cash balances and total cash change visually reconciled. Các trường LCTT đã được đăng ký rõ trong financial_line_items_extracted_fields để tab LCTT không ẩn dữ liệu đã có bằng chứng nguồn. Trạng thái rà soát trực quan vẫn giữ riêng; không coi việc đưa vào danh sách trường là xác minh thủ công toàn bộ.",
-      "operating_cash_flow": 18186686,
-      "operating_cash_flow_calculation": "Q1 equals YTD Q1",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. NORMALIZED CASH FLOW 2026-10-28: Q1/2025 own report PDF pages 7-8; current-year cash balances and total cash change visually reconciled. Các trường LCTT đã được đăng ký rõ trong financial_line_items_extracted_fields để tab LCTT không ẩn dữ liệu đã có bằng chứng nguồn. Trạng thái rà soát trực quan vẫn giữ riêng; không coi việc đưa vào danh sách trường là xác minh thủ công toàn bộ. CASHFLOW REGRESSION REPAIR 2026-10-29: restored source-reconciled cash-flow fields and audit metadata from prior validated snapshot commit 694989992688 after OCR/enrichment commit 8367764 overwrote some cash-flow-only fields with blanks. Non-cash fields from the newer snapshot are retained. Re-run cash-flow regression before further enrichment.",
+      "operating_cash_flow": -26075011,
+      "operating_cash_flow_calculation": "Q1 bằng số lũy kế Q1 theo báo cáo VietstockFinance.",
       "investing_cash_flow": -176955,
-      "investing_cash_flow_calculation": "Q1 equals YTD Q1",
+      "investing_cash_flow_calculation": "Q1 bằng số lũy kế Q1 theo báo cáo VietstockFinance.",
       "financial_line_items_prior_values": {
         "operating_cash_flow_ytd": 7431718,
         "income_tax": 1711446,
@@ -1708,9 +1970,19 @@
       "core_financial_extraction_evidence_attempt_count": 0,
       "financial_line_items_value_corrections": {
         "operating_cash_flow_ytd": {
-          "previous_value": -26075011,
-          "new_value": 18186686,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": 18186686,
+          "new_value": -26075011,
+          "reason": "MBB 2025-Q1: source normalization. Q1/2025 own report PDF pages 7-8; current-year cash balances and total cash change visually reconciled.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": {
+            "previous_value": 7431718,
+            "new_value": 18186686,
+            "reason": "Reparsed from net operating cash flow after changes in operating assets and liabilities, not the subtotal before working-capital changes."
+          }
         },
         "income_tax": {
           "previous_value": 1711446,
@@ -1748,9 +2020,19 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "operating_cash_flow": {
-          "previous_value": -26075011,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": 18186686,
+          "new_value": -26075011,
+          "reason": "MBB 2025-Q1: source normalization. Q1/2025 own report PDF pages 7-8; current-year cash balances and total cash change visually reconciled.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": {
+            "previous_value": 18186686,
+            "new_value": null,
+            "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          }
         },
         "bank_non_controlling_profit": {
           "previous_value": 107139,
@@ -1758,44 +2040,96 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "cash_beginning": {
-          "previous_value": 97040275,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": 1357407,
+          "new_value": 97040275,
+          "reason": "MBB 2025-Q1: source normalization. Q1/2025 own report PDF pages 7-8; current-year cash balances and total cash change visually reconciled.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": {
+            "previous_value": 1357407,
+            "new_value": null,
+            "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          }
         },
         "financing_cash_flow_ytd": {
-          "previous_value": 2198563,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 2198563,
+          "reason": "MBB 2025-Q1: source normalization. Q1/2025 own report PDF pages 7-8; current-year cash balances and total cash change visually reconciled.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "net_cash_change_ytd": {
-          "previous_value": -24053403,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": -24053403,
+          "reason": "MBB 2025-Q1: source normalization. Q1/2025 own report PDF pages 7-8; current-year cash balances and total cash change visually reconciled.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "cash_beginning_reported_ytd": {
-          "previous_value": 97040275,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 97040275,
+          "reason": "MBB 2025-Q1: source normalization. Q1/2025 own report PDF pages 7-8; current-year cash balances and total cash change visually reconciled.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "cash_ending_reported_ytd": {
-          "previous_value": 72986872,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 72986872,
+          "reason": "MBB 2025-Q1: source normalization. Q1/2025 own report PDF pages 7-8; current-year cash balances and total cash change visually reconciled.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "financing_cash_flow": {
-          "previous_value": 2198563,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 2198563,
+          "reason": "MBB 2025-Q1: source normalization. Q1/2025 own report PDF pages 7-8; current-year cash balances and total cash change visually reconciled.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "net_cash_change": {
-          "previous_value": -24053403,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": -24053403,
+          "reason": "MBB 2025-Q1: source normalization. Q1/2025 own report PDF pages 7-8; current-year cash balances and total cash change visually reconciled.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "cash_ending": {
-          "previous_value": 72986872,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 72986872,
+          "reason": "MBB 2025-Q1: source normalization. Q1/2025 own report PDF pages 7-8; current-year cash balances and total cash change visually reconciled.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         }
       },
       "bank_deposits_and_loans_to_credit_institutions": 64338554,
@@ -1804,15 +2138,15 @@
       "capital_expenditure_calculation": "Q1 equals YTD Q1",
       "bank_non_controlling_profit": 107139,
       "bank_non_controlling_profit_calculation": "Lợi nhuận cổ đông không kiểm soát = lợi nhuận sau thuế hợp nhất − lợi nhuận sau thuế thuộc cổ đông ngân hàng mẹ.",
-      "cash_beginning": 1357407,
-      "cash_beginning_calculation": "Số dư tiền đầu quý I lấy từ dòng tiền và tương đương tiền đầu kỳ trên BCTC VietstockFinance.",
-      "financing_cash_flow_ytd": null,
-      "net_cash_change_ytd": null,
-      "cash_beginning_reported_ytd": null,
-      "cash_ending_reported_ytd": null,
-      "financing_cash_flow": null,
-      "net_cash_change": null,
-      "cash_ending": null,
+      "cash_beginning": 97040275,
+      "cash_beginning_calculation": "Số dư đầu kỳ Q1 lấy theo dòng tiền và tương đương tiền đầu kỳ trong BCTC VietstockFinance.",
+      "financing_cash_flow_ytd": 2198563,
+      "net_cash_change_ytd": -24053403,
+      "cash_beginning_reported_ytd": 97040275,
+      "cash_ending_reported_ytd": 72986872,
+      "financing_cash_flow": 2198563,
+      "net_cash_change": -24053403,
+      "cash_ending": 72986872,
       "cashflow_source_reconciliation": {
         "source_policy": "Only VietstockFinance catalog and linked PDF/ZIP; when later report supplies a visually confirmed comparative restatement, retain it as a traceable reference",
         "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
@@ -1939,8 +2273,9 @@
         "status": "ACCEPTED_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT",
         "note": "Q1 statement and Q1/2026 comparative agree internally, while later FY2024 comparison in Q4/2025 reports a 2-million lower opening balance. No balancing amount is invented. Residual is stored in snapshot units (triệu VND): +2 means +2 million VND, not +2,000,000 million VND.",
         "units": "triệu VND",
-        "relative_difference_percent": 2.0609999301836272e-06
-      }
+        "relative_difference_percent": 0.0000020609999301836272
+      },
+      "financial_line_items_rejected_fields": []
     },
     {
       "symbol": "MBB",
@@ -1990,8 +2325,8 @@
       "bank_valuable_papers": 170267177,
       "bank_funding_and_trust_liabilities": 3282236,
       "bank_other_liabilities": 52331480,
-      "operating_cash_flow_ytd": 1516538,
-      "investing_cash_flow_ytd": -473822,
+      "operating_cash_flow_ytd": 1516540,
+      "investing_cash_flow_ytd": -400976,
       "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
         "bank_cash_on_hand",
@@ -2011,11 +2346,19 @@
         "bank_valuable_papers",
         "capital_expenditure",
         "capital_expenditure_ytd",
+        "cash_beginning",
+        "cash_beginning_reported_ytd",
+        "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
         "fixed_assets",
         "income_tax",
         "investing_cash_flow",
         "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
         "operating_cash_flow",
         "operating_cash_flow_ytd",
         "retained_earnings"
@@ -2023,11 +2366,11 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/MBB/manual-mbb-smoke-20261018/e9330c616739ff01.pdf",
       "financial_line_items_updated_at": "2026-10-28T15:34:13+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. NORMALIZED CASH FLOW 2026-10-28: Use latest comparative column in VietstockFinance Q2/2026 report PDF pages 7-8 (visually checked): H1/2025 CFO 1516540, investing -400976, financing 5698563, net 6814127, opening cash 97040273, closing cash 103854400. Q2 standalone flows = revised H1 YTD minus Q1/2025 own-report YTD. YTD cash bridge and flow components reconcile, but cross-quarter cash balance bridge has -2 million VND residual; keep source numbers, do not plug. Các trường LCTT đã được đăng ký rõ trong financial_line_items_extracted_fields để tab LCTT không ẩn dữ liệu đã có bằng chứng nguồn. Trạng thái rà soát trực quan vẫn giữ riêng; không coi việc đưa vào danh sách trường là xác minh thủ công toàn bộ.",
-      "operating_cash_flow": -16670148,
-      "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
-      "investing_cash_flow": -296867,
-      "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. NORMALIZED CASH FLOW 2026-10-28: Use latest comparative column in VietstockFinance Q2/2026 report PDF pages 7-8 (visually checked): H1/2025 CFO 1516540, investing -400976, financing 5698563, net 6814127, opening cash 97040273, closing cash 103854400. Q2 standalone flows = revised H1 YTD minus Q1/2025 own-report YTD. YTD cash bridge and flow components reconcile, but cross-quarter cash balance bridge has -2 million VND residual; keep source numbers, do not plug. Các trường LCTT đã được đăng ký rõ trong financial_line_items_extracted_fields để tab LCTT không ẩn dữ liệu đã có bằng chứng nguồn. Trạng thái rà soát trực quan vẫn giữ riêng; không coi việc đưa vào danh sách trường là xác minh thủ công toàn bộ. CASHFLOW REGRESSION REPAIR 2026-10-29: restored source-reconciled cash-flow fields and audit metadata from prior validated snapshot commit 694989992688 after OCR/enrichment commit 8367764 overwrote some cash-flow-only fields with blanks. Non-cash fields from the newer snapshot are retained. Re-run cash-flow regression before further enrichment.",
+      "operating_cash_flow": 27591551,
+      "operating_cash_flow_calculation": "Quý riêng = số lũy kế 2025 kỳ hiện tại trừ số lũy kế quý liền trước trong cùng năm; đối chiếu trong cashflow_source_reconciliation.",
+      "investing_cash_flow": -224021,
+      "investing_cash_flow_calculation": "Quý riêng = số lũy kế 2025 kỳ hiện tại trừ số lũy kế quý liền trước trong cùng năm; đối chiếu trong cashflow_source_reconciliation.",
       "financial_line_items_prior_values": {
         "operating_cash_flow_ytd": 48756066,
         "income_tax": 1498285,
@@ -2056,9 +2399,19 @@
       "core_financial_extraction_evidence_attempt_count": 0,
       "financial_line_items_value_corrections": {
         "operating_cash_flow_ytd": {
-          "previous_value": 1516540,
-          "new_value": 1516538,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": 1516538,
+          "new_value": 1516540,
+          "reason": "MBB 2025-Q2: source normalization. Use latest comparative column in VietstockFinance Q2/2026 report PDF pages 7-8 (visually checked): H1/2025 CFO 1516540, investing -400976, financing 5698563, net 6814127, opening cash 97040273, closing cash 103854400. Q2 standalone flows = revised H1 YTD minus Q1/2025 own-report YTD. YTD cash bridge and flow components reconcile, but cross-quarter cash balance bridge has -2 million VND residual; keep source numbers, do not plug.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": {
+            "previous_value": 48756066,
+            "new_value": 1516538,
+            "reason": "Reparsed from net operating cash flow after changes in operating assets and liabilities, not the subtotal before working-capital changes."
+          }
         },
         "income_tax": {
           "previous_value": 1498285,
@@ -2076,14 +2429,34 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "investing_cash_flow": {
-          "previous_value": -224021,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": -296867,
+          "new_value": -224021,
+          "reason": "MBB 2025-Q2: source normalization. Use latest comparative column in VietstockFinance Q2/2026 report PDF pages 7-8 (visually checked): H1/2025 CFO 1516540, investing -400976, financing 5698563, net 6814127, opening cash 97040273, closing cash 103854400. Q2 standalone flows = revised H1 YTD minus Q1/2025 own-report YTD. YTD cash bridge and flow components reconcile, but cross-quarter cash balance bridge has -2 million VND residual; keep source numbers, do not plug.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": {
+            "previous_value": -296867,
+            "new_value": null,
+            "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          }
         },
         "operating_cash_flow": {
-          "previous_value": 27591551,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": -16670148,
+          "new_value": 27591551,
+          "reason": "MBB 2025-Q2: source normalization. Use latest comparative column in VietstockFinance Q2/2026 report PDF pages 7-8 (visually checked): H1/2025 CFO 1516540, investing -400976, financing 5698563, net 6814127, opening cash 97040273, closing cash 103854400. Q2 standalone flows = revised H1 YTD minus Q1/2025 own-report YTD. YTD cash bridge and flow components reconcile, but cross-quarter cash balance bridge has -2 million VND residual; keep source numbers, do not plug.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": {
+            "previous_value": -16670148,
+            "new_value": null,
+            "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          }
         },
         "bank_non_controlling_profit": {
           "previous_value": 127101,
@@ -2091,49 +2464,103 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "investing_cash_flow_ytd": {
-          "previous_value": -400976,
-          "new_value": -473822,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": -473822,
+          "new_value": -400976,
+          "reason": "MBB 2025-Q2: source normalization. Use latest comparative column in VietstockFinance Q2/2026 report PDF pages 7-8 (visually checked): H1/2025 CFO 1516540, investing -400976, financing 5698563, net 6814127, opening cash 97040273, closing cash 103854400. Q2 standalone flows = revised H1 YTD minus Q1/2025 own-report YTD. YTD cash bridge and flow components reconcile, but cross-quarter cash balance bridge has -2 million VND residual; keep source numbers, do not plug.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "financing_cash_flow_ytd": {
-          "previous_value": 5698563,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 5698563,
+          "reason": "MBB 2025-Q2: source normalization. Use latest comparative column in VietstockFinance Q2/2026 report PDF pages 7-8 (visually checked): H1/2025 CFO 1516540, investing -400976, financing 5698563, net 6814127, opening cash 97040273, closing cash 103854400. Q2 standalone flows = revised H1 YTD minus Q1/2025 own-report YTD. YTD cash bridge and flow components reconcile, but cross-quarter cash balance bridge has -2 million VND residual; keep source numbers, do not plug.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "net_cash_change_ytd": {
-          "previous_value": 6814127,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 6814127,
+          "reason": "MBB 2025-Q2: source normalization. Use latest comparative column in VietstockFinance Q2/2026 report PDF pages 7-8 (visually checked): H1/2025 CFO 1516540, investing -400976, financing 5698563, net 6814127, opening cash 97040273, closing cash 103854400. Q2 standalone flows = revised H1 YTD minus Q1/2025 own-report YTD. YTD cash bridge and flow components reconcile, but cross-quarter cash balance bridge has -2 million VND residual; keep source numbers, do not plug.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "cash_beginning_reported_ytd": {
-          "previous_value": 97040273,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 97040273,
+          "reason": "MBB 2025-Q2: source normalization. Use latest comparative column in VietstockFinance Q2/2026 report PDF pages 7-8 (visually checked): H1/2025 CFO 1516540, investing -400976, financing 5698563, net 6814127, opening cash 97040273, closing cash 103854400. Q2 standalone flows = revised H1 YTD minus Q1/2025 own-report YTD. YTD cash bridge and flow components reconcile, but cross-quarter cash balance bridge has -2 million VND residual; keep source numbers, do not plug.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "cash_ending_reported_ytd": {
-          "previous_value": 103854400,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 103854400,
+          "reason": "MBB 2025-Q2: source normalization. Use latest comparative column in VietstockFinance Q2/2026 report PDF pages 7-8 (visually checked): H1/2025 CFO 1516540, investing -400976, financing 5698563, net 6814127, opening cash 97040273, closing cash 103854400. Q2 standalone flows = revised H1 YTD minus Q1/2025 own-report YTD. YTD cash bridge and flow components reconcile, but cross-quarter cash balance bridge has -2 million VND residual; keep source numbers, do not plug.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "financing_cash_flow": {
-          "previous_value": 3500000,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 3500000,
+          "reason": "MBB 2025-Q2: source normalization. Use latest comparative column in VietstockFinance Q2/2026 report PDF pages 7-8 (visually checked): H1/2025 CFO 1516540, investing -400976, financing 5698563, net 6814127, opening cash 97040273, closing cash 103854400. Q2 standalone flows = revised H1 YTD minus Q1/2025 own-report YTD. YTD cash bridge and flow components reconcile, but cross-quarter cash balance bridge has -2 million VND residual; keep source numbers, do not plug.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "net_cash_change": {
-          "previous_value": 30867530,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 30867530,
+          "reason": "MBB 2025-Q2: source normalization. Use latest comparative column in VietstockFinance Q2/2026 report PDF pages 7-8 (visually checked): H1/2025 CFO 1516540, investing -400976, financing 5698563, net 6814127, opening cash 97040273, closing cash 103854400. Q2 standalone flows = revised H1 YTD minus Q1/2025 own-report YTD. YTD cash bridge and flow components reconcile, but cross-quarter cash balance bridge has -2 million VND residual; keep source numbers, do not plug.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "cash_beginning": {
-          "previous_value": 72986872,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 72986872,
+          "reason": "MBB 2025-Q2: source normalization. Use latest comparative column in VietstockFinance Q2/2026 report PDF pages 7-8 (visually checked): H1/2025 CFO 1516540, investing -400976, financing 5698563, net 6814127, opening cash 97040273, closing cash 103854400. Q2 standalone flows = revised H1 YTD minus Q1/2025 own-report YTD. YTD cash bridge and flow components reconcile, but cross-quarter cash balance bridge has -2 million VND residual; keep source numbers, do not plug.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "cash_ending": {
-          "previous_value": 103854400,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 103854400,
+          "reason": "MBB 2025-Q2: source normalization. Use latest comparative column in VietstockFinance Q2/2026 report PDF pages 7-8 (visually checked): H1/2025 CFO 1516540, investing -400976, financing 5698563, net 6814127, opening cash 97040273, closing cash 103854400. Q2 standalone flows = revised H1 YTD minus Q1/2025 own-report YTD. YTD cash bridge and flow components reconcile, but cross-quarter cash balance bridge has -2 million VND residual; keep source numbers, do not plug.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         }
       },
       "bank_deposits_and_loans_to_credit_institutions": 96081337,
@@ -2142,14 +2569,14 @@
       "capital_expenditure_calculation": "current YTD minus previous quarter YTD",
       "bank_non_controlling_profit": 127101,
       "bank_non_controlling_profit_calculation": "Lợi nhuận cổ đông không kiểm soát = lợi nhuận sau thuế hợp nhất − lợi nhuận sau thuế thuộc cổ đông ngân hàng mẹ.",
-      "financing_cash_flow_ytd": null,
-      "net_cash_change_ytd": null,
-      "cash_beginning_reported_ytd": null,
-      "cash_ending_reported_ytd": null,
-      "financing_cash_flow": null,
-      "net_cash_change": null,
-      "cash_beginning": null,
-      "cash_ending": null,
+      "financing_cash_flow_ytd": 5698563,
+      "net_cash_change_ytd": 6814127,
+      "cash_beginning_reported_ytd": 97040273,
+      "cash_ending_reported_ytd": 103854400,
+      "financing_cash_flow": 3500000,
+      "net_cash_change": 30867530,
+      "cash_beginning": 72986872,
+      "cash_ending": 103854400,
       "cashflow_source_reconciliation": {
         "source_policy": "Only VietstockFinance catalog and linked PDF/ZIP; when later report supplies a visually confirmed comparative restatement, retain it as a traceable reference",
         "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
@@ -2230,7 +2657,7 @@
         "status": "ACCEPTED_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT",
         "notes": "Use latest comparative column in VietstockFinance Q2/2026 report PDF pages 7-8 (visually checked): H1/2025 CFO 1516540, investing -400976, financing 5698563, net 6814127, opening cash 97040273, closing cash 103854400. Q2 standalone flows = revised H1 YTD minus Q1/2025 own-report YTD. YTD cash bridge and flow components reconcile, but cross-quarter cash balance bridge has -2 million VND residual; keep source numbers, do not plug. Recheck 2026-10-28: the -2 million Q2 bridge residual is part of a connected cross-report opening-cash inconsistency: Q4/2025 comparative FY2024 close 97,040,273, Q1/2025 and its Q1/2026 comparator opening 97,040,275, while Q2/2026 H1/2025 comparator uses 97,040,273. The values are source-backed and visually checked; no balancing plug is permitted. Residual metadata is in triệu VND; +2 is 2 million VND. The -2 million VND quarter bridge residual and connected +2 million VND cross-quarter residual are accepted under the 0.01% relative tolerance rule added 2026-10-28; exact source values and residual metadata remain preserved, with no balancing plug.",
         "verified_at": "2026-10-28",
-        "relative_bridge_difference_percent": 1.925773005284321e-06
+        "relative_bridge_difference_percent": 0.000001925773005284321
       },
       "cashflow_balance_bridge_recovery": {
         "basis": "cross-report opening-cash discrepancy and Q2 standalone balance bridge, reconfirmed 2026-10-28",
@@ -2306,7 +2733,7 @@
         "status": "ACCEPTED_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT",
         "note": "Review must treat this as a connected Q4/2024 -> Q1/2025 -> H1/2025 comparability issue, not only a single Q2/2025 row residual. All bridge residuals are stored in snapshot units (triệu VND). The Q4/2024→Q1/2025 opening discontinuity is +2, not 2,000,000; the Q2/2025 standalone cash bridge residual is -2.",
         "units": "triệu VND",
-        "relative_difference_percent": 1.925773005284321e-06
+        "relative_difference_percent": 0.000001925773005284321
       },
       "financing_cash_flow_calculation": "Quý riêng = số lũy kế 2025 kỳ hiện tại trừ số lũy kế quý liền trước trong cùng năm; đối chiếu trong cashflow_source_reconciliation.",
       "net_cash_change_calculation": "Quý riêng = số lũy kế 2025 kỳ hiện tại trừ số lũy kế quý liền trước trong cùng năm; đối chiếu trong cashflow_source_reconciliation.",
@@ -2317,7 +2744,8 @@
       "cash_beginning_calculation": "Số dư đầu quý = số dư cuối quý trước; khi đối chiếu với cột so sánh YTD khác nguồn, giữ riêng chênh lệch liên kỳ và không ép số.",
       "cash_ending_calculation": "Lấy từ dòng tiền và các khoản tương đương tiền cuối kỳ trên PDF LCTT VietstockFinance, không suy ngược nếu nguồn có dòng số dư.",
       "cash_beginning_reported_ytd_calculation": "Số dư đầu kỳ lũy kế lấy từ cột đầu kỳ báo cáo VietstockFinance; nguồn so sánh cập nhật được ghi trong cashflow_source_reconciliation.",
-      "cash_ending_reported_ytd_calculation": "Số dư cuối kỳ lũy kế lấy từ dòng tiền và tương đương tiền cuối kỳ trên PDF LCTT VietstockFinance."
+      "cash_ending_reported_ytd_calculation": "Số dư cuối kỳ lũy kế lấy từ dòng tiền và tương đương tiền cuối kỳ trên PDF LCTT VietstockFinance.",
+      "financial_line_items_rejected_fields": []
     },
     {
       "symbol": "MBB",
@@ -2387,11 +2815,19 @@
         "bank_valuable_papers",
         "capital_expenditure",
         "capital_expenditure_ytd",
+        "cash_beginning",
+        "cash_beginning_reported_ytd",
+        "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
         "fixed_assets",
         "income_tax",
         "investing_cash_flow",
         "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
         "operating_cash_flow",
         "operating_cash_flow_ytd",
         "retained_earnings"
@@ -2399,9 +2835,9 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/MBB/manual-mbb-smoke-20261018/0526fe8620628e7c.pdf",
       "financial_line_items_updated_at": "2026-10-28T15:34:13+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. NORMALIZED CASH FLOW 2026-10-28: Q3/2025 own report YTD minus latest H1/2025 comparative from Q2/2026 report for standalone quarter; standalone flow total and cash bridge reconcile. Các trường LCTT đã được đăng ký rõ trong financial_line_items_extracted_fields để tab LCTT không ẩn dữ liệu đã có bằng chứng nguồn. Trạng thái rà soát trực quan vẫn giữ riêng; không coi việc đưa vào danh sách trường là xác minh thủ công toàn bộ.",
-      "operating_cash_flow": 10405047,
-      "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. NORMALIZED CASH FLOW 2026-10-28: Q3/2025 own report YTD minus latest H1/2025 comparative from Q2/2026 report for standalone quarter; standalone flow total and cash bridge reconcile. Các trường LCTT đã được đăng ký rõ trong financial_line_items_extracted_fields để tab LCTT không ẩn dữ liệu đã có bằng chứng nguồn. Trạng thái rà soát trực quan vẫn giữ riêng; không coi việc đưa vào danh sách trường là xác minh thủ công toàn bộ. CASHFLOW REGRESSION REPAIR 2026-10-29: restored source-reconciled cash-flow fields and audit metadata from prior validated snapshot commit 694989992688 after OCR/enrichment commit 8367764 overwrote some cash-flow-only fields with blanks. Non-cash fields from the newer snapshot are retained. Re-run cash-flow regression before further enrichment.",
+      "operating_cash_flow": 10405045,
+      "operating_cash_flow_calculation": "Quý riêng = số lũy kế 2025 kỳ hiện tại trừ số lũy kế quý liền trước trong cùng năm; đối chiếu trong cashflow_source_reconciliation.",
       "financial_line_items_prior_values": {
         "operating_cash_flow_ytd": 28656814,
         "income_tax": 1449479,
@@ -2455,14 +2891,34 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "investing_cash_flow": {
-          "previous_value": -776707,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": -703861,
+          "new_value": -776707,
+          "reason": "MBB 2025-Q3: source normalization. Q3/2025 own report YTD minus latest H1/2025 comparative from Q2/2026 report for standalone quarter; standalone flow total and cash bridge reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": {
+            "previous_value": -703861,
+            "new_value": null,
+            "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          }
         },
         "operating_cash_flow": {
-          "previous_value": 10405045,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": 10405047,
+          "new_value": 10405045,
+          "reason": "MBB 2025-Q3: source normalization. Q3/2025 own report YTD minus latest H1/2025 comparative from Q2/2026 report for standalone quarter; standalone flow total and cash bridge reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": {
+            "previous_value": 10405047,
+            "new_value": null,
+            "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          }
         },
         "bank_non_controlling_profit": {
           "previous_value": 229417,
@@ -2470,63 +2926,111 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "financing_cash_flow_ytd": {
-          "previous_value": 7770971,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 7770971,
+          "reason": "MBB 2025-Q3: source normalization. Q3/2025 own report YTD minus latest H1/2025 comparative from Q2/2026 report for standalone quarter; standalone flow total and cash bridge reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "net_cash_change_ytd": {
-          "previous_value": 18514873,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 18514873,
+          "reason": "MBB 2025-Q3: source normalization. Q3/2025 own report YTD minus latest H1/2025 comparative from Q2/2026 report for standalone quarter; standalone flow total and cash bridge reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "cash_beginning_reported_ytd": {
-          "previous_value": 97040273,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 97040273,
+          "reason": "MBB 2025-Q3: source normalization. Q3/2025 own report YTD minus latest H1/2025 comparative from Q2/2026 report for standalone quarter; standalone flow total and cash bridge reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "cash_ending_reported_ytd": {
-          "previous_value": 115555146,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 115555146,
+          "reason": "MBB 2025-Q3: source normalization. Q3/2025 own report YTD minus latest H1/2025 comparative from Q2/2026 report for standalone quarter; standalone flow total and cash bridge reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "financing_cash_flow": {
-          "previous_value": 2072408,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 2072408,
+          "reason": "MBB 2025-Q3: source normalization. Q3/2025 own report YTD minus latest H1/2025 comparative from Q2/2026 report for standalone quarter; standalone flow total and cash bridge reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "net_cash_change": {
-          "previous_value": 11700746,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 11700746,
+          "reason": "MBB 2025-Q3: source normalization. Q3/2025 own report YTD minus latest H1/2025 comparative from Q2/2026 report for standalone quarter; standalone flow total and cash bridge reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "cash_beginning": {
-          "previous_value": 103854400,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 103854400,
+          "reason": "MBB 2025-Q3: source normalization. Q3/2025 own report YTD minus latest H1/2025 comparative from Q2/2026 report for standalone quarter; standalone flow total and cash bridge reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "cash_ending": {
-          "previous_value": 115555146,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 115555146,
+          "reason": "MBB 2025-Q3: source normalization. Q3/2025 own report YTD minus latest H1/2025 comparative from Q2/2026 report for standalone quarter; standalone flow total and cash bridge reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         }
       },
       "bank_deposits_and_loans_to_credit_institutions": 108324759,
       "investing_cash_flow_ytd": -1177683,
       "capital_expenditure_ytd": -926144,
-      "investing_cash_flow": -703861,
-      "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "investing_cash_flow": -776707,
+      "investing_cash_flow_calculation": "Quý riêng = số lũy kế 2025 kỳ hiện tại trừ số lũy kế quý liền trước trong cùng năm; đối chiếu trong cashflow_source_reconciliation.",
       "capital_expenditure": -452322,
       "capital_expenditure_calculation": "current YTD minus previous quarter YTD",
       "bank_non_controlling_profit": 229417,
       "bank_non_controlling_profit_calculation": "Lợi nhuận cổ đông không kiểm soát = lợi nhuận sau thuế hợp nhất − lợi nhuận sau thuế thuộc cổ đông ngân hàng mẹ.",
-      "financing_cash_flow_ytd": null,
-      "net_cash_change_ytd": null,
-      "cash_beginning_reported_ytd": null,
-      "cash_ending_reported_ytd": null,
-      "financing_cash_flow": null,
-      "net_cash_change": null,
-      "cash_beginning": null,
-      "cash_ending": null,
+      "financing_cash_flow_ytd": 7770971,
+      "net_cash_change_ytd": 18514873,
+      "cash_beginning_reported_ytd": 97040273,
+      "cash_ending_reported_ytd": 115555146,
+      "financing_cash_flow": 2072408,
+      "net_cash_change": 11700746,
+      "cash_beginning": 103854400,
+      "cash_ending": 115555146,
       "cashflow_source_reconciliation": {
         "source_policy": "Only VietstockFinance catalog and linked PDF/ZIP; when later report supplies a visually confirmed comparative restatement, retain it as a traceable reference",
         "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
@@ -2590,7 +3094,8 @@
       "cash_beginning_calculation": "Số dư đầu quý = số dư cuối quý trước; khi đối chiếu với cột so sánh YTD khác nguồn, giữ riêng chênh lệch liên kỳ và không ép số.",
       "cash_ending_calculation": "Lấy từ dòng tiền và các khoản tương đương tiền cuối kỳ trên PDF LCTT VietstockFinance, không suy ngược nếu nguồn có dòng số dư.",
       "cash_beginning_reported_ytd_calculation": "Số dư đầu kỳ lũy kế lấy từ cột đầu kỳ báo cáo VietstockFinance; nguồn so sánh cập nhật được ghi trong cashflow_source_reconciliation.",
-      "cash_ending_reported_ytd_calculation": "Số dư cuối kỳ lũy kế lấy từ dòng tiền và tương đương tiền cuối kỳ trên PDF LCTT VietstockFinance."
+      "cash_ending_reported_ytd_calculation": "Số dư cuối kỳ lũy kế lấy từ dòng tiền và tương đương tiền cuối kỳ trên PDF LCTT VietstockFinance.",
+      "financial_line_items_rejected_fields": []
     },
     {
       "symbol": "MBB",
@@ -2661,11 +3166,19 @@
         "bank_valuable_papers",
         "capital_expenditure",
         "capital_expenditure_ytd",
+        "cash_beginning",
+        "cash_beginning_reported_ytd",
+        "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
         "fixed_assets",
         "income_tax",
         "investing_cash_flow",
         "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
         "operating_cash_flow",
         "operating_cash_flow_ytd",
         "retained_earnings"
@@ -2673,9 +3186,9 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/MBB/manual-mbb-smoke-20261018/69eb9144555a7b9e.pdf",
       "financial_line_items_updated_at": "2026-10-28T15:34:13+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Tổng chứng khoán đầu tư cuối năm 2025 đã được đối chiếu trực quan với cột so sánh 31/12/2025 trên BCTC hợp nhất Q1/2026 của VietstockFinance; các dòng chi tiết khác vẫn chờ rà soát. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. NORMALIZED CASH FLOW 2026-10-28: Q4/2025 PDF pages 7-8; Q4 standalone = FY YTD minus Q3 YTD; all sums and balances reconcile. Các trường LCTT đã được đăng ký rõ trong financial_line_items_extracted_fields để tab LCTT không ẩn dữ liệu đã có bằng chứng nguồn. Trạng thái rà soát trực quan vẫn giữ riêng; không coi việc đưa vào danh sách trường là xác minh thủ công toàn bộ.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Tổng chứng khoán đầu tư cuối năm 2025 đã được đối chiếu trực quan với cột so sánh 31/12/2025 trên BCTC hợp nhất Q1/2026 của VietstockFinance; các dòng chi tiết khác vẫn chờ rà soát. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. NORMALIZED CASH FLOW 2026-10-28: Q4/2025 PDF pages 7-8; Q4 standalone = FY YTD minus Q3 YTD; all sums and balances reconcile. Các trường LCTT đã được đăng ký rõ trong financial_line_items_extracted_fields để tab LCTT không ẩn dữ liệu đã có bằng chứng nguồn. Trạng thái rà soát trực quan vẫn giữ riêng; không coi việc đưa vào danh sách trường là xác minh thủ công toàn bộ. CASHFLOW REGRESSION REPAIR 2026-10-29: restored source-reconciled cash-flow fields and audit metadata from prior validated snapshot commit 694989992688 after OCR/enrichment commit 8367764 overwrote some cash-flow-only fields with blanks. Non-cash fields from the newer snapshot are retained. Re-run cash-flow regression before further enrichment.",
       "operating_cash_flow": 127553960,
-      "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "operating_cash_flow_calculation": "Quý riêng = số lũy kế 2025 kỳ hiện tại trừ số lũy kế quý liền trước trong cùng năm; đối chiếu trong cashflow_source_reconciliation.",
       "financial_line_items_prior_values": {
         "operating_cash_flow_ytd": 39713493,
         "income_tax": 2226170,
@@ -2762,44 +3275,92 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "financing_cash_flow_ytd": {
-          "previous_value": 3957417,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 3957417,
+          "reason": "MBB 2025-Q4: source normalization. Q4/2025 PDF pages 7-8; Q4 standalone = FY YTD minus Q3 YTD; all sums and balances reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "net_cash_change_ytd": {
-          "previous_value": 142219716,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 142219716,
+          "reason": "MBB 2025-Q4: source normalization. Q4/2025 PDF pages 7-8; Q4 standalone = FY YTD minus Q3 YTD; all sums and balances reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "cash_beginning_reported_ytd": {
-          "previous_value": 97040273,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 97040273,
+          "reason": "MBB 2025-Q4: source normalization. Q4/2025 PDF pages 7-8; Q4 standalone = FY YTD minus Q3 YTD; all sums and balances reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "cash_ending_reported_ytd": {
-          "previous_value": 239259989,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 239259989,
+          "reason": "MBB 2025-Q4: source normalization. Q4/2025 PDF pages 7-8; Q4 standalone = FY YTD minus Q3 YTD; all sums and balances reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "financing_cash_flow": {
-          "previous_value": -3813554,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": -3813554,
+          "reason": "MBB 2025-Q4: source normalization. Q4/2025 PDF pages 7-8; Q4 standalone = FY YTD minus Q3 YTD; all sums and balances reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "net_cash_change": {
-          "previous_value": 123704843,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 123704843,
+          "reason": "MBB 2025-Q4: source normalization. Q4/2025 PDF pages 7-8; Q4 standalone = FY YTD minus Q3 YTD; all sums and balances reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "cash_beginning": {
-          "previous_value": 115555146,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 115555146,
+          "reason": "MBB 2025-Q4: source normalization. Q4/2025 PDF pages 7-8; Q4 standalone = FY YTD minus Q3 YTD; all sums and balances reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "cash_ending": {
-          "previous_value": 239259989,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 239259989,
+          "reason": "MBB 2025-Q4: source normalization. Q4/2025 PDF pages 7-8; Q4 standalone = FY YTD minus Q3 YTD; all sums and balances reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         }
       },
       "financial_line_items_manually_verified_fields": [
@@ -2808,19 +3369,19 @@
       "bank_deposits_and_loans_to_credit_institutions": 82923726,
       "capital_expenditure_ytd": -1780261,
       "investing_cash_flow": -35563,
-      "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "investing_cash_flow_calculation": "Quý riêng = số lũy kế 2025 kỳ hiện tại trừ số lũy kế quý liền trước trong cùng năm; đối chiếu trong cashflow_source_reconciliation.",
       "capital_expenditure": -854117,
       "capital_expenditure_calculation": "current YTD minus previous quarter YTD",
       "bank_non_controlling_profit": 140382,
       "bank_non_controlling_profit_calculation": "Lợi nhuận cổ đông không kiểm soát = lợi nhuận sau thuế hợp nhất − lợi nhuận sau thuế thuộc cổ đông ngân hàng mẹ.",
-      "financing_cash_flow_ytd": null,
-      "net_cash_change_ytd": null,
-      "cash_beginning_reported_ytd": null,
-      "cash_ending_reported_ytd": null,
-      "financing_cash_flow": null,
-      "net_cash_change": null,
-      "cash_beginning": null,
-      "cash_ending": null,
+      "financing_cash_flow_ytd": 3957417,
+      "net_cash_change_ytd": 142219716,
+      "cash_beginning_reported_ytd": 97040273,
+      "cash_ending_reported_ytd": 239259989,
+      "financing_cash_flow": -3813554,
+      "net_cash_change": 123704843,
+      "cash_beginning": 115555146,
+      "cash_ending": 239259989,
       "cashflow_source_reconciliation": {
         "source_policy": "Only VietstockFinance catalog and linked PDF/ZIP; when later report supplies a visually confirmed comparative restatement, retain it as a traceable reference",
         "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
@@ -2873,7 +3434,8 @@
       "cash_beginning_calculation": "Số dư đầu quý = số dư cuối quý trước; khi đối chiếu với cột so sánh YTD khác nguồn, giữ riêng chênh lệch liên kỳ và không ép số.",
       "cash_ending_calculation": "Lấy từ dòng tiền và các khoản tương đương tiền cuối kỳ trên PDF LCTT VietstockFinance, không suy ngược nếu nguồn có dòng số dư.",
       "cash_beginning_reported_ytd_calculation": "Số dư đầu kỳ lũy kế lấy từ cột đầu kỳ báo cáo VietstockFinance; nguồn so sánh cập nhật được ghi trong cashflow_source_reconciliation.",
-      "cash_ending_reported_ytd_calculation": "Số dư cuối kỳ lũy kế lấy từ dòng tiền và tương đương tiền cuối kỳ trên PDF LCTT VietstockFinance."
+      "cash_ending_reported_ytd_calculation": "Số dư cuối kỳ lũy kế lấy từ dòng tiền và tương đương tiền cuối kỳ trên PDF LCTT VietstockFinance.",
+      "financial_line_items_rejected_fields": []
     },
     {
       "symbol": "MBB",
@@ -2943,11 +3505,19 @@
         "bank_valuable_papers",
         "capital_expenditure",
         "capital_expenditure_ytd",
+        "cash_beginning",
+        "cash_beginning_reported_ytd",
+        "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
         "fixed_assets",
         "income_tax",
         "investing_cash_flow",
         "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
         "operating_cash_flow",
         "operating_cash_flow_ytd",
         "retained_earnings"
@@ -2955,9 +3525,9 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/MBB/manual-mbb-smoke-20261018/eebeda2ebc09b0d4.pdf",
       "financial_line_items_updated_at": "2026-10-28T15:34:13+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng công cụ phái sinh phía tài sản đã được đối chiếu trực quan: kỳ hiện tại là dấu gạch, hiển thị 0; không lấy nhầm số dư cho vay khách hàng. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. NORMALIZED CASH FLOW 2026-10-28: Q1/2026 PDF pages 7-8; totals and bridge reconcile. Các trường LCTT đã được đăng ký rõ trong financial_line_items_extracted_fields để tab LCTT không ẩn dữ liệu đã có bằng chứng nguồn. Trạng thái rà soát trực quan vẫn giữ riêng; không coi việc đưa vào danh sách trường là xác minh thủ công toàn bộ.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng công cụ phái sinh phía tài sản đã được đối chiếu trực quan: kỳ hiện tại là dấu gạch, hiển thị 0; không lấy nhầm số dư cho vay khách hàng. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. NORMALIZED CASH FLOW 2026-10-28: Q1/2026 PDF pages 7-8; totals and bridge reconcile. Các trường LCTT đã được đăng ký rõ trong financial_line_items_extracted_fields để tab LCTT không ẩn dữ liệu đã có bằng chứng nguồn. Trạng thái rà soát trực quan vẫn giữ riêng; không coi việc đưa vào danh sách trường là xác minh thủ công toàn bộ. CASHFLOW REGRESSION REPAIR 2026-10-29: restored source-reconciled cash-flow fields and audit metadata from prior validated snapshot commit 694989992688 after OCR/enrichment commit 8367764 overwrote some cash-flow-only fields with blanks. Non-cash fields from the newer snapshot are retained. Re-run cash-flow regression before further enrichment.",
       "operating_cash_flow": -64971848,
-      "operating_cash_flow_calculation": "Q1 equals YTD Q1",
+      "operating_cash_flow_calculation": "Q1 bằng số lũy kế Q1 theo báo cáo VietstockFinance.",
       "financial_line_items_prior_values": {
         "operating_cash_flow_ytd": 7697852,
         "income_tax": 1925666,
@@ -3020,44 +3590,92 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "financing_cash_flow_ytd": {
-          "previous_value": -3712641,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": -3712641,
+          "reason": "MBB 2026-Q1: source normalization. Q1/2026 PDF pages 7-8; totals and bridge reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "net_cash_change_ytd": {
-          "previous_value": -69274059,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": -69274059,
+          "reason": "MBB 2026-Q1: source normalization. Q1/2026 PDF pages 7-8; totals and bridge reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "cash_beginning_reported_ytd": {
-          "previous_value": 239259989,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 239259989,
+          "reason": "MBB 2026-Q1: source normalization. Q1/2026 PDF pages 7-8; totals and bridge reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "cash_ending_reported_ytd": {
-          "previous_value": 169985930,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 169985930,
+          "reason": "MBB 2026-Q1: source normalization. Q1/2026 PDF pages 7-8; totals and bridge reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "financing_cash_flow": {
-          "previous_value": -3712641,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": -3712641,
+          "reason": "MBB 2026-Q1: source normalization. Q1/2026 PDF pages 7-8; totals and bridge reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "net_cash_change": {
-          "previous_value": -69274059,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": -69274059,
+          "reason": "MBB 2026-Q1: source normalization. Q1/2026 PDF pages 7-8; totals and bridge reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "cash_beginning": {
-          "previous_value": 239259989,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 239259989,
+          "reason": "MBB 2026-Q1: source normalization. Q1/2026 PDF pages 7-8; totals and bridge reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "cash_ending": {
-          "previous_value": 169985930,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 169985930,
+          "reason": "MBB 2026-Q1: source normalization. Q1/2026 PDF pages 7-8; totals and bridge reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         }
       },
       "financial_line_items_manually_verified_fields": [
@@ -3067,19 +3685,19 @@
       "investing_cash_flow_ytd": -589570,
       "capital_expenditure_ytd": -591985,
       "investing_cash_flow": -589570,
-      "investing_cash_flow_calculation": "Q1 equals YTD Q1",
+      "investing_cash_flow_calculation": "Q1 bằng số lũy kế Q1 theo báo cáo VietstockFinance.",
       "capital_expenditure": -591985,
       "capital_expenditure_calculation": "Q1 equals YTD Q1",
       "bank_non_controlling_profit": 187207,
       "bank_non_controlling_profit_calculation": "Lợi nhuận cổ đông không kiểm soát = lợi nhuận sau thuế hợp nhất − lợi nhuận sau thuế thuộc cổ đông ngân hàng mẹ.",
-      "financing_cash_flow_ytd": null,
-      "net_cash_change_ytd": null,
-      "cash_beginning_reported_ytd": null,
-      "cash_ending_reported_ytd": null,
-      "financing_cash_flow": null,
-      "net_cash_change": null,
-      "cash_beginning": null,
-      "cash_ending": null,
+      "financing_cash_flow_ytd": -3712641,
+      "net_cash_change_ytd": -69274059,
+      "cash_beginning_reported_ytd": 239259989,
+      "cash_ending_reported_ytd": 169985930,
+      "financing_cash_flow": -3712641,
+      "net_cash_change": -69274059,
+      "cash_beginning": 239259989,
+      "cash_ending": 169985930,
       "cashflow_source_reconciliation": {
         "source_policy": "Only VietstockFinance catalog and linked PDF/ZIP; when later report supplies a visually confirmed comparative restatement, retain it as a traceable reference",
         "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
@@ -3132,7 +3750,8 @@
       "cash_beginning_calculation": "Số dư đầu kỳ Q1 lấy theo dòng tiền và tương đương tiền đầu kỳ trong BCTC VietstockFinance.",
       "cash_ending_calculation": "Lấy từ dòng tiền và các khoản tương đương tiền cuối kỳ trên PDF LCTT VietstockFinance, không suy ngược nếu nguồn có dòng số dư.",
       "cash_beginning_reported_ytd_calculation": "Số dư đầu kỳ lũy kế lấy từ cột đầu kỳ báo cáo VietstockFinance; nguồn so sánh cập nhật được ghi trong cashflow_source_reconciliation.",
-      "cash_ending_reported_ytd_calculation": "Số dư cuối kỳ lũy kế lấy từ dòng tiền và tương đương tiền cuối kỳ trên PDF LCTT VietstockFinance."
+      "cash_ending_reported_ytd_calculation": "Số dư cuối kỳ lũy kế lấy từ dòng tiền và tương đương tiền cuối kỳ trên PDF LCTT VietstockFinance.",
+      "financial_line_items_rejected_fields": []
     },
     {
       "symbol": "MBB",
@@ -3197,11 +3816,19 @@
         "bank_valuable_papers",
         "capital_expenditure",
         "capital_expenditure_ytd",
+        "cash_beginning",
+        "cash_beginning_reported_ytd",
+        "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
         "fixed_assets",
         "income_tax",
         "investing_cash_flow",
         "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
         "operating_cash_flow",
         "operating_cash_flow_ytd",
         "retained_earnings"
@@ -3209,9 +3836,9 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/MBB/manual-mbb-smoke-20261018/a86757a449995326.pdf",
       "financial_line_items_updated_at": "2026-10-28T15:34:13+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. NORMALIZED CASH FLOW 2026-10-28: Q2/2026 PDF pages 7-8; quarter = H1 YTD minus Q1; totals and bridge reconcile. Các trường LCTT đã được đăng ký rõ trong financial_line_items_extracted_fields để tab LCTT không ẩn dữ liệu đã có bằng chứng nguồn. Trạng thái rà soát trực quan vẫn giữ riêng; không coi việc đưa vào danh sách trường là xác minh thủ công toàn bộ.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. NORMALIZED CASH FLOW 2026-10-28: Q2/2026 PDF pages 7-8; quarter = H1 YTD minus Q1; totals and bridge reconcile. Các trường LCTT đã được đăng ký rõ trong financial_line_items_extracted_fields để tab LCTT không ẩn dữ liệu đã có bằng chứng nguồn. Trạng thái rà soát trực quan vẫn giữ riêng; không coi việc đưa vào danh sách trường là xác minh thủ công toàn bộ. CASHFLOW REGRESSION REPAIR 2026-10-29: restored source-reconciled cash-flow fields and audit metadata from prior validated snapshot commit 694989992688 after OCR/enrichment commit 8367764 overwrote some cash-flow-only fields with blanks. Non-cash fields from the newer snapshot are retained. Re-run cash-flow regression before further enrichment.",
       "operating_cash_flow": 11770037,
-      "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "operating_cash_flow_calculation": "Quý riêng = số lũy kế 2026 kỳ hiện tại trừ số lũy kế quý liền trước trong cùng năm; đối chiếu trong cashflow_source_reconciliation.",
       "financial_line_items_prior_values": {
         "operating_cash_flow_ytd": 23267772,
         "income_tax": 2114399,
@@ -3285,44 +3912,92 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "financing_cash_flow_ytd": {
-          "previous_value": 2023891,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 2023891,
+          "reason": "MBB 2026-Q2: source normalization. Q2/2026 PDF pages 7-8; quarter = H1 YTD minus Q1; totals and bridge reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "net_cash_change_ytd": {
-          "previous_value": -51909802,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": -51909802,
+          "reason": "MBB 2026-Q2: source normalization. Q2/2026 PDF pages 7-8; quarter = H1 YTD minus Q1; totals and bridge reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "cash_beginning_reported_ytd": {
-          "previous_value": 239259989,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 239259989,
+          "reason": "MBB 2026-Q2: source normalization. Q2/2026 PDF pages 7-8; quarter = H1 YTD minus Q1; totals and bridge reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "cash_ending_reported_ytd": {
-          "previous_value": 187350187,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 187350187,
+          "reason": "MBB 2026-Q2: source normalization. Q2/2026 PDF pages 7-8; quarter = H1 YTD minus Q1; totals and bridge reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "financing_cash_flow": {
-          "previous_value": 5736532,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 5736532,
+          "reason": "MBB 2026-Q2: source normalization. Q2/2026 PDF pages 7-8; quarter = H1 YTD minus Q1; totals and bridge reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "net_cash_change": {
-          "previous_value": 17364257,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 17364257,
+          "reason": "MBB 2026-Q2: source normalization. Q2/2026 PDF pages 7-8; quarter = H1 YTD minus Q1; totals and bridge reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "cash_beginning": {
-          "previous_value": 169985930,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 169985930,
+          "reason": "MBB 2026-Q2: source normalization. Q2/2026 PDF pages 7-8; quarter = H1 YTD minus Q1; totals and bridge reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         },
         "cash_ending": {
-          "previous_value": 187350187,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 187350187,
+          "reason": "MBB 2026-Q2: source normalization. Q2/2026 PDF pages 7-8; quarter = H1 YTD minus Q1; totals and bridge reconcile.",
+          "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
+          "source_period_pdf_pages": [
+            7,
+            8
+          ],
+          "prior_correction_record": null
         }
       },
       "bank_derivatives_and_other_financial_assets": 0,
@@ -3330,19 +4005,19 @@
       "investing_cash_flow_ytd": -731882,
       "capital_expenditure_ytd": -762591,
       "investing_cash_flow": -142312,
-      "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "investing_cash_flow_calculation": "Quý riêng = số lũy kế 2026 kỳ hiện tại trừ số lũy kế quý liền trước trong cùng năm; đối chiếu trong cashflow_source_reconciliation.",
       "capital_expenditure": -170606,
       "capital_expenditure_calculation": "current YTD minus previous quarter YTD",
       "bank_non_controlling_profit": 216411,
       "bank_non_controlling_profit_calculation": "Lợi nhuận cổ đông không kiểm soát = lợi nhuận sau thuế hợp nhất − lợi nhuận sau thuế thuộc cổ đông ngân hàng mẹ.",
-      "financing_cash_flow_ytd": null,
-      "net_cash_change_ytd": null,
-      "cash_beginning_reported_ytd": null,
-      "cash_ending_reported_ytd": null,
-      "financing_cash_flow": null,
-      "net_cash_change": null,
-      "cash_beginning": null,
-      "cash_ending": null,
+      "financing_cash_flow_ytd": 2023891,
+      "net_cash_change_ytd": -51909802,
+      "cash_beginning_reported_ytd": 239259989,
+      "cash_ending_reported_ytd": 187350187,
+      "financing_cash_flow": 5736532,
+      "net_cash_change": 17364257,
+      "cash_beginning": 169985930,
+      "cash_ending": 187350187,
       "cashflow_source_reconciliation": {
         "source_policy": "Only VietstockFinance catalog and linked PDF/ZIP; when later report supplies a visually confirmed comparative restatement, retain it as a traceable reference",
         "source_catalog_url": "https://finance.vietstock.vn/MBB/tai-tai-lieu.htm?doctype=1",
