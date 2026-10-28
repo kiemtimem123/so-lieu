@@ -597,9 +597,11 @@ class HCMCashFlowNormalizationTests(unittest.TestCase):
         })
         for period, row in self.rows.items():
             with self.subTest(period=period):
+                numeric_core = tuple(field for field in core if field != "cashflow_period_basis")
                 self.assertTrue(all(isinstance(row.get(field), (int, float))
                                     and not isinstance(row.get(field), bool)
-                                    for field in core))
+                                    for field in numeric_core))
+                self.assertIsInstance(row["cashflow_period_basis"], str)
                 self.assertEqual(row["cashflow_period_basis"], "year_to_date")
                 self.assertEqual(row["source_index_url"],
                                  "https://finance.vietstock.vn/HCM/tai-tai-lieu.htm?doctype=1")
