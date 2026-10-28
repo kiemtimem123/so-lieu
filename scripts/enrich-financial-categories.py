@@ -869,7 +869,7 @@ def extract_bank_split_column_income(pages, factor):
   # extraction strict and require the independent accounting subtotals to agree.
   marker=next((
    idx for idx,line in enumerate(lines)
-   if re.search(r"\\b(?:so|s6|s0)\\s*phat sinh quy",norm(line))
+   if re.search(r"\b(?:so|s6|s0)\s*phat sinh quy",norm(line))
   ),None)
   if marker is None:
    continue
