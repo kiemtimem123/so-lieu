@@ -1,6 +1,6 @@
 # Quy trình chuẩn hóa dữ liệu tài chính theo từng mảng
 
-Phiên bản: 1.9  
+Phiên bản: 2.0  
 Ngày thiết lập: 2026-10-28  
 Cập nhật gần nhất: 2026-10-29  
 Phạm vi: `kiemtimem123/so-lieu`, dữ liệu BCTC quý từ 2024-Q1 trở đi.
@@ -488,3 +488,37 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 - Regression tests: `TPBCashFlowNormalizationTests` in `tests/test_cashflow_bridge.py` validates all 10 periods, YTD component sums, FX-aware cash bridges, quarterly = YTD differences, source reclassification exceptions and visual-review statuses.
 - Result before CI: all 10 periods pass all four arithmetic checks exactly: YTD flow sum, standalone quarter flow sum, YTD cash bridge with FX and quarter cash bridge with FX. The H1/2024 and FY2024 source component reclassifications remain manual-review items because they exceed 0,01%; visual review remains pending for the large later reports listed above. No balancing adjustments were inserted.
 - Next ticker in this data domain: **VPB**. Continue one ticker at a time.
+
+
+## Lượt chuẩn hóa VPB — lưu chuyển tiền tệ (2026-10-29)
+
+### Phạm vi và quy tắc nguồn
+- Snapshot: `data/financials-VPB.json`, 11 kỳ từ 2024-Q1 đến 2026-Q3. Nguồn tài liệu duy nhất: danh mục VietstockFinance `https://finance.vietstock.vn/VPB/tai-tai-lieu.htm?doctype=1` và PDF/ZIP được liên kết trực tiếp.
+- Dùng các dòng tổng cuối của BCTC hợp nhất B04a/TCTD-HN: **CFO = lưu chuyển tiền thuần từ hoạt động kinh doanh**, **CFI = lưu chuyển tiền thuần từ hoạt động đầu tư**, **CFF = lưu chuyển tiền thuần từ hoạt động tài chính**, **net cash flow = lưu chuyển tiền thuần trong kỳ**. Không dùng dòng subtotal “trước những thay đổi về tài sản và nợ phải trả hoạt động” làm CFO.
+- Số trong snapshot được lưu bằng **triệu VND**. Các báo cáo VPB trong loạt đang chuẩn hóa không trình bày một dòng ảnh hưởng tỷ giá riêng trong cầu nối tiền; không tự tạo trường FX hoặc tự gán một giá trị FX để ép khớp.
+- Số quý II–IV được tính bằng YTD kỳ hiện tại trừ YTD quý trước trong cùng năm. Nếu thiếu căn cứ cho một dòng tổng nguồn, không dùng tổng ba thành phần để thay thế con số nguồn bị OCR sai trên giao diện; chỉ tính trường có đầy đủ đầu vào có bằng chứng và ghi rõ công thức.
+
+### Cơ sở YTD đã chọn và các giá trị đã phục hồi
+- **2024-Q1:** chọn cột so sánh Q1/2024 trong báo cáo hợp nhất Q1/2025, thay cho subtotal CFO và CFI bị ánh xạ sai trong snapshot cũ. YTD CFO **-5.358.644**, CFI **-69**, CFF **0**, net **-5.358.713**, tiền đầu **93.667.470**, tiền cuối **88.308.757** triệu VND.
+- **H1/2024:** chọn cột so sánh H1/2024 trong BCTC hợp nhất Q2/2025: CFO **16.535.602**, CFI **-565**, CFF **-7.935.139**, net **8.599.898**, tiền đầu **93.667.470**, tiền cuối **102.267.368** triệu VND.
+- **9M/2024:** chọn cột so sánh 9M/2024 trong BCTC hợp nhất Q3/2025: CFO **33.481.922**, CFI **1.658**, CFF **-7.935.139**, net **25.548.441**, tiền đầu **93.667.470**, tiền cuối **119.215.911** triệu VND. Số OCR cũ tiền cuối **419.215.911** được sửa theo cột so sánh nguồn mới hơn.
+- **FY2024:** dùng BCTC hợp nhất Q4/2024 gốc đã xem trực tiếp trên trang PDF 8–9 (trang in 7–8). CFO **57.316.185**, CFI **-45.039**, CFF **-7.935.832**, net **49.335.314**, tiền đầu **93.667.470**, tiền cuối **143.002.784** triệu VND. Cầu nối trong báo cáo và tổng ba luồng tiền đều khớp.
+- **Q1/2025:** dùng các dòng tổng trong báo cáo Q1/2025: CFO **8.550.806**, CFI **-55.847**, CFF **0** (không có nhóm dòng tài chính riêng, và net bằng CFO+CFI), net **8.494.959**, tiền đầu **143.002.784**, tiền cuối **151.497.743** triệu VND. Giá trị tiền đầu kỳ OCR cũ **443.002.784** được sửa về số đúng của nguồn.
+- **H1/2025:** dùng cột so sánh H1/2025 trong báo cáo Q2/2026, nhất quán với số nguồn sau này: CFO **23.353.876**, CFI **-29.653**, CFF **-3.968.172**, net **19.356.051**, tiền đầu **143.002.784**, tiền cuối **162.358.835** triệu VND. OCR cũ đọc ứng viên **49.356.051**; không dùng ứng viên này vì cột so sánh Q2/2026 ghi **19.356.051** và tổng ba luồng tiền/cầu nối đều khớp.
+- **9M/2025:** CFO **27.397.628**, CFI **-31.788**, CFF **-3.968.172**, net **23.397.668**, tiền đầu **143.002.784**, tiền cuối **166.400.452** triệu VND.
+- **FY2025:** CFO **44.532.621**, CFI **-88.786**, CFF **8.650.600** (tăng vốn góp/phát hành cổ phiếu trừ cổ tức đã trả), net **53.094.435**, tiền đầu **143.002.784**, tiền cuối **196.097.219** triệu VND.
+- **Q1/2026:** CFO **12.145.698**, CFI **-18.002**, CFF **0** (không có nhóm dòng tài chính riêng; net bằng CFO+CFI), net **12.127.696**, tiền đầu **196.097.219**, tiền cuối **208.224.915** triệu VND.
+- **9M/2026:** CFO **46.180.388**, CFI **-11.841.627**, CFF **-3.965.367**, net **30.373.394**, tiền đầu **196.097.219**, tiền cuối **226.470.613** triệu VND. Tổng ba luồng tiền khớp net; cầu nối tiền YTD khớp chính xác.
+
+### Ngoại lệ H1/2026 — giữ để rà soát thủ công
+- Sidecar OCR của BCTC hợp nhất Q2/2026 ghi các thành phần YTD CFO **42.064.417**, CFI **-1.149.285**, CFF **-3.965.367** triệu VND; tổng ba thành phần là **36.949.765** triệu VND. Ứng viên OCR cho dòng “lưu chuyển tiền thuần trong kỳ” là **6.949.765** triệu VND, chênh **30.000.000 triệu VND**, tương đương khoảng **81,19%** theo công thức sai lệch tương đối. Giá trị tiền cuối H1/2026 cũng không được sidecar OCR đọc chắc chắn.
+- Mức chênh **vượt rất xa ngưỡng 0,01%** mà người dùng cho phép. Không được coi là sai số làm tròn, không tự sửa thành 36.949.765, không chèn khoản bù, và không cho công khai ứng viên net OCR. Snapshot giữ các thành phần có căn cứ, đưa ứng viên 6.949.765 vào `financial_line_items_rejected_values`, để trống `net_cash_change`, `net_cash_change_ytd`, `cash_ending`, `cash_ending_reported_ytd`, đồng thời gắn `NEEDS_MANUAL_REVIEW_SOURCE_FLOW_COMPONENT_SUM_GT_0_01_PERCENT`. Cần xem trực tiếp trang PDF/ảnh gốc trước khi đóng ngoại lệ.
+- Quý II/2026: các thành phần quý riêng được tính từ hiệu số YTD nguồn của CFO, CFI, CFF (lần lượt **29.918.719**, **-1.131.283**, **-3.965.367** triệu VND), nhưng net cash quý và số dư cuối quý vẫn để trống vì total H1/cash ending chưa xác nhận. Không coi tổng thành phần quý **24.822.069** là số net đã công bố.
+- Quý III/2026: các thành phần quý riêng từ hiệu số YTD là CFO **4.115.971**, CFI **-10.692.342**, CFF **0** triệu VND; net riêng **-6.576.371** được tính bằng tổng ba thành phần có nguồn và ghi rõ công thức. Net YTD 9M và cầu nối YTD của báo cáo Q3 khớp. Vì tiền cuối H1/2026 chưa xác minh, `cash_beginning` riêng Q3 và cầu nối tiền quý riêng vẫn để trống/gắn rà soát; không suy ra tiền cuối H1 từ cầu nối để lấp chỗ trống.
+- Chỉ Q4/2024 đã được kiểm tra trực quan trang PDF gốc trong lượt này. Các kỳ khác dùng sidecar OCR đã lưu và đối chiếu số học nhưng vẫn gắn trạng thái `ocr_text_reconciled_visual_review_pending`; không tuyên bố đã xem hình ảnh trực tiếp nếu chưa xem.
+
+### Kiểm thử và cách tiếp tục
+- Đã thêm `VPBCashFlowNormalizationTests` trong `tests/test_cashflow_bridge.py`: 11 kỳ, dòng tổng nguồn, công thức quý/YTD, cầu nối tiền, nguồn comparative mới hơn, allowlist hiển thị, không tự tạo FX và ngoại lệ H1/2026 vượt 0,01%.
+- Validator `scripts/validate-bank-reconciliation.py` nhận diện schema `2026-10-26-bank-reconciliation-cashflow-v5` của VPB để đưa các kiểm tra này vào chạy CI.
+- Trước CI, 10 kỳ hoàn chỉnh (2024-Q1 đến 2026-Q1 và 2026-Q3 về tổng YTD/các luồng) khớp số học; H1/2026 là ngoại lệ duy nhất có thành phần CFO/CFI/CFF nguồn nhưng dòng net/cash ending chưa được công nhận, vì OCR sai lệch vượt 0,01%.
+- Trạng thái: **automation hoàn tất, manual review còn lại cho H1/2026**. Sau khi checkpoint và CI được lưu, mã kế tiếp là **STB**, vẫn trong mảng cashflow và xử lý một mã mỗi lượt.
