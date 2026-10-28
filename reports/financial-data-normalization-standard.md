@@ -236,3 +236,10 @@ Sau mỗi kỳ, chạy đủ bốn lớp:
 Kiểm thử `tests/test_cashflow_bridge.py` nay bao phủ phép tính phát sinh quý = chênh lệch YTD cho từng luồng, continuity liên quý qua năm, cùng hai residual nguồn MBB (+2 ở chuyển tiếp Q4→Q1 và -2 ở cầu nối riêng Q2). Test tổng quát “thiếu FX thì không tự bịa FX” dùng dữ liệu giả lập, không lấy lại giá trị OCR TCB đã sửa.
 
 **Trạng thái MBB sau rà soát bổ sung:** 10/10 kỳ khớp thành phần luồng tiền và cầu nối YTD; phát sinh quý khớp chênh lệch YTD ở mọi kỳ đã có số liệu. Cầu nối nội kỳ tự khớp ở 9/10 kỳ. Tuy nhiên, kiểm tra liên tục số dư phát hiện thêm mâu thuẫn Q4/2024 → Q1/2025 **+2 triệu VND**, gắn với residual **-2 triệu** tại Q2/2025. Hai residual được ghi nhận là **một vấn đề so sánh liên kỳ chưa giải quyết**, không phải lỗi phép cộng trong snapshot. Chỉ đóng ngoại lệ khi có bằng chứng nguồn mới có thẩm quyền hoặc tài liệu đính chính rõ ràng.
+
+
+### Sửa lỗi đơn vị ở residual metadata — 2026-10-28
+
+Trong lượt test continuity MBB, phát hiện một lỗi ghi metadata: snapshot báo cáo dùng **triệu VND**, nhưng hai trường `opening_minus_prior_closing_residual` và `prior_year_end_to_q1_opening_residual` đã lưu giá trị `2.000.000` trong khi phép trừ trên dữ liệu snapshot là `97.040.275 − 97.040.273 = 2`. Đã sửa cả hai trường về **2** và gắn `units: "triệu VND"`; các số dư nguồn không đổi. Đã quét đệ quy các trường tên residual/bridge trong snapshot MBB và TCB: không còn residual metadata nào có trị tuyệt đối lớn hơn 1.000 mà có vẻ bị phóng đại đơn vị.
+
+Quy tắc chuẩn hóa: mọi phép chênh và residual phải ở **đúng đơn vị của các trường đầu vào**. Với snapshot dùng triệu VND, residual `2` nghĩa là 2 triệu VND; không nhân thêm 1.000.000. Bài test hồi quy xác nhận giá trị ở cả metadata của Q1 và Q2, đồng thời vẫn giữ hai dấu khác nhau của cùng bất nhất: +2 ở điểm chuyển Q4/2024→Q1/2025 và -2 ở cầu nối Q2/2025 riêng. Không quy đổi sang VND nguyên nếu không khai báo đơn vị và chuyển đổi tường minh.
