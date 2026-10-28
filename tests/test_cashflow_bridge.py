@@ -1403,8 +1403,8 @@ class VHMCashFlowNormalizationTests(unittest.TestCase):
 
     def test_vhm_h1_2026_cashflow_components_are_source_supported(self):
         row = self.rows["2026-Q2"]
-        self.assertEqual(row["operating_cash_flow_ytd"], 88467.954)
-        self.assertEqual(row["investing_cash_flow_ytd"], -154050.779)
+        self.assertEqual(row["operating_cash_flow_ytd"], 88467954)
+        self.assertEqual(row["investing_cash_flow_ytd"], -154050779)
         self.assertEqual(row["financing_cash_flow_ytd"], 68675210)
         self.assertEqual(row["net_cash_change_ytd"], 4092385)
         self.assertEqual(
