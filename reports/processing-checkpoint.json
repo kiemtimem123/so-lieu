@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-29T02:10:00+07:00",
+  "updatedAt": "2026-10-29T02:25:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -1407,12 +1407,12 @@
     "updatedAt": "2026-10-28T19:45:00+07:00"
   },
   "normalizationProgress": {
-    "standardVersion": "1.2",
+    "standardVersion": "1.3",
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
     "activeSymbol": "VND",
     "status": "automated_processing_complete_manual_review_source_comparator_cff_gt_0_01_percent",
-    "lastUpdatedAt": "2026-10-29T02:10:00+07:00",
+    "lastUpdatedAt": "2026-10-29T02:25:00+07:00",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1514,7 +1514,14 @@
       "VND: Q2/2024 CFF newer comparative OCR candidate differs from original Q2/2024 source by 2,000 million VND (>0.01%) and conflicts with net-flow total. Retain original source CFF and preserve the later comparative candidate for manual visual review; do not add a balancing plug.",
       "Added VNDCashFlowNormalizationTests in tests/test_cashflow_bridge.py covering all eleven periods, relative tolerance, quarter=YTD delta, cash continuity, no fabricated FX and the Q2/2024 CFF comparator exception.",
       "Updated financial-data-normalization-standard.md to version 1.2; recorded VND mapping, period basis, source selection, tolerance and unresolved manual-review condition.",
-      "The tool did not render the archived VND PDFs directly; all source-page verification state is explicitly kept as OCR-reconciled with direct visual review pending rather than falsely claiming visual confirmation."
+      "The tool did not render the archived VND PDFs directly; all source-page verification state is explicitly kept as OCR-reconciled with direct visual review pending rather than falsely claiming visual confirmation.",
+      "CI initially exposed an MBB regression: OCR/enrichment commit 8367764 overwrote some already normalized cash-flow fields with nulls; restored only the cash-flow fields and their audit metadata from validated snapshot commit 694989992688, preserving the newer non-cash fields. Snapshot now passes cash-flow arithmetic again.",
+      "Moved unittest.main() to the very end of tests/test_cashflow_bridge.py. Previously, test classes appended below the guard were not collected by the script; with the guard at EOF, the full 25-test cash-flow suite executes.",
+      "Fixed the HCM cash-flow regression so only numeric fields are checked as numbers; cashflow_period_basis is verified separately as a string.",
+      "Added HCM selected_ytd_opening_vs_prior_fy_close audit metadata to 2025-Q2 and 2026-Q2 from existing cross_report_basis_issues. Reported data values were not changed.",
+      "Validate Site and Data run 40735388788 SUCCESS at commit 4181b40fc5852c0a05342f31ea71324e605da054: all 25 cash-flow regression tests PASS; JavaScript syntax and JSON/source wiring checks also PASS.",
+      "Validate quarterly financial data run 40735314898 SUCCESS and Package Hostinger Stock Dashboard run 40735314578 SUCCESS after adding HCM source-basis audit metadata.",
+      "Normalization standard bumped to v1.3, documenting the 0.01% relative tolerance, test collection guard position, and merge-safe handling of normalized cash-flow fields."
     ],
     "unresolved": [
       "ACB pending manual visual review remains only for rows marked ocr_text_reconciled_visual_review_pending (including Q1/2025 comparator and Q1/2026 current report); arithmetic checks pass and no unsupported values were inserted.",
@@ -1527,7 +1534,7 @@
       "VND NEEDS_MANUAL_REVIEW — Q2/2024 financing cash-flow comparator: later Q2/2025 comparative OCR candidate 1,078,401.553 million VND vs original Q2/2024 source 1,076,401.553 million VND; difference 2,000 million VND (~0.1857%, >0.01%) and candidate conflicts with total net cash change. Original source retained; no balancing plug; visually inspect the comparative PDF page before changing.",
       "VND source-page image verification remains pending because the archived PDF viewer could not render these large VietstockFinance PDFs; OCR sidecar text and arithmetic reconciliation are retained but are not claimed as direct visual verification."
     ],
-    "nextStep": "VND cash-flow normalization is committed for all 11 periods; all arithmetic residuals are within the user-approved 0.01% relative tolerance. The Q2/2024 CFF later-comparative OCR conflict (~0.1857%) and direct visual-page review remain manual-review items. At the next continuation, proceed to SHS within the same cashflow domain, one ticker at a time, using the standard v1.2. Do not change other data domains.",
+    "nextStep": "VND cash-flow normalization is committed for 11 periods, with all arithmetic residuals within the approved relative tolerance <=0.01%. Direct-PDF visual review remains pending. The Q2/2024 CFF OCR comparator conflict (~0.1857%, above tolerance) remains flagged for manual review; original source value retained with no balancing plug. MBB cash-flow data were restored from the last validated snapshot after an OCR-enrichment overwrite regression, and all 25 tests now pass. At next continuation, proceed to SHS in the same cashflow domain, one ticker at a time, using standard v1.3. Do not change other data domains.",
     "previousCompletedSymbol": "HCM",
     "validationRuns": [
       {
@@ -1669,6 +1676,41 @@
         "status": "success",
         "commit": "f777ae6b5208d689fa92c77ddf5f0d7f686930b9",
         "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40705085982"
+      },
+      {
+        "name": "Validate Site and Data",
+        "runId": "40735388788",
+        "status": "success",
+        "commit": "4181b40fc5852c0a05342f31ea71324e605da054",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40735388788"
+      },
+      {
+        "name": "Validate quarterly financial data",
+        "runId": "40735314898",
+        "status": "success",
+        "commit": "b093dce9440158ba24cf530ed295159cb97922d9",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40735314898"
+      },
+      {
+        "name": "Package Hostinger Stock Dashboard",
+        "runId": "40735314578",
+        "status": "success",
+        "commit": "b093dce9440158ba24cf530ed295159cb97922d9",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40735314578"
+      },
+      {
+        "name": "Validate quarterly financial data",
+        "runId": "40734979159",
+        "status": "success",
+        "commit": "0b1e249eeef3e716c1e98a03cf10af79892e68c0",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40734979159"
+      },
+      {
+        "name": "Package Hostinger Stock Dashboard",
+        "runId": "40734979139",
+        "status": "success",
+        "commit": "0b1e249eeef3e716c1e98a03cf10af79892e68c0",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40734979139"
       }
     ],
     "lastCompletedSymbol": "FPT"
