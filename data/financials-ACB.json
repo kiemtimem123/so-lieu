@@ -89,9 +89,23 @@
         "bank_service_income",
         "bank_trading_securities",
         "bank_valuable_papers",
+        "cash_beginning",
+        "cash_beginning_reported_ytd",
+        "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
         "fixed_assets",
+        "foreign_exchange_effect",
+        "foreign_exchange_effect_ytd",
         "income_tax",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
+        "operating_cash_flow",
+        "operating_cash_flow_ytd",
         "operating_profit",
         "retained_earnings"
       ],
@@ -100,11 +114,11 @@
       "financial_line_items_schema_updated_at": "2026-10-28T06:05:09+00:00",
       "financial_line_items_source": "reports/raw/ACB/vietstock-acb-20261019/fc106a3ea36da622.pdf",
       "financial_line_items_updated_at": "2026-10-28T06:05:27+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan.",
-      "operating_cash_flow_calculation": "operating_cash_flow quý I = giá trị lũy kế quý I (operating_cash_flow_ytd).",
-      "investing_cash_flow_calculation": "investing_cash_flow quý I = giá trị lũy kế quý I (investing_cash_flow_ytd).",
-      "financing_cash_flow_calculation": "financing_cash_flow quý I = giá trị lũy kế quý I (financing_cash_flow_ytd).",
-      "net_cash_change_calculation": "net_cash_change quý I = giá trị lũy kế quý I (net_cash_change_ytd).",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. CASHFLOW NORMALIZATION 2026-10-28: LCTT lấy từ dòng lưu chuyển thuần cuối nhóm (không lấy subtotal trước biến động tài sản/công nợ); quý riêng = YTD hiện tại trừ YTD liền trước. Nguồn PDF trang 6, 7; trạng thái kiểm tra trực quan=selected_pages_visually_checked.",
+      "operating_cash_flow_calculation": "Quý I bằng số lũy kế quý I theo dòng lưu chuyển thuần cuối nhóm; không dùng subtotal trước thay đổi tài sản/công nợ.",
+      "investing_cash_flow_calculation": "Quý I bằng số lũy kế quý I theo dòng lưu chuyển thuần cuối nhóm; không dùng subtotal trước thay đổi tài sản/công nợ.",
+      "financing_cash_flow_calculation": "Quý I bằng số lũy kế quý I theo dòng lưu chuyển thuần cuối nhóm; không dùng subtotal trước thay đổi tài sản/công nợ.",
+      "net_cash_change_calculation": "Quý I bằng số lũy kế quý I theo dòng lưu chuyển thuần cuối nhóm; không dùng subtotal trước thay đổi tài sản/công nợ.",
       "financial_line_items_prior_values": {
         "bank_operating_expenses": -2763921,
         "bank_provision_expense": -512217,
@@ -123,40 +137,8 @@
         "operating_profit": 5404530
       },
       "financial_line_items_rejected_values": {
-        "operating_cash_flow": {
-          "value": 901606,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "investing_cash_flow": {
-          "value": -29484,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "financing_cash_flow": {
-          "value": 0,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "net_cash_change": {
-          "value": -9499874,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
         "capital_expenditure": {
           "value": -34725,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "operating_cash_flow_ytd": {
-          "value": 901606,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "investing_cash_flow_ytd": {
-          "value": -29484,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "financing_cash_flow_ytd": {
-          "value": 0,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "net_cash_change_ytd": {
-          "value": -9499874,
           "reason": "cash-flow components do not reconcile to reported net cash change"
         },
         "capital_expenditure_ytd": {
@@ -170,16 +152,8 @@
       "financial_line_items_rejected_fields": [
         "capital_expenditure",
         "capital_expenditure_ytd",
-        "financing_cash_flow",
-        "financing_cash_flow_ytd",
         "income_tax_deferred_tax_reconciliation_check",
-        "income_tax_tax_reconciliation_check",
-        "investing_cash_flow",
-        "investing_cash_flow_ytd",
-        "net_cash_change",
-        "net_cash_change_ytd",
-        "operating_cash_flow",
-        "operating_cash_flow_ytd"
+        "income_tax_tax_reconciliation_check"
       ],
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "e9e19af70202284272210f32a56c0c0e4ba8e6a763cc49eb6c12b42006d43774",
@@ -267,7 +241,59 @@
         "operating_cash_flow_ytd"
       ],
       "operating_profit": 5404530,
-      "operating_profit_calculation": "Lợi nhuận hoạt động chung của ngân hàng lấy từ dòng lợi nhuận thuần trước chi phí dự phòng rủi ro tín dụng trong cùng BCTC."
+      "operating_profit_calculation": "Lợi nhuận hoạt động chung của ngân hàng lấy từ dòng lợi nhuận thuần trước chi phí dự phòng rủi ro tín dụng trong cùng BCTC.",
+      "operating_cash_flow_ytd": -9470390,
+      "investing_cash_flow_ytd": -29484,
+      "financing_cash_flow_ytd": 0,
+      "net_cash_change_ytd": -9499874,
+      "cash_beginning_reported_ytd": 136071738,
+      "cash_ending_reported_ytd": 126501216,
+      "foreign_exchange_effect_ytd": -70648,
+      "operating_cash_flow": -9470390,
+      "investing_cash_flow": -29484,
+      "financing_cash_flow": 0,
+      "net_cash_change": -9499874,
+      "cash_beginning": 136071738,
+      "cash_ending": 126501216,
+      "foreign_exchange_effect": -70648,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%201/ACB_Baocaotaichinh_Q1_2024_Hopnhat.pdf",
+        "selected_source_index_url": "https://finance.vietstock.vn/ACB/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/ACB/vietstock-acb-20261019/fc106a3ea36da622.pdf",
+        "source_pdf_pages": [
+          6,
+          7
+        ],
+        "source_printed_pages": [
+          4,
+          5
+        ],
+        "selected_basis": "current Q1/2024 consolidated report",
+        "source_visual_review": "selected_pages_visually_checked",
+        "unit": "triệu VND",
+        "period_basis": "year_to_date",
+        "prior_non_null_values_corrected": {},
+        "revised_basis_applied": false
+      },
+      "cashflow_source_reconciliation": {
+        "status": "PASS_ARITHMETIC_RECONCILED",
+        "units": "triệu VND",
+        "report_period": "2024-Q1",
+        "source_archive_file": "reports/raw/ACB/vietstock-acb-20261019/fc106a3ea36da622.pdf",
+        "source_pdf_pages": [
+          6,
+          7
+        ],
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%201/ACB_Baocaotaichinh_Q1_2024_Hopnhat.pdf",
+        "source_index_url": "https://finance.vietstock.vn/ACB/tai-tai-lieu.htm?doctype=1",
+        "visual_review": "selected_pages_visually_checked",
+        "ytd_flow_components_sum_to_net_cash_change": true,
+        "ytd_cash_bridge_residual": 0,
+        "quarter_flow_components_sum_to_net_cash_change": true,
+        "quarter_cash_bridge_residual": 0,
+        "standalone_quarter_derived_from_ytd": "Q1 equals YTD",
+        "note": null
+      }
     },
     {
       "symbol": "ACB",
@@ -317,16 +343,28 @@
         "bank_provision_expense",
         "bank_service_expense",
         "bank_service_income",
+        "cash_beginning",
+        "cash_beginning_reported_ytd",
+        "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
         "fixed_assets",
+        "foreign_exchange_effect",
+        "foreign_exchange_effect_ytd",
         "income_tax",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
         "operating_cash_flow",
         "operating_cash_flow_ytd"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/ACB/vietstock-acb-20261019/959df6020779b9af.pdf",
       "financial_line_items_updated_at": "2026-10-28T06:05:27+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu thu nhập đang là số lũy kế; chưa đủ dữ liệu chi tiết các quý trước để tách riêng quý nên được để trống, không hiển thị số lũy kế như số quý. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu thu nhập đang là số lũy kế; chưa đủ dữ liệu chi tiết các quý trước để tách riêng quý nên được để trống, không hiển thị số lũy kế như số quý. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. CASHFLOW NORMALIZATION 2026-10-28: LCTT lấy từ dòng lưu chuyển thuần cuối nhóm (không lấy subtotal trước biến động tài sản/công nợ); quý riêng = YTD hiện tại trừ YTD liền trước. Nguồn PDF trang 11, 12; trạng thái kiểm tra trực quan=ocr_text_reconciled_visual_review_pending.",
       "financial_line_items_prior_values": {
         "bank_dividend_and_capital_income": 0,
         "bank_fx_net_income": 1,
@@ -352,10 +390,10 @@
       "income_tax": 1129653,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
       "bank_customer_loans": 543853038,
-      "operating_cash_flow_ytd": 7417337,
+      "operating_cash_flow_ytd": -12620430,
       "cashflow_period_basis": "year_to_date",
-      "operating_cash_flow": 6515731,
-      "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "operating_cash_flow": -3150040,
+      "operating_cash_flow_calculation": "Số quý riêng = số lũy kế kỳ hiện tại − số lũy kế kỳ trước cùng năm.",
       "financial_line_items_value_corrections": {
         "bank_dividend_and_capital_income": {
           "previous_value": 0,
@@ -474,7 +512,71 @@
       "bank_operating_expenses": 2465618,
       "bank_other_operating_net": 285871,
       "bank_pre_provision_operating_profit_calculation": "Lợi nhuận trước thuế + chi phí dự phòng tín dụng dương; khôi phục tổng phụ trước dự phòng.",
-      "bank_pre_provision_operating_profit": 17701383
+      "bank_pre_provision_operating_profit": 17701383,
+      "investing_cash_flow_ytd": -290397,
+      "financing_cash_flow_ytd": -3884051,
+      "net_cash_change_ytd": -16794878,
+      "cash_beginning_reported_ytd": 136071738,
+      "cash_ending_reported_ytd": 119023619,
+      "foreign_exchange_effect_ytd": -253241,
+      "investing_cash_flow": -260913,
+      "financing_cash_flow": -3884051,
+      "net_cash_change": -7295004,
+      "cash_beginning": 126501216,
+      "cash_ending": 119023619,
+      "foreign_exchange_effect": -182593,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%202/ACB_Baocaotaichinh_6T_2024_Soatxet_Hopnhat.pdf",
+        "selected_source_index_url": "https://finance.vietstock.vn/ACB/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/ACB/vietstock-acb-20261019/959df6020779b9af.pdf",
+        "source_pdf_pages": [
+          11,
+          12
+        ],
+        "source_printed_pages": [
+          9,
+          10
+        ],
+        "selected_basis": "reviewed consolidated H1/2024 report",
+        "source_visual_review": "ocr_text_reconciled_visual_review_pending",
+        "unit": "triệu VND",
+        "period_basis": "year_to_date",
+        "prior_non_null_values_corrected": {
+          "operating_cash_flow_ytd": {
+            "previous_value": 7417337,
+            "new_value": -12620430,
+            "reason": "Nguồn dòng LCTT cuối nhóm được xác định lại; giá trị cũ là subtotal trước biến động tài sản/công nợ hoặc lỗi ánh xạ, không phải dòng lưu chuyển thuần.",
+            "source_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%202/ACB_Baocaotaichinh_6T_2024_Soatxet_Hopnhat.pdf",
+            "source_pdf_pages": [
+              11,
+              12
+            ]
+          }
+        },
+        "revised_basis_applied": false
+      },
+      "cashflow_source_reconciliation": {
+        "status": "PASS_ARITHMETIC_RECONCILED",
+        "units": "triệu VND",
+        "report_period": "2024-Q2",
+        "source_archive_file": "reports/raw/ACB/vietstock-acb-20261019/959df6020779b9af.pdf",
+        "source_pdf_pages": [
+          11,
+          12
+        ],
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%202/ACB_Baocaotaichinh_6T_2024_Soatxet_Hopnhat.pdf",
+        "source_index_url": "https://finance.vietstock.vn/ACB/tai-tai-lieu.htm?doctype=1",
+        "visual_review": "ocr_text_reconciled_visual_review_pending",
+        "ytd_flow_components_sum_to_net_cash_change": true,
+        "ytd_cash_bridge_residual": 0,
+        "quarter_flow_components_sum_to_net_cash_change": true,
+        "quarter_cash_bridge_residual": 0,
+        "standalone_quarter_derived_from_ytd": "current YTD minus prior quarter YTD within same year",
+        "note": null
+      },
+      "investing_cash_flow_calculation": "Số quý riêng = số lũy kế kỳ hiện tại − số lũy kế kỳ trước cùng năm.",
+      "financing_cash_flow_calculation": "Số quý riêng = số lũy kế kỳ hiện tại − số lũy kế kỳ trước cùng năm.",
+      "net_cash_change_calculation": "Số quý riêng = số lũy kế kỳ hiện tại − số lũy kế kỳ trước cùng năm."
     },
     {
       "symbol": "ACB",
@@ -539,7 +641,7 @@
       "income_tax_current": -971306,
       "income_tax_deferred": -2343,
       "income_tax": 973649,
-      "operating_cash_flow_ytd": 13005331,
+      "operating_cash_flow_ytd": -29149333,
       "investing_cash_flow_ytd": -394816,
       "financing_cash_flow_ytd": -3884051,
       "net_cash_change_ytd": -33428200,
@@ -569,13 +671,22 @@
         "bank_trading_securities",
         "bank_valuable_papers",
         "capital_expenditure_ytd",
+        "cash_beginning",
+        "cash_beginning_reported_ytd",
+        "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
+        "financing_cash_flow",
         "financing_cash_flow_ytd",
         "fixed_assets",
+        "foreign_exchange_effect",
+        "foreign_exchange_effect_ytd",
         "income_tax",
         "income_tax_current",
         "income_tax_deferred",
+        "investing_cash_flow",
         "investing_cash_flow_ytd",
+        "net_cash_change",
         "net_cash_change_ytd",
         "operating_cash_flow",
         "operating_cash_flow_ytd",
@@ -585,7 +696,7 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/ACB/vietstock-acb-20261019/af9d674fb09f1a08.pdf",
       "financial_line_items_updated_at": "2026-10-28T06:05:27+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Doanh thu cũ trùng thu nhập lãi thuần nhưng chưa đủ cấu phần để tái lập tổng thu nhập hoạt động; đã ẩn. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Doanh thu cũ trùng thu nhập lãi thuần nhưng chưa đủ cấu phần để tái lập tổng thu nhập hoạt động; đã ẩn. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. CASHFLOW NORMALIZATION 2026-10-28: LCTT lấy từ dòng lưu chuyển thuần cuối nhóm (không lấy subtotal trước biến động tài sản/công nợ); quý riêng = YTD hiện tại trừ YTD liền trước. Nguồn PDF trang 6, 7; trạng thái kiểm tra trực quan=selected_pages_visually_checked.",
       "financial_line_items_prior_values": {
         "income_tax": -973649,
         "revenue": 6881387,
@@ -604,8 +715,8 @@
         }
       },
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "operating_cash_flow": 5587994,
-      "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "operating_cash_flow": -16528903,
+      "operating_cash_flow_calculation": "Số quý riêng = số lũy kế kỳ hiện tại − số lũy kế kỳ trước cùng năm.",
       "financial_line_items_schema_version": "2026-10-27-other-statements-source-fields-v12",
       "financial_line_items_schema_updated_at": "2026-10-28T06:05:27+00:00",
       "financial_line_items_rejected_fields": [
@@ -676,7 +787,68 @@
       "bank_pre_provision_operating_profit_calculation": "Lợi nhuận trước thuế + chi phí dự phòng tín dụng dương; khôi phục tổng phụ trước dự phòng.",
       "capital_expenditure_ytd": -500790,
       "operating_profit": 5202287,
-      "operating_profit_calculation": "Lợi nhuận hoạt động chung của ngân hàng lấy từ dòng lợi nhuận thuần trước chi phí dự phòng rủi ro tín dụng trong cùng BCTC."
+      "operating_profit_calculation": "Lợi nhuận hoạt động chung của ngân hàng lấy từ dòng lợi nhuận thuần trước chi phí dự phòng rủi ro tín dụng trong cùng BCTC.",
+      "cash_beginning_reported_ytd": 136071738,
+      "cash_ending_reported_ytd": 102581485,
+      "foreign_exchange_effect_ytd": -62053,
+      "investing_cash_flow": -104419,
+      "financing_cash_flow": 0,
+      "net_cash_change": -16633322,
+      "cash_beginning": 119023619,
+      "cash_ending": 102581485,
+      "foreign_exchange_effect": 191188,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%203/ACB_Baocaotaichinh_Q3_2024_Hopnhat.pdf",
+        "selected_source_index_url": "https://finance.vietstock.vn/ACB/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/ACB/vietstock-acb-20261019/af9d674fb09f1a08.pdf",
+        "source_pdf_pages": [
+          6,
+          7
+        ],
+        "source_printed_pages": [
+          4,
+          5
+        ],
+        "selected_basis": "current Q3/2024 consolidated report",
+        "source_visual_review": "selected_pages_visually_checked",
+        "unit": "triệu VND",
+        "period_basis": "year_to_date",
+        "prior_non_null_values_corrected": {
+          "operating_cash_flow_ytd": {
+            "previous_value": 13005331,
+            "new_value": -29149333,
+            "reason": "Nguồn dòng LCTT cuối nhóm được xác định lại; giá trị cũ là subtotal trước biến động tài sản/công nợ hoặc lỗi ánh xạ, không phải dòng lưu chuyển thuần.",
+            "source_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%203/ACB_Baocaotaichinh_Q3_2024_Hopnhat.pdf",
+            "source_pdf_pages": [
+              6,
+              7
+            ]
+          }
+        },
+        "revised_basis_applied": false
+      },
+      "cashflow_source_reconciliation": {
+        "status": "PASS_ARITHMETIC_RECONCILED",
+        "units": "triệu VND",
+        "report_period": "2024-Q3",
+        "source_archive_file": "reports/raw/ACB/vietstock-acb-20261019/af9d674fb09f1a08.pdf",
+        "source_pdf_pages": [
+          6,
+          7
+        ],
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%203/ACB_Baocaotaichinh_Q3_2024_Hopnhat.pdf",
+        "source_index_url": "https://finance.vietstock.vn/ACB/tai-tai-lieu.htm?doctype=1",
+        "visual_review": "selected_pages_visually_checked",
+        "ytd_flow_components_sum_to_net_cash_change": true,
+        "ytd_cash_bridge_residual": 0,
+        "quarter_flow_components_sum_to_net_cash_change": true,
+        "quarter_cash_bridge_residual": 0,
+        "standalone_quarter_derived_from_ytd": "current YTD minus prior quarter YTD within same year",
+        "note": null
+      },
+      "investing_cash_flow_calculation": "Số quý riêng = số lũy kế kỳ hiện tại − số lũy kế kỳ trước cùng năm.",
+      "financing_cash_flow_calculation": "Số quý riêng = số lũy kế kỳ hiện tại − số lũy kế kỳ trước cùng năm.",
+      "net_cash_change_calculation": "Số quý riêng = số lũy kế kỳ hiện tại − số lũy kế kỳ trước cùng năm."
     },
     {
       "symbol": "ACB",
@@ -763,21 +935,35 @@
         "bank_service_income",
         "bank_trading_securities",
         "bank_valuable_papers",
+        "cash_beginning",
+        "cash_beginning_reported_ytd",
+        "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
         "fixed_assets",
+        "foreign_exchange_effect",
+        "foreign_exchange_effect_ytd",
         "income_tax",
         "income_tax_current",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
+        "operating_cash_flow",
+        "operating_cash_flow_ytd",
         "operating_profit",
         "retained_earnings"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/ACB/vietstock-acb-20261019/d82d1487c377594f.pdf",
       "financial_line_items_updated_at": "2026-10-28T06:05:27+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan.",
-      "operating_cash_flow_calculation": "operating_cash_flow quý riêng = operating_cash_flow_ytd kỳ hiện tại − operating_cash_flow_ytd của 2024-Q3.",
-      "investing_cash_flow_calculation": "investing_cash_flow quý riêng = investing_cash_flow_ytd kỳ hiện tại − investing_cash_flow_ytd của 2024-Q3.",
-      "financing_cash_flow_calculation": "financing_cash_flow quý riêng = financing_cash_flow_ytd kỳ hiện tại − financing_cash_flow_ytd của 2024-Q3.",
-      "net_cash_change_calculation": "net_cash_change quý riêng = net_cash_change_ytd kỳ hiện tại − net_cash_change_ytd của 2024-Q3.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. CASHFLOW NORMALIZATION 2026-10-28: LCTT lấy từ dòng lưu chuyển thuần cuối nhóm (không lấy subtotal trước biến động tài sản/công nợ); quý riêng = YTD hiện tại trừ YTD liền trước. Nguồn PDF trang 7, 8; trạng thái kiểm tra trực quan=selected_pages_visually_checked.",
+      "operating_cash_flow_calculation": "Số quý riêng = số lũy kế kỳ hiện tại − số lũy kế kỳ trước cùng năm.",
+      "investing_cash_flow_calculation": "Số quý riêng = số lũy kế kỳ hiện tại − số lũy kế kỳ trước cùng năm.",
+      "financing_cash_flow_calculation": "Số quý riêng = số lũy kế kỳ hiện tại − số lũy kế kỳ trước cùng năm.",
+      "net_cash_change_calculation": "Số quý riêng = số lũy kế kỳ hiện tại − số lũy kế kỳ trước cùng năm.",
       "financial_line_items_prior_values": {
         "income_tax": -1086127,
         "bank_operating_expenses": -2739350,
@@ -794,40 +980,8 @@
         "operating_profit": 5818946
       },
       "financial_line_items_rejected_values": {
-        "operating_cash_flow": {
-          "value": 3704555,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "investing_cash_flow": {
-          "value": -338495,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "financing_cash_flow": {
-          "value": 0,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "net_cash_change": {
-          "value": 37181070,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
         "capital_expenditure": {
           "value": -418950,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "operating_cash_flow_ytd": {
-          "value": 16709886,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "investing_cash_flow_ytd": {
-          "value": -733311,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "financing_cash_flow_ytd": {
-          "value": -3884051,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "net_cash_change_ytd": {
-          "value": 3752870,
           "reason": "cash-flow components do not reconcile to reported net cash change"
         },
         "capital_expenditure_ytd": {
@@ -839,15 +993,7 @@
       "financial_line_items_rejected_fields": [
         "bank_customer_deposits_magnitude",
         "capital_expenditure",
-        "capital_expenditure_ytd",
-        "financing_cash_flow",
-        "financing_cash_flow_ytd",
-        "investing_cash_flow",
-        "investing_cash_flow_ytd",
-        "net_cash_change",
-        "net_cash_change_ytd",
-        "operating_cash_flow",
-        "operating_cash_flow_ytd"
+        "capital_expenditure_ytd"
       ],
       "financial_line_items_schema_version": "2026-10-27-other-statements-source-fields-v12",
       "financial_line_items_schema_updated_at": "2026-10-28T06:05:15+00:00",
@@ -924,7 +1070,59 @@
         "operating_cash_flow_ytd"
       ],
       "operating_profit": 5818946,
-      "operating_profit_calculation": "Lợi nhuận hoạt động chung của ngân hàng lấy từ dòng lợi nhuận thuần trước chi phí dự phòng rủi ro tín dụng trong cùng BCTC."
+      "operating_profit_calculation": "Lợi nhuận hoạt động chung của ngân hàng lấy từ dòng lợi nhuận thuần trước chi phí dự phòng rủi ro tín dụng trong cùng BCTC.",
+      "operating_cash_flow_ytd": 8370231,
+      "investing_cash_flow_ytd": -733310,
+      "financing_cash_flow_ytd": -3884051,
+      "net_cash_change_ytd": 3752870,
+      "cash_beginning_reported_ytd": 136071738,
+      "cash_ending_reported_ytd": 139824608,
+      "foreign_exchange_effect_ytd": 0,
+      "operating_cash_flow": 37519564,
+      "investing_cash_flow": -338494,
+      "financing_cash_flow": 0,
+      "net_cash_change": 37181070,
+      "cash_beginning": 102581485,
+      "cash_ending": 139824608,
+      "foreign_exchange_effect": 62053,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/ACB_Baocaotaichinh_Q4_2025_Hopnhat.pdf",
+        "selected_source_index_url": "https://finance.vietstock.vn/ACB/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/ACB/vietstock-acb-20261019/ad6cab1acd7556f8.pdf",
+        "source_pdf_pages": [
+          7,
+          8
+        ],
+        "source_printed_pages": [
+          5,
+          6
+        ],
+        "selected_basis": "FY2024 comparative in later Q4/2025 consolidated report; CFO/CFI reclassified by 1 million VND each, net unchanged",
+        "source_visual_review": "selected_pages_visually_checked",
+        "unit": "triệu VND",
+        "period_basis": "year_to_date",
+        "prior_non_null_values_corrected": {},
+        "revised_basis_applied": true
+      },
+      "cashflow_source_reconciliation": {
+        "status": "PASS_ARITHMETIC_RECONCILED",
+        "units": "triệu VND",
+        "report_period": "2024-Q4",
+        "source_archive_file": "reports/raw/ACB/vietstock-acb-20261019/ad6cab1acd7556f8.pdf",
+        "source_pdf_pages": [
+          7,
+          8
+        ],
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/ACB_Baocaotaichinh_Q4_2025_Hopnhat.pdf",
+        "source_index_url": "https://finance.vietstock.vn/ACB/tai-tai-lieu.htm?doctype=1",
+        "visual_review": "selected_pages_visually_checked",
+        "ytd_flow_components_sum_to_net_cash_change": true,
+        "ytd_cash_bridge_residual": 0,
+        "quarter_flow_components_sum_to_net_cash_change": true,
+        "quarter_cash_bridge_residual": 0,
+        "standalone_quarter_derived_from_ytd": "current YTD minus prior quarter YTD within same year",
+        "note": "Uses FY2024 comparative in later Q4/2025 report: CFO changed by -1 and CFI by +1 million VND versus earlier Q4/2024 extraction; net unchanged."
+      }
     },
     {
       "symbol": "ACB",
@@ -1005,10 +1203,24 @@
         "bank_trading_securities",
         "bank_trading_securities_net",
         "bank_valuable_papers",
+        "cash_beginning",
+        "cash_beginning_reported_ytd",
+        "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
         "fixed_assets",
+        "foreign_exchange_effect",
+        "foreign_exchange_effect_ytd",
         "income_tax",
         "income_tax_current",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
+        "operating_cash_flow",
+        "operating_cash_flow_ytd",
         "operating_profit",
         "retained_earnings"
       ],
@@ -1019,14 +1231,14 @@
       "financial_line_items_last_attempt_at": "2026-10-22T10:08:57+00:00",
       "financial_line_items_attempt_count": 0,
       "financial_line_items_last_error": null,
-      "financial_line_items_note": "Chỉ tiêu chi tiết trích xuất từ báo cáo VietstockFinance. Các số lõi đã xác minh được giữ nguyên; chỉ tiêu chi tiết cần đối chiếu trực quan. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Doanh thu cũ trùng thu nhập lãi thuần nhưng chưa đủ cấu phần để tái lập tổng thu nhập hoạt động; đã ẩn. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần.",
+      "financial_line_items_note": "Chỉ tiêu chi tiết trích xuất từ báo cáo VietstockFinance. Các số lõi đã xác minh được giữ nguyên; chỉ tiêu chi tiết cần đối chiếu trực quan. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Doanh thu cũ trùng thu nhập lãi thuần nhưng chưa đủ cấu phần để tái lập tổng thu nhập hoạt động; đã ẩn. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. CASHFLOW NORMALIZATION 2026-10-28: LCTT lấy từ dòng lưu chuyển thuần cuối nhóm (không lấy subtotal trước biến động tài sản/công nợ); quý riêng = YTD hiện tại trừ YTD liền trước. Nguồn PDF trang 7, 8; trạng thái kiểm tra trực quan=ocr_text_reconciled_visual_review_pending.",
       "financial_line_items_extract_review": {
         "final_download_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%201/ACB_Baocaotaichinh_Q1_2025_Hopnhat.pdf",
         "balance_equation_matches": true,
         "unit_note": "triệu VND",
         "candidate_core_values_not_overwritten": true
       },
-      "net_cash_change_calculation": "net_cash_change quý I = giá trị lũy kế quý I (net_cash_change_ytd).",
+      "net_cash_change_calculation": "Quý I bằng số lũy kế quý I theo dòng lưu chuyển thuần cuối nhóm; không dùng subtotal trước thay đổi tài sản/công nợ.",
       "financial_line_items_prior_values": {
         "revenue": 6358865,
         "bank_deposits_and_loans_to_credit_institutions": 129347480,
@@ -1055,40 +1267,8 @@
           "value": 6358865,
           "reason": "legacy parser mapped net interest income into total bank operating income"
         },
-        "operating_cash_flow": {
-          "value": 2203592,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "investing_cash_flow": {
-          "value": -176937,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "financing_cash_flow": {
-          "value": 0,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "net_cash_change": {
-          "value": -4486631,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
         "capital_expenditure": {
           "value": -180662,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "operating_cash_flow_ytd": {
-          "value": 2203592,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "investing_cash_flow_ytd": {
-          "value": -176937,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "financing_cash_flow_ytd": {
-          "value": 0,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "net_cash_change_ytd": {
-          "value": -4486631,
           "reason": "cash-flow components do not reconcile to reported net cash change"
         },
         "capital_expenditure_ytd": {
@@ -1104,14 +1284,6 @@
         "bank_deposits_and_borrowings_from_credit_institutions_magnitude",
         "capital_expenditure",
         "capital_expenditure_ytd",
-        "financing_cash_flow",
-        "financing_cash_flow_ytd",
-        "investing_cash_flow",
-        "investing_cash_flow_ytd",
-        "net_cash_change",
-        "net_cash_change_ytd",
-        "operating_cash_flow",
-        "operating_cash_flow_ytd",
         "revenue"
       ],
       "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
@@ -1123,9 +1295,9 @@
       "bank_funding_and_trust_liabilities": 26725,
       "bank_interest_income": 13327306,
       "income_tax_current": -958551,
-      "operating_cash_flow_calculation": "operating_cash_flow quý I = giá trị lũy kế quý I (operating_cash_flow_ytd).",
-      "investing_cash_flow_calculation": "investing_cash_flow quý I = giá trị lũy kế quý I (investing_cash_flow_ytd).",
-      "financing_cash_flow_calculation": "financing_cash_flow quý I = giá trị lũy kế quý I (financing_cash_flow_ytd).",
+      "operating_cash_flow_calculation": "Quý I bằng số lũy kế quý I theo dòng lưu chuyển thuần cuối nhóm; không dùng subtotal trước thay đổi tài sản/công nợ.",
+      "investing_cash_flow_calculation": "Quý I bằng số lũy kế quý I theo dòng lưu chuyển thuần cuối nhóm; không dùng subtotal trước thay đổi tài sản/công nợ.",
+      "financing_cash_flow_calculation": "Quý I bằng số lũy kế quý I theo dòng lưu chuyển thuần cuối nhóm; không dùng subtotal trước thay đổi tài sản/công nợ.",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "168885f3a75fb7cad3d97a1d09126eadc5e08c8e2eeb11b2a19da95e453e1781",
       "core_financial_extraction_evidence_attempt_count": 0,
@@ -1238,7 +1410,59 @@
         "operating_cash_flow_ytd"
       ],
       "operating_profit": 9819344,
-      "operating_profit_calculation": "Lợi nhuận hoạt động chung của ngân hàng lấy từ dòng lợi nhuận thuần trước chi phí dự phòng rủi ro tín dụng trong cùng BCTC."
+      "operating_profit_calculation": "Lợi nhuận hoạt động chung của ngân hàng lấy từ dòng lợi nhuận thuần trước chi phí dự phòng rủi ro tín dụng trong cùng BCTC.",
+      "operating_cash_flow_ytd": -4309694,
+      "investing_cash_flow_ytd": -176937,
+      "financing_cash_flow_ytd": 0,
+      "net_cash_change_ytd": -4486631,
+      "cash_beginning_reported_ytd": 139824608,
+      "cash_ending_reported_ytd": 135272610,
+      "foreign_exchange_effect_ytd": -65367,
+      "operating_cash_flow": -4309694,
+      "investing_cash_flow": -176937,
+      "financing_cash_flow": 0,
+      "net_cash_change": -4486631,
+      "cash_beginning": 139824608,
+      "cash_ending": 135272610,
+      "foreign_exchange_effect": -65367,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/ACB_Baocaotaichinh_Q1_2026_Hopnhat.zip",
+        "selected_source_index_url": "https://finance.vietstock.vn/ACB/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/ACB/vietstock-acb-2026-priority-20261019/0e27e2eb7262b4c8.zip",
+        "source_pdf_pages": [
+          7,
+          8
+        ],
+        "source_printed_pages": [
+          5,
+          6
+        ],
+        "selected_basis": "Q1/2025 comparative columns in later Q1/2026 consolidated report",
+        "source_visual_review": "ocr_text_reconciled_visual_review_pending",
+        "unit": "triệu VND",
+        "period_basis": "year_to_date",
+        "prior_non_null_values_corrected": {},
+        "revised_basis_applied": true
+      },
+      "cashflow_source_reconciliation": {
+        "status": "PASS_ARITHMETIC_RECONCILED",
+        "units": "triệu VND",
+        "report_period": "2025-Q1",
+        "source_archive_file": "reports/raw/ACB/vietstock-acb-2026-priority-20261019/0e27e2eb7262b4c8.zip",
+        "source_pdf_pages": [
+          7,
+          8
+        ],
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/ACB_Baocaotaichinh_Q1_2026_Hopnhat.zip",
+        "source_index_url": "https://finance.vietstock.vn/ACB/tai-tai-lieu.htm?doctype=1",
+        "visual_review": "ocr_text_reconciled_visual_review_pending",
+        "ytd_flow_components_sum_to_net_cash_change": true,
+        "ytd_cash_bridge_residual": 0,
+        "quarter_flow_components_sum_to_net_cash_change": true,
+        "quarter_cash_bridge_residual": 0,
+        "standalone_quarter_derived_from_ytd": "Q1 equals YTD",
+        "note": "Uses Q1/2026 comparative for Q1/2025."
+      }
     },
     {
       "symbol": "ACB",
@@ -1332,12 +1556,22 @@
         "bank_valuable_papers",
         "capital_expenditure",
         "capital_expenditure_ytd",
+        "cash_beginning",
+        "cash_beginning_reported_ytd",
+        "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
+        "financing_cash_flow",
         "financing_cash_flow_ytd",
         "fixed_assets",
+        "foreign_exchange_effect",
+        "foreign_exchange_effect_ytd",
         "income_tax",
+        "investing_cash_flow",
         "investing_cash_flow_ytd",
+        "net_cash_change",
         "net_cash_change_ytd",
+        "operating_cash_flow",
         "operating_cash_flow_ytd",
         "operating_profit",
         "retained_earnings",
@@ -1348,11 +1582,11 @@
       "financial_line_items_schema_updated_at": "2026-10-28T06:05:27+00:00",
       "financial_line_items_source": "reports/raw/ACB/repair-acb-h1-2025-consolidated/94cbe09e3533cc23.pdf",
       "financial_line_items_updated_at": "2026-10-28T06:05:27+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan.",
-      "operating_cash_flow_calculation": "reported as standalone quarter",
-      "investing_cash_flow_calculation": "reported as standalone quarter",
-      "financing_cash_flow_calculation": "reported as standalone quarter",
-      "net_cash_change_calculation": "reported as standalone quarter",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. CASHFLOW NORMALIZATION 2026-10-28: LCTT lấy từ dòng lưu chuyển thuần cuối nhóm (không lấy subtotal trước biến động tài sản/công nợ); quý riêng = YTD hiện tại trừ YTD liền trước. Nguồn PDF trang 7, 8; trạng thái kiểm tra trực quan=selected_pages_visually_checked.",
+      "operating_cash_flow_calculation": "Số quý riêng = số lũy kế kỳ hiện tại − số lũy kế kỳ trước cùng năm.",
+      "investing_cash_flow_calculation": "Số quý riêng = số lũy kế kỳ hiện tại − số lũy kế kỳ trước cùng năm.",
+      "financing_cash_flow_calculation": "Số quý riêng = số lũy kế kỳ hiện tại − số lũy kế kỳ trước cùng năm.",
+      "net_cash_change_calculation": "Số quý riêng = số lũy kế kỳ hiện tại − số lũy kế kỳ trước cùng năm.",
       "financial_line_items_prior_values": {
         "bank_provision_expense": 11779120,
         "bank_operating_expenses": -5428052,
@@ -1366,24 +1600,7 @@
         "operating_cash_flow_ytd": 8594951,
         "capital_expenditure": -101469
       },
-      "financial_line_items_rejected_values": {
-        "operating_cash_flow": {
-          "value": 8594951,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "investing_cash_flow": {
-          "value": -223472,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "financing_cash_flow": {
-          "value": -4466658,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "net_cash_change": {
-          "value": -14490420,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        }
-      },
+      "financial_line_items_rejected_values": {},
       "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
       "financial_line_items_value_corrections": {
         "bank_provision_expense": {
@@ -1426,12 +1643,8 @@
       "income_tax": 1212186,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
       "financial_line_items_rejected_fields": [
-        "financing_cash_flow",
         "income_tax_current_tax_reconciliation_check",
-        "income_tax_tax_reconciliation_check",
-        "investing_cash_flow",
-        "net_cash_change",
-        "operating_cash_flow"
+        "income_tax_tax_reconciliation_check"
       ],
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "7badd49b8eba7fd3ba580e769b3c4b0519088cc812e0924fbb8f96b7196a2cd6",
@@ -1451,10 +1664,69 @@
         "net_cash_change_ytd",
         "operating_cash_flow_ytd"
       ],
-      "operating_cash_flow_ytd": 8594951,
+      "operating_cash_flow_ytd": -9800290,
       "investing_cash_flow_ytd": -223472,
       "financing_cash_flow_ytd": -4466658,
-      "net_cash_change_ytd": -14490420
+      "net_cash_change_ytd": -14490420,
+      "cash_beginning_reported_ytd": 139824608,
+      "cash_ending_reported_ytd": 125090372,
+      "foreign_exchange_effect_ytd": -243816,
+      "operating_cash_flow": -5490596,
+      "investing_cash_flow": -46535,
+      "financing_cash_flow": -4466658,
+      "net_cash_change": -10003789,
+      "cash_beginning": 135272610,
+      "cash_ending": 125090372,
+      "foreign_exchange_effect": -178449,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/ACB_Baocaotaichinh_Q2_2026_Hopnhat.pdf",
+        "selected_source_index_url": "https://finance.vietstock.vn/ACB/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/ACB/vietstock-acb-2026-priority-20261019/db55bb607d254aee.pdf",
+        "source_pdf_pages": [
+          7,
+          8
+        ],
+        "source_printed_pages": [
+          5,
+          6
+        ],
+        "selected_basis": "H1/2025 comparative columns in later Q2/2026 consolidated report; supersedes earlier H1/2025 extraction basis",
+        "source_visual_review": "selected_pages_visually_checked",
+        "unit": "triệu VND",
+        "period_basis": "year_to_date",
+        "prior_non_null_values_corrected": {
+          "operating_cash_flow_ytd": {
+            "previous_value": 8594951,
+            "new_value": -9800290,
+            "reason": "Nguồn dòng LCTT cuối nhóm được xác định lại; giá trị cũ là subtotal trước biến động tài sản/công nợ hoặc lỗi ánh xạ, không phải dòng lưu chuyển thuần.",
+            "source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/ACB_Baocaotaichinh_Q2_2026_Hopnhat.pdf",
+            "source_pdf_pages": [
+              7,
+              8
+            ]
+          }
+        },
+        "revised_basis_applied": true
+      },
+      "cashflow_source_reconciliation": {
+        "status": "PASS_ARITHMETIC_RECONCILED",
+        "units": "triệu VND",
+        "report_period": "2025-Q2",
+        "source_archive_file": "reports/raw/ACB/vietstock-acb-2026-priority-20261019/db55bb607d254aee.pdf",
+        "source_pdf_pages": [
+          7,
+          8
+        ],
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/ACB_Baocaotaichinh_Q2_2026_Hopnhat.pdf",
+        "source_index_url": "https://finance.vietstock.vn/ACB/tai-tai-lieu.htm?doctype=1",
+        "visual_review": "selected_pages_visually_checked",
+        "ytd_flow_components_sum_to_net_cash_change": true,
+        "ytd_cash_bridge_residual": 0,
+        "quarter_flow_components_sum_to_net_cash_change": true,
+        "quarter_cash_bridge_residual": 0,
+        "standalone_quarter_derived_from_ytd": "current YTD minus prior quarter YTD within same year",
+        "note": "Uses Q2/2026 comparative H1/2025 values; Q3 standalone recalculated against this basis, no balancing plug."
+      }
     },
     {
       "symbol": "ACB",
@@ -1546,11 +1818,25 @@
         "bank_trading_securities",
         "bank_trading_securities_net",
         "bank_valuable_papers",
+        "cash_beginning",
+        "cash_beginning_reported_ytd",
+        "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
         "fixed_assets",
+        "foreign_exchange_effect",
+        "foreign_exchange_effect_ytd",
         "income_tax",
         "income_tax_current",
         "income_tax_deferred",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
+        "operating_cash_flow",
+        "operating_cash_flow_ytd",
         "operating_profit",
         "retained_earnings"
       ],
@@ -1559,7 +1845,7 @@
       "financial_line_items_schema_updated_at": "2026-10-28T06:05:21+00:00",
       "financial_line_items_source": "reports/raw/ACB/vietstock-acb-20261019/62ad59ba4d81857b.pdf",
       "financial_line_items_updated_at": "2026-10-28T06:05:27+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. CASHFLOW NORMALIZATION 2026-10-28: LCTT lấy từ dòng lưu chuyển thuần cuối nhóm (không lấy subtotal trước biến động tài sản/công nợ); quý riêng = YTD hiện tại trừ YTD liền trước. Nguồn PDF trang 7, 8; trạng thái kiểm tra trực quan=ocr_text_reconciled_visual_review_pending.",
       "financial_line_items_prior_values": {
         "income_tax": -1101207,
         "bank_operating_expenses": -2713933,
@@ -1577,40 +1863,8 @@
         "operating_profit": 5670732
       },
       "financial_line_items_rejected_values": {
-        "operating_cash_flow": {
-          "value": 4635312,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "investing_cash_flow": {
-          "value": 132930,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "financing_cash_flow": {
-          "value": 0,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "net_cash_change": {
-          "value": -11257690,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
         "capital_expenditure": {
           "value": -96628,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "operating_cash_flow_ytd": {
-          "value": 13230263,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "investing_cash_flow_ytd": {
-          "value": -90542,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "financing_cash_flow_ytd": {
-          "value": -4466658,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "net_cash_change_ytd": {
-          "value": -25748110,
           "reason": "cash-flow components do not reconcile to reported net cash change"
         },
         "capital_expenditure_ytd": {
@@ -1690,23 +1944,15 @@
       "bank_pre_provision_operating_profit": 5670732,
       "bank_pre_provision_operating_profit_calculation": "Lợi nhuận trước thuế + chi phí dự phòng tín dụng dương; khôi phục tổng phụ trước dự phòng.",
       "capital_expenditure_calculation": "capital_expenditure quý riêng = capital_expenditure_ytd kỳ hiện tại − capital_expenditure_ytd của 2025-Q2.",
-      "operating_cash_flow_calculation": "operating_cash_flow quý riêng = operating_cash_flow_ytd kỳ hiện tại − operating_cash_flow_ytd của 2025-Q2.",
-      "investing_cash_flow_calculation": "investing_cash_flow quý riêng = investing_cash_flow_ytd kỳ hiện tại − investing_cash_flow_ytd của 2025-Q2.",
-      "financing_cash_flow_calculation": "financing_cash_flow quý riêng = financing_cash_flow_ytd kỳ hiện tại − financing_cash_flow_ytd của 2025-Q2.",
-      "net_cash_change_calculation": "net_cash_change quý riêng = net_cash_change_ytd kỳ hiện tại − net_cash_change_ytd của 2025-Q2.",
+      "operating_cash_flow_calculation": "Số quý riêng = số lũy kế kỳ hiện tại − số lũy kế kỳ trước cùng năm.",
+      "investing_cash_flow_calculation": "Số quý riêng = số lũy kế kỳ hiện tại − số lũy kế kỳ trước cùng năm.",
+      "financing_cash_flow_calculation": "Số quý riêng = số lũy kế kỳ hiện tại − số lũy kế kỳ trước cùng năm.",
+      "net_cash_change_calculation": "Số quý riêng = số lũy kế kỳ hiện tại − số lũy kế kỳ trước cùng năm.",
       "operating_profit": 5670732,
       "operating_profit_calculation": "Lợi nhuận hoạt động chung của ngân hàng lấy từ dòng lợi nhuận thuần trước chi phí dự phòng rủi ro tín dụng trong cùng BCTC.",
       "financial_line_items_rejected_fields": [
         "capital_expenditure",
-        "capital_expenditure_ytd",
-        "financing_cash_flow",
-        "financing_cash_flow_ytd",
-        "investing_cash_flow",
-        "investing_cash_flow_ytd",
-        "net_cash_change",
-        "net_cash_change_ytd",
-        "operating_cash_flow",
-        "operating_cash_flow_ytd"
+        "capital_expenditure_ytd"
       ],
       "financial_line_items_rejected_recovered_fields": [
         "capital_expenditure_ytd",
@@ -1714,7 +1960,59 @@
         "investing_cash_flow_ytd",
         "net_cash_change_ytd",
         "operating_cash_flow_ytd"
-      ]
+      ],
+      "operating_cash_flow_ytd": -21190910,
+      "investing_cash_flow_ytd": -90542,
+      "financing_cash_flow_ytd": -4466658,
+      "net_cash_change_ytd": -25748110,
+      "cash_beginning_reported_ytd": 139824608,
+      "cash_ending_reported_ytd": 113756964,
+      "foreign_exchange_effect_ytd": -319534,
+      "operating_cash_flow": -11390620,
+      "investing_cash_flow": 132930,
+      "financing_cash_flow": 0,
+      "net_cash_change": -11257690,
+      "cash_beginning": 125090372,
+      "cash_ending": 113756964,
+      "foreign_exchange_effect": -75718,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%203/ACB_Baocaotaichinh_Q3_2025_Hopnhat.pdf",
+        "selected_source_index_url": "https://finance.vietstock.vn/ACB/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/ACB/vietstock-acb-20261019/62ad59ba4d81857b.pdf",
+        "source_pdf_pages": [
+          7,
+          8
+        ],
+        "source_printed_pages": [
+          5,
+          6
+        ],
+        "selected_basis": "current Q3/2025 consolidated report; standalone Q3 recalculated against latest H1/2025 comparative basis",
+        "source_visual_review": "ocr_text_reconciled_visual_review_pending",
+        "unit": "triệu VND",
+        "period_basis": "year_to_date",
+        "prior_non_null_values_corrected": {},
+        "revised_basis_applied": true
+      },
+      "cashflow_source_reconciliation": {
+        "status": "PASS_ARITHMETIC_RECONCILED",
+        "units": "triệu VND",
+        "report_period": "2025-Q3",
+        "source_archive_file": "reports/raw/ACB/vietstock-acb-20261019/62ad59ba4d81857b.pdf",
+        "source_pdf_pages": [
+          7,
+          8
+        ],
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%203/ACB_Baocaotaichinh_Q3_2025_Hopnhat.pdf",
+        "source_index_url": "https://finance.vietstock.vn/ACB/tai-tai-lieu.htm?doctype=1",
+        "visual_review": "ocr_text_reconciled_visual_review_pending",
+        "ytd_flow_components_sum_to_net_cash_change": true,
+        "ytd_cash_bridge_residual": 0,
+        "quarter_flow_components_sum_to_net_cash_change": true,
+        "quarter_cash_bridge_residual": 0,
+        "standalone_quarter_derived_from_ytd": "current YTD minus prior quarter YTD within same year",
+        "note": null
+      }
     },
     {
       "symbol": "ACB",
@@ -1777,7 +2075,7 @@
       "bank_dividend_and_capital_income": 39141,
       "bank_provision_expense": 1956645,
       "income_tax": 682342,
-      "operating_cash_flow_ytd": 48097000,
+      "operating_cash_flow_ytd": 28160074,
       "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
         "bank_cash_on_hand",
@@ -1803,9 +2101,21 @@
         "bank_trading_securities",
         "bank_trading_securities_net",
         "bank_valuable_papers",
+        "cash_beginning",
+        "cash_beginning_reported_ytd",
+        "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
         "fixed_assets",
+        "foreign_exchange_effect",
+        "foreign_exchange_effect_ytd",
         "income_tax",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
         "operating_cash_flow",
         "operating_cash_flow_ytd",
         "operating_profit",
@@ -1816,9 +2126,9 @@
       "financial_line_items_schema_updated_at": "2026-10-28T06:05:27+00:00",
       "financial_line_items_source": "reports/raw/ACB/vietstock-acb-20261019/ad6cab1acd7556f8.pdf",
       "financial_line_items_updated_at": "2026-10-28T06:05:27+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan.",
-      "operating_cash_flow": 34866737,
-      "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. CASHFLOW NORMALIZATION 2026-10-28: LCTT lấy từ dòng lưu chuyển thuần cuối nhóm (không lấy subtotal trước biến động tài sản/công nợ); quý riêng = YTD hiện tại trừ YTD liền trước. Nguồn PDF trang 7, 8; trạng thái kiểm tra trực quan=selected_pages_visually_checked.",
+      "operating_cash_flow": 49350984,
+      "operating_cash_flow_calculation": "Số quý riêng = số lũy kế kỳ hiện tại − số lũy kế kỳ trước cùng năm.",
       "financial_line_items_prior_values": {
         "income_tax": -663269,
         "bank_operating_expenses": -2782374,
@@ -1904,7 +2214,71 @@
       "bank_pre_provision_operating_profit": 5423672,
       "bank_pre_provision_operating_profit_calculation": "Lợi nhuận trước thuế + chi phí dự phòng tín dụng dương; khôi phục tổng phụ trước dự phòng.",
       "operating_profit": 5423672,
-      "operating_profit_calculation": "Lợi nhuận hoạt động chung của ngân hàng lấy từ dòng lợi nhuận thuần trước chi phí dự phòng rủi ro tín dụng trong cùng BCTC."
+      "operating_profit_calculation": "Lợi nhuận hoạt động chung của ngân hàng lấy từ dòng lợi nhuận thuần trước chi phí dự phòng rủi ro tín dụng trong cùng BCTC.",
+      "investing_cash_flow_ytd": -304232,
+      "financing_cash_flow_ytd": -4466658,
+      "net_cash_change_ytd": 23389184,
+      "cash_beginning_reported_ytd": 139824608,
+      "cash_ending_reported_ytd": 163213792,
+      "foreign_exchange_effect_ytd": 0,
+      "investing_cash_flow": -213690,
+      "financing_cash_flow": 0,
+      "net_cash_change": 49137294,
+      "cash_beginning": 113756964,
+      "cash_ending": 163213792,
+      "foreign_exchange_effect": 319534,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/ACB_Baocaotaichinh_Q4_2025_Hopnhat.pdf",
+        "selected_source_index_url": "https://finance.vietstock.vn/ACB/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/ACB/vietstock-acb-20261019/ad6cab1acd7556f8.pdf",
+        "source_pdf_pages": [
+          7,
+          8
+        ],
+        "source_printed_pages": [
+          5,
+          6
+        ],
+        "selected_basis": "current Q4/2025 consolidated report",
+        "source_visual_review": "selected_pages_visually_checked",
+        "unit": "triệu VND",
+        "period_basis": "year_to_date",
+        "prior_non_null_values_corrected": {
+          "operating_cash_flow_ytd": {
+            "previous_value": 48097000,
+            "new_value": 28160074,
+            "reason": "Nguồn dòng LCTT cuối nhóm được xác định lại; giá trị cũ là subtotal trước biến động tài sản/công nợ hoặc lỗi ánh xạ, không phải dòng lưu chuyển thuần.",
+            "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/ACB_Baocaotaichinh_Q4_2025_Hopnhat.pdf",
+            "source_pdf_pages": [
+              7,
+              8
+            ]
+          }
+        },
+        "revised_basis_applied": false
+      },
+      "cashflow_source_reconciliation": {
+        "status": "PASS_ARITHMETIC_RECONCILED",
+        "units": "triệu VND",
+        "report_period": "2025-Q4",
+        "source_archive_file": "reports/raw/ACB/vietstock-acb-20261019/ad6cab1acd7556f8.pdf",
+        "source_pdf_pages": [
+          7,
+          8
+        ],
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/ACB_Baocaotaichinh_Q4_2025_Hopnhat.pdf",
+        "source_index_url": "https://finance.vietstock.vn/ACB/tai-tai-lieu.htm?doctype=1",
+        "visual_review": "selected_pages_visually_checked",
+        "ytd_flow_components_sum_to_net_cash_change": true,
+        "ytd_cash_bridge_residual": 0,
+        "quarter_flow_components_sum_to_net_cash_change": true,
+        "quarter_cash_bridge_residual": 0,
+        "standalone_quarter_derived_from_ytd": "current YTD minus prior quarter YTD within same year",
+        "note": null
+      },
+      "investing_cash_flow_calculation": "Số quý riêng = số lũy kế kỳ hiện tại − số lũy kế kỳ trước cùng năm.",
+      "financing_cash_flow_calculation": "Số quý riêng = số lũy kế kỳ hiện tại − số lũy kế kỳ trước cùng năm.",
+      "net_cash_change_calculation": "Số quý riêng = số lũy kế kỳ hiện tại − số lũy kế kỳ trước cùng năm."
     },
     {
       "symbol": "ACB",
@@ -1973,10 +2347,24 @@
         "bank_trading_securities",
         "bank_trading_securities_net",
         "bank_valuable_papers",
+        "cash_beginning",
+        "cash_beginning_reported_ytd",
+        "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
         "fixed_assets",
+        "foreign_exchange_effect",
+        "foreign_exchange_effect_ytd",
         "income_tax",
         "income_tax_current",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
+        "operating_cash_flow",
+        "operating_cash_flow_ytd",
         "operating_profit",
         "retained_earnings",
         "revenue"
@@ -1984,11 +2372,11 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/ACB/vietstock-acb-2026-priority-20261019/0e27e2eb7262b4c8.zip",
       "financial_line_items_updated_at": "2026-10-28T06:05:27+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Doanh thu cũ trùng thu nhập lãi thuần nhưng chưa đủ cấu phần để tái lập tổng thu nhập hoạt động; đã ẩn. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan.",
-      "operating_cash_flow_calculation": "operating_cash_flow quý I = giá trị lũy kế quý I (operating_cash_flow_ytd).",
-      "investing_cash_flow_calculation": "investing_cash_flow quý I = giá trị lũy kế quý I (investing_cash_flow_ytd).",
-      "financing_cash_flow_calculation": "financing_cash_flow quý I = giá trị lũy kế quý I (financing_cash_flow_ytd).",
-      "net_cash_change_calculation": "net_cash_change quý I = giá trị lũy kế quý I (net_cash_change_ytd).",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Doanh thu cũ trùng thu nhập lãi thuần nhưng chưa đủ cấu phần để tái lập tổng thu nhập hoạt động; đã ẩn. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. CASHFLOW NORMALIZATION 2026-10-28: LCTT lấy từ dòng lưu chuyển thuần cuối nhóm (không lấy subtotal trước biến động tài sản/công nợ); quý riêng = YTD hiện tại trừ YTD liền trước. Nguồn PDF trang 7, 8; trạng thái kiểm tra trực quan=ocr_text_reconciled_visual_review_pending.",
+      "operating_cash_flow_calculation": "Quý I bằng số lũy kế quý I theo dòng lưu chuyển thuần cuối nhóm; không dùng subtotal trước thay đổi tài sản/công nợ.",
+      "investing_cash_flow_calculation": "Quý I bằng số lũy kế quý I theo dòng lưu chuyển thuần cuối nhóm; không dùng subtotal trước thay đổi tài sản/công nợ.",
+      "financing_cash_flow_calculation": "Quý I bằng số lũy kế quý I theo dòng lưu chuyển thuần cuối nhóm; không dùng subtotal trước thay đổi tài sản/công nợ.",
+      "net_cash_change_calculation": "Quý I bằng số lũy kế quý I theo dòng lưu chuyển thuần cuối nhóm; không dùng subtotal trước thay đổi tài sản/công nợ.",
       "financial_line_items_prior_values": {
         "income_tax": -1073956,
         "revenue": 6989162,
@@ -2005,40 +2393,8 @@
         "capital_expenditure_ytd": -351773
       },
       "financial_line_items_rejected_values": {
-        "operating_cash_flow": {
-          "value": 495410,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "investing_cash_flow": {
-          "value": -336492,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "financing_cash_flow": {
-          "value": 0,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "net_cash_change": {
-          "value": -21775306,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
         "capital_expenditure": {
           "value": -351773,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "operating_cash_flow_ytd": {
-          "value": 495410,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "investing_cash_flow_ytd": {
-          "value": -336492,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "financing_cash_flow_ytd": {
-          "value": 0,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "net_cash_change_ytd": {
-          "value": -21775306,
           "reason": "cash-flow components do not reconcile to reported net cash change"
         },
         "capital_expenditure_ytd": {
@@ -2120,15 +2476,7 @@
       "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
       "financial_line_items_rejected_fields": [
         "capital_expenditure",
-        "capital_expenditure_ytd",
-        "financing_cash_flow",
-        "financing_cash_flow_ytd",
-        "investing_cash_flow",
-        "investing_cash_flow_ytd",
-        "net_cash_change",
-        "net_cash_change_ytd",
-        "operating_cash_flow",
-        "operating_cash_flow_ytd"
+        "capital_expenditure_ytd"
       ],
       "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
@@ -2161,7 +2509,59 @@
         "investing_cash_flow_ytd",
         "net_cash_change_ytd",
         "operating_cash_flow_ytd"
-      ]
+      ],
+      "operating_cash_flow_ytd": -21438814,
+      "investing_cash_flow_ytd": -336492,
+      "financing_cash_flow_ytd": 0,
+      "net_cash_change_ytd": -21775306,
+      "cash_beginning_reported_ytd": 163213792,
+      "cash_ending_reported_ytd": 141349431,
+      "foreign_exchange_effect_ytd": -89055,
+      "operating_cash_flow": -21438814,
+      "investing_cash_flow": -336492,
+      "financing_cash_flow": 0,
+      "net_cash_change": -21775306,
+      "cash_beginning": 163213792,
+      "cash_ending": 141349431,
+      "foreign_exchange_effect": -89055,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/ACB_Baocaotaichinh_Q1_2026_Hopnhat.zip",
+        "selected_source_index_url": "https://finance.vietstock.vn/ACB/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/ACB/vietstock-acb-2026-priority-20261019/0e27e2eb7262b4c8.zip",
+        "source_pdf_pages": [
+          7,
+          8
+        ],
+        "source_printed_pages": [
+          5,
+          6
+        ],
+        "selected_basis": "current Q1/2026 consolidated report",
+        "source_visual_review": "ocr_text_reconciled_visual_review_pending",
+        "unit": "triệu VND",
+        "period_basis": "year_to_date",
+        "prior_non_null_values_corrected": {},
+        "revised_basis_applied": false
+      },
+      "cashflow_source_reconciliation": {
+        "status": "PASS_ARITHMETIC_RECONCILED",
+        "units": "triệu VND",
+        "report_period": "2026-Q1",
+        "source_archive_file": "reports/raw/ACB/vietstock-acb-2026-priority-20261019/0e27e2eb7262b4c8.zip",
+        "source_pdf_pages": [
+          7,
+          8
+        ],
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/ACB_Baocaotaichinh_Q1_2026_Hopnhat.zip",
+        "source_index_url": "https://finance.vietstock.vn/ACB/tai-tai-lieu.htm?doctype=1",
+        "visual_review": "ocr_text_reconciled_visual_review_pending",
+        "ytd_flow_components_sum_to_net_cash_change": true,
+        "ytd_cash_bridge_residual": 0,
+        "quarter_flow_components_sum_to_net_cash_change": true,
+        "quarter_cash_bridge_residual": 0,
+        "standalone_quarter_derived_from_ytd": "Q1 equals YTD",
+        "note": null
+      }
     },
     {
       "symbol": "ACB",
@@ -2222,7 +2622,7 @@
       "bank_provision_expense": 1060172,
       "income_tax_current": -1076615,
       "income_tax": 1074423,
-      "operating_cash_flow_ytd": 9043117,
+      "operating_cash_flow_ytd": -42374834,
       "financing_cash_flow_ytd": -3595660,
       "net_cash_change_ytd": -46558342,
       "cashflow_period_basis": "year_to_date",
@@ -2251,12 +2651,20 @@
         "bank_trading_securities_net",
         "capital_expenditure",
         "capital_expenditure_ytd",
+        "cash_beginning",
+        "cash_beginning_reported_ytd",
+        "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
         "financing_cash_flow",
         "financing_cash_flow_ytd",
         "fixed_assets",
+        "foreign_exchange_effect",
+        "foreign_exchange_effect_ytd",
         "income_tax",
         "income_tax_current",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
         "net_cash_change",
         "net_cash_change_ytd",
         "operating_cash_flow",
@@ -2267,13 +2675,13 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/ACB/vietstock-acb-2026-priority-20261019/db55bb607d254aee.pdf",
       "financial_line_items_updated_at": "2026-10-28T06:05:27+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Doanh thu cũ trùng thu nhập lãi thuần nhưng chưa đủ cấu phần để tái lập tổng thu nhập hoạt động; đã ẩn. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan.",
-      "operating_cash_flow": 8547707,
-      "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Doanh thu cũ trùng thu nhập lãi thuần nhưng chưa đủ cấu phần để tái lập tổng thu nhập hoạt động; đã ẩn. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. CASHFLOW NORMALIZATION 2026-10-28: LCTT lấy từ dòng lưu chuyển thuần cuối nhóm (không lấy subtotal trước biến động tài sản/công nợ); quý riêng = YTD hiện tại trừ YTD liền trước. Nguồn PDF trang 7, 8; trạng thái kiểm tra trực quan=selected_pages_visually_checked.",
+      "operating_cash_flow": -20936020,
+      "operating_cash_flow_calculation": "Số quý riêng = số lũy kế kỳ hiện tại − số lũy kế kỳ trước cùng năm.",
       "financing_cash_flow": -3595660,
-      "financing_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "financing_cash_flow_calculation": "Số quý riêng = số lũy kế kỳ hiện tại − số lũy kế kỳ trước cùng năm.",
       "net_cash_change": -24783036,
-      "net_cash_change_calculation": "current YTD minus previous quarter YTD",
+      "net_cash_change_calculation": "Số quý riêng = số lũy kế kỳ hiện tại − số lũy kế kỳ trước cùng năm.",
       "financial_line_items_prior_values": {
         "income_tax": -1076615,
         "revenue": 7784691,
@@ -2390,15 +2798,73 @@
       "capital_expenditure": -95081,
       "capital_expenditure_calculation": "current YTD minus previous quarter YTD",
       "operating_profit": 6427073,
-      "operating_profit_calculation": "Lợi nhuận hoạt động chung của ngân hàng lấy từ dòng lợi nhuận thuần trước chi phí dự phòng rủi ro tín dụng trong cùng BCTC."
+      "operating_profit_calculation": "Lợi nhuận hoạt động chung của ngân hàng lấy từ dòng lợi nhuận thuần trước chi phí dự phòng rủi ro tín dụng trong cùng BCTC.",
+      "investing_cash_flow_ytd": -587848,
+      "cash_beginning_reported_ytd": 163213792,
+      "cash_ending_reported_ytd": 116533043,
+      "foreign_exchange_effect_ytd": -122407,
+      "investing_cash_flow": -251356,
+      "cash_beginning": 141349431,
+      "cash_ending": 116533043,
+      "foreign_exchange_effect": -33352,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/ACB_Baocaotaichinh_Q2_2026_Hopnhat.pdf",
+        "selected_source_index_url": "https://finance.vietstock.vn/ACB/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/ACB/vietstock-acb-2026-priority-20261019/db55bb607d254aee.pdf",
+        "source_pdf_pages": [
+          7,
+          8
+        ],
+        "source_printed_pages": [
+          5,
+          6
+        ],
+        "selected_basis": "current Q2/2026 consolidated report; ending cash 116,533,043 visually confirmed on PDF page 8",
+        "source_visual_review": "selected_pages_visually_checked",
+        "unit": "triệu VND",
+        "period_basis": "year_to_date",
+        "prior_non_null_values_corrected": {
+          "operating_cash_flow_ytd": {
+            "previous_value": 9043117,
+            "new_value": -42374834,
+            "reason": "Nguồn dòng LCTT cuối nhóm được xác định lại; giá trị cũ là subtotal trước biến động tài sản/công nợ hoặc lỗi ánh xạ, không phải dòng lưu chuyển thuần.",
+            "source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/ACB_Baocaotaichinh_Q2_2026_Hopnhat.pdf",
+            "source_pdf_pages": [
+              7,
+              8
+            ]
+          }
+        },
+        "revised_basis_applied": false
+      },
+      "cashflow_source_reconciliation": {
+        "status": "PASS_ARITHMETIC_RECONCILED",
+        "units": "triệu VND",
+        "report_period": "2026-Q2",
+        "source_archive_file": "reports/raw/ACB/vietstock-acb-2026-priority-20261019/db55bb607d254aee.pdf",
+        "source_pdf_pages": [
+          7,
+          8
+        ],
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/ACB_Baocaotaichinh_Q2_2026_Hopnhat.pdf",
+        "source_index_url": "https://finance.vietstock.vn/ACB/tai-tai-lieu.htm?doctype=1",
+        "visual_review": "selected_pages_visually_checked",
+        "ytd_flow_components_sum_to_net_cash_change": true,
+        "ytd_cash_bridge_residual": 0,
+        "quarter_flow_components_sum_to_net_cash_change": true,
+        "quarter_cash_bridge_residual": 0,
+        "standalone_quarter_derived_from_ytd": "current YTD minus prior quarter YTD within same year",
+        "note": "Ending cash 116,533,043 visually confirmed on source PDF page 8; prior OCR text was misread as 416,533,043, while component amounts sum to 116,533,043."
+      },
+      "investing_cash_flow_calculation": "Số quý riêng = số lũy kế kỳ hiện tại − số lũy kế kỳ trước cùng năm."
     }
   ],
-  "note": "Đã đối soát thủ công các kỳ hợp nhất Q1/2024–Q4/2025 và Q1/2026–Q2/2026 trực tiếp từ tài liệu trong danh mục VietstockFinance. Đơn vị tiền: triệu VND. Lợi nhuận lấy theo phát sinh trong quý; ROA/ROE được thường niên hóa từ LNST quý và bình quân số dư đầu/cuối quý. Ngày công bố lấy từ metadata LastUpdate Vietstock; ngày ký báo cáo lưu riêng.",
+  "note": "Đã đối soát thủ công các kỳ hợp nhất Q1/2024–Q4/2025 và Q1/2026–Q2/2026 trực tiếp từ tài liệu trong danh mục VietstockFinance. Đơn vị tiền: triệu VND. Lợi nhuận lấy theo phát sinh trong quý; ROA/ROE được thường niên hóa từ LNST quý và bình quân số dư đầu/cuối quý. Ngày công bố lấy từ metadata LastUpdate Vietstock; ngày ký báo cáo lưu riêng. Cash-flow normalization pass 2026-10-28: all ten periods from 2024-Q1 to 2026-Q2 rebuilt from VietstockFinance statement lines, using newer comparative basis where applicable; no balancing plug; visual-review state tracked separately.",
   "sync_status": "records_found",
   "bootstrap_last_attempt_at": "2026-10-22T10:08:57+00:00",
   "bootstrap_attempt_count": 1,
   "bootstrap_status": "complete_needs_manual_review",
   "bootstrap_completed_at": "2026-10-22T13:07:11+00:00",
   "bootstrap_completion_note": "Đã lưu dữ liệu tự động; các chỉ tiêu được trích xuất cần đối chiếu trực quan. Mã này sẽ không tự tải lại.",
-  "processedAt": "2026-10-28T06:05:27+00:00"
+  "processedAt": "2026-10-28T11:23:02.576Z"
 }
