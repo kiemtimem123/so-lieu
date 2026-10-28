@@ -1286,8 +1286,9 @@ class VHMCashFlowNormalizationTests(unittest.TestCase):
                 for field in self.core_fields:
                     self.assertIn(field, row["financial_line_items_extracted_fields"])
                     self.assertNotIn(field, row.get("financial_line_items_rejected_fields", []))
-                    self.assertIsInstance(row.get(field), (int, float))
-                    self.assertNotIsInstance(row.get(field), bool)
+                    if field != "cashflow_period_basis":
+                        self.assertIsInstance(row.get(field), (int, float))
+                        self.assertNotIsInstance(row.get(field), bool)
 
                 # VHM reports cash movement in million VND to three decimals.
                 # Preserve reported precision; do not round components independently or add a plug.
@@ -1386,16 +1387,19 @@ class VHMCashFlowNormalizationTests(unittest.TestCase):
         self.assertTrue(within_relative_tolerance(old_2025["net_cash_change_ytd"], new_2025["net_cash_change_ytd"]))
         self.assertTrue(within_relative_tolerance(old_2025["cash_ending_reported_ytd"], new_2025["cash_ending_reported_ytd"]))
 
-    def test_vhm_q1_2026_cross_year_cash_difference_is_accepted_but_preserved(self):
+    def test_vhm_q1_2026_cross_year_cash_difference_over_tolerance_is_preserved(self):
         prior = self.rows["2025-Q4"]
         current = self.rows["2026-Q1"]
         rec = current["cashflow_source_reconciliation"]["cross_period_cash_continuity"]
         self.assertEqual(prior["cash_ending"], 49948.510)
         self.assertEqual(current["cash_beginning"], 49086.598)
         self.assertAlmostEqual(rec["residual_million_vnd"], -861.912, places=7)
-        self.assertLessEqual(rec["relative_difference_percent"], 0.01)
-        self.assertEqual(rec["status"], "ACCEPTED_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT")
-        self.assertEqual(current["cashflow_source_reconciliation"]["status"], "PASS_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT")
+        self.assertGreater(rec["relative_difference_percent"], 0.01)
+        self.assertEqual(rec["status"], "NEEDS_MANUAL_REVIEW_CROSS_PERIOD_CASH_BASIS_GT_0_01_PERCENT")
+        self.assertEqual(
+            current["cashflow_source_reconciliation"]["status"],
+            "NEEDS_MANUAL_REVIEW_CROSS_PERIOD_CASH_BASIS_GT_0_01_PERCENT"
+        )
 
     def test_vhm_h1_2026_cashflow_components_are_source_supported(self):
         row = self.rows["2026-Q2"]
@@ -1407,9 +1411,9 @@ class VHMCashFlowNormalizationTests(unittest.TestCase):
             row["cashflow_source_reconciliation"]["status"],
             "NEEDS_MANUAL_REVIEW_SOURCE_FLOW_COMPONENT_SUM_GT_0_01_PERCENT",
         )
-        self.assertEqual(
+        self.assertAlmostEqual(
             row["cashflow_source_reconciliation"]["source_component_sum_exception"]["ytd_component_sum_residual_million_vnd"],
-            -1000,
+            -1000, places=6
         )
         self.assertEqual(row["cash_beginning_reported_ytd"], 49086.598)
         self.assertEqual(row["cash_ending_reported_ytd"], 53178.983)
