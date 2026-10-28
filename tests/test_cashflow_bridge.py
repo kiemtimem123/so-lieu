@@ -159,6 +159,14 @@ class CashFlowBridgeTests(unittest.TestCase):
             2,
         )
         self.assertEqual(
+            rows["2025-Q2"]["cashflow_balance_bridge_recovery"]["prior_year_end_to_q1_opening_residual"],
+            2,
+        )
+        self.assertEqual(
+            rows["2025-Q2"]["cashflow_source_reconciliation"]["checks"]["prior_year_end_to_q1_opening_residual"],
+            2,
+        )
+        self.assertEqual(
             rows["2025-Q2"]["cashflow_balance_bridge_recovery"]["q2_quarter_bridge_residual"],
             -2,
         )
