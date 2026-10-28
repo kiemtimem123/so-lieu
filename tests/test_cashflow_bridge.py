@@ -1417,7 +1417,10 @@ class VHMCashFlowNormalizationTests(unittest.TestCase):
         )
         self.assertEqual(row["cash_beginning_reported_ytd"], 49086598)
         self.assertEqual(row["cash_ending_reported_ytd"], 53178983)
-        self.assertEqual(row["cashflow_source_reconciliation"]["visual_review"], "visually_checked")
+        self.assertEqual(
+            row["cashflow_source_reconciliation"]["visual_review"],
+            "visually_checked_source_line_40_68_675_210_component_sum_conflict_flagged",
+        )
 
 
 if __name__ == "__main__":
