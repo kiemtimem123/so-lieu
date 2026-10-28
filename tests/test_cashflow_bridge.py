@@ -33,12 +33,13 @@ class CashFlowBridgeTests(unittest.TestCase):
         self.assertEqual(cash_bridge_delta(row), 0)
 
     def test_missing_fx_field_is_not_fabricated(self):
+        # Synthetic fixture: never reuse a real ticker's corrected/previous OCR value here.
         row = {
-            "cash_beginning": 170247424,
-            "cash_ending": 177278961,
-            "net_cash_change": 7031557,
+            "cash_beginning": 1000,
+            "cash_ending": 1230,
+            "net_cash_change": 250,
         }
-        # Without an FX line, retain the small residual for review; do not infer FX.
+        # Without an FX line, retain the residual for review; do not infer FX.
         self.assertEqual(cash_bridge_delta(row), -20)
 
     def test_missing_core_input_returns_none(self):
