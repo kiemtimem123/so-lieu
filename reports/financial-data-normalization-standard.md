@@ -200,3 +200,39 @@ Không thay 2 triệu này vào CFO, dòng tài chính hay số dư tiền để
 ### Bảo đảm trường dữ liệu chuẩn hóa được tab LCTT hiển thị
 
 Sau khi bổ sung hoặc khôi phục số LCTT, phải cập nhật `financial_line_items_extracted_fields` cho các trường nguồn đã đối chiếu (LCTT kinh doanh/đầu tư/tài chính, biến động tiền thuần, số dư tiền đầu/cuối quý và YTD). Trạng thái `pending_visual_review` vẫn phải giữ nếu chưa duyệt bằng mắt toàn bộ kỳ, nhưng không để bộ lọc của giao diện ẩn giá trị đã trích xuất có nguồn. Không đưa các trường thực sự bị từ chối hoặc phạm vi nguồn chưa xác nhận vào danh sách này. Bài test hồi quy kiểm tra cả số liệu, ngoại lệ nguồn và sự hiện diện của các trường.
+
+
+## Rà soát bổ sung MBB — phát hiện liên tục số dư liên kỳ bị bỏ sót (2026-10-28)
+
+### Phát hiện
+
+Lượt rà soát thứ hai cho thấy kiểm tra trước đây chỉ xét cầu nối **bên trong từng quý** và cầu nối **YTD**, chưa khóa riêng điều kiện **tiền cuối quý trước = tiền đầu quý sau**, kể cả khi qua năm tài chính. Vì vậy, chỉ gắn cờ Q2/2025 là chưa mô tả đủ toàn bộ lỗi nguồn.
+
+Đã đối chiếu trực quan ba PDF hợp nhất được lưu/định tuyến từ VietstockFinance:
+
+1. [BCTC hợp nhất Q4/2025, PDF trang 7–8](https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/MBB_Baocaotaichinh_Q4_2025_Hopnhat.pdf) — cột so sánh năm 2024 ghi tiền cuối năm **97.040.273** triệu VND; LCTT kinh doanh năm 2024 **-18.576.384**, đầu tư **-2.238.209**, tài chính **8.759.748**, biến động tiền thuần **-12.054.845**.
+2. [BCTC hợp nhất Q1/2025, PDF trang 8](https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%201/MBB_Baocaotaichinh_Q1_2025_Hopnhat.pdf) — tiền đầu kỳ **97.040.275**, biến động tiền thuần Q1 **-24.053.403**, tiền cuối kỳ **72.986.872**. Cầu nối trong chính báo cáo khớp bằng 0.
+3. [BCTC hợp nhất Q1/2026, PDF trang 8](https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/MBB_Baocaotaichinh_Q1_2026_Hopnhat.pdf) — cột so sánh Q1/2025 lặp lại đúng ba số của báo cáo Q1/2025: **97.040.275**, **-24.053.403**, **72.986.872**.
+4. [BCTC hợp nhất Q2/2026, PDF trang 7–8](https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/MBB_Baocaotaichinh_Q2_2026_Hopnhat.pdf?ver=8b5fd9ba) — cột so sánh H1/2025 ghi tiền đầu kỳ **97.040.273**, LCTT kinh doanh **1.516.540**, đầu tư **-400.976**, tài chính **5.698.563**, biến động tiền thuần **6.814.127**, tiền cuối kỳ **103.854.400**. Bộ số H1 tự cân; ba luồng tiền cộng đúng biến động thuần.
+
+### Kết luận số học sau khi rà lại
+
+- Chuyển tiếp Q4/2024 → Q1/2025: tiền đầu Q1 trừ tiền cuối Q4 = **+2 triệu VND**.
+- Q1/2025: cầu nối nội kỳ vẫn bằng 0 theo số được ghi trên báo cáo Q1/2025 và cột so sánh Q1/2026.
+- H1/2025: cầu nối lũy kế trong báo cáo Q2/2026 bằng 0 theo số được ghi trong báo cáo.
+- Q2/2025 riêng, tính bằng lũy kế H1 mới hơn trừ Q1/2025 đã báo cáo: CFO **27.591.551**, đầu tư **-224.021**, tài chính **3.500.000**, biến động thuần **30.867.530**. Tuy nhiên, thay đổi số dư từ cuối Q1 **72.986.872** đến cuối Q2 **103.854.400** chỉ là **30.867.528**, vì vậy cầu nối riêng Q2 có residual **-2 triệu VND**.
+
+Hai residual này có cùng độ lớn nhưng ngược dấu; chúng thuộc cùng một bất nhất cơ sở số dư liên kỳ. Q1/2025 và cột so sánh Q1/2026 xác nhận lẫn nhau, trong khi báo cáo Q4/2025 và cột so sánh H1/2025 ở Q2/2026 dùng số đầu/ cuối năm trước thấp hơn 2 triệu. Chưa có tài liệu đính chính trong tập nguồn đã kiểm tra giải thích sự khác biệt. **Không sửa giá trị báo cáo, không tự thêm tỷ giá, không thêm “plug” 2 triệu vào bất kỳ dòng tiền nào.** Ghi trạng thái rà soát thủ công ở cả Q1/2025 (đứt mạch số dư đầu kỳ so với Q4 trước) và Q2/2025 (cầu nối quý riêng).
+
+### Quy tắc kiểm tra bắt buộc được bổ sung
+
+Sau mỗi kỳ, chạy đủ bốn lớp:
+
+1. Ba nhóm luồng tiền riêng quý = biến động tiền thuần riêng quý.
+2. Ba nhóm luồng tiền YTD = biến động tiền thuần YTD.
+3. Tiền cuối kỳ − tiền đầu kỳ − biến động tiền thuần (cộng ảnh hưởng tỷ giá **chỉ khi báo cáo có dòng riêng**), kiểm tra riêng cho quý và YTD.
+4. **Liên tục số dư giữa hai quý liền kề:** tiền cuối quý trước phải bằng tiền đầu quý sau, kể cả Q4 → Q1 và khi có cột so sánh được trình bày lại. Nếu bất kỳ báo cáo/cột so sánh mới hơn làm đổi cơ sở, ghi nhận cả hai nguồn, residual và trạng thái review; không âm thầm thay giá trị nguồn cũ.
+
+Kiểm thử `tests/test_cashflow_bridge.py` nay bao phủ phép tính phát sinh quý = chênh lệch YTD cho từng luồng, continuity liên quý qua năm, cùng hai residual nguồn MBB (+2 ở chuyển tiếp Q4→Q1 và -2 ở cầu nối riêng Q2). Test tổng quát “thiếu FX thì không tự bịa FX” dùng dữ liệu giả lập, không lấy lại giá trị OCR TCB đã sửa.
+
+**Trạng thái MBB sau rà soát bổ sung:** 10/10 kỳ khớp thành phần luồng tiền và cầu nối YTD; phát sinh quý khớp chênh lệch YTD ở mọi kỳ đã có số liệu. Cầu nối nội kỳ tự khớp ở 9/10 kỳ. Tuy nhiên, kiểm tra liên tục số dư phát hiện thêm mâu thuẫn Q4/2024 → Q1/2025 **+2 triệu VND**, gắn với residual **-2 triệu** tại Q2/2025. Hai residual được ghi nhận là **một vấn đề so sánh liên kỳ chưa giải quyết**, không phải lỗi phép cộng trong snapshot. Chỉ đóng ngoại lệ khi có bằng chứng nguồn mới có thẩm quyền hoặc tài liệu đính chính rõ ràng.
