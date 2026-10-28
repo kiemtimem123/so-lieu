@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-28T19:45:00+07:00",
+  "updatedAt": "2026-10-28T22:00:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -1411,8 +1411,8 @@
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
     "activeSymbol": "SHB",
-    "status": "ready_to_process_next_symbol_same_domain",
-    "lastUpdatedAt": "2026-10-28T19:45:00+07:00",
+    "status": "automated_processing_complete_manual_review_cross_period_cash_basis_gt_0_01_percent",
+    "lastUpdatedAt": "2026-10-28T22:00:00+07:00",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1481,13 +1481,25 @@
       "FPT internal reconciliations pass within 0.01% for all ten periods: quarter and YTD component sums, quarter/YTD cash bridges including FX, and quarter flows calculated as current minus prior YTD.",
       "FPT remains flagged only for the cross-period cash balance difference Q4/2025 close 10,540,182 vs Q1/2026 opening 10,522,106 million VND (-18,076 million; ~0.17%), above threshold. Preserve both source values; no forced adjustment.",
       "Validate Site and Data run 40681980928 SUCCESS after FPT regression tests; Validate quarterly financial data run 40681897480 SUCCESS; Package Hostinger Stock Dashboard run 40681897445 SUCCESS.",
-      "MBB cross-report cash basis residuals +2/-2 million VND are now accepted by user rule because relative differences are <=0.01%; values and residual metadata remain for traceability, but no longer block automated processing."
+      "MBB cross-report cash basis residuals +2/-2 million VND are now accepted by user rule because relative differences are <=0.01%; values and residual metadata remain for traceability, but no longer block automated processing.",
+      "SHB: normalized 10 periods 2024-Q1 through 2026-Q2 from VietstockFinance consolidated statements; 2024 YTD flows use later comparative columns in Q1/2025, Q2/2025, Q3/2025 and Q4/2025 reports.",
+      "SHB: corrected 2024-Q1 basis from latest Q1/2025 comparative (CFO -52,416,402; net cash change -52,214,342; closing cash 58,645,444) rather than old Q1/2024 presentation; the later comparative's cash bridge reconciles.",
+      "SHB: corrected H1/2024 basis from Q2/2025 comparative (CFO -22,155,105; CFI -66,706; CFF 434,732; net cash change -21,787,079; close 89,072,707).",
+      "SHB: corrected FY2024 basis from Q4/2025 comparative (CFO 11,949,125; CFI -179,988; CFF -1,311,389; net cash change 10,457,748; close 121,317,534).",
+      "SHB: standalone quarterly values now equal current YTD minus prior YTD in the selected same-year basis; all 10/10 periods pass three-flow sums, YTD flow sums, FX-aware YTD cash bridges and quarterly cash bridges.",
+      "SHB: source-page screenshots verified Q1/2025, Q2/2025, Q4/2025 and Q1/2026 reports; original Q3/2024 report was visually checked and its reported values agree with the Q3/2025 comparative OCR. Q3/2025 and Q2/2026 selected PDF pages remain tagged pending direct visual review.",
+      "SHB: cross-period cash continuity exception retained: FY2025 closing cash 162,627,663 vs Q1/2026 opening cash 161,907,719 million VND; residual -719,944 million VND, 0.44269467%, exceeds tolerance. No balancing plug or source-value overwrite.",
+      "Added regression coverage for SHB 10-period calculations, later comparative basis, source trace, and cross-year residual above 0.01%. Validator now accepts the current SHB statement schema and checks Q4-to-Q1 continuity.",
+      "Validate Site and Data run 40703133138 SUCCESS; Validate quarterly financial data run 40703130369 SUCCESS after validator schema/cross-year checks.",
+      "Validate Site and Data run 40703191136 SUCCESS after SHB regression tests; Validate Site and Data run 40703246169 SUCCESS after the standard-document update.",
+      "Validate quarterly financial data run 40702809121 SUCCESS and Package Hostinger Stock Dashboard run 40702809270 SUCCESS after the SHB snapshot normalization."
     ],
     "unresolved": [
       "ACB pending manual visual review remains only for rows marked ocr_text_reconciled_visual_review_pending (including Q1/2025 comparator and Q1/2026 current report); arithmetic checks pass and no unsupported values were inserted.",
-      "FPT NEEDS_MANUAL_REVIEW — FY2025 closing cash 10,540,182 vs Q1/2026 opening cash 10,522,106 million VND, residual -18,076 million VND (~0.17%, above 0.01%). Both reports internally reconcile. Keep each printed value; do not insert a plug or synchronize the figures without a source correction."
+      "FPT NEEDS_MANUAL_REVIEW — FY2025 closing cash 10,540,182 vs Q1/2026 opening cash 10,522,106 million VND, residual -18,076 million VND (~0.17%, above 0.01%). Both reports internally reconcile. Keep each printed value; do not insert a plug or synchronize the figures without a source correction.",
+      "SHB NEEDS_MANUAL_REVIEW — FY2025 close 162,627,663 vs Q1/2026 opening 161,907,719 million VND; residual -719,944 million, relative difference 0.44269467% (>0.01%). Preserve both source values; each report's internal bridge reconciles."
     ],
-    "nextStep": "MBB residuals <=0.01% are accepted and retained in metadata. ACB cash-flow normalization is automated with limited source-page visual review still pending. FPT 10-period cash-flow normalization/tests are complete; preserve its FY2025-close to Q1/2026-opening residual because it exceeds 0.01%. Continue with SHB next in the same cash-flow domain, one ticker at a time; do not switch data domain.",
+    "nextStep": "SHB cash-flow automation and regression checks are complete. Retain the Q4/2025-close to Q1/2026-opening mismatch for manual source review because it exceeds 0.01%; do not adjust source numbers. Next, process HCM in the same cash-flow domain, one ticker at a time, using reports/financial-data-normalization-standard.md.",
     "previousCompletedSymbol": "FPT",
     "validationRuns": [
       {
@@ -1545,6 +1557,48 @@
         "status": "success",
         "commit": "34d6367c83e0d440de5a37f000d635f2405021a8",
         "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40681897445"
+      },
+      {
+        "name": "Validate quarterly financial data",
+        "runId": "40702809121",
+        "status": "success",
+        "commit": "a0527aa753e747665792312f4a69a3fc70d78793",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40702809121"
+      },
+      {
+        "name": "Package Hostinger Stock Dashboard",
+        "runId": "40702809270",
+        "status": "success",
+        "commit": "a0527aa753e747665792312f4a69a3fc70d78793",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40702809270"
+      },
+      {
+        "name": "Validate quarterly financial data",
+        "runId": "40703130369",
+        "status": "success",
+        "commit": "555718ab2a814d4df7e3a5f16843daef62a6f4b3",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40703130369"
+      },
+      {
+        "name": "Validate Site and Data",
+        "runId": "40703133138",
+        "status": "success",
+        "commit": "555718ab2a814d4df7e3a5f16843daef62a6f4b3",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40703133138"
+      },
+      {
+        "name": "Validate Site and Data",
+        "runId": "40703191136",
+        "status": "success",
+        "commit": "f60751a710560920917690733b2f964bbcc9a3e4",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40703191136"
+      },
+      {
+        "name": "Validate Site and Data",
+        "runId": "40703246169",
+        "status": "success",
+        "commit": "a6c18ae7596e85dd824a14b58e493a9a24266b48",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40703246169"
       }
     ],
     "lastCompletedSymbol": "FPT"
