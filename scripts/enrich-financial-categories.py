@@ -2372,6 +2372,215 @@ def repair_tcx_2026_source_rows(items,symbol):
   else:
    print("TCX 2024-Q2: source-backed income repair skipped; required visual-source tokens did not all match.")
 
+ # Restore missing TCX 2025 quarterly income rows from the archived VietstockFinance
+ # B02a-CTCK statements. The total operating-revenue row is sometimes in a
+ # scanned image page, so revenue is rebuilt from the statement's row-70
+ # operating result and the separately reported financial income/expense,
+ # operating expenses and administration expense. Every component used in the
+ # formula must be present on the archived source pages.
+ quarter_income_rebuilds={
+  "2025-Q1":{
+   "evidence":{
+    10:["2.028.164.685.825","523.097.068.369","33.807.231.145","731.734.778.172","158.676.897.251","152.784.768.764","361.042.025.554","13.274.838.561","52.589.999.999","1.157.078.010","127.056.494.784"],
+    11:["7.221.162.086","459.917.550.730","402.089.293.017","137.726.487.123","1.310.685.315.274","299.193.322.777"],
+   },
+   "reported_revenue":2028164.685825,
+   "operating_expenses":127056.494784,
+   "financial_income":7221.162086,
+   "financial_expense":459917.550730,
+   "interest_expense":402089.293017,
+   "admin_expense":137726.487123,
+   "operating_profit":1310685.315274,
+   "income_tax":299193.322777,
+   "detail_values":{
+    "broker_fvtpl_gain":523097.068369,
+    "broker_held_to_maturity_income":33807.231145,
+    "broker_lending_income":731734.778172,
+    "broker_afs_income":158676.897251,
+    "broker_brokerage_revenue":152784.768764,
+    "broker_underwriting_revenue":361042.025554,
+    "broker_custody_revenue":13274.838561,
+    "broker_financial_advisory_revenue":52589.999999,
+    "broker_other_operating_income":1157.078010,
+    "broker_fvtpl_loss":18635.991532,
+    "broker_lending_cost_combined_line":700.498927,
+    "broker_trading_expense":7.476000,
+    "broker_brokerage_expense":53096.430817,
+    "broker_custody_expense":11726.007400,
+    "broker_other_operating_expense":42456.301207,
+   },
+   "pages":[10,11],
+  },
+  "2025-Q2":{
+   "evidence":{
+    10:["219.102.604.818","9.610.461.095","569.420.566.564","147.960.661.005","1.733.125.373.166"],
+    11:["1.733.101.500.233","313.027.670.349","311.831.947.363","1.195.722.986","1.420.073.829.884"],
+   },
+   "reported_revenue":2659998.744458,
+   "operating_expenses":219102.604818,
+   "financial_income":9610.461095,
+   "financial_expense":569420.566564,
+   "interest_expense":497334.006930,
+   "admin_expense":147960.661005,
+   "operating_profit":1733125.373166,
+   "income_tax":313027.670349,
+   "income_tax_current":311831.947363,
+   "income_tax_deferred":1195.722986,
+   "pages":[10,11],
+  },
+  "2025-Q3":{
+   "evidence":{
+    10:["403.418.061.247","17.491.774.068","583.770.068.264","170.652.269.576","2.023.925.521.519"],
+    11:["2.024.406.838.686","404.881.436.097","1.619.525.402.589"],
+   },
+   "reported_revenue":3164274.146538,
+   "operating_expenses":403418.061247,
+   "financial_income":17491.774068,
+   "financial_expense":583770.068264,
+   "interest_expense":536214.064771,
+   "admin_expense":170652.269576,
+   "operating_profit":2023925.521519,
+   "income_tax":404881.436097,
+   "pages":[10,11],
+  },
+  "2025-Q4":{
+   "evidence":{
+    10:["463.974.528.886","11.771.387.986","668.759.010.948","202.636.046.006","2.041.390.739.975"],
+    11:["2.041.351.186.392","408.269.457.278","407.835.810.486","433.646.792","1.633.081.729.114"],
+   },
+   "reported_revenue":3364988.937829,
+   "operating_expenses":463974.528886,
+   "financial_income":11771.387986,
+   "financial_expense":668759.010948,
+   "interest_expense":619374.013780,
+   "admin_expense":202636.046006,
+   "operating_profit":2041390.739975,
+   "income_tax":408269.457278,
+   "income_tax_current":407835.810486,
+   "income_tax_deferred":433.646792,
+   "pages":[10,11],
+  },
+ }
+ for period,spec in quarter_income_rebuilds.items():
+  item=by_period.get(period)
+  if not isinstance(item,dict):
+   continue
+  page_text=archived_pages(item)
+  source_rows_ok=bool(page_text) and all(
+   all(token in page_text.get(page,"") for token in tokens)
+   for page,tokens in spec["evidence"].items()
+  )
+  if not source_rows_ok:
+   print(f"TCX {period}: source-backed income reconstruction skipped; required B02a-CTCK subtotal tokens did not all match.")
+   continue
+  operating_expenses=spec["operating_expenses"]
+  financial_income=spec["financial_income"]
+  financial_expense=spec["financial_expense"]
+  admin_expense=spec["admin_expense"]
+  operating_profit=spec["operating_profit"]
+  reconstructed_revenue=round(
+   operating_profit-financial_income+operating_expenses+financial_expense+admin_expense,
+   6
+  )
+  if abs(reconstructed_revenue-spec["reported_revenue"])>0.01:
+   print(f"TCX {period}: revenue formula did not match the saved independent source checkpoint; skipped.")
+   continue
+  values={
+   "revenue":reconstructed_revenue,
+   "broker_total_operating_revenue":reconstructed_revenue,
+   "broker_total_operating_expenses":operating_expenses,
+   "broker_operating_expenses":operating_expenses,
+   "financial_income":financial_income,
+   "broker_financial_income":financial_income,
+   "financial_expense":financial_expense,
+   "broker_financial_expense":financial_expense,
+   "interest_expense":spec["interest_expense"],
+   "broker_interest_expense":spec["interest_expense"],
+   "admin_expense":admin_expense,
+   "broker_admin_expenses":admin_expense,
+   "operating_profit":operating_profit,
+   "broker_net_operating_profit":operating_profit,
+   "income_tax":spec["income_tax"],
+  }
+  for field,value in spec.get("detail_values",{}).items():
+   values[field]=value
+  for field in ("income_tax_current","income_tax_deferred"):
+   if field in spec:
+    values[field]=spec[field]
+  before_fields=field_count
+  for field,value in values.items():
+   if field in {"revenue","broker_total_operating_revenue"}:
+    reason=(
+     "Quarter operating revenue reconstructed from the reported B02a-CTCK identity: "
+     "row-70 operating result - financial income + total operating expenses + financial expenses + administration expenses; "
+     f"{period}, PDF pages {spec['pages']}. Independently matches the previous source-derived value and the current report's subtotal pattern."
+    )
+   else:
+    reason=(
+     f"Re-read from archived VietstockFinance B02a-CTCK {period}, current-quarter column, "
+     f"PDF pages {spec['pages']}; source VND scaled to million VND."
+    )
+   record_value(item,field,value,reason)
+  fields_before=set(item.get("financial_line_items_extracted_fields") or [])
+  fields_after=fields_before|set(values)
+  if fields_after!=fields_before:
+   item["financial_line_items_extracted_fields"]=sorted(fields_after)
+   changed=True; field_count+=1
+  rejected_before=set(item.get("financial_line_items_rejected_fields") or [])
+  rejected_after=rejected_before-set(values)
+  if rejected_after!=rejected_before:
+   item["financial_line_items_rejected_fields"]=sorted(rejected_after)
+   changed=True; field_count+=1
+  rejected_values=item.get("financial_line_items_rejected_values")
+  if isinstance(rejected_values,dict):
+   for field in values:
+    rejected_values.pop(field,None)
+  formula=(
+   "Lợi nhuận thuần từ hoạt động (dòng 70) - doanh thu hoạt động tài chính "
+   "+ tổng chi phí hoạt động + tổng chi phí tài chính + chi phí quản lý; tái lập từ cùng cột quý của B02a-CTCK VietstockFinance."
+  )
+  item["revenue_calculation"]=formula
+  item["broker_total_operating_revenue_calculation"]=formula
+  item["financial_line_items_source_pages"]=spec["pages"]
+  evidence={
+   "source_policy":"VietstockFinance document catalog and linked PDF only",
+   "source_index_url":item.get("source_index_url"),
+   "source_document_url":item.get("source_url"),
+   "source_archive_file":item.get("source_archive_file"),
+   "report_form":"B02a-CTCK",
+   "report_scope":"standalone securities-company financial statement; not consolidated",
+   "pdf_pages":spec["pages"],
+   "manually_visual_reviewed":False,
+   "restored_fields":sorted(values),
+   "revenue_formula":formula,
+   "source_subtotals":{
+    "operating_result":operating_profit,
+    "financial_income":financial_income,
+    "total_operating_expenses":operating_expenses,
+    "financial_expense":financial_expense,
+    "administration_expense":admin_expense,
+    "reconstructed_revenue":reconstructed_revenue,
+    "previous_source_derived_revenue":spec["reported_revenue"],
+   },
+   "note":"Source PDF text and arithmetic checks reconciled; pages with the total revenue line have low OCR quality, so revenue is reconstructed from the row-70 identity and remains pending visual review."
+  }
+  if item.get("financial_line_items_source_row_reconciliation")!=evidence:
+   item["financial_line_items_source_row_reconciliation"]=evidence
+   changed=True; field_count+=1
+  note=(
+   f"TCX {period}: đã khôi phục doanh thu hoạt động và các tổng phụ KQKD từ B02a-CTCK VietstockFinance. "
+   "Doanh thu được tính theo dòng 70 trừ thu nhập tài chính cộng tổng chi phí hoạt động, chi phí tài chính và chi phí quản lý; "
+   "công thức khớp giá trị nguồn đã lưu. Còn chờ rà soát trực quan trang báo cáo."
+  )
+  old_note=str(item.get("financial_line_items_note") or "")
+  if note not in old_note:
+   item["financial_line_items_note"]=(old_note+" "+note).strip()
+   changed=True; field_count+=1
+  item["financial_line_items_status"]="auto_extracted_pending_visual_review"
+  item["financial_line_items_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
+  if field_count>before_fields:
+   changed=True; quarter_count+=1
+
  # Recover TCX Q1/Q2 2024 cash flows from the exact B03a-CTCK YTD totals.
  # In the older OCR snapshot, the Q1 operating flow was mistakenly populated
  # with PBT and the opening cash was sometimes read from the client-custody
