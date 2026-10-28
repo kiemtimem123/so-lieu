@@ -12,6 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 SCHEMA = "2026-10-27-note-reference-alias-and-manual-guards-v8"
+CURRENT_SCHEMAS = {SCHEMA, "2026-10-27-other-statements-source-fields-v11"}
 BANKS = {"MBB","ACB","SHB","TCB","TPB","VPB","STB","VCB","CTG","BID"}
 ERRORS: list[str] = []
 WARNINGS: list[str] = []
@@ -74,7 +75,7 @@ def cash_bridge_delta(item):
 def audit_item(symbol, item, by_period):
     global ACTIVE_DETAILS_PENDING_REVIEW
     period = str(item.get("period") or "")
-    if item.get("financial_line_items_schema_version") != SCHEMA:
+    if item.get("financial_line_items_schema_version") not in CURRENT_SCHEMAS:
         return
     if symbol not in BANKS:
         return
@@ -151,6 +152,13 @@ def audit_item(symbol, item, by_period):
             for qfield,yfield in (("operating_cash_flow","operating_cash_flow_ytd"),("investing_cash_flow","investing_cash_flow_ytd"),("financing_cash_flow","financing_cash_flow_ytd"),("net_cash_change","net_cash_change_ytd"),("capital_expenditure","capital_expenditure_ytd"),("dividends_paid","dividends_paid_ytd")):
                 if number(item.get(qfield)) and number(item.get(yfield)):
                     require_close(symbol, period, f"Q1 {qfield} equals YTD", item[qfield], item[yfield])
+            # Adjacent-year continuity is checked separately from the report's internal YTD bridge.
+            prior_year_q4 = by_period.get(f"{int(period[:4])-1}-Q4") or {}
+            if number(prior_year_q4.get("cash_ending")) and number(item.get("cash_beginning")):
+                require_close(
+                    symbol, period, "Q1 opening cash vs prior FY/Q4 closing cash",
+                    item["cash_beginning"], prior_year_q4["cash_ending"]
+                )
         else:
             previous = by_period.get(f"{period[:4]}-Q{quarter-1}") or {}
             if previous.get("cashflow_period_basis") == "year_to_date":
@@ -208,7 +216,7 @@ def main():
         by_period = {str(row.get("period")): row for row in rows if isinstance(row, dict)}
         symbols_checked += 1
         for item in rows:
-            if not isinstance(item, dict) or item.get("financial_line_items_schema_version") != SCHEMA:
+            if not isinstance(item, dict) or item.get("financial_line_items_schema_version") not in CURRENT_SCHEMAS:
                 continue
             audited_rows += 1
             audit_item(symbol, item, by_period)
