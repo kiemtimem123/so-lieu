@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-29T04:45:00+07:00",
+  "updatedAt": "2026-10-28T21:11:44.553Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -245,7 +245,7 @@
       "snapshotFetchedAt": "2026-10-24T05:30:00Z"
     },
     "VPB": {
-      "status": "automated_processing_complete",
+      "status": "automated_processing_complete_manual_review_remaining",
       "completeForAutomation": true,
       "manualReviewRemaining": true,
       "periodCount": 11,
@@ -253,16 +253,16 @@
       "lastQuarter": "2026-Q3",
       "pendingCorePeriods": [],
       "terminalManualReviewPeriods": [
-        "2026-Q1",
-        "2026-Q2"
+        "2026-Q2",
+        "2026-Q3"
       ],
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
-      "statementPagesPending": false,
+      "statementPagesPending": true,
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
-      "sourceArchivesChecked": 9,
-      "updatedAt": "2026-10-26T08:12:29Z",
+      "sourceArchivesChecked": 11,
+      "updatedAt": "2026-10-28T21:11:44.553Z",
       "snapshotFetchedAt": "2026-10-21T12:43:23+00:00"
     },
     "STB": {
@@ -1432,12 +1432,12 @@
     "updatedAt": "2026-10-28T19:45:00+07:00"
   },
   "normalizationProgress": {
-    "standardVersion": "1.9",
+    "standardVersion": "2.0",
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
-    "activeSymbol": "TPB",
+    "activeSymbol": "VPB",
     "status": "automated_processing_complete_manual_review_remaining",
-    "lastUpdatedAt": "2026-10-29T04:45:00+07:00",
+    "lastUpdatedAt": "2026-10-28T21:11:44.553Z",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1599,7 +1599,15 @@
       "TPB: material source component reclassification exceptions preserved: H1/2024 source CFI -201,252 vs later Q2/2025 comparative -223,559 million VND (net cash movement and closing cash agree; CFI difference >0.01%); FY2024 original CFF 764,198 vs selected Q4/2025 comparative 763,682 million VND (difference 516 million VND, ~0.0675%, >0.01%; net movement/closing cash unchanged). Both are flagged manual review; no plug inserted.",
       "TPB regression class TPBCashFlowNormalizationTests added. Validate Site and Data run 40760574382 SUCCESS on the tests commit: cash-flow bridge tests, JS syntax, JSON validation and OMO source wiring all pass.",
       "TPB Validate quarterly financial data run 40760465361 SUCCESS; Package Hostinger Stock Dashboard run 40760465331 SUCCESS after the TPB snapshot update.",
-      "TPB normalization standard entry added in document version 1.9; further CI confirmation pending for the documentation/checkpoint commits."
+      "TPB normalization standard entry added in document version 1.9; further CI confirmation pending for the documentation/checkpoint commits.",
+      "VPB: normalized all 11 periods from 2024-Q1 through 2026-Q3 using VietstockFinance-linked consolidated B04a reports; restored source-backed CFO/CFI/CFF/net totals, reported cash balances and standalone quarter values.",
+      "VPB: selected later source comparative columns for Q1/2024 (Q1/2025), H1/2024 (Q2/2025), 9M/2024 (Q3/2025), and H1/2025 (Q2/2026); retained source URL, archive path, source pages, prior parser values and source-basis notes.",
+      "VPB: FY2024 cash-flow statement pages 8-9 were directly visually checked; CFO 57,316,185, CFI -45,039, CFF -7,935,832, net 49,335,314, beginning cash 93,667,470 and ending cash 143,002,784 million VND reconcile.",
+      "VPB: corrected the root mapping bug where a subtotal before changes in operating assets/liabilities was used as final CFO; quarter-only flows now derive from same-year YTD differences.",
+      "VPB: H1/2025 comparator from Q2/2026 clarifies the earlier OCR candidate 49,356,051 as 19,356,051 million VND; flow sums and cash bridge reconcile.",
+      "VPB: H1/2026 source OCR candidate net cash 6,949,765 conflicts with source-backed CFO/CFI/CFF sum 36,949,765 by 30,000,000 million VND (~81.19% relative, above 0.01%); net flow and cash ending are withheld, candidate retained as rejected evidence, no balancing plug added.",
+      "VPB: 9M/2026 YTD components and net 30,373,394 reconcile; Q3 standalone component deltas are recorded with formula, but quarter opening cash/bridge remains pending the unresolved H1/2026 ending balance.",
+      "VPB: added VPBCashFlowNormalizationTests; updated validator to recognize schema 2026-10-26-bank-reconciliation-cashflow-v5; updated normalization standard to version 2.0. Remaining PDF sidecar rows are marked visual review pending unless directly checked."
     ],
     "unresolved": [
       "NLG NEEDS_MANUAL_REVIEW — H1/2024 selected later comparative in Q2/2025 reclassifies CFO/CFI versus the original Q2/2024 source by >0.01%; net cash movement and cash balances remain unchanged. Preserve both source bases and selected later comparative; do not plug.",
@@ -1633,10 +1641,11 @@
       "VHM direct visual review pending for Q1/2024 source page and H1/2024 comparative page; OCR sidecar plus arithmetic review is documented, but visual verification is not claimed.",
       "TPB NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT — H1/2024 CFI original source -201,252 vs later Q2/2025 comparative -223,559 million VND; net cash movement and closing balance agree. Keep later comparison and both source histories, no plug.",
       "TPB NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT — FY2024 CFF original Q4/2024 source 764,198 vs later Q4/2025 comparative 763,682 million VND; difference 516 million VND (~0.0675%, above 0.01%), while net movement and closing cash agree. Keep later comparison and both sources, no plug.",
-      "TPB visual review pending for selected FY2024 comparative in Q4/2025, FY2025 in Q4/2025, Q1/2026 and H1/2026 due PDFs too large to open in the direct viewer; OCR values reconciled arithmetically but not claimed visually verified."
+      "TPB visual review pending for selected FY2024 comparative in Q4/2025, FY2025 in Q4/2025, Q1/2026 and H1/2026 due PDFs too large to open in the direct viewer; OCR values reconciled arithmetically but not claimed visually verified.",
+      "VPB NEEDS_MANUAL_REVIEW — H1/2026 OCR candidate net cash 6,949,765 vs source-backed CFO 42,064,417 + CFI -1,149,285 + CFF -3,965,367 = 36,949,765 million VND; difference 30,000,000 million VND (~81.19%, above 0.01%). The source PDF net row and ending balance were not visually confirmed. Keep net/cash-ending fields blank, preserve candidate as rejected evidence, no plug. Q3/2026 YTD reconciles but standalone opening-cash bridge remains pending H1/2026 review."
     ],
-    "nextStep": "TPB cash-flow data normalized for 2024-Q1 through 2026-Q2; all ten periods pass four arithmetic checks exactly. Manual review remains only for H1/2024 CFI reclassification >0.01%, FY2024 CFF reclassification (~0.0675%), and direct visual review pending for Q4/2025, Q1/2026, Q2/2026 selected report pages. Do not insert balancing plugs. The next ticker in the configured queue is VPB; continue in the same cashflow domain, one ticker at a time.",
-    "previousCompletedSymbol": "VHM",
+    "nextStep": "VPB cash-flow normalized for 11 periods 2024-Q1 through 2026-Q3. CFO/CFI/CFF mapping corrected; source-backed periods reconcile. H1/2026 net cash OCR candidate and ending balance remain blank and flagged because the candidate total differs from source-backed flow components by ~81.19% (>0.01%); Q3/2026 standalone cash opening also remains pending. Do not adjust reported amounts or add a balancing plug. Continue with the next ticker STB in the same cashflow domain, one ticker at a time.",
+    "previousCompletedSymbol": "TPB",
     "validationRuns": [
       {
         "name": "Validate Site and Data",
