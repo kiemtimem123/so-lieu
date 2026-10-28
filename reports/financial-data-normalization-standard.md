@@ -85,3 +85,15 @@ Mỗi mảng phải có hồ sơ riêng ghi quy tắc ánh xạ trường, phép
 2. Đối chiếu PDF VietstockFinance cho TCB Q4/2025 và Q1/2026 để giải thích chênh lệch 565.285 triệu đồng ở số dư đầu kỳ.
 3. Kiểm tra 2026-Q3 thiếu `foreign_exchange_effect`; chỉ cập nhật khi tìm thấy dòng tương ứng trong PDF.
 4. Sau khi TCB hoàn tất, dùng cùng bộ quy tắc cho mã ngân hàng tiếp theo; không thay đổi mảng khác trong lượt này.
+
+
+### Đối chiếu nguồn PDF TCB — lượt tiếp theo (2026-10-28)
+
+Đã đọc sidecar OCR của các PDF hợp nhất được lưu từ danh mục VietstockFinance, đúng trang LCTT:
+
+- **TCB BCTC hợp nhất Q4/2025, PDF trang 10 (trang in 8):** báo cáo ghi tiền đầu kỳ **147.484.415**, biến động tiền thuần **43.777.643**, tiền cuối kỳ **191.262.058** triệu đồng. Cầu nối nội bộ khớp chính xác.
+- **TCB BCTC hợp nhất Q1/2026, PDF trang 10 (trang in 8):** báo cáo ghi tiền đầu kỳ **191.827.343**, biến động tiền thuần **-12.117.985**, tiền cuối kỳ **179.709.358** triệu đồng. Cầu nối nội bộ khớp chính xác. Vì vậy chênh **565.285 triệu đồng** giữa số cuối Q4/2025 và số đầu Q1/2026 đã xuất hiện trong hai báo cáo gốc qua OCR, không phải do phép tính giữa các trường của snapshot. Chưa có bằng chứng giải thích việc chênh lệch; giữ nguyên từng số theo báo cáo, không tự đồng bộ.
+- **TCB BCTC hợp nhất Q3/2026, PDF trang 12 (trang in 8):** báo cáo ghi biến động tiền thuần **-14.548.362**, tiền đầu kỳ **191.827.343**, tiền cuối kỳ **177.278.961** triệu đồng. Phép tính cuối kỳ − đầu kỳ − biến động thuần = **-20 triệu đồng**. Ba luồng hoạt động trong cùng báo cáo cộng đúng ra biến động tiền thuần; trang OCR không có dòng ảnh hưởng tỷ giá. Đây là sai lệch còn lại cần đối chiếu hình ảnh trang PDF, không được tự thêm FX hay sửa số.
+- Kiểm thử tự động “Test cash-flow bridge reconciliation” trong GitHub Actions **PASS** ở run [40651448162](https://github.com/kiemtimem123/so-lieu/actions/runs/40651448162). Đây là kiểm thử logic cầu nối, không thay thế xác minh trực quan PDF.
+
+**Kết luận lượt TCB:** phép kiểm tra nội bộ và bài test hồi quy PASS; đối chiếu OCR nguồn đã thực hiện cho Q4/2025, Q1/2026, Q3/2026; trạng thái tổng vẫn **NEEDS_MANUAL_REVIEW** do chênh lệch liên kỳ 565.285 triệu đồng và sai lệch cầu nối 20 triệu đồng. Chỉ đóng các ngoại lệ sau khi kiểm tra ảnh PDF gốc và có căn cứ rõ ràng. Không chuyển sang mảng dữ liệu khác ở bước này.
