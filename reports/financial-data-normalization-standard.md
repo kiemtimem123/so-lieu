@@ -153,3 +153,12 @@ tests/test_cashflow_bridge.py có thêm test nguồn thực kiểm tra số năm
 - Bài kiểm thử `tests/test_cashflow_bridge.py` được cập nhật để bắt buộc giá trị 177.278.981, xác nhận nguồn/trang OCR mục tiêu và kiểm tra cả cầu nối quý/YTD. Chỉ đánh dấu PASS hoàn chỉnh sau khi workflow kiểm thử cho commit sửa này thành công.
 
 **Trạng thái mảng Lưu chuyển tiền tệ — TCB:** Q4/2025 đã chuẩn hóa bằng BCTC năm đã kiểm toán; Q3/2026 đã đọc lại nguồn và sửa lỗi OCR. Hai ngoại lệ số học đã khép lại. Dữ liệu đã qua OCR nguồn và đối chiếu số học; chưa tuyên bố kiểm tra thủ công từng pixel. Chờ workflow kiểm thử hậu sửa xác nhận PASS, sau đó lưu checkpoint hoàn tất mã TCB trước khi chuyển sang mã kế tiếp trong cùng mảng.
+
+
+### Kết quả CI sau sửa TCB — xác nhận 2026-10-28
+
+- [Validate Site and Data run 40666435248](https://github.com/kiemtimem123/so-lieu/actions/runs/40666435248): **SUCCESS**; bước `Test cash-flow bridge reconciliation` PASS, JSON snapshots PASS và kiểm tra cú pháp PASS.
+- [Validate quarterly financial data run 40666351827](https://github.com/kiemtimem123/so-lieu/actions/runs/40666351827): **SUCCESS**; bước `Validate quarterly financial snapshots` và `Run bank statement reconciliation regression checks` PASS.
+- [Targeted OCR run 40665985748](https://github.com/kiemtimem123/so-lieu/actions/runs/40665985748): **SUCCESS**; sidecar trang 12 Q3/2026 đã được OCR lại ở 300dpi và giá trị mới đã được kiểm tra bằng test.
+
+Do đó TCB–LCTT không còn sai lệch số học mở: Q4/2025 đã được chuẩn hóa theo BCTC năm đã kiểm toán và Q3/2026 đã sửa sai chữ số do OCR. Trạng thái: **PASS nguồn OCR + đối chiếu số học + CI**; không đồng nghĩa với tuyên bố kiểm tra thủ công từng pixel. Bước kế tiếp theo hàng đợi trong cùng mảng là **MBB**, không chuyển sang tab/mảng khác.
