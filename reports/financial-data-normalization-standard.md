@@ -1,6 +1,6 @@
 # Quy trình chuẩn hóa dữ liệu tài chính theo từng mảng
 
-Phiên bản: 1.2  
+Phiên bản: 1.3  
 Ngày thiết lập: 2026-10-28  
 Cập nhật gần nhất: 2026-10-29  
 Phạm vi: `kiemtimem123/so-lieu`, dữ liệu BCTC quý từ 2024-Q1 trở đi.
@@ -344,3 +344,25 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 - Q2/2026 có residual tổng luồng do làm tròn độc lập chỉ **-3 triệu VND** trong snapshot (tương đối dưới 0,01%); được chấp nhận, vẫn giữ residual, không sửa giá trị thành phần.
 - Regression được bổ sung trong `tests/test_cashflow_bridge.py`: 11 kỳ, đơn vị/basis, CFO+CFI+CFF, net change, YTD bridge, quarter bridge, quý riêng = chênh YTD, continuity số dư và kiểm soát CFF H1/2024.
 - Trạng thái VND: **automation complete; manual-review remaining** cho so sánh CFF H1/2024 vượt 0,01% và trực quan PDF chưa hoàn tất. Chuyển tiếp sang mã kế tiếp được phép; không thay đổi mảng dữ liệu khác.
+
+
+## Gia cố quy trình hồi quy và bảo toàn trường đã chuẩn hóa — 2026-10-29
+
+### 1. Quy tắc bắt buộc cho bộ kiểm thử
+- Trong `tests/test_cashflow_bridge.py`, `if __name__ == "__main__": unittest.main()` phải nằm **sau cùng file**, bên dưới mọi lớp test theo mã chứng khoán. Nếu đặt giữa file, Python chạy test trước khi khai báo các lớp ACB/FPT/SHB/HCM/VND; CI có thể báo xanh nhưng bỏ sót các test được thêm ở cuối file.
+- Sau khi di chuyển guard xuống cuối, CI đã thực thi đủ **25 test** trong `python tests/test_cashflow_bridge.py` và đạt **PASS** (run [40735388788](https://github.com/kiemtimem123/so-lieu/actions/runs/40735388788)).
+- Trong test, chỉ kiểm tra kiểu số trên các trường số; trường phân loại như `cashflow_period_basis` là chuỗi và phải được kiểm tra riêng, không đưa vào điều kiện `isinstance(value, (int, float))`.
+
+### 2. Không để quy trình OCR ghi đè trường đã chuẩn hóa
+- Lượt rà soát 2026-10-29 phát hiện commit làm giàu OCR MBB `8367764` đã để trống một số trường dòng tiền và số dư tiền đã chuẩn hóa, trong khi các trường phi dòng tiền khác vẫn mới hơn.
+- Đã khôi phục **chỉ nhóm trường dòng tiền và metadata đối chiếu** của MBB từ snapshot đã qua kiểm định tại commit `694989992688`; giữ các trường phi dòng tiền mới hơn. Không tự tạo giá trị mới, không điều chỉnh số nguồn, không thay đổi các tab/mảng khác.
+- Các kiểm thử hiện xác nhận lại MBB đủ ba luồng tiền, net cash change, quý riêng = chênh YTD, cầu nối tiền và residual liên kỳ được ghi lại. Việc khôi phục được ghi tại các trường ghi chú dòng tiền của snapshot MBB.
+- Quy tắc chung cho mọi lượt OCR/enrichment: **trước khi ghi snapshot mới, so sánh trường đã chuẩn hóa với phiên bản trước; không ghi `null` hoặc giá trị chưa xác minh đè lên trường có nguồn và đã kiểm định**. Nếu cần cập nhật, phải ghi nhận nguyên nhân, nguồn và kết quả kiểm thử trong cùng commit.
+
+### 3. Chuẩn hóa metadata mâu thuẫn liên kỳ HCM
+- Đã bổ sung `selected_ytd_opening_vs_prior_fy_close` cho HCM 2025-Q2 và 2026-Q2, gồm số dư cuối năm trước, số dư đầu YTD từ báo cáo so sánh, residual, tỷ lệ tương đối và cờ rà soát.
+- Các residual HCM vượt 0,01% vẫn giữ nguyên và ở trạng thái manual review; đây chỉ là bổ sung truy vết, không thay đổi số liệu tài chính.
+
+### Trạng thái
+- Quy tắc chấp nhận residual số học tương đối **≤ 0,01%** tiếp tục có hiệu lực: lưu residual nhưng không sửa số nguồn. Ngoại lệ trên 0,01% và vấn đề OCR/khác kỳ/khác phạm vi phải gắn manual review.
+- Mảng đang làm: lưu chuyển tiền tệ. VND đã được chuẩn hóa 11 kỳ; còn mâu thuẫn OCR CFF H1/2024 vượt ngưỡng và rà soát trực quan PDF pending. Mã kế tiếp theo thứ tự danh mục là SHS.
