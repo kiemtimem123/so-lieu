@@ -108,3 +108,34 @@ Mỗi mảng phải có hồ sơ riêng ghi quy tắc ánh xạ trường, phép
 Như vậy chênh **565.285 triệu đồng được xác nhận bằng hình ảnh PDF gốc**, không phải lỗi OCR. Mỗi báo cáo tự cân đối theo số của chính báo cáo đó, nhưng chưa tìm thấy thuyết minh giải thích khác biệt giữa số cuối Q4 và số đầu Q1. Không sửa dữ liệu tự động; cần kiểm tra thêm thuyết minh số 34 và/hoặc tài liệu điều chỉnh nếu có trong chính danh mục VietstockFinance.
 
 Q3/2026 vẫn còn chênh cầu nối **20 triệu đồng** theo OCR; PDF trực tiếp Q3 chưa được công cụ ảnh mở thành công trong lượt này, nên chưa coi là đã xác minh trực quan.
+
+## Quy tắc bổ sung — ưu tiên BCTC năm đã kiểm toán khi chuẩn hóa LCTT Q4
+
+Khi danh mục VietstockFinance có cả báo cáo Q4/năm trước kiểm toán và BCTC hợp nhất năm đã kiểm toán được công bố sau đó, với **mảng LCTT** cần:
+1. Dùng số lũy kế cả năm và số dư tiền cuối năm từ BCTC năm đã kiểm toán mới hơn.
+2. Tính số phát sinh riêng Q4 = số lũy kế cả năm đã kiểm toán − số lũy kế 9 tháng của cùng năm, cùng phạm vi hợp nhất.
+3. Xác minh ba nhóm luồng tiền cộng thành biến động tiền thuần; xác minh tiền cuối kỳ − tiền đầu kỳ = biến động thuần khi báo cáo không trình bày dòng tỷ giá riêng.
+4. Không quy chênh lệch giữa bản trước kiểm toán và bản kiểm toán thành tỷ giá chỉ để ép cầu nối khớp. Ghi nhận rõ bản nguồn cũ, bản kiểm toán thay thế, các trường bị sửa và công thức dẫn xuất. Chỉ sửa các trường của mảng đang xử lý; không ngầm thay số liệu KQKD hoặc bảng cân đối.
+
+## Sửa TCB Q4/2025 theo BCTC hợp nhất năm đã kiểm toán — 2026-10-28
+
+**Phát hiện mới thay thế kết luận sơ bộ ở nhật ký đối chiếu trước đó:** chênh 565.285 triệu đồng giữa số cuối Q4/2025 và số đầu Q1/2026 không phải là một khoản tỷ giá riêng. Trong kho nguồn VietstockFinance có PDF BCTC hợp nhất năm 2025 đã kiểm toán, công bố ngày 17/03/2026; sidecar được bổ sung đúng hai trang LCTT bằng OCR 300dpi:
+- [PDF đã lưu trong kho: báo cáo hợp nhất năm 2025 đã kiểm toán](https://github.com/kiemtimem123/so-lieu/blob/main/reports/raw/TCB/vietstock-tcb-2024-2026-20261019/553195cdc772f58a.pdf)
+- [Sidecar trích xuất trang 15–16](https://github.com/kiemtimem123/so-lieu/blob/main/reports/raw/TCB/vietstock-tcb-2024-2026-20261019/553195cdc772f58a.pdf.extracted.json)
+- Danh mục nguồn chính: https://finance.vietstock.vn/TCB/tai-tai-lieu.htm?doctype=1
+
+BCTC kiểm toán (PDF trang 15–16, trang in 10–11) ghi: LCTT kinh doanh cả năm **39.923.618**, LCTT đầu tư **-816.440**, LCTT tài chính **5.235.750**, biến động tiền thuần **44.342.928**, tiền đầu năm **147.484.415**, tiền cuối năm **191.827.343** triệu đồng. Báo cáo không trình bày dòng ảnh hưởng tỷ giá riêng trên hai trang LCTT này; phép tính tiền cuối − tiền đầu − biến động thuần bằng 0, được ghi nhận là giá trị đối chiếu dẫn xuất chứ không phải giá trị đọc từ một dòng tỷ giá.
+
+Đã sửa data/financials-TCB.json, kỳ 2025-Q4:
+- LCTT kinh doanh YTD: **39.358.333 → 39.923.618**; Q4 riêng: **38.511.806 → 39.077.091**.
+- Biến động tiền thuần YTD: **43.777.643 → 44.342.928**; Q4 riêng: **31.338.378 → 31.903.663**.
+- Tiền cuối kỳ báo cáo và tiền cuối Q4: **191.262.058 → 191.827.343**.
+- LCTT đầu tư và tài chính giữ nguyên YTD theo bản kiểm toán; các số Q4 riêng được tính bằng lũy kế năm kiểm toán trừ lũy kế Q3/2025. Tiền đầu Q4 lấy đúng số cuối Q3/2025 là 159.923.680.
+
+Kết quả sau sửa: ba luồng tiền Q4 cộng đúng **31.903.663**; cầu nối tiền Q4 159.923.680 + 31.903.663 = 191.827.343; cầu nối cả năm 147.484.415 + 44.342.928 = 191.827.343. Số cuối Q4 đã khớp với số đầu Q1/2026. Các trường KQKD và cân đối kế toán không bị thay đổi bởi sửa lỗi LCTT này.
+
+### Bài kiểm thử hồi quy bắt buộc
+
+tests/test_cashflow_bridge.py có thêm test nguồn thực kiểm tra số năm đã kiểm toán, công thức Q4 = FY kiểm toán − 9 tháng, tổng luồng tiền và cầu nối số dư. Test riêng cũng khóa sai lệch 20 triệu đồng còn lại ở TCB Q3/2026 để không ai vô tình tự bù tỷ giá hoặc sửa số khi chưa có bằng chứng. Workflow trích xuất có mục tiêu và workflow kiểm định được lưu trong repo; xem lịch sử GitHub Actions trước khi tuyên bố PASS.
+
+**Trạng thái hiện tại:** TCB LCTT Q4/2025 đã **PASS nguồn OCR và phép đối chiếu số học**, chờ kiểm tra trực quan cuối cùng. Ngoại lệ còn mở trong mảng này là chênh cầu nối **20 triệu đồng ở Q3/2026**; tiếp tục xác minh trên PDF nguồn, không chuyển sang mảng dữ liệu khác cho đến khi đóng ngoại lệ hoặc ghi rõ terminal manual review.
