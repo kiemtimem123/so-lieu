@@ -1026,6 +1026,11 @@ class NLGCashFlowNormalizationTests(unittest.TestCase):
                         sum(q_values), row["net_cash_change"]), 0.01)
                     self.assertLessEqual(rec["quarter_flow_components_relative_difference_percent"], 0.01)
 
+                if period == "2026-Q2":
+                    self.assertGreater(rec["quarter_cash_bridge_relative_difference_percent"], 0.01)
+                else:
+                    self.assertLessEqual(rec["quarter_cash_bridge_relative_difference_percent"], 0.01)
+
                 year, quarter = period.split("-Q")
                 q = int(quarter)
                 if q > 1:
