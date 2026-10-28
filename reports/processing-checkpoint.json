@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-28T21:21:38.004Z",
+  "updatedAt": "2026-10-28T21:22:36.368Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -1437,9 +1437,9 @@
     "standardVersion": "2.1",
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
-    "activeSymbol": "STB",
-    "status": "automated_processing_complete_manual_review_remaining",
-    "lastUpdatedAt": "2026-10-28T21:21:38.004Z",
+    "activeSymbol": "VCB",
+    "status": "in_progress_next_ticker",
+    "lastUpdatedAt": "2026-10-28T21:22:36.368Z",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1625,7 +1625,10 @@
       "STB: all 10 periods have quarter and YTD flows, reported cash balances and FX registered in financial_line_items_extracted_fields; each period passes the YTD and quarterly cash bridge checks under 0.01% tolerance.",
       "STB: H1/2026 CFO+CFI+CFF totals -42,997,005 versus reported net -43,097,005, residual 100,000 million VND (~0.2320% YTD and ~0.6369% quarter, above 0.01%); net/cash bridge reconciles, but flow-component discrepancy retained as manual review and no balancing plug was inserted.",
       "Added STBCashFlowNormalizationTests with regressions for 10 periods, source comparatives, FX revisions, relative tolerance, cash bridge and the H1/2026 over-threshold component mismatch.",
-      "Updated reports/financial-data-normalization-standard.md to version 2.1 with exact relative-tolerance formula, the distinction between line-level reclassification and cash-balance bridge residual, STB source decisions and outstanding manual-review items."
+      "Updated reports/financial-data-normalization-standard.md to version 2.1 with exact relative-tolerance formula, the distinction between line-level reclassification and cash-balance bridge residual, STB source decisions and outstanding manual-review items.",
+      "STB CI after snapshot normalization: Validate Site and Data run 40770995896 SUCCESS; Validate quarterly financial data run 40770996112 SUCCESS; Package Hostinger Stock Dashboard run 40770995912 SUCCESS.",
+      "STB regression test commit validation run 40771146385 SUCCESS; all cash-flow bridge regression tests, JavaScript syntax, JSON snapshot validation and OMO wiring/source-definition checks PASS.",
+      "STB standard document version 2.1 validation run 40771246136 SUCCESS; checkpoint run 40771324652 SUCCESS. Relative tolerance policy is 0.01%, and remaining source discrepancies are explicitly marked."
     ],
     "unresolved": [
       "NLG NEEDS_MANUAL_REVIEW — H1/2024 selected later comparative in Q2/2025 reclassifies CFO/CFI versus the original Q2/2024 source by >0.01%; net cash movement and cash balances remain unchanged. Preserve both source bases and selected later comparative; do not plug.",
@@ -1665,8 +1668,8 @@
       "STB 2024-Q3/Q4 FX source basis: Q3/2025 comparator shows 9M/2024 FX -8,227 versus original Q3/2024 -6,227 million VND. YTD and Q3-quarter bridge residual +2,000 million VND and Q4 residual -2,000 million VND are each below 0.01% of ending cash and may be accepted without a plug, but the FX line reclassification exceeds 0.01% of the FX amount and remains manual review.",
       "STB 2026-Q2: source OCR CFO -41,480,644 + CFI -47,599 + CFF -1,468,762 = -42,997,005 million VND, versus reported net -43,097,005; residual 100,000 million VND (0.2320% YTD; 0.6369% standalone quarter), above 0.01%. Preserve candidates and mark review; net and cash bridge reconcile, no source value or plug inserted. Direct PDF image was inaccessible to the current source viewer, so do not claim visual verification."
     ],
-    "nextStep": "STB automated cash-flow normalization is complete for 2024-Q1 through 2026-Q2 with relative-tolerance checks and provenance preserved. Outstanding manual review: H1/2024 material CFO/CFI reclassification; Q3/2024 FX line source reclassification (while cash bridge residual is below 0.01%); H1/2026 component sum mismatch 100,000 million VND (>0.01%). Do not insert balancing plugs. Continue with VCB as the next ticker in the same cashflow domain, one ticker at a time.",
-    "previousCompletedSymbol": "VPB",
+    "nextStep": "Begin VCB cash-flow normalization only after inspecting the latest checkpoint and VCB snapshot/source archive. Keep the user's skip-unconfirmed-through-period policy intact; do not fill unsupported periods. Use relative tolerance 0.01%, source totals from VietstockFinance only, one ticker, one domain.",
+    "previousCompletedSymbol": "STB",
     "validationRuns": [
       {
         "name": "Validate Site and Data",
@@ -1709,6 +1712,48 @@
         "status": "success",
         "commit": "86b3a3edbcd8ce8e1c2cc94e3b622baabda37b77",
         "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40769927379"
+      },
+      {
+        "name": "Validate Site and Data",
+        "runId": "40770995896",
+        "status": "success",
+        "commit": "d0a5df06755c70d457e294690ff2b4e9b0ef232c",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40770995896"
+      },
+      {
+        "name": "Validate quarterly financial data",
+        "runId": "40770996112",
+        "status": "success",
+        "commit": "d0a5df06755c70d457e294690ff2b4e9b0ef232c",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40770996112"
+      },
+      {
+        "name": "Package Hostinger Stock Dashboard",
+        "runId": "40770995912",
+        "status": "success",
+        "commit": "d0a5df06755c70d457e294690ff2b4e9b0ef232c",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40770995912"
+      },
+      {
+        "name": "Validate Site and Data",
+        "runId": "40771146385",
+        "status": "success",
+        "commit": "c637219756c3f3940ea5a76edd38b24dabf4417e",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40771146385"
+      },
+      {
+        "name": "Validate Site and Data",
+        "runId": "40771246136",
+        "status": "success",
+        "commit": "70bcea26bc63f9553474bf2f44e9684deb491318",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40771246136"
+      },
+      {
+        "name": "Validate Site and Data",
+        "runId": "40771324652",
+        "status": "success",
+        "commit": "e891a6c1efd256eaf32fbecbefc5ed4cead9e6ed",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40771324652"
       }
     ],
     "lastCompletedSymbol": "FPT",
