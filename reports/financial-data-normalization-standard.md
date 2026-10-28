@@ -139,3 +139,17 @@ Kết quả sau sửa: ba luồng tiền Q4 cộng đúng **31.903.663**; cầu 
 tests/test_cashflow_bridge.py có thêm test nguồn thực kiểm tra số năm đã kiểm toán, công thức Q4 = FY kiểm toán − 9 tháng, tổng luồng tiền và cầu nối số dư. Test riêng cũng khóa sai lệch 20 triệu đồng còn lại ở TCB Q3/2026 để không ai vô tình tự bù tỷ giá hoặc sửa số khi chưa có bằng chứng. Workflow trích xuất có mục tiêu và workflow kiểm định được lưu trong repo; xem lịch sử GitHub Actions trước khi tuyên bố PASS.
 
 **Trạng thái hiện tại:** TCB LCTT Q4/2025 đã **PASS nguồn OCR và phép đối chiếu số học**, chờ kiểm tra trực quan cuối cùng. Ngoại lệ còn mở trong mảng này là chênh cầu nối **20 triệu đồng ở Q3/2026**; tiếp tục xác minh trên PDF nguồn, không chuyển sang mảng dữ liệu khác cho đến khi đóng ngoại lệ hoặc ghi rõ terminal manual review.
+
+
+## Đóng ngoại lệ cầu nối TCB Q3/2026 bằng OCR nguồn 300dpi — 2026-10-28
+
+**Cập nhật sau phần nhật ký trước:** chênh 20 triệu đồng đã được giải quyết bằng cách đọc lại dòng số dư cuối kỳ trên đúng PDF gốc, không bằng cách ước lượng hoặc tự thêm tỷ giá.
+
+- Nguồn: PDF BCTC hợp nhất Q3/2026 liên kết từ danh mục VietstockFinance: [PDF lưu trong kho](https://github.com/kiemtimem123/so-lieu/blob/main/reports/raw/TCB/repair-tcb-2026q3-full-report/fd82d64db310dbdb.pdf), PDF trang 12 (trang in 8).
+- Sidecar trang 12 được OCR lại ở 300dpi bằng `tesseract-vie+eng-psm6-300dpi-targeted-rescan`; dòng báo cáo đọc là tiền cuối kỳ **177.278.981** triệu đồng. Lượt OCR trước ghi nhầm **177.278.961** do sai chữ số cuối.
+- Đã sửa `data/financials-TCB.json` kỳ 2026-Q3: `cash_ending` và `cash_ending_reported_ytd` từ **177.278.961 → 177.278.981**. Không thay đổi các dòng lưu chuyển tiền.
+- Kiểm tra lại: lũy kế `191.827.343 + (-14.548.362) = 177.278.981`; riêng quý `170.247.424 + 7.031.557 = 177.278.981`. Cả hai cầu nối dư **0**. Ba luồng tiền hoạt động vẫn cộng thành biến động tiền thuần đã báo cáo. Không thêm trường ảnh hưởng tỷ giá do báo cáo không trình bày dòng tỷ giá riêng và cầu nối nay đã khớp.
+- Lịch sử sửa OCR cũ được bảo toàn trong `financial_line_items_value_corrections.cash_ending.prior_correction_record`; sidecar lưu dấu thời gian, trang nguồn, bộ OCR và giá trị trước/sau.
+- Bài kiểm thử `tests/test_cashflow_bridge.py` được cập nhật để bắt buộc giá trị 177.278.981, xác nhận nguồn/trang OCR mục tiêu và kiểm tra cả cầu nối quý/YTD. Chỉ đánh dấu PASS hoàn chỉnh sau khi workflow kiểm thử cho commit sửa này thành công.
+
+**Trạng thái mảng Lưu chuyển tiền tệ — TCB:** Q4/2025 đã chuẩn hóa bằng BCTC năm đã kiểm toán; Q3/2026 đã đọc lại nguồn và sửa lỗi OCR. Hai ngoại lệ số học đã khép lại. Dữ liệu đã qua OCR nguồn và đối chiếu số học; chưa tuyên bố kiểm tra thủ công từng pixel. Chờ workflow kiểm thử hậu sửa xác nhận PASS, sau đó lưu checkpoint hoàn tất mã TCB trước khi chuyển sang mã kế tiếp trong cùng mảng.
