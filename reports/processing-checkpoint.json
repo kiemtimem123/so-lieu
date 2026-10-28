@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-28T21:11:44.553Z",
+  "updatedAt": "2026-10-28T21:12:52.204Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -1437,7 +1437,7 @@
     "activeDataDomain": "cashflow",
     "activeSymbol": "VPB",
     "status": "automated_processing_complete_manual_review_remaining",
-    "lastUpdatedAt": "2026-10-28T21:11:44.553Z",
+    "lastUpdatedAt": "2026-10-28T21:12:52.204Z",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1607,7 +1607,13 @@
       "VPB: H1/2025 comparator from Q2/2026 clarifies the earlier OCR candidate 49,356,051 as 19,356,051 million VND; flow sums and cash bridge reconcile.",
       "VPB: H1/2026 source OCR candidate net cash 6,949,765 conflicts with source-backed CFO/CFI/CFF sum 36,949,765 by 30,000,000 million VND (~81.19% relative, above 0.01%); net flow and cash ending are withheld, candidate retained as rejected evidence, no balancing plug added.",
       "VPB: 9M/2026 YTD components and net 30,373,394 reconcile; Q3 standalone component deltas are recorded with formula, but quarter opening cash/bridge remains pending the unresolved H1/2026 ending balance.",
-      "VPB: added VPBCashFlowNormalizationTests; updated validator to recognize schema 2026-10-26-bank-reconciliation-cashflow-v5; updated normalization standard to version 2.0. Remaining PDF sidecar rows are marked visual review pending unless directly checked."
+      "VPB: added VPBCashFlowNormalizationTests; updated validator to recognize schema 2026-10-26-bank-reconciliation-cashflow-v5; updated normalization standard to version 2.0. Remaining PDF sidecar rows are marked visual review pending unless directly checked.",
+      "Validate Site and Data run 40769722060 SUCCESS after adding VPB regression coverage: cash-flow bridge tests, JS syntax, JSON snapshot validation and source wiring passed.",
+      "Validate Site and Data run 40769777409 SUCCESS after enabling the VPB cash-flow schema in the bank reconciliation validator.",
+      "Validate quarterly financial data run 40769777419 SUCCESS after the VPB schema and cash-flow snapshot changes.",
+      "Validate Site and Data run 40769860703 SUCCESS after VPB normalization-standard documentation update.",
+      "Validate Site and Data run 40769928773 SUCCESS on checkpoint commit 86b3a3ed; all cash-flow bridge tests, JS syntax, JSON snapshots and source wiring checks passed.",
+      "Package Hostinger Stock Dashboard run 40769927379 SUCCESS on checkpoint commit 86b3a3ed."
     ],
     "unresolved": [
       "NLG NEEDS_MANUAL_REVIEW — H1/2024 selected later comparative in Q2/2025 reclassifies CFO/CFI versus the original Q2/2024 source by >0.01%; net cash movement and cash balances remain unchanged. Preserve both source bases and selected later comparative; do not plug.",
@@ -1649,73 +1655,45 @@
     "validationRuns": [
       {
         "name": "Validate Site and Data",
-        "runId": "40758561100",
+        "runId": "40769722060",
         "status": "success",
-        "commit": "ee0aa5dbe2ce036355d591e945f1d882bf5f2183",
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40758561100"
+        "commit": "b6ee45c15ec6fee560997573d76e307c66af9cc6",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40769722060"
+      },
+      {
+        "name": "Validate Site and Data",
+        "runId": "40769777409",
+        "status": "success",
+        "commit": "2af1d707aae739328e3467557b47648595491e2a",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40769777409"
       },
       {
         "name": "Validate quarterly financial data",
-        "runId": "40758504610",
+        "runId": "40769777419",
         "status": "success",
-        "commit": "993cfe5e778537c8c4d288738371621777a84a8e",
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40758504610"
+        "commit": "2af1d707aae739328e3467557b47648595491e2a",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40769777419"
+      },
+      {
+        "name": "Validate Site and Data",
+        "runId": "40769860703",
+        "status": "success",
+        "commit": "d6c2d3fcb14bbc0e272e0bf74071da37e59c194c",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40769860703"
+      },
+      {
+        "name": "Validate Site and Data",
+        "runId": "40769928773",
+        "status": "success",
+        "commit": "86b3a3edbcd8ce8e1c2cc94e3b622baabda37b77",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40769928773"
       },
       {
         "name": "Package Hostinger Stock Dashboard",
-        "runId": "40758504566",
+        "runId": "40769927379",
         "status": "success",
-        "commit": "993cfe5e778537c8c4d288738371621777a84a8e",
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40758504566"
-      },
-      {
-        "name": "Validate Site and Data",
-        "runId": "40756665538",
-        "status": "success",
-        "commit": "a5ef56afc57f2b5a462a8f13f29162dcb2856322",
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40756665538"
-      },
-      {
-        "name": "Validate Site and Data",
-        "runId": "40756526058",
-        "status": "success",
-        "commit": "fa84b3a67645f887798ffd0b84f4edf6e2b648b1",
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40756526058"
-      },
-      {
-        "name": "Validate Site and Data",
-        "runId": "40756451616",
-        "status": "success",
-        "commit": "2cb7d3383e70ea36e6c6dd544d053d127882bb2d",
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40756451616"
-      },
-      {
-        "name": "Validate Site and Data",
-        "runId": "40759957558",
-        "status": "success",
-        "commit": "40fef3443dc143291f80b78e76e075fbdacc4c9b",
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40759957558"
-      },
-      {
-        "name": "Validate quarterly financial data",
-        "runId": "40760465361",
-        "status": "success",
-        "commit": "74e1dd9cf36ba2ae5726cc54a8685ac6e35bc074",
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40760465361"
-      },
-      {
-        "name": "Package Hostinger Stock Dashboard",
-        "runId": "40760465331",
-        "status": "success",
-        "commit": "74e1dd9cf36ba2ae5726cc54a8685ac6e35bc074",
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40760465331"
-      },
-      {
-        "name": "Validate Site and Data",
-        "runId": "40760574382",
-        "status": "success",
-        "commit": "a024f576e4375fe074d50c8a037b81cb59d2bace",
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40760574382"
+        "commit": "86b3a3edbcd8ce8e1c2cc94e3b622baabda37b77",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40769927379"
       }
     ],
     "lastCompletedSymbol": "FPT",
