@@ -699,3 +699,102 @@ class HCMCashFlowNormalizationTests(unittest.TestCase):
         self.assertEqual(self.rows["2026-Q2"]["cash_ending"], 2202389)
         self.assertEqual(self.rows["2026-Q1"]["cash_ending"], 1208989)
         self.assertEqual(self.rows["2026-Q2"]["cashflow_source_reconciliation"]["selected_ytd_opening_vs_prior_fy_close"]["residual_million_vnd"], -320500)
+
+
+class VNDCashFlowNormalizationTests(unittest.TestCase):
+    """Regression coverage for VNDIRECT's company B03b-CTCK cash-flow statement."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.snapshot = json.loads(
+            (ROOT / "data" / "financials-VND.json").read_text(encoding="utf-8")
+        )
+        cls.rows = {row["period"]: row for row in cls.snapshot["items"]}
+        cls.core = (
+            "operating_cash_flow", "investing_cash_flow", "financing_cash_flow",
+            "net_cash_change", "operating_cash_flow_ytd", "investing_cash_flow_ytd",
+            "financing_cash_flow_ytd", "net_cash_change_ytd", "cash_beginning",
+            "cash_ending", "cash_beginning_reported_ytd", "cash_ending_reported_ytd",
+        )
+
+    def test_vnd_all_eleven_periods_use_ytd_and_reconcile_with_001_percent_tolerance(self):
+        self.assertEqual(len(self.rows), 11)
+        self.assertEqual(set(self.rows), {
+            "2024-Q1", "2024-Q2", "2024-Q3", "2024-Q4",
+            "2025-Q1", "2025-Q2", "2025-Q3", "2025-Q4",
+            "2026-Q1", "2026-Q2", "2026-Q3",
+        })
+        for period, row in self.rows.items():
+            with self.subTest(period=period):
+                self.assertEqual(row["cashflow_period_basis"], "year_to_date")
+                self.assertEqual(row["unit"], "triệu VND")
+                self.assertEqual(row["source_index_url"],
+                                 "https://finance.vietstock.vn/VND/tai-tai-lieu.htm?doctype=1")
+                self.assertTrue(all(isinstance(row.get(k), (int, float))
+                                    and not isinstance(row.get(k), bool)
+                                    for k in self.core))
+                self.assertTrue(all(k in row["financial_line_items_extracted_fields"]
+                                    for k in self.core))
+                self.assertTrue(all(k not in row.get("financial_line_items_rejected_fields", [])
+                                    for k in self.core))
+
+                self.assertTrue(within_relative_tolerance(
+                    row["operating_cash_flow_ytd"] + row["investing_cash_flow_ytd"] +
+                    row["financing_cash_flow_ytd"], row["net_cash_change_ytd"]))
+                self.assertTrue(within_relative_tolerance(
+                    row["operating_cash_flow"] + row["investing_cash_flow"] +
+                    row["financing_cash_flow"], row["net_cash_change"]))
+                self.assertTrue(within_relative_tolerance(
+                    row["cash_ending_reported_ytd"],
+                    row["cash_beginning_reported_ytd"] + row["net_cash_change_ytd"]))
+                self.assertTrue(within_relative_tolerance(
+                    row["cash_ending"], row["cash_beginning"] + row["net_cash_change"]))
+
+                rec = row["cashflow_source_reconciliation"]
+                self.assertLessEqual(rec["ytd_flow_components_relative_difference_percent"], 0.01)
+                self.assertLessEqual(rec["ytd_cash_bridge_relative_difference_percent"], 0.01)
+                self.assertLessEqual(rec["quarter_flow_components_relative_difference_percent"], 0.01)
+                self.assertLessEqual(rec["quarter_cash_bridge_relative_difference_percent"], 0.01)
+                self.assertTrue(rec["foreign_exchange_effect_separately_reported"] is False)
+                self.assertIsNone(row.get("foreign_exchange_effect"))
+                self.assertIsNone(row.get("foreign_exchange_effect_ytd"))
+                self.assertNotIn("foreign_exchange_effect", row["financial_line_items_extracted_fields"])
+                self.assertNotIn("foreign_exchange_effect_ytd", row["financial_line_items_extracted_fields"])
+
+                year, qtext = period.split("-Q")
+                quarter = int(qtext)
+                if quarter == 1:
+                    for field in self.core[:4]:
+                        self.assertEqual(row[field], row[field + "_ytd"])
+                else:
+                    previous = self.rows[f"{year}-Q{quarter-1}"]
+                    for field in self.core[:4]:
+                        self.assertEqual(row[field], row[field + "_ytd"] - previous[field + "_ytd"])
+                    self.assertEqual(row["cash_beginning"], previous["cash_ending"])
+
+    def test_vnd_q2_2024_comparator_cff_conflict_is_retained_for_manual_review(self):
+        row = self.rows["2024-Q2"]
+        rec = row["cashflow_source_reconciliation"]
+        self.assertEqual(rec["status"],
+                         "NEEDS_MANUAL_REVIEW_SOURCE_COMPARATOR_CFF_GT_0_01_PERCENT")
+        issue = rec["source_candidates_pending_manual_review"][0]
+        self.assertEqual(issue["field"], "financing_cash_flow_ytd")
+        self.assertEqual(issue["selected_value_million_vnd"], 1076402)
+        self.assertEqual(issue["newer_comparative_ocr_candidate_million_vnd"], 1078402)
+        self.assertEqual(issue["difference_million_vnd"], 2000)
+        self.assertGreater(issue["relative_difference_percent"], 0.01)
+        # Use the source-backed value that reconciles; never plug in the newer OCR candidate.
+        self.assertEqual(row["financing_cash_flow_ytd"], 1076402)
+        self.assertEqual(
+            row["operating_cash_flow_ytd"] + row["investing_cash_flow_ytd"] +
+            row["financing_cash_flow_ytd"], row["net_cash_change_ytd"]
+        )
+
+    def test_vnd_q2_2026_rounding_residual_is_accepted_not_plugged(self):
+        row = self.rows["2026-Q2"]
+        rec = row["cashflow_source_reconciliation"]
+        self.assertLessEqual(rec["ytd_flow_components_relative_difference_percent"], 0.01)
+        self.assertEqual(rec["ytd_flow_components_residual_million_vnd"], -3)
+        self.assertEqual(row["net_cash_change_ytd"], -296409)
+        self.assertEqual(row["cash_beginning_reported_ytd"], 1622127)
+        self.assertEqual(row["cash_ending_reported_ytd"], 1325719)
