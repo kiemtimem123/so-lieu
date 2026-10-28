@@ -15,7 +15,8 @@ SCHEMA = "2026-10-27-note-reference-alias-and-manual-guards-v8"
 BANKS = {"MBB","ACB","SHB","TCB","TPB","VPB","STB","VCB","CTG","BID"}
 ERRORS: list[str] = []
 WARNINGS: list[str] = []
-EPS = 5
+RELATIVE_TOLERANCE_PERCENT = 0.01
+EPS = 0
 ACTIVE_DETAILS_PENDING_REVIEW = False
 DETAIL_REVIEW_STATUSES = {
     "manual_review_required",
@@ -38,12 +39,26 @@ def reconciliation_issue(symbol, period, message):
     else:
         ERRORS.append(f"{symbol} {period}: {message}")
 
+def relative_difference_percent(actual, expected):
+    """Absolute percentage difference using the larger absolute value as denominator."""
+    scale = max(abs(actual), abs(expected), 1)
+    return abs(actual - expected) / scale * 100
+
+
+def within_relative_tolerance(actual, expected, tolerance_percent=RELATIVE_TOLERANCE_PERCENT):
+    """Accept a discrepancy at or below the explicitly configured relative threshold."""
+    return relative_difference_percent(actual, expected) <= tolerance_percent
+
+
 def require_close(symbol, period, label, actual, expected, tolerance=EPS):
-    if not close(actual, expected, tolerance):
-        reconciliation_issue(
-            symbol, period,
-            f"{label}: actual={actual}, expected={expected}, diff={actual-expected}"
-        )
+    # The 0.01% relative rule supersedes the old blanket million-VND threshold.
+    if abs(actual - expected) <= tolerance or within_relative_tolerance(actual, expected):
+        return
+    reconciliation_issue(
+        symbol, period,
+        f"{label}: actual={actual}, expected={expected}, diff={actual-expected}, "
+        f"relative_diff_percent={relative_difference_percent(actual, expected):.8f}"
+    )
 
 def cash_bridge_delta(item):
     """Return closing - opening - net flow - FX effect, or None if core inputs are absent."""
@@ -153,16 +168,22 @@ def audit_item(symbol, item, by_period):
         fx_available = number(item.get("foreign_exchange_effect"))
         bridge_delta = cash_bridge_delta(item)
         bridge_label = "cash opening/closing bridge after FX" if fx_available else "cash opening/closing bridge (FX unavailable)"
-        if abs(bridge_delta) > 50:
-            reconciliation_issue(
-                symbol, period,
-                f"{bridge_label} differs by {bridge_delta} million VND"
-            )
-        elif bridge_delta:
-            WARNINGS.append(
-                f"{symbol} {period}: {bridge_label} residual {bridge_delta} million VND "
-                "retained for source/OCR review"
-            )
+        expected_closing_cash = item["cash_beginning"] + item["net_cash_change"] + (
+            item.get("foreign_exchange_effect")
+            if fx_available else 0
+        )
+        if not within_relative_tolerance(item["cash_ending"], expected_closing_cash):
+            if abs(bridge_delta) > 50:
+                reconciliation_issue(
+                    symbol, period,
+                    f"{bridge_label} differs by {bridge_delta} million VND "
+                    f"(relative difference {relative_difference_percent(item['cash_ending'], expected_closing_cash):.8f}%)"
+                )
+            elif bridge_delta:
+                WARNINGS.append(
+                    f"{symbol} {period}: {bridge_label} residual {bridge_delta} million VND "
+                    "exceeds the 0.01% relative tolerance; retained for source/OCR review"
+                )
     if number(item.get("cash_and_equivalents")) and number(item.get("cash_beginning_reported_ytd")) and item["cash_and_equivalents"] == item["cash_beginning_reported_ytd"]:
         reconciliation_issue(
             symbol, period,
