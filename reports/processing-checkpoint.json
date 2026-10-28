@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-28T21:22:36.368Z",
+  "updatedAt": "2026-10-28T21:24:27.768Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -1437,9 +1437,9 @@
     "standardVersion": "2.1",
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
-    "activeSymbol": "VCB",
+    "activeSymbol": "CTG",
     "status": "in_progress_next_ticker",
-    "lastUpdatedAt": "2026-10-28T21:22:36.368Z",
+    "lastUpdatedAt": "2026-10-28T21:24:27.768Z",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1628,7 +1628,9 @@
       "Updated reports/financial-data-normalization-standard.md to version 2.1 with exact relative-tolerance formula, the distinction between line-level reclassification and cash-balance bridge residual, STB source decisions and outstanding manual-review items.",
       "STB CI after snapshot normalization: Validate Site and Data run 40770995896 SUCCESS; Validate quarterly financial data run 40770996112 SUCCESS; Package Hostinger Stock Dashboard run 40770995912 SUCCESS.",
       "STB regression test commit validation run 40771146385 SUCCESS; all cash-flow bridge regression tests, JavaScript syntax, JSON snapshot validation and OMO wiring/source-definition checks PASS.",
-      "STB standard document version 2.1 validation run 40771246136 SUCCESS; checkpoint run 40771324652 SUCCESS. Relative tolerance policy is 0.01%, and remaining source discrepancies are explicitly marked."
+      "STB standard document version 2.1 validation run 40771246136 SUCCESS; checkpoint run 40771324652 SUCCESS. Relative tolerance policy is 0.01%, and remaining source discrepancies are explicitly marked.",
+      "STB complete for automated cash-flow processing: 10 periods normalized, test suite and standard v2.1 saved; CI validates snapshot JSON, cash-flow regression, JS syntax and source wiring; quarterly snapshot validation and Hostinger package all PASS.",
+      "VCB was not auto-processed because the existing checkpoint has an explicit user-directed skip for unverified figures in all 10 periods (`skipUnconfirmedAutomation=true`). Existing uncertainty is not converted into new values; continue the ticker queue and preserve VCB manual-review state."
     ],
     "unresolved": [
       "NLG NEEDS_MANUAL_REVIEW — H1/2024 selected later comparative in Q2/2025 reclassifies CFO/CFI versus the original Q2/2024 source by >0.01%; net cash movement and cash balances remain unchanged. Preserve both source bases and selected later comparative; do not plug.",
@@ -1668,7 +1670,7 @@
       "STB 2024-Q3/Q4 FX source basis: Q3/2025 comparator shows 9M/2024 FX -8,227 versus original Q3/2024 -6,227 million VND. YTD and Q3-quarter bridge residual +2,000 million VND and Q4 residual -2,000 million VND are each below 0.01% of ending cash and may be accepted without a plug, but the FX line reclassification exceeds 0.01% of the FX amount and remains manual review.",
       "STB 2026-Q2: source OCR CFO -41,480,644 + CFI -47,599 + CFF -1,468,762 = -42,997,005 million VND, versus reported net -43,097,005; residual 100,000 million VND (0.2320% YTD; 0.6369% standalone quarter), above 0.01%. Preserve candidates and mark review; net and cash bridge reconcile, no source value or plug inserted. Direct PDF image was inaccessible to the current source viewer, so do not claim visual verification."
     ],
-    "nextStep": "Begin VCB cash-flow normalization only after inspecting the latest checkpoint and VCB snapshot/source archive. Keep the user's skip-unconfirmed-through-period policy intact; do not fill unsupported periods. Use relative tolerance 0.01%, source totals from VietstockFinance only, one ticker, one domain.",
+    "nextStep": "VCB remains skipped under its prior user-directed instruction because all 10 periods are flagged stale/unconfirmed; do not automatically promote OCR candidates. Continue cash-flow normalization with CTG as the next eligible ticker. Source only: VietstockFinance document catalog and linked consolidated PDF/ZIP. Apply relative tolerance 0.01%, preserve source values, and do not infer missing flow components.",
     "previousCompletedSymbol": "STB",
     "validationRuns": [
       {
