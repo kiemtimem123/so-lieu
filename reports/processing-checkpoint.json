@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-28T10:05:00Z",
+  "updatedAt": "2026-10-28T17:45:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -1409,8 +1409,8 @@
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
     "activeSymbol": "MBB",
-    "status": "needs_manual_review_source_discrepancy",
-    "lastUpdatedAt": "2026-10-28T10:05:00Z",
+    "status": "needs_manual_review_cross_period_cash_basis",
+    "lastUpdatedAt": "2026-10-28T17:45:00+07:00",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1434,12 +1434,23 @@
       "MBB cash-flow fields registered in financial_line_items_extracted_fields to prevent verified source values being hidden by UI review filters; test now checks these fields.",
       "Validate Site and Data run 40668620712 SUCCESS: cash-flow bridge regression, JSON snapshots, JavaScript syntax and source wiring checks PASS.",
       "Validate quarterly financial data run 40668595088 SUCCESS: quarterly snapshots and bank statement reconciliation regression checks PASS.",
-      "Normalization document updated with the reusable 300dpi OCR, later-comparative precedence, source revision history, UI field registration and MBB exception rules."
+      "Normalization document updated with the reusable 300dpi OCR, later-comparative precedence, source revision history, UI field registration and MBB exception rules.",
+      "Rechecked MBB snapshot: all 10 periods have quarter flow components summing to quarter net change and YTD components summing to YTD net change.",
+      "Rechecked MBB quarter flows against current YTD minus previous quarter YTD for all 10 periods; exact matches.",
+      "Rechecked all MBB YTD cash bridges: 10/10 residual zero; per-quarter internal bridges: 9/10 residual zero, with Q2/2025 -2 million source residual retained.",
+      "Cross-quarter cash continuity test found Q4/2024 ending cash 97040273 vs Q1/2025 opening cash 97040275, +2 million VND.",
+      "Visually inspected VietstockFinance Q1/2025 PDF page 8 and its Q1/2026 comparative page 8: both report Q1/2025 opening 97040275, net change -24053403, closing 72986872; internal Q1 bridge zero.",
+      "Visually inspected VietstockFinance Q4/2025 PDF pages 7-8: FY2024 comparative ending cash 97040273.",
+      "Visually inspected VietstockFinance Q2/2026 PDF pages 7-8: H1/2025 comparative opening 97040273, net change 6814127, ending 103854400; its own YTD bridge and flow sums reconcile.",
+      "Reclassified MBB -2 million Q2/2025 discrepancy as a connected cross-report cash basis issue with +2 million Q4/2024 to Q1/2025 continuity residual; no balancing plug added.",
+      "Corrected generic missing-FX regression fixture to synthetic values instead of stale TCB OCR value 177278961.",
+      "Added regression coverage for every standalone flow equaling the YTD difference and cross-quarter cash continuity across the year boundary.",
+      "Standard procedure updated to require four layers of checks: quarter flows, YTD flows, quarter/YTD balances, and adjacent-quarter balance continuity."
     ],
     "unresolved": [
-      "MBB 2025-Q2 cross-period cash bridge residual -2 million VND. Q1/2025 own report shows opening 97040275, net -24053403, ending 72986872; later Q2/2026 comparative for H1/2025 shows opening 97040273, net 6814127, ending 103854400. Each report's cumulative totals/components reconcile internally, but Q2 standalone net derived from YTD is 30867530 while current closing less prior-quarter closing is 30867528. Keep source values and do not insert a balancing plug."
+      "MBB connected cross-period source inconsistency: Q4/2024 latest comparator closing cash=97040273; Q1/2025 original report and Q1/2026 comparative both report opening=97040275, net change=-24053403, closing=72986872; Q2/2026 H1/2025 comparative reports opening=97040273, net change=6814127, closing=103854400. Thus Q4->Q1 opening continuity residual +2 million; Q2 standalone derived from H1 YTD minus Q1 reported has net change 30867530, but current close minus prior quarter close is 30867528 (residual -2 million). Both individual Q1 and H1 internal bridges reconcile. No authoritative correction found in checked documents. Do not change reported figures or insert balancing plug; retain terminal manual-review until explicit amended/restated source resolves it."
     ],
-    "nextStep": "For MBB only, check the current VietstockFinance document catalog for an amended/corrected report or later statement explaining the 2-million-VND Q1/H1 comparative difference. If source evidence resolves it, update only affected cash-flow fields and regression test. If no authoritative source resolves it, keep the exception as terminal manual review, then proceed to the next ticker within the same cash-flow domain. Do not move to another data domain yet.",
+    "nextStep": "Confirm GitHub Actions after commit bff2bb338ce21a3fdfb8bfd9fa975202fe099d81 passes all cash-flow bridge tests and JSON validation. If PASS, keep MBB checkpoint at manual-review status for the linked +2/-2 million cross-period source inconsistency and continue to the next ticker in the same cash-flow domain without altering MBB source numbers. Do not move to another data domain.",
     "previousCompletedSymbol": "TCB"
   }
 }
