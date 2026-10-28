@@ -278,3 +278,20 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 - Ngoại lệ vượt ngưỡng: tiền cuối FY2025 **10.540.182 triệu VND** trong BCTC Q4/2025 so với tiền đầu Q1/2026 **10.522.106 triệu VND**; chênh **-18.076 triệu VND**, khoảng **0,17%**. Mỗi báo cáo tự khớp cầu nối của mình nhưng continuity liên kỳ vượt 0,01%; giữ nguyên cả hai số nguồn, đánh dấu `NEEDS_MANUAL_REVIEW_CROSS_PERIOD_CASH_BASIS_GT_0_01_PERCENT`, không ép đồng bộ.
 - Kiểm thử hồi quy FPT bao phủ 10 kỳ, so sánh FY2024/H1-2025 mới hơn, quý riêng = chênh lệch YTD, FX, cầu nối tiền và quy tắc 0,01%. Workflow `Validate Site and Data`, `Validate quarterly financial data` và `Package Hostinger Stock Dashboard` đều PASS sau thay đổi snapshot; kiểm thử xác nhận continuity Q4/2025 → Q1/2026 còn là ngoại lệ thủ công, không phải lỗi test.
 - Trạng thái FPT: tự động hóa cốt lõi và kiểm thử hoàn tất; còn một ngoại lệ so sánh liên kỳ vượt ngưỡng ở Q1/2026. Có thể chuyển sang mã tiếp theo trong cùng miền dòng tiền, không chuyển mảng.
+
+
+## Lượt chuẩn hóa SHB — lưu chuyển tiền tệ (2026-10-28)
+
+### Sửa dữ liệu và chọn cơ sở so sánh
+- Snapshot `data/financials-SHB.json`: 10 kỳ từ 2024-Q1 đến 2026-Q2.
+- Đã sửa việc ẩn dòng tiền ở Q1–Q4/2024 do parser cũ trộn lẫn subtotal, số bị ánh xạ nhầm và các cơ sở báo cáo so sánh khác nhau. Cột YTD của từng nhóm phải lấy dòng tổng cuối nhóm (mã 24/34/41 trong mẫu SHB), không lấy subtotal trước biến động tài sản/vốn lưu động.
+- Áp dụng quy tắc ưu tiên cột so sánh mới hơn trong tài liệu VietstockFinance:
+  - Q1/2024: cột so sánh trong BCTC Q1/2025, CFO -52.416.402; CFI 202.387; CFF -327; biến động tiền thuần -52.214.342; tiền đầu kỳ 110.859.786; cuối kỳ 58.645.444. Cột này điều chỉnh CFO/net change +10.000.000 triệu đồng so với bản Q1/2024 cũ và khớp cầu nối tiền của chính báo cáo so sánh; ghi giữ dấu vết bản cũ.
+  - H1/2024: cột so sánh trong BCTC Q2/2025, CFO -22.155.105; CFI -66.706; CFF 434.732; biến động tiền thuần -21.787.079; cuối kỳ 89.072.707.
+  - 9T/2024: cột so sánh trong BCTC Q3/2025, CFO 5.828.557; CFI -88.386; CFF 400.074; biến động tiền thuần 6.140.245; cuối kỳ 117.000.031. Các tổng số khớp báo cáo Q3/2024 đã đối chiếu trực quan.
+  - FY2024: cột so sánh trong BCTC Q4/2025, CFO 11.949.125; CFI -179.988; CFF -1.311.389; biến động tiền thuần 10.457.748; cuối kỳ 121.317.534. Bộ số này thay thế bản trình bày trước trong báo cáo Q4/2024.
+- Quý riêng được tính bằng YTD mới của kỳ hiện tại trừ YTD mới của quý trước cùng năm. Sau khi áp dụng cùng cơ sở, tất cả luồng tiền quý/ytd và cầu nối tiền từng kỳ khớp chính xác; không cần dùng dung sai để che sự lệch nguồn lớn do bản trình bày khác nhau.
+- Soát trực quan trang lưu chuyển tiền của BCTC SHB Q1/2025, Q2/2025, Q4/2025 và Q1/2026; Q3/2024 cũng đã đối chiếu trực quan ở PDF gốc. Q3/2025 và Q2/2026 có sidecar OCR đã lưu, nhưng cần xem ảnh trực tiếp ở lượt sau trước khi tuyên bố xác minh toàn bộ trực quan.
+- Ngoại lệ liên kỳ còn lại: tiền cuối Q4/2025 là 162.627.663 triệu VND; tiền đầu Q1/2026 được báo cáo là 161.907.719 triệu VND; residual -719.944 triệu VND, tương đương khoảng **0,4427%**, lớn hơn ngưỡng 0,01%. Mỗi báo cáo riêng tự cân đối. Giữ nguyên hai số nguồn, gắn `NEEDS_MANUAL_REVIEW_CROSS_PERIOD_CASH_BASIS_GT_0_01_PERCENT`; không đồng bộ, không tự suy diễn tỷ giá và không thêm khoản bù.
+- Regression mới trong `tests/test_cashflow_bridge.py` bao phủ 10 kỳ, tổng ba luồng tiền, chênh YTD, cầu nối có FX, các cột so sánh được chọn và ngoại lệ Q4/2025→Q1/2026. Validator được mở rộng để chạy schema dữ liệu SHB hiện hành và kiểm tra liên tục số dư qua ranh giới năm bằng ngưỡng tương đối 0,01%.
+- Trạng thái SHB: **PASS phép tính nội kỳ và lựa chọn cơ sở so sánh; NEEDS_MANUAL_REVIEW duy nhất cho residual mở đầu năm 2026 vượt 0,01%**, kèm rà soát trực quan còn lại ở các trang đã đánh dấu pending.
