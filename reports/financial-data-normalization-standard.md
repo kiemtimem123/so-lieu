@@ -1,6 +1,6 @@
 # Quy trình chuẩn hóa dữ liệu tài chính theo từng mảng
 
-Phiên bản: 1.3  
+Phiên bản: 1.4  
 Ngày thiết lập: 2026-10-28  
 Cập nhật gần nhất: 2026-10-29  
 Phạm vi: `kiemtimem123/so-lieu`, dữ liệu BCTC quý từ 2024-Q1 trở đi.
@@ -366,3 +366,28 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 ### Trạng thái
 - Quy tắc chấp nhận residual số học tương đối **≤ 0,01%** tiếp tục có hiệu lực: lưu residual nhưng không sửa số nguồn. Ngoại lệ trên 0,01% và vấn đề OCR/khác kỳ/khác phạm vi phải gắn manual review.
 - Mảng đang làm: lưu chuyển tiền tệ. VND đã được chuẩn hóa 11 kỳ; còn mâu thuẫn OCR CFF H1/2024 vượt ngưỡng và rà soát trực quan PDF pending. Mã kế tiếp theo thứ tự danh mục là SHS.
+
+
+## Lượt chuẩn hóa SHS — lưu chuyển tiền tệ (2026-10-29)
+
+### Ánh xạ nguồn và kỳ
+- Snapshot: `data/financials-SHS.json`, 10 kỳ từ 2024-Q1 đến 2026-Q2.
+- Đọc BCTC theo mẫu B03b-CTCK của SHS, chỉ lấy dòng tiền của **công ty**: mã 60 (CFO), 70 (CFI), 80 (CFF), 90 (tăng/giảm tiền thuần), 101/102 (tiền đầu kỳ), 103/104 (tiền cuối kỳ). Không lấy phần lưu chuyển tiền môi giới/ủy thác của khách hàng.
+- Dòng ảnh hưởng tỷ giá được trình bày nhưng ghi dấu gạch “-”; trường hợp này được chuẩn hóa thành 0 theo dấu gạch nguồn, không suy ra từ cầu nối.
+- Đơn vị PDF là VND, snapshot triệu VND; làm tròn mỗi dòng độc lập đến triệu gần nhất. Số quý riêng = YTD quý hiện tại trừ YTD quý trước trong cùng năm, chỉ khi cả hai cơ sở YTD đã được nguồn xác nhận.
+- Không thay `financial_line_items_source` chung của snapshot bằng nguồn lựa chọn riêng cho LCTT. Nguồn được chọn, trang, lý do thay thế và các giá trị cũ chỉ ghi trong `cashflow_audit_revision` / `cashflow_source_reconciliation` để không làm sai xuất xứ các trường ngoài LCTT.
+
+### Kiểm tra nguồn trực quan và các ngoại lệ
+- **2024-Q1:** dùng cột so sánh Q1/2024 trong BCTC Q1/2025 được liên kết từ VietstockFinance. Trang lưu chuyển tiền đã được xem trực tiếp; CFO YTD -382.576 triệu, CFI -650 triệu, CFF -46.000 triệu, biến động thuần -429.226 triệu, tiền đầu kỳ 851.889 triệu, cuối kỳ 422.664 triệu. Giá trị cũ CFO 443.876 triệu thực chất là lợi nhuận trước thuế trên dòng 01, không phải CFO; được thay bằng dòng 60.
+- **2024-Q2:** tổng CFO/CFI/CFF/net từ sidecar ZIP gốc không đọc đủ tin cậy. Cột so sánh H1/2024 trong PDF Q2/2025 đã kiểm tra trực quan nhưng lặp lại số Q1/2024 (tiền cuối kỳ 422.664 triệu), mâu thuẫn với số tiền cuối Q2/2024 OCR từ báo cáo gốc là 971.739 triệu. Không dùng cột so sánh đó để lấp H1/2024; giữ các trường dòng tiền YTD/quý riêng để trống và đặt trạng thái `NEEDS_MANUAL_REVIEW_H1_2024_SOURCE_TOTALS_UNREADABLE`.
+- **2024-Q3:** tổng YTD trên sidecar có thể đối chiếu: CFO -1.098.690, CFI -5.707, CFF +692.982, biến động thuần -411.415 triệu; tiền đầu YTD 851.889, cuối YTD 440.474 triệu. Vì H1/2024 vẫn chưa có cơ sở dòng tiền YTD đã xác nhận, không tính quý riêng Q3 bằng cách trừ số liệu không đáng tin. Các trường quý riêng để trống; YTD được giữ và status ghi manual review.
+- **2024-Q4:** dùng cột so sánh FY2024 mới hơn từ BCTC Q4/2025, các tổng YTD khớp nhau và cầu nối tiền khớp. So với PDF gốc Q4/2024 đã xem trực tiếp, CFO/CFI/CFF được phân loại khác nhưng biến động tiền thuần và số dư tiền không thay đổi. Chênh lệch tương đối của CFO và đặc biệt CFI lớn hơn 0,01%, vì vậy chọn cột so sánh mới hơn nhưng vẫn gắn manual review; không tạo số cân bằng. Quý riêng Q4 được tính từ YTD FY2024 mới hơn trừ 9T/2024 YTD.
+- **2025-Q1 và Q2/2025:** B03b-CTCK Q1/2025 và H1/2025 đã được xem trực tiếp. Đối với H1/2025, so sánh từ BCTC Q2/2026 sau đó đổi CFO/CFI so với báo cáo Q2/2025 gốc nhưng giữ biến động tiền thuần và số dư tiền. Chênh lệch tương đối CFI lớn hơn 0,01%; dùng cơ sở so sánh mới hơn, lưu cả hai bộ số ở metadata và giữ trạng thái manual review. Không ép hai bộ số khớp bằng cách thêm plug.
+- **2025-Q3, Q4 và 2026-Q1, Q2:** YTD values lấy từ dòng tổng cuối nhóm trong PDF/ZIP sidecar của báo cáo tương ứng. Các trang ZIP này chưa được xem trực tiếp; trạng thái visual review vẫn được giữ pending. Kiểm tra số học đã thực hiện trên dòng cuối nhóm, lũy kế, số quý riêng, cầu nối tiền và sai lệch tương đối.
+- Các residual phát sinh do làm tròn trong các kỳ còn đầy đủ đầu vào đều không quá 0,01% và được chấp nhận mà không sửa số nguồn. Residual 1 triệu đồng được lưu rõ trong metadata; không dùng ngưỡng này để bỏ qua khác biệt nguồn trên 0,01%, lỗi OCR hoặc thiếu cơ sở kỳ.
+
+### Kết quả và trạng thái
+- YTD và quý riêng đã chuẩn hóa cho các kỳ có cơ sở nguồn đủ tin cậy; mọi kỳ có đủ bốn thành phần đều khớp CFO+CFI+CFF với net change trong dung sai 0,01% và kiểm tra cầu nối tiền có thể thực hiện đều đạt dung sai.
+- Q2/2024 và quý riêng Q3/2024 được chủ động để trống ở phần thiếu bằng chứng; Q4/2024 và H1/2025 vẫn được dùng theo nguồn so sánh mới hơn nhưng giữ cảnh báo thay đổi nguồn vượt 0,01%.
+- Bài kiểm thử `SHSCashFlowNormalizationTests` kiểm tra 10 kỳ, mapping CFO không được lấy từ lợi nhuận trước thuế, tách YTD/quarter, cách xử lý các ngoại lệ và ngưỡng tương đối 0,01%.
+- Trạng thái: **automation complete; manual-review remaining**. Chuyển sang mã kế tiếp theo thứ tự danh mục là NLG; không thay đổi mảng dữ liệu khác.
