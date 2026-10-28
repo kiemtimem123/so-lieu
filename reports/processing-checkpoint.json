@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-28T22:00:00+07:00",
+  "updatedAt": "2026-10-28T23:20:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -1410,9 +1410,9 @@
     "standardVersion": "1.1",
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
-    "activeSymbol": "SHB",
-    "status": "automated_processing_complete_manual_review_cross_period_cash_basis_gt_0_01_percent",
-    "lastUpdatedAt": "2026-10-28T22:00:00+07:00",
+    "activeSymbol": "HCM",
+    "status": "automated_processing_complete_manual_review_cross_report_basis_gt_0_01_percent",
+    "lastUpdatedAt": "2026-10-28T23:20:00+07:00",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1492,15 +1492,26 @@
       "Added regression coverage for SHB 10-period calculations, later comparative basis, source trace, and cross-year residual above 0.01%. Validator now accepts the current SHB statement schema and checks Q4-to-Q1 continuity.",
       "Validate Site and Data run 40703133138 SUCCESS; Validate quarterly financial data run 40703130369 SUCCESS after validator schema/cross-year checks.",
       "Validate Site and Data run 40703191136 SUCCESS after SHB regression tests; Validate Site and Data run 40703246169 SUCCESS after the standard-document update.",
-      "Validate quarterly financial data run 40702809121 SUCCESS and Package Hostinger Stock Dashboard run 40702809270 SUCCESS after the SHB snapshot normalization."
+      "Validate quarterly financial data run 40702809121 SUCCESS and Package Hostinger Stock Dashboard run 40702809270 SUCCESS after the SHB snapshot normalization.",
+      "HCM: normalized the 10 quarterly periods 2024-Q1 through 2026-Q2 from VietstockFinance consolidated cash-flow source lines 60/70/80/90/101/103, in million-VND snapshot units.",
+      "HCM: used later 2025 comparative columns for FY2024/Q1-Q3 2024 and later Q2/2026 comparative values for H1/2025; preserved the prior H1/2025 basis in audit metadata.",
+      "HCM: re-enabled cash-flow rows that were blank/rejected and registered required flow/balance fields in financial_line_items_extracted_fields; did not fabricate a separate FX line because this statement does not present one.",
+      "HCM: all ten periods pass the 0.01% relative tolerance for quarterly/YTD flow-component sums and selected YTD balance bridges; 1-million-VND rounding residuals are accepted but retained in metadata.",
+      "HCM source-basis exceptions preserved: Q2/2025 quarter-bridge residual -60,500 million VND; Q3/2025 +60,500 million VND; Q2/2026 -320,499 million VND. All exceed 0.01%; no balancing plug or forced rewrite added.",
+      "Direct PDF screenshot/open failed on the large HCM PDFs in this pass; all HCM source pages remain explicitly tagged ocr_text_reconciled_visual_review_pending rather than being marked visually verified.",
+      "Added HCM regression tests in tests/test_cashflow_bridge.py and expanded standard procedure with HCM mappings, comparative precedence, threshold checks and residual issues."
     ],
     "unresolved": [
       "ACB pending manual visual review remains only for rows marked ocr_text_reconciled_visual_review_pending (including Q1/2025 comparator and Q1/2026 current report); arithmetic checks pass and no unsupported values were inserted.",
       "FPT NEEDS_MANUAL_REVIEW — FY2025 closing cash 10,540,182 vs Q1/2026 opening cash 10,522,106 million VND, residual -18,076 million VND (~0.17%, above 0.01%). Both reports internally reconcile. Keep each printed value; do not insert a plug or synchronize the figures without a source correction.",
-      "SHB NEEDS_MANUAL_REVIEW — FY2025 close 162,627,663 vs Q1/2026 opening 161,907,719 million VND; residual -719,944 million, relative difference 0.44269467% (>0.01%). Preserve both source values; each report's internal bridge reconciles."
+      "SHB NEEDS_MANUAL_REVIEW — FY2025 close 162,627,663 vs Q1/2026 opening 161,907,719 million VND; residual -719,944 million, relative difference 0.44269467% (>0.01%). Preserve both source values; each report's internal bridge reconciles.",
+      "HCM NEEDS_MANUAL_REVIEW — Q2/2025 H1 re-presented comparative basis from Q2/2026 creates a -60,500 million VND standalone Q2 cash-bridge residual and differs by -60,500 million VND from the older FY2024 close basis; do not plug.",
+      "HCM NEEDS_MANUAL_REVIEW — Q3/2025 current YTD report combined with later H1/2025 basis yields +60,500 million VND standalone Q3 cash-bridge residual; do not plug.",
+      "HCM NEEDS_MANUAL_REVIEW — Q2/2026 report's reported YTD opening cash 3,381,063 vs FY2025 closing 3,701,563 million VND yields -320,500 million VND continuity residual; standalone Q2 bridge residual -320,499 million VND. Preserve source figures.",
+      "HCM manual visual review pending for all ten periods because source PDFs were not successfully rendered by the direct PDF viewer in this pass; OCR sidecar text retained as evidence."
     ],
-    "nextStep": "SHB cash-flow automation and regression checks are complete. Retain the Q4/2025-close to Q1/2026-opening mismatch for manual source review because it exceeds 0.01%; do not adjust source numbers. Next, process HCM in the same cash-flow domain, one ticker at a time, using reports/financial-data-normalization-standard.md.",
-    "previousCompletedSymbol": "FPT",
+    "nextStep": "HCM cash-flow normalization and regression setup are committed. The arithmetic fields and relative-tolerance results are saved; Q2/2025, Q3/2025 and Q2/2026 remain terminal manual-review exceptions over 0.01%, plus visual-page review pending. Next continue with VND in the same cashflow domain, one ticker at a time, using reports/financial-data-normalization-standard.md. Do not switch domains or adjust HCM source figures without an amended/source correction.",
+    "previousCompletedSymbol": "SHB",
     "validationRuns": [
       {
         "name": "Validate Site and Data",
