@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-29T00:47:00+07:00",
+  "updatedAt": "2026-10-29T01:45:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -1432,12 +1432,12 @@
     "updatedAt": "2026-10-28T19:45:00+07:00"
   },
   "normalizationProgress": {
-    "standardVersion": "1.4",
+    "standardVersion": "1.5",
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
-    "activeSymbol": "SHS",
+    "activeSymbol": "NLG",
     "status": "automated_processing_complete_manual_review_remaining",
-    "lastUpdatedAt": "2026-10-29T00:47:00+07:00",
+    "lastUpdatedAt": "2026-10-29T01:45:00+07:00",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1557,9 +1557,25 @@
       "SHS: normalized fields preserve the original row-level financial_line_items_source for non-cash fields; cash-flow-selected URLs and archives are stored separately in cashflow_audit_revision.",
       "SHS regression suite added and now runs 30 tests. Validate Site and Data run 40738493284 SUCCESS at commit e5da950983ea3230f07c0e1b39864d7d0a240bd4: 30 tests PASS, JavaScript syntax, JSON snapshots and source wiring PASS.",
       "Validate quarterly financial data run 40738359781 SUCCESS and Package Hostinger Stock Dashboard run 40738359767 SUCCESS after the SHS snapshot update.",
-      "Standardization document bumped to v1.4 with SHS source mappings, 0.01% tolerance handling, source-comparison manual-review issues and no-plug rules."
+      "Standardization document bumped to v1.4 with SHS source mappings, 0.01% tolerance handling, source-comparison manual-review issues and no-plug rules.",
+      "User-confirmed tolerance rule is explicit: numerical residuals <=0.01% relative may be accepted for arithmetic rounding; preserve the residual and original values; OCR uncertainty, missing source evidence, source reclassification, scope mismatch, and residuals above 0.01% remain review items.",
+      "Validator scripts/validate-bank-reconciliation.py already uses RELATIVE_TOLERANCE_PERCENT=0.01 with relative_difference_percent(), within_relative_tolerance() and require_close(); reusable tests cover below/equal/above threshold and no-plug behavior.",
+      "NLG cash-flow snapshot normalized for 10 periods 2024-Q1 through 2026-Q2, mapped to statement lines 20/30/40/50/60/70; VND values are rounded independently to million VND and all evidence is linked to the VietstockFinance document catalog.",
+      "NLG H1/2024 selected later visually checked comparative basis in Q2/2025 report; CFO/CFI classification changes above 0.01% against original Q2/2024, while net cash movement and cash balances are unchanged. Manual review and both source histories preserved.",
+      "NLG FY2024 original report remains selected because OCR candidate from FY2024 comparative in Q4/2025 report creates a 3,000,000 million VND component-sum discrepancy; direct visual check failed, so no guessed correction was applied.",
+      "NLG Q1/2026 OCR component candidates sum to -1,886,470 million VND versus reported net change -1,786,471 million VND, a 100,000 million VND mismatch (about 5.30%). CFO/CFI/CFF remain blank for display and retained in source-review metadata; net flow and cash balances reconcile.",
+      "NLG Q2/2026 YTD flow sum and cash bridge pass at reported CFO -1,087,391, CFI -1,181,784, CFF -744,326, net -3,013,501, opening cash 6,781,220, closing cash 3,767,719 million VND. Opening differs from FY2025 close 6,814,305 by -33,085 million VND (~0.485%); standalone Q2 component flows remain blank because Q1/2026 components are unresolved.",
+      "NLG quarter/YTD sum and bridge checks are within 0.01% for all rows with complete verified fields; accepted 1-million rounding residuals are retained in metadata without plugs. Manual review remains for source reclassification, FY2024 comparative OCR, Q1/2026 OCR, and H1/2026 starting balance.",
+      "Validate Site and Data run 40747712015 SUCCESS after first NLG cash-flow regression tests.",
+      "Validate Site and Data run 40747893544 SUCCESS after adding explicit NLG Q2/2026 quarter-bridge tolerance assertion; cash-flow bridge tests, JavaScript syntax, JSON snapshots, and source wiring PASS.",
+      "Validate Site and Data run 40748023476 SUCCESS after standard procedure update to v1.5; cash-flow bridge tests, JavaScript syntax, JSON snapshot validation, and source wiring PASS.",
+      "Validate quarterly financial data run 40747573123 SUCCESS and Package Hostinger Stock Dashboard run 40747572984 SUCCESS after NLG snapshot normalization."
     ],
     "unresolved": [
+      "NLG NEEDS_MANUAL_REVIEW — H1/2024 selected later comparative in Q2/2025 reclassifies CFO/CFI versus the original Q2/2024 source by >0.01%; net cash movement and cash balances remain unchanged. Preserve both source bases and selected later comparative; do not plug.",
+      "NLG NEEDS_MANUAL_REVIEW — FY2024 comparative OCR from Q4/2025 report has a 3,000,000 million VND component-sum mismatch with the reported net cash change. Q4/2025 PDF could not be visually rendered in the pass. Original FY2024 source remains selected; no inferred digit substitution.",
+      "NLG NEEDS_MANUAL_REVIEW — Q1/2026 OCR source candidates for CFO/CFI/CFF sum to -1,886,470 million VND while reported net cash change is -1,786,471 million VND; all three components are withheld pending visual confirmation. Net flow and cash balance bridge reconcile.",
+      "NLG NEEDS_MANUAL_REVIEW — Q2/2026 reported YTD opening cash 6,781,220 vs FY2025 close 6,814,305 million VND gives -33,085 million VND continuity residual (~0.485%, >0.01%); Q2 standalone cash bridge residual -33,085 million VND (~0.87%). Keep each printed amount; no plug. Q2 standalone flow components await Q1/2026 source review.",
       "ACB pending manual visual review remains only for rows marked ocr_text_reconciled_visual_review_pending (including Q1/2025 comparator and Q1/2026 current report); arithmetic checks pass and no unsupported values were inserted.",
       "FPT NEEDS_MANUAL_REVIEW — FY2025 closing cash 10,540,182 vs Q1/2026 opening cash 10,522,106 million VND, residual -18,076 million VND (~0.17%, above 0.01%). Both reports internally reconcile. Keep each printed value; do not insert a plug or synchronize the figures without a source correction.",
       "SHB NEEDS_MANUAL_REVIEW — FY2025 close 162,627,663 vs Q1/2026 opening 161,907,719 million VND; residual -719,944 million, relative difference 0.44269467% (>0.01%). Preserve both source values; each report's internal bridge reconciles.",
@@ -1574,135 +1590,9 @@
       "SHS NEEDS_MANUAL_REVIEW — latest FY2024 comparative in Q4/2025 differs from the visually checked original FY2024 CFO/CFI/CFF values by more than 0.01% for CFO/CFI. Keep the later comparative selected for the snapshot with both source bases logged; no balancing plug.",
       "SHS NEEDS_MANUAL_REVIEW — H1/2025 CFI comparator from Q2/2026 differs from original Q2/2025 by about 0.84% relative, above 0.01%. Latest comparator selected and source history retained; direct image recheck remains pending."
     ],
-    "nextStep": "SHS automation is complete for supported source values, with H1/2024 core flow totals and Q3/2024 standalone flows withheld pending source review, plus FY2024 and H1/2025 source-comparator differences above 0.01% retained as manual-review items. The 30-test cash-flow suite passes. At the next continuation, proceed to NLG in the cashflow domain, one ticker at a time; do not change other data domains.",
-    "previousCompletedSymbol": "VND",
+    "nextStep": "NLG core cash-flow fields normalized for 2024-Q1 through 2026-Q2. All arithmetic checks pass within 0.01% when source fields are sufficiently supported; residuals are kept, never plugged. Manual review remains for H1/2024 classification vs older source, FY2024 comparator OCR mismatch, Q1/2026 OCR components, and Q2/2026 opening-cash continuity. Standard is v1.5, tests/checkpoint updates saved. Next continuation: proceed to BSR in the same cashflow domain, one ticker at a time; do not change other data domains.",
+    "previousCompletedSymbol": "SHS",
     "validationRuns": [
-      {
-        "name": "Validate Site and Data",
-        "runId": "40679904856",
-        "status": "success",
-        "commit": "6e874184d5f542da15a7a58ad0d8e22d0edcf090",
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40679904856"
-      },
-      {
-        "name": "Validate Site and Data",
-        "runId": "40679952807",
-        "status": "success",
-        "commit": "7c4f41398411ee24775e570018b031bfd2a24c9d",
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40679952807"
-      },
-      {
-        "name": "Validate Site and Data",
-        "runId": "40679998702",
-        "status": "success",
-        "commit": "5852118325f6eff8f892ea595721cf0730ed5956",
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40679998702"
-      },
-      {
-        "name": "Validate quarterly financial data",
-        "runId": "40679854670",
-        "status": "success",
-        "commit": "4421ae13aac061bdb76d2c7f5a8eb72ca9ca3cd4",
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40679854670"
-      },
-      {
-        "name": "Package Hostinger Stock Dashboard",
-        "runId": "40679854730",
-        "status": "success",
-        "commit": "4421ae13aac061bdb76d2c7f5a8eb72ca9ca3cd4",
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40679854730"
-      },
-      {
-        "name": "Validate Site and Data",
-        "runId": "40681980928",
-        "status": "success",
-        "commit": "ee305cefbc9e9ad9e870fcbc7da0e92552738591",
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40681980928"
-      },
-      {
-        "name": "Validate quarterly financial data",
-        "runId": "40681897480",
-        "status": "success",
-        "commit": "34d6367c83e0d440de5a37f000d635f2405021a8",
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40681897480"
-      },
-      {
-        "name": "Package Hostinger Stock Dashboard",
-        "runId": "40681897445",
-        "status": "success",
-        "commit": "34d6367c83e0d440de5a37f000d635f2405021a8",
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40681897445"
-      },
-      {
-        "name": "Validate quarterly financial data",
-        "runId": "40702809121",
-        "status": "success",
-        "commit": "a0527aa753e747665792312f4a69a3fc70d78793",
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40702809121"
-      },
-      {
-        "name": "Package Hostinger Stock Dashboard",
-        "runId": "40702809270",
-        "status": "success",
-        "commit": "a0527aa753e747665792312f4a69a3fc70d78793",
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40702809270"
-      },
-      {
-        "name": "Validate quarterly financial data",
-        "runId": "40703130369",
-        "status": "success",
-        "commit": "555718ab2a814d4df7e3a5f16843daef62a6f4b3",
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40703130369"
-      },
-      {
-        "name": "Validate Site and Data",
-        "runId": "40703133138",
-        "status": "success",
-        "commit": "555718ab2a814d4df7e3a5f16843daef62a6f4b3",
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40703133138"
-      },
-      {
-        "name": "Validate Site and Data",
-        "runId": "40703191136",
-        "status": "success",
-        "commit": "f60751a710560920917690733b2f964bbcc9a3e4",
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40703191136"
-      },
-      {
-        "name": "Validate Site and Data",
-        "runId": "40703246169",
-        "status": "success",
-        "commit": "a6c18ae7596e85dd824a14b58e493a9a24266b48",
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40703246169"
-      },
-      {
-        "name": "Validate Site and Data",
-        "runId": "40705256236",
-        "status": "success",
-        "commit": "0ffdf2ce62251f060ab809268c91db3ea23448d5",
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40705256236"
-      },
-      {
-        "name": "Validate Site and Data",
-        "runId": "40705494013",
-        "status": "success",
-        "commit": "3c46e4c5a49468c1bb12734b1fa529742b4537e8",
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40705494013"
-      },
-      {
-        "name": "Validate Site and Data",
-        "runId": "40705626458",
-        "status": "success",
-        "commit": "75a02c9b461340e122c5fe9a7e798018682647c4",
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40705626458"
-      },
-      {
-        "name": "Validate quarterly financial data",
-        "runId": "40705085892",
-        "status": "success",
-        "commit": "f777ae6b5208d689fa92c77ddf5f0d7f686930b9",
-        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40705085892"
-      },
       {
         "name": "Validate Site and Data",
         "runId": "40705085882",
@@ -1772,6 +1662,41 @@
         "status": "success",
         "commit": "aacb800e8b150a685e3a294775a89d45ea623047",
         "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40738359767"
+      },
+      {
+        "name": "Validate Site and Data",
+        "runId": "40747712015",
+        "status": "success",
+        "commit": "8051af78fdfb7e025061037ffecb4c6460961ad0",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40747712015"
+      },
+      {
+        "name": "Validate Site and Data",
+        "runId": "40747893544",
+        "status": "success",
+        "commit": "4c458d227e3737dbd99415535a8406454a082889",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40747893544"
+      },
+      {
+        "name": "Validate Site and Data",
+        "runId": "40748023476",
+        "status": "success",
+        "commit": "be05f40772eb6f7506e70dbd2fc42a89928c9af2",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40748023476"
+      },
+      {
+        "name": "Validate quarterly financial data",
+        "runId": "40747573123",
+        "status": "success",
+        "commit": "7cfecda20f5e8c9b9046a252bc4d473971cc5a55",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40747573123"
+      },
+      {
+        "name": "Package Hostinger Stock Dashboard",
+        "runId": "40747572984",
+        "status": "success",
+        "commit": "7cfecda20f5e8c9b9046a252bc4d473971cc5a55",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40747572984"
       }
     ],
     "lastCompletedSymbol": "FPT"
