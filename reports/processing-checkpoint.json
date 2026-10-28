@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-29T03:15:00+07:00",
+  "updatedAt": "2026-10-29T03:40:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -1432,12 +1432,12 @@
     "updatedAt": "2026-10-28T19:45:00+07:00"
   },
   "normalizationProgress": {
-    "standardVersion": "1.7",
+    "standardVersion": "1.8",
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
     "activeSymbol": "VHM",
     "status": "automated_processing_complete_manual_review_remaining",
-    "lastUpdatedAt": "2026-10-29T03:15:00+07:00",
+    "lastUpdatedAt": "2026-10-29T03:40:00+07:00",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1587,7 +1587,10 @@
       "VHM source PDF Q2/2026 visually checked: reported CFF row 40 is 68,675.210; net change row 50 is 4,092.385; CFO+CFI+CFF sums to 3,092.385, a -1,000 million VND residual (~24.44% relative). Row 50 still bridges to reported opening and closing cash. Flag manual review; preserve source values; do not plug.",
       "VHM Q1/2026 reported opening cash 49,086.598 differs from FY2025 close 49,948.510 by -861.912 million VND (~1.7256%, >0.01%). Both values are preserved and the cross-period basis is flagged for manual review.",
       "VHM regression suite added and now passes in Validate Site and Data run 40758561100 SUCCESS: 10-period cash-flow source fields, YTD/quarter arithmetic, source basis histories, FX-not-reported handling, 0.01% tolerance and the explicit Q2/2026 source exception.",
-      "VHM normalization standard updated to v1.7; current source correction archive for Q2/2026 is recorded as pending direct cash-flow page review because its available extracted sidecar omitted those pages."
+      "VHM normalization standard updated to v1.7; current source correction archive for Q2/2026 is recorded as pending direct cash-flow page review because its available extracted sidecar omitted those pages.",
+      "IMPORTANT UNIT-SCALE CORRECTION — VHM BCTC columns are headed Triệu VND and values like 68.675.210 use dot thousands-grouping; values in the snapshot must be integer million VND (68,675,210), not decimal million VND (68,675.210). The entire 10-period VHM cash-flow series, source audit values and reconciliation residuals were rescaled to the correct integer-million unit; formula checks rerun before commit b20b69844b7cd6d2b01f907cda5fac3340a701f2.",
+      "VHM test fixtures were updated to integer-million values and the normalization standard is version 1.8, explicitly documenting the dot-grouped integer-million source notation.",
+      "VHM unit-scale correction: amounts under 'Triệu VND' such as 68.675.210 are integer million VND with dot thousands separators. Rescaled all VHM 10-period cash-flow fields and audit amounts to integer millions; Q2/2026 component-sum residual is now -1,000,000 million VND (~24.4%) and still flagged, no plug."
     ],
     "unresolved": [
       "NLG NEEDS_MANUAL_REVIEW — H1/2024 selected later comparative in Q2/2025 reclassifies CFO/CFI versus the original Q2/2024 source by >0.01%; net cash movement and cash balances remain unchanged. Preserve both source bases and selected later comparative; do not plug.",
@@ -1616,11 +1619,11 @@
       "VHM NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT — H1/2024 later Q2/2025 comparison has materially different CFO/CFI/CFF classification vs original Q2/2024; net cash movement and closing cash differ by <0.01%; preserve both source bases.",
       "VHM NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT — H1/2025 later Q2/2026 comparison has materially different CFO/CFI/CFF vs original H1/2025; net movement and closing cash differ by <0.01%; preserve both source bases.",
       "VHM NEEDS_MANUAL_REVIEW_CROSS_PERIOD_CASH_BASIS_GT_0_01_PERCENT — FY2025 cash close 49,948.510 vs Q1/2026 cash opening 49,086.598 million VND, difference -861.912 (~1.7256%). Do not overwrite either report value.",
-      "VHM NEEDS_MANUAL_REVIEW_SOURCE_FLOW_COMPONENT_SUM_GT_0_01_PERCENT — Q2/2026 PDF row 40 financing cash flow 68,675.210 plus CFO 88,467.954 and CFI -154,050.779 sums to 3,092.385, while row 50 reports net 4,092.385 million VND; difference -1,000 million VND. Preserve line 40/line 50/source balances exactly, no plug.",
+      "VHM NEEDS_MANUAL_REVIEW_SOURCE_FLOW_COMPONENT_SUM_GT_0_01_PERCENT — Q2/2026 PDF row 40 financing cash flow 68,675,210 plus CFO 88,467.954 and CFI -154,050.779 sums to 3,092.385, while row 50 reports net 4,092,385 million VND; difference -1,000,000 million VND. Preserve line 40/line 50/source balances exactly, no plug.",
       "VHM Q2/2026 has a later September 2026 corrected consolidated report archive in the VietstockFinance-collected ZIP, but the stored sidecar does not expose its cash-flow pages. Review those pages before closing the component mismatch.",
       "VHM direct visual review pending for Q1/2024 source page and H1/2024 comparative page; OCR sidecar plus arithmetic review is documented, but visual verification is not claimed."
     ],
-    "nextStep": "VHM automated cash-flow normalization is saved for 10 periods. Two material source-level exceptions remain: Q1/2026 cash opening vs FY2025 close differs by 1.7256%; Q2/2026 cash-flow component sum is 1,000 million VND below the reported net change. H1/2024 and H1/2025 later comparatives also have source reclassification changes >0.01%. Do not insert balancing plugs or alter reported figures. The current Q2/2026 corrected report archive needs its cash-flow pages examined to determine whether it resolves the line-40/line-50 mismatch. Next ticker in the same cashflow domain is TPB; keep one ticker at a time.",
+    "nextStep": "VHM normalization is saved with correct integer million-VND scale (dots in report figures are thousands separators). Continue to TPB in the same cashflow domain, one ticker at a time. VHM needs manual review: (1) Q1/2026 opening cash 49,086,598 vs FY2025 close 49,948,510 million VND, diff -861,912 (~1.7256%, >0.01%), retain both; (2) Q2/2026 CFO 88,467,954 + CFI -154,050,779 + CFF 68,675,210 = 3,092,385 while line 50 reports 4,092,385 million VND, diff -1,000,000 million VND (~24.4%, >0.01%), no plug. H1/2024 and H1/2025 selected comparative source changes remain flagged. Inspect cash-flow pages of the September 2026 corrected Q2/2026 consolidated VHM report archive before closing source mismatch.",
     "previousCompletedSymbol": "BSR",
     "validationRuns": [
       {
