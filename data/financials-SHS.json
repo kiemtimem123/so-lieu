@@ -175,7 +175,7 @@
         "retained_earnings"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
-      "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/be10b6b2bb57c581.pdf",
+      "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/6f6b826b3132547a.zip",
       "financial_line_items_updated_at": "2026-10-27T09:26:18+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs.",
       "operating_cash_flow": -382576,
@@ -394,12 +394,17 @@
           "foreign_exchange_effect_ytd": 0
         },
         "prior_source_values_superseded": {
-          "cfo": 443875769888,
-          "cfi": null,
-          "cff": null,
-          "net": null,
-          "opening": 851889363555,
-          "closing": null
+          "source_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2024.zip",
+          "source_archive_file": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/6f6b826b3132547a.zip",
+          "source_values_vnd": {
+            "operating_cash_flow_ytd": -382576155250,
+            "investing_cash_flow_ytd": -649663361,
+            "financing_cash_flow_ytd": -46000000000,
+            "net_cash_change_ytd": -429225818617,
+            "cash_beginning_reported_ytd": 851889363555,
+            "cash_ending_reported_ytd": 422663544938
+          },
+          "note": "Original Q1/2024 sidecar OCR is less clear than the Q1/2025 comparative; selected values come from the visually checked Q1/2025 report comparative."
         },
         "later_comparative_source_values_vnd": {
           "cfo": 443875769888,
@@ -409,7 +414,11 @@
           "opening": 851889363555,
           "closing": null
         },
-        "explicit_fx_line": "Source statement contains the exchange-rate effect line and prints a dash; normalized as zero, not inferred from the bridge."
+        "explicit_fx_line": "Source statement contains the exchange-rate effect line and prints a dash; normalized as zero, not inferred from the bridge.",
+        "previous_incorrect_mapping": {
+          "operating_cash_flow_ytd": 443875769888,
+          "reason": "The previous snapshot mapped B03b-CTCK line 01 (profit before tax) to CFO instead of line 60 (net cash flow from operating activities). This was a parser mapping error, not a source CFO value."
+        }
       },
       "cashflow_source_reconciliation": {
         "status": "ACCEPTED_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT",
@@ -916,7 +925,8 @@
           }
         ],
         "source_reclassification_review": null,
-        "note": "The original Q2/2024 archived sidecar reads some cashflow totals poorly; the later Q2/2025 comparative column was visually checked but repeats the Q1/2024 comparator (CFO -382,576m, CFI -650m, CFF -46,000m, net -429,226m and ending cash 422,664m), which is not consistent with the Q2/2024 reported cash ending OCR 971,739m. Do not copy those Q1 values to H1/2024; leave H1/2024 flows blank pending source-page review."
+        "note": "The original Q2/2024 archived sidecar reads some cashflow totals poorly; the later Q2/2025 comparative column was visually checked but repeats the Q1/2024 comparator (CFO -382,576m, CFI -650m, CFF -46,000m, net -429,226m and ending cash 422,664m), which is not consistent with the Q2/2024 reported cash ending OCR 971,739m. Do not copy those Q1 values to H1/2024; leave H1/2024 flows blank pending source-page review.",
+        "source_comparison_manual_review": true
       }
     },
     {
@@ -1315,7 +1325,8 @@
         "selected_values_not_adjusted_for_tolerance": true,
         "source_candidates_pending_manual_review": [],
         "source_reclassification_review": null,
-        "note": null
+        "note": null,
+        "source_comparison_manual_review": true
       }
     },
     {
@@ -1547,7 +1558,7 @@
         "revenue"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
-      "financial_line_items_source": "reports/raw/SHS/vietstock-shs-ocr-refresh-20261019/6b19d1aa37e72f9a.zip",
+      "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/cc0a692f672abc5d.pdf",
       "financial_line_items_updated_at": "2026-10-27T07:53:54+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs.",
       "interest_expense": 0,
@@ -1899,7 +1910,8 @@
           },
           "note": "The latest FY2024 comparative in Q4/2025 report differs from the directly visually checked original Q4/2024 report for CFO, CFI and CFF while preserving net change and cash balances. Selected later FY2024 comparative values are retained, but CFO/CFI changes exceed 0.01% relative tolerance and remain manual-review issues. No balancing plug was used."
         },
-        "note": "The latest FY2024 comparative in Q4/2025 report differs from the directly visually checked original Q4/2024 report for CFO, CFI and CFF while preserving net change and cash balances. Selected later FY2024 comparative values are retained, but CFO/CFI changes exceed 0.01% relative tolerance and remain manual-review issues. No balancing plug was used."
+        "note": "The latest FY2024 comparative in Q4/2025 report differs from the directly visually checked original Q4/2024 report for CFO, CFI and CFF while preserving net change and cash balances. Selected later FY2024 comparative values are retained, but CFO/CFI changes exceed 0.01% relative tolerance and remain manual-review issues. No balancing plug was used.",
+        "source_comparison_manual_review": true
       }
     },
     {
@@ -2563,7 +2575,7 @@
         "revenue"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
-      "financial_line_items_source": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/9246a0423b1cd4aa.zip",
+      "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/12d2061881d334c4.pdf",
       "financial_line_items_updated_at": "2026-10-27T09:26:09+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs.",
       "cash_beginning_calculation": "Prior same-year quarter's reported ending cash; Q2/2024 ending balance remains OCR-text only, pending visual check.",
@@ -2810,10 +2822,11 @@
           "opening": 680759314148,
           "closing": 790995794919
         },
-        "explicit_fx_line": "Source statement contains the exchange-rate effect line and prints a dash; normalized as zero, not inferred from the bridge."
+        "explicit_fx_line": "Source statement contains the exchange-rate effect line and prints a dash; normalized as zero, not inferred from the bridge.",
+        "selected_comparative_policy": "Later H1/2025 comparison selected from Q2/2026; original Q2/2025 values retained in source_reclassification_review."
       },
       "cashflow_source_reconciliation": {
-        "status": "ACCEPTED_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT",
+        "status": "NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT",
         "units": "triệu VND",
         "source_unit": "VND",
         "report_period": "2025-Q2",
@@ -2874,7 +2887,8 @@
           },
           "note": "Selected H1/2025 comparative from Q2/2026. Relative differences vs original Q2/2025 are about 0.0017% for CFO but about 0.85% for CFI; later CFI restatement/comparator difference remains flagged for manual review even though the selected YTD report itself reconciles."
         },
-        "note": "Selected H1/2025 comparative from Q2/2026. Relative differences vs original Q2/2025 are about 0.0017% for CFO but about 0.85% for CFI; later CFI restatement/comparator difference remains flagged for manual review even though the selected YTD report itself reconciles."
+        "note": "Later H1/2025 comparative from Q2/2026 is internally reconciled and selected for the snapshot. However, its investing cash-flow comparator differs from original Q2/2025 by 43,270,000 VND (about 0.84% of the component), above the 0.01% threshold. Preserve the selected source values and both source histories; direct comparative-page review is required. No balancing plug.",
+        "source_comparison_manual_review": true
       }
     },
     {
@@ -4697,5 +4711,5 @@
   "bootstrap_status": "complete_needs_manual_review",
   "bootstrap_completed_at": "2026-10-22T13:14:50+00:00",
   "bootstrap_completion_note": "Các kỳ báo cáo có thể tự trích xuất đã được lưu; một số kỳ còn cần đối chiếu thủ công.",
-  "processedAt": "2026-10-28T17:37:54.813Z"
+  "processedAt": "2026-10-28T17:39:32.425Z"
 }
