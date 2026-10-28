@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-28T10:00:00Z",
+  "updatedAt": "2026-10-28T10:05:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -1408,9 +1408,9 @@
     "standardVersion": "1.0",
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
-    "activeSymbol": "TCB",
-    "status": "awaiting_post_correction_ci",
-    "lastUpdatedAt": "2026-10-28T10:00:00Z",
+    "activeSymbol": "MBB",
+    "status": "in_progress_next_ticker",
+    "lastUpdatedAt": "2026-10-28T10:05:00Z",
     "completedChecks": [
       "TCB snapshot: 11/11 periods operating+investing+financing flows reconcile to net_cash_change",
       "TCB snapshot: 11/11 periods YTD flows reconcile to net_cash_change_ytd",
@@ -1423,9 +1423,15 @@
       "Targeted TCB Q3/2026 PDF page 12 OCR at 300dpi reads closing cash 177278981, replacing the earlier bad OCR 177278961",
       "Corrected TCB 2026-Q3 cash_ending and cash_ending_reported_ytd to 177278981; YTD bridge and standalone-quarter bridge now have residual zero",
       "Added TCB Q4 audited FY2025 regression and updated Q3/2026 high-resolution OCR regression tests in tests/test_cashflow_bridge.py",
-      "Updated standard procedure document with audited-year preference and targeted-OCR correction procedure"
+      "Updated standard procedure document with audited-year preference and targeted-OCR correction procedure",
+      "TCB 2025-Q4 corrected to audited FY2025 cash flow; annual/Q4 bridges residual zero",
+      "TCB 2026-Q3 closing cash corrected from 177278961 to source-backed 177278981 after targeted 300dpi OCR of VietstockFinance PDF page 12; YTD and standalone bridges residual zero",
+      "Validate Site and Data run 40666435248 SUCCESS: cash-flow bridge test, JSON snapshot validation and syntax checks PASS",
+      "Validate quarterly financial data run 40666351827 SUCCESS: quarterly snapshot validation and bank statement reconciliation regression checks PASS",
+      "TCB cash-flow standardization complete for source OCR, arithmetic reconciliation and CI; no unresolved numeric discrepancy, but not claiming manual pixel-by-pixel review"
     ],
     "unresolved": [],
-    "nextStep": "Confirm Validate Site and Data and Validate quarterly financial data workflows triggered by commits aaecc045287df5371502a6543f1a8f893d420ca1 and 0b3b5ee6bcb5859cafbf2e5665ebf3f0adbbbd13. If they pass, mark TCB cash-flow domain PASS and move to the next ticker within cash flow using this standard. If a test fails, fix the root cause and rerun before continuing. OCR-source evidence is high-resolution but is not described as manual pixel-by-pixel review."
+    "nextStep": "Apply reports/financial-data-normalization-standard.md to MBB cash-flow data only. Inspect MBB snapshot and its VietstockFinance-linked source pages, test quarter/YTD flow sums and cash opening/closing bridges including any reported FX row, correct only source-evidenced errors, add or update regression test if needed, run both validation workflows, then checkpoint before moving to another ticker.",
+    "previousCompletedSymbol": "TCB"
   }
 }
