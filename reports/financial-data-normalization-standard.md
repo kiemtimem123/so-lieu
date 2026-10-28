@@ -1,6 +1,6 @@
 # Quy trình chuẩn hóa dữ liệu tài chính theo từng mảng
 
-Phiên bản: 1.5  
+Phiên bản: 1.6  
 Ngày thiết lập: 2026-10-28  
 Cập nhật gần nhất: 2026-10-29  
 Phạm vi: `kiemtimem123/so-lieu`, dữ liệu BCTC quý từ 2024-Q1 trở đi.
@@ -420,3 +420,26 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 - Kết quả snapshot: các kỳ có đủ thành phần đều thỏa dung sai 0,01% cho tổng dòng tiền và cầu nối; Q1/2026 giữ trống thành phần chưa xác minh, Q2/2026 giữ trống thành phần quý riêng phụ thuộc Q1 chưa xác minh. Không ghi số cân bằng.
 - Trạng thái NLG: **tự động hóa được các trường có bằng chứng; manual review còn lại** cho phân loại H1/2024/Q3 riêng, cột so sánh FY2024 bị OCR không khớp, ba thành phần Q1/2026 và liên tục tiền H1/2026.
 - Sau khi lưu NLG, mã kế tiếp theo thứ tự cấu hình là **BSR**; tiếp tục trong mảng cashflow, một mã mỗi lượt.
+
+
+## Lượt chuẩn hóa BSR — lưu chuyển tiền tệ (2026-10-29)
+
+### Nguyên nhân gốc và cơ sở nguồn
+- Snapshot `data/financials-BSR.json`: chuẩn hóa 10 kỳ từ 2024-Q1 đến 2026-Q2 từ BCTC hợp nhất được liên kết tại danh mục VietstockFinance BSR.
+- Sửa lỗi ánh xạ ở các kỳ còn trống/sai: dùng đúng dòng cuối nhóm lưu chuyển tiền thuần từ hoạt động kinh doanh (mã 20), đầu tư (mã 30), tài chính (mã 40), lưu chuyển tiền thuần trong kỳ (mã 50), tiền đầu kỳ (mã 60), ảnh hưởng tỷ giá (mã 61) và tiền cuối kỳ (mã 70). Không lấy subtotal “lợi nhuận từ hoạt động kinh doanh trước thay đổi vốn lưu động” thay cho CFO.
+- Tất cả số nguồn VND được chuyển sang đơn vị snapshot `triệu VND` bằng cách làm tròn đến triệu gần nhất. Quý riêng Q2–Q4 tính bằng YTD hiện tại trừ YTD quý trước trên cùng cơ sở đã chọn; FX riêng quý cũng tính bằng chênh lệch FX YTD. Không dùng công thức để điền những giá trị khi thiếu dòng nguồn hoặc sai phạm vi báo cáo.
+- Khi có cột so sánh mới hơn trên VietstockFinance, ưu tiên giá trị đó nhưng giữ nguyên lịch sử nguồn cũ trong `cashflow_audit_revision`. Cụ thể:
+  - **H1/2024:** dùng cột so sánh H1/2024 của BCTC Q2/2025 thay vì bộ cũ của BCTC Q2/2024. CFO và CFI khác biệt tương đối trên 0,01%; net change, FX và số dư cuối kỳ vẫn khác biệt trong ngưỡng 0,01%.
+  - **FY2024:** dùng cột FY2024 so sánh trong BCTC Q4/2025. CFO và CFF khác biệt phân loại trên 0,01%; net change, CFI, FX và tiền cuối kỳ nằm trong ngưỡng. Hai bộ số vẫn được lưu trong lịch sử; không đổi số gốc để khớp.
+  - **H1/2025:** dùng cột so sánh H1/2025 trong BCTC Q2/2026. CFI, CFF và ảnh hưởng tỷ giá khác biệt tương đối trên 0,01%; net change vẫn trong ngưỡng. Cột so sánh được chọn theo quy tắc nguồn mới hơn và có cờ rà soát phân loại nguồn.
+- Nguồn gốc cho các kỳ kiểm tra trực quan: Q1/2024; H1/2024 so sánh từ Q2/2025; 9M/2024 so sánh từ Q3/2025; FY2024 so sánh Q4/2025; Q1/2025 so sánh Q1/2026; Q3/2025; FY2025; Q1/2026. H1/2025 so sánh từ Q2/2026 và H1/2026 còn trạng thái OCR đã đối chiếu số học nhưng chờ rà soát trực quan, không tuyên bố đã xem hình ảnh đầy đủ.
+- Tiền cuối Q3/2025 được tính từ các số đã có nguồn trong báo cáo: tiền đầu kỳ + biến động tiền thuần + ảnh hưởng tỷ giá. Dòng tiền cuối kỳ trong sidecar OCR bị che/đứt đoạn, nên công thức và trạng thái rà soát được ghi rõ; không dùng giá trị OCR sai `50`.
+- Tiền cuối FY2025 **7.625.815,658 triệu VND** so với tiền đầu Q1/2026 **7.625.822,769 triệu VND** lệch xấp xỉ **7,11 triệu VND**, tương đương khoảng **0,000093%**. Được chấp nhận theo ngưỡng tương đối 0,01%, phần dư vẫn được lưu; không đồng bộ số của hai báo cáo.
+
+### Kết quả kiểm tra và trạng thái
+- Cả 10/10 kỳ hiện có đủ trường lưu chuyển tiền cốt lõi; các trường được thêm vào `financial_line_items_extracted_fields` và gỡ khỏi danh sách bị loại để tab LCTT có thể hiển thị dữ liệu đã có chứng cứ.
+- Kiểm tra tổng CFO+CFI+CFF với net change cho cả quý riêng và YTD, cầu nối tiền mở/đóng kỳ có FX, chênh lệch quý = chênh lệch YTD liên tiếp và chuyển năm Q4→Q1. Các phần dư còn lại đều do làm tròn riêng từng dòng khi đổi VND sang triệu VND; mọi sai lệch số học đều không quá 0,01%.
+- Ba tình huống khác biệt phân loại theo nguồn được gắn `NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT`: H1/2024, FY2024 và H1/2025. Sai lệch số học nhỏ không xoá cờ nguồn này. Không chèn “plug” và không dùng dung sai để bỏ qua lỗi OCR, thiếu trang hoặc sai phạm vi hợp nhất.
+- Bộ test tái sử dụng `BSRCashFlowNormalizationTests` trong `tests/test_cashflow_bridge.py` bao phủ đủ 10 kỳ, đơn vị, nguồn VietstockFinance, allowlist UI, công thức quý/YTD, bridge có FX, comparator history, 3 cờ phân loại nguồn và ngoại lệ liên tục tiền năm mới trong ngưỡng.
+- Trạng thái BSR: **chuẩn hóa số liệu và kiểm tra số học hoàn tất; rà soát thủ công còn lại** đối với khác biệt phân loại so sánh H1/2024, FY2024, H1/2025 và các trang PDF còn được gắn `ocr_text_reconciled_visual_review_pending`.
+- Mã tiếp theo: tiếp tục trong cùng mảng `cashflow`, một mã mỗi lượt, theo checkpoint đã lưu. Không mở mảng khác trước khi tiến độ dòng tiền được cập nhật.
