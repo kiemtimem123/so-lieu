@@ -3088,11 +3088,14 @@ def repair_tcx_2026_source_rows(items,symbol):
  item=by_period.get("2026-Q3")
  if isinstance(item,dict):
   page_text=archived_pages(item)
+  # Match the actual PDF page numbering: total operating expenses are on
+  # continuation page 10, not page 9. OCR also reads the leading digit 5 as
+  # a section symbol in long-term liabilities, so validate its numeric suffix.
   required={
    5:["B01a-CTCK","93.291.524.374.447","3.682.538.394.785","96.974.062.769.232"],
-   6:["49.568.110.970.833","47.405.951.798.399","43.655.467.758.554","5.912.643.212.279"],
-   9:["B02a-CTCK","3.534.194.399.247","249.734.488.798"],
-   10:["2.152.639.191.936","1.159.965.383.620","201.046.195.357"],
+   6:["49.568.110.970.833","47.405.951.798.399","43.655.467.758.554","912.643.212.279"],
+   9:["B02a-CTCK","3.534.194.399.247"],
+   10:["2.152.639.191.936","1.159.965.383.620","201.046.195.357","249.734.488.798"],
    11:["2.152.263.245.328","1.747.895.861.879","404.367.383.449","525"],
   }
   source_ok=bool(page_text) and all(
