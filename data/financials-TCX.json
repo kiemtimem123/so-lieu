@@ -1897,9 +1897,9 @@
     {
       "symbol": "TCX",
       "period": "2024-Q3",
-      "total_assets": 49867993,
-      "total_liabilities": 24278844,
-      "equity": 25589149,
+      "total_assets": 49867993.141852,
+      "total_liabilities": 24278844.247212,
+      "equity": 25589148.89464,
       "pretax_profit": 1097052,
       "net_profit": 877642,
       "net_profit_attributable": 877642,
@@ -1954,6 +1954,7 @@
       "financial_line_items_extracted_fields": [
         "admin_expense",
         "broker_admin_expenses",
+        "broker_afs_assets",
         "broker_afs_income",
         "broker_brokerage_expense",
         "broker_brokerage_revenue",
@@ -1964,13 +1965,19 @@
         "broker_financial_income",
         "broker_fvtpl_gain",
         "broker_fvtpl_loss",
+        "broker_held_to_maturity_assets",
         "broker_held_to_maturity_income",
         "broker_interest_expense",
+        "broker_lending_assets",
         "broker_lending_income",
+        "broker_long_term_bonds",
         "broker_net_operating_profit",
         "broker_operating_expenses",
         "broker_other_operating_expense",
         "broker_other_operating_income",
+        "broker_receivables",
+        "broker_short_term_bonds",
+        "broker_short_term_borrowings",
         "broker_total_operating_expenses",
         "broker_total_operating_revenue",
         "broker_underwriting_revenue",
@@ -1981,27 +1988,33 @@
         "cash_beginning_reported_ytd",
         "cash_ending",
         "cashflow_period_basis",
+        "current_assets",
+        "current_liabilities",
         "financial_expense",
         "financial_income",
         "financing_cash_flow",
         "financing_cash_flow_ytd",
+        "fixed_assets",
         "income_tax",
         "income_tax_current",
         "income_tax_deferred",
         "interest_expense",
         "investing_cash_flow",
         "investing_cash_flow_ytd",
+        "long_term_liabilities",
         "net_cash_change",
         "net_cash_change_ytd",
+        "non_current_assets",
         "operating_cash_flow",
         "operating_cash_flow_ytd",
         "operating_profit",
+        "retained_earnings",
         "revenue"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/904a7efc81bdc8a9.pdf",
-      "financial_line_items_updated_at": "2026-10-28T05:15:03+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Đã đối chiếu trực quan B02a-CTCK VietstockFinance Q3/2024 trang 7–9: bổ sung tổng doanh thu hoạt động, các dòng thu nhập/chi phí, lợi nhuận hoạt động và thuế theo cột Quý 3; dòng chi phí tổng hợp số 24 không gán thành riêng chi phí lãi vay. Đã đối chiếu trực quan B01a-CTCK VietstockFinance Q3/2024 trang 3–4: bổ sung tiền, HTM, cho vay, AFS, phải thu, TSCĐ, tổng tài sản ngắn/dài hạn, nợ ngắn/dài hạn, vay/trái phiếu và lợi nhuận chưa phân phối. Đã đối chiếu trực quan B03a-CTCK VietstockFinance Q3/2024 trang 10–11: dòng tiền quý III được tính bằng lũy kế 9 tháng trừ lũy kế 6 tháng; số dư đầu quý lấy theo số dư cuối Q2 và số dư cuối quý lấy trực tiếp từ báo cáo.",
+      "financial_line_items_updated_at": "2026-10-28T07:20:00Z",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Đã đối chiếu trực quan B02a-CTCK VietstockFinance Q3/2024 trang 7–9: bổ sung tổng doanh thu hoạt động, các dòng thu nhập/chi phí, lợi nhuận hoạt động và thuế theo cột Quý 3; dòng chi phí tổng hợp số 24 không gán thành riêng chi phí lãi vay. Đã đối chiếu trực quan B01a-CTCK VietstockFinance Q3/2024 trang 3–4: bổ sung tiền, HTM, cho vay, AFS, phải thu, TSCĐ, tổng tài sản ngắn/dài hạn, nợ ngắn/dài hạn, vay/trái phiếu và lợi nhuận chưa phân phối. Đã đối chiếu trực quan B03a-CTCK VietstockFinance Q3/2024 trang 10–11: dòng tiền quý III được tính bằng lũy kế 9 tháng trừ lũy kế 6 tháng; số dư đầu quý lấy theo số dư cuối Q2 và số dư cuối quý lấy trực tiếp từ báo cáo. 2024-Q3: khôi phục 13 dòng bảng cân đối từ B01a-CTCK VietstockFinance trang 5–6; phương trình tài sản = nợ phải trả + vốn chủ sở hữu và các tổng phụ đều khớp trong dung sai làm tròn. Còn chờ rà soát trực quan.",
       "investing_cash_flow": -43.49,
       "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "financing_cash_flow": -3360409.560861,
@@ -2230,14 +2243,32 @@
           "reason": "Visually checked in the archived VietstockFinance B02a-CTCK Q3/2024 statement, PDF page 11; current-quarter column; source VND divided by 1,000,000."
         },
         "current_assets": {
-          "previous_value": 46537938.169842,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 46537938.169842,
+          "reason": "Restored from the report's B01a-CTCK current-quarter/date columns on PDF pages 5,6; source amounts are VND divided by 1,000,000. The former parser migration had withheld the line although prior values remain in the source-backed snapshot.",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2024/BCTC/VN/QUY%203/TCBS_Baocaotaichinh_Q3_2024.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/904a7efc81bdc8a9.pdf",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 46537938169842,
+          "manually_visual_reviewed": false
         },
         "non_current_assets": {
-          "previous_value": 3330054.97201,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 3330054.97201,
+          "reason": "Restored from the report's B01a-CTCK current-quarter/date columns on PDF pages 5,6; source amounts are VND divided by 1,000,000. The former parser migration had withheld the line although prior values remain in the source-backed snapshot.",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2024/BCTC/VN/QUY%203/TCBS_Baocaotaichinh_Q3_2024.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/904a7efc81bdc8a9.pdf",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 3330054972010,
+          "manually_visual_reviewed": false
         },
         "cash_and_equivalents": {
           "previous_value": null,
@@ -2245,59 +2276,158 @@
           "reason": "Visually checked in the archived VietstockFinance B03a-CTCK Q3/2024 cash-flow statement, PDF pages 10–11. Q3 standalone flow is nine-month YTD less Q2 YTD; source VND divided by 1,000,000."
         },
         "broker_held_to_maturity_assets": {
-          "previous_value": 2031105.785348,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 2031105.785348,
+          "reason": "Restored from the report's B01a-CTCK current-quarter/date columns on PDF pages 5,6; source amounts are VND divided by 1,000,000. The former parser migration had withheld the line although prior values remain in the source-backed snapshot.",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2024/BCTC/VN/QUY%203/TCBS_Baocaotaichinh_Q3_2024.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/904a7efc81bdc8a9.pdf",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 2031105785348,
+          "manually_visual_reviewed": false
         },
         "broker_lending_assets": {
-          "previous_value": 25483299.379217,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 25483299.379217,
+          "reason": "Restored from the report's B01a-CTCK current-quarter/date columns on PDF pages 5,6; source amounts are VND divided by 1,000,000. The former parser migration had withheld the line although prior values remain in the source-backed snapshot.",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2024/BCTC/VN/QUY%203/TCBS_Baocaotaichinh_Q3_2024.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/904a7efc81bdc8a9.pdf",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 25483299379217,
+          "manually_visual_reviewed": false
         },
         "broker_afs_assets": {
-          "previous_value": 13495559.828376,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 13495559.828376,
+          "reason": "Restored from the report's B01a-CTCK current-quarter/date columns on PDF pages 5,6; source amounts are VND divided by 1,000,000. The former parser migration had withheld the line although prior values remain in the source-backed snapshot.",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2024/BCTC/VN/QUY%203/TCBS_Baocaotaichinh_Q3_2024.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/904a7efc81bdc8a9.pdf",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 13495559828376,
+          "manually_visual_reviewed": false
         },
         "broker_receivables": {
-          "previous_value": 457741.282392,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 457741.282392,
+          "reason": "Restored from the report's B01a-CTCK current-quarter/date columns on PDF pages 5,6; source amounts are VND divided by 1,000,000. The former parser migration had withheld the line although prior values remain in the source-backed snapshot.",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2024/BCTC/VN/QUY%203/TCBS_Baocaotaichinh_Q3_2024.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/904a7efc81bdc8a9.pdf",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 457741282392,
+          "manually_visual_reviewed": false
         },
         "fixed_assets": {
-          "previous_value": 47000.960029,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 47000.960029,
+          "reason": "Restored from the report's B01a-CTCK current-quarter/date columns on PDF pages 5,6; source amounts are VND divided by 1,000,000. The former parser migration had withheld the line although prior values remain in the source-backed snapshot.",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2024/BCTC/VN/QUY%203/TCBS_Baocaotaichinh_Q3_2024.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/904a7efc81bdc8a9.pdf",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 47000960029,
+          "manually_visual_reviewed": false
         },
         "current_liabilities": {
-          "previous_value": 20399876.486004,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 20399876.486004,
+          "reason": "Restored from the report's B01a-CTCK current-quarter/date columns on PDF pages 5,6; source amounts are VND divided by 1,000,000. The former parser migration had withheld the line although prior values remain in the source-backed snapshot.",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2024/BCTC/VN/QUY%203/TCBS_Baocaotaichinh_Q3_2024.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/904a7efc81bdc8a9.pdf",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 20399876486004,
+          "manually_visual_reviewed": false
         },
         "long_term_liabilities": {
-          "previous_value": 3878967.761208,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 3878967.761208,
+          "reason": "Restored from the report's B01a-CTCK current-quarter/date columns on PDF pages 5,6; source amounts are VND divided by 1,000,000. The former parser migration had withheld the line although prior values remain in the source-backed snapshot.",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2024/BCTC/VN/QUY%203/TCBS_Baocaotaichinh_Q3_2024.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/904a7efc81bdc8a9.pdf",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 3878967761208,
+          "manually_visual_reviewed": false
         },
         "broker_short_term_borrowings": {
-          "previous_value": 18250517.591201,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 18250517.591201,
+          "reason": "Restored from the report's B01a-CTCK current-quarter/date columns on PDF pages 5,6; source amounts are VND divided by 1,000,000. The former parser migration had withheld the line although prior values remain in the source-backed snapshot.",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2024/BCTC/VN/QUY%203/TCBS_Baocaotaichinh_Q3_2024.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/904a7efc81bdc8a9.pdf",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 18250517591201,
+          "manually_visual_reviewed": false
         },
         "broker_short_term_bonds": {
-          "previous_value": 750752.043752,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 750752.043752,
+          "reason": "Restored from the report's B01a-CTCK current-quarter/date columns on PDF pages 5,6; source amounts are VND divided by 1,000,000. The former parser migration had withheld the line although prior values remain in the source-backed snapshot.",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2024/BCTC/VN/QUY%203/TCBS_Baocaotaichinh_Q3_2024.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/904a7efc81bdc8a9.pdf",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 750752043752,
+          "manually_visual_reviewed": false
         },
         "broker_long_term_bonds": {
-          "previous_value": 3873429.871913,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 3873429.871913,
+          "reason": "Restored from the report's B01a-CTCK current-quarter/date columns on PDF pages 5,6; source amounts are VND divided by 1,000,000. The former parser migration had withheld the line although prior values remain in the source-backed snapshot.",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2024/BCTC/VN/QUY%203/TCBS_Baocaotaichinh_Q3_2024.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/904a7efc81bdc8a9.pdf",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 3873429871913,
+          "manually_visual_reviewed": false
         },
         "retained_earnings": {
-          "previous_value": 14184540.747501,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 14184540.747501,
+          "reason": "Restored from the report's B01a-CTCK current-quarter/date columns on PDF pages 5,6; source amounts are VND divided by 1,000,000. The former parser migration had withheld the line although prior values remain in the source-backed snapshot.",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2024/BCTC/VN/QUY%203/TCBS_Baocaotaichinh_Q3_2024.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/904a7efc81bdc8a9.pdf",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 14184540747501,
+          "manually_visual_reviewed": false
         },
         "operating_cash_flow_ytd": {
           "previous_value": 3869311,
@@ -2388,20 +2518,20 @@
       "operating_profit": 1096495.48627,
       "broker_net_operating_profit": 1096495.48627,
       "income_tax_deferred": 1090.886538,
-      "current_assets": null,
-      "non_current_assets": null,
+      "current_assets": 46537938.169842,
+      "non_current_assets": 3330054.97201,
       "cash_and_equivalents": 3265767.728843,
-      "broker_held_to_maturity_assets": null,
-      "broker_lending_assets": null,
-      "broker_afs_assets": null,
-      "broker_receivables": null,
-      "fixed_assets": null,
-      "current_liabilities": null,
-      "long_term_liabilities": null,
-      "broker_short_term_borrowings": null,
-      "broker_short_term_bonds": null,
-      "broker_long_term_bonds": null,
-      "retained_earnings": null,
+      "broker_held_to_maturity_assets": 2031105.785348,
+      "broker_lending_assets": 25483299.379217,
+      "broker_afs_assets": 13495559.828376,
+      "broker_receivables": 457741.282392,
+      "fixed_assets": 47000.960029,
+      "current_liabilities": 20399876.486004,
+      "long_term_liabilities": 3878967.761208,
+      "broker_short_term_borrowings": 18250517.591201,
+      "broker_short_term_bonds": 750752.043752,
+      "broker_long_term_bonds": 3873429.871913,
+      "retained_earnings": 14184540.747501,
       "net_cash_change_ytd": -1316413.265345,
       "operating_cash_flow": 3850747.500461,
       "net_cash_change": 490294.4496,
@@ -2503,95 +2633,43 @@
         "note": "Revenue and expense rows are from the Quý 3 column on page 7; financial income/expense and operating profit from page 8; tax and after-tax profit from page 9. The other-operating-income amount is reconciled as the residual to reported total operating revenue after the other eight rows are matched. Combined row 24 is included only in total operating expenses, not relabelled as pure borrowing expense."
       },
       "financial_line_items_balance_source_reconciliation": {
-        "source_policy": "VietstockFinance document catalog and linked PDF only",
+        "source_policy": "VietstockFinance document catalog and linked PDF/ZIP only",
         "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
         "source_document_url": "https://static2.vietstock.vn/data/KHAC/2024/BCTC/VN/QUY%203/TCBS_Baocaotaichinh_Q3_2024.pdf",
         "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/904a7efc81bdc8a9.pdf",
         "report_form": "B01a-CTCK",
-        "report_scope": "BCTC riêng công ty chứng khoán; không phải BCTC hợp nhất",
+        "report_scope": "standalone securities-company balance sheet; not consolidated",
         "pdf_pages": [
           5,
           6
         ],
-        "manually_visual_reviewed": true,
-        "fields": {
-          "current_assets": {
-            "value_million_vnd": 46537938.169842,
-            "source_value_vnd": 46537938169842
-          },
-          "non_current_assets": {
-            "value_million_vnd": 3330054.97201,
-            "source_value_vnd": 3330054972010
-          },
-          "cash_and_equivalents": {
-            "value_million_vnd": 3265767.728843,
-            "source_value_vnd": 3265767728843
-          },
-          "broker_held_to_maturity_assets": {
-            "value_million_vnd": 2031105.785348,
-            "source_value_vnd": 2031105785348
-          },
-          "broker_lending_assets": {
-            "value_million_vnd": 25483299.379217,
-            "source_value_vnd": 25483299379217
-          },
-          "broker_afs_assets": {
-            "value_million_vnd": 13495559.828376,
-            "source_value_vnd": 13495559828376
-          },
-          "broker_receivables": {
-            "value_million_vnd": 457741.282392,
-            "source_value_vnd": 457741282392
-          },
-          "fixed_assets": {
-            "value_million_vnd": 47000.960029,
-            "source_value_vnd": 47000960029
-          },
-          "current_liabilities": {
-            "value_million_vnd": 20399876.486004,
-            "source_value_vnd": 20399876486004
-          },
-          "long_term_liabilities": {
-            "value_million_vnd": 3878967.761208,
-            "source_value_vnd": 3878967761208
-          },
-          "broker_short_term_borrowings": {
-            "value_million_vnd": 18250517.591201,
-            "source_value_vnd": 18250517591201
-          },
-          "broker_short_term_bonds": {
-            "value_million_vnd": 750752.043752,
-            "source_value_vnd": 750752043752
-          },
-          "broker_long_term_bonds": {
-            "value_million_vnd": 3873429.871913,
-            "source_value_vnd": 3873429871913
-          },
-          "retained_earnings": {
-            "value_million_vnd": 14184540.747501,
-            "source_value_vnd": 14184540747501
-          }
+        "manually_visual_reviewed": false,
+        "restored_fields": [
+          "current_assets",
+          "non_current_assets",
+          "broker_held_to_maturity_assets",
+          "broker_lending_assets",
+          "broker_afs_assets",
+          "broker_receivables",
+          "fixed_assets",
+          "current_liabilities",
+          "long_term_liabilities",
+          "broker_short_term_borrowings",
+          "broker_short_term_bonds",
+          "broker_long_term_bonds",
+          "retained_earnings"
+        ],
+        "precise_core_totals": {
+          "total_assets": 49867993.141852,
+          "total_liabilities": 24278844.247212,
+          "equity": 25589148.89464
         },
-        "source_tokens": {
-          "5": [
-            "46.537.938.169.842",
-            "2.031.105.785.348",
-            "25.483.299.379.217",
-            "457.741.282.392",
-            "3.330.054.972.010",
-            "47.000.960.029",
-            "49.867.993.141.852"
-          ],
-          "6": [
-            "24.278.844.247.212",
-            "20.399.876.486.004",
-            "3.878.967.761.208",
-            "18.250.517.591.201",
-            "750.752.043.752",
-            "3.873.429.871.913",
-            "14.184.540.747.501"
-          ]
-        }
+        "checks": {
+          "assetSubtotalsResidual": 0,
+          "liabilitySubtotalsResidual": 0,
+          "assetsLessLiabilitiesAndEquity": 0
+        },
+        "note": "B01a-CTCK Q3/2024, report date 30 September 2024: dữ liệu khôi phục từ các dòng bảng cân đối trong bản trích xuất VietstockFinance đã lưu; các dòng cần kiểm tra trực quan trước khi đánh dấu đã xác minh thủ công."
       },
       "cashflow_source_reconciliation": {
         "source_policy": "VietstockFinance document catalog and linked PDF only",
@@ -2651,7 +2729,53 @@
         "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
         "source_document_url": "https://static2.vietstock.vn/data/KHAC/2024/BCTC/VN/QUY%203/TCBS_Baocaotaichinh_Q3_2024.pdf",
         "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/904a7efc81bdc8a9.pdf"
-      }
+      },
+      "core_financial_extraction_value_corrections": {
+        "total_assets": {
+          "previous_value": 49867993,
+          "new_value": 49867993.141852,
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2024/BCTC/VN/QUY%203/TCBS_Baocaotaichinh_Q3_2024.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/904a7efc81bdc8a9.pdf",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 49867993141852,
+          "reason": "Exact core balance total from the same B01a-CTCK statement; replaces the older whole-million rounded value. Pending visual review."
+        },
+        "total_liabilities": {
+          "previous_value": 24278844,
+          "new_value": 24278844.247212,
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2024/BCTC/VN/QUY%203/TCBS_Baocaotaichinh_Q3_2024.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/904a7efc81bdc8a9.pdf",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 24278844247212,
+          "reason": "Exact core balance total from the same B01a-CTCK statement; replaces the older whole-million rounded value. Pending visual review."
+        },
+        "equity": {
+          "previous_value": 25589149,
+          "new_value": 25589148.89464,
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2024/BCTC/VN/QUY%203/TCBS_Baocaotaichinh_Q3_2024.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/904a7efc81bdc8a9.pdf",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 25589148894640,
+          "reason": "Exact core balance total from the same B01a-CTCK statement; replaces the older whole-million rounded value. Pending visual review."
+        }
+      },
+      "core_financial_extracted_fields": [
+        "equity",
+        "total_assets",
+        "total_liabilities"
+      ]
     },
     {
       "symbol": "TCX",
@@ -4609,9 +4733,9 @@
     {
       "symbol": "TCX",
       "period": "2025-Q2",
-      "total_assets": 65134188,
-      "total_liabilities": 35070953,
-      "equity": 30063235,
+      "total_assets": 65134187.986741,
+      "total_liabilities": 35070953.3444,
+      "equity": 30063234.642341,
       "pretax_profit": 1733101.500233,
       "net_profit": 1420073.8298839997,
       "net_profit_attributable": 1420073.8298839997,
@@ -4679,11 +4803,19 @@
       "financial_line_items_extracted_fields": [
         "admin_expense",
         "broker_admin_expenses",
+        "broker_afs_assets",
         "broker_financial_expense",
         "broker_financial_income",
+        "broker_fvtpl_assets",
+        "broker_held_to_maturity_assets",
         "broker_interest_expense",
+        "broker_lending_assets",
+        "broker_long_term_bonds",
         "broker_net_operating_profit",
         "broker_operating_expenses",
+        "broker_receivables",
+        "broker_short_term_bonds",
+        "broker_short_term_borrowings",
         "broker_total_operating_expenses",
         "broker_total_operating_revenue",
         "capital_expenditure",
@@ -4693,28 +4825,34 @@
         "cash_beginning_reported_ytd",
         "cash_ending",
         "cashflow_period_basis",
+        "current_assets",
+        "current_liabilities",
         "financial_expense",
         "financial_income",
         "financing_cash_flow",
         "financing_cash_flow_ytd",
+        "fixed_assets",
         "income_tax",
         "income_tax_current",
         "income_tax_deferred",
         "interest_expense",
         "investing_cash_flow",
         "investing_cash_flow_ytd",
+        "long_term_liabilities",
         "net_cash_change",
         "net_cash_change_ytd",
+        "non_current_assets",
         "operating_cash_flow",
         "operating_cash_flow_ytd",
         "operating_profit",
         "pretax_profit",
+        "retained_earnings",
         "revenue"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
-      "financial_line_items_updated_at": "2026-10-28T07:00:00Z",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Đã khôi phục Q2/2025: số dư bảng cân đối, tổng doanh thu hoạt động tái dựng từ tổng phụ KQKD, chi phí/thu nhập tài chính, chi phí quản lý, lợi nhuận hoạt động, thuế và dòng tiền quý. Dòng tiền Q2 bằng số lũy kế 6 tháng trừ Q1. Nguồn là BCTC riêng CTCK trong ZIP VietstockFinance; còn chờ rà soát trực quan PDF. Q2/2025: doanh thu hoạt động được tái lập theo đồng nhất thức dòng 70 và các tổng phụ nguồn; các dòng chi phí, doanh thu tài chính, lợi nhuận hoạt động, thuế được lấy từ cột Quý II B02a-CTCK VietstockFinance. Chờ rà soát trực quan trang scan. Q2/2025: số dòng tiền quý được tính bằng số lũy kế đến 30/6 trừ số lũy kế đến 31/3 trên B03a-CTCK; tổng ba luồng tiền bằng biến động tiền thuần và cầu nối số dư tiền khớp.",
+      "financial_line_items_updated_at": "2026-10-28T07:20:00Z",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Đã khôi phục Q2/2025: số dư bảng cân đối, tổng doanh thu hoạt động tái dựng từ tổng phụ KQKD, chi phí/thu nhập tài chính, chi phí quản lý, lợi nhuận hoạt động, thuế và dòng tiền quý. Dòng tiền Q2 bằng số lũy kế 6 tháng trừ Q1. Nguồn là BCTC riêng CTCK trong ZIP VietstockFinance; còn chờ rà soát trực quan PDF. Q2/2025: doanh thu hoạt động được tái lập theo đồng nhất thức dòng 70 và các tổng phụ nguồn; các dòng chi phí, doanh thu tài chính, lợi nhuận hoạt động, thuế được lấy từ cột Quý II B02a-CTCK VietstockFinance. Chờ rà soát trực quan trang scan. Q2/2025: số dòng tiền quý được tính bằng số lũy kế đến 30/6 trừ số lũy kế đến 31/3 trên B03a-CTCK; tổng ba luồng tiền bằng biến động tiền thuần và cầu nối số dư tiền khớp. 2025-Q2: khôi phục 14 dòng bảng cân đối từ B01a-CTCK VietstockFinance trang 5–6; phương trình tài sản = nợ phải trả + vốn chủ sở hữu và các tổng phụ đều khớp trong dung sai làm tròn. Còn chờ rà soát trực quan.",
       "financial_line_items_prior_values": {
         "income_tax": 313028,
         "cash_and_equivalents": 2997602,
@@ -4791,14 +4929,32 @@
           "manually_visual_reviewed": false
         },
         "current_assets": {
-          "previous_value": 61740702.018288,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 61740702.018288,
+          "reason": "Restored from the report's B01a-CTCK current-quarter/date columns on PDF pages 5,6; source amounts are VND divided by 1,000,000. The former parser migration had withheld the line although prior values remain in the source-backed snapshot.",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 61740702018288,
+          "manually_visual_reviewed": false
         },
         "non_current_assets": {
-          "previous_value": 3393485.968453,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 3393485.968453,
+          "reason": "Restored from the report's B01a-CTCK current-quarter/date columns on PDF pages 5,6; source amounts are VND divided by 1,000,000. The former parser migration had withheld the line although prior values remain in the source-backed snapshot.",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 3393485968453,
+          "manually_visual_reviewed": false
         },
         "cash_and_equivalents": {
           "previous_value": 2997602,
@@ -4814,64 +4970,172 @@
           "manually_visual_reviewed": false
         },
         "broker_fvtpl_assets": {
-          "previous_value": 51182.1619,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 51182.1619,
+          "reason": "Restored from the report's B01a-CTCK current-quarter/date columns on PDF pages 5,6; source amounts are VND divided by 1,000,000. The former parser migration had withheld the line although prior values remain in the source-backed snapshot.",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 51182161900,
+          "manually_visual_reviewed": false
         },
         "broker_held_to_maturity_assets": {
-          "previous_value": 2800679.117067,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 2800679.117067,
+          "reason": "Restored from the report's B01a-CTCK current-quarter/date columns on PDF pages 5,6; source amounts are VND divided by 1,000,000. The former parser migration had withheld the line although prior values remain in the source-backed snapshot.",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 2800679117067,
+          "manually_visual_reviewed": false
         },
         "broker_lending_assets": {
-          "previous_value": 33805854.891155,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 33805854.891155,
+          "reason": "Restored from the report's B01a-CTCK current-quarter/date columns on PDF pages 5,6; source amounts are VND divided by 1,000,000. The former parser migration had withheld the line although prior values remain in the source-backed snapshot.",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 33805854891155,
+          "manually_visual_reviewed": false
         },
         "broker_afs_assets": {
-          "previous_value": 21171790.942918,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 21171790.942918,
+          "reason": "Restored from the report's B01a-CTCK current-quarter/date columns on PDF pages 5,6; source amounts are VND divided by 1,000,000. The former parser migration had withheld the line although prior values remain in the source-backed snapshot.",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 21171790942918,
+          "manually_visual_reviewed": false
         },
         "broker_receivables": {
-          "previous_value": 578703.27382,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 578703.27382,
+          "reason": "Restored from the report's B01a-CTCK current-quarter/date columns on PDF pages 5,6; source amounts are VND divided by 1,000,000. The former parser migration had withheld the line although prior values remain in the source-backed snapshot.",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 578703273820,
+          "manually_visual_reviewed": false
         },
         "fixed_assets": {
-          "previous_value": 67889.896187,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 67889.896187,
+          "reason": "Restored from the report's B01a-CTCK current-quarter/date columns on PDF pages 5,6; source amounts are VND divided by 1,000,000. The former parser migration had withheld the line although prior values remain in the source-backed snapshot.",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 67889896187,
+          "manually_visual_reviewed": false
         },
         "current_liabilities": {
-          "previous_value": 33563528.724306,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 33563528.724306,
+          "reason": "Restored from the report's B01a-CTCK current-quarter/date columns on PDF pages 5,6; source amounts are VND divided by 1,000,000. The former parser migration had withheld the line although prior values remain in the source-backed snapshot.",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 33563528724306,
+          "manually_visual_reviewed": false
         },
         "long_term_liabilities": {
-          "previous_value": 1507424.620094,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 1507424.620094,
+          "reason": "Restored from the report's B01a-CTCK current-quarter/date columns on PDF pages 5,6; source amounts are VND divided by 1,000,000. The former parser migration had withheld the line although prior values remain in the source-backed snapshot.",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 1507424620094,
+          "manually_visual_reviewed": false
         },
         "broker_short_term_borrowings": {
-          "previous_value": 27437860,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 27437860,
+          "reason": "Restored from the report's B01a-CTCK current-quarter/date columns on PDF pages 5,6; source amounts are VND divided by 1,000,000. The former parser migration had withheld the line although prior values remain in the source-backed snapshot.",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 27437860000000,
+          "manually_visual_reviewed": false
         },
         "broker_short_term_bonds": {
-          "previous_value": 4569226.462759,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 4569226.462759,
+          "reason": "Restored from the report's B01a-CTCK current-quarter/date columns on PDF pages 5,6; source amounts are VND divided by 1,000,000. The former parser migration had withheld the line although prior values remain in the source-backed snapshot.",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 4569226462759,
+          "manually_visual_reviewed": false
         },
         "broker_long_term_bonds": {
-          "previous_value": 1500054.759542,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 1500054.759542,
+          "reason": "Restored from the report's B01a-CTCK current-quarter/date columns on PDF pages 5,6; source amounts are VND divided by 1,000,000. The former parser migration had withheld the line although prior values remain in the source-backed snapshot.",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 1500054759542,
+          "manually_visual_reviewed": false
         },
         "retained_earnings": {
-          "previous_value": 9119437.052951,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 9119437.052951,
+          "reason": "Restored from the report's B01a-CTCK current-quarter/date columns on PDF pages 5,6; source amounts are VND divided by 1,000,000. The former parser migration had withheld the line although prior values remain in the source-backed snapshot.",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 9119437052951,
+          "manually_visual_reviewed": false
         },
         "revenue": {
           "previous_value": null,
@@ -5262,20 +5526,20 @@
           "manually_visual_reviewed": false
         }
       },
-      "current_assets": null,
-      "non_current_assets": null,
-      "broker_fvtpl_assets": null,
-      "broker_held_to_maturity_assets": null,
-      "broker_lending_assets": null,
-      "broker_afs_assets": null,
-      "broker_receivables": null,
-      "fixed_assets": null,
-      "current_liabilities": null,
-      "long_term_liabilities": null,
-      "broker_short_term_borrowings": null,
-      "broker_short_term_bonds": null,
-      "broker_long_term_bonds": null,
-      "retained_earnings": null,
+      "current_assets": 61740702.018288,
+      "non_current_assets": 3393485.968453,
+      "broker_fvtpl_assets": 51182.1619,
+      "broker_held_to_maturity_assets": 2800679.117067,
+      "broker_lending_assets": 33805854.891155,
+      "broker_afs_assets": 21171790.942918,
+      "broker_receivables": 578703.27382,
+      "fixed_assets": 67889.896187,
+      "current_liabilities": 33563528.724306,
+      "long_term_liabilities": 1507424.620094,
+      "broker_short_term_borrowings": 27437860,
+      "broker_short_term_bonds": 4569226.462759,
+      "broker_long_term_bonds": 1500054.759542,
+      "retained_earnings": 9119437.052951,
       "revenue": 2659998.744458,
       "broker_total_operating_revenue": 2659998.744458,
       "broker_total_operating_expenses": 219102.604818,
@@ -5318,100 +5582,39 @@
         "source_document_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
         "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
         "report_form": "B01a-CTCK",
-        "report_scope": "BCTC riêng công ty chứng khoán; không phải BCTC hợp nhất",
+        "report_scope": "standalone securities-company balance sheet; not consolidated",
         "pdf_pages": [
           5,
           6
         ],
-        "printed_pages": [
-          3,
-          4
-        ],
         "manually_visual_reviewed": false,
-        "fields": {
-          "current_assets": {
-            "value_million_vnd": 61740702.018288,
-            "source_value_vnd": 61740702018288
-          },
-          "non_current_assets": {
-            "value_million_vnd": 3393485.968453,
-            "source_value_vnd": 3393485968453
-          },
-          "cash_and_equivalents": {
-            "value_million_vnd": 2997602.183062,
-            "source_value_vnd": 2997602183062
-          },
-          "broker_fvtpl_assets": {
-            "value_million_vnd": 51182.1619,
-            "source_value_vnd": 51182161900
-          },
-          "broker_held_to_maturity_assets": {
-            "value_million_vnd": 2800679.117067,
-            "source_value_vnd": 2800679117067
-          },
-          "broker_lending_assets": {
-            "value_million_vnd": 33805854.891155,
-            "source_value_vnd": 33805854891155
-          },
-          "broker_afs_assets": {
-            "value_million_vnd": 21171790.942918,
-            "source_value_vnd": 21171790942918
-          },
-          "broker_receivables": {
-            "value_million_vnd": 578703.27382,
-            "source_value_vnd": 578703273820
-          },
-          "fixed_assets": {
-            "value_million_vnd": 67889.896187,
-            "source_value_vnd": 67889896187
-          },
-          "current_liabilities": {
-            "value_million_vnd": 33563528.724306,
-            "source_value_vnd": 33563528724306
-          },
-          "long_term_liabilities": {
-            "value_million_vnd": 1507424.620094,
-            "source_value_vnd": 1507424620094
-          },
-          "broker_short_term_borrowings": {
-            "value_million_vnd": 27437860,
-            "source_value_vnd": 27437860000000
-          },
-          "broker_short_term_bonds": {
-            "value_million_vnd": 4569226.462759,
-            "source_value_vnd": 4569226462759
-          },
-          "broker_long_term_bonds": {
-            "value_million_vnd": 1500054.759542,
-            "source_value_vnd": 1500054759542
-          },
-          "retained_earnings": {
-            "value_million_vnd": 9119437.052951,
-            "source_value_vnd": 9119437052951
-          }
+        "restored_fields": [
+          "current_assets",
+          "non_current_assets",
+          "broker_fvtpl_assets",
+          "broker_held_to_maturity_assets",
+          "broker_lending_assets",
+          "broker_afs_assets",
+          "broker_receivables",
+          "fixed_assets",
+          "current_liabilities",
+          "long_term_liabilities",
+          "broker_short_term_borrowings",
+          "broker_short_term_bonds",
+          "broker_long_term_bonds",
+          "retained_earnings"
+        ],
+        "precise_core_totals": {
+          "total_assets": 65134187.986741,
+          "total_liabilities": 35070953.3444,
+          "equity": 30063234.642341
         },
-        "source_tokens": {
-          "5": [
-            "61,740,702,018,288",
-            "2,997,602,183,062",
-            "51,182,161,900",
-            "2,800,679,117,067",
-            "33,805,854,891,155",
-            "21,171,790,942,918",
-            "578,703,273,820",
-            "3,393,485,968,453"
-          ],
-          "6": [
-            "35,070,953,344,400",
-            "33,563,528,724,306",
-            "27,437,860,000,000",
-            "4,569,226,462,759",
-            "1,507,424,620,094",
-            "1,500,054,759,542",
-            "9,119,437,052,951"
-          ]
+        "checks": {
+          "assetSubtotalsResidual": 0,
+          "liabilitySubtotalsResidual": 0,
+          "assetsLessLiabilitiesAndEquity": -3.725290298461914e-9
         },
-        "note": "Đã đọc lại số liệu B01a-CTCK từ tệp PDF tiếng Anh trong ZIP VietstockFinance; chưa rà soát trực quan từng dòng trên ảnh PDF."
+        "note": "B01a-CTCK Q2/2025, report date 30 June 2025: dữ liệu khôi phục từ các dòng bảng cân đối trong bản trích xuất VietstockFinance đã lưu; các dòng cần kiểm tra trực quan trước khi đánh dấu đã xác minh thủ công."
       },
       "financial_line_items_source_row_reconciliation": {
         "source_policy": "VietstockFinance document catalog and linked PDF/ZIP only",
@@ -5497,7 +5700,53 @@
         "note": "Q2/2025: số dòng tiền quý được tính bằng số lũy kế đến 30/6 trừ số lũy kế đến 31/3 trên B03a-CTCK; tổng ba luồng tiền bằng biến động tiền thuần và cầu nối số dư tiền khớp."
       },
       "revenue_calculation": "Lợi nhuận hoạt động (dòng 70) - doanh thu tài chính + tổng chi phí hoạt động + tổng chi phí tài chính + chi phí quản lý; tái lập từ các tổng phụ cùng cột Quý của B02a-CTCK VietstockFinance.",
-      "broker_total_operating_revenue_calculation": "Lợi nhuận hoạt động (dòng 70) - doanh thu tài chính + tổng chi phí hoạt động + tổng chi phí tài chính + chi phí quản lý; tái lập từ các tổng phụ cùng cột Quý của B02a-CTCK VietstockFinance."
+      "broker_total_operating_revenue_calculation": "Lợi nhuận hoạt động (dòng 70) - doanh thu tài chính + tổng chi phí hoạt động + tổng chi phí tài chính + chi phí quản lý; tái lập từ các tổng phụ cùng cột Quý của B02a-CTCK VietstockFinance.",
+      "core_financial_extraction_value_corrections": {
+        "total_assets": {
+          "previous_value": 65134188,
+          "new_value": 65134187.986741,
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 65134187986741,
+          "reason": "Exact core balance total from the same B01a-CTCK statement; replaces the older whole-million rounded value. Pending visual review."
+        },
+        "total_liabilities": {
+          "previous_value": 35070953,
+          "new_value": 35070953.3444,
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 35070953344400,
+          "reason": "Exact core balance total from the same B01a-CTCK statement; replaces the older whole-million rounded value. Pending visual review."
+        },
+        "equity": {
+          "previous_value": 30063235,
+          "new_value": 30063234.642341,
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pages": [
+            5,
+            6
+          ],
+          "source_value_vnd": 30063234642341,
+          "reason": "Exact core balance total from the same B01a-CTCK statement; replaces the older whole-million rounded value. Pending visual review."
+        }
+      },
+      "core_financial_extracted_fields": [
+        "equity",
+        "total_assets",
+        "total_liabilities"
+      ]
     },
     {
       "symbol": "TCX",
@@ -9212,5 +9461,5 @@
   "bootstrap_status": "complete_needs_manual_review",
   "bootstrap_completed_at": "2026-10-22T13:07:11+00:00",
   "bootstrap_completion_note": "Đã lưu dữ liệu tự động; các chỉ tiêu được trích xuất cần đối chiếu trực quan. Mã này sẽ không tự tải lại.",
-  "processedAt": "2026-10-28T07:00:00Z"
+  "processedAt": "2026-10-28T07:20:00Z"
 }
