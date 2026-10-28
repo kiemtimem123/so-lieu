@@ -1,7 +1,8 @@
 # Quy trình chuẩn hóa dữ liệu tài chính theo từng mảng
 
-Phiên bản: 1.0  
+Phiên bản: 1.2  
 Ngày thiết lập: 2026-10-28  
+Cập nhật gần nhất: 2026-10-29  
 Phạm vi: `kiemtimem123/so-lieu`, dữ liệu BCTC quý từ 2024-Q1 trở đi.
 
 ## Nguyên tắc bắt buộc
@@ -339,7 +340,7 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 ### Kết quả kiểm tra VND
 - 11/11 kỳ đã được chuẩn hóa về cùng cơ sở YTD; các trường CFO/CFI/CFF/net change và số dư đầu/cuối kỳ được lấy theo dòng nguồn phù hợp. Số quý riêng được tính lại từ YTD.
 - Tổng ba luồng tiền và dòng net change, cùng cầu nối tiền đầu/cuối kỳ, có sai lệch làm tròn tương đối ≤ 0,01% ở các kỳ đã có đủ giá trị; không thay số nguồn để khớp.
-- Ngoại lệ còn mở: **CFF H1/2024**: OCR cột so sánh trong Q2/2025 là 1.078.401,553 tỷ đồng? Cần xác minh hình ảnh trước khi dùng. Snapshot giữ 1.076.401,553 triệu VND theo báo cáo Q2/2024 gốc, vì giá trị này khớp CFO/CFI/net/cash bridge; độ lệch của ứng viên so sánh 2.000 triệu VND, tương đối lớn hơn 0,01%.
+- Ngoại lệ còn mở: **CFF H1/2024**: OCR cột so sánh trong Q2/2025 tương đương 1.078.401,553 triệu VND; cần xác minh trực quan trước khi dùng. Snapshot giữ 1.076.401,553 triệu VND theo báo cáo Q2/2024 gốc, vì giá trị này khớp CFO/CFI/net/cash bridge; độ lệch của ứng viên so sánh 2.000 triệu VND, tương đối lớn hơn 0,01%.
 - Q2/2026 có residual tổng luồng do làm tròn độc lập chỉ **-3 triệu VND** trong snapshot (tương đối dưới 0,01%); được chấp nhận, vẫn giữ residual, không sửa giá trị thành phần.
 - Regression được bổ sung trong `tests/test_cashflow_bridge.py`: 11 kỳ, đơn vị/basis, CFO+CFI+CFF, net change, YTD bridge, quarter bridge, quý riêng = chênh YTD, continuity số dư và kiểm soát CFF H1/2024.
 - Trạng thái VND: **automation complete; manual-review remaining** cho so sánh CFF H1/2024 vượt 0,01% và trực quan PDF chưa hoàn tất. Chuyển tiếp sang mã kế tiếp được phép; không thay đổi mảng dữ liệu khác.
