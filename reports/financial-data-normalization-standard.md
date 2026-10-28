@@ -1,6 +1,6 @@
 # Quy trình chuẩn hóa dữ liệu tài chính theo từng mảng
 
-Phiên bản: 1.4  
+Phiên bản: 1.5  
 Ngày thiết lập: 2026-10-28  
 Cập nhật gần nhất: 2026-10-29  
 Phạm vi: `kiemtimem123/so-lieu`, dữ liệu BCTC quý từ 2024-Q1 trở đi.
@@ -391,3 +391,32 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 - Q2/2024 và quý riêng Q3/2024 được chủ động để trống ở phần thiếu bằng chứng; Q4/2024 và H1/2025 vẫn được dùng theo nguồn so sánh mới hơn nhưng giữ cảnh báo thay đổi nguồn vượt 0,01%.
 - Bài kiểm thử `SHSCashFlowNormalizationTests` kiểm tra 10 kỳ, mapping CFO không được lấy từ lợi nhuận trước thuế, tách YTD/quarter, cách xử lý các ngoại lệ và ngưỡng tương đối 0,01%.
 - Trạng thái: **automation complete; manual-review remaining**. Chuyển sang mã kế tiếp theo thứ tự danh mục là NLG; không thay đổi mảng dữ liệu khác.
+
+
+## Lượt chuẩn hóa NLG — lưu chuyển tiền tệ (2026-10-29)
+
+### Quy tắc dung sai được áp dụng
+- Quy tắc người dùng xác nhận: sai lệch tương đối **≤ 0,01%** được phép chấp nhận khi là sai số làm tròn số học. Mẫu số dùng `max(|actual|, |expected|, 1)`; phần dư và đơn vị vẫn được lưu lại, không sửa số nguồn.
+- Ngưỡng này **không** cho phép bỏ qua OCR không khớp, thiếu trang nguồn, sai kỳ/phạm vi, hoặc thay đổi phân loại giữa các báo cáo. Nếu nguồn chưa xác nhận hoặc sai lệch nguồn vượt 0,01%, phải để trống trường không chắc hoặc ghi `NEEDS_MANUAL_REVIEW`; không thêm “plug”.
+- Validator đang dùng `RELATIVE_TOLERANCE_PERCENT = 0.01`, `relative_difference_percent()`, `within_relative_tolerance()` và `require_close()`. Bộ test hiện có kiểm tra cả trường hợp bằng/nhỏ hơn và lớn hơn ngưỡng.
+
+### Quy tắc ánh xạ NLG
+- Snapshot: `data/financials-NLG.json`, 10 kỳ từ 2024-Q1 đến 2026-Q2; nguồn gốc duy nhất là danh mục VietstockFinance và PDF được liên kết từ đó.
+- Với BCTC hợp nhất của NLG, ánh xạ các dòng tổng trong báo cáo lưu chuyển tiền tệ: **20 = CFO**, **30 = CFI**, **40 = CFF**, **50 = biến động tiền thuần**, **60 = tiền đầu kỳ**, **70 = tiền cuối kỳ**. Không lấy dòng 08 “lợi nhuận trước thay đổi vốn lưu động” làm CFO.
+- PDF ghi VND, snapshot dùng triệu VND. Mỗi dòng YTD và số dư được làm tròn độc lập đến triệu VND gần nhất. Quý II–IV = YTD quý hiện tại trừ YTD quý trước trong cùng năm; Q1 bằng YTD Q1. Số dư đầu quý riêng lấy từ số dư cuối quý liền trước khi đã có nguồn hợp lệ. NLG không trình bày dòng ảnh hưởng tỷ giá riêng trong các trang LCTT đã đọc; không tự tạo trường FX.
+- Kiểm tra bắt buộc: tổng ba luồng tiền YTD và quý riêng so với dòng 50; cầu nối tiền đầu/cuối kỳ; quý riêng so với chênh lệch YTD; liên tục số dư qua ranh giới quý/năm. Residual nội kỳ ≤ 0,01% được chấp nhận, giữ lại trong metadata.
+
+### Đối chiếu nguồn và ngoại lệ
+- **2024-Q2 (H1/2024):** đã xem trực tiếp PDF Q2/2024 trang in 6–7 và PDF Q2/2025 trang in 6–7. BCTC Q2/2025 trình bày cột so sánh H1/2024 với CFO **-957.220.112.115 VND**, CFI **230.887.984.065 VND**, CFF **259.630.708.491 VND**, net change **-466.701.419.559 VND**, số dư đầu **2.540.097.046.548 VND**, cuối **2.073.395.626.989 VND**. So với BCTC Q2/2024 gốc, CFO và CFI thay đổi phân loại trên 0,01% nhưng CFF, biến động tiền thuần và số dư tiền được giữ nguyên. Snapshot chọn comparative mới hơn, lưu cả bộ cũ/mới và gắn manual review cho việc phân loại; không “cân” bằng cách đổi dòng khác.
+- **2024-Q3:** YTD 9T/2024 lấy từ dòng 20/30/40/50 trong báo cáo Q3/2024. Quý III riêng được dẫn xuất từ YTD 9T trừ H1/2024 comparative mới được chọn ở báo cáo Q2/2025; vì H1 CFO/CFI đã đổi phân loại so với bộ cũ, CFO/CFI quý III riêng chịu ảnh hưởng cơ sở so sánh. Net flow và cầu nối tiền vẫn khớp trong 0,01%; giữ cờ manual review cho sự khác biệt phân loại, không xem phép tính cộng đúng là bằng chứng rằng hai cách phân loại nguồn giống nhau.
+- **2024-Q4:** chọn số từ BCTC năm 2024 gốc vì OCR sidecar của cột so sánh FY2024 trong báo cáo Q4/2025 đưa CFO ứng viên **4.225.075.645.565 VND** cùng CFI **1.050.946.776.427 VND**, CFF **627.174.142.918 VND** trong khi dòng 50 là **2.903.196.564.910 VND**. Tổng ba ứng viên vượt net change **3.000.000 triệu VND**; sai lệch rất lớn, không thuộc ngưỡng 0,01%. PDF Q4/2025 không mở được ở công cụ xem ảnh do giới hạn kích thước, vì vậy không đoán chữ số đầu hay thay số gốc. Giữ bộ FY2024 đã cân đối từ báo cáo gốc, kèm ngoại lệ cần xác minh trực quan.
+- **2025-Q1 đến 2025-Q4:** các dòng YTD CFO/CFI/CFF/net và số dư đầu/cuối lấy từ BCTC tương ứng. H1/2025 được đối chiếu thêm với cột so sánh trong BCTC Q2/2026 (trang in 6–7), các giá trị H1/2025 khớp và tự cân đối. Các trang chưa được xem trực tiếp vẫn mang trạng thái OCR/pending; bài toán số học khớp không đồng nghĩa đã kiểm tra trực quan tất cả PDF.
+- **2026-Q1:** sidecar OCR cho ba luồng lần lượt là CFO **-619.058.317.030 VND**, CFI **-1.148.948.074.666 VND**, CFF **-118.464.195.182 VND**; tổng là **-1.886.470.586.878 VND**, lệch **-100.000.000.000 VND** so với dòng 50 **-1.786.470.586.878 VND** (sai lệch tương đối khoảng 5,30%). Không thể xác định chỉ dựa vào số học dòng nào bị OCR sai. Vì vậy giữ ứng viên trong metadata nhưng để trống ba trường thành phần dòng tiền trên giao diện, đồng thời giữ net change và số dư đầu/cuối vì cầu nối của báo cáo khớp. Không suy ra thành phần để buộc khớp.
+- **2026-Q2:** PDF trang in 6–7 đã được xem trực tiếp. H1/2026 CFO **-1.087.390.948.867 VND**, CFI **-1.181.784.099.843 VND**, CFF **-744.326.150.991 VND**, net change **-3.013.501.199.701 VND**, tiền đầu kỳ **6.781.220.022.525 VND**, cuối kỳ **3.767.718.822.824 VND**; tổng và cầu nối YTD khớp. Tuy nhiên tiền đầu YTD thấp hơn số cuối FY2025 **33.084.719.822 VND**, tương đương khoảng **0,485%**, vượt 0,01%. Do Q1/2026 thành phần dòng tiền chưa giải quyết, thành phần quý riêng Q2 để trống; net flow quý riêng được tính bằng chênh lệch YTD nhưng cầu nối quý còn dư **-33.085 triệu VND** (khoảng 0,87% so với số dư cuối quý). Giữ nguyên số nguồn và flag manual review.
+- Các trang PDF đã xem trực tiếp trong lượt này: Q2/2024, Q2/2025 và Q2/2026 (trang in 6–7). Những kỳ khác được đánh dấu OCR/pending để không tuyên bố đã xác minh trực quan quá mức.
+
+### Kết quả kiểm định và checkpoint
+- Test NLG trong `tests/test_cashflow_bridge.py` kiểm tra 10 kỳ, YTD/quý riêng, cầu nối tiền, quy tắc tương đối 0,01%, thay đổi phân loại H1/2024, comparator FY2024 bị chặn và hai ngoại lệ 2026.
+- Kết quả snapshot: các kỳ có đủ thành phần đều thỏa dung sai 0,01% cho tổng dòng tiền và cầu nối; Q1/2026 giữ trống thành phần chưa xác minh, Q2/2026 giữ trống thành phần quý riêng phụ thuộc Q1 chưa xác minh. Không ghi số cân bằng.
+- Trạng thái NLG: **tự động hóa được các trường có bằng chứng; manual review còn lại** cho phân loại H1/2024/Q3 riêng, cột so sánh FY2024 bị OCR không khớp, ba thành phần Q1/2026 và liên tục tiền H1/2026.
+- Sau khi lưu NLG, mã kế tiếp theo thứ tự cấu hình là **BSR**; tiếp tục trong mảng cashflow, một mã mỗi lượt.
