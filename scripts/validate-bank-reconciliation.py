@@ -136,14 +136,26 @@ def audit_item(symbol, item, by_period):
                     require_close(symbol, period, "quarter opening cash vs prior quarter close",
                                   item["cash_beginning"], previous["cash_ending"])
     if all(number(item.get(k)) for k in ("cash_beginning","cash_ending","net_cash_change")):
-        bridge_delta = item["cash_ending"]-item["cash_beginning"]-item["net_cash_change"]
+        # B04 cash balance movement includes the separately reported foreign-exchange effect.
+        # net_cash_change itself is the sum of operating, investing and financing flows;
+        # do not mistake FX translation for an OCR/accounting error.
+        fx_available = number(item.get("foreign_exchange_effect"))
+        fx_effect = item["foreign_exchange_effect"] if fx_available else 0
+        bridge_delta = (
+            item["cash_ending"] - item["cash_beginning"] -
+            item["net_cash_change"] - fx_effect
+        )
+        bridge_label = "cash opening/closing bridge after FX" if fx_available else "cash opening/closing bridge (FX unavailable)"
         if abs(bridge_delta) > 50:
             reconciliation_issue(
                 symbol, period,
-                f"cash opening/closing bridge differs by {bridge_delta} million VND"
+                f"{bridge_label} differs by {bridge_delta} million VND"
             )
         elif bridge_delta:
-            WARNINGS.append(f"{symbol} {period}: cash bridge residual {bridge_delta} million VND retained as OCR/source variance")
+            WARNINGS.append(
+                f"{symbol} {period}: {bridge_label} residual {bridge_delta} million VND "
+                "retained for source/OCR review"
+            )
     if number(item.get("cash_and_equivalents")) and number(item.get("cash_beginning_reported_ytd")) and item["cash_and_equivalents"] == item["cash_beginning_reported_ytd"]:
         reconciliation_issue(
             symbol, period,
