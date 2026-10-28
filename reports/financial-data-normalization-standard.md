@@ -1,6 +1,6 @@
 # Quy trình chuẩn hóa dữ liệu tài chính theo từng mảng
 
-Phiên bản: 1.6  
+Phiên bản: 1.7  
 Ngày thiết lập: 2026-10-28  
 Cập nhật gần nhất: 2026-10-29  
 Phạm vi: `kiemtimem123/so-lieu`, dữ liệu BCTC quý từ 2024-Q1 trở đi.
@@ -443,3 +443,22 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 - Bộ test tái sử dụng `BSRCashFlowNormalizationTests` trong `tests/test_cashflow_bridge.py` bao phủ đủ 10 kỳ, đơn vị, nguồn VietstockFinance, allowlist UI, công thức quý/YTD, bridge có FX, comparator history, 3 cờ phân loại nguồn và ngoại lệ liên tục tiền năm mới trong ngưỡng.
 - Trạng thái BSR: **chuẩn hóa số liệu và kiểm tra số học hoàn tất; rà soát thủ công còn lại** đối với khác biệt phân loại so sánh H1/2024, FY2024, H1/2025 và các trang PDF còn được gắn `ocr_text_reconciled_visual_review_pending`.
 - Mã tiếp theo: tiếp tục trong cùng mảng `cashflow`, một mã mỗi lượt, theo checkpoint đã lưu. Không mở mảng khác trước khi tiến độ dòng tiền được cập nhật.
+
+
+## Lượt chuẩn hóa VHM — lưu chuyển tiền tệ (2026-10-29)
+
+### Phục hồi dòng tiền và sửa lỗi ánh xạ
+- Snapshot: `data/financials-VHM.json`, 10 kỳ từ 2024-Q1 đến 2026-Q2.
+- Bốn dòng tổng của BCTC hợp nhất được ánh xạ theo mã báo cáo: 20 = lưu chuyển tiền thuần từ hoạt động kinh doanh; 30 = từ hoạt động đầu tư; 40 = từ hoạt động tài chính; 50 = lưu chuyển tiền thuần trong kỳ. Các dòng 60/70 là tiền đầu/cuối kỳ.
+- VHM trình bày trực tiếp đơn vị **triệu VND**, đến ba chữ số thập phân. Giữ nguyên độ chính xác được in trong báo cáo; không làm tròn riêng từng dòng trước khi kiểm tra cân đối.
+- Q2/2024–Q3/2024 và các báo cáo sau có số lũy kế YTD; số quý riêng được tính từ YTD kỳ hiện tại trừ YTD quý trước cùng năm. Q1 được lấy trực tiếp từ báo cáo quý I.
+- Các biểu mẫu đã kiểm tra không trình bày dòng “ảnh hưởng tỷ giá” riêng trong cầu nối tiền. Trường FX được để trống và đánh dấu `not_reported_separately`, không suy ra FX để ép cầu nối.
+- H1/2024 sử dụng cột so sánh mới hơn trong BCTC Q2/2025: CFO -10.945,610; CFI +1.139,644; CFF +12.882,761; biến động tiền thuần +3.076,795; tiền cuối kỳ 17.179,976 triệu VND. So với bản Q2/2024 gốc, thành phần CFO/CFI/CFF thay đổi trên 0,01%, nhưng biến động tiền thuần và số dư cuối kỳ đều nằm trong ngưỡng 0,01%. Cả hai bộ số được giữ trong lịch sử nguồn, không tự đồng bộ.
+- FY2024 lấy từ cột so sánh của BCTC Q4/2025, nhất quán với BCTC năm 2024 đã kiểm toán; các dòng tổng đã được đối chiếu trực quan.
+- H1/2025 sử dụng cột so sánh mới hơn trong BCTC Q2/2026: CFO +41.093,814; CFI -30.084,340; CFF +8.882,295; biến động tiền thuần +19.891,769; tiền cuối kỳ 48.671,892 triệu VND. Các thành phần khác biệt trên 0,01% so với bản gốc Q2/2025; net cash/closing balance khác biệt dưới 0,01%. Giữ hai cơ sở nguồn và gắn cờ rà soát phân loại.
+- Q1/2026: tiền cuối FY2025 là 49.948,510 nhưng tiền đầu Q1/2026 được báo cáo là 49.086,598 triệu VND; chênh -861,912 triệu VND, tương đương khoảng 0,00173%. Theo ngưỡng mới, sai số liên kỳ được chấp nhận nhưng cả hai số báo cáo vẫn được giữ nguyên, không chèn điều chỉnh.
+- **Ngoại lệ nguồn Q2/2026:** ảnh PDF gốc (trang PDF 17, trang in 10) hiển thị dòng 40 “Lưu chuyển tiền thuần từ hoạt động tài chính” **+68.675,210 triệu VND**; trang kế (trang PDF 18, trang in 11) báo dòng 50 biến động tiền thuần **+4.092,385 triệu VND**. Tổng CFO + CFI + CFF theo các dòng in ra là **+3.092,385**, thấp hơn dòng 50 **1.000 triệu VND** (lệch tương đối khoảng 24,44%, vượt xa ngưỡng 0,01%). Trong khi đó dòng 50 khớp chính xác với tiền đầu kỳ + biến động thuần = tiền cuối kỳ (49.086,598 + 4.092,385 = 53.178,983). **Giữ nguyên dòng 40, dòng 50 và số dư tiền đúng như tài liệu; gắn NEEDS_MANUAL_REVIEW_SOURCE_FLOW_COMPONENT_SUM_GT_0_01_PERCENT; không sửa CFF thành 69.675,210 và không chèn plug.**
+- Danh mục lưu trữ còn có ZIP đính chính BCTC hợp nhất soát xét Q2/2026 (bản đính chính tháng 9/2026), nhưng sidecar đã trích hiện chưa có trang LCTT để xác minh liệu dòng 40 có được sửa. Cần rà soát đúng trang LCTT của bản đính chính trước khi đóng ngoại lệ này.
+- Trạng thái trực quan: Q3/2024, FY2024 so sánh Q4/2025, Q1/2025, H1/2025 so sánh Q2/2026, Q3/FY2025, Q1/Q2/2026 đã được xem trang nguồn. Q1/2024 và H1/2024 so sánh Q2/2025 còn chờ xem ảnh trực tiếp; số đã lấy từ sidecar OCR và đối chiếu nội bộ, không tuyên bố đã xác minh hình ảnh đầy đủ.
+- Kiểm thử tái sử dụng: `VHMCashFlowNormalizationTests` trong `tests/test_cashflow_bridge.py` kiểm tra 10 kỳ, nguồn/VietstockFinance, quý riêng so với chênh lệch YTD, cầu nối tiền, dung sai 0,01%, so sánh H1 mới hơn và ngoại lệ dòng 40 Q2/2026. Ngoại lệ >0,01% được kiểm tra tường minh, không được phép bỏ qua.
+- Trạng thái VHM: **chuẩn hóa dữ liệu tự động hoàn tất; cần rà soát thủ công nguồn phân loại H1/2024, H1/2025, trang Q2/2026 đính chính và sai lệch tổng luồng tiền Q2/2026**. Tiếp tục mã tiếp theo cùng mảng dòng tiền sau khi lưu checkpoint.
