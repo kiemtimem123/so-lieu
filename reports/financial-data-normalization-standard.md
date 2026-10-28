@@ -1,6 +1,6 @@
 # Quy trình chuẩn hóa dữ liệu tài chính theo từng mảng
 
-Phiên bản: 1.8  
+Phiên bản: 1.9  
 Ngày thiết lập: 2026-10-28  
 Cập nhật gần nhất: 2026-10-29  
 Phạm vi: `kiemtimem123/so-lieu`, dữ liệu BCTC quý từ 2024-Q1 trở đi.
@@ -462,3 +462,29 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 - Trạng thái trực quan: Q3/2024, FY2024 so sánh Q4/2025, Q1/2025, H1/2025 so sánh Q2/2026, Q3/FY2025, Q1/Q2/2026 đã được xem trang nguồn. Q1/2024 và H1/2024 so sánh Q2/2025 còn chờ xem ảnh trực tiếp; số đã lấy từ sidecar OCR và đối chiếu nội bộ, không tuyên bố đã xác minh hình ảnh đầy đủ.
 - Kiểm thử tái sử dụng: `VHMCashFlowNormalizationTests` trong `tests/test_cashflow_bridge.py` kiểm tra 10 kỳ, nguồn/VietstockFinance, quý riêng so với chênh lệch YTD, cầu nối tiền, dung sai 0,01%, so sánh H1 mới hơn và ngoại lệ dòng 40 Q2/2026. Ngoại lệ >0,01% được kiểm tra tường minh, không được phép bỏ qua.
 - Trạng thái VHM: **chuẩn hóa dữ liệu tự động hoàn tất; cần rà soát thủ công nguồn phân loại H1/2024, H1/2025, trang Q2/2026 đính chính và sai lệch tổng luồng tiền Q2/2026**. Tiếp tục mã tiếp theo cùng mảng dòng tiền sau khi lưu checkpoint.
+
+
+## Lượt chuẩn hóa TPB — lưu chuyển tiền tệ (2026-10-29)
+
+### Phục hồi dòng tiền cho 10 kỳ
+- Snapshot: `data/financials-TPB.json`, kỳ 2024-Q1 đến 2026-Q2; nguồn chính sách là danh mục VietstockFinance `https://finance.vietstock.vn/TPB/tai-tai-lieu.htm?doctype=1`.
+- Ánh xạ theo BCTC hợp nhất mẫu B04a/TCTD-HN: lấy **dòng tổng cuối nhóm** CFO, CFI, CFF và “Lưu chuyển tiền thuần trong kỳ”; không lấy subtotal tiền trước biến động tài sản/công nợ. Cả ba luồng tiền và dòng tổng được đọc từ cột YTD của báo cáo; số quý riêng = YTD hiện tại − YTD quý trước trong cùng năm.
+- Tiền đầu kỳ, tiền cuối kỳ và ảnh hưởng tỷ giá được đưa vào cầu nối. TPB có dòng FX riêng; FX của quý riêng cũng được tính bằng chênh lệch FX YTD. Tất cả giá trị lưu trong snapshot là số nguyên **triệu VND**, dấu chấm trong tài liệu gốc là phân cách hàng nghìn.
+- Các kỳ đã chuẩn hóa gồm đủ ba luồng tiền, biến động tiền thuần, tiền đầu/cuối kỳ và FX; trường nguồn đã được đưa vào `financial_line_items_extracted_fields` và gỡ khỏi danh sách bị loại để giao diện tab LCTT có thể hiển thị.
+- Số YTD theo các báo cáo được chọn:
+  - 2024-Q1: CFO 9.238.390; CFI -94.074; CFF -5.000; net +9.139.316; open 45.441.602; FX +6.866; close 54.587.784.
+  - 2024-Q2/H1: CFO 5.477.002; CFI -223.559; CFF +195.800; net +5.449.243; open 45.441.602; FX 0; close 50.890.845.
+  - 2024-Q3/9M: CFO 10.812.233; CFI -255.280; CFF +515.999; net +11.072.952; open 45.441.602; FX +419.867; close 56.934.421.
+  - 2024-Q4/FY: CFO 40.343.273; CFI -399.918; CFF +763.682; net +40.707.037; open 45.441.602; FX 0; close 86.148.639.
+  - 2025-Q1: CFO -41.476.406; CFI -71.756; CFF -30.000; net -41.578.162; open 86.148.639; FX +210.436; close 44.780.913.
+  - 2025-Q2/H1: CFO -19.720.550; CFI -134.135; CFF +984.444; net -18.870.241; open 86.148.639; FX 0; close 67.278.398.
+  - 2025-Q3/9M: CFO -1.958.525; CFI -161.466; CFF +2.331.644; net +211.653; open 86.148.639; FX +252.197; close 86.612.489.
+  - 2025-Q4/FY: CFO +29.797.620; CFI -1.571.779; CFF +1.372.844; net +29.598.685; open 86.148.639; FX 0; close 115.747.324.
+  - 2026-Q1: CFO -7.280.016; CFI -94.901; CFF -192.100; net -7.567.017; open 115.747.324; FX +373.117; close 108.553.424.
+  - 2026-Q2/H1: CFO -16.932.973; CFI -127.716; CFF -1.663.300; net -18.723.989; open 115.747.324; FX 0; close 97.023.335.
+- H1/2024 is sourced from the later Q2/2025 comparative table. The Q2/2024 source table reported CFI -201.252 vs the later comparative -223.559 million VND, while CFF, net cash movement and closing balance are recorded as matching. The CFI classification delta is greater than 0,01%; keep `NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT` and preserve the two source references.
+- FY2024 uses the later Q4/2025 comparative table. Versus the original Q4/2024 report, CFO changes 40.342.756 → 40.343.273, CFI -399.917 → -399.918 and CFF 764.198 → 763.682; net movement remains 40.707.037 and closing cash 86.148.639. The CFF difference 516 million VND is about 0,0675%, above the 0,01% threshold. The newer comparative is selected and the original values kept in `cashflow_audit_revision`; flag for manual review, do not use a plug.
+- Visual source pages checked with PDF screenshots: Q1/2025 (including Q1/2024 comparator), Q2/2025 (including H1/2024 comparator), and Q3/2025 (including 9M/2024 comparator). Q4/2025 comparative, FY2025, Q1/2026 and H1/2026 PDFs are marked OCR/source-text reconciled but pending direct visual review because direct PDF fetch exceeded the viewer size limit. Do not claim these pages were visually verified.
+- Regression tests: `TPBCashFlowNormalizationTests` in `tests/test_cashflow_bridge.py` validates all 10 periods, YTD component sums, FX-aware cash bridges, quarterly = YTD differences, source reclassification exceptions and visual-review statuses.
+- Result before CI: all 10 periods pass all four arithmetic checks exactly: YTD flow sum, standalone quarter flow sum, YTD cash bridge with FX and quarter cash bridge with FX. The H1/2024 and FY2024 source component reclassifications remain manual-review items because they exceed 0,01%; visual review remains pending for the large later reports listed above. No balancing adjustments were inserted.
+- Next ticker in this data domain: **VPB**. Continue one ticker at a time.
