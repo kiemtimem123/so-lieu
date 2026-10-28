@@ -134,6 +134,15 @@ class CashFlowBridgeTests(unittest.TestCase):
 
         # Latest, visually checked H1/2025 comparative replaces stale values from the Q2/2025 report.
         q2 = rows["2025-Q2"]
+        for row in rows.values():
+            for field in (
+                "operating_cash_flow", "investing_cash_flow", "financing_cash_flow",
+                "net_cash_change", "cash_beginning", "cash_ending",
+                "operating_cash_flow_ytd", "investing_cash_flow_ytd",
+                "financing_cash_flow_ytd", "net_cash_change_ytd",
+                "cash_beginning_reported_ytd", "cash_ending_reported_ytd",
+            ):
+                self.assertIn(field, row["financial_line_items_extracted_fields"])
         self.assertEqual(q2["operating_cash_flow_ytd"], 1516540)
         self.assertEqual(q2["investing_cash_flow_ytd"], -400976)
         self.assertEqual(q2["financing_cash_flow_ytd"], 5698563)
