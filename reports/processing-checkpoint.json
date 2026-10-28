@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-29T04:05:00+07:00",
+  "updatedAt": "2026-10-29T04:45:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -1432,12 +1432,12 @@
     "updatedAt": "2026-10-28T19:45:00+07:00"
   },
   "normalizationProgress": {
-    "standardVersion": "1.8",
+    "standardVersion": "1.9",
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
-    "activeSymbol": "VHM",
+    "activeSymbol": "TPB",
     "status": "automated_processing_complete_manual_review_remaining",
-    "lastUpdatedAt": "2026-10-29T04:05:00+07:00",
+    "lastUpdatedAt": "2026-10-29T04:45:00+07:00",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1591,7 +1591,15 @@
       "IMPORTANT UNIT-SCALE CORRECTION — VHM BCTC columns are headed Triệu VND and values like 68.675.210 use dot thousands-grouping; values in the snapshot must be integer million VND (68,675,210), not decimal million VND (68,675.210). The entire 10-period VHM cash-flow series, source audit values and reconciliation residuals were rescaled to the correct integer-million unit; formula checks rerun before commit b20b69844b7cd6d2b01f907cda5fac3340a701f2.",
       "VHM test fixtures were updated to integer-million values and the normalization standard is version 1.8, explicitly documenting the dot-grouped integer-million source notation.",
       "VHM unit-scale correction: amounts under 'Triệu VND' such as 68.675.210 are integer million VND with dot thousands separators. Rescaled all VHM 10-period cash-flow fields and audit amounts to integer millions; Q2/2026 component-sum residual is now -1,000,000 million VND (~24.4%) and still flagged, no plug.",
-      "Post-fix VHM test fixtures now use integer million-VND values matching the report's Triệu VND column and dot thousands separators; standard version 1.8 documents the scale correction."
+      "Post-fix VHM test fixtures now use integer million-VND values matching the report's Triệu VND column and dot thousands separators; standard version 1.8 documents the scale correction.",
+      "VHM unit-scale correction: report values under 'Triệu VND' like 68.675.210 were corrected to integer 68,675,210 million VND, not decimal million. All ten periods rescaled in data and audit metadata; tests updated. Validate Site and Data run 40759957558 SUCCESS (cash-flow regression, JavaScript syntax, JSON snapshot and OMO wiring checks). Standard updated to v1.8.",
+      "TPB: normalized ten quarters 2024-Q1 through 2026-Q2 from VietstockFinance consolidated cash-flow statement rows (final net CFO/CFI/CFF, net cash change, opening/closing cash and FX). YTD and quarterly standalone flows calculated on same-year difference basis, all core fields registered in extracted-field allowlist.",
+      "TPB: all 10 periods pass exact CFO+CFI+CFF=net cash change, YTD component sums, cash bridge with FX, quarter cash bridge with FX, and standalone quarter = current YTD minus prior YTD. The cash-flow validation pre-write had zero residuals for all four checks in all ten periods.",
+      "TPB: visually checked source PDF pages: Q1/2025, Q2/2025 and Q3/2025, including the historical Q1/2024, H1/2024 and 9M/2024 comparison columns. Q4/2025 (FY2024/FY2025 comparatives), Q1/2026, Q2/2026 remain marked OCR-reconciled but pending direct visual review due viewer size limits.",
+      "TPB: material source component reclassification exceptions preserved: H1/2024 source CFI -201,252 vs later Q2/2025 comparative -223,559 million VND (net cash movement and closing cash agree; CFI difference >0.01%); FY2024 original CFF 764,198 vs selected Q4/2025 comparative 763,682 million VND (difference 516 million VND, ~0.0675%, >0.01%; net movement/closing cash unchanged). Both are flagged manual review; no plug inserted.",
+      "TPB regression class TPBCashFlowNormalizationTests added. Validate Site and Data run 40760574382 SUCCESS on the tests commit: cash-flow bridge tests, JS syntax, JSON validation and OMO source wiring all pass.",
+      "TPB Validate quarterly financial data run 40760465361 SUCCESS; Package Hostinger Stock Dashboard run 40760465331 SUCCESS after the TPB snapshot update.",
+      "TPB normalization standard entry added in document version 1.9; further CI confirmation pending for the documentation/checkpoint commits."
     ],
     "unresolved": [
       "NLG NEEDS_MANUAL_REVIEW — H1/2024 selected later comparative in Q2/2025 reclassifies CFO/CFI versus the original Q2/2024 source by >0.01%; net cash movement and cash balances remain unchanged. Preserve both source bases and selected later comparative; do not plug.",
@@ -1622,10 +1630,13 @@
       "VHM NEEDS_MANUAL_REVIEW_CROSS_PERIOD_CASH_BASIS_GT_0_01_PERCENT — FY2025 cash close 49,948.510 vs Q1/2026 cash opening 49,086.598 million VND, difference -861.912 (~1.7256%). Do not overwrite either report value.",
       "VHM NEEDS_MANUAL_REVIEW_SOURCE_FLOW_COMPONENT_SUM_GT_0_01_PERCENT — Q2/2026 PDF row 40 financing cash flow 68,675,210 plus CFO 88,467.954 and CFI -154,050.779 sums to 3,092.385, while row 50 reports net 4,092,385 million VND; difference -1,000,000 million VND. Preserve line 40/line 50/source balances exactly, no plug.",
       "VHM Q2/2026 has a later September 2026 corrected consolidated report archive in the VietstockFinance-collected ZIP, but the stored sidecar does not expose its cash-flow pages. Review those pages before closing the component mismatch.",
-      "VHM direct visual review pending for Q1/2024 source page and H1/2024 comparative page; OCR sidecar plus arithmetic review is documented, but visual verification is not claimed."
+      "VHM direct visual review pending for Q1/2024 source page and H1/2024 comparative page; OCR sidecar plus arithmetic review is documented, but visual verification is not claimed.",
+      "TPB NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT — H1/2024 CFI original source -201,252 vs later Q2/2025 comparative -223,559 million VND; net cash movement and closing balance agree. Keep later comparison and both source histories, no plug.",
+      "TPB NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT — FY2024 CFF original Q4/2024 source 764,198 vs later Q4/2025 comparative 763,682 million VND; difference 516 million VND (~0.0675%, above 0.01%), while net movement and closing cash agree. Keep later comparison and both sources, no plug.",
+      "TPB visual review pending for selected FY2024 comparative in Q4/2025, FY2025 in Q4/2025, Q1/2026 and H1/2026 due PDFs too large to open in the direct viewer; OCR values reconciled arithmetically but not claimed visually verified."
     ],
-    "nextStep": "VHM unit scale is corrected to integer millions; rerun and confirm Validate Site and Data after the new regression literals. Manual review remains for H1/2024 and H1/2025 source reclassification, Q1/2026 cross-year opening/closing difference of -861,912 million VND (~1.7256%), and Q2/2026 line-40/line-50 mismatch of -1,000,000 million VND (~24.4%). No balancing plug. Next ticker TPB, same cashflow domain.",
-    "previousCompletedSymbol": "BSR",
+    "nextStep": "TPB cash-flow data normalized for 2024-Q1 through 2026-Q2; all ten periods pass four arithmetic checks exactly. Manual review remains only for H1/2024 CFI reclassification >0.01%, FY2024 CFF reclassification (~0.0675%), and direct visual review pending for Q4/2025, Q1/2026, Q2/2026 selected report pages. Do not insert balancing plugs. The next ticker in the configured queue is VPB; continue in the same cashflow domain, one ticker at a time.",
+    "previousCompletedSymbol": "VHM",
     "validationRuns": [
       {
         "name": "Validate Site and Data",
@@ -1668,9 +1679,37 @@
         "status": "success",
         "commit": "2cb7d3383e70ea36e6c6dd544d053d127882bb2d",
         "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40756451616"
+      },
+      {
+        "name": "Validate Site and Data",
+        "runId": "40759957558",
+        "status": "success",
+        "commit": "40fef3443dc143291f80b78e76e075fbdacc4c9b",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40759957558"
+      },
+      {
+        "name": "Validate quarterly financial data",
+        "runId": "40760465361",
+        "status": "success",
+        "commit": "74e1dd9cf36ba2ae5726cc54a8685ac6e35bc074",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40760465361"
+      },
+      {
+        "name": "Package Hostinger Stock Dashboard",
+        "runId": "40760465331",
+        "status": "success",
+        "commit": "74e1dd9cf36ba2ae5726cc54a8685ac6e35bc074",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40760465331"
+      },
+      {
+        "name": "Validate Site and Data",
+        "runId": "40760574382",
+        "status": "success",
+        "commit": "a024f576e4375fe074d50c8a037b81cb59d2bace",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40760574382"
       }
     ],
     "lastCompletedSymbol": "FPT",
-    "nextSymbolHint": "TPB"
+    "nextSymbolHint": "VPB"
   }
 }
