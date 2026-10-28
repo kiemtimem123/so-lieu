@@ -316,3 +316,30 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 - **2026-Q2:** YTD H1/2026 tự cân đối theo báo cáo hiện hành với opening **3.381.063**, closing **2.202.389**, net change **-1.178.674 triệu VND**. Tuy nhiên, opening H1/2026 lệch **-320.500 triệu VND** so với closing FY2025 **3.701.563**; cầu nối quý riêng sau chênh YTD dư **-320.499 triệu VND** (relative difference xấp xỉ 12,70%, vượt 0,01%). Giữ nguyên cả hai số của báo cáo, đánh dấu `NEEDS_MANUAL_REVIEW_CROSS_REPORT_BASIS_GT_0_01_PERCENT`, không ép liên tục.
 - Regression bổ sung trong `tests/test_cashflow_bridge.py` kiểm tra đủ 10 kỳ, YTD/quarter sums, quý riêng = YTD delta, cầu nối, cơ sở so sánh mới hơn và cả ba ngoại lệ vượt ngưỡng. Sai lệch làm tròn 1 triệu đồng ở những kỳ khác được chấp nhận theo 0,01%.
 - Trạng thái HCM: **PASS phép tính và ánh xạ dòng tiền cốt lõi trong các kỳ không có mâu thuẫn basis; NEEDS_MANUAL_REVIEW ở Q2/2025, Q3/2025 và Q2/2026**. Trang PDF trực tiếp chưa được xem nên review hình ảnh còn pending cho cả 10 kỳ; các số giữ trạng thái thận trọng.
+
+
+## Lượt chuẩn hóa VNDIRECT (VND) — lưu chuyển tiền tệ (2026-10-29)
+
+### Quy tắc ánh xạ cho báo cáo CTCK B03b-CTCK
+- Snapshot: `data/financials-VND.json`, 11 kỳ từ 2024-Q1 đến 2026-Q3.
+- Đối với báo cáo lưu chuyển tiền tệ của VNDIRECT, dùng đúng các dòng của **công ty**: dòng 60 (lưu chuyển thuần kinh doanh), 70 (lưu chuyển thuần đầu tư), 80 (lưu chuyển thuần tài chính), 90 (tăng/giảm tiền thuần), 101 (tiền đầu kỳ), 103 (tiền cuối kỳ). Không lấy phần riêng "lưu chuyển tiền tệ hoạt động môi giới, ủy thác của khách hàng".
+- Báo cáo Q2/Q3 và năm trình bày lưu chuyển tiền **lũy kế từ đầu năm**. Đặt `cashflow_period_basis = year_to_date` cho mọi kỳ. Quý riêng được tính bằng YTD kỳ hiện tại trừ YTD quý trước trong cùng năm; không coi số YTD là số riêng quý.
+- Đơn vị trên PDF là VND; snapshot lưu triệu VND, làm tròn từng dòng báo cáo độc lập đến triệu gần nhất. Không ép tổng thành tuyệt đối bằng cách sửa số nguồn. Chấp nhận residual tương đối ≤ 0,01% và lưu residual trong `cashflow_source_reconciliation`.
+- Báo cáo không có dòng riêng "điều chỉnh ảnh hưởng tỷ giá" cho cầu nối tiền mặt của công ty; không tạo `foreign_exchange_effect` hoặc `foreign_exchange_effect_ytd`.
+- Ưu tiên số so sánh mới hơn khi dòng số và tổng báo cáo có thể đối chiếu nhất quán:
+  - Q1/2024: cột so sánh trong Q1/2025.
+  - H1/2024: cột so sánh trong Q2/2025 cho CFO/CFI/net/cash; riêng CFF giữ số của báo cáo Q2/2024 vì OCR cột so sánh trong Q2/2025 trả về một giá trị khác 2.000 triệu VND và làm hỏng tổng. Ngoại lệ được giữ để kiểm tra hình ảnh, không thêm khoản cân bằng.
+  - 9T/2024: cột so sánh trong Q3/2025.
+  - FY2024: cột so sánh trong Q4/2025.
+  - Q1/2025: cột so sánh trong Q1/2026.
+  - H1/2025: cột so sánh trong Q2/2026.
+  - Các kỳ khác dùng cột YTD hiện hành ở báo cáo tương ứng của VietstockFinance.
+- Trong lần này, công cụ mở PDF trực tiếp không kết xuất được các PDF dung lượng lớn; số liệu được tái dựng từ sidecar OCR đã lưu, phép đối chiếu dòng/tổng và cầu nối. Không đánh dấu đã xác minh trực quan. Các trang nguồn vẫn mang trạng thái `ocr_text_reconciled_visual_review_pending_pdf_tool_limit`.
+
+### Kết quả kiểm tra VND
+- 11/11 kỳ đã được chuẩn hóa về cùng cơ sở YTD; các trường CFO/CFI/CFF/net change và số dư đầu/cuối kỳ được lấy theo dòng nguồn phù hợp. Số quý riêng được tính lại từ YTD.
+- Tổng ba luồng tiền và dòng net change, cùng cầu nối tiền đầu/cuối kỳ, có sai lệch làm tròn tương đối ≤ 0,01% ở các kỳ đã có đủ giá trị; không thay số nguồn để khớp.
+- Ngoại lệ còn mở: **CFF H1/2024**: OCR cột so sánh trong Q2/2025 là 1.078.401,553 tỷ đồng? Cần xác minh hình ảnh trước khi dùng. Snapshot giữ 1.076.401,553 triệu VND theo báo cáo Q2/2024 gốc, vì giá trị này khớp CFO/CFI/net/cash bridge; độ lệch của ứng viên so sánh 2.000 triệu VND, tương đối lớn hơn 0,01%.
+- Q2/2026 có residual tổng luồng do làm tròn độc lập chỉ **-3 triệu VND** trong snapshot (tương đối dưới 0,01%); được chấp nhận, vẫn giữ residual, không sửa giá trị thành phần.
+- Regression được bổ sung trong `tests/test_cashflow_bridge.py`: 11 kỳ, đơn vị/basis, CFO+CFI+CFF, net change, YTD bridge, quarter bridge, quý riêng = chênh YTD, continuity số dư và kiểm soát CFF H1/2024.
+- Trạng thái VND: **automation complete; manual-review remaining** cho so sánh CFF H1/2024 vượt 0,01% và trực quan PDF chưa hoàn tất. Chuyển tiếp sang mã kế tiếp được phép; không thay đổi mảng dữ liệu khác.
