@@ -12,7 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 SCHEMA = "2026-10-27-note-reference-alias-and-manual-guards-v8"
-CURRENT_SCHEMAS = {SCHEMA, "2026-10-27-other-statements-source-fields-v11"}
+CURRENT_SCHEMAS = {SCHEMA, "2026-10-27-other-statements-source-fields-v11", "2026-10-26-bank-reconciliation-cashflow-v5"}
 BANKS = {"MBB","ACB","SHB","TCB","TPB","VPB","STB","VCB","CTG","BID"}
 ERRORS: list[str] = []
 WARNINGS: list[str] = []
