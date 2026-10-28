@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-29T03:40:00+07:00",
+  "updatedAt": "2026-10-29T04:05:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -1437,7 +1437,7 @@
     "activeDataDomain": "cashflow",
     "activeSymbol": "VHM",
     "status": "automated_processing_complete_manual_review_remaining",
-    "lastUpdatedAt": "2026-10-29T03:40:00+07:00",
+    "lastUpdatedAt": "2026-10-29T04:05:00+07:00",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1590,7 +1590,8 @@
       "VHM normalization standard updated to v1.7; current source correction archive for Q2/2026 is recorded as pending direct cash-flow page review because its available extracted sidecar omitted those pages.",
       "IMPORTANT UNIT-SCALE CORRECTION — VHM BCTC columns are headed Triệu VND and values like 68.675.210 use dot thousands-grouping; values in the snapshot must be integer million VND (68,675,210), not decimal million VND (68,675.210). The entire 10-period VHM cash-flow series, source audit values and reconciliation residuals were rescaled to the correct integer-million unit; formula checks rerun before commit b20b69844b7cd6d2b01f907cda5fac3340a701f2.",
       "VHM test fixtures were updated to integer-million values and the normalization standard is version 1.8, explicitly documenting the dot-grouped integer-million source notation.",
-      "VHM unit-scale correction: amounts under 'Triệu VND' such as 68.675.210 are integer million VND with dot thousands separators. Rescaled all VHM 10-period cash-flow fields and audit amounts to integer millions; Q2/2026 component-sum residual is now -1,000,000 million VND (~24.4%) and still flagged, no plug."
+      "VHM unit-scale correction: amounts under 'Triệu VND' such as 68.675.210 are integer million VND with dot thousands separators. Rescaled all VHM 10-period cash-flow fields and audit amounts to integer millions; Q2/2026 component-sum residual is now -1,000,000 million VND (~24.4%) and still flagged, no plug.",
+      "Post-fix VHM test fixtures now use integer million-VND values matching the report's Triệu VND column and dot thousands separators; standard version 1.8 documents the scale correction."
     ],
     "unresolved": [
       "NLG NEEDS_MANUAL_REVIEW — H1/2024 selected later comparative in Q2/2025 reclassifies CFO/CFI versus the original Q2/2024 source by >0.01%; net cash movement and cash balances remain unchanged. Preserve both source bases and selected later comparative; do not plug.",
@@ -1623,7 +1624,7 @@
       "VHM Q2/2026 has a later September 2026 corrected consolidated report archive in the VietstockFinance-collected ZIP, but the stored sidecar does not expose its cash-flow pages. Review those pages before closing the component mismatch.",
       "VHM direct visual review pending for Q1/2024 source page and H1/2024 comparative page; OCR sidecar plus arithmetic review is documented, but visual verification is not claimed."
     ],
-    "nextStep": "VHM normalization is saved with correct integer million-VND scale (dots in report figures are thousands separators). Continue to TPB in the same cashflow domain, one ticker at a time. VHM needs manual review: (1) Q1/2026 opening cash 49,086,598 vs FY2025 close 49,948,510 million VND, diff -861,912 (~1.7256%, >0.01%), retain both; (2) Q2/2026 CFO 88,467,954 + CFI -154,050,779 + CFF 68,675,210 = 3,092,385 while line 50 reports 4,092,385 million VND, diff -1,000,000 million VND (~24.4%, >0.01%), no plug. H1/2024 and H1/2025 selected comparative source changes remain flagged. Inspect cash-flow pages of the September 2026 corrected Q2/2026 consolidated VHM report archive before closing source mismatch.",
+    "nextStep": "VHM unit scale is corrected to integer millions; rerun and confirm Validate Site and Data after the new regression literals. Manual review remains for H1/2024 and H1/2025 source reclassification, Q1/2026 cross-year opening/closing difference of -861,912 million VND (~1.7256%), and Q2/2026 line-40/line-50 mismatch of -1,000,000 million VND (~24.4%). No balancing plug. Next ticker TPB, same cashflow domain.",
     "previousCompletedSymbol": "BSR",
     "validationRuns": [
       {
