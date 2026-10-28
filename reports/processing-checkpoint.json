@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-28T10:05:00Z",
+  "updatedAt": "2026-10-28T10:02:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -1409,29 +1409,26 @@
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
     "activeSymbol": "MBB",
-    "status": "in_progress_next_ticker",
-    "lastUpdatedAt": "2026-10-28T10:05:00Z",
+    "status": "needs_manual_review_source_discrepancy",
+    "lastUpdatedAt": "2026-10-28T10:02:00Z",
     "completedChecks": [
-      "TCB snapshot: 11/11 periods operating+investing+financing flows reconcile to net_cash_change",
-      "TCB snapshot: 11/11 periods YTD flows reconcile to net_cash_change_ytd",
-      "TCB snapshot: available Q2-Q4 standalone flows reconcile to differences in YTD",
-      "GitHub Actions validation run 40665716192 passed cash-flow bridge regression tests for audited FY2025 fix",
-      "Targeted extraction workflow 40665319685 passed; audited FY2025 cash-flow pages added to sidecar",
-      "TCB FY2025 audited consolidated PDF pages 15-16 (printed pages 10-11) show CFO YTD 39923618, investing YTD -816440, financing YTD 5235750, net change YTD 44342928, opening cash 147484415 and closing cash 191827343",
-      "Corrected TCB 2025-Q4 using audited FY2025 YTD minus Q3/2025 YTD: operating 39077091, investing -302339, financing -6871089, net cash change 31903663, closing cash 191827343",
-      "Q4 2025 and FY2025 cash bridges both have residual zero; ending cash matches Q1 2026 opening cash",
-      "Targeted TCB Q3/2026 PDF page 12 OCR at 300dpi reads closing cash 177278981, replacing the earlier bad OCR 177278961",
-      "Corrected TCB 2026-Q3 cash_ending and cash_ending_reported_ytd to 177278981; YTD bridge and standalone-quarter bridge now have residual zero",
-      "Added TCB Q4 audited FY2025 regression and updated Q3/2026 high-resolution OCR regression tests in tests/test_cashflow_bridge.py",
-      "Updated standard procedure document with audited-year preference and targeted-OCR correction procedure",
-      "TCB 2025-Q4 corrected to audited FY2025 cash flow; annual/Q4 bridges residual zero",
-      "TCB 2026-Q3 closing cash corrected from 177278961 to source-backed 177278981 after targeted 300dpi OCR of VietstockFinance PDF page 12; YTD and standalone bridges residual zero",
-      "Validate Site and Data run 40666435248 SUCCESS: cash-flow bridge test, JSON snapshot validation and syntax checks PASS",
-      "Validate quarterly financial data run 40666351827 SUCCESS: quarterly snapshot validation and bank statement reconciliation regression checks PASS",
-      "TCB cash-flow standardization complete for source OCR, arithmetic reconciliation and CI; no unresolved numeric discrepancy, but not claiming manual pixel-by-pixel review"
+      "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
+      "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
+      "MBB snapshot normalized for all 10 periods 2024-Q1 through 2026-Q2; restored missing financing/net cash fields and source cash opening/closing balances where printed.",
+      "MBB 2024-Q3 cash year-opening OCR corrected from 409095118 to visually checked 109095118.",
+      "MBB 2024-Q4 cash-flow YTD uses later visually checked comparative values in VietstockFinance MBB Q4/2025 report; records source reclassification from previous Q4/2024 report.",
+      "MBB H1/2025 cash-flow values use later visually checked comparative in VietstockFinance MBB Q2/2026 report; Q3/2025 standalone flows recalculated from latest H1 comparator.",
+      "MBB quarter and YTD three-flow components sum to net cash change for all 10 periods.",
+      "MBB YTD cash bridges reconcile exactly for all 10 periods.",
+      "MBB quarterly cash bridges reconcile exactly for 9/10 periods; only Q2/2025 has a documented -2 million VND cross-period source difference, no balancing plug inserted.",
+      "Validate quarterly financial data run 40668008382 SUCCESS: quarterly financial snapshots and bank statement reconciliation regression checks PASS.",
+      "Validate Site and Data run 40668224913 SUCCESS: cash-flow bridge regression including MBB and JSON snapshot validation PASS.",
+      "Standardization document updated with the reusable 300dpi OCR procedure, later-comparative precedence policy, and MBB source revision/exceptions."
     ],
-    "unresolved": [],
-    "nextStep": "Apply reports/financial-data-normalization-standard.md to MBB cash-flow data only. Inspect MBB snapshot and its VietstockFinance-linked source pages, test quarter/YTD flow sums and cash opening/closing bridges including any reported FX row, correct only source-evidenced errors, add or update regression test if needed, run both validation workflows, then checkpoint before moving to another ticker.",
+    "unresolved": [
+      "MBB 2025-Q2 cross-period cash bridge residual -2 million VND. Q1/2025 own report: opening cash 97040275, net change -24053403, ending 72986872. Later Q2/2026 comparative for H1/2025: opening cash 97040273, net change 6814127, ending 103854400. H1 components sum correctly and YTD bridge is zero; Q2 standalone from YTD differences is net 30867530 but closing minus prior-quarter close is 30867528. Do not force-match by changing CFO/financing/cash balance; re-check catalog for amended/restated source if needed."
+    ],
+    "nextStep": "For MBB only, inspect the VietstockFinance MBB document catalog for any amended/corrected reports or another later statement that explains the 2-million-VND Q1/H1 comparative difference. If a source documents the restatement, update only affected MBB cash-flow fields and regression test. If no source resolves it, retain terminal manual-review flag for MBB and then continue to the next ticker in the same cash-flow domain using this saved standard. Do not switch to another data domain until the cash-flow domain progression is complete.",
     "previousCompletedSymbol": "TCB"
   }
 }
