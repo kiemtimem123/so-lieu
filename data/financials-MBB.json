@@ -2137,7 +2137,27 @@
           7,
           8
         ],
-        "reference_sources": [],
+        "reference_sources": [
+          {
+            "description": "Cross-check Q1/2025 cash-flow comparative in later VietstockFinance Q1/2026 consolidated BCTC, PDF page 8; visually checked.",
+            "period": "2025-Q1 comparative in Q1/2026",
+            "source_archive_file": "reports/raw/MBB/manual-mbb-smoke-20261018/eebeda2ebc09b0d4.pdf",
+            "source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/MBB_Baocaotaichinh_Q1_2026_Hopnhat.pdf",
+            "pdf_pages": [
+              7,
+              8
+            ],
+            "visually_checked_pages": [
+              8
+            ],
+            "reported_values": {
+              "net_cash_change": -24053403,
+              "cash_beginning": 97040275,
+              "cash_ending": 72986872
+            },
+            "visual_review_date": "2026-10-28"
+          }
+        ],
         "method": "Targeted 300dpi OCR of PDF pages 7-8; visually check exceptional comparatives; quarterly flows are current YTD minus previous quarter YTD; do not force cash bridges with balancing plugs.",
         "current_ytd_values": {
           "operating_cash_flow_ytd": -26075011,
@@ -2165,10 +2185,17 @@
           "ytd_cash_bridge_residual": 0,
           "quarter_cash_bridge_residual": 0,
           "ytd_cash_bridge_matches": true,
-          "quarter_cash_bridge_matches": true
+          "quarter_cash_bridge_matches": true,
+          "q1_standalone_bridge_residual": 0,
+          "prior_year_end_to_q1_opening_residual": 2,
+          "q1_2026_comparative_matches_q1_2025_source": {
+            "net_cash_change": true,
+            "cash_beginning": true,
+            "cash_ending": true
+          }
         },
-        "status": "SOURCE_AND_ARITHMETIC_CHECKED",
-        "notes": "Q1/2025 own report PDF pages 7-8; current-year cash balances and total cash change visually reconciled.",
+        "status": "SOURCE_AND_WITHIN_PERIOD_BRIDGE_PASS_CROSS_PERIOD_CONTINUITY_REVIEW_2_MILLION",
+        "notes": "Q1/2025 own report PDF pages 7-8; current-year cash balances and total cash change visually reconciled. Re-check 2026-10-28: Q1/2025 page 8 was visually inspected and agrees with the same Q1/2025 comparative in the later Q1/2026 VietstockFinance report (net -24,053,403; opening 97,040,275; closing 72,986,872). However, Q4/2024 closing cash is 97,040,273 per the later Q4/2025 comparative, so Q4-to-Q1 continuity has +2 million VND opening-balance difference. Do not silently replace the Q1 report's printed number.",
         "verified_at": "2026-10-28"
       },
       "financing_cash_flow_calculation": "Q1 bằng số lũy kế Q1 theo báo cáo VietstockFinance.",
@@ -2179,7 +2206,54 @@
       "net_cash_change_ytd_calculation": "Đọc theo dòng tổng lưu chuyển tiền thuần tương ứng trên BCTC hợp nhất VietstockFinance; kỳ so sánh mới hơn, nếu được dùng, được ghi trong cashflow_source_reconciliation.",
       "cash_ending_calculation": "Lấy từ dòng tiền và các khoản tương đương tiền cuối kỳ trên PDF LCTT VietstockFinance, không suy ngược nếu nguồn có dòng số dư.",
       "cash_beginning_reported_ytd_calculation": "Số dư đầu kỳ lũy kế lấy từ cột đầu kỳ báo cáo VietstockFinance; nguồn so sánh cập nhật được ghi trong cashflow_source_reconciliation.",
-      "cash_ending_reported_ytd_calculation": "Số dư cuối kỳ lũy kế lấy từ dòng tiền và tương đương tiền cuối kỳ trên PDF LCTT VietstockFinance."
+      "cash_ending_reported_ytd_calculation": "Số dư cuối kỳ lũy kế lấy từ dòng tiền và tương đương tiền cuối kỳ trên PDF LCTT VietstockFinance.",
+      "cashflow_balance_bridge_recovery": {
+        "basis": "cross-period opening cash discontinuity confirmed against original and later comparative",
+        "prior_period": "2024-Q4",
+        "prior_closing_cash": 97040273,
+        "q1_opening_cash": 97040275,
+        "opening_minus_prior_closing_residual": 2000000,
+        "q1_net_cash_change": -24053403,
+        "q1_closing_cash": 72986872,
+        "q1_internal_bridge_residual": 0,
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%201/MBB_Baocaotaichinh_Q1_2025_Hopnhat.pdf",
+        "source_pdf_pages": [
+          7,
+          8
+        ],
+        "visually_checked": true,
+        "confirming_source": {
+          "description": "Cross-check Q1/2025 cash-flow comparative in later VietstockFinance Q1/2026 consolidated BCTC, PDF page 8; visually checked.",
+          "period": "2025-Q1 comparative in Q1/2026",
+          "source_archive_file": "reports/raw/MBB/manual-mbb-smoke-20261018/eebeda2ebc09b0d4.pdf",
+          "source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/MBB_Baocaotaichinh_Q1_2026_Hopnhat.pdf",
+          "pdf_pages": [
+            7,
+            8
+          ],
+          "visually_checked_pages": [
+            8
+          ],
+          "reported_values": {
+            "net_cash_change": -24053403,
+            "cash_beginning": 97040275,
+            "cash_ending": 72986872
+          },
+          "visual_review_date": "2026-10-28"
+        },
+        "competing_prior_close_source": {
+          "archive": "reports/raw/MBB/manual-mbb-smoke-20261018/69eb9144555a7b9e.pdf",
+          "url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/MBB_Baocaotaichinh_Q4_2025_Hopnhat.pdf",
+          "pdf_pages": [
+            7,
+            8
+          ],
+          "closing_cash": 97040273,
+          "visually_checked": true
+        },
+        "status": "NEEDS_MANUAL_REVIEW_CROSS_PERIOD_CONTINUITY_2_MILLION",
+        "note": "Q1 statement and Q1/2026 comparative agree internally, while later FY2024 comparison in Q4/2025 reports a 2-million lower opening balance. No balancing amount is invented."
+      }
     },
     {
       "symbol": "MBB",
@@ -2491,6 +2565,25 @@
               8
             ],
             "visually_checked": true
+          },
+          {
+            "description": "Cross-check Q1/2025 cash-flow comparative in later VietstockFinance Q1/2026 consolidated BCTC, PDF page 8; visually checked.",
+            "period": "2025-Q1 comparative in Q1/2026",
+            "source_archive_file": "reports/raw/MBB/manual-mbb-smoke-20261018/eebeda2ebc09b0d4.pdf",
+            "source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/MBB_Baocaotaichinh_Q1_2026_Hopnhat.pdf",
+            "pdf_pages": [
+              7,
+              8
+            ],
+            "visually_checked_pages": [
+              8
+            ],
+            "reported_values": {
+              "net_cash_change": -24053403,
+              "cash_beginning": 97040275,
+              "cash_ending": 72986872
+            },
+            "visual_review_date": "2026-10-28"
           }
         ],
         "method": "Targeted 300dpi OCR of PDF pages 7-8; visually check exceptional comparatives; quarterly flows are current YTD minus previous quarter YTD; do not force cash bridges with balancing plugs.",
@@ -2520,14 +2613,18 @@
           "ytd_cash_bridge_residual": 0,
           "quarter_cash_bridge_residual": -2,
           "ytd_cash_bridge_matches": true,
-          "quarter_cash_bridge_matches": false
+          "quarter_cash_bridge_matches": false,
+          "q1_source_net_cash_change": -24053403,
+          "q1_source_closing_cash": 72986872,
+          "h1_later_comparative_opening_cash": 97040273,
+          "q1_to_h1_source_baseline_difference": -2
         },
         "status": "NEEDS_MANUAL_REVIEW_CROSS_PERIOD_CASH_BRIDGE_2_MILLION",
         "notes": "Use latest comparative column in VietstockFinance Q2/2026 report PDF pages 7-8 (visually checked): H1/2025 CFO 1516540, investing -400976, financing 5698563, net 6814127, opening cash 97040273, closing cash 103854400. Q2 standalone flows = revised H1 YTD minus Q1/2025 own-report YTD. YTD cash bridge and flow components reconcile, but cross-quarter cash balance bridge has -2 million VND residual; keep source numbers, do not plug.",
         "verified_at": "2026-10-28"
       },
       "cashflow_balance_bridge_recovery": {
-        "basis": "cross-quarter source discrepancy",
+        "basis": "cross-report opening-cash discrepancy and Q2 standalone balance bridge, reconfirmed 2026-10-28",
         "prior_period": "2025-Q1",
         "opening_cash_prior_close": 72986872,
         "closing_cash_current": 103854400,
@@ -2542,7 +2639,63 @@
           8
         ],
         "visually_checked": true,
-        "unresolved_reason": "Q1/2025 original statement shows start cash 97,040,275 and cash change -24,053,403. Later H1/2025 comparative in Q2/2026 statement shows start cash 97,040,273 and H1 net change 6,814,127. Latest H1 values sum to the components and balance, but Q2 standalone bridge leaves -2 million VND vs prior-quarter closing balance. Preserve published values and flag; do not insert a balancing plug."
+        "unresolved_reason": "Three relevant documents were visually checked: Q4/2025 FY2024 comparative closing cash = 97,040,273; Q1/2025 own statement and Q1/2026 comparative both report opening cash = 97,040,275, net change = -24,053,403, closing cash = 72,986,872; Q2/2026 H1/2025 comparative reports opening = 97,040,273, net change = 6,814,127, ending = 103,854,400. Each report's internal bridge and flow components reconcile, but cross-period baseline and Q2 standalone bridge differ by 2 million VND. No source-backed correction found; do not change any reported amount to force a match.",
+        "prior_quarter_close": 72986872,
+        "q1_report_opening_cash": 97040275,
+        "q1_report_net_cash_change": -24053403,
+        "q1_report_closing_cash": 72986872,
+        "h1_2025_later_comparator_opening_cash": 97040273,
+        "h1_2025_later_comparator_net_cash_change": 6814127,
+        "h1_2025_later_comparator_closing_cash": 103854400,
+        "q2_standalone_net_cash_change_from_ytd": 30867530,
+        "q2_balance_change_from_quarter_end_balances": 30867528,
+        "q2_quarter_bridge_residual": -2,
+        "prior_year_end_to_q1_opening_residual": 2,
+        "source_comparisons": [
+          {
+            "description": "Q4/2025 comparative for FY2024",
+            "url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/MBB_Baocaotaichinh_Q4_2025_Hopnhat.pdf",
+            "pdf_pages": [
+              7,
+              8
+            ],
+            "cash_ending_2024": 97040273,
+            "visually_checked": true
+          },
+          {
+            "description": "Cross-check Q1/2025 cash-flow comparative in later VietstockFinance Q1/2026 consolidated BCTC, PDF page 8; visually checked.",
+            "period": "2025-Q1 comparative in Q1/2026",
+            "source_archive_file": "reports/raw/MBB/manual-mbb-smoke-20261018/eebeda2ebc09b0d4.pdf",
+            "source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/MBB_Baocaotaichinh_Q1_2026_Hopnhat.pdf",
+            "pdf_pages": [
+              7,
+              8
+            ],
+            "visually_checked_pages": [
+              8
+            ],
+            "reported_values": {
+              "net_cash_change": -24053403,
+              "cash_beginning": 97040275,
+              "cash_ending": 72986872
+            },
+            "visual_review_date": "2026-10-28"
+          },
+          {
+            "description": "Q2/2026 comparative for H1/2025",
+            "url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/MBB_Baocaotaichinh_Q2_2026_Hopnhat.pdf?ver=8b5fd9ba",
+            "pdf_pages": [
+              7,
+              8
+            ],
+            "opening_cash": 97040273,
+            "net_cash_change": 6814127,
+            "closing_cash": 103854400,
+            "visually_checked": true
+          }
+        ],
+        "status": "NEEDS_MANUAL_REVIEW_CROSS_REPORT_CASH_BASIS_2_MILLION",
+        "note": "Review must treat this as a connected Q4/2024 -> Q1/2025 -> H1/2025 comparability issue, not only a single Q2/2025 row residual."
       },
       "financing_cash_flow_calculation": "Quý riêng = số lũy kế 2025 kỳ hiện tại trừ số lũy kế quý liền trước trong cùng năm; đối chiếu trong cashflow_source_reconciliation.",
       "net_cash_change_calculation": "Quý riêng = số lũy kế 2025 kỳ hiện tại trừ số lũy kế quý liền trước trong cùng năm; đối chiếu trong cashflow_source_reconciliation.",
