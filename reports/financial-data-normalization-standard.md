@@ -258,3 +258,23 @@ Quy tắc chuẩn hóa: mọi phép chênh và residual phải ở **đúng đơ
 - Kiểm tra trong snapshot sau chuẩn hóa: cả 10/10 kỳ đều có tổng CFO+CFI+CFF bằng net cash change; cả 10/10 kỳ YTD cũng khớp; cầu nối số dư tiền YTD và theo quý (có FX) đều dư 0; mọi luồng tiền quý bằng hiệu YTD liên tiếp; các trường LCTT được thêm vào danh sách `financial_line_items_extracted_fields` và gỡ khỏi danh sách trường bị loại.
 - Bộ kiểm thử dùng lại: `tests/test_cashflow_bridge.py`, bổ sung regression riêng ACB cho 10 kỳ, FX, cầu nối, so sánh mới hơn và điều chỉnh OCR Q2/2026.
 - Trạng thái: **PASS về số học và nguồn dòng chính; còn rà soát trực quan hạn chế ở các kỳ được ghi trạng thái pending**. Không đánh dấu toàn bộ ACB đã xác minh thủ công.
+
+
+## Quy tắc dung sai tương đối 0,01% — cập nhật 2026-10-28
+
+Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi ở checkpoint cũ khi đánh giá sai lệch số học:
+
+- Với một phép đối chiếu, tính `relative_difference_percent = abs(actual - expected) / comparison_scale × 100`. Dùng mẫu số phù hợp với phép kiểm tra; đối với cầu nối tiền, mẫu số là quy mô số dư tiền cuối kỳ/dự kiến; đối với tổng các luồng tiền, so với quy mô các luồng thành phần và biến động tiền thuần.
+- Nếu sai lệch tương đối **≤ 0,01%**, cho phép tiếp tục và phân loại là `ACCEPTED_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT` (hoặc PASS nếu residual bằng 0). Lưu giá trị residual cùng đơn vị với snapshot để truy vết; không sửa số gốc và không chèn khoản cân bằng.
+- Nếu sai lệch tương đối **> 0,01%**, giữ nguyên các giá trị đã được xác nhận trên nguồn, gắn `NEEDS_MANUAL_REVIEW` và tiếp tục các mã khác nếu phần tự động hóa cốt lõi của mã hiện tại đã hoàn tất.
+- Dung sai chỉ áp dụng cho sai lệch số học/ làm tròn. Nó **không** cho phép tự sửa OCR sai chữ số, dùng sai kỳ, trộn BCTC riêng lẻ với hợp nhất, bỏ qua trang nguồn thiếu, hoặc suy đoán một trường không có bằng chứng. Trường FX không có trong báo cáo không được tự tạo chỉ vì chênh lệch nhỏ.
+
+## Lượt chuẩn hóa FPT — lưu chuyển tiền tệ (2026-10-28)
+
+- Snapshot `data/financials-FPT.json`: 10 kỳ từ 2024-Q1 đến 2026-Q2 được chuẩn hóa theo dòng 20 (CFO), 30 (CFI), 40 (CFF), 50 (biến động tiền thuần), 60 (tiền đầu kỳ), 61 (ảnh hưởng tỷ giá) và 70 (tiền cuối kỳ) trên BCTC hợp nhất từ danh mục VietstockFinance.
+- Đã ưu tiên so sánh mới hơn: FY2024 sử dụng cột so sánh trong BCTC Q4/2025; H1/2025 sử dụng cột so sánh trong BCTC Q2/2026. Với FY2024, CFO/CFI so với snapshot cũ được trình bày lại lần lượt thành **11.703.777** và **-8.461.812 triệu VND**; CFF **-2.197.766**, biến động tiền thuần **1.044.199**. Đây là phân loại/số so sánh của báo cáo mới hơn, không lấy số cũ để bù cho tổng dòng tiền.
+- Theo cột so sánh Q2/2026, H1/2025 là CFO **1.683.573**, CFI **-7.233.992**, CFF **6.254.833**, biến động tiền thuần **704.415**, FX **-224**, tiền cuối kỳ **10.019.631 triệu VND**. Số quý riêng Q2 và Q3/2025 được tính lại từ chênh lệch YTD theo cơ sở H1/2025 mới này.
+- Residual số học nhỏ do các dòng tiền gốc chính xác đến VND nhưng snapshot lưu triệu VND và làm tròn, ví dụ Q1/2025 cầu nối tiền có residual **-10 triệu VND**; tỷ lệ so với số dư tiền nhỏ hơn 0,01%, nên được chấp nhận theo chính sách mới, được ghi trong metadata, không sửa số gốc.
+- Ngoại lệ vượt ngưỡng: tiền cuối FY2025 **10.540.182 triệu VND** trong BCTC Q4/2025 so với tiền đầu Q1/2026 **10.522.106 triệu VND**; chênh **-18.076 triệu VND**, khoảng **0,17%**. Mỗi báo cáo tự khớp cầu nối của mình nhưng continuity liên kỳ vượt 0,01%; giữ nguyên cả hai số nguồn, đánh dấu `NEEDS_MANUAL_REVIEW_CROSS_PERIOD_CASH_BASIS_GT_0_01_PERCENT`, không ép đồng bộ.
+- Kiểm thử hồi quy FPT bao phủ 10 kỳ, so sánh FY2024/H1-2025 mới hơn, quý riêng = chênh lệch YTD, FX, cầu nối tiền và quy tắc 0,01%. Workflow `Validate Site and Data`, `Validate quarterly financial data` và `Package Hostinger Stock Dashboard` đều PASS sau thay đổi snapshot; kiểm thử xác nhận continuity Q4/2025 → Q1/2026 còn là ngoại lệ thủ công, không phải lỗi test.
+- Trạng thái FPT: tự động hóa cốt lõi và kiểm thử hoàn tất; còn một ngoại lệ so sánh liên kỳ vượt ngưỡng ở Q1/2026. Có thể chuyển sang mã tiếp theo trong cùng miền dòng tiền, không chuyển mảng.
