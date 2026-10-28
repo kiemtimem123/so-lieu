@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-28T08:10:00Z",
+  "updatedAt": "2026-10-28T08:20:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -1409,19 +1409,20 @@
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
     "activeSymbol": "TCB",
-    "status": "needs_manual_pdf_visual_review",
+    "status": "needs_manual_review_source_discrepancy",
     "lastUpdatedAt": "2026-10-28T07:39:00Z",
     "completedChecks": [
       "TCB snapshot: 11/11 periods operating+investing+financing flows reconcile to net_cash_change",
       "TCB snapshot: 11/11 periods YTD flows reconcile to net_cash_change_ytd",
       "TCB snapshot: 8/8 available Q2-Q4 standalone flows reconcile to differences in YTD",
       "GitHub Actions run 40651448162: Test cash-flow bridge reconciliation PASS",
-      "VietstockFinance-linked consolidated PDF OCR checked: Q4/2025 page 10, Q1/2026 page 10, Q3/2026 page 12"
+      "VietstockFinance-linked consolidated PDF OCR checked: Q4/2025 page 10, Q1/2026 page 10, Q3/2026 page 12",
+      "Visual inspection of original VietstockFinance-linked PDF page 8 (PDF page 10): TCB Q4/2025 ending cash 191262058 and Q1/2026 opening cash 191827343 confirmed as printed; difference is source-report discrepancy, not OCR."
     ],
     "unresolved": [
-      "Q4/2025 consolidated cash-flow PDF page 10 reports closing cash 191262058 million VND; Q1/2026 page 10 reports opening cash 191827343 million VND. Difference 565285 million VND is present in source PDFs and remains unexplained; do not normalize by assumption.",
-      "Q3/2026 consolidated cash-flow PDF page 12 reports net cash change -14548362, opening cash 191827343 and closing cash 177278961 million VND; cash bridge residual -20 million VND. Three cash-flow categories sum to the reported net change; no FX line seen in OCR. Check page image before changing values."
+      "Source reports differ by 565285 million VND: Q4/2025 closing cash 191262058; Q1/2026 opening cash 191827343. Both values visually confirmed from original PDF images. Check note 34 / any adjustment documents within VietstockFinance catalog; do not auto-normalize.",
+      "Q3/2026 cash bridge residual -20 million VND from reported net cash change -14548362, opening 191827343 and closing 177278961 million VND. PDF page image not visually confirmed yet; no FX line seen in OCR. Do not invent a value."
     ],
-    "nextStep": "Inspect the original page images of VietstockFinance-linked TCB consolidated PDFs: Q4/2025 PDF page 10 and Q1/2026 PDF page 10 to understand the 565285 million VND opening/closing difference; Q3/2026 PDF page 12 to resolve the 20 million VND cash-bridge residual. Do not invent FX or edit figures without visual source evidence; keep this data domain active until resolved or explicitly terminal manual review."
+    "nextStep": "Within the same TCB cash-flow domain, inspect Q4/2025 and Q1/2026 note 34 for the cash-equivalent composition and check the VietstockFinance TCB document catalog for any amended/adjusted reports; then obtain a visual image of Q3/2026 PDF page 8 (PDF page 12) to verify the 20 million VND residual. Do not edit figures without documentary evidence. Keep TCB active until resolved or terminal manual review."
   }
 }
