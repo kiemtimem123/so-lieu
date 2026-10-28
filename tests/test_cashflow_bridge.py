@@ -457,3 +457,114 @@ class FTPCashFlowNormalizationTests(unittest.TestCase):
         # Keep both printed balances; each report's own cash bridge remains within tolerance.
         self.assertLessEqual(self.relative_residual_percent(
             cash_bridge_delta(current), current["cash_beginning"], current["cash_ending"]), 0.01)
+
+
+class SHBCashFlowNormalizationTests(unittest.TestCase):
+    """Regression coverage for SHB source revisions, YTD math and 0.01% continuity rule."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.snapshot = json.loads(
+            (ROOT / "data" / "financials-SHB.json").read_text(encoding="utf-8")
+        )
+        cls.rows = {row["period"]: row for row in cls.snapshot["items"]}
+
+    def test_shb_all_ten_periods_reconcile_from_selected_ytd_basis(self):
+        core_fields = (
+            "operating_cash_flow", "investing_cash_flow", "financing_cash_flow",
+            "net_cash_change", "operating_cash_flow_ytd", "investing_cash_flow_ytd",
+            "financing_cash_flow_ytd", "net_cash_change_ytd", "cash_beginning",
+            "cash_ending", "cash_beginning_reported_ytd", "cash_ending_reported_ytd",
+            "foreign_exchange_effect", "foreign_exchange_effect_ytd",
+        )
+        self.assertEqual(len(self.rows), 10)
+        for period, row in self.rows.items():
+            with self.subTest(period=period):
+                self.assertTrue(all(isinstance(row.get(field), (int, float))
+                                    and not isinstance(row.get(field), bool)
+                                    for field in core_fields))
+                self.assertEqual(row["cashflow_period_basis"], "year_to_date")
+                self.assertEqual(row["source_index_url"],
+                                 "https://finance.vietstock.vn/SHB/tai-tai-lieu.htm?doctype=1")
+                for field in core_fields:
+                    self.assertIn(field, row["financial_line_items_extracted_fields"])
+                    self.assertNotIn(field, row.get("financial_line_items_rejected_fields", []))
+                self.assertEqual(row["operating_cash_flow"] + row["investing_cash_flow"] +
+                                 row["financing_cash_flow"], row["net_cash_change"])
+                self.assertEqual(row["operating_cash_flow_ytd"] + row["investing_cash_flow_ytd"] +
+                                 row["financing_cash_flow_ytd"], row["net_cash_change_ytd"])
+                self.assertEqual(
+                    row["cash_ending_reported_ytd"] - row["cash_beginning_reported_ytd"] -
+                    row["net_cash_change_ytd"] - row["foreign_exchange_effect_ytd"], 0)
+                self.assertEqual(
+                    row["cash_ending"] - row["cash_beginning"] - row["net_cash_change"] -
+                    row["foreign_exchange_effect"], 0)
+                rec = row["cashflow_source_reconciliation"]
+                self.assertEqual(rec["ytd_cash_bridge_residual"], 0)
+                self.assertEqual(rec["quarter_cash_bridge_residual"], 0)
+                self.assertEqual(rec["status"], "PASS_ARITHMETIC_RECONCILED")
+
+                year, quarter_text = period.split("-Q")
+                q = int(quarter_text)
+                if q == 1:
+                    for flow in ("operating_cash_flow", "investing_cash_flow",
+                                 "financing_cash_flow", "net_cash_change"):
+                        self.assertEqual(row[flow], row[flow + "_ytd"])
+                    self.assertEqual(row["foreign_exchange_effect"],
+                                     row["foreign_exchange_effect_ytd"])
+                else:
+                    previous = self.rows[f"{year}-Q{q-1}"]
+                    for flow in ("operating_cash_flow", "investing_cash_flow",
+                                 "financing_cash_flow", "net_cash_change"):
+                        self.assertEqual(row[flow], row[flow + "_ytd"] - previous[flow + "_ytd"])
+                    self.assertEqual(row["cash_beginning"], previous["cash_ending"])
+
+    def test_shb_uses_later_vietstock_comparatives_for_2024(self):
+        q1 = self.rows["2024-Q1"]
+        self.assertEqual(q1["operating_cash_flow_ytd"], -52416402)
+        self.assertEqual(q1["investing_cash_flow_ytd"], 202387)
+        self.assertEqual(q1["financing_cash_flow_ytd"], -327)
+        self.assertEqual(q1["net_cash_change_ytd"], -52214342)
+        self.assertIn("Q1_2025", q1["cashflow_audit_revision"]["selected_source_url"])
+        self.assertEqual(
+            q1["cashflow_audit_revision"]["previous_original_basis_values_superseded"]["net_cash_change_ytd"],
+            -62214342)
+
+        q2 = self.rows["2024-Q2"]
+        self.assertEqual(q2["operating_cash_flow_ytd"], -22155105)
+        self.assertEqual(q2["investing_cash_flow_ytd"], -66706)
+        self.assertEqual(q2["financing_cash_flow_ytd"], 434732)
+        self.assertEqual(q2["net_cash_change_ytd"], -21787079)
+        self.assertIn("Q2_2025", q2["cashflow_audit_revision"]["selected_source_url"])
+
+        q3 = self.rows["2024-Q3"]
+        self.assertEqual(q3["operating_cash_flow_ytd"], 5828557)
+        self.assertEqual(q3["investing_cash_flow_ytd"], -88386)
+        self.assertEqual(q3["financing_cash_flow_ytd"], 400074)
+        self.assertEqual(q3["net_cash_change_ytd"], 6140245)
+        self.assertIn("Q3_2025", q3["cashflow_audit_revision"]["selected_source_url"])
+
+        q4 = self.rows["2024-Q4"]
+        self.assertEqual(q4["operating_cash_flow_ytd"], 11949125)
+        self.assertEqual(q4["investing_cash_flow_ytd"], -179988)
+        self.assertEqual(q4["financing_cash_flow_ytd"], -1311389)
+        self.assertEqual(q4["net_cash_change_ytd"], 10457748)
+        self.assertEqual(q4["cash_ending_reported_ytd"], 121317534)
+        self.assertIn("Q4_2025", q4["cashflow_audit_revision"]["selected_source_url"])
+
+    def test_shb_q4_to_q1_2026_cash_basis_residual_exceeds_0_01_percent(self):
+        prior = self.rows["2025-Q4"]
+        current = self.rows["2026-Q1"]
+        residual = current["cash_beginning"] - prior["cash_ending"]
+        self.assertEqual(residual, -719944)
+        self.assertFalse(within_relative_tolerance(
+            current["cash_beginning"], prior["cash_ending"]))
+        continuity = current["cashflow_source_reconciliation"]["cross_period_continuity"]
+        self.assertEqual(continuity["residual_million_vnd"], -719944)
+        self.assertGreater(continuity["relative_difference_percent"], 0.01)
+        self.assertEqual(continuity["status"],
+                         "NEEDS_MANUAL_REVIEW_CROSS_PERIOD_CASH_BASIS_GT_0_01_PERCENT")
+        self.assertEqual(current["cash_ending"], 179435919)
+        self.assertEqual(prior["cash_ending"], 162627663)
+        # Both source balances are kept as printed; each row's internal bridge is exact.
+        self.assertEqual(cash_bridge_delta(current), 0)
