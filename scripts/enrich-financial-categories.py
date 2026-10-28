@@ -2145,6 +2145,32 @@ def repair_tcx_2026_source_rows(items,symbol):
    },
    "pages":[5,6],
   },
+  "2025-Q1":{
+   # The OCR has a digit/transcription error in current assets on page 6.
+   # Reconstruct it from the reported total liabilities + equity on page 7,
+   # less the reported non-current-assets subtotal on page 6.
+   "evidence":{
+    6:["52.968,968.277.078","3,374,594,808,902"],
+    7:["29.034.864.968.810","27.294.698.117.170","56.329.563.085.980"],
+   },
+   "values":{
+    "current_assets":52954968.277078,
+   },
+   "pages":[6,7],
+   "manually_visual_reviewed":False,
+   "calculation":"(total liabilities + equity reported on page 7) - non-current assets reported on page 6; source OCR's current-assets row contains a digit mismatch.",
+  },
+  "2026-Q1":{
+   "evidence":{
+    6:["43.198.457.639.720","40.601.152.377.163","2.597.305.262.557"],
+   },
+   "values":{
+    "current_liabilities":40601152.377163,
+    "long_term_liabilities":2597305.262557,
+   },
+   "pages":[6],
+   "manually_visual_reviewed":True,
+  },
  }
  for period,spec in balance_specs.items():
   item=by_period.get(period)
@@ -2186,16 +2212,28 @@ def repair_tcx_2026_source_rows(items,symbol):
    "report_form":"B01a-CTCK",
    "report_scope":"standalone securities-company balance sheet; not consolidated",
    "pdf_pages":spec["pages"],
-   "manually_visual_reviewed":True,
+   "manually_visual_reviewed":bool(spec.get("manually_visual_reviewed",True)),
    "fields":{field:{"value_million_vnd":value,"source_value_vnd":int(round(value*1000000))} for field,value in spec["values"].items()},
   }
   if item.get("financial_line_items_balance_source_reconciliation")!=balance_evidence:
    item["financial_line_items_balance_source_reconciliation"]=balance_evidence
    changed=True; field_count+=1
-  note=(
-   f"Đã đối chiếu trực quan B01a-CTCK VietstockFinance {period}, PDF trang 5–6: khôi phục các dòng tài sản/nợ ngắn hạn, dài hạn, "
-   "đầu tư HTM, cho vay, AFS, phải thu, TSCĐ và lợi nhuận chưa phân phối. Đây là báo cáo riêng CTCK, không phải báo cáo hợp nhất."
-  )
+  if spec.get("manually_visual_reviewed",True):
+   note=(
+    f"Đã đối chiếu trực quan B01a-CTCK VietstockFinance {period}, PDF trang {','.join(str(p) for p in spec['pages'])}: "
+    "khôi phục các dòng tài sản/nợ ngắn hạn, dài hạn và tổng phụ có căn cứ. Đây là báo cáo riêng CTCK, không phải báo cáo hợp nhất."
+   )
+  elif period=="2025-Q1":
+   note=(
+    "TCX 2025-Q1: hiệu chỉnh tài sản ngắn hạn thành 52.954.968,277078 triệu VND theo phương trình "
+    "tổng nợ phải trả + vốn chủ sở hữu - tài sản dài hạn, vì dòng tài sản ngắn hạn bị OCR sai chữ số. "
+    "Đối chiếu bằng văn bản PDF VietstockFinance trang 6–7; cần rà soát trực quan hình ảnh."
+   )
+  else:
+   note=(
+    f"TCX {period}: khôi phục các dòng nợ ngắn hạn/dài hạn từ B01a-CTCK VietstockFinance, "
+    f"PDF trang {','.join(str(p) for p in spec['pages'])}; tổng hai khoản khớp tổng nợ phải trả."
+   )
   old_note=str(item.get("financial_line_items_note") or "")
   if note not in old_note:
    item["financial_line_items_note"]=(old_note+" "+note).strip()
