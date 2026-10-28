@@ -3254,9 +3254,9 @@
       "current_liabilities": 29024790,
       "long_term_liabilities": 10075,
       "retained_earnings": 7699363,
-      "revenue": 62590,
-      "financial_expense": 57828,
-      "admin_expense": 116669,
+      "revenue": 2028164.685825,
+      "financial_expense": 459917.55073,
+      "admin_expense": 137726.487123,
       "investing_cash_flow_ytd": -12546,
       "financing_cash_flow_ytd": 2651425,
       "cash_beginning": 2864601,
@@ -3264,21 +3264,37 @@
       "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
         "admin_expense",
+        "broker_admin_expenses",
         "broker_afs_assets",
         "broker_afs_income",
+        "broker_brokerage_expense",
+        "broker_brokerage_revenue",
+        "broker_custody_expense",
         "broker_custody_revenue",
         "broker_customer_deposits",
         "broker_financial_advisory_revenue",
         "broker_financial_expense",
+        "broker_financial_income",
+        "broker_fvtpl_gain",
+        "broker_fvtpl_loss",
         "broker_held_to_maturity_assets",
+        "broker_held_to_maturity_income",
+        "broker_interest_expense",
         "broker_lending_assets",
+        "broker_lending_cost_combined_line",
+        "broker_lending_income",
         "broker_long_term_bonds",
+        "broker_net_operating_profit",
         "broker_operating_expenses",
+        "broker_other_operating_expense",
+        "broker_other_operating_income",
         "broker_receivables",
         "broker_short_term_bonds",
         "broker_short_term_borrowings",
         "broker_total_operating_expenses",
+        "broker_total_operating_revenue",
         "broker_trading_expense",
+        "broker_underwriting_revenue",
         "cash_and_equivalents",
         "cash_beginning",
         "cash_ending",
@@ -3286,21 +3302,24 @@
         "current_assets",
         "current_liabilities",
         "financial_expense",
+        "financial_income",
         "financing_cash_flow",
         "financing_cash_flow_ytd",
         "fixed_assets",
         "income_tax",
+        "interest_expense",
         "investing_cash_flow",
         "investing_cash_flow_ytd",
         "long_term_liabilities",
         "non_current_assets",
+        "operating_profit",
         "retained_earnings",
         "revenue"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
-      "financial_line_items_updated_at": "2026-10-28T05:20:00Z",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. TCX 2025-Q1: tài sản ngắn hạn đã được tái lập từ tổng nợ phải trả + vốn chủ sở hữu trừ tài sản dài hạn do OCR nhận sai chữ số ở dòng 100; số liệu được đối chiếu số học với B01a-CTCK VietstockFinance trang 6–7, còn chờ rà soát trực quan.",
+      "financial_line_items_updated_at": "2026-10-28T06:10:00Z",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. TCX 2025-Q1: tài sản ngắn hạn đã được tái lập từ tổng nợ phải trả + vốn chủ sở hữu trừ tài sản dài hạn do OCR nhận sai chữ số ở dòng 100; số liệu được đối chiếu số học với B01a-CTCK VietstockFinance trang 6–7, còn chờ rà soát trực quan. Q1/2025: khôi phục doanh thu hoạt động, cấu phần doanh thu/chi phí CTCK và tổng phụ kết quả từ B02a-CTCK VietstockFinance trang 10–11. Doanh thu tổng được kiểm tra lại bằng phương trình dòng 70; chi phí tổng hợp dòng 24 không bị gán nhầm thành chi phí lãi vay.",
       "investing_cash_flow": -12546,
       "investing_cash_flow_calculation": "Q1 equals YTD Q1",
       "financing_cash_flow": 2651425,
@@ -3355,7 +3374,7 @@
         "current_assets": 52968968
       },
       "financial_line_items_rejected_values": {},
-      "income_tax": 299193,
+      "income_tax": 299193.322777,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
       "broker_held_to_maturity_assets": 2854426,
       "broker_lending_assets": 30471557,
@@ -3365,84 +3384,175 @@
       "broker_short_term_bonds": 4575775,
       "broker_long_term_bonds": 4356,
       "broker_customer_deposits": 14833546,
-      "broker_afs_income": 68015,
-      "broker_custody_revenue": 13275,
-      "broker_financial_advisory_revenue": 62590,
-      "broker_operating_expenses": 7,
+      "broker_afs_income": 158676.897251,
+      "broker_custody_revenue": 13274.838561,
+      "broker_financial_advisory_revenue": 52589.999999,
+      "broker_operating_expenses": 127056.494784,
       "financial_line_items_schema_version": "2026-10-27-other-statements-source-fields-v11",
       "financial_line_items_schema_updated_at": "2026-10-28T05:15:03+00:00",
-      "broker_total_operating_expenses": 127056,
-      "broker_financial_expense": 57828,
+      "broker_total_operating_expenses": 127056.494784,
+      "broker_financial_expense": 459917.55073,
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "cc61b457b0984585e1c656ae5fad2fe3364f86840308cb8c0b0bf39ba7400112",
       "core_financial_extraction_evidence_attempt_count": 0,
-      "broker_trading_expense": 7,
+      "broker_trading_expense": 7.476,
       "cash_beginning_reported_ytd": 2864601,
       "financial_line_items_value_corrections": {
         "income_tax": {
-          "previous_value": 299193.322777,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": 299193,
+          "new_value": 299193.322777,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 299193322777,
+          "manually_visual_reviewed": false
         },
         "revenue": {
-          "previous_value": 2028164.685825,
-          "new_value": 62590,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": 62590,
+          "new_value": 2028164.685825,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 2028164685825,
+          "manually_visual_reviewed": false
         },
         "broker_total_operating_revenue": {
-          "previous_value": 2028164.685825,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 2028164.685825,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 2028164685825,
+          "manually_visual_reviewed": false
         },
         "broker_fvtpl_gain": {
-          "previous_value": 523097.068369,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 523097.068369,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 523097068369,
+          "manually_visual_reviewed": false
         },
         "broker_held_to_maturity_income": {
-          "previous_value": 33807.231145,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 33807.231145,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 33807231145,
+          "manually_visual_reviewed": false
         },
         "broker_lending_income": {
-          "previous_value": 731734.778172,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 731734.778172,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 731734778172,
+          "manually_visual_reviewed": false
         },
         "broker_afs_income": {
-          "previous_value": 158676.897251,
-          "new_value": 68015,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": 68015,
+          "new_value": 158676.897251,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 158676897251,
+          "manually_visual_reviewed": false
         },
         "broker_brokerage_revenue": {
-          "previous_value": 152784.768764,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 152784.768764,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 152784768764,
+          "manually_visual_reviewed": false
         },
         "broker_underwriting_revenue": {
-          "previous_value": 361042.025554,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 361042.025554,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 361042025554,
+          "manually_visual_reviewed": false
         },
         "broker_custody_revenue": {
-          "previous_value": 13274.838561,
-          "new_value": 13275,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": 13275,
+          "new_value": 13274.838561,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 13274838561,
+          "manually_visual_reviewed": false
         },
         "broker_financial_advisory_revenue": {
-          "previous_value": 52589.999999,
-          "new_value": 62590,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": 62590,
+          "new_value": 52589.999999,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 52589999999,
+          "manually_visual_reviewed": false
         },
         "broker_other_operating_income": {
-          "previous_value": 1157.07801,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 1157.07801,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 1157078010,
+          "manually_visual_reviewed": false
         },
         "broker_fvtpl_loss": {
-          "previous_value": 18635.991532,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 18635.991532,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 18635991532,
+          "manually_visual_reviewed": false
         },
         "broker_warrant_liability_revaluation_expense": {
           "previous_value": 433.788901,
@@ -3450,89 +3560,208 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "broker_lending_cost_combined_line": {
-          "previous_value": 700.498927,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 700.498927,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 700498927,
+          "manually_visual_reviewed": false
         },
         "broker_brokerage_expense": {
-          "previous_value": 53096.430817,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 53096.430817,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 53096430817,
+          "manually_visual_reviewed": false
         },
         "broker_custody_expense": {
-          "previous_value": 11726.0074,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 11726.0074,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 11726007400,
+          "manually_visual_reviewed": false
         },
         "broker_other_operating_expense": {
-          "previous_value": 42456.301207,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 42456.301207,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 42456301207,
+          "manually_visual_reviewed": false
         },
         "broker_trading_expense": {
-          "previous_value": 7.476,
-          "new_value": 7,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": 7,
+          "new_value": 7.476,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 7476000,
+          "manually_visual_reviewed": false
         },
         "broker_total_operating_expenses": {
-          "previous_value": 127056.494784,
-          "new_value": 127056,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": 127056,
+          "new_value": 127056.494784,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 127056494784,
+          "manually_visual_reviewed": false
         },
         "broker_operating_expenses": {
-          "previous_value": 127056.494784,
-          "new_value": 7,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": 7,
+          "new_value": 127056.494784,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 127056494784,
+          "manually_visual_reviewed": false
         },
         "financial_income": {
-          "previous_value": 7221.162086,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 7221.162086,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 7221162086,
+          "manually_visual_reviewed": false
         },
         "broker_financial_income": {
-          "previous_value": 7221.162086,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 7221.162086,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 7221162086,
+          "manually_visual_reviewed": false
         },
         "financial_expense": {
-          "previous_value": 459917.55073,
-          "new_value": 57828,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": 57828,
+          "new_value": 459917.55073,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 459917550730,
+          "manually_visual_reviewed": false
         },
         "broker_financial_expense": {
-          "previous_value": 459917.55073,
-          "new_value": 57828,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": 57828,
+          "new_value": 459917.55073,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 459917550730,
+          "manually_visual_reviewed": false
         },
         "interest_expense": {
-          "previous_value": 402089.293017,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 402089.293017,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 402089293017,
+          "manually_visual_reviewed": false
         },
         "broker_interest_expense": {
-          "previous_value": 402089.293017,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 402089.293017,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 402089293017,
+          "manually_visual_reviewed": false
         },
         "admin_expense": {
-          "previous_value": 137726.487123,
-          "new_value": 116669,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": 116669,
+          "new_value": 137726.487123,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 137726487123,
+          "manually_visual_reviewed": false
         },
         "broker_admin_expenses": {
-          "previous_value": 137726.487123,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 137726.487123,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 137726487123,
+          "manually_visual_reviewed": false
         },
         "operating_profit": {
-          "previous_value": 1310685.315274,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 1310685.315274,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 1310685315274,
+          "manually_visual_reviewed": false
         },
         "broker_net_operating_profit": {
-          "previous_value": 1310685.315274,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 1310685.315274,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q1, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+          "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
+          "source_value_vnd": 1310685315274,
+          "manually_visual_reviewed": false
         },
         "other_income": {
           "previous_value": 10.733957,
@@ -3628,26 +3857,26 @@
           "manually_visual_reviewed": false
         }
       },
-      "broker_total_operating_revenue": null,
-      "broker_fvtpl_gain": null,
-      "broker_held_to_maturity_income": null,
-      "broker_lending_income": null,
-      "broker_brokerage_revenue": null,
-      "broker_underwriting_revenue": null,
-      "broker_other_operating_income": null,
-      "broker_fvtpl_loss": null,
+      "broker_total_operating_revenue": 2028164.685825,
+      "broker_fvtpl_gain": 523097.068369,
+      "broker_held_to_maturity_income": 33807.231145,
+      "broker_lending_income": 731734.778172,
+      "broker_brokerage_revenue": 152784.768764,
+      "broker_underwriting_revenue": 361042.025554,
+      "broker_other_operating_income": 1157.07801,
+      "broker_fvtpl_loss": 18635.991532,
       "broker_warrant_liability_revaluation_expense": null,
-      "broker_lending_cost_combined_line": null,
-      "broker_brokerage_expense": null,
-      "broker_custody_expense": null,
-      "broker_other_operating_expense": null,
-      "financial_income": null,
-      "broker_financial_income": null,
-      "interest_expense": null,
-      "broker_interest_expense": null,
-      "broker_admin_expenses": null,
-      "operating_profit": null,
-      "broker_net_operating_profit": null,
+      "broker_lending_cost_combined_line": 700.498927,
+      "broker_brokerage_expense": 53096.430817,
+      "broker_custody_expense": 11726.0074,
+      "broker_other_operating_expense": 42456.301207,
+      "financial_income": 7221.162086,
+      "broker_financial_income": 7221.162086,
+      "interest_expense": 402089.293017,
+      "broker_interest_expense": 402089.293017,
+      "broker_admin_expenses": 137726.487123,
+      "operating_profit": 1310685.315274,
+      "broker_net_operating_profit": 1310685.315274,
       "other_income": null,
       "other_expense": null,
       "operating_cash_flow_ytd": null,
@@ -3661,109 +3890,66 @@
       "financial_line_items_rejected_fields": [],
       "financial_line_items_source_pages": [
         10,
-        11,
-        13,
-        14
+        11
       ],
       "financial_line_items_source_row_reconciliation": {
-        "source_policy": "VietstockFinance document catalog and linked PDF only",
+        "source_policy": "VietstockFinance document catalog and linked PDF/ZIP only",
         "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
         "source_document_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 1/TCBS_Baocaotaichinh_Q1_2025.pdf",
         "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/2441da308c9e6c38.pdf",
+        "source_pdf_member": "TCBS_Baocaotaichinh_Q1_2025.pdf",
         "report_form": "B02a-CTCK",
-        "report_scope": "BCTC riêng công ty chứng khoán; không phải BCTC hợp nhất",
+        "report_scope": "standalone securities-company financial statement; not consolidated",
         "pdf_pages": [
           10,
           11
         ],
-        "printed_pages": [
-          7,
-          8
-        ],
         "manually_visual_reviewed": false,
-        "exact_source_vnd": {
-          "revenue": 2028164685825,
-          "broker_total_operating_revenue": 2028164685825,
-          "broker_fvtpl_gain": 523097068369,
-          "broker_held_to_maturity_income": 33807231145,
-          "broker_lending_income": 731734778172,
-          "broker_afs_income": 158676897251,
-          "broker_brokerage_revenue": 152784768764,
-          "broker_underwriting_revenue": 361042025554,
-          "broker_custody_revenue": 13274838561,
-          "broker_financial_advisory_revenue": 52589999999,
-          "broker_other_operating_income": 1157078010,
-          "broker_fvtpl_loss": 18635991532,
-          "broker_warrant_liability_revaluation_expense": 433788901,
-          "broker_lending_cost_combined_line": 700498927,
-          "broker_brokerage_expense": 53096430817,
-          "broker_custody_expense": 11726007400,
-          "broker_other_operating_expense": 42456301207,
-          "broker_trading_expense": 7476000,
-          "broker_total_operating_expenses": 127056494784,
-          "broker_operating_expenses": 127056494784,
-          "financial_income": 7221162086,
-          "broker_financial_income": 7221162086,
-          "financial_expense": 459917550730,
-          "broker_financial_expense": 459917550730,
-          "interest_expense": 402089293017,
-          "broker_interest_expense": 402089293017,
-          "admin_expense": 137726487123,
-          "broker_admin_expenses": 137726487123,
-          "operating_profit": 1310685315274,
-          "broker_net_operating_profit": 1310685315274,
-          "other_income": 10733957,
-          "other_expense": 851832933,
-          "income_tax": 299193322777
+        "restored_fields": [
+          "revenue",
+          "broker_total_operating_revenue",
+          "broker_fvtpl_gain",
+          "broker_held_to_maturity_income",
+          "broker_lending_income",
+          "broker_afs_income",
+          "broker_brokerage_revenue",
+          "broker_underwriting_revenue",
+          "broker_custody_revenue",
+          "broker_financial_advisory_revenue",
+          "broker_other_operating_income",
+          "broker_fvtpl_loss",
+          "broker_lending_cost_combined_line",
+          "broker_trading_expense",
+          "broker_brokerage_expense",
+          "broker_custody_expense",
+          "broker_other_operating_expense",
+          "broker_total_operating_expenses",
+          "broker_operating_expenses",
+          "financial_income",
+          "broker_financial_income",
+          "financial_expense",
+          "broker_financial_expense",
+          "interest_expense",
+          "broker_interest_expense",
+          "admin_expense",
+          "broker_admin_expenses",
+          "operating_profit",
+          "broker_net_operating_profit",
+          "income_tax"
+        ],
+        "revenue_formula": "Lợi nhuận hoạt động (dòng 70) - doanh thu tài chính + tổng chi phí hoạt động + tổng chi phí tài chính + chi phí quản lý; tái lập từ các tổng phụ cùng cột Quý của B02a-CTCK VietstockFinance.",
+        "source_subtotals": {
+          "operating_result": 1310685.315274,
+          "financial_income": 7221.162086,
+          "total_operating_expenses": 127056.494784,
+          "financial_expense": 459917.55073,
+          "administration_expense": 137726.487123,
+          "reconstructed_revenue": 2028164.685825,
+          "previous_source_revenue": 2028164.685825
         },
-        "derived_fields": {
-          "income_tax": {
-            "formula": "reported pretax profit minus reported net profit after tax",
-            "value_million_vnd": 299193.322777
-          },
-          "cash_quarter_flows": {
-            "formula": "Q1 flows equal current YTD values"
-          },
-          "broker_lending_cost_combined_line": {
-            "note": "Source row 24 combines impairment/provision, doubtful-receivable losses and lending costs; not mapped as lending cost alone."
-          }
-        },
-        "source_tokens": {
-          "10": [
-            "523.097.068.369",
-            "33.807.231.145",
-            "731.734.778.172",
-            "158.676.897.251",
-            "152.784.768.764",
-            "361.042.025.554",
-            "13.274.838.561",
-            "52.589.999.999",
-            "1.157.078.010",
-            "2.028.164.685.825"
-          ],
-          "11": [
-            "53.096.430.817",
-            "11.726.007.400",
-            "42.456.301.207",
-            "127.056.494.784",
-            "7.221.162.086",
-            "459.917.550.730",
-            "402.089.293.017",
-            "137.726.487.123",
-            "1.310.685.315.274"
-          ],
-          "13": [
-            "3.193.452.873.535",
-            "12.545.511.663",
-            "554.573.273.390"
-          ],
-          "14": [
-            "2.651.425.111.808",
-            "4.582.180.994.188",
-            "2.310.027.768.246"
-          ]
-        },
-        "note": "Đã trích xuất lại tổng doanh thu hoạt động, các dòng thu nhập/chi phí dễ nhận diện, tổng chi phí, tổng doanh thu/chi phí tài chính, quản lý và kết quả hoạt động. Dòng chi phí số 24 là khoản tổng hợp nên không gán thành riêng chi phí đi vay. Thuế tổng được đối chiếu từ lợi nhuận trước thuế - lợi nhuận sau thuế. Chưa kiểm tra trực quan toàn bộ PDF; giữ trạng thái chờ rà soát trực quan."
+        "validation": {
+          "reconstructed_revenue_matches_reference": true
+        }
       },
       "cashflow_source_reconciliation": {
         "source_policy": "VietstockFinance document catalog and linked PDF only",
@@ -3826,7 +4012,9 @@
             "source_value_vnd": 52954968277078
           }
         }
-      }
+      },
+      "revenue_calculation": "Lợi nhuận hoạt động (dòng 70) - doanh thu tài chính + tổng chi phí hoạt động + tổng chi phí tài chính + chi phí quản lý; tái lập từ các tổng phụ cùng cột Quý của B02a-CTCK VietstockFinance.",
+      "broker_total_operating_revenue_calculation": "Lợi nhuận hoạt động (dòng 70) - doanh thu tài chính + tổng chi phí hoạt động + tổng chi phí tài chính + chi phí quản lý; tái lập từ các tổng phụ cùng cột Quý của B02a-CTCK VietstockFinance."
     },
     {
       "symbol": "TCX",
@@ -3899,15 +4087,31 @@
       "cash_and_equivalents": 2997602,
       "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
+        "admin_expense",
+        "broker_admin_expenses",
+        "broker_financial_expense",
+        "broker_financial_income",
+        "broker_interest_expense",
+        "broker_net_operating_profit",
+        "broker_operating_expenses",
+        "broker_total_operating_expenses",
+        "broker_total_operating_revenue",
         "cash_and_equivalents",
         "cash_beginning",
         "cashflow_period_basis",
-        "income_tax"
+        "financial_expense",
+        "financial_income",
+        "income_tax",
+        "income_tax_current",
+        "income_tax_deferred",
+        "interest_expense",
+        "operating_profit",
+        "revenue"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
-      "financial_line_items_updated_at": "2026-10-28T05:15:03+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Đã khôi phục Q2/2025: số dư bảng cân đối, tổng doanh thu hoạt động tái dựng từ tổng phụ KQKD, chi phí/thu nhập tài chính, chi phí quản lý, lợi nhuận hoạt động, thuế và dòng tiền quý. Dòng tiền Q2 bằng số lũy kế 6 tháng trừ Q1. Nguồn là BCTC riêng CTCK trong ZIP VietstockFinance; còn chờ rà soát trực quan PDF.",
+      "financial_line_items_updated_at": "2026-10-28T06:10:00Z",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Đã khôi phục Q2/2025: số dư bảng cân đối, tổng doanh thu hoạt động tái dựng từ tổng phụ KQKD, chi phí/thu nhập tài chính, chi phí quản lý, lợi nhuận hoạt động, thuế và dòng tiền quý. Dòng tiền Q2 bằng số lũy kế 6 tháng trừ Q1. Nguồn là BCTC riêng CTCK trong ZIP VietstockFinance; còn chờ rà soát trực quan PDF. Q2/2025: doanh thu hoạt động được tái lập theo đồng nhất thức dòng 70 và các tổng phụ nguồn; các dòng chi phí, doanh thu tài chính, lợi nhuận hoạt động, thuế được lấy từ cột Quý II B02a-CTCK VietstockFinance. Chờ rà soát trực quan trang scan.",
       "financial_line_items_prior_values": {
         "income_tax": 313028,
         "cash_and_equivalents": 2997602,
@@ -3959,7 +4163,7 @@
         "revenue": 2659998.744458
       },
       "financial_line_items_rejected_values": {},
-      "income_tax": 313028,
+      "income_tax": 313027.670349,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
       "financial_line_items_schema_version": "2026-10-27-other-statements-source-fields-v11",
       "financial_line_items_schema_updated_at": "2026-10-28T05:14:51+00:00",
@@ -3971,9 +4175,16 @@
       "cash_beginning_reported_ytd": null,
       "financial_line_items_value_corrections": {
         "income_tax": {
-          "previous_value": 313027.670349,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": 313028,
+          "new_value": 313027.670349,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q2, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pdf_member": "TCBS - BCTC QII.2025 (VN).pdf",
+          "source_value_vnd": 313027670349,
+          "manually_visual_reviewed": false
         },
         "current_assets": {
           "previous_value": 61740702.018288,
@@ -4051,24 +4262,52 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "revenue": {
-          "previous_value": 2659998.744458,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 2659998.744458,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q2, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pdf_member": "TCBS - BCTC QII.2025 (VN).pdf",
+          "source_value_vnd": 2659998744458,
+          "manually_visual_reviewed": false
         },
         "broker_total_operating_revenue": {
-          "previous_value": 2659998.744458,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 2659998.744458,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q2, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pdf_member": "TCBS - BCTC QII.2025 (VN).pdf",
+          "source_value_vnd": 2659998744458,
+          "manually_visual_reviewed": false
         },
         "broker_total_operating_expenses": {
-          "previous_value": 219102.604818,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 219102.604818,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q2, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pdf_member": "TCBS - BCTC QII.2025 (VN).pdf",
+          "source_value_vnd": 219102604818,
+          "manually_visual_reviewed": false
         },
         "broker_operating_expenses": {
-          "previous_value": 219102.604818,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 219102.604818,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q2, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pdf_member": "TCBS - BCTC QII.2025 (VN).pdf",
+          "source_value_vnd": 219102604818,
+          "manually_visual_reviewed": false
         },
         "broker_brokerage_expense": {
           "previous_value": 76600.690429,
@@ -4086,64 +4325,148 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "financial_income": {
-          "previous_value": 9610.461095,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 9610.461095,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q2, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pdf_member": "TCBS - BCTC QII.2025 (VN).pdf",
+          "source_value_vnd": 9610461095,
+          "manually_visual_reviewed": false
         },
         "broker_financial_income": {
-          "previous_value": 9610.461095,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 9610.461095,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q2, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pdf_member": "TCBS - BCTC QII.2025 (VN).pdf",
+          "source_value_vnd": 9610461095,
+          "manually_visual_reviewed": false
         },
         "financial_expense": {
-          "previous_value": 569420.566564,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 569420.566564,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q2, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pdf_member": "TCBS - BCTC QII.2025 (VN).pdf",
+          "source_value_vnd": 569420566564,
+          "manually_visual_reviewed": false
         },
         "broker_financial_expense": {
-          "previous_value": 569420.566564,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 569420.566564,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q2, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pdf_member": "TCBS - BCTC QII.2025 (VN).pdf",
+          "source_value_vnd": 569420566564,
+          "manually_visual_reviewed": false
         },
         "interest_expense": {
-          "previous_value": 497334.00693,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 497334.00693,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q2, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pdf_member": "TCBS - BCTC QII.2025 (VN).pdf",
+          "source_value_vnd": 497334006930,
+          "manually_visual_reviewed": false
         },
         "broker_interest_expense": {
-          "previous_value": 497334.00693,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 497334.00693,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q2, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pdf_member": "TCBS - BCTC QII.2025 (VN).pdf",
+          "source_value_vnd": 497334006930,
+          "manually_visual_reviewed": false
         },
         "admin_expense": {
-          "previous_value": 147960.661005,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 147960.661005,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q2, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pdf_member": "TCBS - BCTC QII.2025 (VN).pdf",
+          "source_value_vnd": 147960661005,
+          "manually_visual_reviewed": false
         },
         "broker_admin_expenses": {
-          "previous_value": 147960.661005,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 147960.661005,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q2, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pdf_member": "TCBS - BCTC QII.2025 (VN).pdf",
+          "source_value_vnd": 147960661005,
+          "manually_visual_reviewed": false
         },
         "operating_profit": {
-          "previous_value": 1733125.373166,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 1733125.373166,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q2, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pdf_member": "TCBS - BCTC QII.2025 (VN).pdf",
+          "source_value_vnd": 1733125373166,
+          "manually_visual_reviewed": false
         },
         "broker_net_operating_profit": {
-          "previous_value": 1733125.373166,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 1733125.373166,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q2, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pdf_member": "TCBS - BCTC QII.2025 (VN).pdf",
+          "source_value_vnd": 1733125373166,
+          "manually_visual_reviewed": false
         },
         "income_tax_current": {
-          "previous_value": 311831.947363,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 311831.947363,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q2, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pdf_member": "TCBS - BCTC QII.2025 (VN).pdf",
+          "source_value_vnd": 311831947363,
+          "manually_visual_reviewed": false
         },
         "income_tax_deferred": {
-          "previous_value": 1195.722986,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 1195.722986,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q2, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+          "source_pdf_member": "TCBS - BCTC QII.2025 (VN).pdf",
+          "source_value_vnd": 1195722986,
+          "manually_visual_reviewed": false
         },
         "operating_cash_flow_ytd": {
           "previous_value": -9604109.654171,
@@ -4225,25 +4548,25 @@
       "broker_short_term_bonds": null,
       "broker_long_term_bonds": null,
       "retained_earnings": null,
-      "revenue": null,
-      "broker_total_operating_revenue": null,
-      "broker_total_operating_expenses": null,
-      "broker_operating_expenses": null,
+      "revenue": 2659998.744458,
+      "broker_total_operating_revenue": 2659998.744458,
+      "broker_total_operating_expenses": 219102.604818,
+      "broker_operating_expenses": 219102.604818,
       "broker_brokerage_expense": null,
       "broker_custody_expense": null,
       "broker_other_operating_expense": null,
-      "financial_income": null,
-      "broker_financial_income": null,
-      "financial_expense": null,
-      "broker_financial_expense": null,
-      "interest_expense": null,
-      "broker_interest_expense": null,
-      "admin_expense": null,
-      "broker_admin_expenses": null,
-      "operating_profit": null,
-      "broker_net_operating_profit": null,
-      "income_tax_current": null,
-      "income_tax_deferred": null,
+      "financial_income": 9610.461095,
+      "broker_financial_income": 9610.461095,
+      "financial_expense": 569420.566564,
+      "broker_financial_expense": 569420.566564,
+      "interest_expense": 497334.00693,
+      "broker_interest_expense": 497334.00693,
+      "admin_expense": 147960.661005,
+      "broker_admin_expenses": 147960.661005,
+      "operating_profit": 1733125.373166,
+      "broker_net_operating_profit": 1733125.373166,
+      "income_tax_current": 311831.947363,
+      "income_tax_deferred": 1195.722986,
       "operating_cash_flow_ytd": null,
       "investing_cash_flow_ytd": null,
       "financing_cash_flow_ytd": null,
@@ -4258,12 +4581,8 @@
       "cash_ending_calculation": "Số dư tiền cuối Q2/2025 lấy trực tiếp từ B03a-CTCK; khớp B01a-CTCK.",
       "financial_line_items_rejected_fields": [],
       "financial_line_items_source_pages": [
-        5,
-        6,
         10,
-        11,
-        12,
-        13
+        11
       ],
       "financial_line_items_balance_source_reconciliation": {
         "source_policy": "VietstockFinance document catalog and linked PDF/ZIP only",
@@ -4371,78 +4690,46 @@
         "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
         "source_document_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 2/TCBS_Baocaotaichinh_Q2_2025.zip",
         "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/9d460382e27f59cf.zip",
+        "source_pdf_member": "TCBS - BCTC QII.2025 (VN).pdf",
         "report_form": "B02a-CTCK",
-        "report_scope": "BCTC riêng công ty chứng khoán; không phải BCTC hợp nhất",
+        "report_scope": "standalone securities-company financial statement; not consolidated",
         "pdf_pages": [
           10,
           11
         ],
-        "printed_pages": [
-          8,
-          9
-        ],
         "manually_visual_reviewed": false,
-        "exact_source_vnd": {
-          "revenue": 2659998744458,
-          "broker_total_operating_revenue": 2659998744458,
-          "broker_total_operating_expenses": 219102604818,
-          "broker_operating_expenses": 219102604818,
-          "broker_brokerage_expense": 76600690429,
-          "broker_custody_expense": 21455816281,
-          "broker_other_operating_expense": 54472631866,
-          "financial_income": 9610461095,
-          "broker_financial_income": 9610461095,
-          "financial_expense": 569420566564,
-          "broker_financial_expense": 569420566564,
-          "interest_expense": 497334006930,
-          "broker_interest_expense": 497334006930,
-          "admin_expense": 147960661005,
-          "broker_admin_expenses": 147960661005,
-          "operating_profit": 1733125373166,
-          "broker_net_operating_profit": 1733125373166,
-          "income_tax": 313027670349,
-          "income_tax_current": 311831947363,
-          "income_tax_deferred": 1195722986
+        "restored_fields": [
+          "revenue",
+          "broker_total_operating_revenue",
+          "broker_total_operating_expenses",
+          "broker_operating_expenses",
+          "financial_income",
+          "broker_financial_income",
+          "financial_expense",
+          "broker_financial_expense",
+          "interest_expense",
+          "broker_interest_expense",
+          "admin_expense",
+          "broker_admin_expenses",
+          "operating_profit",
+          "broker_net_operating_profit",
+          "income_tax",
+          "income_tax_current",
+          "income_tax_deferred"
+        ],
+        "revenue_formula": "Lợi nhuận hoạt động (dòng 70) - doanh thu tài chính + tổng chi phí hoạt động + tổng chi phí tài chính + chi phí quản lý; tái lập từ các tổng phụ cùng cột Quý của B02a-CTCK VietstockFinance.",
+        "source_subtotals": {
+          "operating_result": 1733125.373166,
+          "financial_income": 9610.461095,
+          "total_operating_expenses": 219102.604818,
+          "financial_expense": 569420.566564,
+          "administration_expense": 147960.661005,
+          "reconstructed_revenue": 2659998.744458,
+          "previous_source_revenue": 2659998.744458
         },
-        "derived_fields": {
-          "revenue": {
-            "formula": "operating profit - financial income + total operating expenses + financial expenses + management expenses",
-            "value_million_vnd": 2659998.744458,
-            "source_fields": [
-              "operating_profit",
-              "financial_income",
-              "broker_total_operating_expenses",
-              "financial_expense",
-              "admin_expense"
-            ]
-          },
-          "income_tax": {
-            "formula": "pretax profit minus net profit after tax",
-            "value_million_vnd": 313027.670349
-          }
-        },
-        "source_tokens": {
-          "10": [
-            "76,600,690,429",
-            "21,455,816,281",
-            "54,472,631,866",
-            "219,102,604,818",
-            "9,610,461,095",
-            "569,420,566,564",
-            "497,334,006,930",
-            "285,687,148,128",
-            "147,960,661,005",
-            "1,733,125,373,166"
-          ],
-          "11": [
-            "313,027,670,349",
-            "311,831,947,363",
-            "1,195,722,986",
-            "1,733,101,500,233",
-            "1,420,073,829,884"
-          ]
-        },
-        "note": "Tổng doanh thu hoạt động Q2 tái dựng từ các tổng phụ công bố vì OCR trang doanh thu hoạt động không đọc được; phương trình tổng phụ cho lợi nhuận hoạt động khớp. Chi phí dòng 24 là khoản tổng hợp, không gán vào một loại chi phí riêng."
+        "validation": {
+          "reconstructed_revenue_matches_reference": true
+        }
       },
       "cashflow_source_reconciliation": {
         "source_policy": "VietstockFinance document catalog and linked PDF/ZIP only",
@@ -4480,7 +4767,9 @@
         "opening_closing_cash_bridge_reconciles": true,
         "manually_visual_reviewed": false,
         "note": "Q2 flows = 6-month YTD minus Q1 YTD. Starting cash is Q1 closing balance; ending cash matches B01a-CTCK. Text extracted from VietstockFinance-linked ZIP; pending visual review."
-      }
+      },
+      "revenue_calculation": "Lợi nhuận hoạt động (dòng 70) - doanh thu tài chính + tổng chi phí hoạt động + tổng chi phí tài chính + chi phí quản lý; tái lập từ các tổng phụ cùng cột Quý của B02a-CTCK VietstockFinance.",
+      "broker_total_operating_revenue_calculation": "Lợi nhuận hoạt động (dòng 70) - doanh thu tài chính + tổng chi phí hoạt động + tổng chi phí tài chính + chi phí quản lý; tái lập từ các tổng phụ cùng cột Quý của B02a-CTCK VietstockFinance."
     },
     {
       "symbol": "TCX",
@@ -4560,33 +4849,40 @@
       "current_liabilities": 38288931,
       "long_term_liabilities": 1005736,
       "retained_earnings": 10738962,
-      "financial_expense": 47556,
-      "interest_expense": 536214,
+      "financial_expense": 583770.068264,
+      "interest_expense": 536214.064771,
       "investing_cash_flow_ytd": -58635,
       "financing_cash_flow_ytd": 22747993,
       "cash_beginning": 2864601,
       "cash_ending": 5291518,
       "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
+        "admin_expense",
+        "broker_admin_expenses",
         "broker_afs_assets",
         "broker_customer_deposits",
         "broker_financial_expense",
+        "broker_financial_income",
         "broker_held_to_maturity_assets",
         "broker_interest_expense",
         "broker_lending_assets",
         "broker_long_term_bonds",
+        "broker_net_operating_profit",
         "broker_operating_expenses",
         "broker_receivables",
         "broker_short_term_bonds",
         "broker_short_term_borrowings",
         "broker_total_operating_expenses",
+        "broker_total_operating_revenue",
         "cash_and_equivalents",
         "cash_beginning",
         "cash_ending",
         "cashflow_period_basis",
         "current_assets",
         "current_liabilities",
+        "eps",
         "financial_expense",
+        "financial_income",
         "financing_cash_flow_ytd",
         "fixed_assets",
         "income_tax",
@@ -4594,12 +4890,14 @@
         "investing_cash_flow_ytd",
         "long_term_liabilities",
         "non_current_assets",
-        "retained_earnings"
+        "operating_profit",
+        "retained_earnings",
+        "revenue"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/5e23aaf39ecfaf53.zip",
-      "financial_line_items_updated_at": "2026-10-28T05:15:03+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Đã khôi phục chi tiết B01a-CTCK Q3/2025 từ ZIP VietstockFinance, đơn vị triệu VND; báo cáo riêng công ty chứng khoán, không phải hợp nhất. Chờ rà soát trực quan. Đã điền tổng doanh thu hoạt động Q3/2025 theo phương trình tổng phụ của B02a-CTCK vì OCR không đọc được dòng tổng doanh thu; các dòng chi tiết chưa đủ căn cứ tiếp tục để trống. Đã khôi phục lưu chuyển tiền riêng Q3/2025 bằng lũy kế 9 tháng trừ lũy kế 6 tháng; số dư đầu/cuối quý khớp cầu nối tiền. Nguồn là B03a-CTCK trong ZIP VietstockFinance.",
+      "financial_line_items_updated_at": "2026-10-28T06:10:00Z",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Đã khôi phục chi tiết B01a-CTCK Q3/2025 từ ZIP VietstockFinance, đơn vị triệu VND; báo cáo riêng công ty chứng khoán, không phải hợp nhất. Chờ rà soát trực quan. Đã điền tổng doanh thu hoạt động Q3/2025 theo phương trình tổng phụ của B02a-CTCK vì OCR không đọc được dòng tổng doanh thu; các dòng chi tiết chưa đủ căn cứ tiếp tục để trống. Đã khôi phục lưu chuyển tiền riêng Q3/2025 bằng lũy kế 9 tháng trừ lũy kế 6 tháng; số dư đầu/cuối quý khớp cầu nối tiền. Nguồn là B03a-CTCK trong ZIP VietstockFinance. Q3/2025: doanh thu hoạt động được tái lập theo đồng nhất thức dòng 70 của B02a-CTCK và tổng phụ từ cột Quý III; thuế dùng tổng thuế công bố vì cặp thuế chi tiết OCR không khớp. EPS 767 VND/cổ phiếu lấy từ dòng 501 của trang 11. Chờ rà soát trực quan.",
       "financial_line_items_prior_values": {
         "income_tax": 404882,
         "current_assets": 78382770,
@@ -4655,7 +4953,7 @@
         "revenue": 3164274.146538
       },
       "financial_line_items_rejected_values": {},
-      "income_tax": 404882,
+      "income_tax": 404881.436097,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
       "broker_held_to_maturity_assets": 3451359,
       "broker_lending_assets": 41712992,
@@ -4665,21 +4963,28 @@
       "broker_short_term_bonds": 4367617,
       "broker_long_term_bonds": 999946,
       "broker_customer_deposits": 12762473,
-      "broker_operating_expenses": 403418,
+      "broker_operating_expenses": 403418.061247,
       "financial_line_items_schema_version": "2026-10-27-other-statements-source-fields-v11",
       "financial_line_items_schema_updated_at": "2026-10-28T05:14:53+00:00",
-      "broker_total_operating_expenses": 403418,
-      "broker_financial_expense": 47556,
-      "broker_interest_expense": 536214,
+      "broker_total_operating_expenses": 403418.061247,
+      "broker_financial_expense": 583770.068264,
+      "broker_interest_expense": 536214.064771,
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "2adf377110e4b508d92fbfab8d7c46c84a29c88e8901a4eab9b6b0ab57a507cd",
       "core_financial_extraction_evidence_attempt_count": 0,
       "cash_beginning_reported_ytd": 2864601,
       "financial_line_items_value_corrections": {
         "income_tax": {
-          "previous_value": 404881.436097,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": 404882,
+          "new_value": 404881.436097,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q3, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 3/TCX_Baocaotaichinh_Q3_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/5e23aaf39ecfaf53.zip",
+          "source_pdf_member": "TCBS - BCTC QIII.2025 (VN)-T13xpogX.pdf",
+          "source_value_vnd": 404881436097,
+          "manually_visual_reviewed": false
         },
         "current_assets": {
           "previous_value": 78382769.92019,
@@ -4757,24 +5062,52 @@
           "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
         },
         "revenue": {
-          "previous_value": 3164274.146538,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 3164274.146538,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q3, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 3/TCX_Baocaotaichinh_Q3_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/5e23aaf39ecfaf53.zip",
+          "source_pdf_member": "TCBS - BCTC QIII.2025 (VN)-T13xpogX.pdf",
+          "source_value_vnd": 3164274146538,
+          "manually_visual_reviewed": false
         },
         "broker_total_operating_revenue": {
-          "previous_value": 3164274.146538,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 3164274.146538,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q3, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 3/TCX_Baocaotaichinh_Q3_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/5e23aaf39ecfaf53.zip",
+          "source_pdf_member": "TCBS - BCTC QIII.2025 (VN)-T13xpogX.pdf",
+          "source_value_vnd": 3164274146538,
+          "manually_visual_reviewed": false
         },
         "broker_total_operating_expenses": {
-          "previous_value": 403418.061247,
-          "new_value": 403418,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": 403418,
+          "new_value": 403418.061247,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q3, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 3/TCX_Baocaotaichinh_Q3_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/5e23aaf39ecfaf53.zip",
+          "source_pdf_member": "TCBS - BCTC QIII.2025 (VN)-T13xpogX.pdf",
+          "source_value_vnd": 403418061247,
+          "manually_visual_reviewed": false
         },
         "broker_operating_expenses": {
-          "previous_value": 403418.061247,
-          "new_value": 403418,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": 403418,
+          "new_value": 403418.061247,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q3, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 3/TCX_Baocaotaichinh_Q3_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/5e23aaf39ecfaf53.zip",
+          "source_pdf_member": "TCBS - BCTC QIII.2025 (VN)-T13xpogX.pdf",
+          "source_value_vnd": 403418061247,
+          "manually_visual_reviewed": false
         },
         "broker_brokerage_expense": {
           "previous_value": 141988.61395,
@@ -4792,54 +5125,124 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "financial_income": {
-          "previous_value": 17491.774068,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 17491.774068,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q3, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 3/TCX_Baocaotaichinh_Q3_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/5e23aaf39ecfaf53.zip",
+          "source_pdf_member": "TCBS - BCTC QIII.2025 (VN)-T13xpogX.pdf",
+          "source_value_vnd": 17491774068,
+          "manually_visual_reviewed": false
         },
         "broker_financial_income": {
-          "previous_value": 17491.774068,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 17491.774068,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q3, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 3/TCX_Baocaotaichinh_Q3_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/5e23aaf39ecfaf53.zip",
+          "source_pdf_member": "TCBS - BCTC QIII.2025 (VN)-T13xpogX.pdf",
+          "source_value_vnd": 17491774068,
+          "manually_visual_reviewed": false
         },
         "financial_expense": {
-          "previous_value": 583770.068264,
-          "new_value": 47556,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": 47556,
+          "new_value": 583770.068264,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q3, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 3/TCX_Baocaotaichinh_Q3_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/5e23aaf39ecfaf53.zip",
+          "source_pdf_member": "TCBS - BCTC QIII.2025 (VN)-T13xpogX.pdf",
+          "source_value_vnd": 583770068264,
+          "manually_visual_reviewed": false
         },
         "broker_financial_expense": {
-          "previous_value": 583770.068264,
-          "new_value": 47556,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": 47556,
+          "new_value": 583770.068264,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q3, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 3/TCX_Baocaotaichinh_Q3_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/5e23aaf39ecfaf53.zip",
+          "source_pdf_member": "TCBS - BCTC QIII.2025 (VN)-T13xpogX.pdf",
+          "source_value_vnd": 583770068264,
+          "manually_visual_reviewed": false
         },
         "interest_expense": {
-          "previous_value": 536214.064771,
-          "new_value": 536214,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": 536214,
+          "new_value": 536214.064771,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q3, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 3/TCX_Baocaotaichinh_Q3_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/5e23aaf39ecfaf53.zip",
+          "source_pdf_member": "TCBS - BCTC QIII.2025 (VN)-T13xpogX.pdf",
+          "source_value_vnd": 536214064771,
+          "manually_visual_reviewed": false
         },
         "broker_interest_expense": {
-          "previous_value": 536214.064771,
-          "new_value": 536214,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": 536214,
+          "new_value": 536214.064771,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q3, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 3/TCX_Baocaotaichinh_Q3_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/5e23aaf39ecfaf53.zip",
+          "source_pdf_member": "TCBS - BCTC QIII.2025 (VN)-T13xpogX.pdf",
+          "source_value_vnd": 536214064771,
+          "manually_visual_reviewed": false
         },
         "admin_expense": {
-          "previous_value": 170652.269576,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 170652.269576,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q3, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 3/TCX_Baocaotaichinh_Q3_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/5e23aaf39ecfaf53.zip",
+          "source_pdf_member": "TCBS - BCTC QIII.2025 (VN)-T13xpogX.pdf",
+          "source_value_vnd": 170652269576,
+          "manually_visual_reviewed": false
         },
         "broker_admin_expenses": {
-          "previous_value": 170652.269576,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 170652.269576,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q3, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 3/TCX_Baocaotaichinh_Q3_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/5e23aaf39ecfaf53.zip",
+          "source_pdf_member": "TCBS - BCTC QIII.2025 (VN)-T13xpogX.pdf",
+          "source_value_vnd": 170652269576,
+          "manually_visual_reviewed": false
         },
         "operating_profit": {
-          "previous_value": 2023925.521519,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 2023925.521519,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q3, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 3/TCX_Baocaotaichinh_Q3_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/5e23aaf39ecfaf53.zip",
+          "source_pdf_member": "TCBS - BCTC QIII.2025 (VN)-T13xpogX.pdf",
+          "source_value_vnd": 2023925521519,
+          "manually_visual_reviewed": false
         },
         "broker_net_operating_profit": {
-          "previous_value": 2023925.521519,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 2023925.521519,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q3, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 3/TCX_Baocaotaichinh_Q3_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/5e23aaf39ecfaf53.zip",
+          "source_pdf_member": "TCBS - BCTC QIII.2025 (VN)-T13xpogX.pdf",
+          "source_value_vnd": 2023925521519,
+          "manually_visual_reviewed": false
         },
         "other_income": {
           "previous_value": 486.252,
@@ -4867,9 +5270,16 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "eps": {
-          "previous_value": 767,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 767,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q3, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 3/TCX_Baocaotaichinh_Q3_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/5e23aaf39ecfaf53.zip",
+          "source_pdf_member": "TCBS - BCTC QIII.2025 (VN)-T13xpogX.pdf",
+          "source_value_vnd": 767,
+          "manually_visual_reviewed": false
         },
         "operating_cash_flow_ytd": {
           "previous_value": -20252192.435473,
@@ -4938,23 +5348,23 @@
         }
       },
       "broker_fvtpl_assets": null,
-      "revenue": null,
-      "broker_total_operating_revenue": null,
+      "revenue": 3164274.146538,
+      "broker_total_operating_revenue": 3164274.146538,
       "broker_brokerage_expense": null,
       "broker_custody_expense": null,
       "broker_other_operating_expense": null,
-      "financial_income": null,
-      "broker_financial_income": null,
-      "admin_expense": null,
-      "broker_admin_expenses": null,
-      "operating_profit": null,
-      "broker_net_operating_profit": null,
+      "financial_income": 17491.774068,
+      "broker_financial_income": 17491.774068,
+      "admin_expense": 170652.269576,
+      "broker_admin_expenses": 170652.269576,
+      "operating_profit": 2023925.521519,
+      "broker_net_operating_profit": 2023925.521519,
       "other_income": null,
       "other_expense": null,
       "other_operating_result": null,
       "income_tax_current": null,
       "income_tax_deferred": null,
-      "eps": null,
+      "eps": 767,
       "operating_cash_flow_ytd": null,
       "net_cash_change_ytd": null,
       "operating_cash_flow": null,
@@ -4967,12 +5377,8 @@
       "cash_ending_calculation": "Số dư tiền cuối quý III/2025 lấy trực tiếp từ B03a-CTCK; khớp số dư cuối kỳ trên B01a-CTCK.",
       "financial_line_items_rejected_fields": [],
       "financial_line_items_source_pages": [
-        5,
-        6,
         10,
-        11,
-        12,
-        13
+        11
       ],
       "financial_line_items_balance_source_reconciliation": {
         "source_policy": "VietstockFinance document catalog and linked PDF/ZIP only",
@@ -5080,82 +5486,45 @@
         "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
         "source_document_url": "https://static2.vietstock.vn/data/KHAC/2025/BCTC/VN/QUY 3/TCX_Baocaotaichinh_Q3_2025.zip",
         "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/5e23aaf39ecfaf53.zip",
+        "source_pdf_member": "TCBS - BCTC QIII.2025 (VN)-T13xpogX.pdf",
         "report_form": "B02a-CTCK",
-        "report_scope": "BCTC riêng công ty chứng khoán TCBS; không phải BCTC hợp nhất",
+        "report_scope": "standalone securities-company financial statement; not consolidated",
         "pdf_pages": [
           10,
           11
         ],
-        "printed_pages": [
-          8,
-          9
-        ],
         "manually_visual_reviewed": false,
-        "exact_source_vnd": {
-          "revenue": 3164274146538,
-          "broker_total_operating_revenue": 3164274146538,
-          "broker_total_operating_expenses": 403418061247,
-          "broker_operating_expenses": 403418061247,
-          "broker_brokerage_expense": 141988613950,
-          "broker_custody_expense": 21510812097,
-          "broker_other_operating_expense": 91250698238,
-          "financial_income": 17491774068,
-          "broker_financial_income": 17491774068,
-          "financial_expense": 583770068264,
-          "broker_financial_expense": 583770068264,
-          "interest_expense": 536214064771,
-          "broker_interest_expense": 536214064771,
-          "admin_expense": 170652269576,
-          "broker_admin_expenses": 170652269576,
-          "operating_profit": 2023925521519,
-          "broker_net_operating_profit": 2023925521519,
-          "other_income": 486252000,
-          "other_expense": 4934833,
-          "other_operating_result": 481317167,
-          "income_tax": 404881436097,
-          "income_tax_current": 404977243039,
-          "income_tax_deferred": -95806942,
-          "eps": 767000000
+        "restored_fields": [
+          "revenue",
+          "broker_total_operating_revenue",
+          "broker_total_operating_expenses",
+          "broker_operating_expenses",
+          "financial_income",
+          "broker_financial_income",
+          "financial_expense",
+          "broker_financial_expense",
+          "interest_expense",
+          "broker_interest_expense",
+          "admin_expense",
+          "broker_admin_expenses",
+          "operating_profit",
+          "broker_net_operating_profit",
+          "income_tax",
+          "eps"
+        ],
+        "revenue_formula": "Lợi nhuận hoạt động (dòng 70) - doanh thu tài chính + tổng chi phí hoạt động + tổng chi phí tài chính + chi phí quản lý; tái lập từ các tổng phụ cùng cột Quý của B02a-CTCK VietstockFinance.",
+        "source_subtotals": {
+          "operating_result": 2023925.521519,
+          "financial_income": 17491.774068,
+          "total_operating_expenses": 403418.061247,
+          "financial_expense": 583770.068264,
+          "administration_expense": 170652.269576,
+          "reconstructed_revenue": 3164274.146538,
+          "previous_source_revenue": 3164274.146538
         },
-        "derived_fields": {
-          "revenue": {
-            "formula": "operating profit - financial income + total operating expenses + total financial expenses + general/admin expenses",
-            "value_million_vnd": 3164274.146538,
-            "source_fields": [
-              "operating_profit",
-              "financial_income",
-              "broker_total_operating_expenses",
-              "financial_expense",
-              "admin_expense"
-            ]
-          },
-          "income_tax": {
-            "formula": "reported PBT - reported net profit after tax",
-            "value_million_vnd": 404881.436097
-          }
-        },
-        "source_tokens": {
-          "10": [
-            "141.988.613.950",
-            "21.510.812.097",
-            "91.250.698.238",
-            "403.418.061.247",
-            "17.491.774.068",
-            "583.770.068.264",
-            "536.214.064.771",
-            "170.652.269.576",
-            "2.023.925.521.519"
-          ],
-          "11": [
-            "2.024.406.838.686",
-            "404.881.436.097",
-            "404.977.243.039",
-            "(95.806.942)",
-            "1.619.525.402.589",
-            "767"
-          ]
-        },
-        "note": "Tổng doanh thu hoạt động được suy ra từ phương trình các tổng phụ B02a-CTCK vì dòng tổng doanh thu ở trang 9 trong sidecar OCR không đọc được. Các dòng tài chính/chi phí/thuế/PBT/LNST và EPS lấy từ các trang nguồn; trạng thái vẫn chờ rà soát trực quan."
+        "validation": {
+          "reconstructed_revenue_matches_reference": true
+        }
       },
       "cashflow_source_reconciliation": {
         "source_policy": "VietstockFinance document catalog and linked PDF/ZIP only",
@@ -5193,7 +5562,9 @@
         "opening_closing_cash_bridge_reconciles": true,
         "manually_visual_reviewed": false,
         "note": "Số lưu chuyển tiền riêng quý III = lũy kế 9 tháng trừ lũy kế 6 tháng. Số dư đầu quý = số dư cuối Q2; số dư cuối quý lấy trực tiếp từ B03a-CTCK."
-      }
+      },
+      "revenue_calculation": "Lợi nhuận hoạt động (dòng 70) - doanh thu tài chính + tổng chi phí hoạt động + tổng chi phí tài chính + chi phí quản lý; tái lập từ các tổng phụ cùng cột Quý của B02a-CTCK VietstockFinance.",
+      "broker_total_operating_revenue_calculation": "Lợi nhuận hoạt động (dòng 70) - doanh thu tài chính + tổng chi phí hoạt động + tổng chi phí tài chính + chi phí quản lý; tái lập từ các tổng phụ cùng cột Quý của B02a-CTCK VietstockFinance."
     },
     {
       "symbol": "TCX",
@@ -5272,43 +5643,54 @@
       "current_liabilities": 35016932,
       "long_term_liabilities": 1515745,
       "retained_earnings": 12372044,
-      "financial_expense": 49385,
-      "interest_expense": 619374,
+      "financial_expense": 668759.010948,
+      "interest_expense": 619374.01378,
       "operating_cash_flow_ytd": 7108704,
       "financing_cash_flow_ytd": 21101308,
       "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
+        "admin_expense",
+        "broker_admin_expenses",
         "broker_afs_assets",
         "broker_customer_deposits",
         "broker_financial_expense",
+        "broker_financial_income",
         "broker_held_to_maturity_assets",
         "broker_interest_expense",
         "broker_lending_assets",
         "broker_long_term_bonds",
+        "broker_net_operating_profit",
         "broker_operating_expenses",
         "broker_receivables",
         "broker_short_term_bonds",
         "broker_short_term_borrowings",
         "broker_total_operating_expenses",
+        "broker_total_operating_revenue",
         "cash_and_equivalents",
         "cash_beginning",
         "cashflow_period_basis",
         "current_liabilities",
+        "eps",
         "financial_expense",
+        "financial_income",
         "financing_cash_flow",
         "financing_cash_flow_ytd",
         "fixed_assets",
         "income_tax",
+        "income_tax_current",
+        "income_tax_deferred",
         "interest_expense",
         "long_term_liabilities",
         "non_current_assets",
         "operating_cash_flow_ytd",
-        "retained_earnings"
+        "operating_profit",
+        "retained_earnings",
+        "revenue"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/bf55007bcb7a7a7c.zip",
-      "financial_line_items_updated_at": "2026-10-28T05:15:03+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Đã bổ sung chi tiết B01a-CTCK Q4/2025 từ ZIP VietstockFinance, đơn vị triệu VND; báo cáo riêng TCBS, không phải hợp nhất. Chờ rà soát trực quan. Tổng doanh thu hoạt động Q4/2025 tái dựng theo phương trình tổng phụ; tổng chi phí tài chính dùng dòng tổng 668.759 tỷ đồng thay vì dòng chi phí tài chính khác 49.385 tỷ đồng. Đã khôi phục dòng tiền riêng Q4/2025 bằng lũy kế cả năm trừ lũy kế 9 tháng; số dư đầu/cuối quý khớp cầu nối tiền.",
+      "financial_line_items_updated_at": "2026-10-28T06:10:00Z",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Đã bổ sung chi tiết B01a-CTCK Q4/2025 từ ZIP VietstockFinance, đơn vị triệu VND; báo cáo riêng TCBS, không phải hợp nhất. Chờ rà soát trực quan. Tổng doanh thu hoạt động Q4/2025 tái dựng theo phương trình tổng phụ; tổng chi phí tài chính dùng dòng tổng 668.759 tỷ đồng thay vì dòng chi phí tài chính khác 49.385 tỷ đồng. Đã khôi phục dòng tiền riêng Q4/2025 bằng lũy kế cả năm trừ lũy kế 9 tháng; số dư đầu/cuối quý khớp cầu nối tiền. Q4/2025: doanh thu hoạt động được tái lập theo đồng nhất thức dòng 70 của B02a-CTCK với các tổng phụ; chi phí hoạt động/tài chính, lãi vay, quản lý và thuế lấy từ cột Quý IV VietstockFinance. EPS 707 VND/cổ phiếu lấy từ dòng 501 trang 11. Chờ rà soát trực quan.",
       "financing_cash_flow": -1646685,
       "financing_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "cash_beginning": 5291518,
@@ -5368,7 +5750,7 @@
         "revenue": 3364988.9378290004
       },
       "financial_line_items_rejected_values": {},
-      "income_tax": 408269,
+      "income_tax": 408269.457278,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
       "broker_held_to_maturity_assets": 3657419,
       "broker_lending_assets": 43859732,
@@ -5378,25 +5760,32 @@
       "broker_short_term_bonds": 1504311,
       "broker_long_term_bonds": 1509971,
       "broker_customer_deposits": 10702593,
-      "broker_operating_expenses": 463975,
+      "broker_operating_expenses": 463974.528886,
       "financial_line_items_schema_version": "2026-10-27-other-statements-source-fields-v11",
       "financial_line_items_schema_updated_at": "2026-10-28T05:15:03+00:00",
       "financial_line_items_rejected_fields": [
         "current_assets_current_assets_too_small"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-22T12:39:26+00:00",
-      "broker_total_operating_expenses": 463975,
-      "broker_financial_expense": 49385,
-      "broker_interest_expense": 619374,
+      "broker_total_operating_expenses": 463974.528886,
+      "broker_financial_expense": 668759.010948,
+      "broker_interest_expense": 619374.01378,
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "a9ea26f31c6ab64fd49a52c661fc88c177c2263a818b73ab625608acb7531d6d",
       "core_financial_extraction_evidence_attempt_count": 0,
       "cash_beginning_reported_ytd": null,
       "financial_line_items_value_corrections": {
         "income_tax": {
-          "previous_value": 408269.457278,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": 408269,
+          "new_value": 408269.457278,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q4, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY 4/TCX_Baocaotaichinh_Q4_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/bf55007bcb7a7a7c.zip",
+          "source_pdf_member": "TCBS-BCTC-QIV.2025-VN.pdf",
+          "source_value_vnd": 408269457278,
+          "manually_visual_reviewed": false
         },
         "current_assets": {
           "previous_value": 76612765.855403,
@@ -5474,24 +5863,52 @@
           "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
         },
         "revenue": {
-          "previous_value": 3364988.9378290004,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 3364988.937829,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q4, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY 4/TCX_Baocaotaichinh_Q4_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/bf55007bcb7a7a7c.zip",
+          "source_pdf_member": "TCBS-BCTC-QIV.2025-VN.pdf",
+          "source_value_vnd": 3364988937829,
+          "manually_visual_reviewed": false
         },
         "broker_total_operating_revenue": {
-          "previous_value": 3364988.9378290004,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 3364988.937829,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q4, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY 4/TCX_Baocaotaichinh_Q4_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/bf55007bcb7a7a7c.zip",
+          "source_pdf_member": "TCBS-BCTC-QIV.2025-VN.pdf",
+          "source_value_vnd": 3364988937829,
+          "manually_visual_reviewed": false
         },
         "broker_total_operating_expenses": {
-          "previous_value": 463974.528886,
-          "new_value": 463975,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": 463975,
+          "new_value": 463974.528886,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q4, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY 4/TCX_Baocaotaichinh_Q4_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/bf55007bcb7a7a7c.zip",
+          "source_pdf_member": "TCBS-BCTC-QIV.2025-VN.pdf",
+          "source_value_vnd": 463974528886,
+          "manually_visual_reviewed": false
         },
         "broker_operating_expenses": {
-          "previous_value": 463974.528886,
-          "new_value": 463975,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": 463975,
+          "new_value": 463974.528886,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q4, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY 4/TCX_Baocaotaichinh_Q4_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/bf55007bcb7a7a7c.zip",
+          "source_pdf_member": "TCBS-BCTC-QIV.2025-VN.pdf",
+          "source_value_vnd": 463974528886,
+          "manually_visual_reviewed": false
         },
         "broker_brokerage_expense": {
           "previous_value": 119769.061225,
@@ -5509,54 +5926,124 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "financial_income": {
-          "previous_value": 11771.387986,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 11771.387986,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q4, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY 4/TCX_Baocaotaichinh_Q4_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/bf55007bcb7a7a7c.zip",
+          "source_pdf_member": "TCBS-BCTC-QIV.2025-VN.pdf",
+          "source_value_vnd": 11771387986,
+          "manually_visual_reviewed": false
         },
         "broker_financial_income": {
-          "previous_value": 11771.387986,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 11771.387986,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q4, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY 4/TCX_Baocaotaichinh_Q4_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/bf55007bcb7a7a7c.zip",
+          "source_pdf_member": "TCBS-BCTC-QIV.2025-VN.pdf",
+          "source_value_vnd": 11771387986,
+          "manually_visual_reviewed": false
         },
         "financial_expense": {
-          "previous_value": 668759.010948,
-          "new_value": 49385,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": 49385,
+          "new_value": 668759.010948,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q4, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY 4/TCX_Baocaotaichinh_Q4_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/bf55007bcb7a7a7c.zip",
+          "source_pdf_member": "TCBS-BCTC-QIV.2025-VN.pdf",
+          "source_value_vnd": 668759010948,
+          "manually_visual_reviewed": false
         },
         "broker_financial_expense": {
-          "previous_value": 668759.010948,
-          "new_value": 49385,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": 49385,
+          "new_value": 668759.010948,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q4, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY 4/TCX_Baocaotaichinh_Q4_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/bf55007bcb7a7a7c.zip",
+          "source_pdf_member": "TCBS-BCTC-QIV.2025-VN.pdf",
+          "source_value_vnd": 668759010948,
+          "manually_visual_reviewed": false
         },
         "interest_expense": {
-          "previous_value": 619374.01378,
-          "new_value": 619374,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": 619374,
+          "new_value": 619374.01378,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q4, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY 4/TCX_Baocaotaichinh_Q4_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/bf55007bcb7a7a7c.zip",
+          "source_pdf_member": "TCBS-BCTC-QIV.2025-VN.pdf",
+          "source_value_vnd": 619374013780,
+          "manually_visual_reviewed": false
         },
         "broker_interest_expense": {
-          "previous_value": 619374.01378,
-          "new_value": 619374,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": 619374,
+          "new_value": 619374.01378,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q4, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY 4/TCX_Baocaotaichinh_Q4_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/bf55007bcb7a7a7c.zip",
+          "source_pdf_member": "TCBS-BCTC-QIV.2025-VN.pdf",
+          "source_value_vnd": 619374013780,
+          "manually_visual_reviewed": false
         },
         "admin_expense": {
-          "previous_value": 202636.046006,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 202636.046006,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q4, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY 4/TCX_Baocaotaichinh_Q4_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/bf55007bcb7a7a7c.zip",
+          "source_pdf_member": "TCBS-BCTC-QIV.2025-VN.pdf",
+          "source_value_vnd": 202636046006,
+          "manually_visual_reviewed": false
         },
         "broker_admin_expenses": {
-          "previous_value": 202636.046006,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 202636.046006,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q4, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY 4/TCX_Baocaotaichinh_Q4_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/bf55007bcb7a7a7c.zip",
+          "source_pdf_member": "TCBS-BCTC-QIV.2025-VN.pdf",
+          "source_value_vnd": 202636046006,
+          "manually_visual_reviewed": false
         },
         "operating_profit": {
-          "previous_value": 2041390.739975,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 2041390.739975,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q4, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY 4/TCX_Baocaotaichinh_Q4_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/bf55007bcb7a7a7c.zip",
+          "source_pdf_member": "TCBS-BCTC-QIV.2025-VN.pdf",
+          "source_value_vnd": 2041390739975,
+          "manually_visual_reviewed": false
         },
         "broker_net_operating_profit": {
-          "previous_value": 2041390.739975,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 2041390.739975,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q4, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY 4/TCX_Baocaotaichinh_Q4_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/bf55007bcb7a7a7c.zip",
+          "source_pdf_member": "TCBS-BCTC-QIV.2025-VN.pdf",
+          "source_value_vnd": 2041390739975,
+          "manually_visual_reviewed": false
         },
         "other_income": {
           "previous_value": 27.290805,
@@ -5574,19 +6061,40 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "income_tax_current": {
-          "previous_value": 407835.810486,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 407835.810486,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q4, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY 4/TCX_Baocaotaichinh_Q4_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/bf55007bcb7a7a7c.zip",
+          "source_pdf_member": "TCBS-BCTC-QIV.2025-VN.pdf",
+          "source_value_vnd": 407835810486,
+          "manually_visual_reviewed": false
         },
         "income_tax_deferred": {
-          "previous_value": 433.646792,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 433.646792,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q4, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY 4/TCX_Baocaotaichinh_Q4_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/bf55007bcb7a7a7c.zip",
+          "source_pdf_member": "TCBS-BCTC-QIV.2025-VN.pdf",
+          "source_value_vnd": 433646792,
+          "manually_visual_reviewed": false
         },
         "eps": {
-          "previous_value": 707,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": null,
+          "new_value": 707,
+          "reason": "Source text and subtotal reconciliation from the archived VietstockFinance B02a-CTCK report for 2025-Q4, PDF printed/source pages trang 10–11; current-quarter column. Revenue reconstructed from row 70 minus financial income plus total operating expenses, finance expenses and administration expenses. Pending visual review.",
+          "source_page": "trang 10–11",
+          "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY 4/TCX_Baocaotaichinh_Q4_2025.zip",
+          "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
+          "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/bf55007bcb7a7a7c.zip",
+          "source_pdf_member": "TCBS-BCTC-QIV.2025-VN.pdf",
+          "source_value_vnd": 707,
+          "manually_visual_reviewed": false
         },
         "operating_cash_flow_ytd": {
           "previous_value": -20564385.947691,
@@ -5656,23 +6164,23 @@
       },
       "current_assets": null,
       "broker_fvtpl_assets": null,
-      "revenue": null,
-      "broker_total_operating_revenue": null,
+      "revenue": 3364988.937829,
+      "broker_total_operating_revenue": 3364988.937829,
       "broker_brokerage_expense": null,
       "broker_custody_expense": null,
       "broker_other_operating_expense": null,
-      "financial_income": null,
-      "broker_financial_income": null,
-      "admin_expense": null,
-      "broker_admin_expenses": null,
-      "operating_profit": null,
-      "broker_net_operating_profit": null,
+      "financial_income": 11771.387986,
+      "broker_financial_income": 11771.387986,
+      "admin_expense": 202636.046006,
+      "broker_admin_expenses": 202636.046006,
+      "operating_profit": 2041390.739975,
+      "broker_net_operating_profit": 2041390.739975,
       "other_income": null,
       "other_expense": null,
       "other_operating_result": null,
-      "income_tax_current": null,
-      "income_tax_deferred": null,
-      "eps": null,
+      "income_tax_current": 407835.810486,
+      "income_tax_deferred": 433.646792,
+      "eps": 707,
       "investing_cash_flow_ytd": null,
       "net_cash_change_ytd": null,
       "operating_cash_flow": null,
@@ -5683,12 +6191,8 @@
       "cash_ending": null,
       "cash_ending_calculation": "Số dư tiền cuối quý IV/2025 lấy trực tiếp từ B03a-CTCK; khớp B01a-CTCK.",
       "financial_line_items_source_pages": [
-        5,
-        6,
         10,
-        11,
-        12,
-        13
+        11
       ],
       "financial_line_items_balance_source_reconciliation": {
         "source_policy": "VietstockFinance document catalog and linked PDF/ZIP only",
@@ -5796,82 +6300,47 @@
         "source_index_url": "https://finance.vietstock.vn/TCX/tai-tai-lieu.htm?doctype=1",
         "source_document_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY 4/TCX_Baocaotaichinh_Q4_2025.zip",
         "source_archive_file": "reports/raw/TCX/vietstock-tcx-2024-2026-20261019/bf55007bcb7a7a7c.zip",
+        "source_pdf_member": "TCBS-BCTC-QIV.2025-VN.pdf",
         "report_form": "B02a-CTCK",
-        "report_scope": "BCTC riêng công ty chứng khoán TCBS; không phải BCTC hợp nhất",
+        "report_scope": "standalone securities-company financial statement; not consolidated",
         "pdf_pages": [
           10,
           11
         ],
-        "printed_pages": [
-          8,
-          9
-        ],
         "manually_visual_reviewed": false,
-        "exact_source_vnd": {
-          "revenue": 3364988937829,
-          "broker_total_operating_revenue": 3364988937829,
-          "broker_total_operating_expenses": 463974528886,
-          "broker_operating_expenses": 463974528886,
-          "broker_brokerage_expense": 119769061225,
-          "broker_custody_expense": 47026940796,
-          "broker_other_operating_expense": 98595287797,
-          "financial_income": 11771387986,
-          "broker_financial_income": 11771387986,
-          "financial_expense": 668759010948,
-          "broker_financial_expense": 668759010948,
-          "interest_expense": 619374013780,
-          "broker_interest_expense": 619374013780,
-          "admin_expense": 202636046006,
-          "broker_admin_expenses": 202636046006,
-          "operating_profit": 2041390739975,
-          "broker_net_operating_profit": 2041390739975,
-          "other_income": 27290805,
-          "other_expense": 66844388,
-          "other_operating_result": -39553583,
-          "income_tax": 408269457278,
-          "income_tax_current": 407835810486,
-          "income_tax_deferred": 433646792,
-          "eps": 707000000
+        "restored_fields": [
+          "revenue",
+          "broker_total_operating_revenue",
+          "broker_total_operating_expenses",
+          "broker_operating_expenses",
+          "financial_income",
+          "broker_financial_income",
+          "financial_expense",
+          "broker_financial_expense",
+          "interest_expense",
+          "broker_interest_expense",
+          "admin_expense",
+          "broker_admin_expenses",
+          "operating_profit",
+          "broker_net_operating_profit",
+          "income_tax",
+          "income_tax_current",
+          "income_tax_deferred",
+          "eps"
+        ],
+        "revenue_formula": "Lợi nhuận hoạt động (dòng 70) - doanh thu tài chính + tổng chi phí hoạt động + tổng chi phí tài chính + chi phí quản lý; tái lập từ các tổng phụ cùng cột Quý của B02a-CTCK VietstockFinance.",
+        "source_subtotals": {
+          "operating_result": 2041390.739975,
+          "financial_income": 11771.387986,
+          "total_operating_expenses": 463974.528886,
+          "financial_expense": 668759.010948,
+          "administration_expense": 202636.046006,
+          "reconstructed_revenue": 3364988.937829,
+          "previous_source_revenue": 3364988.937829
         },
-        "derived_fields": {
-          "revenue": {
-            "formula": "reported operating profit - financial income + total operating expenses + total financial expenses + general/admin expenses",
-            "value_million_vnd": 3364988.9378290004,
-            "source_fields": [
-              "operating_profit",
-              "financial_income",
-              "broker_total_operating_expenses",
-              "financial_expense",
-              "admin_expense"
-            ]
-          },
-          "income_tax": {
-            "formula": "reported profit before tax minus reported profit after tax",
-            "value_million_vnd": 408269.457278
-          }
-        },
-        "source_tokens": {
-          "10": [
-            "119.769.061.225",
-            "47.026.940.796",
-            "98.595.287.797",
-            "463.974.528.886",
-            "11.771.387.986",
-            "668.759.010.948",
-            "619.374.013.780",
-            "202.636.046.006",
-            "2.041.390.739.975"
-          ],
-          "11": [
-            "2.041.351.186.392",
-            "408.269.457.278",
-            "407.835.810.486",
-            "433.646.792",
-            "1.633.081.729.114",
-            "707"
-          ]
-        },
-        "note": "Tổng doanh thu hoạt động được suy ra từ phương trình các tổng phụ báo cáo vì OCR trang doanh thu hoạt động không đọc rõ; giữ tổng chi phí tài chính 668.759 tỷ đồng, không nhầm với dòng chi phí tài chính khác 49.385 tỷ đồng. Chờ rà soát trực quan."
+        "validation": {
+          "reconstructed_revenue_matches_reference": true
+        }
       },
       "cashflow_source_reconciliation": {
         "source_policy": "VietstockFinance document catalog and linked PDF/ZIP only",
@@ -5909,7 +6378,9 @@
         "opening_closing_cash_bridge_reconciles": true,
         "manually_visual_reviewed": false,
         "note": "Q4 cash flow = full-year YTD minus nine-month YTD. Opening cash equals Q3 close; closing cash is reported on B03a-CTCK and matches B01a-CTCK. Chờ rà soát trực quan."
-      }
+      },
+      "revenue_calculation": "Lợi nhuận hoạt động (dòng 70) - doanh thu tài chính + tổng chi phí hoạt động + tổng chi phí tài chính + chi phí quản lý; tái lập từ các tổng phụ cùng cột Quý của B02a-CTCK VietstockFinance.",
+      "broker_total_operating_revenue_calculation": "Lợi nhuận hoạt động (dòng 70) - doanh thu tài chính + tổng chi phí hoạt động + tổng chi phí tài chính + chi phí quản lý; tái lập từ các tổng phụ cùng cột Quý của B02a-CTCK VietstockFinance."
     },
     {
       "symbol": "TCX",
@@ -7743,5 +8214,5 @@
   "bootstrap_status": "complete_needs_manual_review",
   "bootstrap_completed_at": "2026-10-22T13:07:11+00:00",
   "bootstrap_completion_note": "Đã lưu dữ liệu tự động; các chỉ tiêu được trích xuất cần đối chiếu trực quan. Mã này sẽ không tự tải lại.",
-  "processedAt": "2026-10-28T05:30:00Z"
+  "processedAt": "2026-10-28T06:10:00Z"
 }
