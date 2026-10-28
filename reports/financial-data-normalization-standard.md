@@ -195,3 +195,8 @@ Không thay 2 triệu này vào CFO, dòng tài chính hay số dư tiền để
 - [Validate Site and Data, có bài kiểm thử MBB](https://github.com/kiemtimem123/so-lieu/actions/runs/40668224913): PASS; kiểm thử cash-flow bridge và xác nhận JSON snapshots PASS. Bài kiểm thử chặn việc thay 2 triệu đồng như một balancing plug.
 
 **Trạng thái MBB:** dữ liệu tự động đã chuẩn hóa/kiểm tra cho 10/10 kỳ; có 1 residual cross-quarter -2 triệu VND được lưu công khai để rà soát thủ công. Không gắn nhãn “mọi nguồn đã cân tuyệt đối”; các giá trị nguồn được giữ nguyên đúng theo chứng từ.
+
+
+### Bảo đảm trường dữ liệu chuẩn hóa được tab LCTT hiển thị
+
+Sau khi bổ sung hoặc khôi phục số LCTT, phải cập nhật `financial_line_items_extracted_fields` cho các trường nguồn đã đối chiếu (LCTT kinh doanh/đầu tư/tài chính, biến động tiền thuần, số dư tiền đầu/cuối quý và YTD). Trạng thái `pending_visual_review` vẫn phải giữ nếu chưa duyệt bằng mắt toàn bộ kỳ, nhưng không để bộ lọc của giao diện ẩn giá trị đã trích xuất có nguồn. Không đưa các trường thực sự bị từ chối hoặc phạm vi nguồn chưa xác nhận vào danh sách này. Bài test hồi quy kiểm tra cả số liệu, ngoại lệ nguồn và sự hiện diện của các trường.
