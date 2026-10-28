@@ -17,7 +17,7 @@ REPORT_QUEUE = ROOT / "config" / "report-queue.json"
 _QUEUE_ARCHIVE_BY_URL = None
 # The checkpoint helper uses the same detail schema so completed extraction
 # does not loop forever on quarters already reprocessed with the note-code guards.
-DETAIL_SCHEMA_VERSION = "2026-10-27-other-statements-source-fields-v11"
+DETAIL_SCHEMA_VERSION = "2026-10-27-other-statements-source-fields-v12"
 CORE_EXTRACTION_PARSER_VERSION = "2026-10-23-ngan-vnd-unit-v2-statement-rows"
 NUMBER_RE = re.compile(r"(?<![A-Za-z0-9])\(?-?\d[\d.,]*\d?\)?")
 BANKS = {"MBB", "ACB", "SHB", "TCB", "TPB", "VPB", "STB", "VCB", "CTG", "BID"}
@@ -864,9 +864,59 @@ def extract_bank_split_column_income(pages, factor):
   normalized=norm(" ".join(lines))
   # These are already selected as income-statement pages by extract_fields();
   # avoid a second heading test because OCR often corrupts the title line.
-  marker=next((idx for idx,line in enumerate(lines) if "so phat sinh quy" in norm(line)),None)
+  # OCR sometimes reads the letter "ố/ọ" in "Số" as the digit 6/0.
+  # Accept those explicit OCR variants, but keep the subsequent numeric
+  # extraction strict and require the independent accounting subtotals to agree.
+  marker=next((
+   idx for idx,line in enumerate(lines)
+   if re.search(r"\\b(?:so|s6|s0)\\s*phat sinh quy",norm(line))
+  ),None)
   if marker is None:
    continue
+
+  # Recover the standard 22-row bank income statement when OCR separates the
+  # labels from the value columns. Older code rejected all lines containing
+  # two values, so an otherwise complete quarter was silently left blank.
+  # Use the first number from each paired quarter-comparison row (current year,
+  # then previous year); stop before the separate YTD columns. Reject the
+  # candidate unless all key bank subtotals reconcile within reporting-rounding
+  # tolerance, preventing row shifts or neighbouring-column values from leaking in.
+  paired_rows=[]
+  for line in lines[marker+1:]:
+   clean=norm(line)
+   if "luy ke tu dau nam" in clean or "luy ke tu" in clean:
+    break
+   parsed=amounts(line,threshold=1000)
+   if len(parsed)>=2:
+    paired_rows.append(parsed)
+    if len(paired_rows)==len(expected_fields):
+     break
+  if len(paired_rows)==len(expected_fields):
+   values=[int(round(row[0]*factor)) for row in paired_rows]
+   candidate=dict(zip(expected_fields,values))
+   tolerance=max(2000,abs(candidate["revenue"])*0.0001)
+   checks=[
+    candidate["bank_interest_income"]+candidate["bank_interest_expense"]-candidate["bank_net_interest_income"],
+    candidate["bank_service_income"]+candidate["bank_service_expense"]-candidate["bank_net_service_income"],
+    sum(candidate[field] for field in (
+     "bank_net_interest_income","bank_net_service_income","bank_fx_net_income",
+     "bank_trading_securities_net","bank_investment_securities_net",
+     "bank_other_operating_net","bank_dividend_and_capital_income"
+    ))-candidate["revenue"],
+    candidate["revenue"]-abs(candidate["bank_operating_expenses"])-candidate["bank_pre_provision_operating_profit"],
+    candidate["bank_pre_provision_operating_profit"]-abs(candidate["bank_provision_expense"])-candidate["pretax_profit"],
+    candidate["income_tax_current"]+candidate["income_tax_deferred"]-candidate["income_tax"],
+    candidate["pretax_profit"]+candidate["income_tax"]-candidate["net_profit"],
+    abs(candidate["net_profit"]-candidate["net_profit_attributable"])-abs(candidate["bank_non_controlling_profit"]),
+   ]
+   if all(abs(value)<=tolerance for value in checks):
+    candidate["bank_non_controlling_profit"]=int(round(
+     candidate["net_profit"]-candidate["net_profit_attributable"]
+    ))
+    for key in ("bank_operating_expenses","bank_provision_expense","income_tax"):
+     candidate[key]=abs(candidate[key])
+    return candidate
+
   values=[]
   for line in lines[marker+1:]:
    clean=norm(line)
