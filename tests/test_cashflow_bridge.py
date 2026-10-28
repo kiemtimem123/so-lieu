@@ -140,7 +140,7 @@ class CashFlowBridgeTests(unittest.TestCase):
         self.assertEqual(q2["net_cash_change_ytd"], 6814127)
         self.assertEqual(q2["cash_beginning_reported_ytd"], 97040273)
         self.assertEqual(q2["cash_ending_reported_ytd"], 103854400)
-        self.assertEqual(q2["cashflow_balance_bridge_recovery"]["closing_balance_less_opening_and_net_change"], -2)
+        self.assertEqual(q2["cashflow_balance_bridge_recovery"]["bridge_residual"], -2)
 
 
 
