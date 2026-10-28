@@ -50,11 +50,26 @@
       "source_archive_match": "matched_report_queue_url",
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_extracted_fields": [
-        "income_tax"
+        "cash_beginning",
+        "cash_beginning_reported_ytd",
+        "cash_ending",
+        "cash_ending_reported_ytd",
+        "cashflow_period_basis",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
+        "foreign_exchange_effect",
+        "foreign_exchange_effect_ytd",
+        "income_tax",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
+        "operating_cash_flow",
+        "operating_cash_flow_ytd"
       ],
       "financial_line_items_source": "reports/raw/TPB/auto-tpb-20261021/009b50ea36a586ed.pdf",
       "financial_line_items_updated_at": "2026-10-25T08:14:43+00:00",
-      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
+      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. TPB CASHFLOW NORMALIZATION 2026-10-29: core fields mapped from the final net line for each B04a/TCTD-HN cash-flow group; amounts are in integer million VND. Period-specific source URL, archive and PDF pages are recorded in cashflow_audit_revision.",
       "financial_line_items_prior_values": {},
       "financial_line_items_rejected_values": {},
       "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
@@ -115,7 +130,82 @@
       ],
       "verification_status_note": "Các chỉ tiêu lõi đã được trích xuất tự động từ BCTC hợp nhất VietstockFinance; cần đối chiếu trực quan trước khi coi là xác minh.",
       "income_tax": 365797,
-      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có."
+      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
+      "operating_cash_flow_ytd": 9238390,
+      "investing_cash_flow_ytd": -94074,
+      "financing_cash_flow_ytd": -5000,
+      "net_cash_change_ytd": 9139316,
+      "cash_beginning_reported_ytd": 45441602,
+      "cash_ending_reported_ytd": 54587784,
+      "foreign_exchange_effect_ytd": 6866,
+      "cashflow_period_basis": "year_to_date",
+      "operating_cash_flow": 9238390,
+      "investing_cash_flow": -94074,
+      "financing_cash_flow": -5000,
+      "net_cash_change": 9139316,
+      "cash_beginning": 45441602,
+      "cash_ending": 54587784,
+      "foreign_exchange_effect": 6866,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%201/TPB_Baocaotaichinh_Q1_2025_Hopnhat.pdf",
+        "selected_source_index_url": "https://finance.vietstock.vn/TPB/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/TPB/auto-tpb-20261021/f95e7cacd969ceb0.pdf",
+        "source_pdf_pages": [
+          11,
+          12
+        ],
+        "source_printed_pages": [
+          6,
+          7
+        ],
+        "source_review": "visually_checked",
+        "selected_basis": "Q1/2024 comparative column from later Q1/2025 consolidated statement",
+        "unit": "triệu VND",
+        "period_basis": "year_to_date",
+        "previous_source_url": null,
+        "previous_source_archive_file": null,
+        "previous_source_values_million_vnd": null,
+        "relative_differences_percent": null,
+        "source_basis_changed": false,
+        "snapshot_values_before_normalization": {},
+        "reason": null
+      },
+      "cashflow_source_reconciliation": {
+        "report_period": "2024-Q1",
+        "units": "triệu VND",
+        "source_index_url": "https://finance.vietstock.vn/TPB/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%201/TPB_Baocaotaichinh_Q1_2025_Hopnhat.pdf",
+        "source_archive_file": "reports/raw/TPB/auto-tpb-20261021/f95e7cacd969ceb0.pdf",
+        "source_pdf_pages": [
+          11,
+          12
+        ],
+        "source_printed_pages": [
+          6,
+          7
+        ],
+        "visual_review": "visually_checked",
+        "selected_values_not_adjusted_for_tolerance": true,
+        "relative_tolerance_percent": 0.01,
+        "period_basis": "year_to_date",
+        "ytd_flow_components_residual": 0,
+        "ytd_flow_components_relative_difference_percent": 0,
+        "ytd_cash_bridge_residual": 0,
+        "ytd_cash_bridge_relative_difference_percent": 0,
+        "quarter_flow_components_residual": 0,
+        "quarter_flow_components_relative_difference_percent": 0,
+        "quarter_cash_bridge_residual": 0,
+        "quarter_cash_bridge_relative_difference_percent": 0,
+        "standalone_quarter_derived_from_ytd": "Q1 equals YTD from source statement",
+        "foreign_exchange_effect_source_status": "reported_separately_in_statement",
+        "status": "PASS_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT",
+        "note": null
+      },
+      "financial_line_items_rejected_fields": [],
+      "operating_cash_flow_calculation": "Q1 equals reported year-to-date line from the VietstockFinance consolidated B04a/TCTD-HN statement; amounts are integer million VND.",
+      "investing_cash_flow_calculation": "Q1 equals reported year-to-date line from the VietstockFinance consolidated B04a/TCTD-HN statement; amounts are integer million VND.",
+      "financing_cash_flow_calculation": "Q1 equals reported year-to-date line from the VietstockFinance consolidated B04a/TCTD-HN statement; amounts are integer million VND.",
+      "net_cash_change_calculation": "Q1 equals reported year-to-date line from the VietstockFinance consolidated B04a/TCTD-HN statement; amounts are integer million VND."
     },
     {
       "symbol": "TPB",
@@ -163,11 +253,26 @@
       "source_archive_match": "matched_report_queue_url",
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_extracted_fields": [
-        "income_tax"
+        "cash_beginning",
+        "cash_beginning_reported_ytd",
+        "cash_ending",
+        "cash_ending_reported_ytd",
+        "cashflow_period_basis",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
+        "foreign_exchange_effect",
+        "foreign_exchange_effect_ytd",
+        "income_tax",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
+        "operating_cash_flow",
+        "operating_cash_flow_ytd"
       ],
       "financial_line_items_source": "reports/raw/TPB/auto-tpb-20261021/8544cfead1c6d762.zip",
       "financial_line_items_updated_at": "2026-10-25T08:14:43+00:00",
-      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
+      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. TPB CASHFLOW NORMALIZATION 2026-10-29: core fields mapped from the final net line for each B04a/TCTD-HN cash-flow group; amounts are in integer million VND. Period-specific source URL, archive and PDF pages are recorded in cashflow_audit_revision.",
       "financial_line_items_prior_values": {},
       "financial_line_items_rejected_values": {},
       "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
@@ -221,7 +326,114 @@
       ],
       "verification_status_note": "Các chỉ tiêu lõi đã được trích xuất tự động từ BCTC hợp nhất VietstockFinance; cần đối chiếu trực quan trước khi coi là xác minh.",
       "income_tax": 381329,
-      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có."
+      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
+      "operating_cash_flow_ytd": 5477002,
+      "investing_cash_flow_ytd": -223559,
+      "financing_cash_flow_ytd": 195800,
+      "net_cash_change_ytd": 5449243,
+      "cash_beginning_reported_ytd": 45441602,
+      "cash_ending_reported_ytd": 50890845,
+      "foreign_exchange_effect_ytd": 0,
+      "cashflow_period_basis": "year_to_date",
+      "operating_cash_flow": -3761388,
+      "investing_cash_flow": -129485,
+      "financing_cash_flow": 200800,
+      "net_cash_change": -3690073,
+      "cash_beginning": 54587784,
+      "cash_ending": 50890845,
+      "foreign_exchange_effect": -6866,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%202/TPB_Baocaotaichinh_Q2_2025_Hopnhat.pdf",
+        "selected_source_index_url": "https://finance.vietstock.vn/TPB/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/TPB/auto-tpb-20261021/b30bb9d09e613f27.pdf",
+        "source_pdf_pages": [
+          9,
+          10
+        ],
+        "source_printed_pages": [
+          6,
+          7
+        ],
+        "source_review": "visually_checked",
+        "selected_basis": "H1/2024 comparative column from later Q2/2025 consolidated statement",
+        "unit": "triệu VND",
+        "period_basis": "year_to_date",
+        "previous_source_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%202/TPB_Baocaotaichinh_Q2_2024_Hopnhat.zip",
+        "previous_source_archive_file": "reports/raw/TPB/auto-tpb-20261021/8544cfead1c6d762.zip",
+        "previous_source_values_million_vnd": {
+          "investing_cash_flow_ytd": -201252,
+          "financing_cash_flow_ytd": 195800,
+          "net_cash_change_ytd": 5449243,
+          "cash_beginning_reported_ytd": 45441602,
+          "cash_ending_reported_ytd": 50890845
+        },
+        "relative_differences_percent": {
+          "investing_cash_flow_ytd": {
+            "previous_value_million_vnd": -201252,
+            "selected_value_million_vnd": -223559,
+            "relative_difference_percent": 9.978126579560653
+          },
+          "financing_cash_flow_ytd": {
+            "previous_value_million_vnd": 195800,
+            "selected_value_million_vnd": 195800,
+            "relative_difference_percent": 0
+          },
+          "net_cash_change_ytd": {
+            "previous_value_million_vnd": 5449243,
+            "selected_value_million_vnd": 5449243,
+            "relative_difference_percent": 0
+          },
+          "cash_beginning_reported_ytd": {
+            "previous_value_million_vnd": 45441602,
+            "selected_value_million_vnd": 45441602,
+            "relative_difference_percent": 0
+          },
+          "cash_ending_reported_ytd": {
+            "previous_value_million_vnd": 50890845,
+            "selected_value_million_vnd": 50890845,
+            "relative_difference_percent": 0
+          }
+        },
+        "source_basis_changed": true,
+        "snapshot_values_before_normalization": {},
+        "reason": "Later H1/2024 comparative in Q2/2025 selected; original H1/2024 report has CFI -201,252 versus later comparative -223,559 million VND while net movement/closing cash are unchanged. This is a material component reclassification >0.01%; record both sources, keep later comparator, no plug."
+      },
+      "cashflow_source_reconciliation": {
+        "report_period": "2024-Q2",
+        "units": "triệu VND",
+        "source_index_url": "https://finance.vietstock.vn/TPB/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%202/TPB_Baocaotaichinh_Q2_2025_Hopnhat.pdf",
+        "source_archive_file": "reports/raw/TPB/auto-tpb-20261021/b30bb9d09e613f27.pdf",
+        "source_pdf_pages": [
+          9,
+          10
+        ],
+        "source_printed_pages": [
+          6,
+          7
+        ],
+        "visual_review": "visually_checked",
+        "selected_values_not_adjusted_for_tolerance": true,
+        "relative_tolerance_percent": 0.01,
+        "period_basis": "year_to_date",
+        "ytd_flow_components_residual": 0,
+        "ytd_flow_components_relative_difference_percent": 0,
+        "ytd_cash_bridge_residual": 0,
+        "ytd_cash_bridge_relative_difference_percent": 0,
+        "quarter_flow_components_residual": 0,
+        "quarter_flow_components_relative_difference_percent": 0,
+        "quarter_cash_bridge_residual": 0,
+        "quarter_cash_bridge_relative_difference_percent": 0,
+        "standalone_quarter_derived_from_ytd": "current YTD minus prior quarter YTD within the same year",
+        "foreign_exchange_effect_source_status": "reported_separately_in_statement",
+        "status": "NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT",
+        "note": "Later H1/2024 comparative is selected; previously published H1/2024 component classifications differ. Net movement/cash bridge reconcile within the tolerance but CFI differs by >0.01%; retain source reclass flag."
+      },
+      "financial_line_items_rejected_fields": [],
+      "operating_cash_flow_calculation": "Standalone quarter = current YTD minus previous quarter YTD within the same fiscal year; FX is calculated the same way.",
+      "investing_cash_flow_calculation": "Standalone quarter = current YTD minus previous quarter YTD within the same fiscal year; FX is calculated the same way.",
+      "financing_cash_flow_calculation": "Standalone quarter = current YTD minus previous quarter YTD within the same fiscal year; FX is calculated the same way.",
+      "net_cash_change_calculation": "Standalone quarter = current YTD minus previous quarter YTD within the same fiscal year; FX is calculated the same way."
     },
     {
       "symbol": "TPB",
@@ -269,11 +481,26 @@
       "source_archive_match": "matched_report_queue_url",
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_extracted_fields": [
-        "income_tax"
+        "cash_beginning",
+        "cash_beginning_reported_ytd",
+        "cash_ending",
+        "cash_ending_reported_ytd",
+        "cashflow_period_basis",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
+        "foreign_exchange_effect",
+        "foreign_exchange_effect_ytd",
+        "income_tax",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
+        "operating_cash_flow",
+        "operating_cash_flow_ytd"
       ],
       "financial_line_items_source": "reports/raw/TPB/auto-tpb-20261021/3ab8fa07aa6b1fd6.pdf",
       "financial_line_items_updated_at": "2026-10-25T08:14:43+00:00",
-      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
+      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. TPB CASHFLOW NORMALIZATION 2026-10-29: core fields mapped from the final net line for each B04a/TCTD-HN cash-flow group; amounts are in integer million VND. Period-specific source URL, archive and PDF pages are recorded in cashflow_audit_revision.",
       "financial_line_items_prior_values": {},
       "financial_line_items_rejected_values": {},
       "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
@@ -327,7 +554,82 @@
       ],
       "verification_status_note": "Các chỉ tiêu lõi đã được trích xuất tự động từ BCTC hợp nhất VietstockFinance; cần đối chiếu trực quan trước khi coi là xác minh.",
       "income_tax": 312816,
-      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có."
+      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
+      "operating_cash_flow_ytd": 10812233,
+      "investing_cash_flow_ytd": -255280,
+      "financing_cash_flow_ytd": 515999,
+      "net_cash_change_ytd": 11072952,
+      "cash_beginning_reported_ytd": 45441602,
+      "cash_ending_reported_ytd": 56934421,
+      "foreign_exchange_effect_ytd": 419867,
+      "cashflow_period_basis": "year_to_date",
+      "operating_cash_flow": 5335231,
+      "investing_cash_flow": -31721,
+      "financing_cash_flow": 320199,
+      "net_cash_change": 5623709,
+      "cash_beginning": 50890845,
+      "cash_ending": 56934421,
+      "foreign_exchange_effect": 419867,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%203/TPB_Baocaotaichinh_Q3_2025_Hopnhat.pdf",
+        "selected_source_index_url": "https://finance.vietstock.vn/TPB/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/TPB/auto-tpb-20261021/3849167a56b8ea2a.pdf",
+        "source_pdf_pages": [
+          9,
+          10
+        ],
+        "source_printed_pages": [
+          6,
+          7
+        ],
+        "source_review": "visually_checked",
+        "selected_basis": "9M/2024 comparative column from later Q3/2025 consolidated statement",
+        "unit": "triệu VND",
+        "period_basis": "year_to_date",
+        "previous_source_url": null,
+        "previous_source_archive_file": null,
+        "previous_source_values_million_vnd": null,
+        "relative_differences_percent": null,
+        "source_basis_changed": false,
+        "snapshot_values_before_normalization": {},
+        "reason": null
+      },
+      "cashflow_source_reconciliation": {
+        "report_period": "2024-Q3",
+        "units": "triệu VND",
+        "source_index_url": "https://finance.vietstock.vn/TPB/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%203/TPB_Baocaotaichinh_Q3_2025_Hopnhat.pdf",
+        "source_archive_file": "reports/raw/TPB/auto-tpb-20261021/3849167a56b8ea2a.pdf",
+        "source_pdf_pages": [
+          9,
+          10
+        ],
+        "source_printed_pages": [
+          6,
+          7
+        ],
+        "visual_review": "visually_checked",
+        "selected_values_not_adjusted_for_tolerance": true,
+        "relative_tolerance_percent": 0.01,
+        "period_basis": "year_to_date",
+        "ytd_flow_components_residual": 0,
+        "ytd_flow_components_relative_difference_percent": 0,
+        "ytd_cash_bridge_residual": 0,
+        "ytd_cash_bridge_relative_difference_percent": 0,
+        "quarter_flow_components_residual": 0,
+        "quarter_flow_components_relative_difference_percent": 0,
+        "quarter_cash_bridge_residual": 0,
+        "quarter_cash_bridge_relative_difference_percent": 0,
+        "standalone_quarter_derived_from_ytd": "current YTD minus prior quarter YTD within the same year",
+        "foreign_exchange_effect_source_status": "reported_separately_in_statement",
+        "status": "PASS_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT",
+        "note": null
+      },
+      "financial_line_items_rejected_fields": [],
+      "operating_cash_flow_calculation": "Standalone quarter = current YTD minus previous quarter YTD within the same fiscal year; FX is calculated the same way.",
+      "investing_cash_flow_calculation": "Standalone quarter = current YTD minus previous quarter YTD within the same fiscal year; FX is calculated the same way.",
+      "financing_cash_flow_calculation": "Standalone quarter = current YTD minus previous quarter YTD within the same fiscal year; FX is calculated the same way.",
+      "net_cash_change_calculation": "Standalone quarter = current YTD minus previous quarter YTD within the same fiscal year; FX is calculated the same way."
     },
     {
       "symbol": "TPB",
@@ -383,14 +685,22 @@
         "bank_trading_securities",
         "bank_valuable_papers",
         "cash_beginning",
+        "cash_beginning_reported_ytd",
         "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
+        "financing_cash_flow",
         "financing_cash_flow_ytd",
         "fixed_assets",
+        "foreign_exchange_effect",
+        "foreign_exchange_effect_ytd",
         "income_tax",
         "income_tax_current",
+        "investing_cash_flow",
         "investing_cash_flow_ytd",
+        "net_cash_change",
         "net_cash_change_ytd",
+        "operating_cash_flow",
         "operating_cash_flow_ytd",
         "operating_profit",
         "retained_earnings"
@@ -400,7 +710,7 @@
       "financial_line_items_schema_updated_at": "2026-10-25T20:28:24+00:00",
       "financial_line_items_source": "reports/raw/TPB/auto-tpb-20261021/69d9fe2e732f05a4.pdf",
       "financial_line_items_updated_at": "2026-10-25T20:28:39+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. TPB CASHFLOW NORMALIZATION 2026-10-29: core fields mapped from the final net line for each B04a/TCTD-HN cash-flow group; amounts are in integer million VND. Period-specific source URL, archive and PDF pages are recorded in cashflow_audit_revision.",
       "financial_line_items_prior_values": {
         "bank_operating_expenses": -1793686
       },
@@ -431,11 +741,11 @@
         "total_liabilities": "total_assets minus reported equity; total sources matched total assets"
       },
       "verification_status_note": "Các chỉ tiêu lõi đã được trích xuất tự động từ BCTC hợp nhất VietstockFinance; cần đối chiếu trực quan trước khi coi là xác minh.",
-      "operating_cash_flow_ytd": 26306225,
-      "investing_cash_flow_ytd": -377748,
-      "financing_cash_flow_ytd": 3447816,
+      "operating_cash_flow_ytd": 40343273,
+      "investing_cash_flow_ytd": -399918,
+      "financing_cash_flow_ytd": 763682,
       "net_cash_change_ytd": 40707037,
-      "cash_beginning": 45441602,
+      "cash_beginning": 56934421,
       "cash_ending": 86148639,
       "cashflow_period_basis": "year_to_date",
       "income_tax": 431288,
@@ -467,7 +777,127 @@
           "new_value": 1793686,
           "reason": "Normalized bank operating expenses to the positive expense convention used in subtotal reconciliation."
         }
-      }
+      },
+      "cash_ending_reported_ytd": 86148639,
+      "foreign_exchange_effect_ytd": 0,
+      "operating_cash_flow": 29531040,
+      "investing_cash_flow": -144638,
+      "financing_cash_flow": 247683,
+      "net_cash_change": 29634085,
+      "foreign_exchange_effect": -419867,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/TPB_Baocaotaichinh_Q4_2025_Hopnhat.pdf",
+        "selected_source_index_url": "https://finance.vietstock.vn/TPB/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/TPB/auto-tpb-20261021/7035db49b3b4ca6b.pdf",
+        "source_pdf_pages": [
+          11,
+          12
+        ],
+        "source_printed_pages": [
+          6,
+          7
+        ],
+        "source_review": "ocr_text_reconciled_visual_review_pending",
+        "selected_basis": "FY2024 comparative column from later Q4/2025 consolidated statement",
+        "unit": "triệu VND",
+        "period_basis": "year_to_date",
+        "previous_source_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%204/TPB_Baocaotaichinh_Q4_2024_Hopnhat.pdf",
+        "previous_source_archive_file": "reports/raw/TPB/auto-tpb-20261021/69d9fe2e732f05a4.pdf",
+        "previous_source_values_million_vnd": {
+          "operating_cash_flow_ytd": 40342756,
+          "investing_cash_flow_ytd": -399917,
+          "financing_cash_flow_ytd": 764198,
+          "net_cash_change_ytd": 40707037,
+          "cash_beginning_reported_ytd": 45441602,
+          "foreign_exchange_effect_ytd": 0,
+          "cash_ending_reported_ytd": 86148639
+        },
+        "relative_differences_percent": {
+          "operating_cash_flow_ytd": {
+            "previous_value_million_vnd": 40342756,
+            "selected_value_million_vnd": 40343273,
+            "relative_difference_percent": 0.0012815023709157162
+          },
+          "investing_cash_flow_ytd": {
+            "previous_value_million_vnd": -399917,
+            "selected_value_million_vnd": -399918,
+            "relative_difference_percent": 0.00025005126050840423
+          },
+          "financing_cash_flow_ytd": {
+            "previous_value_million_vnd": 764198,
+            "selected_value_million_vnd": 763682,
+            "relative_difference_percent": 0.06752176791878545
+          },
+          "net_cash_change_ytd": {
+            "previous_value_million_vnd": 40707037,
+            "selected_value_million_vnd": 40707037,
+            "relative_difference_percent": 0
+          },
+          "cash_beginning_reported_ytd": {
+            "previous_value_million_vnd": 45441602,
+            "selected_value_million_vnd": 45441602,
+            "relative_difference_percent": 0
+          },
+          "foreign_exchange_effect_ytd": {
+            "previous_value_million_vnd": 0,
+            "selected_value_million_vnd": 0,
+            "relative_difference_percent": 0
+          },
+          "cash_ending_reported_ytd": {
+            "previous_value_million_vnd": 86148639,
+            "selected_value_million_vnd": 86148639,
+            "relative_difference_percent": 0
+          }
+        },
+        "source_basis_changed": true,
+        "snapshot_values_before_normalization": {
+          "operating_cash_flow_ytd": 26306225,
+          "investing_cash_flow_ytd": -377748,
+          "financing_cash_flow_ytd": 3447816,
+          "net_cash_change_ytd": 40707037,
+          "cash_beginning": 45441602,
+          "cash_ending": 86148639,
+          "cash_beginning_reported_ytd": 45441602,
+          "cashflow_period_basis": "year_to_date"
+        },
+        "reason": "Later FY2024 comparative in Q4/2025 selected. Relative to Q4/2024 original source, CFF moves from 764,198 to 763,682 million VND (about 0.0675%); net movement/closing cash unchanged. Flag source reclassification >0.01%; no plug."
+      },
+      "cashflow_source_reconciliation": {
+        "report_period": "2024-Q4",
+        "units": "triệu VND",
+        "source_index_url": "https://finance.vietstock.vn/TPB/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/TPB_Baocaotaichinh_Q4_2025_Hopnhat.pdf",
+        "source_archive_file": "reports/raw/TPB/auto-tpb-20261021/7035db49b3b4ca6b.pdf",
+        "source_pdf_pages": [
+          11,
+          12
+        ],
+        "source_printed_pages": [
+          6,
+          7
+        ],
+        "visual_review": "ocr_text_reconciled_visual_review_pending",
+        "selected_values_not_adjusted_for_tolerance": true,
+        "relative_tolerance_percent": 0.01,
+        "period_basis": "year_to_date",
+        "ytd_flow_components_residual": 0,
+        "ytd_flow_components_relative_difference_percent": 0,
+        "ytd_cash_bridge_residual": 0,
+        "ytd_cash_bridge_relative_difference_percent": 0,
+        "quarter_flow_components_residual": 0,
+        "quarter_flow_components_relative_difference_percent": 0,
+        "quarter_cash_bridge_residual": 0,
+        "quarter_cash_bridge_relative_difference_percent": 0,
+        "standalone_quarter_derived_from_ytd": "current YTD minus prior quarter YTD within the same year",
+        "foreign_exchange_effect_source_status": "reported_separately_in_statement",
+        "status": "NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT",
+        "note": "Later FY2024 comparative is selected; CFF classification difference of 516 million VND is about 0.0675%, above tolerance although total net movement and closing balance are unchanged."
+      },
+      "financial_line_items_rejected_fields": [],
+      "operating_cash_flow_calculation": "Standalone quarter = current YTD minus previous quarter YTD within the same fiscal year; FX is calculated the same way.",
+      "investing_cash_flow_calculation": "Standalone quarter = current YTD minus previous quarter YTD within the same fiscal year; FX is calculated the same way.",
+      "financing_cash_flow_calculation": "Standalone quarter = current YTD minus previous quarter YTD within the same fiscal year; FX is calculated the same way.",
+      "net_cash_change_calculation": "Standalone quarter = current YTD minus previous quarter YTD within the same fiscal year; FX is calculated the same way."
     },
     {
       "symbol": "TPB",
@@ -535,10 +965,22 @@
         "bank_service_income",
         "bank_trading_securities",
         "cash_beginning",
+        "cash_beginning_reported_ytd",
         "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
         "fixed_assets",
+        "foreign_exchange_effect",
+        "foreign_exchange_effect_ytd",
         "income_tax",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
+        "operating_cash_flow",
+        "operating_cash_flow_ytd",
         "revenue"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
@@ -546,64 +988,22 @@
       "financial_line_items_schema_updated_at": "2026-10-25T20:28:26+00:00",
       "financial_line_items_source": "reports/raw/TPB/auto-tpb-20261021/f95e7cacd969ceb0.pdf",
       "financial_line_items_updated_at": "2026-10-26T07:06:10+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. TPB CASHFLOW NORMALIZATION 2026-10-29: core fields mapped from the final net line for each B04a/TCTD-HN cash-flow group; amounts are in integer million VND. Period-specific source URL, archive and PDF pages are recorded in cashflow_audit_revision.",
       "financial_line_items_prior_values": {
         "bank_operating_expenses": -1883976,
         "bank_provision_expense": -489617
       },
-      "financial_line_items_rejected_values": {
-        "operating_cash_flow": {
-          "value": 6286794,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "investing_cash_flow": {
-          "value": -71757,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "financing_cash_flow": {
-          "value": -30000,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "net_cash_change": {
-          "value": -41578162,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "operating_cash_flow_ytd": {
-          "value": 6286794,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "investing_cash_flow_ytd": {
-          "value": -71757,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "financing_cash_flow_ytd": {
-          "value": -30000,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "net_cash_change_ytd": {
-          "value": -41578162,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        }
-      },
+      "financial_line_items_rejected_values": {},
       "core_financial_extraction_attempt_count": 4,
       "core_financial_extraction_status": "auto_extracted_pending_visual_review",
       "core_financial_extraction_updated_at": "2026-10-25T08:14:40+00:00",
       "cashflow_period_basis": "year_to_date",
-      "operating_cash_flow_calculation": "Q1 equals YTD Q1",
-      "investing_cash_flow_calculation": "Q1 equals YTD Q1",
-      "financing_cash_flow_calculation": "Q1 equals YTD Q1",
-      "net_cash_change_calculation": "Q1 equals YTD Q1",
+      "operating_cash_flow_calculation": "Q1 equals reported year-to-date line from the VietstockFinance consolidated B04a/TCTD-HN statement; amounts are integer million VND.",
+      "investing_cash_flow_calculation": "Q1 equals reported year-to-date line from the VietstockFinance consolidated B04a/TCTD-HN statement; amounts are integer million VND.",
+      "financing_cash_flow_calculation": "Q1 equals reported year-to-date line from the VietstockFinance consolidated B04a/TCTD-HN statement; amounts are integer million VND.",
+      "net_cash_change_calculation": "Q1 equals reported year-to-date line from the VietstockFinance consolidated B04a/TCTD-HN statement; amounts are integer million VND.",
       "financial_line_items_cash_check": "opening/closing cash hidden because the cash bridge did not reconcile",
-      "financial_line_items_rejected_fields": [
-        "financing_cash_flow",
-        "financing_cash_flow_ytd",
-        "investing_cash_flow",
-        "investing_cash_flow_ytd",
-        "net_cash_change",
-        "net_cash_change_ytd",
-        "operating_cash_flow",
-        "operating_cash_flow_ytd"
-      ],
+      "financial_line_items_rejected_fields": [],
       "cash_beginning": 86148639,
       "cash_ending": 44780913,
       "core_financial_extraction_note": "Không còn trang PDF/ZIP đang chờ trích xuất tự động nhưng bộ chỉ tiêu lõi vẫn thiếu hoặc chưa cân đối. Giữ trống chỉ tiêu chưa xác minh và yêu cầu đối chiếu trực quan với báo cáo VietstockFinance.",
@@ -683,7 +1083,82 @@
       "bank_pre_provision_operating_profit": 2598492,
       "bank_pre_provision_operating_profit_calculation": "Tổng thu nhập hoạt động - |chi phí hoạt động| theo BCTC ngân hàng.",
       "revenue_calculation": "Lợi nhuận trước dự phòng + chi phí hoạt động; đối chiếu theo tổng phụ BCTC ngân hàng.",
-      "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC."
+      "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
+      "operating_cash_flow_ytd": -41476406,
+      "investing_cash_flow_ytd": -71756,
+      "financing_cash_flow_ytd": -30000,
+      "net_cash_change_ytd": -41578162,
+      "cash_ending_reported_ytd": 44780913,
+      "foreign_exchange_effect_ytd": 210436,
+      "operating_cash_flow": -41476406,
+      "investing_cash_flow": -71756,
+      "financing_cash_flow": -30000,
+      "net_cash_change": -41578162,
+      "foreign_exchange_effect": 210436,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%201/TPB_Baocaotaichinh_Q1_2025_Hopnhat.pdf",
+        "selected_source_index_url": "https://finance.vietstock.vn/TPB/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/TPB/auto-tpb-20261021/f95e7cacd969ceb0.pdf",
+        "source_pdf_pages": [
+          11,
+          12
+        ],
+        "source_printed_pages": [
+          6,
+          7
+        ],
+        "source_review": "visually_checked",
+        "selected_basis": "Current Q1/2025 consolidated report, visually checked",
+        "unit": "triệu VND",
+        "period_basis": "year_to_date",
+        "previous_source_url": null,
+        "previous_source_archive_file": null,
+        "previous_source_values_million_vnd": null,
+        "relative_differences_percent": null,
+        "source_basis_changed": false,
+        "snapshot_values_before_normalization": {
+          "cash_beginning": 86148639,
+          "cash_ending": 44780913,
+          "cash_beginning_reported_ytd": 86148639,
+          "cashflow_period_basis": "year_to_date",
+          "operating_cash_flow_calculation": "Q1 equals YTD Q1",
+          "investing_cash_flow_calculation": "Q1 equals YTD Q1",
+          "financing_cash_flow_calculation": "Q1 equals YTD Q1",
+          "net_cash_change_calculation": "Q1 equals YTD Q1"
+        },
+        "reason": null
+      },
+      "cashflow_source_reconciliation": {
+        "report_period": "2025-Q1",
+        "units": "triệu VND",
+        "source_index_url": "https://finance.vietstock.vn/TPB/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%201/TPB_Baocaotaichinh_Q1_2025_Hopnhat.pdf",
+        "source_archive_file": "reports/raw/TPB/auto-tpb-20261021/f95e7cacd969ceb0.pdf",
+        "source_pdf_pages": [
+          11,
+          12
+        ],
+        "source_printed_pages": [
+          6,
+          7
+        ],
+        "visual_review": "visually_checked",
+        "selected_values_not_adjusted_for_tolerance": true,
+        "relative_tolerance_percent": 0.01,
+        "period_basis": "year_to_date",
+        "ytd_flow_components_residual": 0,
+        "ytd_flow_components_relative_difference_percent": 0,
+        "ytd_cash_bridge_residual": 0,
+        "ytd_cash_bridge_relative_difference_percent": 0,
+        "quarter_flow_components_residual": 0,
+        "quarter_flow_components_relative_difference_percent": 0,
+        "quarter_cash_bridge_residual": 0,
+        "quarter_cash_bridge_relative_difference_percent": 0,
+        "standalone_quarter_derived_from_ytd": "Q1 equals YTD from source statement",
+        "foreign_exchange_effect_source_status": "reported_separately_in_statement",
+        "status": "PASS_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT",
+        "note": null
+      }
     },
     {
       "symbol": "TPB",
@@ -756,10 +1231,24 @@
         "bank_service_income",
         "bank_trading_securities",
         "bank_valuable_papers",
+        "cash_beginning",
+        "cash_beginning_reported_ytd",
+        "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
         "fixed_assets",
+        "foreign_exchange_effect",
+        "foreign_exchange_effect_ytd",
         "income_tax",
         "income_tax_current",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
+        "operating_cash_flow",
+        "operating_cash_flow_ytd",
         "operating_profit",
         "retained_earnings"
       ],
@@ -768,49 +1257,12 @@
       "financial_line_items_schema_updated_at": "2026-10-25T20:28:29+00:00",
       "financial_line_items_source": "reports/raw/TPB/auto-tpb-20261021/b30bb9d09e613f27.pdf",
       "financial_line_items_updated_at": "2026-10-25T20:28:39+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. TPB CASHFLOW NORMALIZATION 2026-10-29: core fields mapped from the final net line for each B04a/TCTD-HN cash-flow group; amounts are in integer million VND. Period-specific source URL, archive and PDF pages are recorded in cashflow_audit_revision.",
       "financial_line_items_prior_values": {
         "income_tax": -407754,
         "bank_operating_expenses": -1753628
       },
-      "financial_line_items_rejected_values": {
-        "operating_cash_flow": {
-          "value": 6497786,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "investing_cash_flow": {
-          "value": -62378,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "financing_cash_flow": {
-          "value": 1014444,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "net_cash_change": {
-          "value": 22707921,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "operating_cash_flow_ytd": {
-          "value": 12784580,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "investing_cash_flow_ytd": {
-          "value": -134135,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "financing_cash_flow_ytd": {
-          "value": 984444,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "net_cash_change_ytd": {
-          "value": -18870241,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "cash_beginning": {
-          "value": 44780913,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        }
-      },
+      "financial_line_items_rejected_values": {},
       "bank_net_service_income": 988763,
       "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
       "retained_earnings": 6874202,
@@ -822,22 +1274,12 @@
       "core_financial_extraction_status": "auto_extracted_pending_visual_review",
       "core_financial_extraction_updated_at": "2026-10-25T08:14:41+00:00",
       "cashflow_period_basis": "year_to_date",
-      "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
-      "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
-      "financing_cash_flow_calculation": "current YTD minus previous quarter YTD",
-      "net_cash_change_calculation": "current YTD minus previous quarter YTD",
+      "operating_cash_flow_calculation": "Standalone quarter = current YTD minus previous quarter YTD within the same fiscal year; FX is calculated the same way.",
+      "investing_cash_flow_calculation": "Standalone quarter = current YTD minus previous quarter YTD within the same fiscal year; FX is calculated the same way.",
+      "financing_cash_flow_calculation": "Standalone quarter = current YTD minus previous quarter YTD within the same fiscal year; FX is calculated the same way.",
+      "net_cash_change_calculation": "Standalone quarter = current YTD minus previous quarter YTD within the same fiscal year; FX is calculated the same way.",
       "cash_beginning_calculation": "previous quarter closing cash",
-      "financial_line_items_rejected_fields": [
-        "cash_beginning",
-        "financing_cash_flow",
-        "financing_cash_flow_ytd",
-        "investing_cash_flow",
-        "investing_cash_flow_ytd",
-        "net_cash_change",
-        "net_cash_change_ytd",
-        "operating_cash_flow",
-        "operating_cash_flow_ytd"
-      ],
+      "financial_line_items_rejected_fields": [],
       "cash_beginning": 44780913,
       "core_financial_extraction_note": "Không còn trang PDF/ZIP đang chờ trích xuất tự động nhưng bộ chỉ tiêu lõi vẫn thiếu hoặc chưa cân đối. Giữ trống chỉ tiêu chưa xác minh và yêu cầu đối chiếu trực quan với báo cáo VietstockFinance.",
       "core_financial_extraction_evidence_fingerprint": "66760b08ac1f9433d23c5c6a22dbfe659b58b85ee628a803fb9ad01c98542e11",
@@ -895,13 +1337,89 @@
       },
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "verification_status_note": "Các chỉ tiêu lõi đã được trích xuất tự động từ BCTC hợp nhất VietstockFinance; cần đối chiếu trực quan trước khi coi là xác minh.",
-      "cash_beginning_reported_ytd": 44780913,
+      "cash_beginning_reported_ytd": 86148639,
       "financial_line_items_value_corrections": {
         "bank_operating_expenses": {
           "previous_value": -1753628,
           "new_value": 1753628,
           "reason": "Normalized bank operating expenses to the positive expense convention used in subtotal reconciliation."
         }
+      },
+      "operating_cash_flow_ytd": -19720550,
+      "investing_cash_flow_ytd": -134135,
+      "financing_cash_flow_ytd": 984444,
+      "net_cash_change_ytd": -18870241,
+      "cash_ending_reported_ytd": 67278398,
+      "foreign_exchange_effect_ytd": 0,
+      "operating_cash_flow": 21755856,
+      "investing_cash_flow": -62379,
+      "financing_cash_flow": 1014444,
+      "net_cash_change": 22707921,
+      "cash_ending": 67278398,
+      "foreign_exchange_effect": -210436,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%202/TPB_Baocaotaichinh_Q2_2025_Hopnhat.pdf",
+        "selected_source_index_url": "https://finance.vietstock.vn/TPB/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/TPB/auto-tpb-20261021/b30bb9d09e613f27.pdf",
+        "source_pdf_pages": [
+          9,
+          10
+        ],
+        "source_printed_pages": [
+          6,
+          7
+        ],
+        "source_review": "visually_checked",
+        "selected_basis": "Current H1/2025 consolidated report; later Q2/2026 comparative matches",
+        "unit": "triệu VND",
+        "period_basis": "year_to_date",
+        "previous_source_url": null,
+        "previous_source_archive_file": null,
+        "previous_source_values_million_vnd": null,
+        "relative_differences_percent": null,
+        "source_basis_changed": false,
+        "snapshot_values_before_normalization": {
+          "cash_beginning": 44780913,
+          "cash_beginning_reported_ytd": 44780913,
+          "cashflow_period_basis": "year_to_date",
+          "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
+          "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
+          "financing_cash_flow_calculation": "current YTD minus previous quarter YTD",
+          "net_cash_change_calculation": "current YTD minus previous quarter YTD",
+          "cash_beginning_calculation": "previous quarter closing cash"
+        },
+        "reason": null
+      },
+      "cashflow_source_reconciliation": {
+        "report_period": "2025-Q2",
+        "units": "triệu VND",
+        "source_index_url": "https://finance.vietstock.vn/TPB/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%202/TPB_Baocaotaichinh_Q2_2025_Hopnhat.pdf",
+        "source_archive_file": "reports/raw/TPB/auto-tpb-20261021/b30bb9d09e613f27.pdf",
+        "source_pdf_pages": [
+          9,
+          10
+        ],
+        "source_printed_pages": [
+          6,
+          7
+        ],
+        "visual_review": "visually_checked",
+        "selected_values_not_adjusted_for_tolerance": true,
+        "relative_tolerance_percent": 0.01,
+        "period_basis": "year_to_date",
+        "ytd_flow_components_residual": 0,
+        "ytd_flow_components_relative_difference_percent": 0,
+        "ytd_cash_bridge_residual": 0,
+        "ytd_cash_bridge_relative_difference_percent": 0,
+        "quarter_flow_components_residual": 0,
+        "quarter_flow_components_relative_difference_percent": 0,
+        "quarter_cash_bridge_residual": 0,
+        "quarter_cash_bridge_relative_difference_percent": 0,
+        "standalone_quarter_derived_from_ytd": "current YTD minus prior quarter YTD within the same year",
+        "foreign_exchange_effect_source_status": "reported_separately_in_statement",
+        "status": "PASS_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT",
+        "note": null
       }
     },
     {
@@ -965,11 +1483,23 @@
         "bank_trading_securities",
         "bank_valuable_papers",
         "cash_beginning",
+        "cash_beginning_reported_ytd",
         "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
         "fixed_assets",
+        "foreign_exchange_effect",
+        "foreign_exchange_effect_ytd",
         "income_tax",
         "income_tax_current",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
+        "operating_cash_flow",
+        "operating_cash_flow_ytd",
         "operating_profit",
         "retained_earnings"
       ],
@@ -978,45 +1508,12 @@
       "financial_line_items_schema_updated_at": "2026-10-25T20:28:33+00:00",
       "financial_line_items_source": "reports/raw/TPB/auto-tpb-20261021/3849167a56b8ea2a.pdf",
       "financial_line_items_updated_at": "2026-10-25T20:28:39+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. TPB CASHFLOW NORMALIZATION 2026-10-29: core fields mapped from the final net line for each B04a/TCTD-HN cash-flow group; amounts are in integer million VND. Period-specific source URL, archive and PDF pages are recorded in cashflow_audit_revision.",
       "financial_line_items_prior_values": {
         "income_tax": -381217,
         "bank_operating_expenses": -1713927
       },
-      "financial_line_items_rejected_values": {
-        "operating_cash_flow": {
-          "value": 8181267,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "investing_cash_flow": {
-          "value": -27948,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "financing_cash_flow": {
-          "value": 1347200,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "net_cash_change": {
-          "value": 19081894,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "operating_cash_flow_ytd": {
-          "value": 20965847,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "investing_cash_flow_ytd": {
-          "value": -162083,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "financing_cash_flow_ytd": {
-          "value": 2331644,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "net_cash_change_ytd": {
-          "value": 211653,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        }
-      },
+      "financial_line_items_rejected_values": {},
       "bank_net_service_income": 1034974,
       "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
       "retained_earnings": 8385337,
@@ -1042,22 +1539,13 @@
       "core_financial_extraction_updated_at": "2026-10-26T07:06:04+00:00",
       "core_financial_extraction_note": "Đã có đủ trang nguồn mục tiêu nhưng hai lượt phân tích trên cùng văn bản vẫn không tạo được bộ chỉ tiêu lõi cân đối. Các số OCR chưa cân đối được lưu riêng để đối chiếu; chỉ tiêu chính chưa xác minh được để trống.",
       "cashflow_period_basis": "year_to_date",
-      "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
-      "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
-      "financing_cash_flow_calculation": "current YTD minus previous quarter YTD",
-      "net_cash_change_calculation": "current YTD minus previous quarter YTD",
+      "operating_cash_flow_calculation": "Standalone quarter = current YTD minus previous quarter YTD within the same fiscal year; FX is calculated the same way.",
+      "investing_cash_flow_calculation": "Standalone quarter = current YTD minus previous quarter YTD within the same fiscal year; FX is calculated the same way.",
+      "financing_cash_flow_calculation": "Standalone quarter = current YTD minus previous quarter YTD within the same fiscal year; FX is calculated the same way.",
+      "net_cash_change_calculation": "Standalone quarter = current YTD minus previous quarter YTD within the same fiscal year; FX is calculated the same way.",
       "financial_line_items_cash_check": "opening/closing cash hidden because the cash bridge did not reconcile",
-      "financial_line_items_rejected_fields": [
-        "financing_cash_flow",
-        "financing_cash_flow_ytd",
-        "investing_cash_flow",
-        "investing_cash_flow_ytd",
-        "net_cash_change",
-        "net_cash_change_ytd",
-        "operating_cash_flow",
-        "operating_cash_flow_ytd"
-      ],
-      "cash_beginning": 86148639,
+      "financial_line_items_rejected_fields": [],
+      "cash_beginning": 67278398,
       "cash_ending": 86612489,
       "verification_status_note": "Cần đối chiếu trực quan với PDF VietstockFinance trước khi công bố các chỉ tiêu lõi.",
       "bank_operating_expenses": 1713927,
@@ -1103,6 +1591,81 @@
           "new_value": 1713927,
           "reason": "Normalized bank operating expenses to the positive expense convention used in subtotal reconciliation."
         }
+      },
+      "operating_cash_flow_ytd": -1958525,
+      "investing_cash_flow_ytd": -161466,
+      "financing_cash_flow_ytd": 2331644,
+      "net_cash_change_ytd": 211653,
+      "cash_ending_reported_ytd": 86612489,
+      "foreign_exchange_effect_ytd": 252197,
+      "operating_cash_flow": 17762025,
+      "investing_cash_flow": -27331,
+      "financing_cash_flow": 1347200,
+      "net_cash_change": 19081894,
+      "foreign_exchange_effect": 252197,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%203/TPB_Baocaotaichinh_Q3_2025_Hopnhat.pdf",
+        "selected_source_index_url": "https://finance.vietstock.vn/TPB/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/TPB/auto-tpb-20261021/3849167a56b8ea2a.pdf",
+        "source_pdf_pages": [
+          9,
+          10
+        ],
+        "source_printed_pages": [
+          6,
+          7
+        ],
+        "source_review": "visually_checked",
+        "selected_basis": "Current 9M/2025 consolidated report, visually checked",
+        "unit": "triệu VND",
+        "period_basis": "year_to_date",
+        "previous_source_url": null,
+        "previous_source_archive_file": null,
+        "previous_source_values_million_vnd": null,
+        "relative_differences_percent": null,
+        "source_basis_changed": false,
+        "snapshot_values_before_normalization": {
+          "cash_beginning": 86148639,
+          "cash_ending": 86612489,
+          "cash_beginning_reported_ytd": 86148639,
+          "cashflow_period_basis": "year_to_date",
+          "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
+          "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
+          "financing_cash_flow_calculation": "current YTD minus previous quarter YTD",
+          "net_cash_change_calculation": "current YTD minus previous quarter YTD"
+        },
+        "reason": null
+      },
+      "cashflow_source_reconciliation": {
+        "report_period": "2025-Q3",
+        "units": "triệu VND",
+        "source_index_url": "https://finance.vietstock.vn/TPB/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%203/TPB_Baocaotaichinh_Q3_2025_Hopnhat.pdf",
+        "source_archive_file": "reports/raw/TPB/auto-tpb-20261021/3849167a56b8ea2a.pdf",
+        "source_pdf_pages": [
+          9,
+          10
+        ],
+        "source_printed_pages": [
+          6,
+          7
+        ],
+        "visual_review": "visually_checked",
+        "selected_values_not_adjusted_for_tolerance": true,
+        "relative_tolerance_percent": 0.01,
+        "period_basis": "year_to_date",
+        "ytd_flow_components_residual": 0,
+        "ytd_flow_components_relative_difference_percent": 0,
+        "ytd_cash_bridge_residual": 0,
+        "ytd_cash_bridge_relative_difference_percent": 0,
+        "quarter_flow_components_residual": 0,
+        "quarter_flow_components_relative_difference_percent": 0,
+        "quarter_cash_bridge_residual": 0,
+        "quarter_cash_bridge_relative_difference_percent": 0,
+        "standalone_quarter_derived_from_ytd": "current YTD minus prior quarter YTD within the same year",
+        "foreign_exchange_effect_source_status": "reported_separately_in_statement",
+        "status": "PASS_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT",
+        "note": null
       }
     },
     {
@@ -1178,14 +1741,22 @@
         "bank_trading_securities",
         "bank_valuable_papers",
         "cash_beginning",
+        "cash_beginning_reported_ytd",
         "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
+        "financing_cash_flow",
         "financing_cash_flow_ytd",
         "fixed_assets",
+        "foreign_exchange_effect",
+        "foreign_exchange_effect_ytd",
         "income_tax",
         "income_tax_current",
+        "investing_cash_flow",
         "investing_cash_flow_ytd",
+        "net_cash_change",
         "net_cash_change_ytd",
+        "operating_cash_flow",
         "operating_cash_flow_ytd",
         "operating_profit",
         "retained_earnings"
@@ -1195,7 +1766,7 @@
       "financial_line_items_schema_updated_at": "2026-10-26T07:06:06+00:00",
       "financial_line_items_source": "reports/raw/TPB/auto-tpb-20261021/7035db49b3b4ca6b.pdf",
       "financial_line_items_updated_at": "2026-10-26T07:06:06+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. TPB CASHFLOW NORMALIZATION 2026-10-29: core fields mapped from the final net line for each B04a/TCTD-HN cash-flow group; amounts are in integer million VND. Period-specific source URL, archive and PDF pages are recorded in cashflow_audit_revision.",
       "financial_line_items_prior_values": {
         "cash_beginning": 86612489,
         "income_tax": -617872,
@@ -1210,8 +1781,8 @@
       "core_financial_extraction_attempt_count": 4,
       "core_financial_extraction_status": "auto_extracted_pending_visual_review",
       "core_financial_extraction_updated_at": "2026-10-25T08:14:42+00:00",
-      "operating_cash_flow_ytd": 30133067,
-      "investing_cash_flow_ytd": -405174,
+      "operating_cash_flow_ytd": 29797620,
+      "investing_cash_flow_ytd": -1571779,
       "financing_cash_flow_ytd": 1372844,
       "net_cash_change_ytd": 29598685,
       "cash_beginning": 86612489,
@@ -1311,7 +1882,84 @@
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "verification_status_note": "Các chỉ tiêu lõi đã được trích xuất tự động từ BCTC hợp nhất VietstockFinance; cần đối chiếu trực quan trước khi coi là xác minh.",
       "bank_other_operating_net": 21861,
-      "cash_beginning_reported_ytd": 86148639
+      "cash_beginning_reported_ytd": 86148639,
+      "cash_ending_reported_ytd": 115747324,
+      "foreign_exchange_effect_ytd": 0,
+      "operating_cash_flow": 31756145,
+      "investing_cash_flow": -1410313,
+      "financing_cash_flow": -958800,
+      "net_cash_change": 29387032,
+      "foreign_exchange_effect": -252197,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/TPB_Baocaotaichinh_Q4_2025_Hopnhat.pdf",
+        "selected_source_index_url": "https://finance.vietstock.vn/TPB/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/TPB/auto-tpb-20261021/7035db49b3b4ca6b.pdf",
+        "source_pdf_pages": [
+          11,
+          12
+        ],
+        "source_printed_pages": [
+          6,
+          7
+        ],
+        "source_review": "ocr_text_reconciled_visual_review_pending",
+        "selected_basis": "Current FY2025 consolidated report",
+        "unit": "triệu VND",
+        "period_basis": "year_to_date",
+        "previous_source_url": null,
+        "previous_source_archive_file": null,
+        "previous_source_values_million_vnd": null,
+        "relative_differences_percent": null,
+        "source_basis_changed": false,
+        "snapshot_values_before_normalization": {
+          "operating_cash_flow_ytd": 30133067,
+          "investing_cash_flow_ytd": -405174,
+          "financing_cash_flow_ytd": 1372844,
+          "net_cash_change_ytd": 29598685,
+          "cash_beginning": 86612489,
+          "cash_ending": 115747324,
+          "cash_beginning_reported_ytd": 86148639,
+          "cashflow_period_basis": "year_to_date",
+          "cash_beginning_calculation": "previous quarter closing cash"
+        },
+        "reason": null
+      },
+      "cashflow_source_reconciliation": {
+        "report_period": "2025-Q4",
+        "units": "triệu VND",
+        "source_index_url": "https://finance.vietstock.vn/TPB/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/TPB_Baocaotaichinh_Q4_2025_Hopnhat.pdf",
+        "source_archive_file": "reports/raw/TPB/auto-tpb-20261021/7035db49b3b4ca6b.pdf",
+        "source_pdf_pages": [
+          11,
+          12
+        ],
+        "source_printed_pages": [
+          6,
+          7
+        ],
+        "visual_review": "ocr_text_reconciled_visual_review_pending",
+        "selected_values_not_adjusted_for_tolerance": true,
+        "relative_tolerance_percent": 0.01,
+        "period_basis": "year_to_date",
+        "ytd_flow_components_residual": 0,
+        "ytd_flow_components_relative_difference_percent": 0,
+        "ytd_cash_bridge_residual": 0,
+        "ytd_cash_bridge_relative_difference_percent": 0,
+        "quarter_flow_components_residual": 0,
+        "quarter_flow_components_relative_difference_percent": 0,
+        "quarter_cash_bridge_residual": 0,
+        "quarter_cash_bridge_relative_difference_percent": 0,
+        "standalone_quarter_derived_from_ytd": "current YTD minus prior quarter YTD within the same year",
+        "foreign_exchange_effect_source_status": "reported_separately_in_statement",
+        "status": "NEEDS_MANUAL_REVIEW_SOURCE_VISUAL_PENDING",
+        "note": null
+      },
+      "financial_line_items_rejected_fields": [],
+      "operating_cash_flow_calculation": "Standalone quarter = current YTD minus previous quarter YTD within the same fiscal year; FX is calculated the same way.",
+      "investing_cash_flow_calculation": "Standalone quarter = current YTD minus previous quarter YTD within the same fiscal year; FX is calculated the same way.",
+      "financing_cash_flow_calculation": "Standalone quarter = current YTD minus previous quarter YTD within the same fiscal year; FX is calculated the same way.",
+      "net_cash_change_calculation": "Standalone quarter = current YTD minus previous quarter YTD within the same fiscal year; FX is calculated the same way."
     },
     {
       "symbol": "TPB",
@@ -1389,11 +2037,23 @@
         "bank_service_income",
         "bank_trading_securities",
         "cash_beginning",
+        "cash_beginning_reported_ytd",
         "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
         "fixed_assets",
+        "foreign_exchange_effect",
+        "foreign_exchange_effect_ytd",
         "income_tax",
         "income_tax_current",
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
+        "operating_cash_flow",
+        "operating_cash_flow_ytd",
         "operating_profit",
         "retained_earnings"
       ],
@@ -1402,45 +2062,12 @@
       "financial_line_items_schema_updated_at": "2026-10-25T20:28:37+00:00",
       "financial_line_items_source": "reports/raw/TPB/auto-tpb-20261021/d8f4e25a6a4b8054.pdf",
       "financial_line_items_updated_at": "2026-10-25T20:28:39+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. TPB CASHFLOW NORMALIZATION 2026-10-29: core fields mapped from the final net line for each B04a/TCTD-HN cash-flow group; amounts are in integer million VND. Period-specific source URL, archive and PDF pages are recorded in cashflow_audit_revision.",
       "financial_line_items_prior_values": {
         "income_tax": -475390,
         "bank_operating_expenses": -2246554
       },
-      "financial_line_items_rejected_values": {
-        "operating_cash_flow": {
-          "value": 471388,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "investing_cash_flow": {
-          "value": -81784,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "financing_cash_flow": {
-          "value": -192100,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "net_cash_change": {
-          "value": -7567017,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "operating_cash_flow_ytd": {
-          "value": 471388,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "investing_cash_flow_ytd": {
-          "value": -81784,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "financing_cash_flow_ytd": {
-          "value": -192100,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        },
-        "net_cash_change_ytd": {
-          "value": -7567017,
-          "reason": "cash-flow components do not reconcile to reported net cash change"
-        }
-      },
+      "financial_line_items_rejected_values": {},
       "bank_net_service_income": 1252429,
       "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
       "retained_earnings": 11305830,
@@ -1452,21 +2079,12 @@
       "core_financial_extraction_updated_at": "2026-10-25T08:14:43+00:00",
       "core_financial_extraction_note": "Không còn trang PDF/ZIP đang chờ trích xuất tự động nhưng bộ chỉ tiêu lõi vẫn thiếu hoặc chưa cân đối. Giữ trống chỉ tiêu chưa xác minh và yêu cầu đối chiếu trực quan với báo cáo VietstockFinance.",
       "cashflow_period_basis": "year_to_date",
-      "operating_cash_flow_calculation": "Q1 equals YTD Q1",
-      "investing_cash_flow_calculation": "Q1 equals YTD Q1",
-      "financing_cash_flow_calculation": "Q1 equals YTD Q1",
-      "net_cash_change_calculation": "Q1 equals YTD Q1",
+      "operating_cash_flow_calculation": "Q1 equals reported year-to-date line from the VietstockFinance consolidated B04a/TCTD-HN statement; amounts are integer million VND.",
+      "investing_cash_flow_calculation": "Q1 equals reported year-to-date line from the VietstockFinance consolidated B04a/TCTD-HN statement; amounts are integer million VND.",
+      "financing_cash_flow_calculation": "Q1 equals reported year-to-date line from the VietstockFinance consolidated B04a/TCTD-HN statement; amounts are integer million VND.",
+      "net_cash_change_calculation": "Q1 equals reported year-to-date line from the VietstockFinance consolidated B04a/TCTD-HN statement; amounts are integer million VND.",
       "financial_line_items_cash_check": "opening/closing cash hidden because the cash bridge did not reconcile",
-      "financial_line_items_rejected_fields": [
-        "financing_cash_flow",
-        "financing_cash_flow_ytd",
-        "investing_cash_flow",
-        "investing_cash_flow_ytd",
-        "net_cash_change",
-        "net_cash_change_ytd",
-        "operating_cash_flow",
-        "operating_cash_flow_ytd"
-      ],
+      "financial_line_items_rejected_fields": [],
       "cash_beginning": 115747324,
       "cash_ending": 108553424,
       "core_financial_extraction_evidence_fingerprint": "a06a9101cbb8f7925b3b06776bc590fe8104a0daa0eb47b055e0ac400aec9e02",
@@ -1531,6 +2149,81 @@
           "new_value": 2246554,
           "reason": "Normalized bank operating expenses to the positive expense convention used in subtotal reconciliation."
         }
+      },
+      "operating_cash_flow_ytd": -7280016,
+      "investing_cash_flow_ytd": -94901,
+      "financing_cash_flow_ytd": -192100,
+      "net_cash_change_ytd": -7567017,
+      "cash_ending_reported_ytd": 108553424,
+      "foreign_exchange_effect_ytd": 373117,
+      "operating_cash_flow": -7280016,
+      "investing_cash_flow": -94901,
+      "financing_cash_flow": -192100,
+      "net_cash_change": -7567017,
+      "foreign_exchange_effect": 373117,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/TPB_Baocaotaichinh_Q1_2026_Hopnhat.pdf",
+        "selected_source_index_url": "https://finance.vietstock.vn/TPB/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/TPB/auto-tpb-20261021/d8f4e25a6a4b8054.pdf",
+        "source_pdf_pages": [
+          9,
+          10
+        ],
+        "source_printed_pages": [
+          6,
+          7
+        ],
+        "source_review": "ocr_text_reconciled_visual_review_pending",
+        "selected_basis": "Current Q1/2026 consolidated report",
+        "unit": "triệu VND",
+        "period_basis": "year_to_date",
+        "previous_source_url": null,
+        "previous_source_archive_file": null,
+        "previous_source_values_million_vnd": null,
+        "relative_differences_percent": null,
+        "source_basis_changed": false,
+        "snapshot_values_before_normalization": {
+          "cash_beginning": 115747324,
+          "cash_ending": 108553424,
+          "cash_beginning_reported_ytd": 115747324,
+          "cashflow_period_basis": "year_to_date",
+          "operating_cash_flow_calculation": "Q1 equals YTD Q1",
+          "investing_cash_flow_calculation": "Q1 equals YTD Q1",
+          "financing_cash_flow_calculation": "Q1 equals YTD Q1",
+          "net_cash_change_calculation": "Q1 equals YTD Q1"
+        },
+        "reason": null
+      },
+      "cashflow_source_reconciliation": {
+        "report_period": "2026-Q1",
+        "units": "triệu VND",
+        "source_index_url": "https://finance.vietstock.vn/TPB/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/TPB_Baocaotaichinh_Q1_2026_Hopnhat.pdf",
+        "source_archive_file": "reports/raw/TPB/auto-tpb-20261021/d8f4e25a6a4b8054.pdf",
+        "source_pdf_pages": [
+          9,
+          10
+        ],
+        "source_printed_pages": [
+          6,
+          7
+        ],
+        "visual_review": "ocr_text_reconciled_visual_review_pending",
+        "selected_values_not_adjusted_for_tolerance": true,
+        "relative_tolerance_percent": 0.01,
+        "period_basis": "year_to_date",
+        "ytd_flow_components_residual": 0,
+        "ytd_flow_components_relative_difference_percent": 0,
+        "ytd_cash_bridge_residual": 0,
+        "ytd_cash_bridge_relative_difference_percent": 0,
+        "quarter_flow_components_residual": 0,
+        "quarter_flow_components_relative_difference_percent": 0,
+        "quarter_cash_bridge_residual": 0,
+        "quarter_cash_bridge_relative_difference_percent": 0,
+        "standalone_quarter_derived_from_ytd": "Q1 equals YTD from source statement",
+        "foreign_exchange_effect_source_status": "reported_separately_in_statement",
+        "status": "NEEDS_MANUAL_REVIEW_SOURCE_VISUAL_PENDING",
+        "note": null
       }
     },
     {
@@ -1603,14 +2296,22 @@
         "bank_trading_securities",
         "bank_valuable_papers",
         "cash_beginning",
+        "cash_beginning_reported_ytd",
         "cash_ending",
+        "cash_ending_reported_ytd",
         "cashflow_period_basis",
+        "financing_cash_flow",
         "financing_cash_flow_ytd",
         "fixed_assets",
+        "foreign_exchange_effect",
+        "foreign_exchange_effect_ytd",
         "income_tax",
         "income_tax_current",
+        "investing_cash_flow",
         "investing_cash_flow_ytd",
+        "net_cash_change",
         "net_cash_change_ytd",
+        "operating_cash_flow",
         "operating_cash_flow_ytd",
         "operating_profit",
         "retained_earnings"
@@ -1620,7 +2321,7 @@
       "financial_line_items_schema_updated_at": "2026-10-26T07:06:10+00:00",
       "financial_line_items_source": "reports/raw/TPB/auto-tpb-20261021/36160cdcecbd2382.pdf",
       "financial_line_items_updated_at": "2026-10-26T07:06:10+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. TPB CASHFLOW NORMALIZATION 2026-10-29: core fields mapped from the final net line for each B04a/TCTD-HN cash-flow group; amounts are in integer million VND. Period-specific source URL, archive and PDF pages are recorded in cashflow_audit_revision.",
       "financial_line_items_prior_values": {
         "cash_beginning": 108553424,
         "bank_operating_expenses": -2043366
@@ -1656,9 +2357,9 @@
       "core_financial_extraction_attempt_count": 4,
       "income_tax": 486508,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "operating_cash_flow_ytd": 18171212,
-      "investing_cash_flow_ytd": -114798,
-      "financing_cash_flow_ytd": 920000,
+      "operating_cash_flow_ytd": -16932973,
+      "investing_cash_flow_ytd": -127716,
+      "financing_cash_flow_ytd": -1663300,
       "net_cash_change_ytd": -18723989,
       "cash_beginning": 108553424,
       "cash_ending": 97023335,
@@ -1720,7 +2421,84 @@
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "verification_status_note": "Các chỉ tiêu lõi đã được trích xuất tự động từ BCTC hợp nhất VietstockFinance; cần đối chiếu trực quan trước khi coi là xác minh.",
       "bank_other_operating_net": 184196,
-      "cash_beginning_reported_ytd": 115747324
+      "cash_beginning_reported_ytd": 115747324,
+      "cash_ending_reported_ytd": 97023335,
+      "foreign_exchange_effect_ytd": 0,
+      "operating_cash_flow": -9652957,
+      "investing_cash_flow": -32815,
+      "financing_cash_flow": -1471200,
+      "net_cash_change": -11156972,
+      "foreign_exchange_effect": -373117,
+      "cashflow_audit_revision": {
+        "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/TPB_Baocaotaichinh_Q2_2026_Hopnhat.pdf",
+        "selected_source_index_url": "https://finance.vietstock.vn/TPB/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/TPB/auto-tpb-20261021/36160cdcecbd2382.pdf",
+        "source_pdf_pages": [
+          11,
+          12
+        ],
+        "source_printed_pages": [
+          6,
+          7
+        ],
+        "source_review": "ocr_text_reconciled_visual_review_pending",
+        "selected_basis": "Current H1/2026 consolidated statement",
+        "unit": "triệu VND",
+        "period_basis": "year_to_date",
+        "previous_source_url": null,
+        "previous_source_archive_file": null,
+        "previous_source_values_million_vnd": null,
+        "relative_differences_percent": null,
+        "source_basis_changed": false,
+        "snapshot_values_before_normalization": {
+          "operating_cash_flow_ytd": 18171212,
+          "investing_cash_flow_ytd": -114798,
+          "financing_cash_flow_ytd": 920000,
+          "net_cash_change_ytd": -18723989,
+          "cash_beginning": 108553424,
+          "cash_ending": 97023335,
+          "cash_beginning_reported_ytd": 115747324,
+          "cashflow_period_basis": "year_to_date",
+          "cash_beginning_calculation": "previous quarter closing cash"
+        },
+        "reason": null
+      },
+      "cashflow_source_reconciliation": {
+        "report_period": "2026-Q2",
+        "units": "triệu VND",
+        "source_index_url": "https://finance.vietstock.vn/TPB/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/TPB_Baocaotaichinh_Q2_2026_Hopnhat.pdf",
+        "source_archive_file": "reports/raw/TPB/auto-tpb-20261021/36160cdcecbd2382.pdf",
+        "source_pdf_pages": [
+          11,
+          12
+        ],
+        "source_printed_pages": [
+          6,
+          7
+        ],
+        "visual_review": "ocr_text_reconciled_visual_review_pending",
+        "selected_values_not_adjusted_for_tolerance": true,
+        "relative_tolerance_percent": 0.01,
+        "period_basis": "year_to_date",
+        "ytd_flow_components_residual": 0,
+        "ytd_flow_components_relative_difference_percent": 0,
+        "ytd_cash_bridge_residual": 0,
+        "ytd_cash_bridge_relative_difference_percent": 0,
+        "quarter_flow_components_residual": 0,
+        "quarter_flow_components_relative_difference_percent": 0,
+        "quarter_cash_bridge_residual": 0,
+        "quarter_cash_bridge_relative_difference_percent": 0,
+        "standalone_quarter_derived_from_ytd": "current YTD minus prior quarter YTD within the same year",
+        "foreign_exchange_effect_source_status": "reported_separately_in_statement",
+        "status": "NEEDS_MANUAL_REVIEW_SOURCE_VISUAL_PENDING",
+        "note": "Current H1/2026 source text was reconciled arithmetically; source-page visual review pending because direct screenshot fetch was too large."
+      },
+      "financial_line_items_rejected_fields": [],
+      "operating_cash_flow_calculation": "Standalone quarter = current YTD minus previous quarter YTD within the same fiscal year; FX is calculated the same way.",
+      "investing_cash_flow_calculation": "Standalone quarter = current YTD minus previous quarter YTD within the same fiscal year; FX is calculated the same way.",
+      "financing_cash_flow_calculation": "Standalone quarter = current YTD minus previous quarter YTD within the same fiscal year; FX is calculated the same way.",
+      "net_cash_change_calculation": "Standalone quarter = current YTD minus previous quarter YTD within the same fiscal year; FX is calculated the same way."
     }
   ],
   "sync_status": "records_found",
@@ -1728,5 +2506,7 @@
   "bootstrap_attempt_count": 1,
   "bootstrap_status": "complete_needs_manual_review",
   "bootstrap_completed_at": "2026-10-22T16:41:46+00:00",
-  "bootstrap_completion_note": "Các kỳ báo cáo có thể tự trích xuất đã được lưu; một số kỳ còn cần đối chiếu thủ công."
+  "bootstrap_completion_note": "Các kỳ báo cáo có thể tự trích xuất đã được lưu; một số kỳ còn cần đối chiếu thủ công.",
+  "processedAt": "2026-10-29T04:20:00+07:00",
+  "note": " Cash-flow normalization 2026-10-29: all ten periods from 2024-Q1 through 2026-Q2 normalized from VietstockFinance consolidated report lines, using newer comparison columns where selected; integer million-VND units retained, quarter standalone flows derived from YTD, FX bridge included. Source reclassifications above 0.01% remain flagged; no balancing plugs."
 }
