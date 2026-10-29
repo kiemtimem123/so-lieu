@@ -33,7 +33,9 @@
         "manually_visual_reviewed": false,
         "last_extraction_attempt_at": "2026-10-23T15:50:31+00:00",
         "extraction_attempt_count": 1,
-        "last_extraction_error": "HTTPSConnectionPool(host='static2.vietstock.vn', port=443): Read timed out."
+        "last_extraction_error": "HTTPSConnectionPool(host='static2.vietstock.vn', port=443): Read timed out.",
+        "cashflow_mapping_reviewed_at": "2026-10-29T21:55:00+07:00",
+        "cashflow_mapping_evidence": "Existing archived VietstockFinance consolidated Q1/2024 sidecar: page 9 row 30 net investing cash flow 259,332,595,227 VND; page 10 row 40 net financing cash flow -175,821,860,734 VND, row 60 opening cash 1,432,080,508,529 VND, row 61 FX dash, row 70 ending cash 1,017,951,206,637 VND. OCR-derived; direct visual PDF confirmation remains pending."
       },
       "published_at": "2024-04-27",
       "source_archive_file": "reports/raw/DPG/auto-dpg-20261021/21f3661caf47da6f.pdf",
@@ -69,14 +71,12 @@
         "total_liabilities": "total_assets minus reported equity; total sources matched total assets"
       },
       "financial_line_items_rejected_fields": [
-        "cash_beginning",
-        "cash_ending",
         "income_tax_current_tax_reconciliation_check",
         "income_tax_deferred_tax_reconciliation_check",
         "income_tax_tax_reconciliation_check"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-23T17:36:14+00:00",
-      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Số dư tiền đầu/cuối kỳ bị ẩn vì không khớp biến động tiền thuần theo quý.",
+      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Số dư tiền đầu/cuối kỳ bị ẩn vì không khớp biến động tiền thuần theo quý. Q1/2024 cash-flow mapping corrected from already archived VietstockFinance OCR sidecar: net investing flow was confused with capex, FX was confused with ending cash, and opening/closing cash were available on page 10. Values remain pending direct visual PDF review.",
       "current_assets": 3544118,
       "cash_and_equivalents": 1017951,
       "short_term_investments": 76008,
@@ -96,17 +96,19 @@
       "admin_expense": 20266,
       "operating_profit": 80606,
       "operating_cash_flow_ytd": -497640,
-      "investing_cash_flow_ytd": 108772,
-      "financing_cash_flow_ytd": -176,
+      "investing_cash_flow_ytd": 259333,
+      "financing_cash_flow_ytd": -175822,
       "capital_expenditure_ytd": 108772,
       "dividends_paid_ytd": 706,
       "net_cash_change_ytd": -414129,
-      "foreign_exchange_effect_ytd": 1017951,
+      "foreign_exchange_effect_ytd": 0,
       "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
         "admin_expense",
         "capital_expenditure_ytd",
         "cash_and_equivalents",
+        "cash_beginning",
+        "cash_ending",
         "cashflow_period_basis",
         "cost_of_goods_sold",
         "current_assets",
@@ -114,18 +116,23 @@
         "dividends_paid_ytd",
         "financial_expense",
         "financial_income",
+        "financing_cash_flow",
         "financing_cash_flow_ytd",
         "fixed_assets",
+        "foreign_exchange_effect",
         "foreign_exchange_effect_ytd",
         "gross_profit",
         "income_tax",
         "interest_expense",
         "inventory",
+        "investing_cash_flow",
         "investing_cash_flow_ytd",
         "long_term_liabilities",
+        "net_cash_change",
         "net_cash_change_ytd",
         "net_profit_attributable",
         "non_current_assets",
+        "operating_cash_flow",
         "operating_cash_flow_ytd",
         "operating_profit",
         "retained_earnings",
@@ -141,9 +148,9 @@
       "financial_line_items_updated_at": "2026-10-23T17:36:15+00:00",
       "operating_cash_flow": -497640,
       "operating_cash_flow_calculation": "Q1 equals YTD Q1",
-      "investing_cash_flow": 108772,
+      "investing_cash_flow": 259333,
       "investing_cash_flow_calculation": "Q1 equals YTD Q1",
-      "financing_cash_flow": -176,
+      "financing_cash_flow": -175822,
       "financing_cash_flow_calculation": "Q1 equals YTD Q1",
       "capital_expenditure": 108772,
       "capital_expenditure_calculation": "Q1 equals YTD Q1",
@@ -151,21 +158,33 @@
       "dividends_paid_calculation": "Q1 equals YTD Q1",
       "net_cash_change": -414129,
       "net_cash_change_calculation": "Q1 equals YTD Q1",
-      "foreign_exchange_effect": 1017951,
+      "foreign_exchange_effect": 0,
       "foreign_exchange_effect_calculation": "Q1 equals YTD Q1",
-      "financial_line_items_prior_values": {},
-      "financial_line_items_rejected_values": {
+      "financial_line_items_prior_values": {
+        "investing_cash_flow_ytd": {
+          "value": 108772,
+          "reason": "Prior mapping incorrectly used capex row 21 instead of net investing cash flow row 30; replaced from existing VietstockFinance OCR page 9."
+        },
+        "foreign_exchange_effect_ytd": {
+          "value": 1017951,
+          "reason": "Prior value was mis-mapped from ending cash row 70; row 61 in existing VietstockFinance OCR page 10 is dash."
+        },
         "cash_beginning": {
-          "value": 1432081,
-          "reason": "cash balance bridge does not reconcile to net cash change"
+          "value": null,
+          "reason": "Restored from row 60 in existing VietstockFinance OCR page 10."
         },
         "cash_ending": {
-          "value": 1017951,
-          "reason": "cash balance bridge does not reconcile to net cash change"
+          "value": null,
+          "reason": "Restored from row 70 in existing VietstockFinance OCR page 10."
         }
       },
+      "financial_line_items_rejected_values": {},
       "income_tax": 10554,
-      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có."
+      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
+      "cash_beginning": 1432081,
+      "cash_ending": 1017951,
+      "cash_beginning_calculation": "OCR row 60, existing VietstockFinance consolidated Q1/2024 PDF sidecar page 10; rounded to million VND.",
+      "cash_ending_calculation": "OCR row 70, existing VietstockFinance consolidated Q1/2024 PDF sidecar page 10; rounded to million VND."
     },
     {
       "symbol": "DPG",
