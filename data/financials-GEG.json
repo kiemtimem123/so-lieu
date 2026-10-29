@@ -1556,7 +1556,7 @@
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "1036bbcd4cb50cac56a249c3aaf9ab18e02ac11e48709731746c9687056022c9",
       "core_financial_extraction_evidence_attempt_count": 0,
-      "financial_line_items_status": "cashflow_normalized_from_vietstock_source_visual_review_pending",
+      "financial_line_items_status": "cashflow_source_rows_visually_verified",
       "financial_line_items_extracted_fields": [
         "admin_expense",
         "cash_and_equivalents",
@@ -1594,7 +1594,7 @@
       ],
       "financial_line_items_source": "reports/raw/GEG/auto-geg-20261021/a5dc3fd9e734420f.pdf",
       "financial_line_items_updated_at": "2026-10-25T21:31:21+00:00",
-      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. OCR closing-cash row 70 is truncated; retain the current candidate pending image review.",
+      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. OCR closing-cash row 70 is truncated; retain the current candidate pending image review. Visual review update 2026-10-30: direct inspection of the official VietstockFinance Q4/2025 PDF printed pages 4-5 confirms CFO 932,884,327,033 VND; CFI 1,921,143,888 VND; CFF -1,012,240,268,026 VND; net cash change -77,434,797,105 VND; beginning cash 163,717,707,072 VND; FX 81,753,281 VND; ending cash 86,364,663,248 VND. Earlier OCR truncation flag for row 70 is resolved. No source values were modified.",
       "financial_line_items_prior_values": {
         "net_profit": 0,
         "income_tax": 90552
@@ -1735,7 +1735,7 @@
       "net_cash_change_ytd": -77435,
       "cash_ending": 86365,
       "cash_ending_reported_ytd": 86365,
-      "cash_ending_calculation": "Giữ candidate hiện có vì OCR dòng 70 bị cắt; ảnh PDF cần rà soát.",
+      "cash_ending_calculation": "Theo dòng 70 báo cáo nguồn; đã xác minh trực tiếp ảnh PDF in trang 5 ngày 2026-10-30.",
       "cashflow_source_reconciliation": {
         "source_policy": "Only VietstockFinance catalog and directly linked consolidated reports.",
         "source_index_url": "https://finance.vietstock.vn/GEG/tai-tai-lieu.htm?doctype=1",
@@ -1743,7 +1743,7 @@
         "selected_cashflow_source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/GEG_Baocaotaichinh_Q4_2025_Hopnhat.pdf",
         "selected_cashflow_source_period": "FY2025 current report; row 70 OCR truncated",
         "selected_cashflow_source_archive_file": "reports/raw/GEG/auto-geg-20261021/a5dc3fd9e734420f.pdf.extracted.json",
-        "selected_cashflow_source_pages": "Existing archived OCR sidecar; direct PDF image review pending",
+        "selected_cashflow_source_pages": "PDF printed pages 4-5; directly inspected by screenshot on 2026-10-30",
         "selected_cashflow_source_basis": "FY2025 current report; row 70 OCR truncated",
         "source_statement_period_basis": "YTD source; standalone quarter = current YTD less prior same-year YTD",
         "unit": "raw source values in VND; displayed in million VND rounded to nearest million",
@@ -1751,7 +1751,7 @@
         "separate_fx_line_reported": true,
         "selected_values_not_adjusted_for_tolerance": true,
         "no_balancing_plug": true,
-        "visual_review": "archived_OCR_text_reconciled_visual_review_pending",
+        "visual_review": "direct_image_verified_printed_pages_4_5",
         "selected_values_raw_vnd": {
           "ytd": {
             "cfo": 932884327033,
@@ -1782,7 +1782,21 @@
           "quarter_cash_bridge_relative_difference_percent": 0,
           "ytd_cash_bridge_relative_difference_percent": 0,
           "quarter_flows_equal_selected_ytd_delta": true,
-          "rounding_method": "Subtract raw YTD VND values first, then round for display to nearest million VND"
+          "rounding_method": "Subtract raw YTD VND values first, then round for display to nearest million VND",
+          "source_row_visual_confirmation": {
+            "report_page_4": {
+              "cfi_ytd_vnd": 1921143888,
+              "cfo_ytd_vnd": 932884327033,
+              "cff_ytd_vnd": -1012240268026
+            },
+            "report_page_5": {
+              "net_cash_change_ytd_vnd": -77434797105,
+              "cash_beginning_vnd": 163717707072,
+              "fx_vnd": 81753281,
+              "cash_ending_vnd": 86364663248
+            },
+            "method": "Direct image screenshot inspection; matches the existing source values. No data value changed."
+          }
         },
         "quarter_flow_components_within_tolerance": true,
         "ytd_flow_components_within_tolerance": true,
@@ -1806,7 +1820,24 @@
           },
           "reason": "Use FY2025 current report; row 70 OCR is truncated."
         },
-        "status": "NEEDS_MANUAL_REVIEW_END_CASH_OCR_TRUNCATED_AND_VISUAL_PENDING"
+        "status": "PASS_WITHIN_TOLERANCE_SOURCE_ROWS_VISUALLY_VERIFIED",
+        "visual_review_completed_at": "2026-10-30",
+        "visual_review_confirmed_fields": [
+          "operating_cash_flow_ytd",
+          "investing_cash_flow_ytd",
+          "financing_cash_flow_ytd",
+          "net_cash_change_ytd",
+          "foreign_exchange_effect_ytd",
+          "cash_beginning_reported_ytd",
+          "cash_ending_reported_ytd",
+          "operating_cash_flow",
+          "investing_cash_flow",
+          "financing_cash_flow",
+          "net_cash_change",
+          "foreign_exchange_effect",
+          "cash_beginning",
+          "cash_ending"
+        ]
       }
     },
     {

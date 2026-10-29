@@ -3543,3 +3543,18 @@ class GEGCashFlowNormalizationTests(unittest.TestCase):
                     self.assertIn(field, ex)
                     self.assertNotIn(field, rejected)
 
+    def test_geg_q4_2025_cashflow_rows_visually_verified(self):
+        row = self.rows["2025-Q4"]
+        rec = row["cashflow_source_reconciliation"]
+        ytd = rec["selected_values_raw_vnd"]["ytd"]
+        self.assertEqual(rec["visual_review"], "direct_image_verified_printed_pages_4_5")
+        self.assertEqual(rec["visual_review_completed_at"], "2026-10-30")
+        self.assertEqual(ytd["cfo"], 932884327033)
+        self.assertEqual(ytd["cfi"], 1921143888)
+        self.assertEqual(ytd["cff"], -1012240268026)
+        self.assertEqual(ytd["net_cash_change"], -77434797105)
+        self.assertEqual(ytd["cash_beginning"], 163717707072)
+        self.assertEqual(ytd["fx"], 81753281)
+        self.assertEqual(ytd["cash_ending"], 86364663248)
+        self.assertEqual(rec["status"], "PASS_WITHIN_TOLERANCE_SOURCE_ROWS_VISUALLY_VERIFIED")
+

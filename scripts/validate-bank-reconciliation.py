@@ -485,6 +485,21 @@ def main():
                 for key in ("cfo","cfi","cff","net_cash_change","fx"):
                     if qraw.get(key) != yraw.get(key):
                         ERRORS.append(f"GEG {period}: Q1 values should equal YTD Q1")
+        geg_2025_q4 = geg_rows.get("2025-Q4", {})
+        q4_rec = geg_2025_q4.get("cashflow_source_reconciliation", {})
+        q4_ytd = (q4_rec.get("selected_values_raw_vnd") or {}).get("ytd") or {}
+        expected_q4_values = {
+            "cfo": 932884327033, "cfi": 1921143888, "cff": -1012240268026,
+            "net_cash_change": -77434797105, "cash_beginning": 163717707072,
+            "fx": 81753281, "cash_ending": 86364663248,
+        }
+        for field, expected_value in expected_q4_values.items():
+            if q4_ytd.get(field) != expected_value:
+                ERRORS.append(f"GEG Q4/2025: visually confirmed source value {field} changed")
+        if q4_rec.get("visual_review") != "direct_image_verified_printed_pages_4_5":
+            ERRORS.append("GEG Q4/2025: direct image review status missing")
+        if q4_rec.get("status") != "PASS_WITHIN_TOLERANCE_SOURCE_ROWS_VISUALLY_VERIFIED":
+            ERRORS.append("GEG Q4/2025: visually verified source rows should not remain flagged as OCR-truncated")
         if geg_rows.get("2025-Q2",{}).get("cashflow_source_reconciliation",{}).get("source_revision",{}).get("selected_minus_prior_source_values_raw_vnd",{}).get("net") != 336385390:
             ERRORS.append("GEG H1/2025 comparative net-cash revision not traceable")
         q1_bridge = geg_rows.get("2026-Q1",{}).get("cashflow_source_reconciliation",{}).get("calculations",{}).get("quarter_cash_bridge_residual_raw_vnd")
