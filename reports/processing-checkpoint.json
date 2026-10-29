@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-29T09:47:32.163Z",
+  "updatedAt": "2026-10-29T09:48:33.293Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -39,7 +39,7 @@
     "VCK",
     "MBB"
   ],
-  "lastCompletedSymbol": "VDS",
+  "lastCompletedSymbol": "KDH",
   "activeSymbol": "KDH",
   "resumeSymbolHint": "ACB",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
@@ -1450,9 +1450,9 @@
     "standardVersion": "2.6",
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
-    "activeSymbol": "KDH",
-    "status": "automated_processing_complete_manual_review_remaining",
-    "lastUpdatedAt": "2026-10-29T09:47:32.163Z",
+    "activeSymbol": "NVL",
+    "status": "in_progress_next_ticker",
+    "lastUpdatedAt": "2026-10-29T09:48:33.293Z",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1684,7 +1684,9 @@
       "KDH: source reclassifications above 0.01% remain manual review at 2024-Q2, 2024-Q4 and 2025-Q2/Q3 even where cash net is within tolerance; no balancing plug.",
       "KDH: visually checked Q1/2026 cash-flow statement ending line and Q2/2026 cash-flow totals/balances. Q1/2026 cash-flow line 70 = 3,643,808,683 thousand VND conflicts with same-report balance-sheet cash line 110 = 3,613,808,683 thousand VND; 30,000 million VND residual (~0.82%), >0.01%. Q2/2026 standalone quarter bridge inherits about -30,001 million VND discrepancy, retained without plug.",
       "KDH: Q3/2025 cash ending uses cash-and-equivalents line from same report balance sheet because cash-flow line 70 OCR was unreadable; the sourced value reconciles with opening cash plus net cash movement.",
-      "Added KDHCashFlowNormalizationTests with all 10 periods, tolerance, quarter/YTD math, selected comparative evidence and explicit Q1/Q2-2026 cash conflicts."
+      "Added KDHCashFlowNormalizationTests with all 10 periods, tolerance, quarter/YTD math, selected comparative evidence and explicit Q1/Q2-2026 cash conflicts.",
+      "KDH normalization checkpoint finalized after successful current-run CI: Validate Site and Data 40852450152 PASS; quarterly financial validation 40852158646 PASS; Hostinger package 40852158618 PASS.",
+      "KDH terminal/manual review flags saved; next cash-flow ticker advanced to NVL."
     ],
     "unresolved": [
       "NLG NEEDS_MANUAL_REVIEW — H1/2024 selected later comparative in Q2/2025 reclassifies CFO/CFI versus the original Q2/2024 source by >0.01%; net cash movement and cash balances remain unchanged. Preserve both source bases and selected later comparative; do not plug.",
@@ -1737,8 +1739,8 @@
       "KDH 2025-Q2/Q3: Q2/2026 H1/2025 comparator materially changes H1 cash-flow totals; Q3 standalone uses later H1 basis. Retain source history and manual review.",
       "KDH 2026-Q1/Q2: direct PDF shows cash-flow closing 3,643,808,683 thousand VND vs same-report balance-sheet cash 3,613,808,683 thousand VND in Q1; 30,000 million VND (~0.82%). Q2 YTD reconciles but standalone Q2 bridge inherits the Q1 discrepancy; no balancing plug."
     ],
-    "nextStep": "KDH cash-flow snapshot, regression tests and standard documentation saved; wait for CI results before considering the ticker complete. Manual review remains for material source reclassifications and Q1/Q2 2026 cash conflicts. Next ticker in cash-flow domain after CI pass: NVL.",
-    "previousCompletedSymbol": "VDS",
+    "nextStep": "KDH automated cash-flow normalization and all relevant validations passed. Remaining manual-review flags are source-based and preserved: material comparative reclassifications (2024-Q2, 2024-Q4, 2025-Q2/Q3) and Q1/Q2 2026 cash-statement inconsistency (>0.01%). No values were plugged or forcibly reconciled. Continue next with NVL cash-flow data only, using the 0.01% relative tolerance rule and one ticker per run.",
+    "previousCompletedSymbol": "KDH",
     "validationRuns": [
       {
         "name": "Validate Site and Data",
@@ -1844,10 +1846,45 @@
         "status": "success",
         "commit": "a921930815dd64b490748ba850c96f494571a710",
         "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40846359720"
+      },
+      {
+        "name": "Validate Site and Data",
+        "runId": "40852353292",
+        "status": "success",
+        "commit": "d39cd907883fc929576f3c11341cf435dea81b8d",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40852353292"
+      },
+      {
+        "name": "Validate Site and Data",
+        "runId": "40852400831",
+        "status": "success",
+        "commit": "3aa28f9909bd11f3926fced5fc2e82eec9da94d8",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40852400831"
+      },
+      {
+        "name": "Validate Site and Data",
+        "runId": "40852450152",
+        "status": "success",
+        "commit": "28d66f083ab156f2b3ff39c20f22e1fdecef9d5e",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40852450152"
+      },
+      {
+        "name": "Validate quarterly financial data",
+        "runId": "40852158646",
+        "status": "success",
+        "commit": "7d0f60a467303c5e9e2cadde9d4c5c28e24ab202",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40852158646"
+      },
+      {
+        "name": "Package Hostinger Stock Dashboard",
+        "runId": "40852158618",
+        "status": "success",
+        "commit": "7d0f60a467303c5e9e2cadde9d4c5c28e24ab202",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40852158618"
       }
     ],
     "lastCompletedSymbol": "BID",
     "nextSymbolHint": "VIX"
   },
-  "nextSymbolHint": "KDH"
+  "nextSymbolHint": "NVL"
 }
