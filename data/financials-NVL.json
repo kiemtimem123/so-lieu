@@ -1500,7 +1500,7 @@
         "no_balancing_plug": true
       },
       "cashflow_source_reconciliation": {
-        "status": "PASS_ARITHMETIC_RECONCILED",
+        "status": "NEEDS_MANUAL_REVIEW_CONNECTED_H1_2025_COMPARATIVE_RECLASS",
         "units": "triệu VND",
         "source_reporting_unit": "VND",
         "tolerance_percent": 0.01,
@@ -1529,7 +1529,13 @@
         "quarter_cash_bridge_within_tolerance": true,
         "quarter_values_basis": "current selected YTD minus prior quarter selected YTD; if source comparative basis changes, retain a manual-review marker",
         "no_balancing_plug": true,
-        "manual_review_remaining": false
+        "manual_review_remaining": true,
+        "source_basis_dependence": {
+          "previous_ytd_period": "2025-Q2",
+          "selected_previous_ytd_source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/NVL_Baocaotaichinh_Q2_2026_Hopnhat.pdf",
+          "selected_previous_ytd_source_archive_file": "reports/raw/NVL/auto-nvl-20261021/4c62126cc62d6221.pdf",
+          "reason": "Standalone Q3 values use the later H1/2025 comparative from Q2/2026; original H1/2025 report differs by more than 0.01% in net cash movement and closing cash."
+        }
       }
     },
     {
@@ -2074,13 +2080,14 @@
         "quarter_values_basis": "current selected YTD minus prior quarter selected YTD; if source comparative basis changes, retain a manual-review marker",
         "no_balancing_plug": true,
         "manual_review_remaining": true,
-        "q1_2026_close_raw_vnd": 4518328920108,
-        "q1_2026_close_to_q2_2026_ytd_opening_residual_raw_vnd": -309558899630,
-        "q1_2026_close_to_q2_2026_ytd_opening_relative_difference_percent": 6.8511811579799895,
-        "q1_2026_close_to_q2_2026_ytd_opening_within_tolerance": false,
         "ytd_opening_vs_fy2025_close_residual_raw_vnd": -186550949360,
         "ytd_opening_vs_fy2025_close_relative_difference_percent": 4.244307768196409,
-        "source_discrepancy_note": "Q2/2026 report re-presents 31/12/2025 cash/equivalents as 4,208,770,020,478 VND and internally reconciles its H1 YTD bridge. This differs from the Q1/2026 opening basis and FY2025 report closing cash by more than 0.01%. Standalone Q2 bridge inherits the cross-report opening-balance change; do not plug."
+        "source_discrepancy_note": "Q2/2026 report presents a restated year-opening cash balance of 4,208,770,020,478 VND, versus 4,397,582,643,211 VND in Q1/2026 (relative difference >0.01%). Its own H1 YTD cash bridge reconciles. The standalone Q2 bridge calculated from the YTD flow differences and Q1 close retains the resulting residual; no plug is inserted.",
+        "q1_2026_ytd_opening_raw_vnd": 4397582643211,
+        "q2_2026_ytd_opening_raw_vnd": 4208770020478,
+        "q1_to_q2_reported_ytd_opening_residual_raw_vnd": -188812622733,
+        "q1_to_q2_reported_ytd_opening_relative_difference_percent": 4.293554847104225,
+        "q1_to_q2_reported_ytd_opening_within_tolerance": false
       }
     }
   ],
