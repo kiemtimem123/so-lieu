@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-29T16:20:00+07:00",
+  "updatedAt": "2026-10-29T17:05:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -39,8 +39,8 @@
     "VCK",
     "MBB"
   ],
-  "lastCompletedSymbol": "SSI",
-  "activeSymbol": "VDS",
+  "lastCompletedSymbol": "VDS",
+  "activeSymbol": "KDH",
   "resumeSymbolHint": "ACB",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
@@ -450,18 +450,17 @@
       "pendingCorePeriods": [],
       "terminalManualReviewPeriods": [
         "2024-Q2",
-        "2024-Q3",
-        "2024-Q4",
-        "2025-Q1"
+        "2024-Q3"
       ],
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
-      "statementPagesPending": false,
+      "statementPagesPending": true,
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
-      "sourceArchivesChecked": 6,
-      "updatedAt": "2026-10-25T21:22:23Z",
-      "snapshotFetchedAt": "2026-10-23T11:20:31+00:00"
+      "sourceArchivesChecked": 10,
+      "updatedAt": "2026-10-29T10:05:00Z",
+      "normalizationStatus": "cashflow_normalized_with_0_01_percent_tolerance",
+      "manualReviewReason": "H1/2024 CFI/CFF source reclassification >0.01% compared with original Q2/2024; connected Q3/2024 quarterly deltas and direct PDF image review remain pending."
     },
     "KDH": {
       "status": "automated_processing_complete",
@@ -1448,12 +1447,12 @@
     "updatedAt": "2026-10-28T19:45:00+07:00"
   },
   "normalizationProgress": {
-    "standardVersion": "2.4",
+    "standardVersion": "2.5",
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
-    "activeSymbol": "VDS",
+    "activeSymbol": "KDH",
     "status": "in_progress_next_ticker",
-    "lastUpdatedAt": "2026-10-29T16:20:00+07:00",
+    "lastUpdatedAt": "2026-10-29T17:05:00+07:00",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1672,7 +1671,12 @@
       "Validate Site and Data run 40846765898 SUCCESS after fixing SSI regression-test field typing; the job completed without failing steps.",
       "SSI: normalized all 10 periods 2024-Q1 through 2026-Q2 from consolidated VietstockFinance source PDFs/ZIPs; YTD and quarter flows, cash bridges and quarter/YTD deltas pass within the user-approved 0.01% relative tolerance.",
       "SSI: added source records for cash-component detail rows 102/104 and deliberately left additive foreign_exchange_effect fields null; no balancing plug or source value mutation.",
-      "SSI: updated standard to version 2.4 with details on report-line mapping, comparative-source precedence, rounding tolerance and pending visual-review classification."
+      "SSI: updated standard to version 2.4 with details on report-line mapping, comparative-source precedence, rounding tolerance and pending visual-review classification.",
+      "VDS cash-flow snapshot normalized for all 10 periods from 2024-Q1 through 2026-Q2 using final consolidated report totals lines 60/70/80/90/101/103; prior mapping had incorrectly retained capex line 61 as the investing total and/or component lines as activity totals.",
+      "VDS: all quarter/YTD flows and cash bridges are within 0.01% relative tolerance; quarter rows derive from YTD differences and all source residuals are kept as metadata, with no balancing plug.",
+      "VDS: H1/2024 newer comparative in Q2/2025 reclassifies CFI/CFF by VND 13 billion each compared with original Q2/2024, net cash change unchanged; difference measured at 57.25% CFI and 3.49% CFF. Q2 and connected Q3 2024 rows remain flagged for manual review, and both source bases are recorded.",
+      "VDS: FY2024 comparison in Q4/2025, Q1/2025 comparison in Q1/2026, and H1/2025 comparison in Q2/2026 were used where available; comparisons and page/archive references stored row-by-row.",
+      "Added VDSCashFlowNormalizationTests and updated standard documentation to version 2.5; direct PDF image review remains pending and is explicitly not claimed complete."
     ],
     "unresolved": [
       "NLG NEEDS_MANUAL_REVIEW — H1/2024 selected later comparative in Q2/2025 reclassifies CFO/CFI versus the original Q2/2024 source by >0.01%; net cash movement and cash balances remain unchanged. Preserve both source bases and selected later comparative; do not plug.",
@@ -1718,10 +1722,11 @@
       "BID NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT — H1/2025 comparative in Q2/2026 changes CFI -869,550 to -867,517 million VND (~0.234%); later comparison selected and original H1 basis retained. Standalone Q3/2025 uses this later H1 basis.",
       "BID PDF images could not be opened directly in the source viewer due file size in this pass; OCR source text and arithmetic are captured, so source pages retain ocr_text_reconciled_visual_review_pending and are not claimed visually verified.",
       "VIX terminal scope hold: standalone/unconfirmed VietstockFinance documents are withheld from the consolidated cashflow series; resume only after a consolidated report source is confirmed.",
-      "SSI: all 10 periods pass arithmetic under 0.01% tolerance; source OCR is transcribed and source scope is consolidated, but direct PDF image review remains pending. SSI line 102/104 component adjustments are retained as metadata and not used as additive FX bridge."
+      "SSI: all 10 periods pass arithmetic under 0.01% tolerance; source OCR is transcribed and source scope is consolidated, but direct PDF image review remains pending. SSI line 102/104 component adjustments are retained as metadata and not used as additive FX bridge.",
+      "VDS source reclassification: H1/2024 comparative in Q2/2025 changes CFI/CFF by VND 13 billion each versus Q2/2024 source, with net unchanged; Q3/2024 quarterly deltas are connected to this mixed comparative basis. Both rows need manual source review, no balancing plug."
     ],
-    "nextStep": "SSI normalization is saved and its regression workflow passed. Move to VDS as the next eligible ticker in the same cash-flow domain. Inspect existing source archives/data/financials-VDS.json; use only consolidated VietstockFinance documents, preserve unresolved source scope/OCR issues, apply 0.01% relative tolerance, and do not modify other tickers.",
-    "previousCompletedSymbol": "SSI",
+    "nextStep": "VDS automated cash-flow normalization saved; arithmetic residuals fall within 0.01%, but connected H1/2024 comparative reclassification (>0.01%) remains terminal/manual review for 2024-Q2 and 2024-Q3. Keep source bases and do not add plugs. Next ticker in the same cash-flow domain: KDH. Direct image review for VDS rows remains pending.",
+    "previousCompletedSymbol": "VDS",
     "validationRuns": [
       {
         "name": "Validate Site and Data",
@@ -1832,5 +1837,5 @@
     "lastCompletedSymbol": "BID",
     "nextSymbolHint": "VIX"
   },
-  "nextSymbolHint": "VDS"
+  "nextSymbolHint": "KDH"
 }
