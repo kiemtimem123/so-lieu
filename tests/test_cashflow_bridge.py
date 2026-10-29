@@ -2982,8 +2982,12 @@ class HHVCashFlowNormalizationTests(unittest.TestCase):
         self.assertEqual(q3_2024["cashflow_audit_revision"]["source_values_raw_vnd"]["net"], 71870752272)
         self.assertIn("later_comparative_comparison", q3_2024["cashflow_audit_revision"])
         self.assertGreater(
-            q3_2024["cashflow_audit_revision"]["later_comparative_comparison"]["cfi"]["relative_difference_percent"],
+            q3_2024["cashflow_audit_revision"]["later_comparative_arithmetic"]["source_flow_sum_relative_difference_percent"],
             0.01,
+        )
+        self.assertEqual(
+            q3_2024["cashflow_audit_revision"]["later_comparative_arithmetic"]["source_flow_sum_residual_vnd"],
+            -10_010_000,
         )
         self.assertTrue(q3_2024["cashflow_source_reconciliation"]["status"].startswith("NEEDS_MANUAL_REVIEW"))
         # Keep the original 9M/2024 series because the later OCR comparator's flow sum
