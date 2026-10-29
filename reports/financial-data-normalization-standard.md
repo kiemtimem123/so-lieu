@@ -1,6 +1,6 @@
 # Quy trình chuẩn hóa dữ liệu tài chính theo từng mảng
 
-Phiên bản: 2.1  
+Phiên bản: 2.2  
 Ngày thiết lập: 2026-10-28  
 Cập nhật gần nhất: 2026-10-29  
 Phạm vi: `kiemtimem123/so-lieu`, dữ liệu BCTC quý từ 2024-Q1 trở đi.
@@ -552,4 +552,25 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 ### Kiểm thử hồi quy
 - Bổ sung `STBCashFlowNormalizationTests` trong `tests/test_cashflow_bridge.py`, kiểm tra 10 kỳ; nguồn/VietstockFinance; bốn phép kiểm tra YTD/quý riêng/cầu nối YTD/cầu nối quý; FX; quý riêng bằng hiệu số YTD; so sánh sau hơn; lỗi OCR FX 9M/2025; sự khác biệt nguồn H1/2024; và ngoại lệ H1/2026 > 0,01%.
 - Tất cả các kỳ STB đều có luồng tiền riêng quý, lũy kế, số đầu/cuối kỳ và FX được ghi nhận, và các trường đã được đưa vào `financial_line_items_extracted_fields` cho giao diện có thể đọc đúng. Mọi residual cầu nối tiền đều không vượt 0,01%; 2026-Q2 là **ngoại lệ duy nhất ở phép tổng ba luồng tiền** vượt 0,01%, được đánh dấu rõ ràng và không bị tính thành PASS.
-- Trạng thái: **automation hoàn tất; manual review còn lại cho phân loại H1/2024, thay đổi FX nguồn 9M/2024, và tổng luồng tiền H1/2026**. Sau khi CI và checkpoint được lưu, chuyển sang mã **VCB** trong cùng mảng cashflow.
+- Trạng thái tại thời điểm ghi mục STB: **automation hoàn tất; manual review còn lại cho phân loại H1/2024, thay đổi FX nguồn 9M/2024, và tổng luồng tiền H1/2026**. Cập nhật sau đó theo checkpoint: VCB được bỏ qua theo chỉ dẫn trước đó; CTG trở thành mã đủ điều kiện tiếp theo và đã được chuẩn hóa tại mục CTG bên dưới. Sau khi lưu CI/checkpoint CTG, mã tiếp theo là BID trong cùng mảng cashflow.
+
+
+## Lượt chuẩn hóa CTG — lưu chuyển tiền tệ (2026-10-29)
+
+### Sửa lỗi ánh xạ và phục hồi dữ liệu
+- Snapshot: `data/financials-CTG.json`, 10 kỳ từ 2024-Q1 đến 2026-Q2. Nguồn tài liệu duy nhất là danh mục VietstockFinance CTG và các PDF/ZIP hợp nhất liên kết trực tiếp.
+- Bộ trích xuất cũ đã dùng nhầm subtotal **“Lưu chuyển tiền thuần từ hoạt động kinh doanh trước thay đổi về tài sản và vốn lưu động”** làm CFO cuối nhóm ở một số kỳ. Quy tắc bắt buộc: lấy dòng tổng cuối nhóm CFO, CFI, CFF và dòng **“Lưu chuyển tiền thuần trong kỳ”**; không dùng subtotal trước biến động tài sản/công nợ.
+- Phục hồi đủ bốn dòng YTD CFO/CFI/CFF/net, tiền đầu-cuối YTD và FX cho cả 10 kỳ. Quý riêng = YTD đã chọn của kỳ hiện tại trừ YTD quý trước cùng năm; FX riêng quý cũng tính bằng hiệu YTD. Không suy ra FX khi báo cáo không có dòng tương ứng.
+- Cơ sở comparative mới hơn đã chọn: H1/2024 từ Q2/2025; 9M/2024 từ Q3/2025; FY2024 từ Q4/2025; Q1/2025 từ Q1/2026; H1/2025 từ Q2/2026. Lịch sử nguồn cũ/mới được lưu trong `cashflow_audit_revision`; các thay đổi phân loại CFO/CFI lớn hơn 0,01% được gắn manual review, không dùng plug.
+- **Q3/2024:** nguồn OCR cũ cho net cash là 99.013.649 triệu VND, nhưng ba dòng cuối nhóm cộng thành 99.913.649; comparative 9M/2024 trong Q3/2025 báo cáo 99.913.649 và khớp cầu nối tiền. Chọn comparative mới hơn, nhưng chưa đóng ngoại lệ cho net-row của báo cáo gốc cho đến khi kiểm tra ảnh trang gốc trực tiếp.
+- **Q1/2026:** kiểm tra trực tiếp [PDF Q1/2026 trang in 6–8](https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/CTG_Baocaotaichinh_Q1_2026_Hopnhat.pdf) xác nhận tiền cuối kỳ là **578.995.009 triệu VND**, không phải 578.095.009 do OCR trước đó đọc nhầm chữ số. Sau khi sửa, tiền đầu 451.745.475 + net flow 127.164.150 + FX 85.384 = tiền cuối 578.995.009; cầu nối khớp chính xác. Q2/2026 mở đầu từ số dư này và cầu nối quý riêng cũng khớp; không còn ngoại lệ 900.000 triệu do OCR.
+- Các trang đã được xem trực tiếp: comparative FY2024 trong Q4/2025, comparative Q1/2025 trong Q1/2026, báo cáo Q1/2026 và báo cáo H1/2026. Các trang nguồn còn lại được đối chiếu OCR và số học, vẫn được đánh dấu `ocr_text_reconciled_visual_review_pending`; không khẳng định đã xác minh trực quan chúng.
+
+### Kết quả kiểm định
+- 10/10 kỳ: CFO + CFI + CFF bằng net cash change ở cấp quý riêng và YTD.
+- 10/10 kỳ: cầu nối tiền YTD và quý riêng đều khớp sau khi tính FX; quý riêng khớp hiệu YTD; số dư đầu quý liền trước bằng tiền cuối quý trước, gồm ranh giới FY2024/Q1/2025 và FY2025/Q1/2026.
+- Tất cả trường LCTT liên quan được đăng ký trong `financial_line_items_extracted_fields` và gỡ khỏi `financial_line_items_rejected_fields` để giao diện không ẩn dữ liệu đã phục hồi.
+- Trạng thái **manual review còn lại**: Q2/2024, Q3/2024, FY2024, H1/2025 và Q3/2025 do khác biệt phân loại nguồn >0,01% hoặc net-row OCR cũ cần xác minh trực quan. Sai lệch số học nội kỳ đã được sửa/xác nhận; không tự thay số báo cáo và không thêm plug.
+- Kiểm thử hồi quy tái sử dụng: `CTGCashFlowNormalizationTests` trong `tests/test_cashflow_bridge.py`, bao phủ 10 kỳ, YTD/quý, FX-aware cash bridge, nguồn comparative, correction OCR Q1/2026 và các cờ manual review.
+- Quy tắc dung sai được áp dụng đúng phạm vi: residual số học tương đối ≤0,01% có thể chấp nhận và vẫn lưu metadata; sự khác nhau của một dòng do nguồn/ phân loại >0,01%, OCR không chắc hoặc thiếu trang vẫn phải rà soát thủ công. Không dùng ngưỡng dung sai để che lỗi OCR.
+- Trạng thái CTG: **automation complete; manual-review remaining**. Theo hàng đợi hiện tại, VCB tiếp tục bỏ qua theo chỉ dẫn đã lưu; mã tiếp theo là **BID** trong cùng mảng lưu chuyển tiền tệ.
