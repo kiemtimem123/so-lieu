@@ -2274,7 +2274,7 @@ class SSICashFlowNormalizationTests(unittest.TestCase):
         )
         visible_fields = flows + cash_fields + (
             "capital_expenditure", "capital_expenditure_ytd",
-            "dividends_paid", "dividends_paid_ytd", "cashflow_period_basis",
+            "dividends_paid", "dividends_paid_ytd",
         )
         self.assertEqual(set(self.rows), set(periods))
         for period, row in self.rows.items():
