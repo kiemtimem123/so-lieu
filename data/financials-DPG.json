@@ -214,7 +214,12 @@
         "listing_title": "Báo cáo tài chính Hợp nhất quý 3 năm 2024  | BCTC Hợp nhất quý 3 năm 2024  | https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY 3/DPG_Baocaotaichinh_Q3_2024_Hopnhat.pdf",
         "document_id": "483105",
         "manually_visual_reviewed": false,
-        "extraction_deferred_for_short_batch": true
+        "extraction_deferred_for_short_batch": true,
+        "cashflow_mapping_reviewed_at": "2026-10-29T22:05:00+07:00",
+        "cashflow_mapping_evidence": "Existing VietstockFinance Q3/2024 consolidated cumulative cash-flow OCR sidecar (PDF issued Q4/2024): page 9 row 20 CFO -393,415,955,937 VND and row 30 net investing cash flow 44,280,737,411 VND; page 10 row 40 CFF -204,281,759,614 VND, row 50 net change -553,446,978,140 VND, row 60 opening cash 1,432,080,508,529 VND, row 61 FX dash, row 70 closing cash 878,633,530,389 VND. Flow sum residual after rounding is -30 million VND (relative 0.00542% of net cash change), within 0.01%; retained without a plug. Direct visual PDF confirmation pending.",
+        "cashflow_flow_sum_residual_million_vnd": 30,
+        "cashflow_flow_sum_relative_difference_percent": 0.005420573243689098,
+        "cashflow_cash_bridge_residual_million_vnd": 0
       },
       "published_at": "2024-10-30",
       "source_archive_file": "reports/raw/DPG/auto-dpg-20261021/264402446ea3b7ae.pdf",
@@ -254,7 +259,7 @@
         "non_current_assets_asset_total_check"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-23T17:41:20+00:00",
-      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc.",
+      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Q3/2024: restored cumulative flows and cash balances from existing Q3 comparative OCR in the Q4/2024 VietstockFinance report. Rounded component-sum residual is retained under 0.01% tolerance; visual PDF review remains pending.",
       "cash_and_equivalents": 878634,
       "short_term_investments": 70573,
       "short_term_receivables": 989637,
@@ -275,14 +280,14 @@
       "income_tax_deferred": -43,
       "income_tax": 8323,
       "operating_cash_flow_ytd": -393416,
-      "investing_cash_flow_ytd": -86948,
-      "financing_cash_flow_ytd": -2043,
+      "investing_cash_flow_ytd": 44281,
+      "financing_cash_flow_ytd": -204282,
       "capital_expenditure_ytd": -86948,
       "dividends_paid_ytd": 53700,
       "net_cash_change_ytd": -553447,
       "cash_beginning": 1432081,
       "cash_ending": 878634,
-      "foreign_exchange_effect_ytd": 878634,
+      "foreign_exchange_effect_ytd": 0,
       "diluted_eps": 314,
       "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
@@ -298,8 +303,10 @@
         "dividends_paid_ytd",
         "financial_expense",
         "financial_income",
+        "financing_cash_flow",
         "financing_cash_flow_ytd",
         "fixed_assets",
+        "foreign_exchange_effect",
         "foreign_exchange_effect_ytd",
         "gross_profit",
         "income_tax",
@@ -307,10 +314,13 @@
         "income_tax_deferred",
         "interest_expense",
         "inventory",
+        "investing_cash_flow",
         "investing_cash_flow_ytd",
         "long_term_liabilities",
+        "net_cash_change",
         "net_cash_change_ytd",
         "net_profit_attributable",
+        "operating_cash_flow",
         "operating_cash_flow_ytd",
         "operating_profit",
         "retained_earnings",
@@ -324,11 +334,40 @@
       "financial_line_items_schema_updated_at": "2026-10-25T21:26:25+00:00",
       "financial_line_items_source": "reports/raw/DPG/auto-dpg-20261021/264402446ea3b7ae.pdf",
       "financial_line_items_updated_at": "2026-10-23T17:41:20+00:00",
-      "foreign_exchange_effect": 64931,
+      "foreign_exchange_effect": 0,
       "foreign_exchange_effect_calculation": "current YTD minus previous quarter YTD",
-      "financial_line_items_prior_values": {},
+      "financial_line_items_prior_values": {
+        "investing_cash_flow_ytd": {
+          "value": -86948,
+          "reason": "Prior mapping incomplete or incorrect; restored from existing VietstockFinance Q3/2024 cumulative cash-flow pages 9-10 sidecar; direct visual review pending."
+        },
+        "financing_cash_flow_ytd": {
+          "value": -2043,
+          "reason": "Prior mapping incomplete or incorrect; restored from existing VietstockFinance Q3/2024 cumulative cash-flow pages 9-10 sidecar; direct visual review pending."
+        },
+        "net_cash_change_ytd": {
+          "value": -553447,
+          "reason": "Prior mapping incomplete or incorrect; restored from existing VietstockFinance Q3/2024 cumulative cash-flow pages 9-10 sidecar; direct visual review pending."
+        },
+        "foreign_exchange_effect_ytd": {
+          "value": 878634,
+          "reason": "Prior mapping incomplete or incorrect; restored from existing VietstockFinance Q3/2024 cumulative cash-flow pages 9-10 sidecar; direct visual review pending."
+        },
+        "cash_beginning": {
+          "value": 1432081,
+          "reason": "Prior mapping incomplete or incorrect; restored from existing VietstockFinance Q3/2024 cumulative cash-flow pages 9-10 sidecar; direct visual review pending."
+        },
+        "cash_ending": {
+          "value": 878634,
+          "reason": "Prior mapping incomplete or incorrect; restored from existing VietstockFinance Q3/2024 cumulative cash-flow pages 9-10 sidecar; direct visual review pending."
+        }
+      },
       "financial_line_items_rejected_values": {},
-      "cash_beginning_reported_ytd": 1432081
+      "cash_beginning_reported_ytd": 1432081,
+      "operating_cash_flow": -393416,
+      "investing_cash_flow": 44281,
+      "financing_cash_flow": -204282,
+      "net_cash_change": -553447
     },
     {
       "symbol": "DPG",
