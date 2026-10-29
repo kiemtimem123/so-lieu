@@ -3318,3 +3318,123 @@ class IDCCashFlowNormalizationTests(unittest.TestCase):
                     self.assertIn(field, extracted)
                     self.assertNotIn(field, rejected)
 
+class KBCCashFlowNormalizationTests(unittest.TestCase):
+    """KBC cash-flow source precedence, quarter/YTD reconciliation and exceptions."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.snapshot = json.loads((ROOT / "data" / "financials-KBC.json").read_text(encoding="utf-8"))
+        cls.rows = {row["period"]: row for row in cls.snapshot["items"]}
+        cls.expected_periods = {"2024-Q1","2024-Q2","2024-Q3","2024-Q4","2025-Q1","2025-Q2","2025-Q3","2025-Q4","2026-Q1","2026-Q2","2026-Q3"}
+        cls.flows = ("operating_cash_flow", "investing_cash_flow", "financing_cash_flow", "net_cash_change")
+        cls.ytd = tuple(field + "_ytd" for field in cls.flows)
+
+    @staticmethod
+    def _relative_percent(left, right):
+        return abs(left - right) / max(abs(left), abs(right), 1) * 100
+
+    @classmethod
+    def _within_tolerance(cls, left, right):
+        return cls._relative_percent(left, right) <= 0.01
+
+    def test_kbc_period_schema_sources_and_units(self):
+        self.assertEqual(set(self.rows), self.expected_periods)
+        self.assertEqual(len(self.snapshot["items"]), 11)
+        for period, row in self.rows.items():
+            with self.subTest(period=period):
+                self.assertEqual(row["symbol"], "KBC")
+                self.assertEqual(row["unit"], "triệu VND")
+                self.assertEqual(row["source_index_url"], "https://finance.vietstock.vn/KBC/tai-tai-lieu.htm?doctype=1")
+                self.assertTrue(row["source_url"].startswith("https://static2.vietstock.vn/"))
+                rec = row["cashflow_source_reconciliation"]
+                self.assertEqual(rec["relative_tolerance_percent"], 0.01)
+                self.assertTrue(rec["selected_values_not_adjusted_for_tolerance"])
+                self.assertTrue(rec["no_balancing_plug"])
+                self.assertFalse(rec["separate_fx_line_reported"])
+                self.assertTrue(rec["selected_cashflow_source_url"].startswith("https://static2.vietstock.vn/"))
+                self.assertTrue(rec["selected_cashflow_source_archive_file"].startswith("reports/raw/KBC/"))
+
+    def test_kbc_all_periods_raw_flow_sums_and_bridges(self):
+        for period, row in self.rows.items():
+            with self.subTest(period=period):
+                rec = row["cashflow_source_reconciliation"]
+                raw = rec["selected_values_raw_vnd"]
+                q, ytd = raw["quarter"], raw["ytd"]
+                self.assertEqual(q["cfo"] + q["cfi"] + q["cff"], q["net_cash_change"])
+                self.assertEqual(ytd["cfo"] + ytd["cfi"] + ytd["cff"], ytd["net_cash_change"])
+                q_residual = q["cash_ending"] - q["cash_beginning"] - q["net_cash_change"]
+                y_residual = ytd["cash_ending"] - ytd["cash_beginning"] - ytd["net_cash_change"]
+                self.assertEqual(q_residual, rec["calculations"]["quarter_cash_bridge_residual_raw_vnd"])
+                self.assertEqual(y_residual, rec["calculations"]["ytd_cash_bridge_residual_raw_vnd"])
+                self.assertTrue(self._within_tolerance(q["cash_ending"], q["cash_beginning"] + q["net_cash_change"]))
+                self.assertTrue(self._within_tolerance(ytd["cash_ending"], ytd["cash_beginning"] + ytd["net_cash_change"]))
+                self.assertTrue(rec["quarter_flow_components_within_tolerance"])
+                self.assertTrue(rec["ytd_flow_components_within_tolerance"])
+                self.assertTrue(rec["quarter_cash_bridge_within_tolerance"])
+                self.assertTrue(rec["ytd_cash_bridge_within_tolerance"])
+
+    def test_kbc_quarter_values_equal_ytd_differences_before_rounding(self):
+        for period, row in self.rows.items():
+            year, qtxt = period.split("-Q")
+            quarter = int(qtxt)
+            previous = self.rows.get(f"{year}-Q{quarter - 1}") if quarter > 1 else None
+            raw = row["cashflow_source_reconciliation"]["selected_values_raw_vnd"]
+            with self.subTest(period=period):
+                if previous:
+                    prev_ytd = previous["cashflow_source_reconciliation"]["selected_values_raw_vnd"]["ytd"]
+                    for key in ("cfo","cfi","cff","net_cash_change"):
+                        self.assertEqual(raw["quarter"][key], raw["ytd"][key] - prev_ytd[key])
+                    self.assertEqual(raw["quarter"]["cash_beginning"], prev_ytd["cash_ending"])
+                else:
+                    for key in ("cfo","cfi","cff","net_cash_change"):
+                        self.assertEqual(raw["quarter"][key], raw["ytd"][key])
+
+    def test_kbc_fx_is_null_because_source_has_no_separate_fx_line(self):
+        for row in self.rows.values():
+            with self.subTest(period=row["period"]):
+                self.assertIsNone(row.get("foreign_exchange_effect"))
+                self.assertIsNone(row.get("foreign_exchange_effect_ytd"))
+                self.assertFalse(row["cashflow_source_reconciliation"]["separate_fx_line_reported"])
+
+    def test_kbc_cross_year_cash_basis_difference_is_preserved(self):
+        rec = self.rows["2026-Q1"]["cashflow_source_reconciliation"]["cross_year_cash_basis"]
+        self.assertEqual(rec["prior_year_end_cash_raw_vnd"], 8386548063120)
+        self.assertEqual(rec["current_year_open_cash_raw_vnd"], 8368534552023)
+        self.assertEqual(rec["residual_raw_vnd"], -18013511097)
+        self.assertGreater(rec["relative_difference_percent"], 0.01)
+        self.assertTrue(rec["no_balancing_plug"])
+
+    def test_kbc_q3_2026_investing_total_uses_detail_sum_not_bad_ocr_candidate(self):
+        rec = self.rows["2026-Q3"]["cashflow_source_reconciliation"]
+        self.assertEqual(rec["investing_total_ocr_candidate_raw_vnd"], -518402271256)
+        self.assertEqual(rec["investing_component_sum_raw_vnd"], -515402271256)
+        self.assertEqual(rec["investing_component_sum_vs_ocr_residual_raw_vnd"], 3000000000)
+        self.assertEqual(sum(rec["investing_component_lines_raw_vnd"].values()), -515402271256)
+        self.assertEqual(self.rows["2026-Q3"]["investing_cash_flow_ytd"], -515402.271)
+
+    def test_kbc_h1_2025_comparative_revision_is_preserved(self):
+        rec = self.rows["2025-Q2"]["cashflow_source_reconciliation"]["source_revision"]
+        self.assertEqual(rec["prior_source_values_raw_vnd"]["cfo"], -7173820953702)
+        self.assertEqual(rec["prior_source_values_raw_vnd"]["cfi"], -1366913300321)
+        self.assertEqual(rec["selected_minus_prior_source_values_raw_vnd"]["cfo"], -895822506913)
+        self.assertEqual(rec["selected_minus_prior_source_values_raw_vnd"]["cfi"], 895672506913)
+        self.assertEqual(rec["selected_minus_prior_source_values_raw_vnd"]["net"], -150000000)
+
+    def test_kbc_source_cash_crosscheck_q3_2025_is_within_tolerance(self):
+        rec = self.rows["2025-Q3"]["cashflow_source_reconciliation"]["balance_sheet_cash_crosscheck"]
+        self.assertEqual(rec["balance_sheet_cash_million_vnd"], 9418878)
+        self.assertEqual(rec["cashflow_statement_close_raw_vnd"], 9418578135962)
+        self.assertLessEqual(rec["relative_difference_percent"], 0.01)
+
+    def test_kbc_validated_cashflow_fields_not_false_rejected(self):
+        fields = self.flows + self.ytd + ("cash_beginning","cash_ending","cash_beginning_reported_ytd","cash_ending_reported_ytd")
+        for period, row in self.rows.items():
+            with self.subTest(period=period):
+                extracted = set(row.get("financial_line_items_extracted_fields", []))
+                rejected = set(row.get("financial_line_items_rejected_fields", []))
+                for field in fields:
+                    self.assertIsInstance(row.get(field), (int,float))
+                    self.assertNotIsInstance(row.get(field), bool)
+                    self.assertIn(field, extracted)
+                    self.assertNotIn(field, rejected)
+

@@ -725,3 +725,15 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 - Q2/2026 ghi tiền đầu năm 553.943.475.131 VND, trong khi cuối FY2025 là 553.052.678.239 VND; chênh 890.796.892 VND (~0,161%), vượt dung sai. Cầu nối YTD của báo cáo Q2/2026 tự khớp, cầu nối riêng Q2 chưa khớp do cơ sở tiền đầu năm khác FY2025; giữ cả hai số để rà soát.
 - Sidecar OCR đã lưu được tái sử dụng; chưa xác minh trực tiếp bằng ảnh PDF. Snapshot hiện có dữ liệu đến Q2/2026. Đã tìm báo cáo Q3/2026 trên danh mục VietstockFinance nhưng trang nguồn không trả nội dung và chưa xác nhận được URL trực tiếp từ danh mục; không kết luận rằng báo cáo Q3 chưa công bố.
 
+## Lượt chuẩn hóa KBC — lưu chuyển tiền tệ (2026-10-30)
+
+- Snapshot có 11 kỳ từ 2024-Q1 đến 2026-Q3. Toàn bộ sidecar OCR được tái sử dụng từ `reports/raw/KBC/auto-kbc-20261021/`; không tải lại hoặc OCR lại.
+- Ưu tiên comparative VietstockFinance mới hơn: Q1/2024 từ Q1/2025; H1/2024 từ Q2/2025; 9T/2024 từ Q3/2025; FY2024 từ Q4/2025; Q1/2025 từ Q1/2026; H1/2025 từ comparative Q2/2026; 9T/2025 từ comparative Q3/2026; FY2025 từ Q4/2025 hiện hành.
+- Raw source amounts lưu theo VND trong `cashflow_source_reconciliation.selected_values_raw_vnd`; display values chuẩn hóa triệu VND và làm tròn đến 0,001 triệu. Quý II–IV riêng = YTD hiện tại trừ YTD kỳ trước cùng năm. `cashflow_period_basis` tránh để giao diện tính đè các giá trị quý đã chuẩn hóa.
+- BCTC KBC không trình bày một dòng FX riêng trong bảng lưu chuyển tiền tệ được đọc từ sidecar; FX fields để null và công thức bridge không cộng FX giả định.
+- Q3/2026: dòng 30 CFI OCR đọc thành -518.402.271.256 VND, nhưng dòng chi tiết 21–27 cộng lại -515.402.271.256 VND và khớp dòng 50. Chọn tổng dòng chi tiết, giữ candidate OCR +3.000.000.000 VND sai khác để rà soát ảnh.
+- Q4/2025: OCR dòng 70 bị cắt; giữ candidate cuối kỳ 8.386.548,063 triệu VND từ snapshot hiện có, cầu nối FY khớp. Cần xác minh ảnh trực tiếp.
+- Q1/2026: tiền đầu kỳ báo cáo 8.368.534,552 triệu VND khác số cuối FY2025 8.386.548,063 triệu VND khoảng -0,2148%, vượt ngưỡng 0,01%. Giữ hai số, không thêm balancing plug.
+- Q3/2025: số tiền và tương đương tiền trên Bảng cân đối kế toán lệch số cuối trên BCTT khoảng 299,864 triệu VND (~0,00318%), trong dung sai. Giữ nguyên hai giá trị nguồn.
+- Kiểm thử raw-flow sums, cầu nối quý/YTD và quarter=YTD delta được thêm vào `tests/test_cashflow_bridge.py`. Ảnh PDF trực tiếp vẫn pending; các ngoại lệ nêu trên không được xem là đã xác minh trực quan.
+
