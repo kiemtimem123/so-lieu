@@ -3438,3 +3438,108 @@ class KBCCashFlowNormalizationTests(unittest.TestCase):
                     self.assertIn(field, extracted)
                     self.assertNotIn(field, rejected)
 
+class GEGCashFlowNormalizationTests(unittest.TestCase):
+    """GEG cash-flow source precedence, quarterly/YTD calculations and known source-basis exceptions."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.snapshot = json.loads((ROOT / "data" / "financials-GEG.json").read_text(encoding="utf-8"))
+        cls.rows = {row["period"]: row for row in cls.snapshot["items"]}
+        cls.expected = {"2024-Q1","2024-Q2","2024-Q3","2024-Q4","2025-Q1","2025-Q2","2025-Q3","2025-Q4","2026-Q1","2026-Q2"}
+        cls.flows = ("operating_cash_flow","investing_cash_flow","financing_cash_flow","net_cash_change")
+        cls.ytd = tuple(k + "_ytd" for k in cls.flows)
+        cls.fx = ("foreign_exchange_effect","foreign_exchange_effect_ytd")
+
+    @staticmethod
+    def pct(a, b):
+        return abs(a - b) / max(abs(a), abs(b), 1) * 100
+
+    @classmethod
+    def within(cls, a, b):
+        return cls.pct(a, b) <= 0.01
+
+    def test_geg_sources_periods_and_units(self):
+        self.assertEqual(set(self.rows), self.expected)
+        self.assertEqual(len(self.snapshot["items"]), 10)
+        for period, row in self.rows.items():
+            with self.subTest(period=period):
+                self.assertEqual(row["symbol"], "GEG")
+                self.assertEqual(row["unit"], "triệu VND")
+                self.assertEqual(row["source_index_url"], "https://finance.vietstock.vn/GEG/tai-tai-lieu.htm?doctype=1")
+                self.assertTrue(row["source_url"].startswith("https://static2.vietstock.vn/"))
+                rec = row["cashflow_source_reconciliation"]
+                self.assertEqual(rec["relative_tolerance_percent"], 0.01)
+                self.assertTrue(rec["selected_values_not_adjusted_for_tolerance"])
+                self.assertTrue(rec["no_balancing_plug"])
+                self.assertTrue(rec["separate_fx_line_reported"])
+                self.assertTrue(rec["selected_cashflow_source_url"].startswith("https://static2.vietstock.vn/"))
+                self.assertTrue(rec["selected_cashflow_source_archive_file"].startswith("reports/raw/GEG/"))
+
+    def test_geg_raw_quarter_and_ytd_flow_sums_are_exact(self):
+        for period, row in self.rows.items():
+            with self.subTest(period=period):
+                rec = row["cashflow_source_reconciliation"]
+                q, y = rec["selected_values_raw_vnd"]["quarter"], rec["selected_values_raw_vnd"]["ytd"]
+                self.assertEqual(q["cfo"] + q["cfi"] + q["cff"], q["net_cash_change"])
+                self.assertEqual(y["cfo"] + y["cfi"] + y["cff"], y["net_cash_change"])
+                self.assertTrue(rec["quarter_flow_components_within_tolerance"])
+                self.assertTrue(rec["ytd_flow_components_within_tolerance"])
+
+    def test_geg_ytd_cash_bridges_and_quarter_exceptions(self):
+        expected_exceptions = {"2025-Q2", "2025-Q3", "2026-Q2"}
+        for period, row in self.rows.items():
+            with self.subTest(period=period):
+                rec = row["cashflow_source_reconciliation"]
+                q, y = rec["selected_values_raw_vnd"]["quarter"], rec["selected_values_raw_vnd"]["ytd"]
+                q_expected = q["cash_beginning"] + q["net_cash_change"] + q["fx"]
+                y_expected = y["cash_beginning"] + y["net_cash_change"] + y["fx"]
+                self.assertTrue(self.within(y["cash_ending"], y_expected))
+                self.assertTrue(rec["ytd_cash_bridge_within_tolerance"])
+                if period in expected_exceptions:
+                    self.assertGreater(self.pct(q["cash_ending"], q_expected), 0.01)
+                    self.assertFalse(rec["quarter_cash_bridge_within_tolerance"])
+                else:
+                    self.assertTrue(self.within(q["cash_ending"], q_expected))
+                    self.assertTrue(rec["quarter_cash_bridge_within_tolerance"])
+
+    def test_geg_standalone_quarter_equals_ytd_difference_before_rounding(self):
+        for period, row in self.rows.items():
+            year, qtxt = period.split("-Q")
+            qnum = int(qtxt)
+            prev = self.rows.get(f"{year}-Q{qnum-1}") if qnum > 1 else None
+            raw = row["cashflow_source_reconciliation"]["selected_values_raw_vnd"]
+            with self.subTest(period=period):
+                if prev:
+                    prev_ytd = prev["cashflow_source_reconciliation"]["selected_values_raw_vnd"]["ytd"]
+                    for key in ("cfo","cfi","cff","net_cash_change","fx"):
+                        self.assertEqual(raw["quarter"][key], raw["ytd"][key] - prev_ytd[key])
+                    self.assertEqual(raw["quarter"]["cash_beginning"], prev_ytd["cash_ending"])
+                else:
+                    for key in ("cfo","cfi","cff","net_cash_change","fx"):
+                        self.assertEqual(raw["quarter"][key], raw["ytd"][key])
+
+    def test_geg_restatement_exceptions_are_traceable(self):
+        h1_2024 = self.rows["2024-Q2"]["cashflow_source_reconciliation"]["source_revision"]
+        self.assertEqual(h1_2024["prior_source"], "2024-Q2 original report")
+        h1_2025 = self.rows["2025-Q2"]["cashflow_source_reconciliation"]["source_revision"]
+        self.assertEqual(h1_2025["prior_source"], "2025-Q2 original report")
+        delta = h1_2025["selected_minus_prior_source_values_raw_vnd"]
+        self.assertEqual(delta["cfo"], -5752433928)
+        self.assertEqual(delta["cfi"], 6272819320)
+        self.assertEqual(delta["net"], 336385390)
+        self.assertEqual(self.rows["2025-Q2"]["cashflow_source_reconciliation"]["calculations"]["quarter_cash_bridge_residual_raw_vnd"], -12113208011)
+        self.assertEqual(self.rows["2025-Q3"]["cashflow_source_reconciliation"]["calculations"]["quarter_cash_bridge_residual_raw_vnd"], 12113208011)
+        self.assertEqual(self.rows["2026-Q2"]["cashflow_source_reconciliation"]["calculations"]["quarter_cash_bridge_residual_raw_vnd"], -11422219803)
+        self.assertEqual(self.rows["2026-Q2"]["cashflow_source_reconciliation"]["cross_period_cash_basis"]["residual_raw_vnd"], -30914348704)
+
+    def test_geg_numeric_cashflow_fields_are_allowlisted(self):
+        fields = self.flows + self.ytd + self.fx + ("cash_beginning","cash_ending","cash_beginning_reported_ytd","cash_ending_reported_ytd")
+        for period, row in self.rows.items():
+            with self.subTest(period=period):
+                ex, rejected = set(row.get("financial_line_items_extracted_fields") or []), set(row.get("financial_line_items_rejected_fields") or [])
+                for field in fields:
+                    self.assertIsInstance(row.get(field), (int,float))
+                    self.assertNotIsInstance(row.get(field), bool)
+                    self.assertIn(field, ex)
+                    self.assertNotIn(field, rejected)
+

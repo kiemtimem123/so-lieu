@@ -414,6 +414,85 @@ def main():
         if bs_cross.get("relative_difference_percent", 1) > RELATIVE_TOLERANCE_PERCENT or bs_cross.get("no_balancing_plug") is not True:
             ERRORS.append("KBC 2025-Q3: within-tolerance balance-sheet cash difference must retain both source values")
 
+
+
+    # GEG cash-flow regression in CI: raw VND values, source provenance, bridges,
+    # YTD-to-quarter deltas and explicitly documented source-basis exceptions.
+    geg_path = DATA_DIR / "financials-GEG.json"
+    if geg_path.exists():
+        geg = json.loads(geg_path.read_text(encoding="utf-8"))
+        geg_rows = {str(r.get("period")): r for r in (geg.get("items") or []) if isinstance(r, dict)}
+        geg_expected = {"2024-Q1","2024-Q2","2024-Q3","2024-Q4","2025-Q1","2025-Q2","2025-Q3","2025-Q4","2026-Q1","2026-Q2"}
+        if set(geg_rows) != geg_expected or len(geg.get("items") or []) != 10:
+            ERRORS.append("GEG cash-flow regression: expected 10 unique quarters 2024-Q1 through 2026-Q2")
+        q_exceptions = {"2025-Q2","2025-Q3","2026-Q2"}
+        flow_keys = ("operating_cash_flow","investing_cash_flow","financing_cash_flow","net_cash_change")
+        ytd_keys = tuple(k + "_ytd" for k in flow_keys)
+        for period, row in geg_rows.items():
+            rec = row.get("cashflow_source_reconciliation") or {}
+            raw = rec.get("selected_values_raw_vnd") or {}
+            qraw, yraw = raw.get("quarter") or {}, raw.get("ytd") or {}
+            if row.get("source_index_url") != "https://finance.vietstock.vn/GEG/tai-tai-lieu.htm?doctype=1":
+                ERRORS.append(f"GEG {period}: invalid VietstockFinance index URL")
+            if not str(row.get("source_url") or "").startswith("https://static2.vietstock.vn/"):
+                ERRORS.append(f"GEG {period}: original source is not a Vietstock static PDF/ZIP")
+            if not str(rec.get("selected_cashflow_source_url") or "").startswith("https://static2.vietstock.vn/"):
+                ERRORS.append(f"GEG {period}: selected comparative/source URL missing")
+            if not str(rec.get("selected_cashflow_source_archive_file") or "").startswith("reports/raw/GEG/"):
+                ERRORS.append(f"GEG {period}: selected existing OCR sidecar missing")
+            if rec.get("relative_tolerance_percent") != 0.01 or rec.get("no_balancing_plug") is not True:
+                ERRORS.append(f"GEG {period}: tolerance/no-balancing-plug metadata missing")
+            if rec.get("separate_fx_line_reported") is not True:
+                ERRORS.append(f"GEG {period}: source FX-row policy not marked")
+            for part_name, part in (("quarter", qraw), ("YTD", yraw)):
+                required = ("cfo","cfi","cff","net_cash_change","fx","cash_beginning","cash_ending")
+                if not all(number(part.get(k)) for k in required):
+                    ERRORS.append(f"GEG {period}: raw {part_name} values missing")
+                    continue
+                if part["cfo"] + part["cfi"] + part["cff"] != part["net_cash_change"]:
+                    ERRORS.append(f"GEG {period}: raw {part_name} flows do not sum to net cash")
+                expected_end = part["cash_beginning"] + part["net_cash_change"] + part["fx"]
+                if part_name == "YTD":
+                    if not within_relative_tolerance(part["cash_ending"], expected_end) or rec.get("ytd_cash_bridge_within_tolerance") is not True:
+                        ERRORS.append(f"GEG {period}: YTD cash bridge failed")
+                elif period in q_exceptions:
+                    if within_relative_tolerance(part["cash_ending"], expected_end) or rec.get("quarter_cash_bridge_within_tolerance") is not False:
+                        ERRORS.append(f"GEG {period}: expected quarter cash-basis exception not retained")
+                    if rec.get("calculations", {}).get("quarter_cash_bridge_residual_raw_vnd") != part["cash_ending"] - expected_end:
+                        ERRORS.append(f"GEG {period}: quarter bridge residual metadata mismatch")
+                else:
+                    if not within_relative_tolerance(part["cash_ending"], expected_end) or rec.get("quarter_cash_bridge_within_tolerance") is not True:
+                        ERRORS.append(f"GEG {period}: quarter cash bridge failed without an exception")
+            if rec.get("quarter_flow_components_within_tolerance") is not True or rec.get("ytd_flow_components_within_tolerance") is not True:
+                ERRORS.append(f"GEG {period}: flow component flags not passing")
+            if row.get("cashflow_period_basis") not in ("quarterly_reported","quarterly_normalized_from_ytd"):
+                ERRORS.append(f"GEG {period}: invalid quarterly basis")
+            ex, rejected = set(row.get("financial_line_items_extracted_fields") or []), set(row.get("financial_line_items_rejected_fields") or [])
+            for field in flow_keys + ytd_keys + ("foreign_exchange_effect","foreign_exchange_effect_ytd","cash_beginning","cash_ending","cash_beginning_reported_ytd","cash_ending_reported_ytd"):
+                if not number(row.get(field)) or field not in ex or field in rejected:
+                    ERRORS.append(f"GEG {period}: cashflow field {field} missing/not allowlisted/rejected")
+            year, qtxt = period.split("-Q")
+            qnum = int(qtxt)
+            previous = geg_rows.get(f"{year}-Q{qnum-1}") if qnum > 1 else None
+            if previous:
+                prev_ytd = ((previous.get("cashflow_source_reconciliation") or {}).get("selected_values_raw_vnd") or {}).get("ytd") or {}
+                for key in ("cfo","cfi","cff","net_cash_change","fx"):
+                    if qraw.get(key) != yraw.get(key,0) - prev_ytd.get(key,0):
+                        ERRORS.append(f"GEG {period}: quarterly {key} does not equal the same-year YTD delta")
+                if qraw.get("cash_beginning") != prev_ytd.get("cash_ending"):
+                    ERRORS.append(f"GEG {period}: quarterly opening does not equal prior-quarter close")
+            else:
+                for key in ("cfo","cfi","cff","net_cash_change","fx"):
+                    if qraw.get(key) != yraw.get(key):
+                        ERRORS.append(f"GEG {period}: Q1 values should equal YTD Q1")
+        if geg_rows.get("2025-Q2",{}).get("cashflow_source_reconciliation",{}).get("source_revision",{}).get("selected_minus_prior_source_values_raw_vnd",{}).get("net") != 336385390:
+            ERRORS.append("GEG H1/2025 comparative net-cash revision not traceable")
+        q1_bridge = geg_rows.get("2026-Q1",{}).get("cashflow_source_reconciliation",{}).get("calculations",{}).get("quarter_cash_bridge_residual_raw_vnd")
+        if q1_bridge != 900:
+            ERRORS.append("GEG Q1/2026 expected +900 VND bridge residual not preserved")
+        if geg_rows.get("2026-Q2",{}).get("cashflow_source_reconciliation",{}).get("cross_period_cash_basis",{}).get("residual_raw_vnd") != -30914348704:
+            ERRORS.append("GEG Q2/2026 opening-cash basis exception missing")
+
     print("Bank financial reconciliation regression checks")
     print(f"Bank snapshots checked: {symbols_checked}; rows on current schema: {audited_rows}")
     print(f"Errors: {len(ERRORS)}; warnings: {len(WARNINGS)}")
