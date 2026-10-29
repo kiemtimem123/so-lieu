@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T02:45:00+07:00",
+  "updatedAt": "2026-10-30T03:05:00+07:00",
   "processingMode": "one_ticker_at_a_time_checkpoint_on_pass_no_reload_of_passed_data",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -44,28 +44,25 @@
   "resumeSymbolHint": "ACB",
   "resumeRule": "Read reports/processing-checkpoint.json first. Do not reload/re-OCR/re-parse a ticker already passed under the current standard unless explicit new evidence, an applicable standard change, or regression failure requires reopening. Finish one ticker, write its checkpoint immediately, then proceed.",
   "lastProgress": {
-    "symbol": "KBC",
-    "status": "terminal_needs_manual_review",
-    "completeForAutomation": true,
+    "symbol": "GEG",
+    "status": "in_progress_ci_validation",
+    "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-30T02:25:00+07:00",
+    "processedAt": "2026-10-30T03:05:00+07:00",
     "changedPaths": [
-      "data/financials-KBC.json",
+      "data/financials-GEG.json",
       "tests/test_cashflow_bridge.py",
-      "reports/financial-data-normalization-standard.md",
-      "scripts/validate-bank-reconciliation.py"
+      "scripts/validate-bank-reconciliation.py",
+      "reports/financial-data-normalization-standard.md"
     ],
-    "periodCount": 11,
+    "periodCount": 10,
     "firstQuarter": "2024-Q1",
-    "lastQuarter": "2026-Q3",
+    "lastQuarter": "2026-Q2",
     "pendingCorePeriods": [],
     "terminalManualReviewPeriods": [
-      "2024-Q2",
-      "2024-Q4",
       "2025-Q2",
-      "2025-Q4",
-      "2026-Q1",
-      "2026-Q3"
+      "2025-Q3",
+      "2026-Q2"
     ],
     "pendingDetailPeriods": [],
     "staleDetailSchemaPeriods": [],
@@ -76,7 +73,7 @@
       40941571553,
       40941571666
     ],
-    "note": "KBC cash-flow values normalized across 11 periods; regression now runs in CI and passed. Cross-year cash basis, truncated FY2025 closing-cash OCR, Q3/2026 CFI OCR candidate and source-image review remain manual."
+    "note": "GEG Q4/2025 direct PDF review resolved row-70 truncation flag; regression was extended, pending CI confirmation."
   },
   "symbolStates": {
     "MBB": {
@@ -673,22 +670,27 @@
       "note": "KBC cash-flow normalization and CI regression passed through Q3/2026; terminal manual review remains for direct visual review, FY2025 ending-cash OCR truncation, Q1/2026 cross-year cash basis and Q3/2026 CFI total OCR mismatch. No balancing plugs."
     },
     "GEG": {
-      "status": "automated_processing_complete",
-      "completeForAutomation": true,
+      "status": "in_progress_ci_validation",
+      "completeForAutomation": false,
       "manualReviewRemaining": true,
       "periodCount": 10,
       "firstQuarter": "2024-Q1",
       "lastQuarter": "2026-Q2",
       "pendingCorePeriods": [],
-      "terminalManualReviewPeriods": [],
+      "terminalManualReviewPeriods": [
+        "2025-Q2",
+        "2025-Q3",
+        "2026-Q2"
+      ],
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
-      "statementPagesPending": false,
+      "statementPagesPending": true,
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-10-25T21:31:22Z",
-      "snapshotFetchedAt": "2026-10-23T20:45:50+00:00"
+      "updatedAt": "2026-10-30T03:05:00+07:00",
+      "snapshotFetchedAt": "2026-10-23T20:45:50+00:00",
+      "note": "Q4/2025 cash-flow statement pages 4-5 visually confirmed on 2026-10-30; row-70 OCR blocker resolved. New regression checks added, awaiting CI confirmation. Source-basis discrepancies for H1/2025 and Q2/2026 remain manual."
     },
     "SHS": {
       "status": "terminal_needs_manual_review",
@@ -1495,7 +1497,7 @@
     "activeDataDomain": "cashflow",
     "activeSymbol": "GEG",
     "status": "in_progress_ci_validation",
-    "lastUpdatedAt": "2026-10-30T02:45:00+07:00",
+    "lastUpdatedAt": "2026-10-30T03:05:00+07:00",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1789,7 +1791,9 @@
       "KBC: FY2025 cash close candidate 8,386,548,063,120 VND has truncated OCR; Q1/2026 reported opening cash 8,368,534,552,023 VND differs by -18,013,511,097 VND (~0.2148%), above tolerance. Preserve both values without balancing plug. Q3/2025 balance-sheet cash differs from cashflow close by 299,864,038 VND (~0.00318%), within 0.01%, with both source values preserved.",
       "KBC: no explicit FX line is shown in the archived cash-flow statements, so FX fields are null, not a fabricated zero. Current snapshot latest period is Q3/2026. Direct visual review of archived cash-flow pages remains pending.",
       "GEG cash-flow snapshot normalized across 10 periods (2024-Q1–2026-Q2) from archived VietstockFinance OCR sidecars; no report reload/OCR rerun.",
-      "GEG regression test and CI validator integrated; latest commit 9bc4a028f739a19b051dbaaf8c768b29742d9b5d workflow status: Validate quarterly financial data=success; Validate Site and Data=success; Package Hostinger Stock Dashboard=not_found."
+      "GEG regression test and CI validator integrated; latest commit 9bc4a028f739a19b051dbaaf8c768b29742d9b5d workflow status: Validate quarterly financial data=success; Validate Site and Data=success; Package Hostinger Stock Dashboard=not_found.",
+      "GEG Q4/2025 source image reviewed directly on 2026-10-30: official VietstockFinance consolidated PDF printed pages 4-5 confirm CFO 932,884,327,033; CFI 1,921,143,888; CFF -1,012,240,268,026; net change -77,434,797,105; opening cash 163,717,707,072; FX 81,753,281; ending cash 86,364,663,248 VND. The prior truncated-row-70 OCR flag is resolved without changing source values.",
+      "Added regression assertions in tests/test_cashflow_bridge.py and scripts/validate-bank-reconciliation.py for GEG Q4/2025 visually confirmed raw values and review status; validation of the visual-review commit is the next gate before marking GEG terminal."
     ],
     "unresolved": [
       "NLG NEEDS_MANUAL_REVIEW — H1/2024 selected later comparative in Q2/2025 reclassifies CFO/CFI versus the original Q2/2024 source by >0.01%; net cash movement and cash balances remain unchanged. Preserve both source bases and selected later comparative; do not plug.",
@@ -1854,7 +1858,7 @@
       "HHV NEEDS_MANUAL_REVIEW_CROSS_PERIOD_CASH_BASIS_GT_0_01_PERCENT — Q2/2026 YTD opening cash differs from FY2025 close by -15,039,846,885 VND; Q2 standalone bridge residual against Q1 close is -15,039,808,794 VND (~2.96%). Keep both printed source balances and no balancing plug.",
       "HHV source-page direct image review remains pending because the direct PDF viewer could not render the archived VietstockFinance PDFs; OCR sidecars and arithmetic checks are not presented as visual verification."
     ],
-    "nextStep": "GEG CI runs are not all complete; keep GEG active and do not mark complete until success.",
+    "nextStep": "GEG Q4/2025 cash-flow source page verification is saved; remain on GEG until CI validates the newly added regression, then continue only if another ticker is genuinely eligible.",
     "previousCompletedSymbol": "HHV",
     "validationRuns": [
       {
@@ -2084,11 +2088,11 @@
     ],
     "activeTickerFindings": {
       "ticker": "GEG",
-      "status": "awaiting_ci_results",
+      "status": "in_progress_ci_validation",
       "latestAvailablePeriodInSnapshot": "2026-Q2",
       "periodCount": 10,
-      "sourcePolicy": "Only VietstockFinance catalog and directly linked PDFs/ZIPs",
-      "dataCommit": "9bc4a028f739a19b051dbaaf8c768b29742d9b5d",
+      "sourcePolicy": "Only VietstockFinance catalog and directly linked official consolidated financial statements",
+      "dataCommit": "22a3c2c9555a780c4b5bab5bd2c5bc84278b1ea9",
       "validationRuns": [
         {
           "name": "Validate quarterly financial data",
@@ -2113,11 +2117,10 @@
         }
       ],
       "manualReviewRemaining": [
-        "Direct PDF image review pending for OCR-derived flow pages.",
-        "H1/2025 restated comparative in Q2/2026 has a different opening/closing cash basis than Q1/2025, original Q2/2025 and Q3/2025 current report; quarter bridge exceptions for 2025-Q2 and 2025-Q3 exceed 0.01%.",
-        "Q4/2025 closing-cash row 70 OCR is truncated; retain candidate pending image review.",
-        "Q2/2026 reported YTD opening cash differs from Q1/2026 closing cash, and quarterly bridge exceeds tolerance; keep both values, no plug.",
-        "Official VietstockFinance index/direct source URL for GEG Q3/2026 was not confirmed; snapshot latest is Q2/2026, not a claim that Q3 has not been published."
+        "Direct image review remains pending for the other OCR-derived cash-flow pages.",
+        "H1/2025 comparative in Q2/2026 has a different opening/closing cash basis; Q2/2025 and Q3/2025 standalone cash bridges exceed 0.01%. Keep source differences without balancing plugs.",
+        "Q2/2026 reported YTD opening cash differs from Q1/2026 closing cash by 30,914,348,704 VND; YTD bridge passes but quarter bridge requires manual review.",
+        "Official GEG Q3/2026 consolidated report URL was not confirmed from the approved source catalog in this pass; snapshot remains at Q2/2026, not a claim that Q3 is unpublished."
       ],
       "tests": {
         "rawQuarterAndYTDSums": "PASS exact 10/10",
@@ -2127,7 +2130,10 @@
         "sourceAndAllowlist": "in regression tests and validator",
         "ci": "PENDING"
       },
-      "nextStep": "Fix any failed validation before advancing to the next ticker."
+      "nextStep": "Confirm Validate quarterly financial data and Validate Site and Data on the visual-review commit; if both pass, mark GEG terminal manual review and then inspect checkpoint for the next eligible ticker without reopening passed snapshots.",
+      "visualReviewResolved": [
+        "2025-Q4 printed PDF pages 4-5 verified directly on 2026-10-30; row 70 is no longer an OCR blocker."
+      ]
     },
     "tickerComplete": false,
     "manualReviewRemaining": [
