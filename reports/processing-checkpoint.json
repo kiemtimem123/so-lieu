@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-29T22:11:00+07:00",
+  "updatedAt": "2026-10-29T23:43:00+07:00",
   "processingMode": "one_ticker_at_a_time_checkpoint_on_pass_no_reload_of_passed_data",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -1458,7 +1458,7 @@
     "activeDataDomain": "cashflow",
     "activeSymbol": "DPG",
     "status": "in_progress_source_review",
-    "lastUpdatedAt": "2026-10-29T22:11:00+07:00",
+    "lastUpdatedAt": "2026-10-29T23:43:00+07:00",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1718,7 +1718,15 @@
       "DPG Q1/2024: net investing flow corrected from row 30 (259,332.595 million VND, rounded to 259,333); net financing flow -175,822; FX dash=0; opening/closing cash restored. Flow sum exact; bridge residual -1 million VND = 0.00006983%, accepted under 0.01% tolerance and preserved. Direct visual PDF review pending. Data commit 7ecac53c01a013019153b68b32405b347701ff82.",
       "DPG Q3/2024: restored YTD CFO -393,416, CFI 44,281, CFF -204,282, net change -553,447, FX dash=0, opening cash 1,432,081 and closing cash 878,634 million VND from existing Q4/2024 VietstockFinance comparative OCR sidecar pages 9-10. Flow sum residual +30 million VND, relative 0.00542057%, accepted under 0.01% and retained; cash bridge residual zero. Direct visual PDF review pending. Data commit d698f098f1e4d749fb3544392c038160d976b693.",
       "DPG Q2/2024 partial: restored CFO -561,750, CFF -248,871, net change -618,377, FX dash=0, opening cash 1,432,081 and closing cash 813,703 million VND from existing VietstockFinance OCR. Investing row 30 OCR candidate 792,243 conflicts with reported net and components; investing flow left blank, no balancing plug. Visual PDF review pending. Data commit a49cf79c7c69b460005b6190d22a6cbc6ab6b40e.",
-      "DPG Q4/2024: restored FY2024 YTD CFO -321,644, CFI -4,693, CFF -89,178, net change -415,515, FX dash=0, opening cash 1,432,081 and closing cash 1,016,566 million VND from existing VietstockFinance OCR sidecar pages 11-13. YTD flow sum and cash bridge both reconcile exactly; standalone Q4 flows derived as FY YTD minus Q3 YTD values. Visual PDF review pending. Data commit 83bfd8216fca65e5da97287d3c8208d14f85227f."
+      "DPG Q4/2024: restored FY2024 YTD CFO -321,644, CFI -4,693, CFF -89,178, net change -415,515, FX dash=0, opening cash 1,432,081 and closing cash 1,016,566 million VND from existing VietstockFinance OCR sidecar pages 11-13. YTD flow sum and cash bridge both reconcile exactly; standalone Q4 flows derived as FY YTD minus Q3 YTD values. Visual PDF review pending. Data commit 83bfd8216fca65e5da97287d3c8208d14f85227f.",
+      "DPG cash-flow review extended through latest available archived report Q2/2026. Data commit 7e0a85cc231cd72faaa3cd6b580267dc53aea8fd. Reused existing VietstockFinance OCR sidecars; no report re-download/re-OCR.",
+      "DPG 2025-Q1: CFO -134,843.943; CFI -32,831.173; CFF -77,451.489; net change -245,126.605; opening cash 1,016,565.559; closing cash 771,438.953 million VND. Sum and bridge reconcile; visual PDF review pending.",
+      "DPG 2025-Q2: CFO -855,102.015; CFI -172,981.422; CFF 910,552.710; net change -117,530.727; opening cash 1,016,565.559; closing cash 899,034.831 million VND. Sum and bridge reconcile; visual PDF review pending.",
+      "DPG 2025-Q3: CFO -1,127,810.522; CFI -328,468.544; CFF 1,045,124.815; net change -411,154.250; opening cash 1,016,565.559; closing cash 605,411.308 million VND. Sum and bridge reconcile; CFI OCR punctuation ambiguous but totals reconcile; visual PDF review pending.",
+      "DPG 2025-Q4: CFI -791,349.091; CFF 1,259,334.180; net change -220,309.125; opening cash 1,016,565.559; closing cash 796,256.434 million VND. Cash bridge reconciles, but CFO OCR is ambiguous and remains blank; do not use balancing plug.",
+      "DPG 2026-Q1: CFO -117,096.225; CFI -848,383.577; CFF 1,003,389.623; net change 37,909.821; opening cash 796,256.460; closing cash 834,166.280 million VND. Flow-sum residual 0.002 million VND, well under 0.01%; bridge reconciles; visual review pending.",
+      "DPG 2026-Q2 (latest archived quarter): CFO 100,013.778; CFI -1,573,206.841; CFF 1,577,281.998; net change 104,088.935 million VND. Flow sum reconciles exactly. OCR opening cash appears about 711,256.460 million VND and conflicts with Q1 closing cash 834,166.280; opening cash left blank pending manual review. Reported closing cash OCR is 815,345.394 million VND.",
+      "DPG Q2/2024 investing cash flow remains unresolved due conflicting OCR; do not infer it. Q4/2025 CFO and Q2/2026 opening cash require manual source-page confirmation. All recently populated OCR-derived values remain visually unconfirmed."
     ],
     "unresolved": [
       "NLG NEEDS_MANUAL_REVIEW — H1/2024 selected later comparative in Q2/2025 reclassifies CFO/CFI versus the original Q2/2024 source by >0.01%; net cash movement and cash balances remain unchanged. Preserve both source bases and selected later comparative; do not plug.",
@@ -1783,7 +1791,7 @@
       "HHV NEEDS_MANUAL_REVIEW_CROSS_PERIOD_CASH_BASIS_GT_0_01_PERCENT — Q2/2026 YTD opening cash differs from FY2025 close by -15,039,846,885 VND; Q2 standalone bridge residual against Q1 close is -15,039,808,794 VND (~2.96%). Keep both printed source balances and no balancing plug.",
       "HHV source-page direct image review remains pending because the direct PDF viewer could not render the archived VietstockFinance PDFs; OCR sidecars and arithmetic checks are not presented as visual verification."
     ],
-    "nextStep": "Continue DPG cash-flow only. Q1 and Q4/2024 YTD fields reconcile; Q3/2024 flow residual +30 million VND is 0.00542057% and accepted with residual preserved; Q2/2024 investing flow remains blank because OCR is ambiguous. Next inspect Q1/2025 existing sidecar pages 9-10, then continue sequentially. Reuse archived sources only. DPG is not complete until unresolved Q2/2024 source and all required periods/regression tests are resolved; keep visual review pending.",
+    "nextStep": "Continue DPG cash-flow verification through latest available report Q2/2026. Resolve only targeted ambiguities by visually inspecting existing archived PDF pages: Q2/2024 row 30, FY2025 row 20, and Q2/2026 rows 60/70. Do not reload already passing data. After resolving these, run schema/period/source and cash-bridge regression tests; only then checkpoint DPG complete and move to next ticker. Q2/2026 is the latest period currently present in DPG data; check VietstockFinance source list for any newly published Q3/2026 report before final ticker completion.",
     "previousCompletedSymbol": "HHV",
     "validationRuns": [
       {
@@ -2017,7 +2025,7 @@
       "existingArchives": "reports/raw/DPG/auto-dpg-20261021/ and reports/raw/DPG/repair-dpg-2025q2-full-report/",
       "snapshotIssue": "Q2/2024 investing flow remains blank due ambiguous OCR. Remaining periods need source review. Ticker not complete.",
       "sourcePolicy": "Only VietstockFinance document index and linked official quarterly reports.",
-      "reloadRule": "Reuse existing archived PDF and .extracted.json sidecars; no re-download/re-OCR unless unresolved specific evidence requires it.",
+      "reloadRule": "Reuse existing archived PDF and .extracted.json sidecars; do not re-download/re-OCR already inspected reports. Only inspect specific source pages for unresolved OCR lines.",
       "completedPeriodInCurrentPass": "2024-Q1",
       "q1_2024": {
         "status": "ocr_source_mapping_corrected_visual_review_pending",
@@ -2063,6 +2071,29 @@
         "reportedNetCashChangeMillionVND": -415515,
         "flowResidualMillionVND": 0,
         "cashBridgeResidualMillionVND": 0
+      },
+      "latestAvailablePeriod": "2026-Q2",
+      "latestAvailablePeriodStatus": "flow_components_reconciled_opening_cash_manual_review",
+      "latestPeriodDataCommit": "7e0a85cc231cd72faaa3cd6b580267dc53aea8fd",
+      "periodsReviewedThrough": "2026-Q2",
+      "tickerComplete": false,
+      "manualReviewRemaining": [
+        "2024-Q2 investing cash flow OCR conflicts with reported net",
+        "2025-Q4 operating cash flow OCR ambiguous; left blank",
+        "2026-Q2 opening cash OCR conflicts with prior period closing cash",
+        "Visual PDF review for OCR-derived cash-flow values"
+      ],
+      "latestPeriod": {
+        "period": "2026-Q2",
+        "cfoYtdMillionVND": 100013.778298,
+        "cfiYtdMillionVND": -1573206.841411,
+        "cffYtdMillionVND": 1577281.998033,
+        "netCashChangeYtdMillionVND": 104088.93492,
+        "flowSumResidualMillionVND": 0,
+        "openingCash": null,
+        "reportedOpeningCashOcrCandidateMillionVND": 711256.459555,
+        "closingCashOcrMillionVND": 815345.394475,
+        "status": "NEEDS_MANUAL_REVIEW_OPENING_CASH"
       }
     }
   },
