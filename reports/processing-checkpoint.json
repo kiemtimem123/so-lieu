@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-29T09:48:33.293Z",
+  "updatedAt": "2026-10-29T09:59:45.044Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -1451,8 +1451,8 @@
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
     "activeSymbol": "NVL",
-    "status": "in_progress_next_ticker",
-    "lastUpdatedAt": "2026-10-29T09:48:33.293Z",
+    "status": "normalized_awaiting_ci_manual_review_remaining",
+    "lastUpdatedAt": "2026-10-29T09:59:45.044Z",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1686,7 +1686,13 @@
       "KDH: Q3/2025 cash ending uses cash-and-equivalents line from same report balance sheet because cash-flow line 70 OCR was unreadable; the sourced value reconciles with opening cash plus net cash movement.",
       "Added KDHCashFlowNormalizationTests with all 10 periods, tolerance, quarter/YTD math, selected comparative evidence and explicit Q1/Q2-2026 cash conflicts.",
       "KDH normalization checkpoint finalized after successful current-run CI: Validate Site and Data 40852450152 PASS; quarterly financial validation 40852158646 PASS; Hostinger package 40852158618 PASS.",
-      "KDH terminal/manual review flags saved; next cash-flow ticker advanced to NVL."
+      "KDH terminal/manual review flags saved; next cash-flow ticker advanced to NVL.",
+      "NVL cash-flow: normalized ten periods 2024-Q1 through 2026-Q2 from VietstockFinance consolidated source statements; stored VND source amounts in audit metadata and scaled snapshot values to million VND.",
+      "NVL cash-flow: selected later comparative data for Q1/H1/9M/FY2024 and H1/2025 where the source index had later comparatives; original figures retained in per-period previous_source_comparison metadata.",
+      "NVL cash-flow: all ten raw source CFO+CFI+CFF sums exactly match reported net cash change, and each raw source cash bridge (opening + net movement + FX = closing) is zero.",
+      "NVL cash-flow: snapshot standalone quarter fields are computed from selected YTD differences; quarter/YTD flow sums are within 0.01% after million-VND rounding. Small rounding residuals remain in metadata and are not plugged.",
+      "NVL cash-flow: manually reviewed Q1/2025 comparator, H1/2025 comparator in Q2/2026, Q3/2025 current source, and Q1/Q2 2026 source pages. Q4/2025 source remains OCR-sidecar based pending a direct visual check.",
+      "NVL cash-basis issues retained: H1/2024 and FY2024 reclassifications; H1/2025 comparator revision; FY2025 close 4,395,320,969,838 VND vs later re-presented opening 4,208,770,020,478 VND; Q4/2025 close to Q1/2026 opening difference 2,261,673,373 VND (>0.01%); Q1/Q2 2026 YTD opening-basis revision causes Q2 standalone cash bridge residual around -188,812 million VND (>0.01%). No balancing plugs."
     ],
     "unresolved": [
       "NLG NEEDS_MANUAL_REVIEW — H1/2024 selected later comparative in Q2/2025 reclassifies CFO/CFI versus the original Q2/2024 source by >0.01%; net cash movement and cash balances remain unchanged. Preserve both source bases and selected later comparative; do not plug.",
@@ -1737,9 +1743,15 @@
       "KDH 2024-Q2: later H1/2024 comparator reclassifies CFO/CFI >0.01% vs original source; net and close remain within 0.01%. Keep both source bases and manual review.",
       "KDH 2024-Q4: later FY2024 comparator materially reclassifies CFO/CFI vs original; net and closing cash remain within tolerance. Do not force a balance.",
       "KDH 2025-Q2/Q3: Q2/2026 H1/2025 comparator materially changes H1 cash-flow totals; Q3 standalone uses later H1 basis. Retain source history and manual review.",
-      "KDH 2026-Q1/Q2: direct PDF shows cash-flow closing 3,643,808,683 thousand VND vs same-report balance-sheet cash 3,613,808,683 thousand VND in Q1; 30,000 million VND (~0.82%). Q2 YTD reconciles but standalone Q2 bridge inherits the Q1 discrepancy; no balancing plug."
+      "KDH 2026-Q1/Q2: direct PDF shows cash-flow closing 3,643,808,683 thousand VND vs same-report balance-sheet cash 3,613,808,683 thousand VND in Q1; 30,000 million VND (~0.82%). Q2 YTD reconciles but standalone Q2 bridge inherits the Q1 discrepancy; no balancing plug.",
+      "NVL 2024-Q2: later H1/2024 comparative changes CFO/CFI and net/closing cash >0.01% vs original report; selected later source is traced and manual review remains.",
+      "NVL 2024-Q4: FY2024 comparative from Q4/2025 materially reclassifies CFO/CFF vs original FY2024; net/close stay near tolerance; source history retained.",
+      "NVL 2025-Q2/Q3: H1/2025 values from Q2/2026 report differ >0.01% from original H1/2025 report; Q3 standalone derived on later comparator basis.",
+      "NVL 2025-Q4 vs later Q2/2026 restated cash basis: 4,395,320,969,838 VND vs 4,208,770,020,478 VND, >0.01%, no adjustment without amended FY2025 cash-flow source.",
+      "NVL Q4/2025 close to Q1/2026 opening difference +2,261,673,373 VND (~0.051%); Q1 report internally reconciles.",
+      "NVL Q2/2026 source opening basis 4,208,770,020,478 VND differs from Q1/2026 YTD opening 4,397,582,643,211 VND; its own YTD bridge passes but standalone Q2 bridge computed from YTD differences is about -188,812 million VND residual, >0.01%, preserve manual review."
     ],
-    "nextStep": "KDH automated cash-flow normalization and all relevant validations passed. Remaining manual-review flags are source-based and preserved: material comparative reclassifications (2024-Q2, 2024-Q4, 2025-Q2/Q3) and Q1/Q2 2026 cash-statement inconsistency (>0.01%). No values were plugged or forcibly reconciled. Continue next with NVL cash-flow data only, using the 0.01% relative tolerance rule and one ticker per run.",
+    "nextStep": "NVL snapshot and regression tests are committed; await/inspect CI before marking automated processing complete. Keep manual review flags above; if CI passes, continue to the next ticker in the same cashflow domain according to the checkpoint's ticker order. Do not switch data domains.",
     "previousCompletedSymbol": "KDH",
     "validationRuns": [
       {
