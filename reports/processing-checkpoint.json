@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-29T16:05:00+07:00",
+  "updatedAt": "2026-10-29T16:20:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -1453,7 +1453,7 @@
     "activeDataDomain": "cashflow",
     "activeSymbol": "VDS",
     "status": "in_progress_next_ticker",
-    "lastUpdatedAt": "2026-10-29T16:05:00+07:00",
+    "lastUpdatedAt": "2026-10-29T16:20:00+07:00",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1668,7 +1668,11 @@
       "SSI arithmetic: all 10 periods pass YTD/quarter flow-sum checks and YTD/quarter cash bridges within the 0.01% relative tolerance; standalone quarter figures equal YTD differences and opening cash equals prior quarter closing cash.",
       "SSI exception rule: statement lines 102/104 describe opening/closing cash component adjustments, not an additive line-90 FX bridge; foreign_exchange_effect fields remain null and raw line 102/104 values are preserved in audit metadata.",
       "SSI residuals after VND-to-million-VND rounding are within 0.01%; no printed values were changed and no balancing plug was inserted. Direct page-image visual review is pending and explicitly noted.",
-      "Added SSICashFlowNormalizationTests and documented SSI mapping, comparative precedence, 0.01% tolerance and line-102/104 semantics in reports/financial-data-normalization-standard.md version 2.4."
+      "Added SSICashFlowNormalizationTests and documented SSI mapping, comparative precedence, 0.01% tolerance and line-102/104 semantics in reports/financial-data-normalization-standard.md version 2.4.",
+      "Validate Site and Data run 40846765898 SUCCESS after fixing SSI regression-test field typing; the job completed without failing steps.",
+      "SSI: normalized all 10 periods 2024-Q1 through 2026-Q2 from consolidated VietstockFinance source PDFs/ZIPs; YTD and quarter flows, cash bridges and quarter/YTD deltas pass within the user-approved 0.01% relative tolerance.",
+      "SSI: added source records for cash-component detail rows 102/104 and deliberately left additive foreign_exchange_effect fields null; no balancing plug or source value mutation.",
+      "SSI: updated standard to version 2.4 with details on report-line mapping, comparative-source precedence, rounding tolerance and pending visual-review classification."
     ],
     "unresolved": [
       "NLG NEEDS_MANUAL_REVIEW — H1/2024 selected later comparative in Q2/2025 reclassifies CFO/CFI versus the original Q2/2024 source by >0.01%; net cash movement and cash balances remain unchanged. Preserve both source bases and selected later comparative; do not plug.",
@@ -1716,7 +1720,7 @@
       "VIX terminal scope hold: standalone/unconfirmed VietstockFinance documents are withheld from the consolidated cashflow series; resume only after a consolidated report source is confirmed.",
       "SSI: all 10 periods pass arithmetic under 0.01% tolerance; source OCR is transcribed and source scope is consolidated, but direct PDF image review remains pending. SSI line 102/104 component adjustments are retained as metadata and not used as additive FX bridge."
     ],
-    "nextStep": "SSI cash-flow normalization is complete for 10 periods, with all arithmetic residuals <=0.01% and no balancing plugs. Direct PDF visual review remains pending; do not hold the ticker queue for that alone. Next eligible ticker: VDS, same cash-flow domain, using VietstockFinance consolidated sources and the 0.01% relative tolerance.",
+    "nextStep": "SSI normalization is saved and its regression workflow passed. Move to VDS as the next eligible ticker in the same cash-flow domain. Inspect existing source archives/data/financials-VDS.json; use only consolidated VietstockFinance documents, preserve unresolved source scope/OCR issues, apply 0.01% relative tolerance, and do not modify other tickers.",
     "previousCompletedSymbol": "SSI",
     "validationRuns": [
       {
@@ -1802,6 +1806,27 @@
         "status": "success",
         "commit": "e891a6c1efd256eaf32fbecbefc5ed4cead9e6ed",
         "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40771324652"
+      },
+      {
+        "name": "Validate Site and Data",
+        "runId": "40846765898",
+        "status": "success",
+        "commit": "e90327b4301bb2faad3d4cdb8470dd9a5e4eed72",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40846765898"
+      },
+      {
+        "name": "Validate quarterly financial data",
+        "runId": "40846359708",
+        "status": "success",
+        "commit": "a921930815dd64b490748ba850c96f494571a710",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40846359708"
+      },
+      {
+        "name": "Package Hostinger Stock Dashboard",
+        "runId": "40846359720",
+        "status": "success",
+        "commit": "a921930815dd64b490748ba850c96f494571a710",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40846359720"
       }
     ],
     "lastCompletedSymbol": "BID",
