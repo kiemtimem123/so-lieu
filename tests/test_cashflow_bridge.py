@@ -3042,3 +3042,151 @@ class HHVCashFlowNormalizationTests(unittest.TestCase):
         self.assertTrue(rec["status"].startswith("NEEDS_MANUAL_REVIEW"))
         self.assertTrue(within_relative_tolerance(
             q1["cash_beginning_reported_ytd"], fy2025["cash_ending_reported_ytd"]))
+
+class PLXCashFlowNormalizationTests(unittest.TestCase):
+    """Regression coverage for PLX cash flow, YTD bridges, field visibility and cross-year exceptions."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.snapshot = json.loads(
+            (ROOT / "data" / "financials-PLX.json").read_text(encoding="utf-8")
+        )
+        cls.rows = {row["period"]: row for row in cls.snapshot["items"]}
+        cls.index_url = "https://finance.vietstock.vn/PLX/tai-tai-lieu.htm?doctype=1"
+        cls.flow_fields = (
+            "operating_cash_flow", "investing_cash_flow",
+            "financing_cash_flow", "net_cash_change",
+        )
+        cls.ytd_fields = tuple(field + "_ytd" for field in cls.flow_fields)
+        cls.fx_fields = ("foreign_exchange_effect", "foreign_exchange_effect_ytd")
+
+    @staticmethod
+    def _relative_percent(left, right):
+        return abs(left - right) / max(abs(left), abs(right), 1) * 100
+
+    @classmethod
+    def _within_tolerance(cls, left, right):
+        return cls._relative_percent(left, right) <= 0.01
+
+    def test_plx_has_expected_periods_and_approved_vietstock_sources(self):
+        expected = {
+            "2024-Q1", "2024-Q2", "2024-Q3", "2024-Q4",
+            "2025-Q1", "2025-Q2", "2025-Q3", "2025-Q4",
+            "2026-Q1", "2026-Q2",
+        }
+        self.assertEqual(set(self.rows), expected)
+        self.assertEqual(len(self.rows), 10)
+        for period, row in self.rows.items():
+            with self.subTest(period=period):
+                self.assertEqual(row["symbol"], "PLX")
+                self.assertEqual(row["unit"], "triệu VND")
+                self.assertEqual(row["source_index_url"], self.index_url)
+                self.assertIn("PLX_Baocaotaichinh_", row["source_url"])
+                self.assertTrue(row["source_url"].startswith("https://static2.vietstock.vn/"))
+                self.assertTrue(row["source_archive_file"].startswith("reports/raw/PLX/"))
+                self.assertEqual(row["cashflow_source_reconciliation"]["source_url"], row["source_url"])
+                self.assertEqual(row["cashflow_source_reconciliation"]["relative_tolerance_percent"], 0.01)
+                self.assertTrue(row["cashflow_source_reconciliation"]["selected_values_not_adjusted_for_tolerance"])
+                self.assertTrue(row["cashflow_source_reconciliation"]["no_balancing_plug"])
+
+    def test_plx_nine_periods_pass_flows_and_cash_bridges_within_001_percent(self):
+        complete_periods = sorted(period for period, row in self.rows.items()
+                                  if all(isinstance(row.get(field), (int, float)) and not isinstance(row.get(field), bool)
+                                         for field in self.flow_fields + self.ytd_fields + self.fx_fields
+                                         + ("cash_beginning", "cash_ending")))
+        self.assertEqual(len(complete_periods), 9)
+        for period in complete_periods:
+            with self.subTest(period=period):
+                row = self.rows[period]
+                year, quarter_text = period.split("-Q")
+                quarter = int(quarter_text)
+                quarterly_sum = sum(row[field] for field in self.flow_fields[:3])
+                ytd_sum = sum(row[field] for field in self.ytd_fields[:3])
+                self.assertTrue(self._within_tolerance(quarterly_sum, row["net_cash_change"]))
+                self.assertTrue(self._within_tolerance(ytd_sum, row["net_cash_change_ytd"]))
+                self.assertTrue(self._within_tolerance(
+                    row["cash_beginning"] + row["net_cash_change"] + row["foreign_exchange_effect"],
+                    row["cash_ending"],
+                ))
+                year_open = self.rows[f"{year}-Q1"]["cash_beginning"]
+                self.assertTrue(self._within_tolerance(
+                    year_open + row["net_cash_change_ytd"] + row["foreign_exchange_effect_ytd"],
+                    row["cash_ending"],
+                ))
+                if quarter == 1:
+                    for field in self.flow_fields:
+                        self.assertTrue(self._within_tolerance(row[field], row[field + "_ytd"]))
+                    self.assertTrue(self._within_tolerance(
+                        row["foreign_exchange_effect"], row["foreign_exchange_effect_ytd"]))
+                else:
+                    prior = self.rows[f"{year}-Q{quarter - 1}"]
+                    for field in self.flow_fields:
+                        self.assertTrue(self._within_tolerance(
+                            row[field], row[field + "_ytd"] - prior[field + "_ytd"]))
+                    self.assertTrue(self._within_tolerance(
+                        row["foreign_exchange_effect"],
+                        row["foreign_exchange_effect_ytd"] - prior["foreign_exchange_effect_ytd"],
+                    ))
+                    self.assertTrue(self._within_tolerance(row["cash_beginning"], prior["cash_ending"]))
+
+                rec = row["cashflow_source_reconciliation"]
+                self.assertTrue(rec["quarter_flow_components_within_tolerance"])
+                self.assertTrue(rec["ytd_flow_components_within_tolerance"])
+                self.assertTrue(rec["quarter_cash_bridge_within_tolerance"])
+                self.assertTrue(rec["ytd_cash_bridge_within_tolerance"])
+                self.assertEqual(rec["visual_review"], "ocr_text_reconciled_visual_review_pending")
+
+    def test_plx_source_matched_cashflow_fields_are_allowlisted_and_not_false_rejected(self):
+        flow_keys = self.flow_fields + self.ytd_fields + self.fx_fields
+        balance_keys = ("cash_beginning", "cash_ending")
+        for period, row in self.rows.items():
+            with self.subTest(period=period):
+                extracted = set(row.get("financial_line_items_extracted_fields", []))
+                rejected = set(row.get("financial_line_items_rejected_fields", []))
+                if period == "2026-Q2":
+                    for field in flow_keys:
+                        self.assertIsNone(row.get(field))
+                        self.assertNotIn(field, extracted)
+                    # Opening comes from Q1 close; closing is supported by the Q2 balance sheet.
+                    for field in balance_keys:
+                        self.assertIsInstance(row.get(field), (int, float))
+                        self.assertIn(field, extracted)
+                        self.assertNotIn(field, rejected)
+                    continue
+                for field in flow_keys + balance_keys:
+                    self.assertIsInstance(row.get(field), (int, float))
+                    self.assertNotIsInstance(row.get(field), bool)
+                    self.assertIn(field, extracted)
+                    self.assertNotIn(field, rejected)
+
+    def test_plx_year_boundary_cash_basis_discrepancies_are_preserved_without_plugs(self):
+        cases = (
+            ("2024-Q4", "2025-Q1", 15062136, 14933069, -129067),
+            ("2025-Q4", "2026-Q1", 10803154, 7588240, -3214914),
+        )
+        for previous_period, current_period, previous_close, current_open, expected_residual in cases:
+            with self.subTest(previous_period=previous_period, current_period=current_period):
+                previous = self.rows[previous_period]
+                current = self.rows[current_period]
+                self.assertEqual(previous["cash_ending"], previous_close)
+                self.assertEqual(current["cash_beginning"], current_open)
+                self.assertEqual(current_open - previous_close, expected_residual)
+                self.assertGreater(self._relative_percent(previous_close, current_open), 0.01)
+                rec = current["cashflow_source_reconciliation"]["cross_period_cash_basis"]
+                self.assertEqual(rec["previous_period"], previous_period)
+                self.assertEqual(rec["residual_million_vnd"], expected_residual)
+                self.assertGreater(rec["relative_difference_percent"], 0.01)
+                self.assertEqual(rec["status"], "NEEDS_MANUAL_REVIEW_CROSS_YEAR_CASH_BASIS")
+                self.assertTrue(rec["no_balancing_plug"])
+
+    def test_plx_q2_2026_cashflow_remains_blank_when_archived_ocr_is_unreadable(self):
+        row = self.rows["2026-Q2"]
+        rec = row["cashflow_source_reconciliation"]
+        self.assertEqual(rec["status"], "NEEDS_MANUAL_REVIEW_CASHFLOW_OCR_INCOMPLETE")
+        self.assertEqual(rec["visual_review"], "ocr_text_unreadable_visual_review_pending")
+        for field in self.flow_fields + self.ytd_fields + self.fx_fields:
+            self.assertIsNone(row.get(field))
+        self.assertEqual(row["cash_beginning"], 10034406)
+        self.assertEqual(row["cash_ending"], 6323957)
+        self.assertIn("OCR table on PDF pages 6-7", rec["note"])
+
