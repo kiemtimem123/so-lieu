@@ -1,6 +1,6 @@
 # Quy trình chuẩn hóa dữ liệu tài chính theo từng mảng
 
-Phiên bản: 2.3  
+Phiên bản: 2.4  
 Ngày thiết lập: 2026-10-28  
 Cập nhật gần nhất: 2026-10-29  
 Phạm vi: `kiemtimem123/so-lieu`, dữ liệu BCTC quý từ 2024-Q1 trở đi.
@@ -595,3 +595,18 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 - Regression class `BIDCashFlowNormalizationTests` trong `tests/test_cashflow_bridge.py` bao phủ 10 kỳ, lũy kế/quý riêng, cầu nối tiền, nguồn comparative, FX để null khi không có dòng và dung sai tương đối 0,01%.
 - Cờ manual review chỉ còn cho sai khác nguồn vượt 0,01% (comparative FY2024 và H1/2025). H1/2024 variance đã được chấp nhận vì mỗi residual liên quan không quá 0,01%. Q1/2026 opening-cash residual liên kỳ cũng được chấp nhận trong dung sai. Không có balancing plug.
 - Trạng thái BID: **automation normalized; manual review remains for source reclassifications and source-image review**. Dùng mốc checkpoint để tiếp tục sau khi kiểm thử/đóng gói hoàn tất; không chuyển sang miền dữ liệu khác.
+
+
+## Lượt chuẩn hóa SSI — lưu chuyển tiền tệ (2026-10-29)
+
+### Phục hồi dữ liệu nguồn
+- Snapshot: `data/financials-SSI.json`, 10 kỳ từ 2024-Q1 đến 2026-Q2. Nguồn gốc chỉ lấy từ PDF/ZIP hợp nhất trong danh mục VietstockFinance của SSI.
+- Trường chính được trích từ các dòng tổng của báo cáo lưu chuyển tiền tệ: dòng 60 = CFO thuần, dòng 70 = CFI thuần, dòng 80 = CFF thuần, dòng 90 = biến động tiền thuần, dòng 101 = tiền và tương đương tiền đầu năm, dòng 103 = tiền và tương đương tiền cuối kỳ. Không dùng dòng 30 “lợi nhuận từ hoạt động kinh doanh trước thay đổi vốn lưu động” làm CFO.
+- Q4/2024 được đối chiếu với cột so sánh FY2024 trong BCTC Q4/2025; Q1/2025 với cột so sánh trong BCTC Q1/2026; H1/2025 với cột so sánh trong BCTC Q2/2026. Các dòng tổng LCTT liên quan trùng với cơ sở báo cáo gốc; lịch sử nguồn so sánh vẫn được ghi vào `cashflow_audit_revision`.
+- Đơn vị nguồn là VND; snapshot được lưu bằng triệu VND, làm tròn từng dòng về triệu gần nhất. Số quý riêng Q2–Q4 là YTD hiện tại trừ YTD quý trước cùng năm; Q1 = YTD. CAPEX và cổ tức trả cũng được quarterize bằng cùng quy tắc.
+- Sai lệch số học sau quy đổi được chấp nhận khi tỷ lệ `abs(actual - expected) / max(abs(actual), abs(expected), 1) × 100` không vượt **0,01%**. Residual và đơn vị vẫn lưu trong `cashflow_source_reconciliation`; không sửa số gốc, không ép cộng tuyệt đối và không chèn “plug”.
+- Tất cả 10 kỳ SSI: tổng ba luồng tiền YTD và theo quý, cầu nối tiền YTD và theo quý đều nằm trong ngưỡng 0,01%; số đầu quý bằng số cuối quý trước; số quý riêng khớp chênh lệch YTD. Residual còn lại là số học làm tròn độc lập từ VND sang triệu VND, không phải lý do để thay đổi số nguồn.
+- **Quy tắc đặc thù SSI về dòng 102/104:** BCTC SSI hiển thị thêm các dòng “Ảnh hưởng của thay đổi tỷ giá hối đoái quy đổi ngoại tệ” dưới phần cấu phần tiền đầu kỳ/cuối kỳ. Các dòng đó giải thích chênh lệch giữa tổng tiền và tương đương tiền với hai dòng thành phần, không phải một dòng FX cộng thêm vào dòng 90 để nối số dư tiền. Vì vậy `foreign_exchange_effect` và `foreign_exchange_effect_ytd` trong snapshot được để `null`; các giá trị dòng 102/104 được giữ ở metadata `cash_component_detail_adjustment_line_102_vnd` và `cash_component_detail_adjustment_line_104_vnd`, theo đơn vị VND. Không suy diễn thành một khoản FX cầu nối.
+- Dòng 102 của Q1/2024 trong OCR ghi 2.242.128.854 VND, trong khi hiệu giữa số tổng đầu kỳ và hai cấu phần hiện ra khoảng 2.242.128.654 VND: chênh 200 VND, tỷ lệ dưới 0,01%. Giữ nguyên giá trị trích từ dòng nguồn và ghi chú sai số OCR nhỏ; không tự sửa số.
+- Trạng thái xác minh: **PASS/ACCEPTED_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT về phép tính; NEEDS_VISUAL_REVIEW cho toàn bộ trang nguồn trong lượt này**. Dù số học khớp, chưa tuyên bố ảnh PDF từng trang đã được kiểm tra trực quan; trường dữ liệu vẫn ghi rõ trạng thái OCR chờ xác minh hình ảnh.
+- Regression mới: `SSICashFlowNormalizationTests` trong `tests/test_cashflow_bridge.py`, kiểm tra 10 kỳ, nguồn/index VietstockFinance, so sánh mới hơn, chênh YTD/quý, hai lớp cầu nối, residual 0,01%, metadata dòng 102/104 và bảo đảm không có balancing plug.
