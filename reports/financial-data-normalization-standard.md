@@ -714,3 +714,14 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 4. **Không nạp lại mã đã đạt:** lần tiếp tục đọc checkpoint trước, bỏ qua dữ liệu/mã đã có trạng thái PASS phù hợp với đúng domain và version quy trình. Chỉ đọc lại khi có yêu cầu sửa cụ thể, nguồn mới, thay đổi chuẩn có ảnh hưởng tới mã đó, hoặc kiểm thử hồi quy phát hiện lỗi. Không tải/parse lại PDF, OCR hoặc snapshot đã đạt chỉ để lặp lại công việc.
 5. **Một mã mỗi lượt:** xử lý mã đang hoạt động đến khi đạt hoặc gắn trạng thái manual review có lý do và checkpoint bền vững; sau đó mới chuyển mã kế tiếp. Manual review không được báo là PASS hoàn toàn, nhưng có thể đóng phần tự động nếu dữ liệu và kiểm thử số học đạt.
 6. **Trạng thái cần phân biệt:** `PASS` (đủ điều kiện), `PASS_WITHIN_TOLERANCE` (chỉ residual số học ≤0,01%), `NEEDS_MANUAL_REVIEW` (mâu thuẫn nguồn/semantic hoặc bằng chứng còn thiếu), và `FAILED` (lỗi số học vượt dung sai hoặc schema/test lỗi). Ghi rõ điều kiện nào đã đạt và điều kiện nào còn treo.
+
+## Lượt kiểm tra IDC — lưu chuyển tiền tệ (2026-10-30)
+
+- Snapshot: 10 kỳ 2024-Q1 đến 2026-Q2; nguồn duy nhất là danh mục VietstockFinance IDC và PDF/ZIP được liên kết.
+- Comparative được ưu tiên theo báo cáo mới hơn: Q1/2024 từ Q1/2025; H1/2024 từ Q2/2025; 9T/2024 từ Q3/2025; FY2024 từ Q4/2025; H1/2025 từ comparative “As restated - Note 41” trong Q2/2026.
+- Số nguồn chính xác (VND) lưu trong `cashflow_source_reconciliation.selected_values_raw_vnd`; dữ liệu hiển thị chuẩn hóa về triệu VND. Quý II–IV riêng = YTD kỳ hiện tại trừ YTD kỳ trước cùng năm; Q1 riêng bằng YTD Q1. Đặt `cashflow_period_basis=quarterly_normalized_from_ytd` để giao diện dùng số quý đã chuẩn hóa.
+- H1/2025 thay đổi phân loại CFO/CFI: CFO YTD giảm 525.837.250.014 VND và CFI YTD tăng cùng lượng; CFF/net cash/FX không đổi. Giá trị cũ và cơ sở mới đều được lưu.
+- Cầu nối FY2024 và FY2025 lệch 28.692.943 VND (dưới dung sai tương đối 0,01%); giữ nguyên residual, không thêm plug.
+- Q2/2026 ghi tiền đầu năm 553.943.475.131 VND, trong khi cuối FY2025 là 553.052.678.239 VND; chênh 890.796.892 VND (~0,161%), vượt dung sai. Cầu nối YTD của báo cáo Q2/2026 tự khớp, cầu nối riêng Q2 chưa khớp do cơ sở tiền đầu năm khác FY2025; giữ cả hai số để rà soát.
+- Sidecar OCR đã lưu được tái sử dụng; chưa xác minh trực tiếp bằng ảnh PDF. Snapshot hiện có dữ liệu đến Q2/2026. Đã tìm báo cáo Q3/2026 trên danh mục VietstockFinance nhưng trang nguồn không trả nội dung và chưa xác nhận được URL trực tiếp từ danh mục; không kết luận rằng báo cáo Q3 chưa công bố.
+

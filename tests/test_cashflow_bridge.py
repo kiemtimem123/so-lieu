@@ -3190,3 +3190,131 @@ class PLXCashFlowNormalizationTests(unittest.TestCase):
         self.assertEqual(row["cash_ending"], 6323957)
         self.assertIn("OCR table on PDF pages 6-7", rec["note"])
 
+class IDCCashFlowNormalizationTests(unittest.TestCase):
+    """IDC cash-flow source precedence, quarter/YTD math and cash-basis exception tests."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.snapshot = json.loads((ROOT / "data" / "financials-IDC.json").read_text(encoding="utf-8"))
+        cls.rows = {row["period"]: row for row in cls.snapshot["items"]}
+        cls.expected_periods = {"2024-Q1", "2024-Q2", "2024-Q3", "2024-Q4", "2025-Q1", "2025-Q2", "2025-Q3", "2025-Q4", "2026-Q1", "2026-Q2"}
+        cls.flow_fields = ("operating_cash_flow", "investing_cash_flow", "financing_cash_flow", "net_cash_change")
+        cls.ytd_fields = tuple(field + "_ytd" for field in cls.flow_fields)
+
+    @staticmethod
+    def _relative_percent(left, right):
+        return abs(left - right) / max(abs(left), abs(right), 1) * 100
+
+    @classmethod
+    def _within_tolerance(cls, left, right):
+        return cls._relative_percent(left, right) <= 0.01
+
+    def test_idc_expected_periods_source_and_units(self):
+        self.assertEqual(set(self.rows), self.expected_periods)
+        self.assertEqual(len(self.snapshot["items"]), 10)
+        for period, row in self.rows.items():
+            with self.subTest(period=period):
+                self.assertEqual(row["symbol"], "IDC")
+                self.assertEqual(row["unit"], "triệu VND")
+                self.assertEqual(row["source_index_url"], "https://finance.vietstock.vn/IDC/tai-tai-lieu.htm?doctype=1")
+                self.assertTrue(row["source_url"].startswith("https://static2.vietstock.vn/"))
+                self.assertTrue(row["source_archive_file"].startswith("reports/raw/IDC/"))
+                rec = row["cashflow_source_reconciliation"]
+                self.assertEqual(rec["original_period_source_url"], row["source_url"])
+                self.assertEqual(rec["relative_tolerance_percent"], 0.01)
+                self.assertTrue(rec["selected_values_not_adjusted_for_tolerance"])
+                self.assertTrue(rec["no_balancing_plug"])
+                self.assertIn("static2.vietstock.vn", rec["selected_cashflow_source_url"])
+                self.assertTrue(rec["selected_cashflow_source_archive_file"].startswith("reports/raw/IDC/"))
+
+    def test_idc_quarter_and_ytd_components_sum_to_net_change(self):
+        for period, row in self.rows.items():
+            with self.subTest(period=period):
+                rec = row["cashflow_source_reconciliation"]
+                q_sum = sum(row[k] for k in self.flow_fields[:3])
+                ytd_sum = sum(row[k] for k in self.ytd_fields[:3])
+                self.assertTrue(self._within_tolerance(q_sum, row["net_cash_change"]))
+                self.assertTrue(self._within_tolerance(ytd_sum, row["net_cash_change_ytd"]))
+                self.assertTrue(rec["quarter_flow_components_within_tolerance"])
+                self.assertTrue(rec["ytd_flow_components_within_tolerance"])
+                raw = rec["selected_values_raw_vnd"]
+                self.assertEqual(raw["quarter"]["cfo"] + raw["quarter"]["cfi"] + raw["quarter"]["cff"], raw["quarter"]["net_cash_change"])
+                self.assertEqual(raw["ytd"]["cfo"] + raw["ytd"]["cfi"] + raw["ytd"]["cff"], raw["ytd"]["net_cash_change"])
+
+    def test_idc_ytd_cash_bridge_and_quarter_cash_bridge(self):
+        for period, row in self.rows.items():
+            with self.subTest(period=period):
+                rec = row["cashflow_source_reconciliation"]
+                raw = rec["selected_values_raw_vnd"]
+                ytd = raw["ytd"]
+                ytd_expected = ytd["cash_beginning"] + ytd["net_cash_change"] + ytd["fx"]
+                ytd_residual = ytd["cash_ending"] - ytd_expected
+                self.assertEqual(ytd_residual, rec["calculations"]["ytd_cash_bridge_residual_raw_vnd"])
+                self.assertTrue(rec["ytd_cash_bridge_within_tolerance"])
+                q = raw["quarter"]
+                q_expected = q["cash_beginning"] + q["net_cash_change"] + q["fx"]
+                q_residual = q["cash_ending"] - q_expected
+                self.assertEqual(q_residual, rec["calculations"]["quarter_cash_bridge_residual_raw_vnd"])
+                if period == "2026-Q2":
+                    self.assertGreater(self._relative_percent(q["cash_ending"], q_expected), 0.01)
+                    self.assertFalse(rec["quarter_cash_bridge_within_tolerance"])
+                    self.assertEqual(rec["status"], "NEEDS_MANUAL_REVIEW_CROSS_PERIOD_CASH_BASIS_AND_VISUAL_PENDING")
+                else:
+                    self.assertTrue(rec["quarter_cash_bridge_within_tolerance"])
+
+    def test_idc_quarter_flows_equal_ytd_deltas_and_intra_year_cash_continuity(self):
+        for period, row in self.rows.items():
+            year, quarter_text = period.split("-Q")
+            quarter = int(quarter_text)
+            prior = self.rows.get(f"{year}-Q{quarter-1}") if quarter > 1 else None
+            with self.subTest(period=period):
+                raw = row["cashflow_source_reconciliation"]["selected_values_raw_vnd"]
+                qraw, yraw = raw["quarter"], raw["ytd"]
+                if prior:
+                    praw = prior["cashflow_source_reconciliation"]["selected_values_raw_vnd"]["ytd"]
+                    for field in ("cfo", "cfi", "cff", "net_cash_change", "fx"):
+                        self.assertEqual(qraw[field], yraw[field] - praw[field])
+                    self.assertEqual(qraw["cash_beginning"], praw["cash_ending"])
+                    self.assertEqual(row["cash_beginning"], prior["cash_ending"])
+                else:
+                    for field in ("cfo", "cfi", "cff", "net_cash_change", "fx"):
+                        self.assertEqual(qraw[field], yraw[field])
+
+    def test_idc_ytd_opening_is_separate_and_2026_q2_exception_preserved(self):
+        row = self.rows["2026-Q2"]
+        rec = row["cashflow_source_reconciliation"]
+        cross = rec["cross_period_cash_basis"]
+        self.assertEqual(row["cash_beginning"], 800729)
+        self.assertEqual(row["cash_beginning_reported_ytd"], 553943)
+        self.assertEqual(row["cash_ending"], 608685)
+        self.assertEqual(row["cash_and_equivalents"], 608685)
+        self.assertEqual(cross["prior_year_end_cash_raw_vnd"], 553052678239)
+        self.assertEqual(cross["source_reported_ytd_open_raw_vnd"], 553943475131)
+        self.assertEqual(cross["residual_raw_vnd"], 890796892)
+        self.assertGreater(cross["relative_difference_percent"], 0.01)
+        self.assertTrue(cross["no_balancing_plug"])
+
+    def test_idc_h1_source_revision_history_is_preserved(self):
+        h124 = self.rows["2024-Q2"]["cashflow_source_reconciliation"]["source_revision"]
+        self.assertEqual(h124["prior_source"], "2024-Q2 original report")
+        self.assertEqual(h124["selected_minus_prior_ytd_values_raw_vnd"]["cfo"], 27887768541)
+        self.assertEqual(h124["selected_minus_prior_ytd_values_raw_vnd"]["cfi"], -27887762007)
+        h125 = self.rows["2025-Q2"]["cashflow_source_reconciliation"]["source_revision"]
+        self.assertEqual(h125["selected_minus_prior_ytd_values_raw_vnd"]["cfo"], -525837250014)
+        self.assertEqual(h125["selected_minus_prior_ytd_values_raw_vnd"]["cfi"], 525837250014)
+        self.assertEqual(h125["selected_minus_prior_ytd_values_raw_vnd"]["net"], 0)
+        self.assertEqual(h125["selected_minus_prior_ytd_values_raw_vnd"]["cff"], 0)
+        self.assertIn("As restated", self.rows["2025-Q2"]["cashflow_source_reconciliation"]["selected_cashflow_source_basis"])
+
+    def test_idc_cashflow_fields_are_allowlisted_and_not_false_rejected(self):
+        fields = self.flow_fields + self.ytd_fields + ("foreign_exchange_effect", "foreign_exchange_effect_ytd", "cash_beginning", "cash_ending", "cash_beginning_reported_ytd", "cash_ending_reported_ytd")
+        for period, row in self.rows.items():
+            with self.subTest(period=period):
+                extracted = set(row.get("financial_line_items_extracted_fields", []))
+                rejected = set(row.get("financial_line_items_rejected_fields", []))
+                for field in fields:
+                    self.assertIsInstance(row.get(field), (int, float))
+                    self.assertNotIsInstance(row.get(field), bool)
+                    self.assertIn(field, extracted)
+                    self.assertNotIn(field, rejected)
+
