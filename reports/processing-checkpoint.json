@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-28T21:24:27.768Z",
+  "updatedAt": "2026-10-29T11:48:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -295,15 +295,22 @@
       "firstQuarter": "2024-Q1",
       "lastQuarter": "2026-Q2",
       "pendingCorePeriods": [],
-      "terminalManualReviewPeriods": [],
+      "terminalManualReviewPeriods": [
+        "2024-Q2",
+        "2024-Q3",
+        "2024-Q4",
+        "2025-Q2",
+        "2025-Q3"
+      ],
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
-      "statementPagesPending": false,
+      "statementPagesPending": true,
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-10-25T20:43:05Z",
-      "snapshotFetchedAt": "2026-10-24T06:50:00Z"
+      "updatedAt": "2026-10-29T04:48:00Z",
+      "snapshotFetchedAt": "2026-10-29T05:00:00Z",
+      "note": "Cash-flow automation completed; arithmetic bridges pass after Q1/2026 ending cash OCR correction. Source reclassification and original Q3/2024 net-row visual review remain manual items."
     },
     "BID": {
       "status": "automated_processing_complete",
@@ -1437,9 +1444,9 @@
     "standardVersion": "2.1",
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
-    "activeSymbol": "CTG",
+    "activeSymbol": "BID",
     "status": "in_progress_next_ticker",
-    "lastUpdatedAt": "2026-10-28T21:24:27.768Z",
+    "lastUpdatedAt": "2026-10-29T11:48:00+07:00",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1630,7 +1637,15 @@
       "STB regression test commit validation run 40771146385 SUCCESS; all cash-flow bridge regression tests, JavaScript syntax, JSON snapshot validation and OMO wiring/source-definition checks PASS.",
       "STB standard document version 2.1 validation run 40771246136 SUCCESS; checkpoint run 40771324652 SUCCESS. Relative tolerance policy is 0.01%, and remaining source discrepancies are explicitly marked.",
       "STB complete for automated cash-flow processing: 10 periods normalized, test suite and standard v2.1 saved; CI validates snapshot JSON, cash-flow regression, JS syntax and source wiring; quarterly snapshot validation and Hostinger package all PASS.",
-      "VCB was not auto-processed because the existing checkpoint has an explicit user-directed skip for unverified figures in all 10 periods (`skipUnconfirmedAutomation=true`). Existing uncertainty is not converted into new values; continue the ticker queue and preserve VCB manual-review state."
+      "VCB was not auto-processed because the existing checkpoint has an explicit user-directed skip for unverified figures in all 10 periods (`skipUnconfirmedAutomation=true`). Existing uncertainty is not converted into new values; continue the ticker queue and preserve VCB manual-review state.",
+      "CTG: normalized all 10 periods 2024-Q1 through 2026-Q2 from VietstockFinance-linked consolidated B04/B04a sources; restored CFO, CFI, CFF, net cash, opening/closing cash and FX.",
+      "CTG: automated tests confirm quarter and YTD flow sums, FX-aware cash bridges, quarterly values equal YTD differences, and adjacent-quarter cash continuity across year boundaries all reconcile after source corrections.",
+      "CTG: visually checked Q1/2026 PDF pages printed 6-8; page 8 confirms ending cash 578,995,009 million VND. Corrected prior OCR misread 578,095,009; the apparent -/+900,000 million VND discrepancy is not a source cash-balance exception.",
+      "CTG: later comparatives selected for H1/2024, 9M/2024, FY2024, Q1/2025 and H1/2025. Source history and >0.01% line reclassifications preserved; original Q3/2024 net-row OCR candidate remains manual review.",
+      "Added CTGCashFlowNormalizationTests, aligned ACB/CTG OCR-correction metadata assertions, documented CTG normalization and manual-review items in standard v2.2.",
+      "Validate Site and Data run 40821147681 SUCCESS after final CTG test updates: cash-flow bridge regression, script syntax, JSON snapshots and source-wiring checks PASS.",
+      "Validate quarterly financial data run 40820705474 SUCCESS on CTG snapshot normalization commit; quarterly snapshot validation and bank reconciliation regressions PASS.",
+      "Package Hostinger Stock Dashboard run 40820705636 SUCCESS on CTG snapshot normalization commit."
     ],
     "unresolved": [
       "NLG NEEDS_MANUAL_REVIEW — H1/2024 selected later comparative in Q2/2025 reclassifies CFO/CFI versus the original Q2/2024 source by >0.01%; net cash movement and cash balances remain unchanged. Preserve both source bases and selected later comparative; do not plug.",
@@ -1668,10 +1683,13 @@
       "VPB NEEDS_MANUAL_REVIEW — H1/2026 OCR candidate net cash 6,949,765 vs source-backed CFO 42,064,417 + CFI -1,149,285 + CFF -3,965,367 = 36,949,765 million VND; difference 30,000,000 million VND (~81.19%, above 0.01%). The source PDF net row and ending balance were not visually confirmed. Keep net/cash-ending fields blank, preserve candidate as rejected evidence, no plug. Q3/2026 YTD reconciles but standalone opening-cash bridge remains pending H1/2026 review.",
       "STB 2024-Q2: later H1/2024 comparative in Q2/2025 report revises CFO by +11,679 and CFI by -11,678 million VND versus the earlier H1/2024 snapshot; line-level relative differences exceed 0.01%, although net cash and bridge are unchanged. Keep later comparative selected and preserve source history; manual review remains.",
       "STB 2024-Q3/Q4 FX source basis: Q3/2025 comparator shows 9M/2024 FX -8,227 versus original Q3/2024 -6,227 million VND. YTD and Q3-quarter bridge residual +2,000 million VND and Q4 residual -2,000 million VND are each below 0.01% of ending cash and may be accepted without a plug, but the FX line reclassification exceeds 0.01% of the FX amount and remains manual review.",
-      "STB 2026-Q2: source OCR CFO -41,480,644 + CFI -47,599 + CFF -1,468,762 = -42,997,005 million VND, versus reported net -43,097,005; residual 100,000 million VND (0.2320% YTD; 0.6369% standalone quarter), above 0.01%. Preserve candidates and mark review; net and cash bridge reconcile, no source value or plug inserted. Direct PDF image was inaccessible to the current source viewer, so do not claim visual verification."
+      "STB 2026-Q2: source OCR CFO -41,480,644 + CFI -47,599 + CFF -1,468,762 = -42,997,005 million VND, versus reported net -43,097,005; residual 100,000 million VND (0.2320% YTD; 0.6369% standalone quarter), above 0.01%. Preserve candidates and mark review; net and cash bridge reconcile, no source value or plug inserted. Direct PDF image was inaccessible to the current source viewer, so do not claim visual verification.",
+      "CTG NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT — H1/2024 later comparative changes CFO/CFI while net cash, FX and closing cash remain unchanged. Both source bases are retained.",
+      "CTG NEEDS_MANUAL_REVIEW_SOURCE_NET_ROW_DIFF_GT_0_01_PERCENT — original Q3/2024 OCR candidate net 99,013,649 conflicts with source components/bridge and later Q3/2025 comparative net 99,913,649. Latest comparative selected; direct image of original net line remains to be inspected.",
+      "CTG NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT — FY2024 and H1/2025 comparative sources reclassify CFO/CFI by >0.01%; latest comparisons are selected and older values retained. Standalone Q3/2025 is derived against the later H1/2025 basis."
     ],
-    "nextStep": "VCB remains skipped under its prior user-directed instruction because all 10 periods are flagged stale/unconfirmed; do not automatically promote OCR candidates. Continue cash-flow normalization with CTG as the next eligible ticker. Source only: VietstockFinance document catalog and linked consolidated PDF/ZIP. Apply relative tolerance 0.01%, preserve source values, and do not infer missing flow components.",
-    "previousCompletedSymbol": "STB",
+    "nextStep": "CTG automated cash-flow normalization is saved. Continue with BID as the next eligible ticker in the same cash-flow domain (VCB remains skipped under the prior user-directed instruction). Start from data/financials-BID.json and existing reports/raw/BID archives; select consolidated VietstockFinance statement sources, apply the 0.01% relative arithmetic tolerance, preserve old/new source basis, and process one ticker at a time.",
+    "previousCompletedSymbol": "CTG",
     "validationRuns": [
       {
         "name": "Validate Site and Data",
@@ -1758,7 +1776,7 @@
         "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40771324652"
       }
     ],
-    "lastCompletedSymbol": "FPT",
-    "nextSymbolHint": "VPB"
+    "lastCompletedSymbol": "CTG",
+    "nextSymbolHint": "BID"
   }
 }
