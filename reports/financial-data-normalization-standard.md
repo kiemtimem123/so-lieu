@@ -1,6 +1,6 @@
 # Quy trình chuẩn hóa dữ liệu tài chính theo từng mảng
 
-Phiên bản: 2.2  
+Phiên bản: 2.3  
 Ngày thiết lập: 2026-10-28  
 Cập nhật gần nhất: 2026-10-29  
 Phạm vi: `kiemtimem123/so-lieu`, dữ liệu BCTC quý từ 2024-Q1 trở đi.
@@ -574,3 +574,24 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 - Kiểm thử hồi quy tái sử dụng: `CTGCashFlowNormalizationTests` trong `tests/test_cashflow_bridge.py`, bao phủ 10 kỳ, YTD/quý, FX-aware cash bridge, nguồn comparative, correction OCR Q1/2026 và các cờ manual review.
 - Quy tắc dung sai được áp dụng đúng phạm vi: residual số học tương đối ≤0,01% có thể chấp nhận và vẫn lưu metadata; sự khác nhau của một dòng do nguồn/ phân loại >0,01%, OCR không chắc hoặc thiếu trang vẫn phải rà soát thủ công. Không dùng ngưỡng dung sai để che lỗi OCR.
 - Trạng thái CTG: **automation complete; manual-review remaining**. Theo hàng đợi hiện tại, VCB tiếp tục bỏ qua theo chỉ dẫn đã lưu; mã tiếp theo là **BID** trong cùng mảng lưu chuyển tiền tệ.
+
+
+## Lượt chuẩn hóa BID — lưu chuyển tiền tệ (2026-10-29)
+
+### Phục hồi dòng tiền và nguồn so sánh
+- Snapshot: `data/financials-BID.json`, 10 kỳ từ 2024-Q1 đến 2026-Q2. Nguồn được dùng là các báo cáo hợp nhất PDF/ZIP liên kết trong danh mục VietstockFinance của BID.
+- Sửa nguyên nhân gốc: các bản ghi cũ có trường trống/bị loại hoặc dùng nhầm dòng **“Lưu chuyển tiền thuần từ hoạt động kinh doanh trước những thay đổi về tài sản và vốn lưu động”** thành CFO cuối nhóm. Quy tắc cố định: chỉ lấy dòng tổng cuối nhóm I (CFO), II (CFI), III (CFF) và IV (net cash change); không dùng subtotal trước thay đổi tài sản/công nợ.
+- Khôi phục đủ CFO, CFI, CFF, net cash change, tiền đầu/cuối kỳ cho 10 kỳ. Số quý riêng Q2–Q4 tính bằng YTD kỳ hiện tại trừ YTD quý trước cùng năm; các trường YTD giữ đúng cột lũy kế của nguồn đã chọn.
+- Báo cáo BID được kiểm tra trong lượt này không có dòng điều chỉnh ảnh hưởng tỷ giá tách riêng trong LCTT; vì vậy `foreign_exchange_effect` và `foreign_exchange_effect_ytd` để null, không suy diễn 0 hay tự tạo một khoản FX. Phép kiểm tra cầu nối dùng FX bằng 0 chỉ khi trường nguồn không có dòng FX, trong khi metadata vẫn nêu rõ trường chưa được báo cáo.
+- Comparative H1/2024 từ Q2/2025 được chọn vì sai khác với báo cáo Q2/2024 cũ đều không quá 0,01%: CFO khoảng 0,00985%, net cash khoảng 0,00996%, số dư cuối kỳ khoảng 0,0017%. Sai khác được chấp nhận và lưu metadata, không sửa số nguồn.
+- Comparative FY2024 từ Q4/2025 được chọn để chuẩn hóa Q4/2024. Báo cáo sau thay đổi đáng kể cách phân loại các luồng tiền CFO/CFI/CFF so với bản Q4/2024 cũ; các sai khác vượt 0,01%, nên trạng thái vẫn **NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT**. Hai cơ sở nguồn đều được lưu trong audit metadata.
+- Comparative H1/2025 từ Q2/2026 được chọn. CFI đổi từ -869.550 sang -867.517 triệu VND (khoảng 0,234%, vượt ngưỡng); sai khác được giữ để rà soát thủ công. CFO và net/ending chênh trong ngưỡng 0,01%, không được dùng để che việc phân loại CFI đã đổi. Q3/2025 đứng trên cùng cơ sở H1/2025 mới hơn và cũng được đánh dấu cần review.
+- Q1/2026 mở đầu bằng 530.277.690 triệu VND, thấp hơn 18.308 triệu so với số cuối FY2025 được chọn là 530.295.998. Sai khác tương đối khoảng 0,00345%, nên nằm trong dung sai 0,01%; giữ nguyên cả hai giá trị đã báo cáo, lưu residual và không đồng bộ cưỡng bức.
+- Trạng thái nguồn: sidecar OCR của các PDF/ZIP đã được đối chiếu số học. Một số PDF BID có kích thước vượt khả năng mở trực tiếp của bộ xem trong lượt này; do đó các kỳ đều giữ cờ `ocr_text_reconciled_visual_review_pending`. Không tuyên bố đã xác minh trực quan toàn bộ ảnh trang nguồn.
+
+### Kiểm định và ngoại lệ
+- 10/10 kỳ: CFO + CFI + CFF bằng net cash change ở cấp quý riêng và YTD.
+- 10/10 kỳ: cầu nối tiền YTD và quý riêng khớp theo số nguồn đã chọn; số quý riêng bằng hiệu YTD; các trường LCTT được đưa vào `financial_line_items_extracted_fields` và gỡ khỏi danh sách trường bị loại để UI không ẩn số đã phục hồi.
+- Regression class `BIDCashFlowNormalizationTests` trong `tests/test_cashflow_bridge.py` bao phủ 10 kỳ, lũy kế/quý riêng, cầu nối tiền, nguồn comparative, FX để null khi không có dòng và dung sai tương đối 0,01%.
+- Cờ manual review chỉ còn cho sai khác nguồn vượt 0,01% (comparative FY2024 và H1/2025). H1/2024 variance đã được chấp nhận vì mỗi residual liên quan không quá 0,01%. Q1/2026 opening-cash residual liên kỳ cũng được chấp nhận trong dung sai. Không có balancing plug.
+- Trạng thái BID: **automation normalized; manual review remains for source reclassifications and source-image review**. Dùng mốc checkpoint để tiếp tục sau khi kiểm thử/đóng gói hoàn tất; không chuyển sang miền dữ liệu khác.
