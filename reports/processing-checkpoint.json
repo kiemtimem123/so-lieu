@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-29T21:45:00+07:00",
+  "updatedAt": "2026-10-29T21:50:00+07:00",
   "processingMode": "one_ticker_at_a_time_checkpoint_on_pass_no_reload_of_passed_data",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -1457,8 +1457,8 @@
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
     "activeSymbol": "DPG",
-    "status": "in_progress_next_ticker",
-    "lastUpdatedAt": "2026-10-29T21:45:00+07:00",
+    "status": "in_progress_source_review",
+    "lastUpdatedAt": "2026-10-29T21:50:00+07:00",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1777,7 +1777,7 @@
       "HHV NEEDS_MANUAL_REVIEW_CROSS_PERIOD_CASH_BASIS_GT_0_01_PERCENT — Q2/2026 YTD opening cash differs from FY2025 close by -15,039,846,885 VND; Q2 standalone bridge residual against Q1 close is -15,039,808,794 VND (~2.96%). Keep both printed source balances and no balancing plug.",
       "HHV source-page direct image review remains pending because the direct PDF viewer could not render the archived VietstockFinance PDFs; OCR sidecars and arithmetic checks are not presented as visual verification."
     ],
-    "nextStep": "Continue DPG cash-flow only. Inspect existing checkpoint and DPG snapshot/sidecars without reprocessing already-passed periods. Apply standard v2.7; accept pure arithmetic residuals <=0.01% while retaining them, but keep material source reclassification, unit/period/consolidation mismatch and cash-basis conflicts >0.01% under manual review. When DPG passes, immediately commit its ticker checkpoint and validations, then continue to the next ticker.",
+    "nextStep": "DPG is the active ticker. Existing report PDFs and extracted sidecars are already archived under reports/raw/DPG; reuse these files, do not download or OCR again unless a specific page/value remains unresolved. Snapshot has 10 periods but cash-flow fields are missing/rejected for most periods. Recover only from existing VietstockFinance sidecars and source pages, apply <=0.01% arithmetic tolerance with residual recorded, run DPG regression checks, then immediately commit a per-ticker checkpoint before moving on.",
     "previousCompletedSymbol": "HHV",
     "validationRuns": [
       {
@@ -2004,7 +2004,15 @@
       "Accept arithmetic discrepancies at or below 0.01% relative error, retain the residual and ratio in metadata, and do not insert a balancing plug.",
       "For each ticker that passes the required checks, commit a durable checkpoint immediately before starting the next ticker.",
       "Do not reload, re-OCR, or re-parse data already passed under the current standard unless a new source, explicit correction, standard change affecting it, or regression failure requires reopening."
-    ]
+    ],
+    "activeTickerFindings": {
+      "ticker": "DPG",
+      "periods": 10,
+      "existingArchives": "reports/raw/DPG/auto-dpg-20261021/ and reports/raw/DPG/repair-dpg-2025q2-full-report/",
+      "snapshotIssue": "Cash-flow values are missing/rejected in most periods; several rows have incomplete or suspiciously mapped cash balances. Do not assume the existing extracted fields are passed.",
+      "sourcePolicy": "Only VietstockFinance document index and linked official quarterly reports.",
+      "reloadRule": "Reuse existing archived PDF and .extracted.json sidecars; no re-download/re-OCR unless unresolved specific evidence requires it."
+    }
   },
   "nextSymbolHint": "HHV"
 }
