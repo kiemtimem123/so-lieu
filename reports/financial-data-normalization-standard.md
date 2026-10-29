@@ -1,6 +1,6 @@
 # Quy trình chuẩn hóa dữ liệu tài chính theo từng mảng
 
-Phiên bản: 2.4  
+Phiên bản: 2.5  
 Ngày thiết lập: 2026-10-28  
 Cập nhật gần nhất: 2026-10-29  
 Phạm vi: `kiemtimem123/so-lieu`, dữ liệu BCTC quý từ 2024-Q1 trở đi.
@@ -610,3 +610,18 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 - Dòng 102 của Q1/2024 trong OCR ghi 2.242.128.854 VND, trong khi hiệu giữa số tổng đầu kỳ và hai cấu phần hiện ra khoảng 2.242.128.654 VND: chênh 200 VND, tỷ lệ dưới 0,01%. Giữ nguyên giá trị trích từ dòng nguồn và ghi chú sai số OCR nhỏ; không tự sửa số.
 - Trạng thái xác minh: **PASS/ACCEPTED_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT về phép tính; NEEDS_VISUAL_REVIEW cho toàn bộ trang nguồn trong lượt này**. Dù số học khớp, chưa tuyên bố ảnh PDF từng trang đã được kiểm tra trực quan; trường dữ liệu vẫn ghi rõ trạng thái OCR chờ xác minh hình ảnh.
 - Regression mới: `SSICashFlowNormalizationTests` trong `tests/test_cashflow_bridge.py`, kiểm tra 10 kỳ, nguồn/index VietstockFinance, so sánh mới hơn, chênh YTD/quý, hai lớp cầu nối, residual 0,01%, metadata dòng 102/104 và bảo đảm không có balancing plug.
+
+
+## Lượt chuẩn hóa VDS — lưu chuyển tiền tệ (2026-10-29)
+
+### Sửa ánh xạ dòng tổng và chuẩn hóa 10 kỳ
+- Snapshot: `data/financials-VDS.json`, 2024-Q1 đến 2026-Q2. Nguồn duy nhất: báo cáo hợp nhất được lưu từ danh mục VietstockFinance của VDS. Tất cả giá trị snapshot là triệu VND; số nguồn nguyên bản giữ trong metadata và archive PDF/ZIP.
+- Dùng đúng dòng tổng cuối mỗi nhóm: dòng 60 CFO thuần, dòng 70 CFI thuần, dòng 80 CFF thuần, dòng 90 biến động tiền thuần, dòng 101 tiền và tương đương tiền đầu năm, dòng 103 cuối kỳ. Không dùng riêng dòng 61 mua sắm TSCĐ làm toàn bộ CFI, cũng không dùng các cấu phần thu/chi vay làm CFF.
+- Q1/Q2/Q3/FY2024 đã được so với các cột so sánh trong báo cáo Q1/Q2/Q3/Q4 năm 2025; Q1/2025 và H1/2025 đã so với cột so sánh trong Q1/Q2 năm 2026. Các nguồn mới hơn được ưu tiên khi có; lịch sử nguồn và số gốc cũ được bảo lưu trong `cashflow_audit_revision`.
+- **Ngoại lệ nguồn cần rà soát:** cột H1/2024 so sánh trong BCTC Q2/2025 đổi cách phân loại CFI/CFF so với BCTC Q2/2024 gốc. CFI YTD chuyển từ -22.707.469.615 lên -9.707.469.615 VND (khác khoảng 57,25% theo mẫu số lớn hơn); CFF YTD chuyển từ 372.500.000.000 xuống 359.500.000.000 VND (khác khoảng 3,49%). Biến động tiền thuần YTD giữ nguyên -201.926.546.392 VND, và cầu nối số dư tiền vẫn đúng. Chọn cột so sánh mới hơn cho H1/2024 nhưng đánh dấu **NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT** ở Q2/2024.
+- Cột so sánh 9M/2024 trong Q3/2025 dùng cơ sở CFI/CFF khác với cơ sở H1/2024 trong Q2/2025. Q3/2024 standalone phải tính bằng YTD 9M đã chọn trừ H1/2024 đã chọn; trường Q3 vì vậy cũng được đánh dấu rà soát thủ công, dù tổng dòng tiền và cầu nối số dư vẫn trong ngưỡng. Không lấy một cột gốc cũ để âm thầm trộn với cột so sánh mới; không chèn khoản cân bằng.
+- Q4/2024 FY YTD, Q1/2025 và H1/2025 comparatives từ báo cáo phát hành sau khớp các dòng tổng cốt lõi với báo cáo kỳ gốc. Nguồn được lưu trong metadata để lần rà soát sau có thể truy nguyên.
+- Snapshot được chuẩn hóa lại đủ 10 kỳ: dòng tiền quý riêng bằng hiệu YTD liên tiếp; cầu nối tiền đầu/cuối kỳ; nguồn gốc và đơn vị; các trường dữ liệu được thêm vào `financial_line_items_extracted_fields` và gỡ khỏi danh sách bị loại. Các trường `foreign_exchange_effect` và `foreign_exchange_effect_ytd` để `null`, vì dòng FX 102/104 trống trong các trang nguồn LCTT được kiểm tra; không được tự suy diễn.
+- Áp dụng ngưỡng tương đối **0,01%** cho residual số học sau khi quy đổi VND sang triệu VND. Residual 1–2 triệu VND tương đối nhỏ được giữ nguyên trong metadata và chấp nhận; số liệu nguồn không bị sửa và không có balancing plug.
+- Regression class `VDSCashFlowNormalizationTests` trong `tests/test_cashflow_bridge.py` bao phủ 10 kỳ, tổng CFO/CFI/CFF, net cash change, cầu nối tiền YTD/quý, quarter=YTD delta, nguồn comparative mới hơn, ngoại lệ reclassification H1/2024 và dung sai 0,01%.
+- Trạng thái cuối: **PASS về phép tính và ánh xạ dòng tổng; NEEDS_MANUAL_REVIEW** cho ngoại lệ reclassification H1/2024/9M2024 và xác minh hình ảnh PDF. Các trang đã trích xuất từ OCR, chưa tuyên bố là đã kiểm tra trực quan đầy đủ.
