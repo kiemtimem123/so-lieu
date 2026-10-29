@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-29T21:05:00+07:00",
-  "processingMode": "one stock ticker at a time; one report per workflow run",
+  "updatedAt": "2026-10-29T21:45:00+07:00",
+  "processingMode": "one_ticker_at_a_time_checkpoint_on_pass_no_reload_of_passed_data",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
   "quarterRetentionTarget": 12,
@@ -42,7 +42,7 @@
   "lastCompletedSymbol": "NVL",
   "activeSymbol": "KDH",
   "resumeSymbolHint": "ACB",
-  "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
+  "resumeRule": "Read reports/processing-checkpoint.json first. Do not reload/re-OCR/re-parse a ticker already passed under the current standard unless explicit new evidence, an applicable standard change, or regression failure requires reopening. Finish one ticker, write its checkpoint immediately, then proceed.",
   "lastProgress": {
     "symbol": "MBB",
     "status": "automated_processing_complete",
@@ -1440,19 +1440,25 @@
   },
   "reconciliationPolicy": {
     "acceptedRelativeDifferencePercent": 0.01,
-    "formula": "abs(actual - expected) / comparison_scale * 100",
+    "formula": "abs(actual-expected)/max(abs(actual),abs(expected),1)*100",
     "unit": "relative percent; individual snapshot residuals retain the source field unit",
     "rule": "A relative difference <=0.01% is accepted and retained in residual metadata without altering printed values or inserting a balancing plug. A difference >0.01% requires manual review. Relative tolerance never waives missing source evidence, OCR digit errors, incorrect report scope, or an unreported FX field.",
     "supersedesPreviousRule": "Replaces the former blanket acceptedAbsoluteDifferenceMillionVnd=10 rule as a standalone acceptance threshold.",
-    "updatedAt": "2026-10-28T19:45:00+07:00"
+    "updatedAt": "2026-10-28T19:45:00+07:00",
+    "relativeTolerancePercent": 0.01,
+    "passCondition": "Arithmetic residual <= 0.01% is accepted and retained in metadata; no balancing plug.",
+    "semanticExceptions": "Tolerance never suppresses source-line misclassification, unit/consolidation/period mismatch, unverified OCR, material reclassification, or cross-period cash-basis mismatch > 0.01%.",
+    "checkpointRule": "Commit a checkpoint immediately when each ticker passes required checks; store source evidence, periods, tests, residuals, data commit and CI runs.",
+    "noReloadRule": "Skip any ticker/domain already passed under the same standard version unless a new source, explicit correction, standard change affecting it, or regression failure requires reopening.",
+    "standardDocument": "reports/financial-data-normalization-standard.md"
   },
   "normalizationProgress": {
-    "standardVersion": "2.6",
+    "standardVersion": "2.7",
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
     "activeSymbol": "DPG",
     "status": "in_progress_next_ticker",
-    "lastUpdatedAt": "2026-10-29T21:05:00+07:00",
+    "lastUpdatedAt": "2026-10-29T21:45:00+07:00",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1771,7 +1777,7 @@
       "HHV NEEDS_MANUAL_REVIEW_CROSS_PERIOD_CASH_BASIS_GT_0_01_PERCENT — Q2/2026 YTD opening cash differs from FY2025 close by -15,039,846,885 VND; Q2 standalone bridge residual against Q1 close is -15,039,808,794 VND (~2.96%). Keep both printed source balances and no balancing plug.",
       "HHV source-page direct image review remains pending because the direct PDF viewer could not render the archived VietstockFinance PDFs; OCR sidecars and arithmetic checks are not presented as visual verification."
     ],
-    "nextStep": "HHV cash-flow normalization saved for 10 periods and automated regression/source arithmetic checks PASS. The 0.01% relative tolerance is applied to small rounding residuals; material source reclassifications and the Q2/2026 opening-cash basis remain explicitly flagged, with no balancing plugs. Next, continue with DPG cash-flow only using reports/financial-data-normalization-standard.md v2.6, one ticker at a time.",
+    "nextStep": "Continue DPG cash-flow only. Inspect existing checkpoint and DPG snapshot/sidecars without reprocessing already-passed periods. Apply standard v2.7; accept pure arithmetic residuals <=0.01% while retaining them, but keep material source reclassification, unit/period/consolidation mismatch and cash-basis conflicts >0.01% under manual review. When DPG passes, immediately commit its ticker checkpoint and validations, then continue to the next ticker.",
     "previousCompletedSymbol": "HHV",
     "validationRuns": [
       {
@@ -1993,7 +1999,12 @@
       }
     ],
     "lastCompletedSymbol": "BID",
-    "nextSymbolHint": "VIX"
+    "nextSymbolHint": "VIX",
+    "userRules": [
+      "Accept arithmetic discrepancies at or below 0.01% relative error, retain the residual and ratio in metadata, and do not insert a balancing plug.",
+      "For each ticker that passes the required checks, commit a durable checkpoint immediately before starting the next ticker.",
+      "Do not reload, re-OCR, or re-parse data already passed under the current standard unless a new source, explicit correction, standard change affecting it, or regression failure requires reopening."
+    ]
   },
   "nextSymbolHint": "HHV"
 }
