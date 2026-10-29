@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-29T09:59:45.044Z",
+  "updatedAt": "2026-10-29T10:00:53.342Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -39,7 +39,7 @@
     "VCK",
     "MBB"
   ],
-  "lastCompletedSymbol": "KDH",
+  "lastCompletedSymbol": "NVL",
   "activeSymbol": "KDH",
   "resumeSymbolHint": "ACB",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
@@ -1450,9 +1450,9 @@
     "standardVersion": "2.6",
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
-    "activeSymbol": "NVL",
-    "status": "normalized_awaiting_ci_manual_review_remaining",
-    "lastUpdatedAt": "2026-10-29T09:59:45.044Z",
+    "activeSymbol": "HHV",
+    "status": "in_progress_next_ticker",
+    "lastUpdatedAt": "2026-10-29T10:00:53.342Z",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1692,7 +1692,9 @@
       "NVL cash-flow: all ten raw source CFO+CFI+CFF sums exactly match reported net cash change, and each raw source cash bridge (opening + net movement + FX = closing) is zero.",
       "NVL cash-flow: snapshot standalone quarter fields are computed from selected YTD differences; quarter/YTD flow sums are within 0.01% after million-VND rounding. Small rounding residuals remain in metadata and are not plugged.",
       "NVL cash-flow: manually reviewed Q1/2025 comparator, H1/2025 comparator in Q2/2026, Q3/2025 current source, and Q1/Q2 2026 source pages. Q4/2025 source remains OCR-sidecar based pending a direct visual check.",
-      "NVL cash-basis issues retained: H1/2024 and FY2024 reclassifications; H1/2025 comparator revision; FY2025 close 4,395,320,969,838 VND vs later re-presented opening 4,208,770,020,478 VND; Q4/2025 close to Q1/2026 opening difference 2,261,673,373 VND (>0.01%); Q1/Q2 2026 YTD opening-basis revision causes Q2 standalone cash bridge residual around -188,812 million VND (>0.01%). No balancing plugs."
+      "NVL cash-basis issues retained: H1/2024 and FY2024 reclassifications; H1/2025 comparator revision; FY2025 close 4,395,320,969,838 VND vs later re-presented opening 4,208,770,020,478 VND; Q4/2025 close to Q1/2026 opening difference 2,261,673,373 VND (>0.01%); Q1/Q2 2026 YTD opening-basis revision causes Q2 standalone cash bridge residual around -188,812 million VND (>0.01%). No balancing plugs.",
+      "NVL normalization and related CI all PASS: Validate Site and Data run 40853848282; quarterly financial validation run 40853800705; dashboard package run 40853800513; standard documentation validation run 40853979999; final checkpoint validation run 40854028339.",
+      "NVL cash-flow series saved for 10 periods. Residuals within 0.01% accepted; H1/2024, FY2024, H1/2025 comparative reclassifications and FY2025/Q1-Q2 2026 cash-basis exceptions remain flagged, no balancing plugs."
     ],
     "unresolved": [
       "NLG NEEDS_MANUAL_REVIEW — H1/2024 selected later comparative in Q2/2025 reclassifies CFO/CFI versus the original Q2/2024 source by >0.01%; net cash movement and cash balances remain unchanged. Preserve both source bases and selected later comparative; do not plug.",
@@ -1751,8 +1753,8 @@
       "NVL Q4/2025 close to Q1/2026 opening difference +2,261,673,373 VND (~0.051%); Q1 report internally reconciles.",
       "NVL Q2/2026 source opening basis 4,208,770,020,478 VND differs from Q1/2026 YTD opening 4,397,582,643,211 VND; its own YTD bridge passes but standalone Q2 bridge computed from YTD differences is about -188,812 million VND residual, >0.01%, preserve manual review."
     ],
-    "nextStep": "NVL snapshot and regression tests are committed; await/inspect CI before marking automated processing complete. Keep manual review flags above; if CI passes, continue to the next ticker in the same cashflow domain according to the checkpoint's ticker order. Do not switch data domains.",
-    "previousCompletedSymbol": "KDH",
+    "nextStep": "NVL saved after PASS checks. Continue with HHV cash-flow normalization only. Keep the 0.01% relative tolerance rule, use VietstockFinance consolidated sources, compare against later comparative columns when available, preserve raw source VND values and flag material source-basis changes without balancing plugs.",
+    "previousCompletedSymbol": "NVL",
     "validationRuns": [
       {
         "name": "Validate Site and Data",
@@ -1893,10 +1895,45 @@
         "status": "success",
         "commit": "7d0f60a467303c5e9e2cadde9d4c5c28e24ab202",
         "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40852158618"
+      },
+      {
+        "name": "Validate Site and Data",
+        "runId": "40853848282",
+        "status": "success",
+        "commit": "b2a02a9d8351986c11f144209c4cd7f226dcb188",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40853848282"
+      },
+      {
+        "name": "Validate Site and Data",
+        "runId": "40853979999",
+        "status": "success",
+        "commit": "15f7ba4dca825dda4c6972f6e133adbc308309bf",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40853979999"
+      },
+      {
+        "name": "Validate quarterly financial data",
+        "runId": "40853800705",
+        "status": "success",
+        "commit": "07d655a23211a1d0999748909f6eb42050050a11",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40853800705"
+      },
+      {
+        "name": "Package Hostinger Stock Dashboard",
+        "runId": "40853800513",
+        "status": "success",
+        "commit": "07d655a23211a1d0999748909f6eb42050050a11",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40853800513"
+      },
+      {
+        "name": "Validate Site and Data",
+        "runId": "40854028339",
+        "status": "success",
+        "commit": "409bf3f6e1e249cadadd6e1e42e64792c73cac22",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40854028339"
       }
     ],
     "lastCompletedSymbol": "BID",
     "nextSymbolHint": "VIX"
   },
-  "nextSymbolHint": "NVL"
+  "nextSymbolHint": "HHV"
 }
