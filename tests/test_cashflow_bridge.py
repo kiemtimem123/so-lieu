@@ -2176,5 +2176,75 @@ class BIDCashFlowNormalizationTests(unittest.TestCase):
         self.assertEqual(h12026["cash_ending_reported_ytd"], 522150229)
 
 
+
+
+class VIXCashFlowScopeGuardTests(unittest.TestCase):
+    """Prevent VIX standalone/unconfirmed reports from entering consolidated cash-flow charts."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.snapshot = json.loads(
+            (ROOT / "data" / "financials-VIX.json").read_text(encoding="utf-8")
+        )
+        cls.rows = {row["period"]: row for row in cls.snapshot["items"]}
+
+    def test_vix_cashflow_fields_are_withheld_until_consolidation_scope_is_confirmed(self):
+        fields = (
+            "operating_cash_flow", "investing_cash_flow", "financing_cash_flow",
+            "net_cash_change", "operating_cash_flow_ytd", "investing_cash_flow_ytd",
+            "financing_cash_flow_ytd", "net_cash_change_ytd", "cash_beginning",
+            "cash_ending", "cash_beginning_reported_ytd", "cash_ending_reported_ytd",
+            "foreign_exchange_effect", "foreign_exchange_effect_ytd",
+            "capital_expenditure", "capital_expenditure_ytd",
+            "dividends_paid", "dividends_paid_ytd", "cashflow_period_basis",
+        )
+        self.assertEqual(len(self.rows), 11)
+        for period, row in self.rows.items():
+            with self.subTest(period=period):
+                self.assertTrue(all(row.get(field) is None for field in fields))
+                self.assertFalse(row["cashflow_source_reconciliation"]["selected_for_consolidated_series"])
+                self.assertTrue(row["cashflow_audit_revision"]["withheld_from_consolidated_cashflow"])
+                self.assertEqual(
+                    row["source_index_url"],
+                    "https://finance.vietstock.vn/VIX/tai-tai-lieu.htm?doctype=1",
+                )
+                for field in fields:
+                    if field != "cashflow_period_basis":
+                        self.assertNotIn(field, row.get("financial_line_items_extracted_fields", []))
+                        self.assertIn(field, row.get("financial_line_items_rejected_fields", []))
+
+    def test_vix_previous_candidates_are_preserved_for_scope_review(self):
+        explicitly_standalone = ("2024-Q1", "2024-Q2", "2024-Q3", "2024-Q4",
+                                 "2025-Q1", "2025-Q2", "2025-Q3")
+        for period in explicitly_standalone:
+            with self.subTest(period=period):
+                row = self.rows[period]
+                self.assertEqual(
+                    row["cashflow_source_reconciliation"]["status"],
+                    "TERMINAL_MANUAL_REVIEW_SCOPE_NOT_CONSOLIDATED",
+                )
+                self.assertEqual(
+                    row["cashflow_source_reconciliation"]["source_scope_status"],
+                    "confirmed_standalone",
+                )
+        for period in ("2025-Q4", "2026-Q1", "2026-Q2", "2026-Q3"):
+            with self.subTest(period=period):
+                row = self.rows[period]
+                self.assertEqual(
+                    row["cashflow_source_reconciliation"]["status"],
+                    "TERMINAL_MANUAL_REVIEW_SCOPE_UNCONFIRMED",
+                )
+                self.assertEqual(
+                    row["cashflow_source_reconciliation"]["source_scope_status"],
+                    "consolidation_scope_unconfirmed",
+                )
+        q12024 = self.rows["2024-Q1"]
+        prior = q12024["cashflow_audit_revision"]["original_cashflow_candidates"]
+        self.assertTrue(prior)
+        self.assertTrue(any(
+            isinstance(v, (int, float))
+            for v in prior.values()
+        ))
+
 if __name__ == "__main__":
     unittest.main()
