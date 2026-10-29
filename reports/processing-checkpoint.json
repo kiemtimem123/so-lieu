@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-29T17:05:00+07:00",
+  "updatedAt": "2026-10-29T09:47:32.163Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -1447,12 +1447,12 @@
     "updatedAt": "2026-10-28T19:45:00+07:00"
   },
   "normalizationProgress": {
-    "standardVersion": "2.5",
+    "standardVersion": "2.6",
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
     "activeSymbol": "KDH",
-    "status": "in_progress_next_ticker",
-    "lastUpdatedAt": "2026-10-29T17:05:00+07:00",
+    "status": "automated_processing_complete_manual_review_remaining",
+    "lastUpdatedAt": "2026-10-29T09:47:32.163Z",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1676,7 +1676,15 @@
       "VDS: all quarter/YTD flows and cash bridges are within 0.01% relative tolerance; quarter rows derive from YTD differences and all source residuals are kept as metadata, with no balancing plug.",
       "VDS: H1/2024 newer comparative in Q2/2025 reclassifies CFI/CFF by VND 13 billion each compared with original Q2/2024, net cash change unchanged; difference measured at 57.25% CFI and 3.49% CFF. Q2 and connected Q3 2024 rows remain flagged for manual review, and both source bases are recorded.",
       "VDS: FY2024 comparison in Q4/2025, Q1/2025 comparison in Q1/2026, and H1/2025 comparison in Q2/2026 were used where available; comparisons and page/archive references stored row-by-row.",
-      "Added VDSCashFlowNormalizationTests and updated standard documentation to version 2.5; direct PDF image review remains pending and is explicitly not claimed complete."
+      "Added VDSCashFlowNormalizationTests and updated standard documentation to version 2.5; direct PDF image review remains pending and is explicitly not claimed complete.",
+      "KDH: normalized 10 periods 2024-Q1 through 2026-Q2 from VietstockFinance consolidated cash-flow totals. Raw source integers are retained in Ngàn VND; displayed snapshot values are divided by 1,000 and rounded to triệu VND.",
+      "KDH: Q1 values retained as reported YTD; Q2-Q4 standalone values are differences of selected YTD totals. Registered core cash-flow and cash balance fields in financial_line_items_extracted_fields and removed them from the rejected-field list.",
+      "KDH: later comparative basis selected for Q1/2024 from Q1/2025, H1/2024 from Q2/2025, 9M/2024 from Q3/2025, FY2024 from Q4/2025, Q1/2025 from Q1/2026 and H1/2025 from Q2/2026. Original source values and relative comparison metadata are preserved.",
+      "KDH: all 10 source YTD CFO+CFI+CFF sums match source net movement before scaling; snapshot sum residuals after scaling/rounding stay within the 0.01% relative tolerance. Quarter fields match YTD differences exactly at stored precision.",
+      "KDH: source reclassifications above 0.01% remain manual review at 2024-Q2, 2024-Q4 and 2025-Q2/Q3 even where cash net is within tolerance; no balancing plug.",
+      "KDH: visually checked Q1/2026 cash-flow statement ending line and Q2/2026 cash-flow totals/balances. Q1/2026 cash-flow line 70 = 3,643,808,683 thousand VND conflicts with same-report balance-sheet cash line 110 = 3,613,808,683 thousand VND; 30,000 million VND residual (~0.82%), >0.01%. Q2/2026 standalone quarter bridge inherits about -30,001 million VND discrepancy, retained without plug.",
+      "KDH: Q3/2025 cash ending uses cash-and-equivalents line from same report balance sheet because cash-flow line 70 OCR was unreadable; the sourced value reconciles with opening cash plus net cash movement.",
+      "Added KDHCashFlowNormalizationTests with all 10 periods, tolerance, quarter/YTD math, selected comparative evidence and explicit Q1/Q2-2026 cash conflicts."
     ],
     "unresolved": [
       "NLG NEEDS_MANUAL_REVIEW — H1/2024 selected later comparative in Q2/2025 reclassifies CFO/CFI versus the original Q2/2024 source by >0.01%; net cash movement and cash balances remain unchanged. Preserve both source bases and selected later comparative; do not plug.",
@@ -1723,9 +1731,13 @@
       "BID PDF images could not be opened directly in the source viewer due file size in this pass; OCR source text and arithmetic are captured, so source pages retain ocr_text_reconciled_visual_review_pending and are not claimed visually verified.",
       "VIX terminal scope hold: standalone/unconfirmed VietstockFinance documents are withheld from the consolidated cashflow series; resume only after a consolidated report source is confirmed.",
       "SSI: all 10 periods pass arithmetic under 0.01% tolerance; source OCR is transcribed and source scope is consolidated, but direct PDF image review remains pending. SSI line 102/104 component adjustments are retained as metadata and not used as additive FX bridge.",
-      "VDS source reclassification: H1/2024 comparative in Q2/2025 changes CFI/CFF by VND 13 billion each versus Q2/2024 source, with net unchanged; Q3/2024 quarterly deltas are connected to this mixed comparative basis. Both rows need manual source review, no balancing plug."
+      "VDS source reclassification: H1/2024 comparative in Q2/2025 changes CFI/CFF by VND 13 billion each versus Q2/2024 source, with net unchanged; Q3/2024 quarterly deltas are connected to this mixed comparative basis. Both rows need manual source review, no balancing plug.",
+      "KDH 2024-Q2: later H1/2024 comparator reclassifies CFO/CFI >0.01% vs original source; net and close remain within 0.01%. Keep both source bases and manual review.",
+      "KDH 2024-Q4: later FY2024 comparator materially reclassifies CFO/CFI vs original; net and closing cash remain within tolerance. Do not force a balance.",
+      "KDH 2025-Q2/Q3: Q2/2026 H1/2025 comparator materially changes H1 cash-flow totals; Q3 standalone uses later H1 basis. Retain source history and manual review.",
+      "KDH 2026-Q1/Q2: direct PDF shows cash-flow closing 3,643,808,683 thousand VND vs same-report balance-sheet cash 3,613,808,683 thousand VND in Q1; 30,000 million VND (~0.82%). Q2 YTD reconciles but standalone Q2 bridge inherits the Q1 discrepancy; no balancing plug."
     ],
-    "nextStep": "VDS automated cash-flow normalization saved; arithmetic residuals fall within 0.01%, but connected H1/2024 comparative reclassification (>0.01%) remains terminal/manual review for 2024-Q2 and 2024-Q3. Keep source bases and do not add plugs. Next ticker in the same cash-flow domain: KDH. Direct image review for VDS rows remains pending.",
+    "nextStep": "KDH cash-flow snapshot, regression tests and standard documentation saved; wait for CI results before considering the ticker complete. Manual review remains for material source reclassifications and Q1/Q2 2026 cash conflicts. Next ticker in cash-flow domain after CI pass: NVL.",
     "previousCompletedSymbol": "VDS",
     "validationRuns": [
       {
