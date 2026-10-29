@@ -2057,5 +2057,116 @@ class CTGCashFlowNormalizationTests(unittest.TestCase):
         self.assertTrue(within_relative_tolerance(578995009, 578995009))
 
 
+
+
+class BIDCashFlowNormalizationTests(unittest.TestCase):
+    """Regression coverage for BID consolidated cash-flow normalization."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.snapshot = json.loads(
+            (ROOT / "data" / "financials-BID.json").read_text(encoding="utf-8")
+        )
+        cls.rows = {row["period"]: row for row in cls.snapshot["items"]}
+
+    def test_bid_all_ten_periods_reconcile_with_selected_ytd_basis(self):
+        periods = {
+            "2024-Q1", "2024-Q2", "2024-Q3", "2024-Q4", "2025-Q1",
+            "2025-Q2", "2025-Q3", "2025-Q4", "2026-Q1", "2026-Q2",
+        }
+        flows = ("operating_cash_flow", "investing_cash_flow",
+                 "financing_cash_flow", "net_cash_change")
+        core = (*flows, *(field + "_ytd" for field in flows),
+                "cash_beginning", "cash_ending", "cash_beginning_reported_ytd",
+                "cash_ending_reported_ytd", "foreign_exchange_effect",
+                "foreign_exchange_effect_ytd", "cashflow_period_basis")
+        self.assertEqual(set(self.rows), periods)
+        self.assertEqual(len(self.rows), 10)
+        for period, row in self.rows.items():
+            with self.subTest(period=period):
+                self.assertEqual(row["cashflow_period_basis"], "year_to_date")
+                self.assertEqual(row["unit"], "triệu VND")
+                self.assertTrue(all(field in row["financial_line_items_extracted_fields"]
+                                    for field in core))
+                self.assertTrue(all(field not in row.get("financial_line_items_rejected_fields", [])
+                                    for field in core))
+                self.assertEqual(row["source_index_url"],
+                                 "https://finance.vietstock.vn/BID/tai-tai-lieu.htm?doctype=1")
+                self.assertEqual(row["foreign_exchange_effect"], None)
+                self.assertEqual(row["foreign_exchange_effect_ytd"], None)
+                self.assertEqual(row["cashflow_source_reconciliation"]["fx_line_present"], False)
+                self.assertEqual(row["operating_cash_flow"] +
+                                 row["investing_cash_flow"] +
+                                 row["financing_cash_flow"], row["net_cash_change"])
+                self.assertEqual(row["operating_cash_flow_ytd"] +
+                                 row["investing_cash_flow_ytd"] +
+                                 row["financing_cash_flow_ytd"], row["net_cash_change_ytd"])
+                self.assertEqual(row["cash_ending_reported_ytd"] -
+                                 row["cash_beginning_reported_ytd"] -
+                                 row["net_cash_change_ytd"], 0)
+                self.assertEqual(cash_bridge_delta(row), 0)
+                self.assertEqual(row["cashflow_source_reconciliation"]["ytd_cash_bridge_residual"], 0)
+                self.assertEqual(row["cashflow_source_reconciliation"]["quarter_cash_bridge_residual"], 0)
+
+                year, quarter_s = period.split("-Q")
+                quarter = int(quarter_s)
+                if quarter == 1:
+                    for field in flows:
+                        self.assertEqual(row[field], row[field + "_ytd"])
+                else:
+                    previous = self.rows[f"{year}-Q{quarter-1}"]
+                    for field in flows:
+                        self.assertEqual(row[field], row[field + "_ytd"] -
+                                         previous[field + "_ytd"])
+                    self.assertEqual(row["cash_beginning"], previous["cash_ending"])
+
+    def test_bid_tolerance_is_relative_and_source_numbers_are_not_plugged(self):
+        # Original-vs-later H1/2024 differences are below or equal to 0.01%.
+        h12024 = self.rows["2024-Q2"]
+        comparison = h12024["cashflow_audit_revision"]["previous_source_basis"]["relative_comparisons"]
+        self.assertLessEqual(comparison["operating_cash_flow_ytd"]["relative_difference_percent"], 0.01)
+        self.assertLessEqual(comparison["net_cash_change_ytd"]["relative_difference_percent"], 0.01)
+        self.assertEqual(h12024["cashflow_source_reconciliation"]["status"],
+                         "PASS_WITHIN_0_01_PERCENT_COMPARATIVE_DIFFERENCE_ACCEPTED")
+        # The FY2024 source basis and H1/2025 CFI reclassification exceed tolerance and remain flagged.
+        q42024 = self.rows["2024-Q4"]
+        self.assertEqual(q42024["cashflow_source_reconciliation"]["status"],
+                         "NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT")
+        self.assertEqual(q42024["cashflow_audit_revision"]["previous_source_basis"]["ytd"],
+                         [101080084, -1127413, -94460, 99858211])
+        h12025 = self.rows["2025-Q2"]
+        self.assertEqual(h12025["cashflow_source_reconciliation"]["status"],
+                         "NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT")
+        self.assertEqual(h12025["cashflow_audit_revision"]["previous_source_basis"]["ytd"],
+                         [90471834, -869550, 13196654, 102798938])
+        # The Q1/2026 opening differs from FY2025 close by 18,308 million VND,
+        # which is less than 0.01%; source-reported balances remain unchanged.
+        q12026 = self.rows["2026-Q1"]
+        self.assertEqual(q12026["cash_beginning"], 530277690)
+        self.assertEqual(self.rows["2025-Q4"]["cash_ending"], 530295998)
+        self.assertEqual(q12026["cashflow_source_reconciliation"]
+                         ["adjacent_quarter_cash_continuity_residual"], -18308)
+        self.assertTrue(within_relative_tolerance(530277690, 530295998))
+        self.assertEqual(q12026["cashflow_source_reconciliation"]["status"],
+                         "PASS_WITHIN_0_01_PERCENT_CROSS_YEAR_OPENING_DIFFERENCE_ACCEPTED")
+
+    def test_bid_last_period_uses_final_cfo_line_not_operating_subtotal(self):
+        # The Q4/2025 CFO amount is the final net CFO line, not the subtotal before
+        # movements in operating assets and liabilities.
+        q42025 = self.rows["2025-Q4"]
+        self.assertEqual(q42025["operating_cash_flow_ytd"], 192956384)
+        self.assertEqual(q42025["investing_cash_flow_ytd"], -1638693)
+        self.assertEqual(q42025["financing_cash_flow_ytd"], 14253843)
+        self.assertEqual(q42025["net_cash_change_ytd"], 205571534)
+        self.assertEqual(q42025["cash_ending_reported_ytd"], 530295998)
+        self.assertEqual(q42025["cashflow_source_reconciliation"]["ytd_flow_sum_residual"], 0)
+        # H1/2026 CFF OCR candidate has been corrected from 1,616,208 to 16,162,208
+        # based on the printed total being required by the source's flow/net rows.
+        h12026 = self.rows["2026-Q2"]
+        self.assertEqual(h12026["financing_cash_flow_ytd"], 16162208)
+        self.assertEqual(h12026["net_cash_change_ytd"], -8127461)
+        self.assertEqual(h12026["cash_ending_reported_ytd"], 522150229)
+
+
 if __name__ == "__main__":
     unittest.main()
