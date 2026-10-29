@@ -315,6 +315,105 @@ def main():
                     ERRORS.append(
                         f"MBB {period}: {field} must be {expected} million VND, got {actual!r}"
                     )
+
+
+    # KBC cash-flow regression: non-bank issuer, but the same cash-flow quality
+    # checks run in this CI job so the exact per-ticker normalization is enforced.
+    kbc_path = DATA_DIR / "financials-KBC.json"
+    if kbc_path.exists():
+        kbc = json.loads(kbc_path.read_text(encoding="utf-8"))
+        kbc_rows = {
+            str(row.get("period")): row
+            for row in (kbc.get("items") or [])
+            if isinstance(row, dict)
+        }
+        expected_kbc_periods = {
+            "2024-Q1", "2024-Q2", "2024-Q3", "2024-Q4",
+            "2025-Q1", "2025-Q2", "2025-Q3", "2025-Q4",
+            "2026-Q1", "2026-Q2", "2026-Q3",
+        }
+        if set(kbc_rows) != expected_kbc_periods or len(kbc.get("items") or []) != 11:
+            ERRORS.append("KBC cash-flow regression: expected 11 unique periods from 2024-Q1 through 2026-Q3")
+        kbc_flow_fields = ("operating_cash_flow", "investing_cash_flow", "financing_cash_flow", "net_cash_change")
+        kbc_ytd_fields = tuple(field + "_ytd" for field in kbc_flow_fields)
+        for period, row in kbc_rows.items():
+            rec = row.get("cashflow_source_reconciliation") or {}
+            raw = rec.get("selected_values_raw_vnd") or {}
+            quarter = raw.get("quarter") or {}
+            ytd = raw.get("ytd") or {}
+            if row.get("source_index_url") != "https://finance.vietstock.vn/KBC/tai-tai-lieu.htm?doctype=1":
+                ERRORS.append(f"KBC {period}: source index is not the approved VietstockFinance catalog")
+            if not str(row.get("source_url") or "").startswith("https://static2.vietstock.vn/"):
+                ERRORS.append(f"KBC {period}: original source PDF link is missing or outside Vietstock")
+            if rec.get("relative_tolerance_percent") != 0.01 or rec.get("no_balancing_plug") is not True:
+                ERRORS.append(f"KBC {period}: cash-flow audit metadata/tolerance is missing")
+            if rec.get("separate_fx_line_reported") is not False or row.get("foreign_exchange_effect") is not None or row.get("foreign_exchange_effect_ytd") is not None:
+                ERRORS.append(f"KBC {period}: FX fields must stay null because the source statement has no separate FX line")
+            selected_url = str(rec.get("selected_cashflow_source_url") or "")
+            selected_archive = str(rec.get("selected_cashflow_source_archive_file") or "")
+            if not selected_url.startswith("https://static2.vietstock.vn/") or not selected_archive.startswith("reports/raw/KBC/"):
+                ERRORS.append(f"KBC {period}: selected source comparative/archive provenance is missing")
+            for part_name, part in (("quarter", quarter), ("YTD", ytd)):
+                required = ("cfo", "cfi", "cff", "net_cash_change", "cash_beginning", "cash_ending")
+                if not all(number(part.get(field)) for field in required):
+                    ERRORS.append(f"KBC {period}: raw {part_name} cash-flow source values are incomplete")
+                    continue
+                flow_sum = part["cfo"] + part["cfi"] + part["cff"]
+                if flow_sum != part["net_cash_change"]:
+                    ERRORS.append(f"KBC {period}: raw {part_name} flow components do not sum to reported net cash")
+                bridge = part["cash_ending"] - part["cash_beginning"] - part["net_cash_change"]
+                if bridge != 0:
+                    WARNINGS.append(f"KBC {period}: raw {part_name} cash bridge residual {bridge} VND; retained for review")
+            if not rec.get("quarter_flow_components_within_tolerance") or not rec.get("ytd_flow_components_within_tolerance"):
+                ERRORS.append(f"KBC {period}: quarter/YTD flow component check not marked within tolerance")
+            if not rec.get("quarter_cash_bridge_within_tolerance") or not rec.get("ytd_cash_bridge_within_tolerance"):
+                ERRORS.append(f"KBC {period}: quarter/YTD cash bridge not marked within tolerance")
+            if row.get("cashflow_period_basis") not in ("quarterly_reported", "quarterly_normalized_from_ytd"):
+                ERRORS.append(f"KBC {period}: invalid cashflow_period_basis")
+            extracted = set(row.get("financial_line_items_extracted_fields") or [])
+            rejected = set(row.get("financial_line_items_rejected_fields") or [])
+            for field in kbc_flow_fields + kbc_ytd_fields + ("cash_beginning", "cash_ending", "cash_beginning_reported_ytd", "cash_ending_reported_ytd"):
+                if not number(row.get(field)) or field not in extracted or field in rejected:
+                    ERRORS.append(f"KBC {period}: validated field {field} is blank, not allowlisted, or still rejected")
+            year, quarter_text = period.split("-Q")
+            quarter_number = int(quarter_text)
+            prior = kbc_rows.get(f"{year}-Q{quarter_number-1}") if quarter_number > 1 else None
+            if prior and all(number((raw.get("ytd") or {}).get(key)) for key in ("cfo","cfi","cff","net_cash_change")):
+                previous_ytd = (prior.get("cashflow_source_reconciliation") or {}).get("selected_values_raw_vnd", {}).get("ytd") or {}
+                for key in ("cfo","cfi","cff","net_cash_change"):
+                    if quarter.get(key) != ytd.get(key) - previous_ytd.get(key):
+                        ERRORS.append(f"KBC {period}: standalone-quarter {key} is not current YTD minus previous same-year YTD")
+                if quarter.get("cash_beginning") != previous_ytd.get("cash_ending"):
+                    ERRORS.append(f"KBC {period}: quarter opening cash does not equal previous same-year quarter closing cash")
+            elif not prior:
+                for key in ("cfo","cfi","cff","net_cash_change"):
+                    if quarter.get(key) != ytd.get(key):
+                        ERRORS.append(f"KBC {period}: Q1 {key} should equal YTD Q1")
+        # Explicit exceptions stay blocking as review flags, not source-value rewrites.
+        kbc_2026_q1 = (kbc_rows.get("2026-Q1") or {}).get("cashflow_source_reconciliation") or {}
+        cross_year = kbc_2026_q1.get("cross_year_cash_basis") or {}
+        if cross_year.get("residual_raw_vnd") != -18013511097 or cross_year.get("status") != "NEEDS_MANUAL_REVIEW_CROSS_YEAR_CASH_BASIS":
+            ERRORS.append("KBC 2026-Q1: expected FY2025-to-Q1/2026 cash-basis exception is missing or changed")
+        if (kbc_rows.get("2026-Q1") or {}).get("cash_ending") != 6930682.751:
+            ERRORS.append("KBC 2026-Q1: cash ending display must be 6,930,682.751 million VND")
+        kbc_q3_2026 = (kbc_rows.get("2026-Q3") or {}).get("cashflow_source_reconciliation") or {}
+        if kbc_q3_2026.get("investing_total_ocr_candidate_raw_vnd") != -518402271256:
+            ERRORS.append("KBC 2026-Q3: preserve the original CFI total OCR candidate for review")
+        if kbc_q3_2026.get("investing_component_sum_raw_vnd") != -515402271256:
+            ERRORS.append("KBC 2026-Q3: CFI must be reconstructed from detailed investment rows, not the erroneous OCR total")
+        if sum((kbc_q3_2026.get("investing_component_lines_raw_vnd") or {}).values()) != -515402271256:
+            ERRORS.append("KBC 2026-Q3: investing-detail components do not sum to the selected CFI total")
+        if kbc_q3_2026.get("investing_component_sum_vs_ocr_residual_raw_vnd") != 3000000000:
+            ERRORS.append("KBC 2026-Q3: expected 3,000,000,000 VND CFI OCR discrepancy must remain recorded")
+        h1_2025_revision = ((kbc_rows.get("2025-Q2") or {}).get("cashflow_source_reconciliation") or {}).get("source_revision") or {}
+        h1_2025_delta = h1_2025_revision.get("selected_minus_prior_source_values_raw_vnd") or {}
+        if h1_2025_delta.get("cfo") != -895822506913 or h1_2025_delta.get("cfi") != 895672506913 or h1_2025_delta.get("net") != -150000000:
+            ERRORS.append("KBC 2025-Q2: restated comparative source revision must remain traceable")
+        kbc_2025_q3 = (kbc_rows.get("2025-Q3") or {}).get("cashflow_source_reconciliation") or {}
+        bs_cross = kbc_2025_q3.get("balance_sheet_cash_crosscheck") or {}
+        if bs_cross.get("relative_difference_percent", 1) > RELATIVE_TOLERANCE_PERCENT or bs_cross.get("no_balancing_plug") is not True:
+            ERRORS.append("KBC 2025-Q3: within-tolerance balance-sheet cash difference must retain both source values")
+
     print("Bank financial reconciliation regression checks")
     print(f"Bank snapshots checked: {symbols_checked}; rows on current schema: {audited_rows}")
     print(f"Errors: {len(ERRORS)}; warnings: {len(WARNINGS)}")
