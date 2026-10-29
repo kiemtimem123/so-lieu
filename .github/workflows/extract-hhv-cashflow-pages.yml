@@ -1,0 +1,111 @@
+name: Extract HHV Cash-Flow Statement Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/extract-hhv-cashflow-pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: so-lieu-financial-data-writes-v2
+  cancel-in-progress: false
+
+jobs:
+  extract-hhv-cashflow-pages:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout HHV source archive and report worker
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/scripts/ocr-stored-reports.py
+            /.github/scripts/requirements-report-worker.txt
+            /config/securities.json
+            /data/financials-HHV.json
+            /reports/raw/HHV/**
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install report extraction dependencies
+        run: pip install -r .github/scripts/requirements-report-worker.txt
+      - name: Install OCR tools for missing statement pages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils tesseract-ocr tesseract-ocr-vie tesseract-ocr-eng
+      - name: Verify HHV archive gaps before extraction
+        env:
+          REPORT_OCR_SYMBOL: HHV
+          REPORT_OCR_MAX_PAGES: "18"
+          REPORT_OCR_MAX_REPORTS: "3"
+          REPORT_OCR_DPI: "300"
+        run: |
+          python - <<'PY'
+          import json, os, runpy
+          from pathlib import Path
+          worker = runpy.run_path(".github/scripts/ocr-stored-reports.py")
+          rows = []
+          for period, archive in worker["symbol_report_archives"]("HHV"):
+              sidecar = Path(str(archive) + ".extracted.json")
+              payload = worker["load_json"](sidecar) or {}
+              pages = {int(p.get("page")) for p in payload.get("pages", [])
+                       if isinstance(p, dict) and str(p.get("page", "")).isdigit()}
+              missing = sorted(set(range(1, min(int(payload.get("page_count") or 0), 18)+1))-pages)
+              if missing:
+                  rows.append({"period": period, "archive": str(archive), "missing_target_pages": missing})
+          print(json.dumps({"symbol":"HHV","targets":rows}, ensure_ascii=False, indent=2))
+          PY
+      - name: Extract missing statement pages for HHV only
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3 4 5; do
+            echo "HHV page extraction pass ${attempt}/5"
+            REPORT_OCR_SYMBOL=HHV REPORT_OCR_MAX_PAGES=18 REPORT_OCR_MAX_REPORTS=3 REPORT_OCR_DPI=300 \
+              python .github/scripts/ocr-stored-reports.py
+          done
+      - name: Verify extracted statement pages
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          snapshot = json.loads(Path("data/financials-HHV.json").read_text(encoding="utf-8"))
+          gaps = []
+          for item in snapshot.get("items", []):
+              period = str(item.get("period") or "")
+              archive = str(item.get("source_archive_file") or "")
+              if not period or not archive:
+                  continue
+              sidecar = Path(archive + ".extracted.json")
+              payload = json.loads(sidecar.read_text(encoding="utf-8")) if sidecar.exists() else {}
+              pages = {int(p.get("page")) for p in payload.get("pages", [])
+                       if isinstance(p, dict) and str(p.get("page", "")).isdigit()}
+              missing = sorted(set(range(1, min(int(payload.get("page_count") or 0), 18)+1))-pages)
+              if missing:
+                  gaps.append({"period":period,"missing_pages":missing,"sidecar":str(sidecar)})
+          print(json.dumps({"symbol":"HHV","remaining_page_gaps":gaps}, ensure_ascii=False, indent=2))
+          if gaps:
+              raise SystemExit("Some HHV source pages 1-18 are still missing; preserve gap details for manual review.")
+          PY
+      - name: Commit only HHV archive evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -- reports/raw/HHV
+          if git diff --cached --quiet; then
+            echo "No HHV sidecar changes were produced."
+            exit 0
+          fi
+          git commit -m "Extract HHV cash-flow statement source pages"
+          git push origin HEAD:main
