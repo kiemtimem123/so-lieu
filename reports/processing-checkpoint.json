@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T01:40:00+07:00",
+  "updatedAt": "2026-10-30T02:00:00+07:00",
   "processingMode": "one_ticker_at_a_time_checkpoint_on_pass_no_reload_of_passed_data",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -39,8 +39,8 @@
     "VCK",
     "MBB"
   ],
-  "lastCompletedSymbol": "DPG",
-  "activeSymbol": "PLX",
+  "lastCompletedSymbol": "PLX",
+  "activeSymbol": "IDC",
   "resumeSymbolHint": "ACB",
   "resumeRule": "Read reports/processing-checkpoint.json first. Do not reload/re-OCR/re-parse a ticker already passed under the current standard unless explicit new evidence, an applicable standard change, or regression failure requires reopening. Finish one ticker, write its checkpoint immediately, then proceed.",
   "lastProgress": {
@@ -588,22 +588,27 @@
       "snapshotFetchedAt": "2026-10-23T18:00:37+00:00"
     },
     "PLX": {
-      "status": "automated_processing_complete",
+      "status": "terminal_needs_manual_review",
       "completeForAutomation": true,
       "manualReviewRemaining": true,
       "periodCount": 10,
       "firstQuarter": "2024-Q1",
       "lastQuarter": "2026-Q2",
       "pendingCorePeriods": [],
-      "terminalManualReviewPeriods": [],
+      "terminalManualReviewPeriods": [
+        "2025-Q1",
+        "2026-Q1",
+        "2026-Q2"
+      ],
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
-      "statementPagesPending": false,
+      "statementPagesPending": true,
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-10-25T21:28:15Z",
-      "snapshotFetchedAt": "2026-10-25T21:25:00Z"
+      "updatedAt": "2026-10-30T02:00:00+07:00",
+      "snapshotFetchedAt": "2026-10-25T21:25:00Z",
+      "note": "Quarter/YTD flow sums, FX-aware bridges, and quarter-to-YTD delta tests pass within <=0.01% for 9 complete periods. Terminal manual review remains for two cross-year cash-basis discrepancies >0.01%, source visual review, and unreadable Q2/2026 cash-flow OCR. Source amounts preserved with no balancing plugs."
     },
     "IDC": {
       "status": "automated_processing_complete",
@@ -1462,9 +1467,9 @@
     "standardVersion": "2.7",
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
-    "activeSymbol": "PLX",
-    "status": "in_progress_source_review",
-    "lastUpdatedAt": "2026-10-30T01:40:00+07:00",
+    "activeSymbol": "IDC",
+    "status": "terminal_manual_review_recorded_next_ticker",
+    "lastUpdatedAt": "2026-10-30T02:00:00+07:00",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1737,7 +1742,13 @@
       "DPG cash-flow validation pass 2026-10-30: existing CI runs Validate Site and Data #1372 and Validate quarterly financial data #596 succeeded on the current data/checkpoint commits. Reconciliation recheck accepts Q1/2024 cash-bridge residual 0.00006983% and Q3/2024 YTD flow residual 0.00542057% under the user-defined <=0.01% rule, retaining residuals without plugs.",
       "DPG cash-flow validation 2026-10-30: unresolved source exceptions preserved for terminal manual review rather than fabricated: Q2/2024 investing flow blank; FY2024-derived standalone Q4 flow residual -30 million VND = 0.02174985% of quarter net change (above tolerance); Q4/2025 CFO blank due ambiguous OCR; Q2/2026 opening cash blank due mismatch with prior close; direct visual source review still pending. Do not treat the entire DPG cash-flow set as a clean PASS.",
       "PLX initial cash-flow-domain audit started 2026-10-30 using existing data/financials-PLX.json; no re-download/re-OCR. JSON parses, 10/10 expected quarters 2024-Q1–2026-Q2 exist with no duplicates, source-index links use the approved PLX VietstockFinance catalog, and source PDF links are Vietstock-hosted.",
-      "PLX initial structural checks pass: total assets = total liabilities + equity within 0.01% for every period with all three values; no cash-flow component-sum failure was found where the quarter/YTD components and net change are all present. Q2/2026 cash-flow fields are absent/incomplete while cash_beginning=10,034,406 and cash_ending=6,323,957 are present; this period requires targeted review and must not be treated as fully reconciled."
+      "PLX initial structural checks pass: total assets = total liabilities + equity within 0.01% for every period with all three values; no cash-flow component-sum failure was found where the quarter/YTD components and net change are all present. Q2/2026 cash-flow fields are absent/incomplete while cash_beginning=10,034,406 and cash_ending=6,323,957 are present; this period requires targeted review and must not be treated as fully reconciled.",
+      "PLX cash-flow regression completed in commit 99f9964e4a2f6c6e24c978d4ed9101c7afd345ab. Nine complete periods (2024-Q1 through 2026-Q1) pass quarter/YTD flow-component sums, FX-aware quarterly and YTD cash bridges, and quarter-versus-YTD delta checks within the agreed <=0.01% relative tolerance; +/-1 million VND rounded residuals are preserved.",
+      "PLX source-derived cash-flow and opening/closing cash fields were registered in financial_line_items_extracted_fields and removed from exact matching rejection entries only where numeric values pass reconciliation. Source amounts were not changed. Regression class PLXCashFlowNormalizationTests added to tests/test_cashflow_bridge.py.",
+      "PLX 2026-10-30 CI PASS on commit 99f9964e4a2f6c6e24c978d4ed9101c7afd345ab: Validate quarterly financial data run 40937321618, Validate Site and Data run 40937321576, Package Hostinger Stock Dashboard run 40937321577 all completed successfully.",
+      "PLX cross-year source cash basis exceptions retained without balancing plug: FY2024 close 15,062,136 vs Q1/2025 opening 14,933,069 million VND, residual -129,067 million (0.856897%); FY2025 close 10,803,154 vs Q1/2026 opening 7,588,240 million, residual -3,214,914 million (29.759031%). Both exceed the 0.01% tolerance and remain manual review items.",
+      "PLX Q2/2026 cash-flow table on archived VietstockFinance PDF pages 6-7 is unreadable in its existing OCR sidecar. CFO/CFI/CFF/net change and YTD/FX flow fields remain null; opening cash 10,034,406 is linked to Q1/2026 closing cash and closing cash 6,323,957 is independently supported by the Q2/2026 balance sheet. No amounts were inferred from the cash bridge.",
+      "PLX official source-index page could not be retrieved directly during this pass; web search did not confirm a Q3/2026 linked BCTC. The dataset's latest available PLX period remains Q2/2026; do not claim Q3/2026 is unpublished."
     ],
     "unresolved": [
       "NLG NEEDS_MANUAL_REVIEW — H1/2024 selected later comparative in Q2/2025 reclassifies CFO/CFI versus the original Q2/2024 source by >0.01%; net cash movement and cash balances remain unchanged. Preserve both source bases and selected later comparative; do not plug.",
@@ -1802,7 +1813,7 @@
       "HHV NEEDS_MANUAL_REVIEW_CROSS_PERIOD_CASH_BASIS_GT_0_01_PERCENT — Q2/2026 YTD opening cash differs from FY2025 close by -15,039,846,885 VND; Q2 standalone bridge residual against Q1 close is -15,039,808,794 VND (~2.96%). Keep both printed source balances and no balancing plug.",
       "HHV source-page direct image review remains pending because the direct PDF viewer could not render the archived VietstockFinance PDFs; OCR sidecars and arithmetic checks are not presented as visual verification."
     ],
-    "nextStep": "Continue PLX cash-flow validation using the existing snapshot and archived source sidecars. Q2/2026 cash-flow fields are incomplete; inspect only that period and run all four cash-flow regression layers before marking PLX terminal review or complete.",
+    "nextStep": "PLX automated checks pass for nine complete periods, with two terminal cross-year source-basis exceptions and unreadable Q2/2026 flow OCR documented. Continue with IDC next from the existing snapshot/archive; do not reload already checked data.",
     "previousCompletedSymbol": "HHV",
     "validationRuns": [
       {
@@ -2031,60 +2042,52 @@
       "Do not reload, re-OCR, or re-parse data already passed under the current standard unless a new source, explicit correction, standard change affecting it, or regression failure requires reopening."
     ],
     "activeTickerFindings": {
-      "ticker": "PLX",
-      "status": "initial_structural_tests_pass_cashflow_review_in_progress",
-      "periods": 10,
+      "ticker": "IDC",
+      "status": "queued_existing_snapshot_review",
+      "periodCount": 10,
       "firstQuarter": "2024-Q1",
-      "latestAvailablePeriod": "2026-Q2",
-      "sourcePolicy": "Only VietstockFinance document catalog and directly linked official PDF/ZIP",
-      "existingSnapshot": "data/financials-PLX.json",
-      "initialTests": {
-        "jsonParse": "PASS",
-        "expectedPeriods": "PASS 10/10",
-        "duplicatePeriods": "PASS none",
-        "sourceIndex": "PASS",
-        "sourcePdf": "PASS",
-        "balanceSheetEquation": "PASS",
-        "componentSumsWhereComplete": "PASS no failures detected",
-        "latestPeriodCashflow": "INCOMPLETE_NEEDS_REVIEW"
-      },
-      "manualReviewRemaining": [
-        "PLX 2026-Q2 cash-flow components and net cash change are absent/incomplete, though opening and closing cash are populated; inspect only the already archived VietstockFinance Q2/2026 source pages/sidecar.",
-        "Run full YTD/quarter flow sum, cash bridge including FX, standalone-quarter versus YTD difference, and adjacent-quarter continuity checks across all ten periods.",
-        "Preserve source discrepancies and leave uncertain values blank; do not create balancing plugs."
-      ],
-      "nextStep": "Continue targeted PLX cash-flow validation using existing archives, then update checkpoint before selecting the next ticker."
+      "latestPeriod": "2026-Q2",
+      "existingSnapshot": "data/financials-IDC.json",
+      "sourcePolicy": "Only VietstockFinance document catalog and directly linked PDF/ZIP",
+      "reloadRule": "Reuse the existing snapshot and archived OCR sidecars; no re-download/re-OCR for already checked data.",
+      "nextStep": "Audit IDC with schema/source/period tests and the four cash-flow reconciliation layers. Keep all uncertain fields blank; preserve discrepancies and update checkpoint before moving to another ticker."
     },
     "tickerComplete": false,
-    "manualReviewRemaining": [],
+    "manualReviewRemaining": [
+      "PLX: direct visual review of OCR-derived source pages remains pending.",
+      "PLX Q1/2025: opening cash 14,933,069 vs FY2024 closing 15,062,136 million VND; residual -129,067 million (0.856897%), above tolerance.",
+      "PLX Q1/2026: opening cash 7,588,240 vs FY2025 closing 10,803,154 million VND; residual -3,214,914 million (29.759031%), above tolerance.",
+      "PLX Q2/2026: cash-flow table OCR unreadable on source pages 6-7; flow values remain null; no bridge-derived imputation."
+    ],
     "lastTickerReview": {
-      "ticker": "DPG",
+      "ticker": "PLX",
       "status": "terminal_needs_manual_review",
       "periodsReviewedThrough": "2026-Q2",
       "latestAvailablePeriodInSnapshot": "2026-Q2",
       "periodCount": 10,
+      "lastDataCommit": "99f9964e4a2f6c6e24c978d4ed9101c7afd345ab",
       "tests": {
-        "jsonParse": "PASS",
-        "expectedPeriodsAndDuplicates": "PASS",
-        "approvedVietstockSourcePattern": "PASS",
-        "balanceSheetEquation": "PASS",
-        "existingCiRuns": "PASS",
-        "q1_2024CashBridgeRelativeDifferencePercent": 0.00006982845244088846,
-        "q3_2024YtdFlowRelativeDifferencePercent": 0.005420573243689098,
-        "q4_2024StandaloneFlowResidualMillionVND": -30,
-        "q4_2024StandaloneFlowResidualRelativePercent": 0.021749847751065744,
-        "q4_2024StandaloneFlowSum": "FAIL_ABOVE_0.01_PERCENT_TOLERANCE"
+        "jsonAndPeriodSchema": "PASS 10/10 expected quarters, no duplicate periods",
+        "approvedSourceAndUnit": "PASS VietstockFinance index + linked static2.vietstock PDFs, unit million VND",
+        "balanceSheetEquation": "PASS for periods with complete core balance values",
+        "quarterFlowComponents": "PASS 9/9 complete periods within <=0.01%",
+        "ytdFlowComponents": "PASS 9/9 complete periods within <=0.01%",
+        "fxAwareQuarterCashBridge": "PASS 9/9 complete periods within <=0.01%",
+        "fxAwareYtdCashBridge": "PASS 9/9 complete periods within <=0.01%",
+        "quarterlyFlowsEqualYtdDifference": "PASS 9/9 complete periods within <=0.01%",
+        "withinYearCashContinuity": "PASS for complete data periods",
+        "crossYearCashContinuity": "NEEDS_MANUAL_REVIEW two exceptions >0.01%",
+        "q2_2026CashFlow": "NEEDS_MANUAL_REVIEW source OCR unreadable; values withheld",
+        "ci": "PASS Validate quarterly financial data #597; Validate Site and Data #1376; Package Hostinger Stock Dashboard #174"
       },
       "manualReviewRemaining": [
-        "2024-Q2 investing cash flow OCR candidate conflicts with reported net; leave blank.",
-        "2024-Q4 standalone flow residual -30 million VND (0.02174985%); preserve source values, no balancing plug.",
-        "2025-Q4 operating cash flow OCR ambiguous; leave blank.",
-        "2026-Q2 opening cash OCR conflicts with preceding quarter closing cash; leave blank.",
-        "Visual review of OCR-derived cash-flow source pages pending.",
-        "Official VietstockFinance index check for a newly published DPG Q3/2026 report not confirmed in this pass."
+        "Direct visual source PDF review remains pending for OCR-derived cash-flow rows.",
+        "FY2024 closing cash 15,062,136 vs Q1/2025 opening 14,933,069 million VND: residual -129,067 million (0.856897%). Preserve both original values.",
+        "FY2025 closing cash 10,803,154 vs Q1/2026 opening 7,588,240 million VND: residual -3,214,914 million (29.759031%). Preserve both original values.",
+        "Q2/2026 cash-flow table OCR on pages 6-7 is unreadable; flow components/net change remain blank.",
+        "Direct official VietstockFinance document index could not be verified for a new Q3/2026 report in this pass; snapshot remains at Q2/2026."
       ],
-      "lastDataCommit": "7e0a85cc231cd72faaa3cd6b580267dc53aea8fd",
-      "nextAction": "Do not reload or re-OCR DPG data already checked. Proceed to PLX using existing snapshot and archived VietstockFinance source PDFs; audit only outstanding cash-flow mappings/tests for PLX."
+      "nextAction": "Proceed to IDC by reusing data/financials-IDC.json and its archived PDF/OCR sidecars. Run source/schema/period checks, then quarter/YTD flow sums, FX-aware quarter/YTD cash bridges, quarter=YTD deltas and adjacent-period continuity. Do not reload/re-OCR passed data."
     }
   },
   "nextSymbolHint": "HHV"
