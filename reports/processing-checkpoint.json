@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-29T10:00:53.342Z",
+  "updatedAt": "2026-10-29T21:05:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -1450,9 +1450,9 @@
     "standardVersion": "2.6",
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
-    "activeSymbol": "HHV",
+    "activeSymbol": "DPG",
     "status": "in_progress_next_ticker",
-    "lastUpdatedAt": "2026-10-29T10:00:53.342Z",
+    "lastUpdatedAt": "2026-10-29T21:05:00+07:00",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1694,7 +1694,19 @@
       "NVL cash-flow: manually reviewed Q1/2025 comparator, H1/2025 comparator in Q2/2026, Q3/2025 current source, and Q1/Q2 2026 source pages. Q4/2025 source remains OCR-sidecar based pending a direct visual check.",
       "NVL cash-basis issues retained: H1/2024 and FY2024 reclassifications; H1/2025 comparator revision; FY2025 close 4,395,320,969,838 VND vs later re-presented opening 4,208,770,020,478 VND; Q4/2025 close to Q1/2026 opening difference 2,261,673,373 VND (>0.01%); Q1/Q2 2026 YTD opening-basis revision causes Q2 standalone cash bridge residual around -188,812 million VND (>0.01%). No balancing plugs.",
       "NVL normalization and related CI all PASS: Validate Site and Data run 40853848282; quarterly financial validation run 40853800705; dashboard package run 40853800513; standard documentation validation run 40853979999; final checkpoint validation run 40854028339.",
-      "NVL cash-flow series saved for 10 periods. Residuals within 0.01% accepted; H1/2024, FY2024, H1/2025 comparative reclassifications and FY2025/Q1-Q2 2026 cash-basis exceptions remain flagged, no balancing plugs."
+      "NVL cash-flow series saved for 10 periods. Residuals within 0.01% accepted; H1/2024, FY2024, H1/2025 comparative reclassifications and FY2025/Q1-Q2 2026 cash-basis exceptions remain flagged, no balancing plugs.",
+      "HHV cash-flow series normalized for 10 periods 2024-Q1 through 2026-Q2; exact source VND figures, selected YTD basis, archive path and statement page numbers saved in each row's cashflow_audit_revision.",
+      "HHV: source line mapping is statement row 20 CFO, 30 CFI, 40 CFF, 50 net cash movement, 60 opening cash, 61 FX effect, and 70 closing cash; reported VND values scaled to million VND without adding balancing plugs.",
+      "HHV: later comparative basis selected for H1/2024 from Q2/2025, FY2024 from Q4/2025, and H1/2025 from Q2/2026; original source values and per-field relative differences retained.",
+      "HHV: Q3/2024 later comparative OCR has a 10,010,000 VND component/net residual (~0.0139%); original internally reconciling source retained pending direct image review.",
+      "HHV: original Q4/2024 OCR values contain about 30,000,000,000 VND component/cash bridge discrepancy; later FY2024 comparative from Q4/2025 selected, old source retained with manual-review flag; selected comparative flow residual 100,000 VND is below 0.01%.",
+      "HHV: H1/2025 later comparative in Q2/2026 selected; CFO/CFI/CFF reclassification exceeds 0.01%, while 30,030 VND flow residual is below threshold and accepted without a plug.",
+      "HHV: Q2/2026 YTD opening cash 571,723,614,675 VND differs from FY2025 close 586,763,461,560 VND by -15,039,846,885 VND; standalone Q2 cash bridge residual is -15,039,808,794 VND (~2.96%). Preserve source values and mark manual review.",
+      "HHV Q1/Q2 2026 missing statement pages 16-18 were OCR-extracted into source sidecars with the dedicated workflow. OCR sidecar values are arithmetically reconciled where noted; direct PDF image viewer was unavailable, so no claim of direct image verification.",
+      "HHV regression coverage added to tests/test_cashflow_bridge.py: 10 periods, source VND provenance, unit scaling, 0.01% relative tolerance, later comparatives, selected cash bridges, and Q2/2026 cross-period issue.",
+      "HHV normalized snapshot validation passed: Validate Site and Data 40889038726, Validate quarterly financial data 40889038727, Package Hostinger Stock Dashboard 40889038814.",
+      "HHV regression test + documentation validation passes: Validate Site and Data run 40889485011 after comparator test refinement and run 40889650791 after standard v2.6 documentation update.",
+      "HHV extraction workflow succeeded: run 40887648122; workflow/YAML validation run 40887648011."
     ],
     "unresolved": [
       "NLG NEEDS_MANUAL_REVIEW — H1/2024 selected later comparative in Q2/2025 reclassifies CFO/CFI versus the original Q2/2024 source by >0.01%; net cash movement and cash balances remain unchanged. Preserve both source bases and selected later comparative; do not plug.",
@@ -1751,10 +1763,16 @@
       "NVL 2025-Q2/Q3: H1/2025 values from Q2/2026 report differ >0.01% from original H1/2025 report; Q3 standalone derived on later comparator basis.",
       "NVL 2025-Q4 vs later Q2/2026 restated cash basis: 4,395,320,969,838 VND vs 4,208,770,020,478 VND, >0.01%, no adjustment without amended FY2025 cash-flow source.",
       "NVL Q4/2025 close to Q1/2026 opening difference +2,261,673,373 VND (~0.051%); Q1 report internally reconciles.",
-      "NVL Q2/2026 source opening basis 4,208,770,020,478 VND differs from Q1/2026 YTD opening 4,397,582,643,211 VND; its own YTD bridge passes but standalone Q2 bridge computed from YTD differences is about -188,812 million VND residual, >0.01%, preserve manual review."
+      "NVL Q2/2026 source opening basis 4,208,770,020,478 VND differs from Q1/2026 YTD opening 4,397,582,643,211 VND; its own YTD bridge passes but standalone Q2 bridge computed from YTD differences is about -188,812 million VND residual, >0.01%, preserve manual review.",
+      "HHV NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT — H1/2024 later comparative in Q2/2025 revises CFO/CFI materially versus the original report. Net/closing cash differences are within 0.01%; selected comparative and both source bases are preserved.",
+      "HHV NEEDS_MANUAL_REVIEW_COMPARATOR_ARITHMETIC_GT_0_01_PERCENT — later 9M/2024 comparative OCR from Q3/2025 has a -10,010,000 VND component/net residual (~0.0139%). Original Q3/2024 source selected because its totals reconcile; visual image review pending.",
+      "HHV NEEDS_MANUAL_REVIEW_SOURCE_RECONCILIATION_GT_0_01_PERCENT — original Q4/2024 OCR sidecar has a -30,000,000,000 VND flow-total and cash bridge discrepancy. FY2024 comparison from Q4/2025 selected; old values and new comparison retained; direct source image review pending.",
+      "HHV NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT — H1/2025 later comparative in Q2/2026 materially reclassifies CFO/CFI/CFF versus original H1/2025, although net movement/closing cash differ under 0.01%. Preserve both source bases; no plug.",
+      "HHV NEEDS_MANUAL_REVIEW_CROSS_PERIOD_CASH_BASIS_GT_0_01_PERCENT — Q2/2026 YTD opening cash differs from FY2025 close by -15,039,846,885 VND; Q2 standalone bridge residual against Q1 close is -15,039,808,794 VND (~2.96%). Keep both printed source balances and no balancing plug.",
+      "HHV source-page direct image review remains pending because the direct PDF viewer could not render the archived VietstockFinance PDFs; OCR sidecars and arithmetic checks are not presented as visual verification."
     ],
-    "nextStep": "NVL saved after PASS checks. Continue with HHV cash-flow normalization only. Keep the 0.01% relative tolerance rule, use VietstockFinance consolidated sources, compare against later comparative columns when available, preserve raw source VND values and flag material source-basis changes without balancing plugs.",
-    "previousCompletedSymbol": "NVL",
+    "nextStep": "HHV cash-flow normalization saved for 10 periods and automated regression/source arithmetic checks PASS. The 0.01% relative tolerance is applied to small rounding residuals; material source reclassifications and the Q2/2026 opening-cash basis remain explicitly flagged, with no balancing plugs. Next, continue with DPG cash-flow only using reports/financial-data-normalization-standard.md v2.6, one ticker at a time.",
+    "previousCompletedSymbol": "HHV",
     "validationRuns": [
       {
         "name": "Validate Site and Data",
@@ -1930,6 +1948,48 @@
         "status": "success",
         "commit": "409bf3f6e1e249cadadd6e1e42e64792c73cac22",
         "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40854028339"
+      },
+      {
+        "name": "Extract HHV Cash-Flow Statement Pages",
+        "runId": "40887648122",
+        "status": "success",
+        "commit": "d8d16a5cb33bf08c1869e5bd261067cbf9ef2f5c",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40887648122"
+      },
+      {
+        "name": "Validate Site and Data",
+        "runId": "40889038726",
+        "status": "success",
+        "commit": "3a3b391a127b6fe25dabad1a29c8ed818122ed74",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40889038726"
+      },
+      {
+        "name": "Validate quarterly financial data",
+        "runId": "40889038727",
+        "status": "success",
+        "commit": "3a3b391a127b6fe25dabad1a29c8ed818122ed74",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40889038727"
+      },
+      {
+        "name": "Package Hostinger Stock Dashboard",
+        "runId": "40889038814",
+        "status": "success",
+        "commit": "3a3b391a127b6fe25dabad1a29c8ed818122ed74",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40889038814"
+      },
+      {
+        "name": "Validate Site and Data",
+        "runId": "40889485011",
+        "status": "success",
+        "commit": "a10fa3dc5e1658aab5f8f08cd26c0f33ff3b4659",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40889485011"
+      },
+      {
+        "name": "Validate Site and Data",
+        "runId": "40889650791",
+        "status": "success",
+        "commit": "6d93117483b52938072e8be2a79dd826e13bb4d1",
+        "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40889650791"
       }
     ],
     "lastCompletedSymbol": "BID",
