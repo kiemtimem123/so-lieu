@@ -2699,5 +2699,164 @@ class KDHCashFlowNormalizationTests(unittest.TestCase):
         self.assertLessEqual(q2rec["ytd_cash_bridge_relative_difference_percent"], 0.01)
         self.assertTrue(q2rec["no_balancing_plug"])
 
+
+
+class NVLCashFlowNormalizationTests(unittest.TestCase):
+    """Regression for NVL cash-flow series, source revisions and 0.01% tolerance."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.snapshot = json.loads(
+            (ROOT / "data" / "financials-NVL.json").read_text(encoding="utf-8")
+        )
+        cls.rows = {row["period"]: row for row in cls.snapshot["items"]}
+
+    def test_nvl_ten_periods_use_source_ytd_and_correct_vnd_scaling(self):
+        expected = {
+            "2024-Q1", "2024-Q2", "2024-Q3", "2024-Q4", "2025-Q1",
+            "2025-Q2", "2025-Q3", "2025-Q4", "2026-Q1", "2026-Q2",
+        }
+        self.assertEqual(set(self.rows), expected)
+        self.assertEqual(len(self.rows), 10)
+        core_fields = (
+            "operating_cash_flow", "investing_cash_flow", "financing_cash_flow",
+            "net_cash_change", "operating_cash_flow_ytd", "investing_cash_flow_ytd",
+            "financing_cash_flow_ytd", "net_cash_change_ytd", "cash_beginning",
+            "cash_ending", "cash_beginning_reported_ytd", "cash_ending_reported_ytd",
+            "foreign_exchange_effect", "foreign_exchange_effect_ytd",
+        )
+        for period, row in self.rows.items():
+            with self.subTest(period=period):
+                audit = row["cashflow_audit_revision"]
+                rec = row["cashflow_source_reconciliation"]
+                self.assertEqual(row["cashflow_period_basis"], "year_to_date")
+                self.assertEqual(row["unit"], "triệu VND")
+                self.assertEqual(row["source_index_url"],
+                                 "https://finance.vietstock.vn/NVL/tai-tai-lieu.htm?doctype=1")
+                self.assertEqual(audit["source_reporting_unit"], "VND")
+                self.assertEqual(audit["stored_unit"], "triệu VND")
+                self.assertIn("source_values_raw_vnd", audit)
+                self.assertEqual(rec["tolerance_percent"], 0.01)
+                self.assertTrue(rec["no_balancing_plug"])
+                for field in core_fields:
+                    self.assertIn(field, row.get("financial_line_items_extracted_fields", []))
+                    self.assertNotIn(field, row.get("financial_line_items_rejected_fields", []))
+                    self.assertIsInstance(row.get(field), (int, float), field)
+                    self.assertNotIsInstance(row.get(field), bool)
+
+                raw = audit["source_values_raw_vnd"]
+                self.assertEqual(raw["cfo"] + raw["cfi"] + raw["cff"], raw["net"])
+                self.assertEqual(raw["close"] - raw["open"] - raw["net"] - raw["fx"], 0)
+                for stored_key, raw_key in (
+                    ("operating_cash_flow_ytd", "cfo"),
+                    ("investing_cash_flow_ytd", "cfi"),
+                    ("financing_cash_flow_ytd", "cff"),
+                    ("net_cash_change_ytd", "net"),
+                    ("cash_beginning_reported_ytd", "open"),
+                    ("cash_ending_reported_ytd", "close"),
+                    ("foreign_exchange_effect_ytd", "fx"),
+                ):
+                    self.assertLessEqual(abs(row[stored_key] * 1_000_000 - raw[raw_key]), 500_000)
+
+                ytd_sum = sum(row[f] for f in (
+                    "operating_cash_flow_ytd", "investing_cash_flow_ytd",
+                    "financing_cash_flow_ytd",
+                ))
+                quarter_sum = sum(row[f] for f in (
+                    "operating_cash_flow", "investing_cash_flow", "financing_cash_flow",
+                ))
+                self.assertTrue(within_relative_tolerance(ytd_sum, row["net_cash_change_ytd"]))
+                self.assertTrue(within_relative_tolerance(quarter_sum, row["net_cash_change"]))
+                self.assertLessEqual(rec["ytd_flow_sum_relative_difference_percent"], 0.01)
+                self.assertLessEqual(rec["quarter_flow_sum_relative_difference_percent"], 0.01)
+
+                ytd_expected = (row["cash_beginning_reported_ytd"] +
+                                row["net_cash_change_ytd"] +
+                                row["foreign_exchange_effect_ytd"])
+                quarter_expected = (row["cash_beginning"] + row["net_cash_change"] +
+                                    row["foreign_exchange_effect"])
+                if rec["ytd_cash_bridge_relative_difference_percent"] <= 0.01:
+                    self.assertTrue(within_relative_tolerance(row["cash_ending_reported_ytd"], ytd_expected))
+                    self.assertTrue(rec["ytd_cash_bridge_within_tolerance"])
+                else:
+                    self.assertTrue(rec["status"].startswith("NEEDS_MANUAL_REVIEW"))
+                if rec["quarter_cash_bridge_relative_difference_percent"] <= 0.01:
+                    self.assertTrue(within_relative_tolerance(row["cash_ending"], quarter_expected))
+                    self.assertTrue(rec["quarter_cash_bridge_within_tolerance"])
+                else:
+                    self.assertTrue(rec["status"].startswith("NEEDS_MANUAL_REVIEW"))
+
+                year, qtext = period.split("-Q")
+                q = int(qtext)
+                if q == 1:
+                    for flow in ("operating_cash_flow", "investing_cash_flow",
+                                 "financing_cash_flow", "net_cash_change"):
+                        self.assertEqual(row[flow], row[flow + "_ytd"])
+                    self.assertEqual(row["foreign_exchange_effect"], row["foreign_exchange_effect_ytd"])
+                else:
+                    prior = self.rows[f"{year}-Q{q-1}"]
+                    for flow in ("operating_cash_flow", "investing_cash_flow",
+                                 "financing_cash_flow", "net_cash_change"):
+                        self.assertEqual(row[flow], row[flow + "_ytd"] - prior[flow + "_ytd"])
+                    self.assertEqual(row["foreign_exchange_effect"],
+                                     row["foreign_exchange_effect_ytd"] -
+                                     prior["foreign_exchange_effect_ytd"])
+
+    def test_nvl_later_comparatives_and_source_reclassifications_are_traced(self):
+        q2_2024 = self.rows["2024-Q2"]
+        self.assertIn("NVL_Baocaotaichinh_Q2_2025", q2_2024["cashflow_audit_revision"]["selected_source_url"])
+        self.assertGreater(
+            q2_2024["cashflow_audit_revision"]["previous_source_comparison"]["cfo"]["relative_difference_percent"],
+            0.01,
+        )
+        self.assertGreater(
+            q2_2024["cashflow_audit_revision"]["previous_source_comparison"]["net"]["relative_difference_percent"],
+            0.01,
+        )
+        self.assertTrue(q2_2024["cashflow_source_reconciliation"]["status"].startswith("NEEDS_MANUAL_REVIEW"))
+
+        q4_2024 = self.rows["2024-Q4"]
+        self.assertIn("NVL_Baocaotaichinh_Q4_2025", q4_2024["cashflow_audit_revision"]["selected_source_url"])
+        self.assertGreater(
+            q4_2024["cashflow_audit_revision"]["previous_source_comparison"]["cfo"]["relative_difference_percent"],
+            0.01,
+        )
+        self.assertTrue(q4_2024["cashflow_source_reconciliation"]["no_balancing_plug"])
+
+        q2_2025 = self.rows["2025-Q2"]
+        self.assertIn("NVL_Baocaotaichinh_Q2_2026", q2_2025["cashflow_audit_revision"]["selected_source_url"])
+        self.assertGreater(
+            q2_2025["cashflow_audit_revision"]["previous_source_comparison"]["net"]["relative_difference_percent"],
+            0.01,
+        )
+        self.assertTrue(q2_2025["cashflow_source_reconciliation"]["status"].startswith("NEEDS_MANUAL_REVIEW"))
+        self.assertTrue(self.rows["2025-Q3"]["cashflow_source_reconciliation"]["status"].startswith("NEEDS_MANUAL_REVIEW"))
+
+    def test_nvl_later_restated_fy2025_cash_basis_is_preserved(self):
+        fy25 = self.rows["2025-Q4"]
+        rec = fy25["cashflow_source_reconciliation"]
+        self.assertEqual(fy25["cash_ending_reported_ytd"], 4_395_321)
+        self.assertEqual(fy25["cashflow_audit_revision"]["later_report_represented_fy2025_cash_close_raw_vnd"],
+                         4_208_770_020_478)
+        self.assertGreater(rec["later_report_fy2025_cash_basis_relative_difference_percent"], 0.01)
+        self.assertTrue(rec["status"].startswith("NEEDS_MANUAL_REVIEW"))
+
+    def test_nvl_2026_q1_q2_source_cash_basis_conflict_remains_unplugged(self):
+        q1 = self.rows["2026-Q1"]
+        q1rec = q1["cashflow_source_reconciliation"]
+        self.assertEqual(q1["cash_ending_reported_ytd"], 4_518_329)
+        self.assertEqual(q1rec["q4_2025_close_to_q1_2026_opening_residual_raw_vnd"], 2_261_673_373)
+        self.assertGreater(q1rec["q4_2025_close_to_q1_2026_opening_relative_difference_percent"], 0.01)
+
+        q2 = self.rows["2026-Q2"]
+        q2rec = q2["cashflow_source_reconciliation"]
+        self.assertEqual(q2["cash_beginning_reported_ytd"], 4_208_770)
+        self.assertEqual(q2rec["q1_to_q2_reported_ytd_opening_residual_raw_vnd"], -188_812_622_733)
+        self.assertGreater(q2rec["q1_to_q2_reported_ytd_opening_relative_difference_percent"], 0.01)
+        self.assertLessEqual(q2rec["ytd_cash_bridge_relative_difference_percent"], 0.01)
+        self.assertGreater(q2rec["quarter_cash_bridge_relative_difference_percent"], 0.01)
+        self.assertEqual(q2rec["quarter_cash_bridge_residual"], -188_812)
+        self.assertTrue(q2rec["no_balancing_plug"])
+
 if __name__ == "__main__":
     unittest.main()
