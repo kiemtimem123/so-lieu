@@ -333,7 +333,7 @@ class ACBCashFlowNormalizationTests(unittest.TestCase):
         correction = row["cashflow_source_reconciliation"]["source_ocr_correction"]
         self.assertEqual(correction["misread_value"], 416533043)
         self.assertEqual(correction["corrected_source_value"], 116533043)
-        self.assertEqual(correction["units"], "triệu VND")
+        self.assertEqual(correction["unit"], "triệu VND")
         self.assertEqual(row["cashflow_source_reconciliation"]["ytd_cash_bridge_residual"], 0)
 
 
@@ -1983,9 +1983,9 @@ class CTGCashFlowNormalizationTests(unittest.TestCase):
                 self.assertEqual(cash_bridge_delta(row), 0)
                 self.assertEqual(row["cashflow_source_reconciliation"]["ytd_cash_bridge_residual"], 0)
                 self.assertEqual(row["cashflow_source_reconciliation"]["quarter_cash_bridge_residual"], 0)
+                review = row["cashflow_audit_revision"].get("source_basis_review") or {}
                 self.assertEqual(row["cashflow_source_reconciliation"]["status"],
-                                 row["cashflow_audit_revision"].get("source_basis_review", {}).get(
-                                     "status", row["cashflow_source_reconciliation"]["status"]))
+                                 review.get("status", row["cashflow_source_reconciliation"]["status"]))
                 self.assertTrue(all(field in row["financial_line_items_extracted_fields"]
                                     for field in core))
                 self.assertTrue(all(field not in row.get("financial_line_items_rejected_fields", [])
@@ -2048,9 +2048,9 @@ class CTGCashFlowNormalizationTests(unittest.TestCase):
         self.assertEqual(row["cash_ending_reported_ytd"], 578995009)
         self.assertEqual(row["cash_ending"], 578995009)
         correction = row["cashflow_source_reconciliation"]["source_ocr_correction"]
-        self.assertEqual(correction["misreadValue"], 578095009)
-        self.assertEqual(correction["correctedValue"], 578995009)
-        self.assertEqual(correction["sourcePdfPage"], 11)
+        self.assertEqual(correction["old"], 578095009)
+        self.assertEqual(correction["new"], 578995009)
+        self.assertEqual(correction["page"], 11)
         self.assertEqual(correction["units"], "triệu VND")
         self.assertEqual(row["cashflow_source_reconciliation"]["ytd_cash_bridge_residual"], 0)
         self.assertEqual(cash_bridge_delta(row), 0)
