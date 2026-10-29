@@ -1,6 +1,6 @@
 # Quy trình chuẩn hóa dữ liệu tài chính theo từng mảng
 
-Phiên bản: 2.5  
+Phiên bản: 2.6  
 Ngày thiết lập: 2026-10-28  
 Cập nhật gần nhất: 2026-10-29  
 Phạm vi: `kiemtimem123/so-lieu`, dữ liệu BCTC quý từ 2024-Q1 trở đi.
@@ -681,3 +681,26 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 - `tests/test_cashflow_bridge.py` có thêm `NVLCashFlowNormalizationTests`: 10 kỳ, nguồn VND và quy đổi triệu VND, tổng ba luồng tiền, YTD/quý riêng, cầu nối có ảnh hưởng tỷ giá, comparative đổi cơ sở, và các ngoại lệ tiền Q4/2025–Q2/2026.
 - Kiểm tra trước khi ghi snapshot: tổng CFO+CFI+CFF khớp dòng 50 ở **10/10 kỳ trong số liệu nguồn chính xác**; cầu nối YTD ở nguồn gốc khớp; các tổng ở snapshot sau làm tròn nằm trong 0,01%; dữ liệu quý riêng được tính là hiệu YTD liên tiếp.
 - Trạng thái NVL sau chuẩn hóa: **đã sửa phần tự động hóa dữ liệu**, còn **NEEDS_MANUAL_REVIEW** cho reclassification H1/2024, FY2024, H1/2025 và cơ sở số dư tiền FY2025/Q1–Q2 2026. Không có giá trị nào được điền bằng ước tính.
+
+
+## Lượt chuẩn hóa HHV — lưu chuyển tiền tệ (2026-10-29)
+
+### Quy tắc áp dụng
+- Snapshot: `data/financials-HHV.json`, 10 kỳ từ 2024-Q1 đến 2026-Q2. Nguồn báo cáo theo quý: [danh mục tài liệu HHV trên VietstockFinance](https://finance.vietstock.vn/HHV/tai-tai-lieu.htm?doctype=1) và các PDF đã được lưu liên kết trực tiếp từ danh mục.
+- Báo cáo ghi số tiền theo **VND**; snapshot thống nhất **triệu VND**. Mỗi số tiền YTD được tính bằng số nguồn VND / 1.000.000, làm tròn tới triệu gần nhất; giá trị VND nguồn được giữ nguyên trong `cashflow_audit_revision.source_values_raw_vnd`.
+- Ánh xạ đúng dòng cuối nhóm của báo cáo lưu chuyển tiền tệ: mã 20 = CFO, mã 30 = CFI, mã 40 = CFF, mã 50 = biến động tiền thuần, mã 60 = tiền đầu kỳ, mã 61 = ảnh hưởng tỷ giá, mã 70 = tiền cuối kỳ. Không dùng subtotal “lợi nhuận từ hoạt động kinh doanh trước những thay đổi vốn lưu động” thay cho CFO.
+- Quý I = YTD quý I. Các quý II–IV = YTD hiện tại trừ YTD quý trước trong cùng năm. Không tự thêm khoản cân bằng để làm khớp cầu nối.
+- **Ngưỡng dung sai tương đối 0,01%** là `abs(actual - expected) / max(abs(actual), abs(expected), 1) × 100`. Residual không vượt ngưỡng được chấp nhận, không chặn trạng thái chỉ vì residual số học nhỏ; vẫn giữ residual gốc trong metadata. Quy tắc không cho phép bỏ qua thay đổi phân loại dòng tiền >0,01%, nguồn khác phạm vi hợp nhất, hoặc chênh lệch cơ sở tiền đầu/cuối kỳ >0,01%.
+
+### Các cơ sở nguồn được chọn và ngoại lệ
+- **H1/2024 (2024-Q2):** dùng số so sánh mới hơn trong BCTC H1/2025 của VietstockFinance. CFO và CFI thay đổi đáng kể so với báo cáo H1/2024 ban đầu; net cash và tiền cuối kỳ chỉ khác 2.440 VND. Chọn comparative mới hơn cho chuỗi chuẩn hóa nhưng giữ trạng thái manual review do tái phân loại vượt 0,01%.
+- **9M/2024 (2024-Q3):** giữ bộ số của báo cáo Q3/2024 vì ba luồng tiền cộng đúng dòng net cash. Sidecar của comparative 9M/2024 ở báo cáo Q3/2025 có tổng thành phần lệch dòng net 10.010.000 VND, khoảng **0,0139%**, vượt 0,01%; giữ cả bộ comparative trong metadata để đối chiếu, không thay thế số đang chọn bằng OCR chưa xác minh.
+- **FY2024 (2024-Q4):** dùng comparative FY2024 trong BCTC Q4/2025. Sidecar của báo cáo Q4/2024 gốc có sai lệch khoảng 30 tỷ VND ở tổng luồng tiền/cầu nối; comparative mới hơn có residual tổng CFO+CFI+CFF so với net là 100.000 VND (dưới 0,01%) và cầu nối tiền khớp. Chọn comparative mới hơn nhưng giữ manual review vì chênh lệch nguồn cũ rất lớn và chưa thể xem trực tiếp ảnh PDF qua trình xem nguồn.
+- **H1/2025 (2025-Q2):** dùng comparative H1/2025 trong báo cáo Q2/2026. CFO/CFI/CFF khác đáng kể so với H1/2025 ban đầu, trong khi net/tiền cuối kỳ chỉ khác 43.973 VND. Residual thành phần so với net 30.030 VND tương đối dưới 0,01%, được chấp nhận mà không chỉnh số; việc tái phân loại thành phần vẫn mang manual-review flag.
+- **Q1/2026 (2026-Q1):** OCR sidecar trang PDF 16–17 ghi line 20/30/40/50 = 415.266.432.734 / -17.037.407.288 / 217.218.045.306 / 615.447.070.752 VND; dòng mở/đóng tiền khớp với line 60/70 của cùng báo cáo và số tiền tương đương tiền trên bảng cân đối.
+- **H1/2026 (2026-Q2):** các dòng YTD hiện tại có tổng luồng tiền và cầu nối theo số dư đầu năm của chính báo cáo khớp. Tuy nhiên báo cáo Q2 ghi tiền đầu năm 571.723.614.675 VND, trong khi FY2025 close là 586.763.461.560 VND; residual -15.039.846.885 VND, vượt 0,01%. Khi tính quý riêng từ YTD Q2 trừ YTD Q1, cầu nối Q2 giữa tiền cuối kỳ và tiền cuối Q1 còn residual -15.039.808.794 VND (khoảng 2,96%). Giữ trạng thái `NEEDS_MANUAL_REVIEW_CROSS_PERIOD_CASH_BASIS_GT_0_01_PERCENT`, bảo toàn số in trên từng báo cáo; không đồng bộ số đầu kỳ và không chèn plug.
+
+### Giới hạn xác minh nguồn
+- Workflow `.github/workflows/extract-hhv-cashflow-pages.yml` đã điền các trang nguồn còn thiếu cho Q1/Q2-2026 vào sidecar OCR. Run [40887648122](https://github.com/kiemtimem123/so-lieu/actions/runs/40887648122) thành công. Trình xem PDF trực tiếp không mở được các PDF này trong phiên làm việc, nên các dòng số HHV được ghi nhận là **OCR sidecar + đối chiếu số học**, không tuyên bố đã xác minh ảnh PDF trực tiếp.
+- Regression `HHVCashFlowNormalizationTests` trong `tests/test_cashflow_bridge.py` kiểm tra 10 kỳ, dữ liệu nguồn VND, quy đổi đơn vị, tổng ba nhóm luồng tiền, YTD/quý riêng, cầu nối có tỷ giá, trường hiển thị, comparative history và ngoại lệ cơ sở tiền Q2/2026.
+- Trạng thái: **đã chuẩn hóa tự động và kiểm thử số học cho cả 10 kỳ; cần rà soát thủ công các comparative/reclassification và cơ sở tiền đã ghi rõ**. Không có balancing plug.
