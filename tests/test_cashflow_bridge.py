@@ -2123,7 +2123,7 @@ class BIDCashFlowNormalizationTests(unittest.TestCase):
     def test_bid_tolerance_is_relative_and_source_numbers_are_not_plugged(self):
         # Original-vs-later H1/2024 differences are below or equal to 0.01%.
         h12024 = self.rows["2024-Q2"]
-        comparison = h12024["cashflow_audit_revision"]["previous_source_basis"]["relative_comparisons"]
+        comparison = h12024["cashflow_audit_revision"]["previous_source_basis"]["relative_changes"]
         self.assertLessEqual(comparison["operating_cash_flow_ytd"]["relative_difference_percent"], 0.01)
         self.assertLessEqual(comparison["net_cash_change_ytd"]["relative_difference_percent"], 0.01)
         self.assertEqual(h12024["cashflow_source_reconciliation"]["status"],
