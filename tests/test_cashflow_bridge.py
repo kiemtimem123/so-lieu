@@ -2132,13 +2132,21 @@ class BIDCashFlowNormalizationTests(unittest.TestCase):
         q42024 = self.rows["2024-Q4"]
         self.assertEqual(q42024["cashflow_source_reconciliation"]["status"],
                          "NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT")
-        self.assertEqual(q42024["cashflow_audit_revision"]["previous_source_basis"]["ytd"],
-                         [101080084, -1127413, -94460, 99858211])
+        self.assertEqual(q42024["cashflow_audit_revision"]["previous_source_basis"]["ytd"], {
+            "operating_cash_flow_ytd": 101080084,
+            "investing_cash_flow_ytd": -1127413,
+            "financing_cash_flow_ytd": -94460,
+            "net_cash_change_ytd": 99858211,
+        })
         h12025 = self.rows["2025-Q2"]
         self.assertEqual(h12025["cashflow_source_reconciliation"]["status"],
                          "NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT")
-        self.assertEqual(h12025["cashflow_audit_revision"]["previous_source_basis"]["ytd"],
-                         [90471834, -869550, 13196654, 102798938])
+        self.assertEqual(h12025["cashflow_audit_revision"]["previous_source_basis"]["ytd"], {
+            "operating_cash_flow_ytd": 90471834,
+            "investing_cash_flow_ytd": -869550,
+            "financing_cash_flow_ytd": 13196654,
+            "net_cash_change_ytd": 102798938,
+        })
         # The Q1/2026 opening differs from FY2025 close by 18,308 million VND,
         # which is less than 0.01%; source-reported balances remain unchanged.
         q12026 = self.rows["2026-Q1"]
