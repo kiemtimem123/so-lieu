@@ -737,3 +737,13 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 - Q3/2025: số tiền và tương đương tiền trên Bảng cân đối kế toán lệch số cuối trên BCTT khoảng 299,864 triệu VND (~0,00318%), trong dung sai. Giữ nguyên hai giá trị nguồn.
 - Kiểm thử raw-flow sums, cầu nối quý/YTD và quarter=YTD delta được thêm vào `tests/test_cashflow_bridge.py`. Ảnh PDF trực tiếp vẫn pending; các ngoại lệ nêu trên không được xem là đã xác minh trực quan.
 
+## Lượt chuẩn hóa GEG — lưu chuyển tiền tệ (2026-10-30)
+
+- Đã dùng lại sidecar OCR đã lưu trong `reports/raw/GEG/auto-geg-20261021/`; không tải lại hoặc OCR lại.
+- Snapshot có 10 kỳ 2024-Q1 đến 2026-Q2. Comparative được chọn theo báo cáo VietstockFinance hiện có: Q1/2024 từ Q1/2025; H1/2024 từ Q2/2025; 9T/2024 từ Q3/2025; FY2024 từ Q4/2025; Q1/2025 từ Q1/2026; H1/2025 từ Q2/2026; các kỳ còn lại từ báo cáo tương ứng.
+- Raw source VND được giữ trong `cashflow_source_reconciliation.selected_values_raw_vnd`; display fields chuẩn hóa triệu VND. Quý II–IV riêng được tính từ chênh lệch YTD giữa hai kỳ liền nhau cùng năm. FX lấy từ dòng tỷ giá nguồn.
+- H1/2025 comparative trong Q2/2026 khác cơ sở tiền so với FY2024/Q1/2025 và báo cáo gốc Q2/2025. Cầu nối quý Q2/2025 và Q3/2025 lệch vượt 0,01%; giữ số nguồn và ghi rõ ngoại lệ, không cân bằng cưỡng ép.
+- Q2/2026: số đầu YTD 74.942.444.345 VND khác số cuối Q1/2026 105.856.793.049 VND; YTD bridge tự khớp nhưng cầu nối quý không khớp. Giữ cả hai số.
+- Q4/2025: OCR dòng 70 cuối kỳ bị cắt; candidate snapshot được giữ để xem ảnh. Q1/2026 residual bridge +900 VND nằm trong dung sai và được lưu.
+- Ảnh PDF trực tiếp còn pending. Snapshot hiện có đến Q2/2026; đã tìm nhưng chưa xác nhận được URL BCTC Q3/2026 hợp nhất từ danh mục nguồn VietstockFinance trong lượt này; không kết luận rằng Q3 chưa công bố.
+
