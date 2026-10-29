@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T02:25:00+07:00",
+  "updatedAt": "2026-10-30T02:40:00+07:00",
   "processingMode": "one_ticker_at_a_time_checkpoint_on_pass_no_reload_of_passed_data",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -40,7 +40,7 @@
     "MBB"
   ],
   "lastCompletedSymbol": "KBC",
-  "activeSymbol": "KBC",
+  "activeSymbol": "GEG",
   "resumeSymbolHint": "ACB",
   "resumeRule": "Read reports/processing-checkpoint.json first. Do not reload/re-OCR/re-parse a ticker already passed under the current standard unless explicit new evidence, an applicable standard change, or regression failure requires reopening. Finish one ticker, write its checkpoint immediately, then proceed.",
   "lastProgress": {
@@ -1494,8 +1494,8 @@
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
     "activeSymbol": "GEG",
-    "status": "terminal_manual_review_recorded_next_ticker",
-    "lastUpdatedAt": "2026-10-30T02:25:00+07:00",
+    "status": "in_progress_ci_validation",
+    "lastUpdatedAt": "2026-10-30T02:40:00+07:00",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1787,7 +1787,9 @@
       "KBC cash-flow regression is enforced by scripts/validate-bank-reconciliation.py in CI. Commit 69758dc2d03c0e390073b42892a631e9948034c5 passed Validate quarterly financial data #601 (40941571553) and Validate Site and Data #1382 (40941571666). Checks cover source index/source files, exact raw quarter/YTD flows, quarter/YTD cash bridges, YTD-delta conversion, allowlisted fields, no separate FX line, H1/2025 restatement, Q1/2026 cross-year cash basis issue and Q3/2026 CFI component correction.",
       "KBC: all 11 raw-quarter and YTD three-flow component sums reconcile exactly; all 11 cash bridges tie using reported flows (no separate FX line), all quarters derive exactly from current YTD less previous same-year YTD before display rounding. Q3/2026 total CFI OCR candidate -518,402,271,256 VND disagrees with legible investing rows 21-27; derived from detailed rows = -515,402,271,256 VND; original candidate and +3,000,000,000 VND discrepancy are preserved for image review.",
       "KBC: FY2025 cash close candidate 8,386,548,063,120 VND has truncated OCR; Q1/2026 reported opening cash 8,368,534,552,023 VND differs by -18,013,511,097 VND (~0.2148%), above tolerance. Preserve both values without balancing plug. Q3/2025 balance-sheet cash differs from cashflow close by 299,864,038 VND (~0.00318%), within 0.01%, with both source values preserved.",
-      "KBC: no explicit FX line is shown in the archived cash-flow statements, so FX fields are null, not a fabricated zero. Current snapshot latest period is Q3/2026. Direct visual review of archived cash-flow pages remains pending."
+      "KBC: no explicit FX line is shown in the archived cash-flow statements, so FX fields are null, not a fabricated zero. Current snapshot latest period is Q3/2026. Direct visual review of archived cash-flow pages remains pending.",
+      "GEG cash-flow snapshot normalized across 10 periods (2024-Q1–2026-Q2) from archived VietstockFinance OCR sidecars; no report reload/OCR rerun.",
+      "GEG regression test and CI validator integrated; latest commit 9bc4a028f739a19b051dbaaf8c768b29742d9b5d workflow status: Validate quarterly financial data=success; Validate Site and Data=success; Package Hostinger Stock Dashboard=not_found."
     ],
     "unresolved": [
       "NLG NEEDS_MANUAL_REVIEW — H1/2024 selected later comparative in Q2/2025 reclassifies CFO/CFI versus the original Q2/2024 source by >0.01%; net cash movement and cash balances remain unchanged. Preserve both source bases and selected later comparative; do not plug.",
@@ -2082,14 +2084,50 @@
     ],
     "activeTickerFindings": {
       "ticker": "GEG",
-      "status": "queued_existing_snapshot_review",
-      "existingSnapshot": "data/financials-GEG.json",
+      "status": "awaiting_ci_results",
+      "latestAvailablePeriodInSnapshot": "2026-Q2",
       "periodCount": 10,
-      "firstQuarter": "2024-Q1",
-      "latestPeriod": "2026-Q2",
-      "sourcePolicy": "Only VietstockFinance document catalog and directly linked PDF/ZIP",
-      "reloadRule": "Reuse data/financials-GEG.json and archived source sidecars; do not reload/re-OCR periods already reviewed as passing.",
-      "nextStep": "Audit GEG period/source/schema, then quarter/YTD flow sums, cash bridges, quarter=YTD deltas, adjacent-quarter cash continuity, and field allowlist. Preserve unresolved OCR/source exceptions and save checkpoint."
+      "sourcePolicy": "Only VietstockFinance catalog and directly linked PDFs/ZIPs",
+      "dataCommit": "9bc4a028f739a19b051dbaaf8c768b29742d9b5d",
+      "validationRuns": [
+        {
+          "name": "Validate quarterly financial data",
+          "id": 40943362792,
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40943362792"
+        },
+        {
+          "name": "Validate Site and Data",
+          "id": 40943363049,
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40943363049"
+        },
+        {
+          "name": "Package Hostinger Stock Dashboard",
+          "id": null,
+          "status": "not_found",
+          "conclusion": null,
+          "url": null
+        }
+      ],
+      "manualReviewRemaining": [
+        "Direct PDF image review pending for OCR-derived flow pages.",
+        "H1/2025 restated comparative in Q2/2026 has a different opening/closing cash basis than Q1/2025, original Q2/2025 and Q3/2025 current report; quarter bridge exceptions for 2025-Q2 and 2025-Q3 exceed 0.01%.",
+        "Q4/2025 closing-cash row 70 OCR is truncated; retain candidate pending image review.",
+        "Q2/2026 reported YTD opening cash differs from Q1/2026 closing cash, and quarterly bridge exceeds tolerance; keep both values, no plug.",
+        "Official VietstockFinance index/direct source URL for GEG Q3/2026 was not confirmed; snapshot latest is Q2/2026, not a claim that Q3 has not been published."
+      ],
+      "tests": {
+        "rawQuarterAndYTDSums": "PASS exact 10/10",
+        "ytdCashBridges": "PASS 10/10 within 0.01%",
+        "quarterCashBridges": "PASS 7/10; 3 cross-source-basis exceptions retained",
+        "quarterEqualsYtdDelta": "PASS 10/10 before display rounding",
+        "sourceAndAllowlist": "in regression tests and validator",
+        "ci": "PENDING"
+      },
+      "nextStep": "Fix any failed validation before advancing to the next ticker."
     },
     "tickerComplete": false,
     "manualReviewRemaining": [
@@ -2098,36 +2136,7 @@
       "PLX Q1/2026: opening cash 7,588,240 vs FY2025 closing 10,803,154 million VND; residual -3,214,914 million (29.759031%), above tolerance.",
       "PLX Q2/2026: cash-flow table OCR unreadable on source pages 6-7; flow values remain null; no bridge-derived imputation."
     ],
-    "lastTickerReview": {
-      "ticker": "KBC",
-      "status": "terminal_needs_manual_review",
-      "periodsReviewedThrough": "2026-Q3",
-      "latestAvailablePeriodInSnapshot": "2026-Q3",
-      "periodCount": 11,
-      "lastDataCommit": "d8bd8ea0d5f5a0e8ad7b70e32fbc814548d5d6aa",
-      "validationCommit": "69758dc2d03c0e390073b42892a631e9948034c5",
-      "tests": {
-        "expectedPeriodsAndSources": "PASS 11/11 periods; unique quarters 2024-Q1–2026-Q3, approved VietstockFinance catalog and linked source PDFs",
-        "rawQuarterFlowSums": "PASS 11/11 exact",
-        "rawYTDFLowSums": "PASS 11/11 exact",
-        "quarterCashBridges": "PASS 11/11 exact within source raw data",
-        "ytdCashBridges": "PASS 11/11 exact within source raw data",
-        "quarterVsYtdDeltas": "PASS 11/11 exact prior-YTD deltas before display rounding",
-        "fieldAllowlistAndUnits": "PASS for required cashflow display fields; FX remains null because no separate source line",
-        "crossYearContinuity": "NEEDS_MANUAL_REVIEW FY2025 close vs Q1/2026 open residual -18,013,511,097 VND (~0.2148%)",
-        "q3_2026InvestingTotal": "NEEDS_MANUAL_REVIEW OCR row 30 candidate -518,402,271,256 VND vs detail-sum -515,402,271,256 VND; selected detailed sum and retained candidate",
-        "fy2025EndingCash": "NEEDS_MANUAL_REVIEW row 70 OCR truncated; preserve existing source candidate",
-        "ci": "PASS Validate quarterly financial data #601; Validate Site and Data #1382"
-      },
-      "manualReviewRemaining": [
-        "Direct image review of OCR-derived cash-flow pages is still pending.",
-        "Q4/2025 cash ending OCR is truncated; existing candidate 8,386,548.063 million VND retained pending visual confirmation.",
-        "Q1/2026 opening cash 8,368,534.552 million VND differs from Q4/2025 closing cash 8,386,548.063 million VND by -18,013.511 million (~0.2148%), >0.01%; no plug.",
-        "Q3/2026 investing total OCR candidate differs from the sum of displayed investing detail by 3,000,000,000 VND; selected detail-derived sum, candidate retained.",
-        "Q3/2025 balance-sheet cash mismatch is within 0.01% and both source values remain unchanged."
-      ],
-      "nextAction": "Continue with GEG using existing snapshot and archives. Run source/schema/period and all cash-flow reconciliation layers; do not re-download/re-OCR passed source sidecars."
-    }
+    "lastTickerReview": null
   },
   "nextSymbolHint": "HHV"
 }
