@@ -333,7 +333,7 @@ class ACBCashFlowNormalizationTests(unittest.TestCase):
         correction = row["cashflow_source_reconciliation"]["source_ocr_correction"]
         self.assertEqual(correction["misread_value"], 416533043)
         self.assertEqual(correction["corrected_source_value"], 116533043)
-        self.assertEqual(correction["unit"], "triệu VND")
+        self.assertEqual(correction["units"], "triệu VND")
         self.assertEqual(row["cashflow_source_reconciliation"]["ytd_cash_bridge_residual"], 0)
 
 
@@ -2051,7 +2051,7 @@ class CTGCashFlowNormalizationTests(unittest.TestCase):
         self.assertEqual(correction["old"], 578095009)
         self.assertEqual(correction["new"], 578995009)
         self.assertEqual(correction["page"], 11)
-        self.assertEqual(correction["units"], "triệu VND")
+        self.assertEqual(correction["unit"], "triệu VND")
         self.assertEqual(row["cashflow_source_reconciliation"]["ytd_cash_bridge_residual"], 0)
         self.assertEqual(cash_bridge_delta(row), 0)
         self.assertTrue(within_relative_tolerance(578995009, 578995009))
