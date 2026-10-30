@@ -3874,7 +3874,12 @@ def capture_source_audited_cashflow_backups(items, symbol):
             or source_arithmetic_passed
             or (
                 audit.get("no_balancing_plug") is True
-                and audit.get("source_values_original_unit_preserved") is True
+                and (
+                    audit.get("source_values_original_unit_preserved") is True
+                    or isinstance(audit.get("source_values_raw_vnd"), dict)
+                    or isinstance(audit.get("source_values_raw_thousand_vnd"), dict)
+                    or isinstance(audit.get("selected_source_values_vnd"), dict)
+                )
             )
         )
         if (
