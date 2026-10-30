@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T10:43:29Z",
+  "updatedAt": "2026-10-30T10:43:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -191,11 +191,13 @@
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
-      "skipUnconfirmedAutomation": false,
+      "skipUnconfirmedAutomation": true,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 10,
       "updatedAt": "2026-10-30T09:28:52Z",
-      "snapshotFetchedAt": "2026-10-22T00:37:51+00:00"
+      "snapshotFetchedAt": "2026-10-22T00:37:51+00:00",
+      "skipUnconfirmedThroughPeriod": "2026-Q3",
+      "manualReviewReason": "Đã phát hiện workflow OCR/enrich ghi đè các trường cash-flow đã chuẩn hóa (basis YTD, CFO/CFI/CFF/net cash và số dư tiền) thành quarterly_reported hoặc null. Đã khôi phục đúng các trường cash-flow từ snapshot đã kiểm định ở commit 599fe737965b062e723daa9fc2c7543a86e3ce4d; giữ nguyên các trường khác mới hơn. Tạm dừng tự động nâng schema VND đến khi sửa được cơ chế bảo toàn dữ liệu, không OCR/enrich lại dữ liệu đã xác nhận."
     },
     "VCB": {
       "status": "terminal_needs_manual_review",
@@ -2151,7 +2153,7 @@
   },
   "nextSymbolHint": "SHS",
   "lastSessionCheckpoint": {
-    "savedAt": "2026-10-30T10:42:13Z",
+    "savedAt": "2026-10-30T10:43:00Z",
     "branch": "main",
     "latestWorkflowFixCommit": "45424f32ab634e30497cbce105c51441cf65ef9e",
     "lastCompletedWork": [
@@ -2159,7 +2161,9 @@
       "SHB 2024 cash-flow YTD and standalone-quarter values corrected from archived VietstockFinance comparative reports.",
       "FPT validated core financial fields restored from the last known-good snapshot after OCR enrichment regression.",
       "NLG held for manual review after repeated detail-schema enrichment failures; existing source-backed figures and archives preserved.",
-      "Requested-symbol OCR path updated to honor skipUnconfirmedAutomation and refuse automated retry for tickers held for manual review."
+      "Requested-symbol OCR path updated to honor skipUnconfirmedAutomation and refuse automated retry for tickers held for manual review.",
+      "Phát hiện VND OCR/enrich regression: workflow đã thay đổi cashflow_period_basis từ year_to_date sang quarterly_reported và làm null nhiều dòng cash-flow.",
+      "Khôi phục 11 kỳ VND (2024-Q1 đến 2026-Q3) cho các trường cashflow basis, CFO/CFI/CFF/net cash, YTD, opening/closing cash và calculation metadata từ snapshot đã kiểm định commit 599fe737965b062e723daa9fc2c7543a86e3ce4d; giữ nguyên các trường khác."
     ],
     "lastKnownValidation": {
       "quarterlyFinancialData": "success",
@@ -2175,9 +2179,17 @@
       "For OCR dispatches, honor manual-review holds even when a ticker is passed as an explicit workflow input."
     ],
     "nextActions": [
-      "Confirm OCR workflow run 41042681319 selected a ticker or correctly held the queue after the selector guard.",
-      "Inspect the selected ticker only; finish OCR/enrichment and run quarterly/site validation before checkpointing it.",
-      "Continue cash-flow normalization from GAS using already archived VietstockFinance PDFs and targeted statement-page OCR; do not redownload or infer values."
+      "Xác nhận Validate Site and Data và Validate quarterly financial data sau khi phục hồi VND.",
+      "Đảm bảo workflow selector mới không dispatch lại NLG/VND/SHS/TCX đang giữ manual review.",
+      "Chỉ tiếp tục mã chưa hoàn tất sau khi validation xanh; kiểm tra lỗi enrichment trước khi commit snapshot.",
+      "Tiếp tục chuẩn hóa cash-flow GAS từ 10 PDF VietstockFinance đã lưu, OCR đúng trang báo cáo gốc; không tải lại hoặc suy diễn."
+    ],
+    "latestDataRecoveryCommit": "168342286eeb209974c91880c6ae6f8511790d66",
+    "heldTickersUpdated": [
+      "NLG",
+      "VND",
+      "SHS",
+      "TCX"
     ]
   }
 }
