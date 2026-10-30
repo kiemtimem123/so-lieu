@@ -3766,9 +3766,12 @@ class EnrichmentCashflowPreservationTests(unittest.TestCase):
             "financial_line_items_rejected_fields": [],
             "cashflow_source_reconciliation": {
                 "source_index_url": source_index,
-                "selected_values_not_adjusted_for_tolerance": True,
-                "relative_tolerance_percent": 0.01,
-                "status": "PASS_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT",
+                "comparison_tolerance_relative_percent": 0.01,
+                "ytd_flow_components_sum_to_net_cash_change": True,
+                "quarter_flow_components_sum_to_net_cash_change": True,
+                "ytd_cash_bridge_residual": 0,
+                "quarter_cash_bridge_residual": 0,
+                "status": "PASS_ARITHMETIC_RECONCILED",
             },
             "cashflow_audit_revision": {"selected_basis": "validated YTD source"},
         }
@@ -3794,7 +3797,7 @@ class EnrichmentCashflowPreservationTests(unittest.TestCase):
         self.assertEqual(row["financing_cash_flow"], 5302391)
         self.assertEqual(row["cash_ending"], 977372)
         self.assertEqual(row["cashflow_source_reconciliation"]["status"],
-                         "PASS_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT")
+                         "PASS_ARITHMETIC_RECONCILED")
         self.assertIn("brokerage_revenue", row["financial_line_items_extracted_fields"])
         self.assertIn("operating_cash_flow_ytd", row["financial_line_items_extracted_fields"])
         self.assertNotIn("operating_cash_flow_ytd", row["financial_line_items_rejected_fields"])
