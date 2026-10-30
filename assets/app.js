@@ -2083,6 +2083,26 @@
         return { periods, rows: sourceRows };
       }
 
+      if (activeStatement !== 'peers' && ['balance','income','cashflow','ratios'].includes(activeStatement) && statementHint) {
+        const coverageDefs = getStatementRows().filter(def => def && def.key);
+        const coverageTotal = coverageDefs.length * periods.length;
+        let coverageFilled = 0;
+        for (const period of periods) {
+          const item = sourceRows.find(row => row.period === period);
+          if (!item) continue;
+          for (const def of coverageDefs) {
+            const value = activeStatement === 'cashflow'
+              ? cashflowValue(item, def.key, sourceRows, ticker)
+              : resolveStatementValue(item, def.key, sourceRows, ticker).value;
+            if (validNumber(value)) coverageFilled += 1;
+          }
+        }
+        if (coverageTotal) {
+          const percent = Math.round(coverageFilled / coverageTotal * 100);
+          statementHint.textContent += ' Độ phủ dữ liệu: ' + coverageFilled + '/' + coverageTotal + ' ô (' + percent + '%) trên ' + periods.length + ' kỳ.';
+        }
+      }
+
       if (stateBox) stateBox.classList.add('hidden');
       if (tableWrap) tableWrap.classList.remove('hidden');
       if (statementHead) statementHead.innerHTML = '<tr><th class="statement-first-col">' + (activeStatement === 'peers' ? 'Mã chứng khoán' : 'Chỉ tiêu') + '</th>' +
