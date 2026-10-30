@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T09:17:28Z",
+  "updatedAt": "2026-10-30T09:24:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -41,7 +41,7 @@
   ],
   "lastCompletedSymbol": "SHB",
   "activeSymbol": null,
-  "resumeSymbolHint": "TCX",
+  "resumeSymbolHint": "GAS",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "SHB",
@@ -151,11 +151,13 @@
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
-      "skipUnconfirmedAutomation": false,
-      "skipUnconfirmedReason": null,
+      "skipUnconfirmedAutomation": true,
+      "skipUnconfirmedReason": "User-directed skip after repeated OCR enrichment runs selected TCX but failed validation on existing source-backed core fields. Preserve the current validated snapshot and v11 detail fields; defer v12 schema-only additions to manual review. Do not reprocess automatically.",
       "sourceArchivesChecked": 11,
       "updatedAt": "2026-10-28T05:15:03Z",
-      "snapshotFetchedAt": "2026-10-21T15:15:06+00:00"
+      "snapshotFetchedAt": "2026-10-21T15:15:06+00:00",
+      "skipUnconfirmedThroughPeriod": "2026-Q3",
+      "manualReviewReason": "v12 detail-schema migration remains unresolved; existing v11 values retained. Current repository data passes quarterly and site validation."
     },
     "HCM": {
       "status": "automated_processing_complete",
@@ -1484,7 +1486,7 @@
     "activeDataDomain": "cashflow",
     "activeSymbol": "GAS",
     "status": "active_gas_source_page_ocr_pending",
-    "lastUpdatedAt": "2026-10-30T16:18:00+07:00",
+    "lastUpdatedAt": "2026-10-30T16:24:00+07:00",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -2148,5 +2150,5 @@
       }
     ]
   },
-  "nextSymbolHint": "HHV"
+  "nextSymbolHint": "GAS"
 }
