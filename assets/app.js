@@ -1291,6 +1291,8 @@
     const peerOptions = $('#stockPeerOptions');
     const unitSelect = $('#stockUnit');
     const basisSelect = $('#stockReportBasis');
+    const cashflowBasisSelect = $('#stockCashflowBasis');
+    const cashflowBasisLabel = $('#stockCashflowBasisLabel');
     const tableCompareMetric = $('#stockTableCompareMetric');
 
     const rowsForBasis = ticker => {
@@ -1303,6 +1305,27 @@
         if (basis === 'separate') return /riêng lẻ|riêng/.test(description) && !/hợp nhất/.test(description);
         return !/riêng lẻ|riêng/.test(description);
       });
+    };
+    const cashflowValue = (item, field, rows, ticker) => {
+      if ((cashflowBasisSelect?.value || 'quarter') !== 'ytd') {
+        return resolveStatementValue(item, field, rows, ticker).value;
+      }
+      if (field === 'cash_beginning') {
+        for (const key of ['cash_beginning_reported_ytd','cash_beginning_ytd','cash_beginning']) {
+          if (validNumber(item?.[key])) return Number(item[key]);
+        }
+        return null;
+      }
+      if (field === 'cash_ending') {
+        for (const key of ['cash_ending_reported_ytd','cash_ending_ytd','cash_ending']) {
+          if (validNumber(item?.[key])) return Number(item[key]);
+        }
+        return null;
+      }
+      const ytdKey = field + '_ytd';
+      if (validNumber(item?.[ytdKey])) return Number(item[ytdKey]);
+      const quarterOne = /^\\d{4}-Q1$/.test(String(item?.period || ''));
+      return quarterOne && validNumber(item?.[field]) ? Number(item[field]) : null;
     };
     const displayPeriod = value => String(value || '').replace(/^(\d{4})-Q([1-4])$/, (_, year, quarter) => 'Q' + quarter + '/' + year);
     const overviewNumber = (value, item, suffix = '') => {
@@ -2019,8 +2042,10 @@
       if (next) next.disabled = periodOffset + statementPageSize >= allTablePeriods.length;
       if (last) last.disabled = periodOffset + statementPageSize >= allTablePeriods.length;
       if (peerOptions) peerOptions.hidden = activeStatement !== 'peers';
+      if (cashflowBasisLabel) cashflowBasisLabel.hidden = activeStatement !== 'cashflow';
       if (statementHint) {
         const unitName = (unitSelect?.value || 'billion') === 'billion' ? 'tỷ đồng' : 'triệu đồng';
+        const cashflowMode = (cashflowBasisSelect?.value || 'quarter') === 'ytd' ? 'lũy kế từ đầu năm' : 'phát sinh riêng trong quý';
         const hints = {
           balance: 'Bảng cân đối kế toán: các khoản mục chi tiết được điền từ dòng báo cáo có thể nhận diện và giữ trống nếu không khớp tổng tài sản/nợ.',
           income: activeIndustry === 'banking'
@@ -2028,7 +2053,7 @@
             : activeIndustry === 'securities'
               ? 'Báo cáo công ty chứng khoán: doanh thu môi giới, cho vay, tự doanh, bảo lãnh và lưu ký được tách theo mẫu báo cáo CTCK; trường thiếu hoặc chưa khớp sẽ để trống.'
               : 'Kết quả kinh doanh: chỉ tiêu chi tiết lấy từ BCTC quý; doanh thu có thể được tái lập từ lợi nhuận gộp và giá vốn khi OCR sai chữ số, có ghi công thức trong ghi chú.',
-          cashflow: 'Bảng hiển thị số phát sinh riêng trong quý; số lũy kế *_ytd không thay thế số quý. Luồng tiền được tái lập từ báo cáo VietstockFinance; ô thiếu hoặc chưa thể đối chiếu vẫn để trống.',
+          cashflow: 'Bảng lưu chuyển tiền tệ đang hiển thị số ' + cashflowMode + '. Chỉ tiêu lũy kế không bị gán nhầm thành phát sinh quý; ô thiếu hoặc chưa thể đối chiếu vẫn để trống.',
           notes: 'Thông tin nguồn, kỳ công bố và trạng thái kiểm chứng lấy từ bản ghi báo cáo; mở PDF để xem chi tiết gốc.',
           ratios: 'ROA/ROE và P/B chỉ lấy từ trường dữ liệu đã có trong snapshot; không tự tính P/B khi thiếu giá thị trường và giá trị sổ sách trên mỗi cổ phiếu.',
           peers: 'So sánh các mã cùng nhóm ngành đã cấu hình, cùng kỳ và cùng chỉ tiêu. P/B chỉ hiển thị khi snapshot có dữ liệu được cung cấp; không tự suy đoán giá thị trường.'
@@ -2074,7 +2099,7 @@
       let body = '';
       const cashflowFields = ['operating_cash_flow','capital_expenditure','investing_cash_flow','financing_cash_flow','foreign_exchange_effect','dividends_paid','net_cash_change','cash_beginning','cash_ending'];
       const cashflowAvailable = activeStatement === 'cashflow' && sourceRows.some(row =>
-        cashflowFields.some(field => validNumber(resolveStatementValue(row, field, sourceRows, ticker).value)));
+        cashflowFields.some(field => validNumber(cashflowValue(row, field, sourceRows, ticker))));
       if (activeStatement === 'cashflow' && !cashflowAvailable) {
         body = '<tr><td colspan="' + (periods.length + 1) + '" class="statement-no-data">Chưa có trường lưu chuyển tiền tệ đã trích xuất trong snapshot hiện tại. Danh mục chuẩn đã sẵn sàng; các ô chỉ được điền khi bộ trích xuất xác minh được dữ liệu từ báo cáo gốc.</td></tr>';
       } else if (activeStatement === 'peers') {
@@ -2141,7 +2166,9 @@
               return '<td><span class="financial-status financial-status-' + badge.kind + '">' + escapeHtml(badge.label) + '</span></td>';
             }
             if (def.text) return '<td class="statement-text-cell">' + escapeHtml(value || '—') + '</td>';
-            const resolved = resolveStatementValue(item, def.key, sourceRows, ticker);
+            const resolved = activeStatement === 'cashflow'
+              ? { value: cashflowValue(item, def.key, sourceRows, ticker), formula: '' }
+              : resolveStatementValue(item, def.key, sourceRows, ticker);
             const resolvedValue = resolved.value;
             const displayValue = def.negativeExpense && validNumber(resolvedValue) ? -Math.abs(Number(resolvedValue)) : resolvedValue;
             const displayed = statementNumber(displayValue, item, Boolean(def.ratio));
@@ -2395,7 +2422,8 @@
       }
     });
     yearSelect?.addEventListener('change',renderSelected);
-    basisSelect?.addEventListener('change', () => { periodOffset = 0; renderSelected(); });
+    basisSelect?.addEventListener('change', () => { periodOffset = 0; renderSelected(); drawComparison(); populateComparePeriods(); });
+    cashflowBasisSelect?.addEventListener('change', renderSelected);
     unitSelect?.addEventListener('change', () => { renderSelected(); drawComparison(); });
     tableCompareMetric?.addEventListener('change',renderSelected);
     $('#stockPeerIndustry')?.addEventListener('change',renderSelected);
