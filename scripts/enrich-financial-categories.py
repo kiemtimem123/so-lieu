@@ -3853,12 +3853,22 @@ def capture_source_audited_cashflow_backups(items, symbol):
             tolerance = float(tolerance or 0)
         except (TypeError, ValueError):
             tolerance = 1.0
-        source_arithmetic_passed = (
+        ctg_style_arithmetic_passed = (
             audit.get("ytd_flow_components_sum_to_net_cash_change") is True
             and audit.get("quarter_flow_components_sum_to_net_cash_change") is True
             and audit.get("ytd_cash_bridge_residual") is not None
             and audit.get("quarter_cash_bridge_residual") is not None
         )
+        tolerance_style_arithmetic_passed = all(
+            audit.get(key) is True
+            for key in (
+                "ytd_flow_components_within_tolerance",
+                "quarter_flow_components_within_tolerance",
+                "ytd_cash_bridge_within_tolerance",
+                "quarter_cash_bridge_within_tolerance",
+            )
+        )
+        source_arithmetic_passed = ctg_style_arithmetic_passed or tolerance_style_arithmetic_passed
         source_values_selected = (
             audit.get("selected_values_not_adjusted_for_tolerance") is True
             or source_arithmetic_passed
