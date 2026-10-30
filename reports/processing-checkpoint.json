@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T16:06:00Z",
+  "updatedAt": "2026-10-30T16:40:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -36,26 +36,32 @@
     "VCI",
     "VCK",
     "MBB",
-    "GAS",
     "VDS"
   ],
   "lastCompletedSymbol": "VDS",
-  "activeSymbol": null,
-  "resumeSymbolHint": "IDC",
+  "activeSymbol": "GAS",
+  "resumeSymbolHint": "GAS",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
-    "symbol": "VDS",
-    "status": "automated_processing_complete",
-    "completeForAutomation": true,
+    "symbol": "GAS",
+    "status": "in_progress",
+    "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-30T16:06:00Z",
+    "processedAt": "2026-10-30T16:40:00+07:00",
     "changedPaths": [
-      "data/financials-VDS.json"
+      "data/financials-GAS.json"
     ],
     "periodCount": 10,
     "firstQuarter": "2024-Q1",
     "lastQuarter": "2026-Q2",
-    "pendingCorePeriods": [],
+    "pendingCorePeriods": [
+      "2025-Q1",
+      "2025-Q2",
+      "2025-Q3",
+      "2025-Q4",
+      "2026-Q1",
+      "2026-Q2"
+    ],
     "terminalManualReviewPeriods": [],
     "pendingDetailPeriods": [],
     "staleDetailSchemaPeriods": [],
@@ -606,16 +612,13 @@
       "snapshotFetchedAt": "2026-10-23T16:14:01+00:00"
     },
     "GAS": {
-      "status": "automated_processing_complete",
-      "completeForAutomation": true,
+      "status": "in_progress",
+      "completeForAutomation": false,
       "manualReviewRemaining": true,
       "periodCount": 10,
       "firstQuarter": "2024-Q1",
       "lastQuarter": "2026-Q2",
-      "pendingCorePeriods": [],
-      "terminalManualReviewPeriods": [
-        "2024-Q3",
-        "2024-Q4",
+      "pendingCorePeriods": [
         "2025-Q1",
         "2025-Q2",
         "2025-Q3",
@@ -623,14 +626,29 @@
         "2026-Q1",
         "2026-Q2"
       ],
+      "terminalManualReviewPeriods": [],
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
-      "statementPagesPending": false,
+      "statementPagesPending": true,
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 2,
-      "updatedAt": "2026-10-30T15:41:38Z",
-      "snapshotFetchedAt": "2026-10-23T18:00:37+00:00"
+      "updatedAt": "2026-10-30T16:40:00+07:00",
+      "snapshotFetchedAt": "2026-10-23T18:00:37+00:00",
+      "sourceReconciledPeriods": [
+        "2024-Q3",
+        "2024-Q4"
+      ],
+      "lastSourceReconciliation": {
+        "periodRange": "2024-Q3 through 2024-Q4",
+        "status": "core_and_detail_source_text_reconciled_pending_visual_review",
+        "correctionCommit": "483f427cecadfb788a6b78e33e17e15bde07f5e8",
+        "findings": [
+          "Q3/2024 raw OCR VND values corrected to triệu VND; balance-sheet totals reconcile exactly; income tax/PAT and parent/NCI bridges reconcile; cash-flow YTD bridge reconciles exactly.",
+          "Q4/2024 source-readable core/income fields restored and all known raw-VND candidates removed from public display; total liabilities and cash-flow rows remain blank pending reliable source confirmation."
+        ],
+        "remaining": "Continue OCR of the remaining six archived reports (2025-Q1 through 2026-Q2), one ticker at a time. Visual PDF review remains pending."
+      }
     },
     "PLX": {
       "status": "terminal_needs_manual_review",
