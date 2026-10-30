@@ -462,13 +462,13 @@
     {
       "symbol": "GAS",
       "period": "2024-Q1",
-      "total_assets": null,
-      "total_liabilities": null,
-      "equity": null,
-      "pretax_profit": null,
-      "net_profit": null,
-      "net_profit_attributable": null,
-      "revenue": null,
+      "total_assets": 91775937,
+      "total_liabilities": 23875666,
+      "equity": 67900271,
+      "pretax_profit": 3170607,
+      "net_profit": 2543605,
+      "net_profit_attributable": 2511656,
+      "revenue": 23314998,
       "roa": null,
       "roe": null,
       "unit": "triệu VND",
@@ -491,7 +491,37 @@
         "ocr_deferred_at": "2026-10-23T18:00:31+00:00",
         "ocr_deferred_reason": "Không có binary Poppler/Tesseract trong lô đồng bộ ngắn; giữ báo cáo chờ workflow OCR kho tài liệu.",
         "last_extraction_attempt_at": "2026-10-23T18:00:31+00:00",
-        "extraction_attempt_count": 0
+        "extraction_attempt_count": 0,
+        "q1_2024_core_source_reconciliation": {
+          "status": "source_text_reconciled_pending_visual_review",
+          "source_pdf": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%201/GAS_Baocaotaichinh_Q1_2024_Hopnhat.pdf",
+          "sidecar_pages": {
+            "balance_sheet": [
+              4,
+              5
+            ],
+            "income_statement": [
+              6
+            ]
+          },
+          "raw_vnd": {
+            "total_assets": 91775937412903,
+            "total_liabilities": 23875666198026,
+            "equity": 67900271214877,
+            "revenue": 23314997603580,
+            "pretax_profit": 3170606630107,
+            "net_profit": 2543605417303,
+            "net_profit_attributable": 2511656345896,
+            "income_tax_current": 620219873816,
+            "income_tax_deferred": 6781338988
+          },
+          "checks": {
+            "balanceEquationDelta": 0,
+            "profitAttributionDelta": 0,
+            "netProfitBridgeDelta": 0
+          },
+          "note": "Core values converted from VND to million VND; OCR text source available, but page images not visually checked."
+        }
       },
       "published_at": "2024-04-27",
       "source_archive_file": "reports/raw/GAS/auto-gas-20261021/87907c1c11be85dc.pdf",
@@ -503,11 +533,20 @@
       },
       "core_financial_extracted_fields": [
         "eps",
-        "net_profit"
+        "equity",
+        "income_tax",
+        "income_tax_current",
+        "income_tax_deferred",
+        "net_profit",
+        "net_profit_attributable",
+        "pretax_profit",
+        "revenue",
+        "total_assets",
+        "total_liabilities"
       ],
-      "core_financial_extraction_status": "manual_review_required_pending_extraction",
+      "core_financial_extraction_status": "source_text_reconciled_pending_visual_review",
       "core_financial_extraction_note": "Đã có đủ trang nguồn mục tiêu nhưng hai lượt phân tích trên cùng văn bản vẫn không tạo được bộ chỉ tiêu lõi cân đối. Các số OCR chưa cân đối được lưu riêng để đối chiếu; chỉ tiêu chính chưa xác minh được để trống.",
-      "verification_status_note": "Cần đối chiếu trực quan với PDF VietstockFinance trước khi công bố các chỉ tiêu lõi.",
+      "verification_status_note": "Các chỉ tiêu cốt lõi đã được khôi phục từ OCR văn bản của PDF VietstockFinance; ảnh trang PDF chưa được kiểm tra trực quan. Dòng tiền Q1/2024 còn thiếu chi tiết OCR, không suy diễn.",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "89b03ef9b40b78a7063335cc2041c8850a75ee6d5f311ddc7e48d5456629e435",
       "core_financial_extraction_evidence_attempt_count": 1,
@@ -516,18 +555,36 @@
         "admin_expense",
         "cash_beginning",
         "cashflow_period_basis",
+        "equity",
         "financial_expense",
         "financial_income",
         "income_tax",
         "income_tax_current",
+        "income_tax_deferred",
         "interest_expense",
-        "selling_expense"
+        "net_profit",
+        "net_profit_attributable",
+        "pretax_profit",
+        "revenue",
+        "selling_expense",
+        "total_assets",
+        "total_liabilities"
       ],
       "financial_line_items_source": "reports/raw/GAS/auto-gas-20261021/87907c1c11be85dc.pdf",
       "financial_line_items_updated_at": "2026-10-30T11:14:31+00:00",
-      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần.",
+      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Đã trích xuất lại chỉ tiêu cốt lõi từ sidecar OCR: B/S trang in 1–2, KQKD trang in 3. Sửa income_tax từ giá trị raw hiện hành bị lưu sai đơn vị sang tổng thuế hiện hành + hoãn lại, đơn vị triệu VND. Dòng tiền chưa xác minh đầy đủ.",
       "financial_line_items_prior_values": {
-        "cash_beginning": 5668895214949
+        "cash_beginning": 5668895214949,
+        "total_assets": null,
+        "total_liabilities": null,
+        "equity": null,
+        "revenue": null,
+        "pretax_profit": null,
+        "net_profit": null,
+        "net_profit_attributable": null,
+        "income_tax": 620219873816,
+        "income_tax_current": 620219873816,
+        "income_tax_deferred": null
       },
       "financial_line_items_rejected_values": {
         "operating_cash_flow": {
@@ -613,8 +670,8 @@
       "interest_expense": 108404069269,
       "selling_expense": 585203252226,
       "admin_expense": 217952939421,
-      "income_tax_current": 620219873816,
-      "income_tax": 620219873816,
+      "income_tax_current": 620220,
+      "income_tax": 627001,
       "cashflow_period_basis": "year_to_date",
       "operating_cash_flow_calculation": "Q1 equals YTD Q1",
       "investing_cash_flow_calculation": "Q1 equals YTD Q1",
@@ -625,7 +682,60 @@
       "cash_beginning_reported_ytd": 5668895214949,
       "core_financial_extraction_manual_terminal": true,
       "cash_beginning": 5668895214949,
-      "cash_beginning_calculation": "Số dư tiền đầu quý I lấy từ dòng tiền và tương đương tiền đầu kỳ trên BCTC VietstockFinance."
+      "cash_beginning_calculation": "Số dư tiền đầu quý I lấy từ dòng tiền và tương đương tiền đầu kỳ trên BCTC VietstockFinance.",
+      "income_tax_deferred": 6781,
+      "financial_line_items_value_corrections": {
+        "total_assets": {
+          "previous_value": null,
+          "new_value": 91775937,
+          "reason": "BCTC hợp nhất GAS Q1/2024, bảng cân đối trang in 1 (sidecar trang 4): tổng tài sản 91.775.937.412.903 VND."
+        },
+        "total_liabilities": {
+          "previous_value": null,
+          "new_value": 23875666,
+          "reason": "BCTC hợp nhất GAS Q1/2024, bảng cân đối trang in 2 (sidecar trang 5): nợ phải trả 23.875.666.198.026 VND."
+        },
+        "equity": {
+          "previous_value": null,
+          "new_value": 67900271,
+          "reason": "BCTC hợp nhất GAS Q1/2024, bảng cân đối trang in 2 (sidecar trang 5): vốn chủ sở hữu 67.900.271.214.877 VND."
+        },
+        "revenue": {
+          "previous_value": null,
+          "new_value": 23314998,
+          "reason": "BCTC hợp nhất GAS Q1/2024, B02-DN/HN trang in 3 (sidecar trang 6): doanh thu thuần 23.314.997.603.580 VND."
+        },
+        "pretax_profit": {
+          "previous_value": null,
+          "new_value": 3170607,
+          "reason": "BCTC hợp nhất GAS Q1/2024, B02-DN/HN trang in 3 (sidecar trang 6): tổng lợi nhuận kế toán trước thuế 3.170.606.630.107 VND."
+        },
+        "net_profit": {
+          "previous_value": null,
+          "new_value": 2543605,
+          "reason": "BCTC hợp nhất GAS Q1/2024, B02-DN/HN trang in 3 (sidecar trang 6): lợi nhuận sau thuế 2.543.605.417.303 VND."
+        },
+        "net_profit_attributable": {
+          "previous_value": null,
+          "new_value": 2511656,
+          "reason": "BCTC hợp nhất GAS Q1/2024, B02-DN/HN trang in 3 (sidecar trang 6): LNST cổ đông công ty mẹ 2.511.656.345.896 VND."
+        },
+        "income_tax": {
+          "previous_value": 620219873816,
+          "new_value": 627001,
+          "reason": "BCTC hợp nhất GAS Q1/2024, B02-DN/HN trang in 3: tổng chi phí thuế = thuế hiện hành 620.219.873.816 + thuế hoãn lại 6.781.338.988 = 627.001.212.804 VND."
+        },
+        "income_tax_current": {
+          "previous_value": 620219873816,
+          "new_value": 620220,
+          "reason": "BCTC hợp nhất GAS Q1/2024, B02-DN/HN trang in 3: thuế TNDN hiện hành 620.219.873.816 VND."
+        },
+        "income_tax_deferred": {
+          "previous_value": null,
+          "new_value": 6781,
+          "reason": "BCTC hợp nhất GAS Q1/2024, B02-DN/HN trang in 3: chi phí thuế TNDN hoãn lại 6.781.338.988 VND."
+        }
+      }
     },
     {
       "symbol": "GAS",
