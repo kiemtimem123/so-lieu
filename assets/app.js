@@ -1079,7 +1079,7 @@
         ? { label: 'Có số liệu · cần rà soát', kind: 'review' }
         : { label: 'Chờ dữ liệu', kind: 'pending' };
     };
-    const allPeriods = () => [...new Set(symbols.flatMap(ticker => rowsFor(ticker).filter(hasNumericFinancialData).map(item => item.period)))].sort();
+    const allPeriods = () => [...new Set(symbols.flatMap(ticker => rowsForBasis(ticker).filter(hasNumericFinancialData).map(item => item.period)))].sort();
 
     function populateYearOptions() {
       if (!yearSelect) return;
@@ -1206,7 +1206,8 @@
     }
 
     function drawSelectedCharts(ticker) {
-      const rows = rowsFor(ticker);
+      // Charts must use the same report basis as the statement table and overview.
+      const rows = rowsForBasis(ticker);
       const labels = rows.map(item => periodLabel(item.period));
       const numericSeries = (field, label, type='line') => {
         const values = rows.map(item => validNumber(item[field]) ? Number(item[field]) : null);
@@ -1234,7 +1235,7 @@
       drawChart('balance','stockBalanceChart','stockBalanceNote',{
         labels,points:balanceAvailable.flatMap(s=>s.values.filter(v=>v!==null)),
         datasets:balanceAvailable.map(s=>({label:s.label,data:s.values,borderWidth:2,tension:.18,pointRadius:rows.length>32?0:3,spanGaps:false})),
-        note:balanceAvailable.length?'Đơn vị: ' + ((unitSelect?.value || 'billion') === 'billion' ? 'tỷ đồng' : 'triệu đồng') + '. Kiểm tra trạng thái kỳ báo cáo và cơ sở hợp nhất/riêng lẻ trong bảng trước khi so sánh.':'',
+        note:balanceAvailable.length?'Đơn vị: ' + ((unitSelect?.value || 'billion') === 'billion' ? 'tỷ đồng' : 'triệu đồng') + '. Cơ sở báo cáo: ' + ((basisSelect?.value || 'consolidated') === 'separate' ? 'riêng lẻ' : 'hợp nhất') + '; trùng với bảng đang chọn.':'',
         emptyMessage:'Chưa có số liệu tài sản, nợ hoặc vốn chủ sở hữu hợp lệ.'
       });
       const ratios=[
@@ -1261,7 +1262,7 @@
       const selectedIndustry = industryFor(String(symbolSelect?.value || 'MBB').toUpperCase());
       const compareSymbols = symbols.filter(ticker => compareIndustry === 'all' || industryFor(ticker) === selectedIndustry);
       const values = compareSymbols.map(ticker => {
-        const tickerRows = rowsFor(ticker);
+        const tickerRows = rowsForBasis(ticker);
         const row = tickerRows.find(item=>item.period===period);
         const isRatio = ['roa','roe','pb'].includes(metric);
         const resolved = row ? resolveStatementValue(row,metric,tickerRows,ticker).value : null;
@@ -1271,7 +1272,7 @@
         type:'bar', labels:values.map(item=>item.ticker), points:values.map(item=>item.value),
         datasets:values.length?[{label:meta.label+((meta.unit==='%'?' (%)':meta.unit==='lần'?' (lần)':'')),data:values.map(item=>item.value),borderWidth:1}]:[],
         beginAtZero:true,
-        note:values.length?'Kỳ '+periodLabel(period)+' · '+meta.label+'. Giá trị tiền tệ đã quy đổi sang cùng đơn vị hiển thị; doanh thu có thể khác định nghĩa tùy ngành.':'',
+        note:values.length?'Kỳ '+periodLabel(period)+' · '+meta.label+' · cơ sở '+((basisSelect?.value || 'consolidated') === 'separate' ? 'riêng lẻ' : 'hợp nhất')+'. Giá trị tiền tệ đã quy đổi sang cùng đơn vị hiển thị; doanh thu có thể khác định nghĩa tùy ngành.':'',
         emptyMessage:'Chưa có dữ liệu đã xác minh cho chỉ tiêu và kỳ so sánh đã chọn.'
       });
       const table = $('#stockCompareTable');
@@ -2272,7 +2273,7 @@
       select.innerHTML = periods.slice().reverse().map(period => '<option value="' + escapeHtml(period) + '">' + escapeHtml(periodLabel(period)) + '</option>').join('');
       const metric = $('#stockCompareMetric')?.value || 'net_profit';
       const hasComparisonValue = period => symbols.some(ticker => {
-        const tickerRows = rowsFor(ticker);
+        const tickerRows = rowsForBasis(ticker);
         const row = tickerRows.find(item => item.period === period);
         return row && validNumber(resolveStatementValue(row, metric, tickerRows, ticker).value);
       });
