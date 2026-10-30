@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T11:08:44Z",
+  "updatedAt": "2026-10-30T11:08:45Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -41,7 +41,7 @@
   ],
   "lastCompletedSymbol": "DPG",
   "activeSymbol": null,
-  "resumeSymbolHint": "GAS",
+  "resumeSymbolHint": "DPG",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "DPG",
@@ -538,11 +538,13 @@
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
-      "skipUnconfirmedAutomation": false,
+      "skipUnconfirmedAutomation": true,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 8,
       "updatedAt": "2026-10-30T11:07:22Z",
-      "snapshotFetchedAt": "2026-10-23T14:30:37+00:00"
+      "snapshotFetchedAt": "2026-10-23T14:30:37+00:00",
+      "skipUnconfirmedThroughPeriod": "2026-Q2",
+      "manualReviewReason": "HHV Q2/2026 YTD source totals reconcile internally, but the report's opening cash differs from FY2025/Q1 close and standalone Q2 cash bridge residual is about 2.96%, explicitly documented with no balancing plug. OCR/enrich changed the source-backed Q2 values/basis; restored all 10 periods and audit metadata from the validated normalized snapshot commit dcdafc8b76bbfc20974a6b1d99f75958524510fd, recovery commit 9041cb94393c62aca3e5260f008e5263147cc46f. Preserve source discrepancy for manual review and hold HHV."
     },
     "DPG": {
       "status": "automated_processing_complete",
@@ -2163,7 +2165,7 @@
   },
   "nextSymbolHint": "SHS",
   "lastSessionCheckpoint": {
-    "savedAt": "2026-10-30T11:08:00Z",
+    "savedAt": "2026-10-30T11:08:45Z",
     "branch": "main",
     "latestWorkflowFixCommit": "45424f32ab634e30497cbce105c51441cf65ef9e",
     "lastCompletedWork": [
@@ -2193,7 +2195,8 @@
       "SSI: phục hồi thêm capital_expenditure quý riêng cho 10 kỳ từ snapshot kiểm định; site validation 1445, quarterly validation 636 và Hostinger package 201 đều pass sau phục hồi.",
       "KDH: OCR/enrich run 3013 giữ phần lớn cashflow nhưng đổi basis Q1/Q2 2026 và ẩn cash balances do discrepancy >0.01%; phục hồi toàn bộ cashflow từ commit 7d0f60a467303c5e9e2cadde9d4c5c28e24ab202, recovery 97c6f53010d73a9f8db2dafaa69b79f117cf3df4; hold KDH manual review.",
       "NVL: OCR/enrich run 3014 đã làm trống các dòng tiền H1/2026 do audit metadata khác schema; đã khôi phục 10 kỳ từ snapshot kiểm định commit 07d655a23211a1d0999748909f6eb42050050a11, recovery commit 285920c0ec9161c9d682153d0544b08bd6f6b94b; hold NVL manual review.",
-      "HHV: OCR/enrich run 3016 completed for 10 periods Q1/2024–Q2/2026; next checkpoint DPG."
+      "HHV: OCR/enrich run 3016 completed for 10 periods Q1/2024–Q2/2026; next checkpoint DPG.",
+      "HHV: OCR/enrich run 3016 changed Q2/2026 cashflow basis/values despite documented source discrepancy; restored 10 periods from normalized snapshot commit dcdafc8b76bbfc20974a6b1d99f75958524510fd, recovery 9041cb94393c62aca3e5260f008e5263147cc46f; hold HHV manual review."
     ],
     "lastKnownValidation": {
       "siteAndData": "success",
@@ -2214,10 +2217,10 @@
       "For OCR dispatches, honor manual-review holds even when a ticker is passed as an explicit workflow input."
     ],
     "nextActions": [
-      "Xác nhận validation sau phục hồi NVL và kiểm tra HHV cashflow preservation against normalized snapshot.",
-      "Tiếp tục DPG theo checkpoint, sau đó các mã còn lại.",
-      "Giữ NVL manual-review hold do Q1/Q2 2026 cash basis discrepancy; không tự điền plug.",
-      "Tiếp tục mở rộng helper preservation cho các định dạng audit source khác nhau."
+      "Confirm validation after HHV restoration; keep Q2/2026 cross-period cash discrepancy visible and no balancing plug.",
+      "Continue DPG from persisted checkpoint; one ticker only.",
+      "Verify new helper captures KDH/HHV/NVL-style no_balancing_plug + raw-source metadata and SSI/CTG tolerance audit formats.",
+      "After DPG, continue remaining tickers without reprocessing any manual-review-held ticker."
     ],
     "latestDataRecoveryCommit": "168342286eeb209974c91880c6ae6f8511790d66",
     "heldTickersUpdated": [
@@ -2235,7 +2238,8 @@
       "CTG",
       "SSI",
       "KDH",
-      "NVL"
+      "NVL",
+      "HHV"
     ],
     "latestDataRecoveryCommits": {
       "VND": "168342286eeb209974c91880c6ae6f8511790d66",
@@ -2249,7 +2253,8 @@
       "BID": "5cdd3a676483cb53b02e63e803264c6ddc3d3916",
       "SSI": "125f8d6dcfc66007e9651e1c6472c8e99b0481c0",
       "KDH": "97c6f53010d73a9f8db2dafaa69b79f117cf3df4",
-      "NVL": "285920c0ec9161c9d682153d0544b08bd6f6b94b"
+      "NVL": "285920c0ec9161c9d682153d0544b08bd6f6b94b",
+      "HHV": "9041cb94393c62aca3e5260f008e5263147cc46f"
     }
   }
 }
