@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T15:20:00Z",
+  "updatedAt": "2026-10-30T15:17:40.419Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -39,9 +39,9 @@
     "MBB",
     "GAS"
   ],
-  "lastCompletedSymbol": "GAS",
+  "lastCompletedSymbol": "GEG",
   "activeSymbol": null,
-  "resumeSymbolHint": "GEG",
+  "resumeSymbolHint": null,
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "GAS",
@@ -2188,9 +2188,9 @@
       }
     ]
   },
-  "nextSymbolHint": "IDC",
+  "nextSymbolHint": null,
   "lastSessionCheckpoint": {
-    "savedAt": "2026-10-30T15:20:00Z",
+    "savedAt": "2026-10-30T15:17:40.419Z",
     "branch": "main",
     "latestWorkflowFixCommit": "45424f32ab634e30497cbce105c51441cf65ef9e",
     "lastCompletedWork": [
@@ -2225,7 +2225,9 @@
       "IDC: khôi phục net_profit_attributable Q2/2024 từ giá trị OCR sai 26 về 432.485 triệu VND theo báo cáo hợp nhất VietstockFinance trang in 9; ghi lịch sử giá trị trước/sau và nguồn chứng minh. Commit 51918bc138a5e737434dfded5c418dbd7f22e97f; Validate quarterly financial data run 41073860617 SUCCESS.",
       "IDC: giữ Q2/2026 cash-flow bridge discrepancy 0.1463479% và cross-year opening-cash residual 0.1608101% ở trạng thái manual review; không điều chỉnh số, không tạo balancing plug.",
       "KBC Q3/2026: restored net_profit_attributable=917255.360 million VND from VietstockFinance consolidated PDF document 562815, printed page 6, line 61. Source composition does not reconcile to line 60 total by approx 6bn; retain manual review. Commit 7c2e3bbfb9c2dbafe43378f1db5850bb2cf4ca0b.",
-      "GEG: reviewed existing 10-period snapshot and archived VietstockFinance OCR sidecars. No core P&L/BS correction confirmed. Explained parent profit > consolidated profit by negative NCI where supported. Q2/2026 YTD cash bridge passes; quarter opening-basis discrepancy remains manual review. No OCR rerun and no numeric overwrite."
+      "GEG: reviewed existing 10-period snapshot and archived VietstockFinance OCR sidecars. No core P&L/BS correction confirmed. Explained parent profit > consolidated profit by negative NCI where supported. Q2/2026 YTD cash bridge passes; quarter opening-basis discrepancy remains manual review. No OCR rerun and no numeric overwrite.",
+      "Cross-ticker audit: all 32 enabled symbols have data snapshots; each snapshot item count matches its checkpoint periodCount and period labels are unique. No financial values were rewritten.",
+      "Fixed scripts/validate-financials.mjs summary to derive first/last quarter from sorted period keys; this corrects misleading report summaries caused by snapshot insertion order."
     ],
     "lastKnownValidation": {
       "siteAndData": "success",
@@ -2244,7 +2246,8 @@
       "kbcCorrectionQuarterly": "success",
       "kbcCorrectionSite": "success",
       "kbcCorrectionPackage": "success",
-      "gegReview": "source-sidecar-reviewed-no-core-edit"
+      "gegReview": "source-sidecar-reviewed-no-core-edit",
+      "crossTickerAudit": "metadata-consistency-pass; validator summary fix committed; CI status pending"
     },
     "resumeRules": [
       "Resume from this checkpoint; do not reload or reprocess tickers already validated.",
@@ -2294,5 +2297,26 @@
     },
     "latestIdcCorrectionCommit": "51918bc138a5e737434dfded5c418dbd7f22e97f",
     "latestKbcCorrectionCommit": "7c2e3bbfb9c2dbafe43378f1db5850bb2cf4ca0b"
-  }
+  },
+  "lastCrossTickerAudit": {
+    "checkedAt": "2026-10-30T15:17:40.419Z",
+    "enabledSymbols": 32,
+    "snapshotsFound": 32,
+    "periodCountsMatchCheckpoint": true,
+    "duplicatePeriodLabelsFound": 0,
+    "scope": "Metadata and quarter-index consistency only; no financial values changed.",
+    "finding": "All 32 enabled tickers have a data/financials-*.json snapshot. Each snapshot item count matches its checkpoint periodCount; period labels are unique and observed first/last periods match configured coverage, including VCK from 2025-Q1.",
+    "exceptions": [
+      "VCB retains 10 stale detail-schema periods for manual review.",
+      "VCI, VIX, VCK and other explicitly held tickers retain their existing source-scope/manual-review holds.",
+      "IDC, KBC, GEG and PLX retain source-page/cash-flow visual-review flags; no missing values were imputed."
+    ],
+    "codeFix": "scripts/validate-financials.mjs now reports chronological first/last periods from sorted unique period keys instead of relying on insertion order."
+  },
+  "nextActions": [
+    "Do not rerun OCR or reload already validated ticker snapshots.",
+    "Continue only with source-backed manual review for existing flagged periods; preserve blank values and reconciliation residuals above 0.01%.",
+    "Automatically resume a ticker only when a newer official consolidated VietstockFinance report appears or a user explicitly requests a targeted review.",
+    "Recheck KBC Q3/2026 parent-profit composition only if the original PDF page image becomes available."
+  ]
 }
