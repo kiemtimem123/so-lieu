@@ -742,10 +742,10 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 - Đã dùng lại sidecar OCR đã lưu trong `reports/raw/GEG/auto-geg-20261021/`; không tải lại hoặc OCR lại.
 - Snapshot có 10 kỳ 2024-Q1 đến 2026-Q2. Comparative được chọn theo báo cáo VietstockFinance hiện có: Q1/2024 từ Q1/2025; H1/2024 từ Q2/2025; 9T/2024 từ Q3/2025; FY2024 từ Q4/2025; Q1/2025 từ Q1/2026; H1/2025 từ Q2/2026; các kỳ còn lại từ báo cáo tương ứng.
 - Raw source VND được giữ trong `cashflow_source_reconciliation.selected_values_raw_vnd`; display fields chuẩn hóa triệu VND. Quý II–IV riêng được tính từ chênh lệch YTD giữa hai kỳ liền nhau cùng năm. FX lấy từ dòng tỷ giá nguồn.
-- H1/2025 comparative trong Q2/2026 khác cơ sở tiền so với FY2024/Q1/2025 và báo cáo gốc Q2/2025. Cầu nối quý Q2/2025 và Q3/2025 lệch vượt 0,01%; giữ số nguồn và ghi rõ ngoại lệ, không cân bằng cưỡng ép.
-- Q2/2026: số đầu YTD 74.942.444.345 VND khác số cuối Q1/2026 105.856.793.049 VND; YTD bridge tự khớp nhưng cầu nối quý không khớp. Giữ cả hai số.
+- H1/2025 dùng báo cáo hợp nhất gốc Q2/2025: CFO 555.421.075.993 VND; CFI 476.067.298.075 VND; CFF -721.712.954.268 VND; net cash +309.775.419.800 VND; FX +56.223.158 VND; đầu kỳ 163.717.707.072 VND; cuối kỳ 473.549.350.030 VND. Báo cáo Q3/2025 và FY2025 cùng chuỗi cơ sở tiền. Comparative H1/2025 trong Q2/2026 có số đầu/cuối và phân loại dòng tiền khác nên được lưu riêng làm nguồn thay thế, không trộn vào chuỗi quý 2025.
+- Sau khi thống nhất cơ sở H1/2025 gốc, cầu nối quý Q2/2025 và Q3/2025 đều khớp chính xác trước làm tròn; tổng ba luồng và chênh YTD đều đạt. Q2/2026 là ngoại lệ còn lại: đầu YTD 74.942.444.345 VND khác số cuối Q1/2026 105.856.793.049 VND; YTD bridge khớp nhưng cầu nối quý riêng lệch -11.422.219.803 VND. Giữ cả hai số, không balancing plug.
 - Q4/2025: OCR dòng 70 cuối kỳ bị cắt; candidate snapshot được giữ để xem ảnh. Q1/2026 residual bridge +900 VND nằm trong dung sai và được lưu.
-- Ảnh PDF trực tiếp còn pending. Snapshot hiện có đến Q2/2026; đã tìm nhưng chưa xác nhận được URL BCTC Q3/2026 hợp nhất từ danh mục nguồn VietstockFinance trong lượt này; không kết luận rằng Q3 chưa công bố.
+- Đã kiểm tra trực tiếp ảnh trang in 4-5 của BCTC Q1/2026 (bao gồm comparative Q1/2025), Q2/2025, Q3/2025 và Q4/2025. Các kỳ 2024 và Q2/2026 vẫn cần rà soát trực quan. Snapshot có dữ liệu đến Q2/2026; chưa xác nhận được URL BCTC Q3/2026 hợp nhất từ danh mục VietstockFinance, không kết luận rằng Q3 chưa công bố.
 
 ## Bảo toàn dòng tiền đã kiểm toán nguồn khi enrichment
 
@@ -761,3 +761,12 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 - Tổng thuế khớp PBT-LNST; ROA/ROE tính lại theo LNST riêng quý và bình quân số dư đầu/cuối quý là 14,29% và 28,03%. Giá trị trước sửa được lưu riêng trong `financial_line_items_prior_values` / `financial_line_items_value_corrections`; trường lõi được đánh dấu manual visual và allowlisted.
 - Bổ sung safeguard: snapshot các trường lõi đã có `verification_status=verified_manual_visual_reconciliation` trước parser migration; sau enrichment phục hồi nguyên giá trị, source URL, allowlist và trạng thái xác minh nếu parser làm mất/ghi đè. Chỉ phục hồi khi URL nguồn và catalog vẫn y nguyên; không áp lên báo cáo nguồn mới.
 - Đã chuyển `unittest.main()` xuống cuối `tests/test_cashflow_bridge.py` để mọi class kiểm thử được đăng ký trước khi runner thực thi.
+
+### Rà soát nguồn bổ sung và thống nhất cơ sở H1/2025 (2026-10-30)
+
+- Ảnh trực tiếp Q2/2025 (trang in 4-5) xác nhận H1/2025 CFO 555.421.075.993; CFI 476.067.298.075; CFF -721.712.954.268; net cash +309.775.419.800; FX +56.223.158; tiền đầu kỳ 163.717.707.072; tiền cuối kỳ 473.549.350.030 VND.
+- Ảnh trực tiếp Q3/2025 (trang in 4-5) xác nhận 9T/2025 CFO 856.209.015.015; CFI 244.031.897.120; CFF -857.979.656.903; net cash +242.261.255.232; FX +74.334.749; tiền đầu năm 163.717.707.072; tiền cuối kỳ 406.053.297.053 VND.
+- Q2/2025 riêng = H1 gốc trừ Q1/2025; Q3/2025 riêng = 9T/2025 trừ H1 gốc Q2/2025. Cả hai quý có tổng luồng tiền và cầu nối tiền khớp chính xác theo VND trước làm tròn. Comparative H1/2025 trong Q2/2026 vẫn được giữ trong `source_revision.later_comparative_alternative`, không xóa và không dùng trộn vào chuỗi báo cáo gốc 2025.
+- Q2/2025 cash trên Bảng cân đối kế toán (473.549 triệu VND) và tiền cuối kỳ BCTT (473.549.350.030 VND) chênh khoảng 350.030 VND, thấp hơn 0,01%; giữ hai giá trị nguồn.
+- Đã xem trực tiếp ảnh trang in 4-5 của Q1/2026, Q2/2025, Q3/2025 và Q4/2025. Q2/2026 vẫn cần xác nhận ảnh dòng tiền đầu kỳ; snapshot đã lưu hiện chỉ có đến Q2/2026.
+
