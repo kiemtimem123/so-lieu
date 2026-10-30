@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T15:20:00Z",
+  "updatedAt": "2026-10-30T15:23:12.215Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -40,8 +40,8 @@
     "GAS"
   ],
   "lastCompletedSymbol": "GEG",
-  "activeSymbol": null,
-  "resumeSymbolHint": null,
+  "activeSymbol": "VCB",
+  "resumeSymbolHint": "VCB",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "GAS",
@@ -239,8 +239,29 @@
       "skipUnconfirmedAutomation": true,
       "skipUnconfirmedReason": "User-directed skip; unverified figures remain blank for manual review.",
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-10-25T20:42:11Z",
-      "snapshotFetchedAt": "2026-10-24T06:15:00Z"
+      "updatedAt": "2026-10-30T15:23:12.215Z",
+      "snapshotFetchedAt": "2026-10-24T06:15:00Z",
+      "sourceReconciledPeriods": [
+        "2024-Q1"
+      ],
+      "lastSourceReconciliation": {
+        "period": "2024-Q1",
+        "status": "source_text_reconciled_pending_visual_review",
+        "correctionCommit": "8c7d327e3996a862cadfab2b9be244ce5f9f3a3f",
+        "correctedFields": [
+          "net_profit_attributable",
+          "operating_cash_flow",
+          "operating_cash_flow_ytd",
+          "investing_cash_flow",
+          "investing_cash_flow_ytd",
+          "financing_cash_flow",
+          "financing_cash_flow_ytd",
+          "bank_other_operating_net",
+          "cashflow_period_basis"
+        ],
+        "checks": "Balance sheet, bank income components, PPOP, pretax/net profit, cash flow sum, and opening/closing cash bridge reconcile exactly from saved VietstockFinance PDF OCR text.",
+        "remaining": "Visual inspection of PDF page images and remaining 9 VCB periods; do not mark visual verification complete."
+      }
     },
     "TPB": {
       "status": "automated_processing_complete",
@@ -2314,9 +2335,8 @@
     "codeFix": "scripts/validate-financials.mjs now reports chronological first/last periods from sorted unique period keys instead of relying on insertion order."
   },
   "nextActions": [
-    "Do not rerun OCR or reload already validated ticker snapshots.",
-    "Continue only with source-backed manual review for existing flagged periods; preserve blank values and reconciliation residuals above 0.01%.",
-    "Automatically resume a ticker only when a newer official consolidated VietstockFinance report appears or a user explicitly requests a targeted review.",
-    "Recheck KBC Q3/2026 parent-profit composition only if the original PDF page image becomes available."
+    "Continue VCB only: reconcile the remaining 9 quarters against their already archived VietstockFinance consolidated PDF sidecars; do not fetch/reprocess completed source files unnecessarily.",
+    "Keep VCB periods marked pending visual review until source page images have been inspected; do not promote legacy schema v4 to current schema by label only.",
+    "After VCB is complete, move to the next ticker with unresolved source-backed fields; keep explicit skip/scope holds unchanged."
   ]
 }
