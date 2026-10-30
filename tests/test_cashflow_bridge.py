@@ -3803,5 +3803,64 @@ class EnrichmentCashflowPreservationTests(unittest.TestCase):
         self.assertNotIn("operating_cash_flow_ytd", row["financial_line_items_rejected_fields"])
 
 
+    def test_ssi_and_raw_source_audit_variants_are_preserved(self):
+        symbol = "KDH"
+        source_index = "https://finance.vietstock.vn/KDH/tai-tai-lieu.htm?doctype=1"
+        audit_variants = [
+            (
+                {
+                    "source_index_url": source_index,
+                    "tolerance_percent": 0.01,
+                    "ytd_flow_components_within_tolerance": True,
+                    "quarter_flow_components_within_tolerance": True,
+                    "ytd_cash_bridge_within_tolerance": True,
+                    "quarter_cash_bridge_within_tolerance": True,
+                },
+                {},
+            ),
+            (
+                {
+                    "source_index_url": source_index,
+                    "tolerance_percent": 0.01,
+                    "no_balancing_plug": True,
+                },
+                {
+                    "no_balancing_plug": True,
+                    "source_values_raw_thousand_vnd": {"operating": -633698923, "net": 1069523944},
+                },
+            ),
+        ]
+        for audit, revision in audit_variants:
+            with self.subTest(audit=audit):
+                row = {
+                    "period": "2026-Q1",
+                    "unit": "triệu VND",
+                    "source_index_url": source_index,
+                    "source_archive_file": "reports/raw/KDH/test-source.pdf",
+                    "cashflow_period_basis": "year_to_date",
+                    "operating_cash_flow_ytd": -633699,
+                    "cash_ending_reported_ytd": 3643809,
+                    "financial_line_items_extracted_fields": [
+                        "operating_cash_flow_ytd", "cash_ending_reported_ytd",
+                    ],
+                    "financial_line_items_rejected_fields": [],
+                    "cashflow_source_reconciliation": audit,
+                    "cashflow_audit_revision": revision,
+                }
+                rows = [row]
+                backups = capture_source_audited_cashflow_backups(rows, symbol)
+                self.assertIn("2026-Q1", backups)
+                row["cashflow_period_basis"] = "quarterly_reported"
+                row["operating_cash_flow_ytd"] = None
+                row["cash_ending_reported_ytd"] = None
+                changed, affected, restored = restore_source_audited_cashflow_backups(rows, backups)
+                self.assertTrue(changed)
+                self.assertEqual(affected, 1)
+                self.assertGreater(restored, 0)
+                self.assertEqual(row["cashflow_period_basis"], "year_to_date")
+                self.assertEqual(row["operating_cash_flow_ytd"], -633699)
+                self.assertEqual(row["cash_ending_reported_ytd"], 3643809)
+
+
 if __name__ == "__main__":
     unittest.main()
