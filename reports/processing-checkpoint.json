@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T09:28:52Z",
+  "updatedAt": "2026-10-30T10:16:28.291Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -752,7 +752,10 @@
         "2026-Q2"
       ],
       "sourceUpdateNote": "NLG source reconciliation: Q1/Q2 2026 cash-flow aggregates and Q1 income-field mappings refreshed from VietstockFinance-linked PDFs. Q2 PDF pages were visually checked; Q1 operating_cash_flow remains blank because the OCR line differs from reported net cash flow by VND 100,000,000,000. Q1/Q2 opening-cash discrepancy of about VND 33,084.7 million is retained as a source anomaly.",
-      "sourceUpdateCommit": "ebc7828ae8eaf98d680861a1b6669ea4aa91cf81"
+      "sourceUpdateCommit": "ebc7828ae8eaf98d680861a1b6669ea4aa91cf81",
+      "skipUnconfirmedAutomation": true,
+      "skipUnconfirmedThroughPeriod": "2026-Q2",
+      "manualReviewReason": "Tạm dừng tự động nâng schema chi tiết: workflow OCR NLG liên tiếp chọn lại do các mục chi tiết cũ, nhưng bước enrich làm kiểm định snapshot thất bại ở NLG 2024-Q4 dù snapshot đã lưu vẫn có pretax_profit=1655465 và net_profit=1272769, kèm đối chiếu nguồn VietstockFinance. Giữ nguyên dữ liệu và sidecar hiện có; chuyển nâng schema/kiểm tra thay đổi transient sang rà soát thủ công, không OCR lại hoặc ghi đè số liệu đã lưu."
     },
     "BSR": {
       "status": "automated_processing_complete",
@@ -2152,5 +2155,5 @@
       }
     ]
   },
-  "nextSymbolHint": "GAS"
+  "nextSymbolHint": "SHS"
 }
