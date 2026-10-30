@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T14:42:30Z",
+  "updatedAt": "2026-10-30T15:05:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -41,7 +41,7 @@
   ],
   "lastCompletedSymbol": "GAS",
   "activeSymbol": null,
-  "resumeSymbolHint": "IDC",
+  "resumeSymbolHint": "GEG",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "GAS",
@@ -675,9 +675,9 @@
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 11,
-      "updatedAt": "2026-10-30T02:25:00+07:00",
+      "updatedAt": "2026-10-30T15:05:00Z",
       "snapshotFetchedAt": "2026-10-25T09:45:00Z",
-      "note": "KBC cash-flow normalization and CI regression passed through Q3/2026; terminal manual review remains for direct visual review, FY2025 ending-cash OCR truncation, Q1/2026 cross-year cash basis and Q3/2026 CFI total OCR mismatch. No balancing plugs."
+      "note": "KBC: 11 kỳ Q1/2024–Q3/2026; automated extraction/normalization and cash-flow regression remain complete. Corrected 2026-Q3 net_profit_attributable from null to 917255.360 million VND based on VietstockFinance consolidated PDF document 562815, printed page 6, line 61 (917,255,360,018 VND). Source line 60 total net profit 937,236,264,334 and line 62 NCI 25,980,904,313 sum to 943,236,264,331, differing by ~6bn; keep manual review flag, do not infer or plug. Other pending visual/source-review exceptions: 2024-Q2/Q4, 2025-Q2/Q4, 2026-Q1/Q3."
     },
     "GEG": {
       "status": "terminal_needs_manual_review",
@@ -2190,7 +2190,7 @@
   },
   "nextSymbolHint": "IDC",
   "lastSessionCheckpoint": {
-    "savedAt": "2026-10-30T14:42:30Z",
+    "savedAt": "2026-10-30T15:05:00Z",
     "branch": "main",
     "latestWorkflowFixCommit": "45424f32ab634e30497cbce105c51441cf65ef9e",
     "lastCompletedWork": [
@@ -2223,7 +2223,8 @@
       "HHV: OCR/enrich run 3016 completed for 10 periods Q1/2024–Q2/2026; next checkpoint DPG.",
       "HHV: OCR/enrich run 3016 changed Q2/2026 cashflow basis/values despite documented source discrepancy; restored 10 periods from normalized snapshot commit dcdafc8b76bbfc20974a6b1d99f75958524510fd, recovery 9041cb94393c62aca3e5260f008e5263147cc46f; hold HHV manual review.",
       "IDC: khôi phục net_profit_attributable Q2/2024 từ giá trị OCR sai 26 về 432.485 triệu VND theo báo cáo hợp nhất VietstockFinance trang in 9; ghi lịch sử giá trị trước/sau và nguồn chứng minh. Commit 51918bc138a5e737434dfded5c418dbd7f22e97f; Validate quarterly financial data run 41073860617 SUCCESS.",
-      "IDC: giữ Q2/2026 cash-flow bridge discrepancy 0.1463479% và cross-year opening-cash residual 0.1608101% ở trạng thái manual review; không điều chỉnh số, không tạo balancing plug."
+      "IDC: giữ Q2/2026 cash-flow bridge discrepancy 0.1463479% và cross-year opening-cash residual 0.1608101% ở trạng thái manual review; không điều chỉnh số, không tạo balancing plug.",
+      "KBC Q3/2026: restored net_profit_attributable=917255.360 million VND from VietstockFinance consolidated PDF document 562815, printed page 6, line 61. Source composition does not reconcile to line 60 total by approx 6bn; retain manual review. Commit 7c2e3bbfb9c2dbafe43378f1db5850bb2cf4ca0b."
     ],
     "lastKnownValidation": {
       "siteAndData": "success",
@@ -2232,9 +2233,13 @@
       "validationRuns": {
         "siteAndData": 41044866172,
         "quarterlyFinancialData": 41073860617,
-        "hostingerPackage": 41044783809
+        "hostingerPackage": 41044783809,
+        "kbcCorrectionQuarterly": 41078614187,
+        "kbcCorrectionSite": 41078614164,
+        "kbcCorrectionPackage": 41078614193
       },
-      "note": "Site validation 1439 success includes CTG cashflow restoration and the new CTG-style audit preservation unit test. Quarterly validation 632 and package 199 passed after CTG restore."
+      "note": "Site validation 1439 success includes CTG cashflow restoration and the new CTG-style audit preservation unit test. Quarterly validation 632 and package 199 passed after CTG restore.",
+      "kbcCorrection": "queued"
     },
     "resumeRules": [
       "Resume from this checkpoint; do not reload or reprocess tickers already validated.",
@@ -2244,10 +2249,9 @@
       "For OCR dispatches, honor manual-review holds even when a ticker is passed as an explicit workflow input."
     ],
     "nextActions": [
-      "IDC: chỉ hoàn tất manual review khi có thể kiểm tra trực quan trang PDF gốc cho các kỳ đang gắn cờ; không chạy lại OCR/enrich trên 10 kỳ đã đối chiếu.",
-      "IDC Q2/2026: giữ nguyên số nguồn và sai lệch cross-period cash basis 0.1608101%; không tạo balancing plug.",
-      "Kiểm tra danh mục VietstockFinance IDC để xác nhận khi BCTC hợp nhất Q3/2026 được đăng; chỉ bổ sung sau khi có document ID và PDF/ZIP được liên kết từ đúng danh mục.",
-      "Tiếp tục mã tiếp theo trong hàng đợi, một mã mỗi lần; checkpoint ngay sau khi qua kiểm định."
+      "KBC: preserve six terminal manual-review periods; do not rerun OCR or alter cash flows absent direct visual/source proof.",
+      "Wait for KBC correction validation workflows 41078614187, 41078614164 and package 41078614193 to complete; investigate only if failed.",
+      "Continue next ticker GEG, one ticker at a time; first inspect existing snapshot/checkpoint and avoid reprocessing completed periods."
     ],
     "latestDataRecoveryCommit": "168342286eeb209974c91880c6ae6f8511790d66",
     "heldTickersUpdated": [
@@ -2283,6 +2287,7 @@
       "NVL": "285920c0ec9161c9d682153d0544b08bd6f6b94b",
       "HHV": "9041cb94393c62aca3e5260f008e5263147cc46f"
     },
-    "latestIdcCorrectionCommit": "51918bc138a5e737434dfded5c418dbd7f22e97f"
+    "latestIdcCorrectionCommit": "51918bc138a5e737434dfded5c418dbd7f22e97f",
+    "latestKbcCorrectionCommit": "7c2e3bbfb9c2dbafe43378f1db5850bb2cf4ca0b"
   }
 }
