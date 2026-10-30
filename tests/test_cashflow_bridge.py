@@ -3484,7 +3484,7 @@ class GEGCashFlowNormalizationTests(unittest.TestCase):
                 self.assertTrue(rec["ytd_flow_components_within_tolerance"])
 
     def test_geg_ytd_cash_bridges_and_quarter_exceptions(self):
-        expected_exceptions = {"2025-Q2", "2025-Q3", "2026-Q2"}
+        expected_exceptions = {"2026-Q2"}
         for period, row in self.rows.items():
             with self.subTest(period=period):
                 rec = row["cashflow_source_reconciliation"]
@@ -3516,19 +3516,53 @@ class GEGCashFlowNormalizationTests(unittest.TestCase):
                     for key in ("cfo","cfi","cff","net_cash_change","fx"):
                         self.assertEqual(raw["quarter"][key], raw["ytd"][key])
 
-    def test_geg_restatement_exceptions_are_traceable(self):
-        h1_2024 = self.rows["2024-Q2"]["cashflow_source_reconciliation"]["source_revision"]
-        self.assertEqual(h1_2024["prior_source"], "2024-Q2 original report")
-        h1_2025 = self.rows["2025-Q2"]["cashflow_source_reconciliation"]["source_revision"]
-        self.assertEqual(h1_2025["prior_source"], "2025-Q2 original report")
-        delta = h1_2025["selected_minus_prior_source_values_raw_vnd"]
-        self.assertEqual(delta["cfo"], -5752433928)
-        self.assertEqual(delta["cfi"], 6272819320)
-        self.assertEqual(delta["net"], 336385390)
-        self.assertEqual(self.rows["2025-Q2"]["cashflow_source_reconciliation"]["calculations"]["quarter_cash_bridge_residual_raw_vnd"], -12113208011)
-        self.assertEqual(self.rows["2025-Q3"]["cashflow_source_reconciliation"]["calculations"]["quarter_cash_bridge_residual_raw_vnd"], 12113208011)
+    def test_geg_original_h1_2025_source_and_later_comparative_are_traceable(self):
+        q2 = self.rows["2025-Q2"]["cashflow_source_reconciliation"]
+        self.assertEqual(q2["selected_cashflow_source_period"], "H1/2025 original consolidated BCTC Q2/2025")
+        self.assertTrue(q2["selected_cashflow_source_url"].endswith("GEG_Baocaotaichinh_Q2_2025_Hopnhat.pdf"))
+        ytd = q2["selected_values_raw_vnd"]["ytd"]
+        self.assertEqual(ytd["cfo"], 555421075993)
+        self.assertEqual(ytd["cfi"], 476067298075)
+        self.assertEqual(ytd["cff"], -721712954268)
+        self.assertEqual(ytd["net_cash_change"], 309775419800)
+        self.assertEqual(ytd["fx"], 56223158)
+        self.assertEqual(ytd["cash_beginning"], 163717707072)
+        self.assertEqual(ytd["cash_ending"], 473549350030)
+        alternative = q2["source_revision"]["later_comparative_alternative"]
+        self.assertEqual(alternative["source_period"], "H1/2025 later comparative in Q2/2026")
+        self.assertEqual(alternative["raw_values_vnd"]["net_cash_change"], 310111805190)
+        self.assertEqual(alternative["differences_vs_selected_original_raw_vnd"]["net_cash_change"], 336385390)
+        self.assertEqual(q2["calculations"]["quarter_cash_bridge_residual_raw_vnd"], 0)
+        self.assertEqual(self.rows["2025-Q3"]["cashflow_source_reconciliation"]["calculations"]["quarter_cash_bridge_residual_raw_vnd"], 0)
         self.assertEqual(self.rows["2026-Q2"]["cashflow_source_reconciliation"]["calculations"]["quarter_cash_bridge_residual_raw_vnd"], -11422219803)
         self.assertEqual(self.rows["2026-Q2"]["cashflow_source_reconciliation"]["cross_period_cash_basis"]["residual_raw_vnd"], -30914348704)
+
+    def test_geg_q2_q3_2025_source_pages_visually_verified_and_quarter_bridges_pass(self):
+        q2 = self.rows["2025-Q2"]
+        q2_rec = q2["cashflow_source_reconciliation"]
+        self.assertEqual(q2_rec["visual_review"], "direct_image_verified_printed_pages_4_5")
+        self.assertEqual(q2_rec["status"], "PASS_WITHIN_TOLERANCE_SOURCE_ROWS_VISUALLY_VERIFIED")
+        self.assertTrue(q2_rec["quarter_cash_bridge_within_tolerance"])
+        self.assertTrue(q2_rec["ytd_cash_bridge_within_tolerance"])
+        self.assertEqual(q2_rec["selected_values_raw_vnd"]["quarter"]["cash_beginning"], 175400032558)
+        self.assertEqual(q2_rec["selected_values_raw_vnd"]["quarter"]["cash_ending"], 473549350030)
+
+        q3 = self.rows["2025-Q3"]
+        q3_rec = q3["cashflow_source_reconciliation"]
+        self.assertEqual(q3_rec["visual_review"], "direct_image_verified_printed_pages_4_5")
+        self.assertEqual(q3_rec["status"], "PASS_WITHIN_TOLERANCE_SOURCE_ROWS_VISUALLY_VERIFIED")
+        self.assertTrue(q3_rec["quarter_cash_bridge_within_tolerance"])
+        self.assertTrue(q3_rec["ytd_cash_bridge_within_tolerance"])
+        self.assertEqual(q3_rec["selected_values_raw_vnd"]["quarter"]["cash_beginning"], 473549350030)
+        self.assertEqual(q3_rec["selected_values_raw_vnd"]["quarter"]["cash_ending"], 406053297053)
+
+    def test_geg_q1_2025_comparative_and_q1_2026_source_pages_visually_verified(self):
+        for period in ("2025-Q1", "2026-Q1"):
+            with self.subTest(period=period):
+                rec = self.rows[period]["cashflow_source_reconciliation"]
+                self.assertEqual(rec["visual_review"], "direct_image_verified_printed_pages_4_5")
+                self.assertEqual(rec["visual_review_completed_at"], "2026-10-30")
+                self.assertEqual(rec["status"], "PASS_WITHIN_TOLERANCE_SOURCE_ROWS_VISUALLY_VERIFIED")
 
     def test_geg_numeric_cashflow_fields_are_allowlisted(self):
         fields = self.flows + self.ytd + self.fx + ("cash_beginning","cash_ending","cash_beginning_reported_ytd","cash_ending_reported_ytd")
