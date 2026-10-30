@@ -2432,9 +2432,7 @@
         "selling_expense",
         "short_term_investments",
         "short_term_receivables",
-        "cash_beginning",
         "cash_beginning_reported_ytd",
-        "cash_ending",
         "cash_ending_reported_ytd"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
@@ -2689,7 +2687,9 @@
         "cash_flow_statement_vs_balance_sheet_ending_cash_relative_difference_percent": 0.823314284585169,
         "cash_flow_statement_vs_balance_sheet_ending_cash_within_tolerance": false,
         "balance_sheet_cash_ending_raw_thousand_vnd": 3613808683,
-        "source_discrepancy_note": "The source PDF visually prints 3,643,808,683 on cash-flow statement line 70, while the same-report balance sheet line 110 reports 3,613,808,683; both remain unchanged for manual review."
+        "source_discrepancy_note": "The source PDF visually prints 3,643,808,683 on cash-flow statement line 70, while the same-report balance sheet line 110 reports 3,613,808,683; both remain unchanged for manual review.",
+        "standalone_quarter_cash_fields_hidden": true,
+        "standalone_quarter_cash_fields_hidden_reason": "Q1/Q2 2026 cash-flow-to-balance-sheet or cross-period opening cash discrepancy exceeds 0.01%; retain reported YTD opening/closing cash and source values, but do not expose derived standalone-quarter cash_beginning/cash_ending."
       },
       "financial_line_items_rejected_recovered_fields": [
         "current_assets",
@@ -2700,9 +2700,7 @@
       "current_assets": 37310715,
       "non_current_assets": 348807,
       "current_liabilities": 3394097,
-      "long_term_liabilities": 14943620,
-      "cash_beginning": 2544285,
-      "cash_ending": 3643809
+      "long_term_liabilities": 14943620
     },
     {
       "symbol": "KDH",
@@ -2782,8 +2780,6 @@
       "financial_line_items_extracted_fields": [
         "admin_expense",
         "cash_and_equivalents",
-        "cash_beginning",
-        "cash_ending",
         "cashflow_period_basis",
         "cost_of_goods_sold",
         "current_assets",
@@ -2987,7 +2983,10 @@
         "formula": "gross_profit + abs(cost_of_goods_sold)",
         "difference_from_parsed_value": 80522
       },
-      "financial_line_items_rejected_fields": [],
+      "financial_line_items_rejected_fields": [
+        "cash_beginning",
+        "cash_ending"
+      ],
       "financial_line_items_unverified_values": {
         "admin_expense": -60,
         "cash_and_equivalents": 2605261,
@@ -3021,8 +3020,6 @@
       "cash_beginning_reported_ytd": 2544285,
       "cash_ending_reported_ytd": 2605261,
       "foreign_exchange_effect_ytd": null,
-      "cash_beginning": 3643809,
-      "cash_ending": 2605261,
       "foreign_exchange_effect": null,
       "cashflow_audit_revision": {
         "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/KDH_Baocaotaichinh_Q2_2026_Hopnhat.pdf",
@@ -3092,7 +3089,9 @@
         "source_values_original_unit_preserved": true,
         "no_balancing_plug": true,
         "manual_review_remaining": true,
-        "source_discrepancy_note": "The H1/2026 YTD source totals and year-opening/closing bridge reconcile. Standalone Q2 cash bridge residual mirrors the unresolved Q1 cash-flow-vs-balance-sheet discrepancy; no balancing plug."
+        "source_discrepancy_note": "The H1/2026 YTD source totals and year-opening/closing bridge reconcile. Standalone Q2 cash bridge residual mirrors the unresolved Q1 cash-flow-vs-balance-sheet discrepancy; no balancing plug.",
+        "standalone_quarter_cash_fields_hidden": true,
+        "standalone_quarter_cash_fields_hidden_reason": "Q1/Q2 2026 cash-flow-to-balance-sheet or cross-period opening cash discrepancy exceeds 0.01%; retain reported YTD opening/closing cash and source values, but do not expose derived standalone-quarter cash_beginning/cash_ending."
       },
       "financial_line_items_rejected_recovered_fields": [
         "current_liabilities",
@@ -3815,5 +3814,5 @@
   "bootstrap_completed_at": "2026-10-23T14:29:23+00:00",
   "bootstrap_completion_note": "Các kỳ báo cáo có thể tự trích xuất đã được lưu; một số kỳ còn cần đối chiếu thủ công.",
   "note": " KDH cash-flow normalization 2026-10-29: selected later comparative columns where relevant; all exact source YTD flow totals and selected cash-flow bridges audited; data converted from thousand VND to million VND. ≤0.01% rounded residuals retained and accepted; >0.01% source-basis/cash-statement conflicts flagged; no balancing plugs.",
-  "processedAt": "2026-10-30T11:06:10.639Z"
+  "processedAt": "2026-10-30T11:09:54.502Z"
 }
