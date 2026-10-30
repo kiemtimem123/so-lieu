@@ -3845,11 +3845,29 @@ def capture_source_audited_cashflow_backups(items, symbol):
         audit = item.get("cashflow_source_reconciliation")
         if not isinstance(audit, dict):
             continue
+        tolerance = audit.get(
+            "relative_tolerance_percent",
+            audit.get("comparison_tolerance_relative_percent", audit.get("tolerance_percent", 0)),
+        )
+        try:
+            tolerance = float(tolerance or 0)
+        except (TypeError, ValueError):
+            tolerance = 1.0
+        source_arithmetic_passed = (
+            audit.get("ytd_flow_components_sum_to_net_cash_change") is True
+            and audit.get("quarter_flow_components_sum_to_net_cash_change") is True
+            and audit.get("ytd_cash_bridge_residual") is not None
+            and audit.get("quarter_cash_bridge_residual") is not None
+        )
+        source_values_selected = (
+            audit.get("selected_values_not_adjusted_for_tolerance") is True
+            or source_arithmetic_passed
+        )
         if (
             item.get("source_index_url") != expected_index
             or audit.get("source_index_url") != expected_index
-            or audit.get("selected_values_not_adjusted_for_tolerance") is not True
-            or float(audit.get("relative_tolerance_percent") or 0) > 0.01
+            or not source_values_selected
+            or tolerance > 0.01
             or item.get("unit") != "triệu VND"
         ):
             continue
