@@ -3818,12 +3818,120 @@ def restore_manually_verified_core_fields(items, symbol, backups):
             affected_quarters += 1
     return changed, affected_quarters, changed_fields
 
+def capture_source_audited_cashflow_backups(items, symbol):
+    """Snapshot already reconciled cash-flow fields before generic detail enrichment."""
+    symbol = str(symbol or "").strip().upper()
+    expected_index = f"https://finance.vietstock.vn/{symbol}/tai-tai-lieu.htm?doctype=1"
+    fields = {
+        "cashflow_period_basis",
+        "operating_cash_flow", "investing_cash_flow", "financing_cash_flow",
+        "net_cash_change", "foreign_exchange_effect",
+        "operating_cash_flow_ytd", "investing_cash_flow_ytd",
+        "financing_cash_flow_ytd", "net_cash_change_ytd",
+        "foreign_exchange_effect_ytd",
+        "cash_beginning", "cash_ending",
+        "cash_beginning_reported_ytd", "cash_ending_reported_ytd",
+        "capital_expenditure", "capital_expenditure_ytd",
+        "dividends_paid", "dividends_paid_ytd",
+        "operating_cash_flow_calculation", "investing_cash_flow_calculation",
+        "financing_cash_flow_calculation", "net_cash_change_calculation",
+        "foreign_exchange_effect_calculation", "cash_beginning_calculation",
+        "cash_ending_calculation",
+    }
+    backups = {}
+    for item in (items if isinstance(items, list) else []):
+        if not isinstance(item, dict) or not period_key(item):
+            continue
+        audit = item.get("cashflow_source_reconciliation")
+        if not isinstance(audit, dict):
+            continue
+        if (
+            item.get("source_index_url") != expected_index
+            or audit.get("source_index_url") != expected_index
+            or audit.get("selected_values_not_adjusted_for_tolerance") is not True
+            or float(audit.get("relative_tolerance_percent") or 0) > 0.01
+            or item.get("unit") != "triệu VND"
+        ):
+            continue
+        archive = str(item.get("source_archive_file") or "")
+        if not archive.startswith(f"reports/raw/{symbol}/"):
+            continue
+        values = {field: item[field] for field in fields if field in item}
+        backups[str(item["period"])] = {
+            "values": values,
+            "extracted_fields": [
+                field for field in (item.get("financial_line_items_extracted_fields") or [])
+                if field in fields
+            ],
+            "rejected_fields": [
+                field for field in (item.get("financial_line_items_rejected_fields") or [])
+                if field in fields
+            ],
+            "cashflow_source_reconciliation": item.get("cashflow_source_reconciliation"),
+            "cashflow_audit_revision": item.get("cashflow_audit_revision"),
+        }
+    return backups
+
+
+def restore_source_audited_cashflow_backups(items, backups):
+    """Restore pre-enrichment source-audited values without discarding new non-cash details."""
+    changed = False
+    affected = 0
+    restored_fields = 0
+    by_period = {
+        str(item.get("period")): item
+        for item in (items if isinstance(items, list) else [])
+        if isinstance(item, dict)
+    }
+    for period, backup in (backups or {}).items():
+        item = by_period.get(period)
+        if not isinstance(item, dict):
+            continue
+        row_changed = False
+        for field, value in (backup.get("values") or {}).items():
+            if item.get(field) != value:
+                item[field] = value
+                row_changed = True
+                restored_fields += 1
+        previous_extracted = set(backup.get("extracted_fields") or [])
+        current_extracted = set(item.get("financial_line_items_extracted_fields") or [])
+        merged_extracted = current_extracted | previous_extracted
+        if merged_extracted != current_extracted:
+            item["financial_line_items_extracted_fields"] = sorted(merged_extracted)
+            row_changed = True
+        previous_rejected = set(backup.get("rejected_fields") or [])
+        current_rejected = set(item.get("financial_line_items_rejected_fields") or [])
+        merged_rejected = (current_rejected | previous_rejected) - previous_extracted
+        if merged_rejected != current_rejected:
+            item["financial_line_items_rejected_fields"] = sorted(merged_rejected)
+            row_changed = True
+        for key in ("cashflow_source_reconciliation", "cashflow_audit_revision"):
+            previous = backup.get(key)
+            if previous is not None and item.get(key) != previous:
+                item[key] = previous
+                row_changed = True
+        if row_changed:
+            item.pop("financial_line_items_cash_check", None)
+            item["financial_line_items_note"] = str(item.get("financial_line_items_note") or "").replace(
+                "Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý.", " "
+            ).strip()
+            item["cashflow_enrichment_preservation"] = {
+                "restored_pre_enrichment_source_audited_fields": True,
+                "source_audit": "cashflow_source_reconciliation",
+                "no_source_values_or_balancing_plugs_changed": True,
+            }
+            affected += 1
+            changed = True
+    return changed, affected, restored_fields
+
+
 def enrich_snapshot(path):
  snapshot=json.loads(path.read_text(encoding="utf-8"))
  symbol=str(snapshot.get("symbol") or path.stem.replace("financials-","")).upper()
  items=snapshot.get("items")
  if not isinstance(items,list): return False,0,0
  manually_verified_core_backups=capture_manually_verified_core_fields(items)
+ audited_cashflow_backups=capture_source_audited_cashflow_backups(items,symbol)
  changed=False; quarter_count=0; field_count=0
  for item in items:
   if not isinstance(item,dict) or not period_key(item): continue
@@ -4442,6 +4550,10 @@ def enrich_snapshot(path):
  changed=changed or manual_core_changed
  quarter_count+=manual_core_quarters
  field_count+=manual_core_fields
+ audited_cashflow_changed,audited_cashflow_quarters,audited_cashflow_fields=restore_source_audited_cashflow_backups(items,audited_cashflow_backups)
+ changed=changed or audited_cashflow_changed
+ quarter_count+=audited_cashflow_quarters
+ field_count+=audited_cashflow_fields
  if changed:
   # Record processing time separately from fetchedAt (source-download time).
   # The browser can now choose the newest processed snapshot across origins.
