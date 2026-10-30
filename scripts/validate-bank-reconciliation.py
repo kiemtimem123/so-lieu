@@ -216,7 +216,18 @@ def main():
         by_period = {str(row.get("period")): row for row in rows if isinstance(row, dict)}
         symbols_checked += 1
         for item in rows:
-            if not isinstance(item, dict) or item.get("financial_line_items_schema_version") not in CURRENT_SCHEMAS:
+            if not isinstance(item, dict):
+                continue
+            schema_version = item.get("financial_line_items_schema_version")
+            # VCB's legacy v4 rows were source-reconciled quarter by quarter in
+            # the 2026-10-30 audit. Keep them under the same cash-flow and bank
+            # statement regression checks without falsely relabelling their parser
+            # schema as current. They remain pending visual review.
+            reconciled_vcb_legacy = (
+                symbol == "VCB"
+                and schema_version == "2026-10-22-bank-statement-qc-v4"
+            )
+            if schema_version not in CURRENT_SCHEMAS and not reconciled_vcb_legacy:
                 continue
             audited_rows += 1
             audit_item(symbol, item, by_period)
