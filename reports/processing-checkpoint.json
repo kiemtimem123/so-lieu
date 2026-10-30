@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T15:30:11.384Z",
+  "updatedAt": "2026-10-30T15:31:20.719Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -40,8 +40,8 @@
     "GAS"
   ],
   "lastCompletedSymbol": "GEG",
-  "activeSymbol": "KBC",
-  "resumeSymbolHint": "KBC",
+  "activeSymbol": "GEG",
+  "resumeSymbolHint": "GEG",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "GAS",
@@ -725,9 +725,38 @@
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 11,
-      "updatedAt": "2026-10-30T15:05:00Z",
+      "updatedAt": "2026-10-30T15:31:20.719Z",
       "snapshotFetchedAt": "2026-10-25T09:45:00Z",
-      "note": "KBC: 11 kỳ Q1/2024–Q3/2026; automated extraction/normalization and cash-flow regression remain complete. Corrected 2026-Q3 net_profit_attributable from null to 917255.360 million VND based on VietstockFinance consolidated PDF document 562815, printed page 6, line 61 (917,255,360,018 VND). Source line 60 total net profit 937,236,264,334 and line 62 NCI 25,980,904,313 sum to 943,236,264,331, differing by ~6bn; keep manual review flag, do not infer or plug. Other pending visual/source-review exceptions: 2024-Q2/Q4, 2025-Q2/Q4, 2026-Q1/Q3."
+      "note": "KBC: 11 kỳ Q1/2024–Q3/2026; automated extraction/normalization and cash-flow regression remain complete. Corrected 2026-Q3 net_profit_attributable from null to 917255.360 million VND based on VietstockFinance consolidated PDF document 562815, printed page 6, line 61 (917,255,360,018 VND). Source line 60 total net profit 937,236,264,334 and line 62 NCI 25,980,904,313 sum to 943,236,264,331, differing by ~6bn; keep manual review flag, do not infer or plug. Other pending visual/source-review exceptions: 2024-Q2/Q4, 2025-Q2/Q4, 2026-Q1/Q3.",
+      "sourceReconciledPeriods": [
+        "2024-Q2",
+        "2024-Q4",
+        "2025-Q2",
+        "2025-Q4",
+        "2026-Q1",
+        "2026-Q3"
+      ],
+      "lastSourceReconciliation": {
+        "periodRange": "2024-Q2, 2024-Q4, 2025-Q2, 2025-Q4, 2026-Q1, 2026-Q3",
+        "status": "source_text_reconciled_pending_visual_review",
+        "reviewedArchives": [
+          "reports/raw/KBC/auto-kbc-20261021/a4d47d50ee7517c8.pdf.extracted.json",
+          "reports/raw/KBC/auto-kbc-20261021/13f70b708b575b20.pdf.extracted.json",
+          "reports/raw/KBC/auto-kbc-20261021/da32cf40760390a0.pdf.extracted.json",
+          "reports/raw/KBC/auto-kbc-20261021/cc8416858d0b46fc.pdf.extracted.json",
+          "reports/raw/KBC/auto-kbc-20261021/f3e1ce721e98eb23.pdf.extracted.json",
+          "reports/raw/KBC/auto-kbc-20261021/e5e107ac51bdb756.pdf.extracted.json"
+        ],
+        "findings": [
+          "2024-Q2 uses the subsequent Q2/2025 comparative for H1/2024 cash-flow reclassification; net cash bridge and all component sums reconcile.",
+          "2024-Q4 uses the subsequent FY2025 comparative; cash-flow YTD and Q4 bridges reconcile.",
+          "2025-Q2 uses the subsequent Q2/2026 comparative; CFO/CFI presentation is reclassified and the net cash totals reconcile; prior source values are preserved.",
+          "2025-Q4 YTD and standalone cash-flow component sums reconcile; closing cash OCR remains truncated, so keep the previously stored candidate flagged.",
+          "2026-Q1 internal cash-flow sums reconcile; opening cash differs from 2025-Q4 closing cash by 0.214791%, above 0.01%; do not force continuity.",
+          "2026-Q3 cash-flow sums reconcile using the component-derived investing total; OCR row 30 candidate differs by 3bn VND. Income statement composition mismatch remains: parent profit plus NCI differs from consolidated net profit by 6bn VND for Q3, and the 9M composition OCR also differs. Preserve source values and manual review."
+        ],
+        "remaining": "Archived OCR text reviewed. PDF page images not visually inspected; do not clear terminal manual-review periods."
+      }
     },
     "GEG": {
       "status": "terminal_needs_manual_review",
@@ -2364,8 +2393,8 @@
     "codeFix": "scripts/validate-financials.mjs now reports chronological first/last periods from sorted unique period keys instead of relying on insertion order."
   },
   "nextActions": [
-    "Continue KBC: inspect the six terminal manual-review periods against archived VietstockFinance PDF sidecars, preserving the existing 6bn Q3 composition discrepancy unless the PDF page resolves it.",
-    "Continue GEG after KBC, then PLX only if its user-directed skip hold is lifted; do not override explicit skip/scope holds.",
-    "Do not rerun OCR or reload snapshots already validated; visual-review flags remain until page images are inspected."
+    "Continue GEG: inspect its five flagged quarters against the saved VietstockFinance PDF/ZIP sidecars; preserve unresolved visual/cash-flow bridge flags.",
+    "After GEG, review PLX only if its user-directed skip hold is lifted; do not override the explicit hold.",
+    "Do not reload/reprocess validated snapshots; only make source-backed corrections and checkpoint after one ticker."
   ]
 }
