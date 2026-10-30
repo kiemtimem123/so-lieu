@@ -2087,11 +2087,11 @@
       if (statementHead) statementHead.innerHTML = '<tr><th class="statement-first-col">' + (activeStatement === 'peers' ? 'Mã chứng khoán' : 'Chỉ tiêu') + '</th>' +
         periods.map(period => {
           const report = sourceRows.find(item => item.period === period);
-          const pdfUrl = report && typeof report.source_url === 'string' && /\.pdf(?:$|[?#])/i.test(report.source_url)
+          const sourceDocumentUrl = report && typeof report.source_url === 'string' && /\.(?:pdf|zip)(?:$|[?#])/i.test(report.source_url)
             ? report.source_url
             : '';
-          const pdfLink = pdfUrl
-            ? '<a class="statement-source-link statement-period-pdf" href="' + escapeHtml(pdfUrl) + '" target="_blank" rel="noopener noreferrer" title="Mở báo cáo PDF gốc" aria-label="Mở báo cáo PDF ' + escapeHtml(displayPeriod(period)) + '">▧</a>'
+          const pdfLink = sourceDocumentUrl
+            ? '<a class="statement-source-link statement-period-pdf" href="' + escapeHtml(sourceDocumentUrl) + '" target="_blank" rel="noopener noreferrer" title="Mở tài liệu báo cáo gốc" aria-label="Mở tài liệu báo cáo ' + escapeHtml(displayPeriod(period)) + '">▧</a>'
             : '';
           return '<th class="statement-period">' + pdfLink + escapeHtml(displayPeriod(period)) + '</th>';
         }).join('') + '</tr>';
