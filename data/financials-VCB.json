@@ -297,8 +297,8 @@
       "equity": 181702789,
       "pretax_profit": 10116275,
       "net_profit": 8124709,
-      "net_profit_attributable": null,
-      "revenue": null,
+      "net_profit_attributable": 8119414,
+      "revenue": 16751609,
       "roa": 1.77,
       "roe": 18.29,
       "unit": "triệu VND",
@@ -329,7 +329,37 @@
         ],
         "accounting_equation_difference_million_vnd": 0,
         "accounting_equation_matches": true,
-        "review_method": "OCR/text reconciliation; visual PDF review pending"
+        "review_method": "OCR/text reconciliation; visual PDF review pending",
+        "q2_2024_source_reconciliation": {
+          "status": "source_text_reconciled_pending_visual_review",
+          "source_pdf": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%202/VCB_Baocaotaichinh_Q2_2024_Hopnhat.pdf",
+          "source_pages": {
+            "balance_sheet": [
+              4,
+              5
+            ],
+            "income_statement": [
+              7,
+              8
+            ],
+            "cash_flow": [
+              9,
+              10
+            ]
+          },
+          "checks": {
+            "balanceEquationDelta": 0,
+            "operatingIncomeComponentsSum": 16751609,
+            "revenueVsPpopDelta": 0,
+            "pretaxBridgeDelta": 0,
+            "netProfitBridgeDelta": 0,
+            "cashFlowYtdSum": -43930968,
+            "cashFlowYtdDelta": 0,
+            "standaloneCashFlowSum": 19374052,
+            "standaloneNetCashDelta": 0,
+            "cashBridgeDelta": 0
+          }
+        }
       },
       "published_at": "2024-08-01",
       "source_archive_file": "reports/raw/VCB/auto-vcb-20261021/725730719cacd00b.pdf",
@@ -385,7 +415,7 @@
       "income_tax_current": -1992320,
       "income_tax_deferred": -4956,
       "income_tax": 1991566,
-      "cashflow_period_basis": "quarterly_reported",
+      "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
         "bank_cash_on_hand",
         "bank_contributions_and_long_term_investments",
@@ -399,11 +429,15 @@
         "bank_fx_net_income",
         "bank_interest_income",
         "bank_investment_securities",
+        "bank_investment_securities_net",
+        "bank_net_interest_income",
         "bank_net_service_income",
         "bank_non_controlling_profit",
         "bank_operating_expenses",
         "bank_other_assets",
         "bank_other_liabilities",
+        "bank_other_operating_net",
+        "bank_pre_provision_operating_profit",
         "bank_provision_expense",
         "bank_service_expense",
         "bank_service_income",
@@ -411,24 +445,48 @@
         "bank_trading_securities_net",
         "bank_valuable_papers",
         "cashflow_period_basis",
+        "financing_cash_flow",
+        "financing_cash_flow_ytd",
         "fixed_assets",
         "income_tax",
         "income_tax_current",
         "income_tax_deferred",
-        "retained_earnings"
+        "investing_cash_flow",
+        "investing_cash_flow_ytd",
+        "net_cash_change",
+        "net_cash_change_ytd",
+        "net_profit_attributable",
+        "operating_cash_flow",
+        "operating_cash_flow_ytd",
+        "retained_earnings",
+        "revenue"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-22T17:33:18+00:00",
       "financial_line_items_source": "reports/raw/VCB/auto-vcb-20261021/725730719cacd00b.pdf",
       "financial_line_items_updated_at": "2026-10-22T17:33:18+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần.",
-      "operating_cash_flow_calculation": "reported as standalone quarter",
-      "investing_cash_flow_calculation": "reported as standalone quarter",
-      "financing_cash_flow_calculation": "reported as standalone quarter",
-      "net_cash_change_calculation": "reported as standalone quarter",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Đính chính đối chiếu nguồn 2026-10-30: khôi phục thu nhập hoạt động và lợi nhuận phân bổ cổ đông; sửa cơ sở dòng tiền từ nhầm cột sang YTD 6 tháng, tách Q2 bằng phép trừ Q1 đã xác minh. Trạng thái vẫn chờ rà soát trực quan.",
+      "operating_cash_flow_calculation": "Quý II riêng = B04 YTD 6 tháng trừ B04 Q1 đã đối chiếu.",
+      "investing_cash_flow_calculation": "Quý II riêng = B04 YTD 6 tháng trừ B04 Q1 đã đối chiếu.",
+      "financing_cash_flow_calculation": "BCTC Q1 và 6 tháng đều ghi dấu gạch ngang; quý II bằng 0.",
+      "net_cash_change_calculation": "Quý II riêng = B04 YTD 6 tháng trừ B04 Q1 đã đối chiếu.",
       "financial_line_items_prior_values": {
-        "income_tax": -1997276
+        "income_tax": -1997276,
+        "net_profit_attributable": null,
+        "revenue": null,
+        "bank_net_interest_income": null,
+        "bank_investment_securities_net": null,
+        "bank_other_operating_net": null,
+        "bank_pre_provision_operating_profit": null,
+        "operating_cash_flow_ytd": null,
+        "investing_cash_flow_ytd": null,
+        "financing_cash_flow_ytd": null,
+        "net_cash_change_ytd": null,
+        "operating_cash_flow": null,
+        "investing_cash_flow": null,
+        "financing_cash_flow": null,
+        "net_cash_change": null
       },
       "financial_line_items_rejected_values": {
         "operating_cash_flow": {
@@ -521,7 +579,91 @@
         "note": "Bổ sung từ văn bản/OCR của PDF liên kết VietstockFinance; cần kiểm tra trực quan PDF."
       },
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
-      "verification_status_note": "Các chỉ tiêu lõi đã được trích xuất tự động từ BCTC hợp nhất VietstockFinance; cần đối chiếu trực quan trước khi coi là xác minh."
+      "verification_status_note": "Các chỉ tiêu lõi đã được trích xuất tự động từ BCTC hợp nhất VietstockFinance; cần đối chiếu trực quan trước khi coi là xác minh.",
+      "financial_line_items_value_corrections": {
+        "net_profit_attributable": {
+          "previous_value": null,
+          "new_value": 8119414,
+          "reason": "BCTC hợp nhất Q2/2024 trang in 8: lợi nhuận thuần phân bổ cho cổ đông ngân hàng 8.119.414 triệu VND."
+        },
+        "revenue": {
+          "previous_value": null,
+          "new_value": 16751609,
+          "reason": "Tổng thu nhập hoạt động tính theo 7 cấu phần BCTC ngân hàng trang in 7: 13.907.711 + 1.498.953 + 1.160.895 - 1.324 + 1.854 + 24.387 + 159.133 = 16.751.609 triệu VND; khớp PPOP 11.629.816 + chi phí hoạt động 5.121.793."
+        },
+        "bank_net_interest_income": {
+          "previous_value": null,
+          "new_value": 13907711,
+          "reason": "BCTC hợp nhất Q2/2024 trang in 7, dòng thu nhập lãi thuần, cột Quý II: 13.907.711 triệu VND."
+        },
+        "bank_investment_securities_net": {
+          "previous_value": null,
+          "new_value": 1854,
+          "reason": "BCTC hợp nhất Q2/2024 trang in 7, lãi thuần từ mua bán chứng khoán đầu tư, cột Quý II: 1.854 triệu VND."
+        },
+        "bank_other_operating_net": {
+          "previous_value": null,
+          "new_value": 24387,
+          "reason": "BCTC hợp nhất Q2/2024 trang in 7, lãi thuần từ hoạt động khác, cột Quý II: 24.387 triệu VND."
+        },
+        "bank_pre_provision_operating_profit": {
+          "previous_value": null,
+          "new_value": 11629816,
+          "reason": "BCTC hợp nhất Q2/2024 trang in 7: lợi nhuận trước chi phí dự phòng rủi ro tín dụng 11.629.816 triệu VND."
+        },
+        "operating_cash_flow_ytd": {
+          "previous_value": null,
+          "new_value": -43570203,
+          "reason": "BCTC hợp nhất Q2/2024 trang in 9: tiền thuần từ hoạt động kinh doanh lũy kế 6 tháng -43.570.203 triệu VND."
+        },
+        "investing_cash_flow_ytd": {
+          "previous_value": null,
+          "new_value": -360765,
+          "reason": "BCTC hợp nhất Q2/2024 trang in 10: tiền thuần từ hoạt động đầu tư lũy kế 6 tháng -360.765 triệu VND."
+        },
+        "financing_cash_flow_ytd": {
+          "previous_value": null,
+          "new_value": 0,
+          "reason": "BCTC hợp nhất Q2/2024 trang in 10: tiền thuần từ hoạt động tài chính thể hiện dấu gạch ngang, quy đổi 0."
+        },
+        "net_cash_change_ytd": {
+          "previous_value": null,
+          "new_value": -43930968,
+          "reason": "BCTC hợp nhất Q2/2024 trang in 10: lưu chuyển tiền thuần trong kỳ lũy kế 6 tháng -43.930.968 triệu VND."
+        },
+        "operating_cash_flow": {
+          "previous_value": null,
+          "new_value": 19604283,
+          "reason": "Dòng tiền quý II riêng = lũy kế 6 tháng -43.570.203 trừ Q1 -63.174.486 = 19.604.283 triệu VND; Q1 lấy trực tiếp từ BCTC Q1/2024."
+        },
+        "investing_cash_flow": {
+          "previous_value": null,
+          "new_value": -230231,
+          "reason": "Dòng tiền đầu tư quý II riêng = lũy kế 6 tháng -360.765 trừ Q1 -130.534 = -230.231 triệu VND."
+        },
+        "financing_cash_flow": {
+          "previous_value": null,
+          "new_value": 0,
+          "reason": "Dòng tiền tài chính lũy kế 6 tháng là dấu gạch ngang và Q1 cũng là dấu gạch ngang; quý II = 0."
+        },
+        "net_cash_change": {
+          "previous_value": null,
+          "new_value": 19374052,
+          "reason": "Lưu chuyển tiền thuần quý II riêng = lũy kế 6 tháng -43.930.968 trừ Q1 -63.305.020 = 19.374.052 triệu VND."
+        }
+      },
+      "bank_net_interest_income": 13907711,
+      "bank_investment_securities_net": 1854,
+      "bank_other_operating_net": 24387,
+      "bank_pre_provision_operating_profit": 11629816,
+      "operating_cash_flow_ytd": -43570203,
+      "investing_cash_flow_ytd": -360765,
+      "financing_cash_flow_ytd": 0,
+      "net_cash_change_ytd": -43930968,
+      "operating_cash_flow": 19604283,
+      "investing_cash_flow": -230231,
+      "financing_cash_flow": 0,
+      "net_cash_change": 19374052
     },
     {
       "symbol": "VCB",
