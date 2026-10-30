@@ -94,6 +94,14 @@ jobs:
               for item in config.get("securities", [])
               if isinstance(item, dict) and item.get("enabled") is not False and item.get("symbol")
           ]
+          rescan_pages_by_symbol = {
+              str(item.get("symbol") or "").strip().upper(): {
+                  int(page) for page in (item.get("ocrRescanPages") or [])
+                  if str(page).isdigit() and 1 <= int(page) <= 18
+              }
+              for item in config.get("securities", [])
+              if isinstance(item, dict) and item.get("symbol")
+          }
 
           def load_json(path):
               try:
@@ -128,7 +136,7 @@ jobs:
                       return True
               return False
 
-          def payload_needs_pages(payload):
+          def payload_needs_pages(payload, symbol=None):
               if not isinstance(payload, dict):
                   return False
               if payload.get("kind") == "pdf":
@@ -146,6 +154,7 @@ jobs:
                   for value in os.environ.get("TARGET_RESCAN_PAGES", "").split(",")
                   if value.strip().isdigit()
               }
+              rescan_pages.update(rescan_pages_by_symbol.get(str(symbol or "").strip().upper(), set()))
               for document in documents:
                   try:
                       page_count = int(document.get("page_count") or 0)
@@ -190,7 +199,7 @@ jobs:
                       continue
                   sidecar = Path(str(archive_path) + ".extracted.json")
                   extracted = load_json(sidecar)
-                  if extracted is not None and payload_needs_pages(extracted):
+                  if extracted is not None and payload_needs_pages(extracted, symbol):
                       return True
               return False
 
@@ -437,7 +446,7 @@ jobs:
         env:
           REPORT_OCR_SYMBOL: ${{ needs['select-ticker'].outputs.symbol }}
           REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || (github.event_name == 'push' && '18') || '18' }}
-          REPORT_OCR_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || '' }}
+          REPORT_OCR_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || (needs['select-ticker'].outputs.symbol == 'GAS' && '3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18') || '' }}
         shell: bash
         run: |
           python - <<'PY'
@@ -569,7 +578,7 @@ jobs:
           REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || (github.event_name == 'push' && '18') || '18' }}
           REPORT_OCR_MAX_REPORTS: "2"
           REPORT_OCR_DPI: "240"
-          REPORT_OCR_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || '' }}
+          REPORT_OCR_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || (needs['select-ticker'].outputs.symbol == 'GAS' && '3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18') || '' }}
         run: python .github/scripts/ocr-stored-reports.py
 
       - name: Validate queue after OCR
@@ -591,7 +600,7 @@ jobs:
         env:
           REPORT_OCR_SYMBOL: ${{ needs['select-ticker'].outputs.symbol }}
           REPORT_OCR_MAX_PAGES: ${{ github.event.inputs.max_pages || (github.event_name == 'push' && '18') || '18' }}
-          REPORT_OCR_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || '' }}
+          REPORT_OCR_RESCAN_PAGES: ${{ github.event.inputs.rescan_pages || (needs['select-ticker'].outputs.symbol == 'GAS' && '3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18') || '' }}
         shell: bash
         run: |
           set -euo pipefail
