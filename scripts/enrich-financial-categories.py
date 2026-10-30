@@ -4047,9 +4047,14 @@ def enrich_snapshot(path):
   source_validation_for_parser=item.get("source_validation")
   if not isinstance(source_validation_for_parser,dict):
    source_validation_for_parser={}
+  source_text_reconciled=(
+   source_validation_for_parser.get("archived_source_text_reviewed") is True
+   or source_validation_for_parser.get("core_source_text_reconciled") is True
+  )
   parser_migration_allowed=(
    item.get("verification_status") in core_review_statuses
    and source_validation_for_parser.get("automatic_extraction_exhausted") is not True
+   and not source_text_reconciled
   )
   if old_parser_version!=CORE_EXTRACTION_PARSER_VERSION:
    if parser_migration_allowed:
