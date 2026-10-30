@@ -1311,10 +1311,11 @@
         return resolveStatementValue(item, field, rows, ticker).value;
       }
       if (field === 'cash_beginning') {
-        for (const key of ['cash_beginning_reported_ytd','cash_beginning_ytd','cash_beginning']) {
+        for (const key of ['cash_beginning_reported_ytd','cash_beginning_ytd']) {
           if (validNumber(item?.[key])) return Number(item[key]);
         }
-        return null;
+        const quarterOne = /^\d{4}-Q1$/.test(String(item?.period || ''));
+        return quarterOne && validNumber(item?.cash_beginning) ? Number(item.cash_beginning) : null;
       }
       if (field === 'cash_ending') {
         for (const key of ['cash_ending_reported_ytd','cash_ending_ytd','cash_ending']) {
