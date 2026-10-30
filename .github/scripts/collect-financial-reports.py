@@ -946,7 +946,7 @@ def failed_url_retry_state(jobs: list[dict], symbol: str, now: datetime | None =
             for key in keys:
                 if status == "downloaded_needs_review":
                     successful.add(key)
-                elif status == "download_error":
+                elif status == "download_error" and record.get("manual_review_terminal") is not True:
                     stamp = record.get("attempted_at") or record.get("failed_at") or record.get("downloaded_at")
                     epoch = 0.0
                     if stamp:
