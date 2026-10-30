@@ -2066,7 +2066,7 @@
         const reviewNote = activeStatement !== 'balance' && detailReviewNeeded
           ? ' Lưu ý: một số dòng đã trích xuất từ báo cáo PDF nhưng vẫn chờ rà soát trực quan; trạng thái và nguồn từng kỳ nằm trong tab Ghi chú.'
           : '';
-        statementHint.textContent = hints[activeStatement] + ' Đơn vị tiền tệ đang chọn: ' + unitName + '.' + reviewNote;
+        statementHint.textContent = hints[activeStatement] + ' Đơn vị tiền tệ đang chọn: ' + unitName + '. Ô trống/— là chưa có số liệu nguồn được xác nhận, không đồng nghĩa bằng 0.' + reviewNote;
       }
       if (!periods.length) {
         if (tableWrap) tableWrap.classList.add('hidden');
