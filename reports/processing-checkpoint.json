@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T15:31:56.369Z",
+  "updatedAt": "2026-10-30T15:35:23.117Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -36,12 +36,11 @@
     "TCB",
     "VCI",
     "VCK",
-    "MBB",
-    "GAS"
+    "MBB"
   ],
   "lastCompletedSymbol": "GEG",
-  "activeSymbol": "GEG",
-  "resumeSymbolHint": "GEG",
+  "activeSymbol": "GAS",
+  "resumeSymbolHint": "GAS",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "GAS",
@@ -604,15 +603,13 @@
       "snapshotFetchedAt": "2026-10-23T16:14:01+00:00"
     },
     "GAS": {
-      "status": "automated_processing_complete",
-      "completeForAutomation": true,
+      "status": "in_progress",
+      "completeForAutomation": false,
       "manualReviewRemaining": true,
       "periodCount": 10,
       "firstQuarter": "2024-Q1",
       "lastQuarter": "2026-Q2",
-      "pendingCorePeriods": [],
-      "terminalManualReviewPeriods": [
-        "2024-Q1",
+      "pendingCorePeriods": [
         "2024-Q3",
         "2024-Q4",
         "2025-Q1",
@@ -622,14 +619,22 @@
         "2026-Q1",
         "2026-Q2"
       ],
+      "terminalManualReviewPeriods": [],
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
-      "statementPagesPending": false,
+      "statementPagesPending": true,
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 1,
-      "updatedAt": "2026-10-30T11:16:40Z",
-      "snapshotFetchedAt": "2026-10-23T18:00:37+00:00"
+      "updatedAt": "2026-10-30T15:35:23.117Z",
+      "snapshotFetchedAt": "2026-10-23T18:00:37+00:00",
+      "retryAuthorization": {
+        "at": "2026-10-30T15:35:23.117Z",
+        "reason": "User requested verification of remaining missing tickers. Archived GAS consolidated PDFs and OCR rescan configuration pages 3-18 exist; previous per-item manual-terminal flags were preventing the configured targeted OCR retry.",
+        "maxPages": 18,
+        "rescanPages": "3-18",
+        "oneTickerAtATime": true
+      }
     },
     "PLX": {
       "status": "terminal_needs_manual_review",
@@ -2413,8 +2418,8 @@
     "codeFix": "scripts/validate-financials.mjs now reports chronological first/last periods from sorted unique period keys instead of relying on insertion order."
   },
   "nextActions": [
-    "GEG source-text reconciliation completed for five flagged periods; Q1/2024 revenue correction committed. Visual PDF page review remains pending.",
-    "Next: review remaining unheld tickers with terminal manual-review periods; preserve user-directed skip holds for PLX, VCI/VIX/VCK and other held periods.",
-    "Do not rerun OCR or reload completed data; do not change source values to force cross-period cash continuity."
+    "GAS active: run targeted OCR against archived VietstockFinance consolidated PDFs, pages 3-18, up to two reports per run; do not advance to another ticker until GAS queue finishes.",
+    "After OCR, validate all core figures, source units, balance sheet, income statement and cash-flow bridges; keep unresolved fields blank and preserve manual review where source OCR remains unclear.",
+    "Then continue with the next ticker having missing core fields; do not override explicit skip/scope holds."
   ]
 }
