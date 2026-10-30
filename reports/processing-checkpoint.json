@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T10:52:31Z",
+  "updatedAt": "2026-10-30T10:53:30Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -246,11 +246,13 @@
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
-      "skipUnconfirmedAutomation": false,
+      "skipUnconfirmedAutomation": true,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 9,
       "updatedAt": "2026-10-30T10:52:31Z",
-      "snapshotFetchedAt": "2026-10-24T05:30:00Z"
+      "snapshotFetchedAt": "2026-10-24T05:30:00Z",
+      "skipUnconfirmedThroughPeriod": "2026-Q2",
+      "manualReviewReason": "OCR/enrich run 3001 passed the local snapshot validator but overwrote source-backed YTD cash-flow values, cash balances and FX fields (e.g. 2024-Q4, 2025-Q1/Q2/Q3). Restored cash-flow values and source reconciliation/audit metadata for all 10 periods from the validated normalized snapshot at commit 74e1dd9cf36ba2ae5726cc54a8685ac6e35bc074, commit 02b68225e73bd36bff7a3940aea26f99f6ee3294. Hold TPB until enrichment preserves validated cash-flow fields."
     },
     "VPB": {
       "status": "automated_processing_complete_manual_review_remaining",
@@ -2166,7 +2168,7 @@
   },
   "nextSymbolHint": "SHS",
   "lastSessionCheckpoint": {
-    "savedAt": "2026-10-30T10:50:30Z",
+    "savedAt": "2026-10-30T10:53:30Z",
     "branch": "main",
     "latestWorkflowFixCommit": "45424f32ab634e30497cbce105c51441cf65ef9e",
     "lastCompletedWork": [
@@ -2185,7 +2187,8 @@
       "Package Hostinger Stock Dashboard run 41043062033 SUCCESS.",
       "TCB OCR run 2997 failed bank-specific regression for Q3/2026 gross interest income and capital-contribution income; commit step skipped, so stored TCB snapshot was preserved and the ticker is held for manual review.",
       "VHM: OCR/enrich run 2998 làm mất cashflow YTD đã chuẩn hóa; phục hồi 10 kỳ và metadata từ snapshot kiểm định commit b20b69844b7cd6d2b01f907cda5fac3340a701f2; giữ VHM manual review.",
-      "VHM: run 2999 là handoff cũ đã khởi chạy trước manual hold, ghi đè cashflow sau lần khôi phục đầu tiên; đã khôi phục lần hai sau khi run hoàn tất và khóa VHM ở checkpoint mới nhất."
+      "VHM: run 2999 là handoff cũ đã khởi chạy trước manual hold, ghi đè cashflow sau lần khôi phục đầu tiên; đã khôi phục lần hai sau khi run hoàn tất và khóa VHM ở checkpoint mới nhất.",
+      "TPB: OCR/enrich run 3001 làm thay đổi cash-flow YTD đã chuẩn hóa dù kiểm định snapshot cục bộ và bank regression pass; đã khôi phục 10 kỳ từ snapshot chuẩn hóa đã kiểm định commit 74e1dd9cf36ba2ae5726cc54a8685ac6e35bc074 và đặt TPB vào manual-review hold."
     ],
     "lastKnownValidation": {
       "quarterlyFinancialData": "success",
@@ -2206,9 +2209,10 @@
       "For OCR dispatches, honor manual-review holds even when a ticker is passed as an explicit workflow input."
     ],
     "nextActions": [
-      "Xác nhận VHM cashflow đã trở về basis year_to_date và các kiểm định xanh.",
-      "Tiếp tục TPB; kiểm tra job advance/handoff cũ không chọn lại VHM.",
-      "Sửa cơ chế enrich để không ghi đè cashflow đã chuẩn hóa và khóa manual hold bền vững trước khi tiếp tục mã khác."
+      "Chạy kiểm định toàn kho sau khi phục hồi TPB; xác nhận các test cash-flow TPB/HCM/BSR/VHM/VND đều pass.",
+      "Ngăn explicit handoff OCR chạy lại mã đã complete mà không có quý mới; selector guard commit 6655ea3ca4176827a308da0e04fc735c80f93c78.",
+      "Tiếp tục VPB nếu queue đã chuyển qua mã này; nếu OCR làm thay đổi số đã xác minh thì khôi phục và hold như quy trình.",
+      "Sửa enrichment pipeline để bảo toàn cashflow_period_basis, CFO/CFI/CFF/net cash, FX và cash balances trước khi tiếp tục migration."
     ],
     "latestDataRecoveryCommit": "168342286eeb209974c91880c6ae6f8511790d66",
     "heldTickersUpdated": [
@@ -2219,13 +2223,15 @@
       "BSR",
       "HCM",
       "TCB",
-      "VHM"
+      "VHM",
+      "TPB"
     ],
     "latestDataRecoveryCommits": {
       "VND": "168342286eeb209974c91880c6ae6f8511790d66",
       "BSR": "11b373bbf5fb796a7bd4fc9bba225ee603e4e370",
       "HCM": "c1abc317ba3b2237ea03a5c3184e0d6aef13610f",
-      "VHM": "187049422e6406cad17b8d02512b2161050b4a0a"
+      "VHM": "187049422e6406cad17b8d02512b2161050b4a0a",
+      "TPB": "02b68225e73bd36bff7a3940aea26f99f6ee3294"
     }
   }
 }
