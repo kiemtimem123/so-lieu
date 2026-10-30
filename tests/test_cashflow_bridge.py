@@ -3565,7 +3565,7 @@ class GEGSourceAuditEnrichmentPreservationTests(unittest.TestCase):
             str(ROOT / "scripts" / "enrich-financial-categories.py"),
             run_name="cashflow_enricher_for_test",
         )
-        cls.restore = cls.enricher["restore_source_audited_cashflow_fields"]
+        cls.restore = staticmethod(cls.enricher["restore_source_audited_cashflow_fields"])
 
     def test_geg_audited_cashflow_fields_survive_generic_enrichment(self):
         snapshot = json.loads((ROOT / "data" / "financials-GEG.json").read_text(encoding="utf-8"))
@@ -3648,8 +3648,8 @@ class ManualCoreValueEnrichmentPreservationTests(unittest.TestCase):
             str(ROOT / "scripts" / "enrich-financial-categories.py"),
             run_name="manual_core_enricher_for_test",
         )
-        cls.capture = cls.enricher["capture_manually_verified_core_fields"]
-        cls.restore = cls.enricher["restore_manually_verified_core_fields"]
+        cls.capture = staticmethod(cls.enricher["capture_manually_verified_core_fields"])
+        cls.restore = staticmethod(cls.enricher["restore_manually_verified_core_fields"])
 
     def test_fpt_q4_2024_manually_verified_core_values_survive_parser_migration(self):
         snapshot = json.loads((ROOT / "data" / "financials-FPT.json").read_text(encoding="utf-8"))
