@@ -172,11 +172,12 @@ for (const symbol of symbols) {
     }
   }
 
+  const sortedPeriods = [...byPeriod.keys()].sort();
   summary.push({
     symbol,
     periods: snapshot.items.length,
-    first: snapshot.items[0]?.period || null,
-    last: snapshot.items.at(-1)?.period || null,
+    first: sortedPeriods[0] || null,
+    last: sortedPeriods.at(-1) || null,
     statuses: statusCounts,
     detailQuarters: snapshot.items.filter(item => item.financial_line_items_status).length
   });
