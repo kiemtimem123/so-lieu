@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T18:25:00+07:00",
+  "updatedAt": "2026-10-30T18:35:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -39,7 +39,7 @@
     "VDS",
     "GAS"
   ],
-  "lastCompletedSymbol": "KBC",
+  "lastCompletedSymbol": "GEG",
   "activeSymbol": null,
   "resumeSymbolHint": "GEG",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
@@ -2405,5 +2405,35 @@
     "GAS active: run targeted OCR against archived VietstockFinance consolidated PDFs, pages 3-18, up to two reports per run; do not advance to another ticker until GAS queue finishes.",
     "After OCR, validate all core figures, source units, balance sheet, income statement and cash-flow bridges; keep unresolved fields blank and preserve manual review where source OCR remains unclear.",
     "Then continue with the next ticker having missing core fields; do not override explicit skip/scope holds."
-  ]
+  ],
+  "lastUiUpdate": {
+    "updatedAt": "2026-10-30T18:35:00+07:00",
+    "commits": [
+      "4fc7eecb3",
+      "002b7b0",
+      "e708b5f",
+      "7d71b8a",
+      "0b3412f"
+    ],
+    "changes": [
+      "Bảng, biểu đồ và so sánh dùng chung bộ lọc báo cáo hợp nhất/riêng lẻ.",
+      "Tab lưu chuyển tiền tệ có cơ sở phát sinh quý và lũy kế từ đầu năm; tránh lấy số YTD làm số quý.",
+      "Hiển thị độ phủ dữ liệu theo từng tab để nhận biết số ô đã có/thiếu.",
+      "Liên kết nguồn ở tiêu đề kỳ mở được cả PDF và ZIP VietstockFinance.",
+      "Đã tăng phiên bản cache CSS/JS để trình duyệt nhận bản mới."
+    ],
+    "validation": {
+      "siteAndData": "success",
+      "quarterlyFinancialData": "success",
+      "packageHostinger": "success",
+      "validatedCommit": "4779ec05b082e9e919eb202ce970f1921a6f6f2d",
+      "runs": {
+        "site": 41089435795,
+        "quarterly": 41089435680,
+        "package": 41089435800
+      }
+    },
+    "deploymentStatus": "package_built_not_deployed",
+    "note": "Gói Hostinger đã build thành công; chưa có thao tác triển khai trực tiếp lên hosting."
+  }
 }
