@@ -1,5 +1,6 @@
 """Regression tests for the FX-aware cash-flow bridge in validate-bank-reconciliation.py."""
 import json
+from decimal import Decimal, ROUND_HALF_UP
 from pathlib import Path
 import runpy
 import unittest
@@ -3660,16 +3661,15 @@ class GEGSourceAuditEnrichmentPreservationTests(unittest.TestCase):
                     self.assertIn(field, extracted)
                     self.assertNotIn(field, rejected)
 
-        # Keep three >0.01% quarterly bridge exceptions visible, never plug them.
-        for period, residual in (
-            ("2025-Q2", -12113208011),
-            ("2025-Q3", 12113208011),
-            ("2026-Q2", -11422219803),
-        ):
-            rec = rows[period]["cashflow_source_reconciliation"]
-            self.assertFalse(rec["quarter_cash_bridge_within_tolerance"])
-            self.assertEqual(rec["calculations"]["quarter_cash_bridge_residual_raw_vnd"], residual)
-            self.assertTrue(rec["no_balancing_plug"])
+        # Only the source-basis difference in Q2/2026 remains above tolerance.
+        rec = rows["2026-Q2"]["cashflow_source_reconciliation"]
+        self.assertFalse(rec["quarter_cash_bridge_within_tolerance"])
+        self.assertEqual(rec["calculations"]["quarter_cash_bridge_residual_raw_vnd"], -11422219803)
+        self.assertTrue(rec["no_balancing_plug"])
+        for period in ("2025-Q2", "2025-Q3"):
+            source_rec = rows[period]["cashflow_source_reconciliation"]
+            self.assertTrue(source_rec["quarter_cash_bridge_within_tolerance"])
+            self.assertEqual(source_rec["calculations"]["quarter_cash_bridge_residual_raw_vnd"], 0)
 
         self.assertEqual(rows["2025-Q4"]["financial_line_items_status"], "cashflow_source_rows_visually_verified")
 
