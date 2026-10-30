@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T15:23:12.215Z",
+  "updatedAt": "2026-10-30T15:27:46.777Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -239,28 +239,34 @@
       "skipUnconfirmedAutomation": true,
       "skipUnconfirmedReason": "User-directed skip; unverified figures remain blank for manual review.",
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-10-30T15:23:12.215Z",
+      "updatedAt": "2026-10-30T15:27:46.777Z",
       "snapshotFetchedAt": "2026-10-24T06:15:00Z",
       "sourceReconciledPeriods": [
-        "2024-Q1"
+        "2024-Q1",
+        "2024-Q2",
+        "2024-Q3",
+        "2024-Q4",
+        "2025-Q1",
+        "2025-Q2",
+        "2025-Q3",
+        "2025-Q4",
+        "2026-Q1",
+        "2026-Q2"
       ],
       "lastSourceReconciliation": {
-        "period": "2024-Q1",
+        "periodRange": "2024-Q1 through 2026-Q2",
         "status": "source_text_reconciled_pending_visual_review",
-        "correctionCommit": "8c7d327e3996a862cadfab2b9be244ce5f9f3a3f",
-        "correctedFields": [
-          "net_profit_attributable",
-          "operating_cash_flow",
-          "operating_cash_flow_ytd",
-          "investing_cash_flow",
-          "investing_cash_flow_ytd",
-          "financing_cash_flow",
-          "financing_cash_flow_ytd",
-          "bank_other_operating_net",
-          "cashflow_period_basis"
+        "correctionCommits": [
+          "8c7d327e3996a862cadfab2b9be244ce5f9f3a3f",
+          "a285b735946f7f1bcd62e1dd203dbab3e7a648ce",
+          "ee68cf5d177e98a071dd60c97e51e935006020aa",
+          "97951b4e9ad79031c17aeeeb4c657283ca9063cc",
+          "2a40b3a19dc49451f1f1cdacf960135356302b91"
         ],
-        "checks": "Balance sheet, bank income components, PPOP, pretax/net profit, cash flow sum, and opening/closing cash bridge reconcile exactly from saved VietstockFinance PDF OCR text.",
-        "remaining": "Visual inspection of PDF page images and remaining 9 VCB periods; do not mark visual verification complete."
+        "validatorCommit": "5b57b6cac94c42055415ea73b2298303686a4011",
+        "summary": "Đã đối chiếu đủ 10/10 kỳ từ sidecar PDF hợp nhất VietstockFinance. Sửa ánh xạ dòng tiền bị nhầm với thu nhập lãi/chi mua TSCĐ; tách dòng tiền quý từ YTD; khôi phục lợi nhuận thuộc cổ đông ngân hàng; bổ sung các cấu phần thu nhập thiếu; sửa dấu chi phí dự phòng Q4/2025 và Q2/2026.",
+        "checks": "Mỗi kỳ đã kiểm tra cân đối tài sản, tổng cấu phần thu nhập, doanh thu so với PPOP + chi phí hoạt động, lợi nhuận trước thuế, lợi nhuận sau thuế, tổng dòng tiền YTD, số dư tiền đầu/cuối kỳ; các sai lệch tính toán sau sửa đều bằng 0.",
+        "remaining": "Ảnh PDF gốc chưa được kiểm tra trực quan. Giữ nguyên verification_status pending_visual_review và schema v4; không giả mạo nâng version parser. Kiểm tra Q1/2025 opening cash so với Q4/2024 closing cash vẫn là điểm cần xem ảnh/giải thích bản so sánh."
       }
     },
     "TPB": {
@@ -2335,8 +2341,8 @@
     "codeFix": "scripts/validate-financials.mjs now reports chronological first/last periods from sorted unique period keys instead of relying on insertion order."
   },
   "nextActions": [
-    "Continue VCB only: reconcile the remaining 9 quarters against their already archived VietstockFinance consolidated PDF sidecars; do not fetch/reprocess completed source files unnecessarily.",
-    "Keep VCB periods marked pending visual review until source page images have been inspected; do not promote legacy schema v4 to current schema by label only.",
-    "After VCB is complete, move to the next ticker with unresolved source-backed fields; keep explicit skip/scope holds unchanged."
+    "VCB: source-text reconciliation completed for all 10 stored periods; wait for/perform visual PDF page review before changing visual-review statuses or parser schema.",
+    "Check VCB 2025-Q1 opening cash against VCB 2024-Q4 closing cash; retain both source-reported values and review comparative restatement rather than forcing continuity.",
+    "After VCB visual review, continue with next ticker whose checkpoint still has stale detail schema or unresolved source-page review; preserve explicit scope holds."
   ]
 }
