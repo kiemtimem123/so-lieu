@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T15:27:46.777Z",
+  "updatedAt": "2026-10-30T15:30:11.384Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -40,8 +40,8 @@
     "GAS"
   ],
   "lastCompletedSymbol": "GEG",
-  "activeSymbol": "VCB",
-  "resumeSymbolHint": "VCB",
+  "activeSymbol": "KBC",
+  "resumeSymbolHint": "KBC",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "GAS",
@@ -676,9 +676,32 @@
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-10-30T14:42:30Z",
+      "updatedAt": "2026-10-30T15:30:11.384Z",
       "snapshotFetchedAt": "2026-10-25T23:45:00Z",
-      "note": "IDC: Q1/2024–Q2/2026 (10 kỳ), dữ liệu lõi đã xử lý tự động; Q2/2024 net_profit_attributable đã khôi phục từ 26 về 432.485 triệu VND theo dòng 19 BCTC hợp nhất VietstockFinance (PDF trong ZIP, sidecar trang 13/trang in 9). Quarterly financial validation run 41073860617 SUCCESS. Vẫn giữ terminal_needs_manual_review cho kiểm tra trực quan PDF, rà soát source revisions và Q2/2026 cash-flow cross-period basis discrepancy; không balancing plug."
+      "note": "IDC: Q1/2024–Q2/2026 (10 kỳ), dữ liệu lõi đã xử lý tự động; Q2/2024 net_profit_attributable đã khôi phục từ 26 về 432.485 triệu VND theo dòng 19 BCTC hợp nhất VietstockFinance (PDF trong ZIP, sidecar trang 13/trang in 9). Quarterly financial validation run 41073860617 SUCCESS. Vẫn giữ terminal_needs_manual_review cho kiểm tra trực quan PDF, rà soát source revisions và Q2/2026 cash-flow cross-period basis discrepancy; không balancing plug.",
+      "sourceReconciledPeriods": [
+        "2024-Q2",
+        "2024-Q4",
+        "2025-Q2",
+        "2026-Q2"
+      ],
+      "lastSourceReconciliation": {
+        "periodRange": "2024-Q2, 2024-Q4, 2025-Q2, 2026-Q2",
+        "status": "source_text_reconciled_pending_visual_review",
+        "reviewedArchives": [
+          "reports/raw/IDC/auto-idc-20261021/ecbef46d7d1d9ff3.zip.extracted.json",
+          "reports/raw/IDC/auto-idc-20261021/00983465c42328c1.zip.extracted.json",
+          "reports/raw/IDC/auto-idc-20261021/48616c2bb9d17c99.zip.extracted.json",
+          "reports/raw/IDC/auto-idc-20261021/5e5637e71fa303a7.zip.extracted.json"
+        ],
+        "findings": [
+          "2024-Q2 uses later H1/2025 comparative; CFO/CFI reclassification versus original report preserves net cash; flow and cash bridges pass.",
+          "2024-Q4 uses later FY2025 comparative; cash bridge residual 0.001311%, within user's 0.01% tolerance.",
+          "2025-Q2 uses later H1/2026 restated comparative (Note 41); CFO and CFI shift by equal/opposite 525,837,250,014 VND; net cash unchanged; all bridges pass.",
+          "2026-Q2 YTD bridge passes. Cross-year opening cash basis residual 0.160810% and quarter cash bridge residual 0.146348% remain above 0.01%; preserve manual review, do not plug."
+        ],
+        "remaining": "Source OCR text reviewed; visual inspection of PDF page images still pending for all four periods."
+      }
     },
     "KBC": {
       "status": "terminal_needs_manual_review",
@@ -2341,8 +2364,8 @@
     "codeFix": "scripts/validate-financials.mjs now reports chronological first/last periods from sorted unique period keys instead of relying on insertion order."
   },
   "nextActions": [
-    "VCB: source-text reconciliation completed for all 10 stored periods; wait for/perform visual PDF page review before changing visual-review statuses or parser schema.",
-    "Check VCB 2025-Q1 opening cash against VCB 2024-Q4 closing cash; retain both source-reported values and review comparative restatement rather than forcing continuity.",
-    "After VCB visual review, continue with next ticker whose checkpoint still has stale detail schema or unresolved source-page review; preserve explicit scope holds."
+    "Continue KBC: inspect the six terminal manual-review periods against archived VietstockFinance PDF sidecars, preserving the existing 6bn Q3 composition discrepancy unless the PDF page resolves it.",
+    "Continue GEG after KBC, then PLX only if its user-directed skip hold is lifted; do not override explicit skip/scope holds.",
+    "Do not rerun OCR or reload snapshots already validated; visual-review flags remain until page images are inspected."
   ]
 }
