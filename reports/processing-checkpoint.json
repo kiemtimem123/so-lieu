@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T11:00:14Z",
+  "updatedAt": "2026-10-30T11:01:30Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -2160,7 +2160,7 @@
   },
   "nextSymbolHint": "SHS",
   "lastSessionCheckpoint": {
-    "savedAt": "2026-10-30T10:58:30Z",
+    "savedAt": "2026-10-30T11:01:30Z",
     "branch": "main",
     "latestWorkflowFixCommit": "45424f32ab634e30497cbce105c51441cf65ef9e",
     "lastCompletedWork": [
@@ -2183,18 +2183,20 @@
       "TPB: OCR/enrich run 3001 làm thay đổi cash-flow YTD đã chuẩn hóa dù kiểm định snapshot cục bộ và bank regression pass; đã khôi phục 10 kỳ từ snapshot chuẩn hóa đã kiểm định commit 74e1dd9cf36ba2ae5726cc54a8685ac6e35bc074 và đặt TPB vào manual-review hold.",
       "VPB: OCR/enrich run 3003 làm thay đổi dòng tiền đã chuẩn hóa dù local validators pass; đã khôi phục 11 kỳ từ snapshot kiểm định commit 56b2e28388f0c140a669192187872c36af850578 và chuyển VPB sang manual-review hold.",
       "STB: OCR/enrich run 3004 làm thay đổi cash-flow và bank_cash_on_hand; đã khôi phục 10 kỳ từ snapshot kiểm định commit d0a5df06755c70d457e294690ff2b4e9b0ef232c, commit phục hồi c7adf9bd17134110ee85d6169a3a7f3a9f09ddac; giữ STB ở manual review.",
-      "CTG: OCR/enrich run 3006 làm sai lệch dòng tiền đã đối chiếu; phục hồi 10 kỳ từ snapshot kiểm định commit 7220e11068fa1a4de3de76ac44ecf6bc4915ccce, commit phục hồi 3f7bc603929872a84a78f02383e0568abeefa7a3; mở rộng guard nhận diện schema audit riêng của CTG."
+      "CTG: OCR/enrich run 3006 làm sai lệch dòng tiền đã đối chiếu; phục hồi 10 kỳ từ snapshot kiểm định commit 7220e11068fa1a4de3de76ac44ecf6bc4915ccce, commit phục hồi 3f7bc603929872a84a78f02383e0568abeefa7a3; mở rộng guard nhận diện schema audit riêng của CTG.",
+      "CTG: lần phục hồi cuối cùng lấy từ commit 67e122544b25d194056600705f442c1c96dcab59, recovery commit df8ff59afe73d796bca7cfaeaf87f421ad594bf5; test suite site đã pass ở run 1438.",
+      "BID: OCR/enrich run 3008 hoàn tất 10 kỳ Q1/2024–Q2/2026; source-audited YTD cashflow values remain unchanged compared with normalized commit 1af2c5379049ed8795ff0ae7700b03d904d41fee; only additional bank cash detail fields were extracted."
     ],
     "lastKnownValidation": {
-      "quarterlyFinancialData": "success",
       "siteAndData": "success",
+      "quarterlyFinancialData": "success",
       "hostingerPackage": "success",
       "validationRuns": {
-        "quarterlyFinancialData": 41043061862,
-        "siteAndData": 41043062024,
-        "hostingerPackage": 41043062033
+        "siteAndData": 41044866172,
+        "quarterlyFinancialData": 41044783726,
+        "hostingerPackage": 41044783809
       },
-      "note": "All three checks passed after restoring HCM and BSR cash-flow snapshots. TCB OCR run 2997 passed enrichment validation but failed bank-specific regression; no data commit was made."
+      "note": "Site validation 1439 success includes CTG cashflow restoration and the new CTG-style audit preservation unit test. Quarterly validation 632 and package 199 passed after CTG restore."
     },
     "resumeRules": [
       "Resume from this checkpoint; do not reload or reprocess tickers already validated.",
@@ -2204,10 +2206,10 @@
       "For OCR dispatches, honor manual-review holds even when a ticker is passed as an explicit workflow input."
     ],
     "nextActions": [
-      "Chạy kiểm định sau phục hồi CTG và kiểm thử mới cho preservation helper.",
-      "Tiếp tục BID theo checkpoint khi các kiểm định xanh.",
-      "Kiểm tra helper preservation với các định dạng cashflow_source_reconciliation khác nhau, bao gồm CTG.",
-      "Giữ các mã đã phục hồi ở manual-review hold; không OCR/enrich lại nếu không có quý mới hoặc nguồn sửa đổi."
+      "Tiếp tục mã VCI sau khi collector handoff hiện tại kết thúc; mã tiếp theo theo checkpoint là VCI.",
+      "Kiểm tra VCI cashflow preservation after enrichment; if any source-audited fields change, restore from prior normalized snapshot and hold ticker.",
+      "Keep all previously restored tickers in manual-review hold; no repeated OCR/enrich without a new quarter or changed source.",
+      "Continue fix/validation of source-audited cashflow preservation across all audit metadata formats."
     ],
     "latestDataRecoveryCommit": "168342286eeb209974c91880c6ae6f8511790d66",
     "heldTickersUpdated": [
@@ -2232,7 +2234,8 @@
       "TPB": "02b68225e73bd36bff7a3940aea26f99f6ee3294",
       "VPB": "f8e978f7d4b962b00061101e62c8a183f11389c5",
       "STB": "c7adf9bd17134110ee85d6169a3a7f3a9f09ddac",
-      "CTG": "3f7bc603929872a84a78f02383e0568abeefa7a3"
+      "CTG": "df8ff59afe73d796bca7cfaeaf87f421ad594bf5",
+      "BID": "5cdd3a676483cb53b02e63e803264c6ddc3d3916"
     }
   }
 }
