@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T15:56:00Z",
+  "updatedAt": "2026-10-30T16:01:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -47,7 +47,7 @@
     "status": "in_progress",
     "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-30T15:56:00Z",
+    "processedAt": "2026-10-30T16:01:00Z",
     "changedPaths": [
       "data/financials-VDS.json"
     ],
@@ -55,8 +55,6 @@
     "firstQuarter": "2024-Q1",
     "lastQuarter": "2026-Q2",
     "pendingCorePeriods": [
-      "2024-Q3",
-      "2024-Q4",
       "2025-Q1"
     ],
     "terminalManualReviewPeriods": [],
@@ -481,8 +479,6 @@
       "firstQuarter": "2024-Q1",
       "lastQuarter": "2026-Q2",
       "pendingCorePeriods": [
-        "2024-Q3",
-        "2024-Q4",
         "2025-Q1"
       ],
       "terminalManualReviewPeriods": [],
@@ -492,21 +488,23 @@
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 6,
-      "updatedAt": "2026-10-30T15:56:00Z",
+      "updatedAt": "2026-10-30T16:01:00Z",
       "snapshotFetchedAt": "2026-10-23T11:20:31+00:00",
       "sourceReconciledPeriods": [
-        "2024-Q2"
+        "2024-Q2",
+        "2024-Q3",
+        "2024-Q4"
       ],
       "lastSourceReconciliation": {
-        "periodRange": "2024-Q2",
+        "periodRange": "2024-Q2 through 2024-Q4",
         "status": "core_source_text_reconciled_pending_visual_review",
-        "correctionCommit": "ee18b6fea58e7a10f80990fbd3b61238fcdd6237",
+        "correctionCommit": "224c539ae53f54e0acc454e9e7c509d13ab74ce5",
         "findings": [
-          "Khôi phục tổng tài sản, nợ phải trả, vốn chủ sở hữu, doanh thu, LNTT, LNST và lợi nhuận thuộc cổ đông công ty mẹ từ sidecar PDF VietstockFinance.",
-          "Tổng nợ + vốn chủ sở hữu khớp tổng tài sản; LNST khớp LNTT trừ thuế TNDN.",
-          "Ngoại lệ phân loại CFO/CFI/CFF từ báo cáo so sánh Q2/2025 được giữ nguyên, không điều chỉnh theo hướng ép số."
+          "Q2/2024 restored: total assets/liabilities/equity and PBT/PAT; balance and tax bridge exact.",
+          "Q3/2024 restored: total assets/liabilities/equity and revenue/PBT/PAT; balance and tax bridge exact. Parent attribution OCR remains ambiguous and is intentionally blank.",
+          "Q4/2024 restored: total assets/liabilities/equity and revenue/PBT/PAT/parent PAT; balance and tax bridge exact."
         ],
-        "remaining": "Cần xử lý Q3/2024, Q4/2024, Q1/2025; kiểm tra trực quan ảnh PDF và giữ ngoại lệ dòng tiền Q2/2024."
+        "remaining": "Q1/2025 is the remaining core extraction gap. Visual PDF review remains pending for these periods; Q2/2024 cash-flow reclassification exception remains flagged."
       }
     },
     "KDH": {
