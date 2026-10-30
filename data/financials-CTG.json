@@ -63,7 +63,7 @@
         "income_tax_tax_reconciliation_check"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-23T03:49:10+00:00",
-      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. CTG CASHFLOW NORMALIZATION 2026-10-29: use the final net cash-flow rows I/II/III/IV, not the subtotal before asset/liability movements. Standalone quarter = selected YTD current minus previous same-year YTD. Apply the 0.01% relative tolerance to arithmetic rounding only; source reclassification/OCR uncertainty above that threshold remains manually flagged. Status: PASS_ARITHMETIC_RECONCILED.",
+      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. CTG CASHFLOW NORMALIZATION 2026-10-29: use the final net cash-flow rows I/II/III/IV, not the subtotal before asset/liability movements. Standalone quarter = selected YTD current minus previous same-year YTD. Apply the 0.01% relative tolerance to arithmetic rounding only; source reclassification/OCR uncertainty above that threshold remains manually flagged. Status: PASS_ARITHMETIC_RECONCILED. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan.",
       "fixed_assets": 9921221,
       "retained_earnings": 46998456,
       "bank_cash_on_hand": 9408384,
@@ -111,17 +111,13 @@
         "bank_service_income",
         "bank_trading_securities",
         "bank_valuable_papers",
-        "cash_beginning",
-        "cash_beginning_reported_ytd",
-        "cash_ending",
-        "cash_ending_reported_ytd",
         "cashflow_period_basis",
         "financing_cash_flow",
         "financing_cash_flow_ytd",
         "fixed_assets",
-        "foreign_exchange_effect",
-        "foreign_exchange_effect_ytd",
         "income_tax",
+        "income_tax_current",
+        "income_tax_deferred",
         "investing_cash_flow",
         "investing_cash_flow_ytd",
         "net_cash_change",
@@ -133,16 +129,29 @@
         "revenue"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
-      "financial_line_items_schema_version": "2026-10-27-note-reference-alias-and-manual-guards-v8",
-      "financial_line_items_schema_updated_at": "2026-10-29T05:00:00Z",
+      "financial_line_items_schema_version": "2026-10-27-other-statements-source-fields-v12",
+      "financial_line_items_schema_updated_at": "2026-10-30T10:57:27+00:00",
       "financial_line_items_source": "reports/raw/CTG/auto-ctg-20261021/a06c48abd7f22ae7.pdf",
-      "financial_line_items_updated_at": "2026-10-29T05:00:00Z",
-      "operating_cash_flow_calculation": "Q1 equals the selected YTD row I/II/III/IV from the consolidated cash-flow statement.",
-      "investing_cash_flow_calculation": "Q1 equals the selected YTD row I/II/III/IV from the consolidated cash-flow statement.",
-      "financing_cash_flow_calculation": "Q1 equals the selected YTD row I/II/III/IV from the consolidated cash-flow statement.",
-      "net_cash_change_calculation": "Q1 equals the selected YTD row I/II/III/IV from the consolidated cash-flow statement.",
+      "financial_line_items_updated_at": "2026-10-30T10:57:27+00:00",
+      "operating_cash_flow_calculation": "Q1 equals YTD Q1",
+      "investing_cash_flow_calculation": "Q1 equals YTD Q1",
+      "financing_cash_flow_calculation": "Q1 equals YTD Q1",
+      "net_cash_change_calculation": "Q1 equals YTD Q1",
       "financial_line_items_prior_values": {
-        "bank_provision_expense": 14259441
+        "bank_provision_expense": 14259441,
+        "bank_net_service_income": 1778753,
+        "cash_beginning": 272303607,
+        "cash_beginning_reported_ytd": 272303607,
+        "cash_ending": 308509791,
+        "cash_ending_reported_ytd": 308509791,
+        "financing_cash_flow": 0,
+        "foreign_exchange_effect": 37417,
+        "foreign_exchange_effect_ytd": 37417,
+        "investing_cash_flow": -201089,
+        "net_cash_change": 36168767,
+        "operating_cash_flow": 36369856,
+        "revenue": 19066889,
+        "operating_cash_flow_ytd": 36369856
       },
       "financial_line_items_rejected_values": {},
       "bank_net_service_income": 1778753,
@@ -154,6 +163,71 @@
           "previous_value": 14259441,
           "new_value": 8049159,
           "reason": "derived from reconciled pre-provision operating profit minus reported quarterly PBT"
+        },
+        "bank_net_service_income": {
+          "previous_value": 1778753,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_beginning": {
+          "previous_value": 272303607,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_beginning_reported_ytd": {
+          "previous_value": 272303607,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_ending": {
+          "previous_value": 308509791,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_ending_reported_ytd": {
+          "previous_value": 308509791,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "financing_cash_flow": {
+          "previous_value": 0,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "foreign_exchange_effect": {
+          "previous_value": 37417,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "foreign_exchange_effect_ytd": {
+          "previous_value": 37417,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "investing_cash_flow": {
+          "previous_value": -201089,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "net_cash_change": {
+          "previous_value": 36168767,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "operating_cash_flow": {
+          "previous_value": 36369856,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "revenue": {
+          "previous_value": 19066889,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "operating_cash_flow_ytd": {
+          "previous_value": 36369856,
+          "new_value": 5141022,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
         }
       },
       "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
@@ -185,20 +259,20 @@
       "core_financial_extraction_evidence_fingerprint": "377afbea247c27daf701d5563ba0dff528463b871334fce3113fbbd392fe2b59",
       "core_financial_extraction_evidence_attempt_count": 0,
       "bank_other_operating_net": 778121,
-      "operating_cash_flow_ytd": 36369856,
+      "operating_cash_flow_ytd": 5141022,
       "investing_cash_flow_ytd": -201089,
       "financing_cash_flow_ytd": 0,
       "net_cash_change_ytd": 36168767,
-      "cash_beginning_reported_ytd": 272303607,
-      "cash_ending_reported_ytd": 308509791,
-      "foreign_exchange_effect_ytd": 37417,
-      "operating_cash_flow": 36369856,
+      "cash_beginning_reported_ytd": null,
+      "cash_ending_reported_ytd": null,
+      "foreign_exchange_effect_ytd": null,
+      "operating_cash_flow": 5141022,
       "investing_cash_flow": -201089,
       "financing_cash_flow": 0,
       "net_cash_change": 36168767,
-      "cash_beginning": 272303607,
-      "cash_ending": 308509791,
-      "foreign_exchange_effect": 37417,
+      "cash_beginning": null,
+      "cash_ending": null,
+      "foreign_exchange_effect": null,
       "cashflow_audit_revision": {
         "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%201/CTG_Baocaotaichinh_Q1_2024_Hopnhat.pdf",
         "selected_source_index_url": "https://finance.vietstock.vn/CTG/tai-tai-lieu.htm?doctype=1",
@@ -312,7 +386,9 @@
       },
       "cash_beginning_calculation": "Opening cash as reported for Q1.",
       "cash_ending_calculation": "Reported closing cash from the selected source report; never calculated to force reconciliation.",
-      "foreign_exchange_effect_calculation": "Q1 equals reported YTD FX effect."
+      "foreign_exchange_effect_calculation": "Q1 equals reported YTD FX effect.",
+      "income_tax_current": 1207758,
+      "income_tax_deferred": 0
     },
     {
       "symbol": "CTG",
@@ -374,17 +450,15 @@
         "bank_service_income",
         "bank_trading_securities",
         "bank_valuable_papers",
+        "capital_expenditure_ytd",
         "cash_beginning",
-        "cash_beginning_reported_ytd",
-        "cash_ending",
-        "cash_ending_reported_ytd",
         "cashflow_period_basis",
         "financing_cash_flow",
         "financing_cash_flow_ytd",
         "fixed_assets",
-        "foreign_exchange_effect",
-        "foreign_exchange_effect_ytd",
         "income_tax",
+        "income_tax_current",
+        "income_tax_deferred",
         "investing_cash_flow",
         "investing_cash_flow_ytd",
         "net_cash_change",
@@ -395,12 +469,29 @@
         "retained_earnings"
       ],
       "financial_line_items_source": "reports/raw/CTG/auto-ctg-20261021/3b47819ee15267f8.pdf",
-      "financial_line_items_updated_at": "2026-10-29T05:00:00Z",
-      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. CTG CASHFLOW NORMALIZATION 2026-10-29: use the final net cash-flow rows I/II/III/IV, not the subtotal before asset/liability movements. Standalone quarter = selected YTD current minus previous same-year YTD. Apply the 0.01% relative tolerance to arithmetic rounding only; source reclassification/OCR uncertainty above that threshold remains manually flagged. Status: NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT.",
-      "financial_line_items_prior_values": {},
+      "financial_line_items_updated_at": "2026-10-30T10:57:27+00:00",
+      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. CTG CASHFLOW NORMALIZATION 2026-10-29: use the final net cash-flow rows I/II/III/IV, not the subtotal before asset/liability movements. Standalone quarter = selected YTD current minus previous same-year YTD. Apply the 0.01% relative tolerance to arithmetic rounding only; source reclassification/OCR uncertainty above that threshold remains manually flagged. Status: NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan.",
+      "financial_line_items_prior_values": {
+        "bank_net_service_income": 1886236,
+        "bank_pre_provision_operating_profit": 21316631,
+        "cash_beginning_reported_ytd": 272303607,
+        "cash_ending": 356354678,
+        "cash_ending_reported_ytd": 356354678,
+        "financing_cash_flow": 1537,
+        "foreign_exchange_effect": 55339,
+        "foreign_exchange_effect_ytd": 92756,
+        "investing_cash_flow": -226586,
+        "net_cash_change": 47789548,
+        "operating_cash_flow": 48014597,
+        "bank_interest_income": 30138279,
+        "operating_cash_flow_ytd": 84384453,
+        "investing_cash_flow_ytd": -427675,
+        "financing_cash_flow_ytd": 1537,
+        "cash_beginning": 308509791
+      },
       "financial_line_items_rejected_values": {},
-      "financial_line_items_schema_version": "2026-10-27-note-reference-alias-and-manual-guards-v8",
-      "financial_line_items_schema_updated_at": "2026-10-29T05:00:00Z",
+      "financial_line_items_schema_version": "2026-10-27-other-statements-source-fields-v12",
+      "financial_line_items_schema_updated_at": "2026-10-30T10:57:27+00:00",
       "core_financial_extracted_fields": [
         "equity",
         "net_profit",
@@ -442,17 +533,17 @@
       "bank_funding_and_trust_liabilities": 2232594,
       "bank_other_liabilities": 45495319,
       "operating_profit": 14566685,
-      "bank_interest_income": 30138279,
+      "bank_interest_income": 0,
       "bank_service_income": 3178353,
       "bank_service_expense": 1292117,
       "bank_dividend_and_capital_income": 150897,
       "bank_operating_expenses": 5073752,
       "bank_provision_expense": 14566685,
       "bank_non_controlling_profit": 44064,
-      "operating_cash_flow_ytd": 84384453,
-      "investing_cash_flow_ytd": -427675,
+      "operating_cash_flow_ytd": 19551440,
+      "investing_cash_flow_ytd": -415420,
       "net_cash_change_ytd": 83958315,
-      "cash_beginning": 308509791,
+      "cash_beginning": 272303607,
       "cashflow_period_basis": "year_to_date",
       "bank_net_service_income": 1886236,
       "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
@@ -487,15 +578,15 @@
       "cash_beginning_reported_ytd": 272303607,
       "bank_pre_provision_operating_profit": 21316631,
       "bank_pre_provision_operating_profit_calculation": "Lợi nhuận trước thuế + chi phí dự phòng tín dụng dương; khôi phục tổng phụ trước dự phòng.",
-      "financing_cash_flow_ytd": 1537,
-      "cash_ending_reported_ytd": 356354678,
-      "foreign_exchange_effect_ytd": 92756,
-      "operating_cash_flow": 48014597,
-      "investing_cash_flow": -226586,
-      "financing_cash_flow": 1537,
+      "financing_cash_flow_ytd": 0,
+      "cash_ending_reported_ytd": null,
+      "foreign_exchange_effect_ytd": null,
+      "operating_cash_flow": 14410418,
+      "investing_cash_flow": -214331,
+      "financing_cash_flow": 0,
       "net_cash_change": 47789548,
-      "cash_ending": 356354678,
-      "foreign_exchange_effect": 55339,
+      "cash_ending": null,
+      "foreign_exchange_effect": null,
       "cashflow_audit_revision": {
         "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%202/CTG_Baocaotaichinh_Q2_2025_Hopnhat.pdf",
         "selected_source_index_url": "https://finance.vietstock.vn/CTG/tai-tai-lieu.htm?doctype=1",
@@ -587,13 +678,98 @@
         },
         "source_ocr_correction": null
       },
-      "operating_cash_flow_calculation": "Standalone quarter = current selected YTD minus previous selected YTD in the same year.",
-      "investing_cash_flow_calculation": "Standalone quarter = current selected YTD minus previous selected YTD in the same year.",
-      "financing_cash_flow_calculation": "Standalone quarter = current selected YTD minus previous selected YTD in the same year.",
-      "net_cash_change_calculation": "Standalone quarter = current selected YTD minus previous selected YTD in the same year.",
+      "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "financing_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "net_cash_change_calculation": "current YTD minus previous quarter YTD",
       "cash_beginning_calculation": "Previous quarter's selected reported closing cash.",
       "cash_ending_calculation": "Reported closing cash from the selected source report; never calculated to force reconciliation.",
-      "foreign_exchange_effect_calculation": "Standalone-quarter FX = current YTD FX minus previous quarter YTD FX; no FX amount inferred."
+      "foreign_exchange_effect_calculation": "Standalone-quarter FX = current YTD FX minus previous quarter YTD FX; no FX amount inferred.",
+      "financial_line_items_value_corrections": {
+        "bank_net_service_income": {
+          "previous_value": 1886236,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "bank_pre_provision_operating_profit": {
+          "previous_value": 21316631,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_beginning_reported_ytd": {
+          "previous_value": 272303607,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_ending": {
+          "previous_value": 356354678,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_ending_reported_ytd": {
+          "previous_value": 356354678,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "financing_cash_flow": {
+          "previous_value": 1537,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "foreign_exchange_effect": {
+          "previous_value": 55339,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "foreign_exchange_effect_ytd": {
+          "previous_value": 92756,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "investing_cash_flow": {
+          "previous_value": -226586,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "net_cash_change": {
+          "previous_value": 47789548,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "operating_cash_flow": {
+          "previous_value": 48014597,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "bank_interest_income": {
+          "previous_value": 30138279,
+          "new_value": 0,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "operating_cash_flow_ytd": {
+          "previous_value": 84384453,
+          "new_value": 19551440,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "investing_cash_flow_ytd": {
+          "previous_value": -427675,
+          "new_value": -415420,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "financing_cash_flow_ytd": {
+          "previous_value": 1537,
+          "new_value": 0,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "cash_beginning": {
+          "previous_value": 308509791,
+          "new_value": 272303607,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        }
+      },
+      "income_tax_current": 1340587,
+      "income_tax_deferred": 0,
+      "capital_expenditure_ytd": -425931
     },
     {
       "symbol": "CTG",
@@ -655,7 +831,7 @@
         "income_tax_tax_reconciliation_check"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-23T03:52:22+00:00",
-      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. CTG CASHFLOW NORMALIZATION 2026-10-29: use the final net cash-flow rows I/II/III/IV, not the subtotal before asset/liability movements. Standalone quarter = selected YTD current minus previous same-year YTD. Apply the 0.01% relative tolerance to arithmetic rounding only; source reclassification/OCR uncertainty above that threshold remains manually flagged. Status: NEEDS_MANUAL_REVIEW_SOURCE_NET_ROW_DIFF_GT_0_01_PERCENT.",
+      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. CTG CASHFLOW NORMALIZATION 2026-10-29: use the final net cash-flow rows I/II/III/IV, not the subtotal before asset/liability movements. Standalone quarter = selected YTD current minus previous same-year YTD. Apply the 0.01% relative tolerance to arithmetic rounding only; source reclassification/OCR uncertainty above that threshold remains manually flagged. Status: NEEDS_MANUAL_REVIEW_SOURCE_NET_ROW_DIFF_GT_0_01_PERCENT. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan.",
       "fixed_assets": 9622806,
       "retained_earnings": 57471783,
       "bank_cash_on_hand": 10239086,
@@ -677,12 +853,12 @@
       "bank_dividend_and_capital_income": 150836,
       "bank_operating_expenses": 6094955,
       "bank_provision_expense": 15821343,
-      "bank_non_controlling_profit": -33347,
-      "operating_cash_flow_ytd": 100518480,
+      "bank_non_controlling_profit": -33338,
+      "operating_cash_flow_ytd": 35072741,
       "investing_cash_flow_ytd": -606368,
       "financing_cash_flow_ytd": 1537,
-      "net_cash_change_ytd": 99913649,
-      "cash_beginning": 356354678,
+      "net_cash_change_ytd": 99013649,
+      "cash_beginning": 272303607,
       "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
         "bank_cash_on_hand",
@@ -708,16 +884,13 @@
         "bank_trading_securities",
         "bank_valuable_papers",
         "cash_beginning",
-        "cash_beginning_reported_ytd",
-        "cash_ending",
-        "cash_ending_reported_ytd",
         "cashflow_period_basis",
         "financing_cash_flow",
         "financing_cash_flow_ytd",
         "fixed_assets",
-        "foreign_exchange_effect",
-        "foreign_exchange_effect_ytd",
         "income_tax",
+        "income_tax_current",
+        "income_tax_deferred",
         "investing_cash_flow",
         "investing_cash_flow_ytd",
         "net_cash_change",
@@ -728,17 +901,33 @@
         "retained_earnings"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
-      "financial_line_items_schema_version": "2026-10-27-note-reference-alias-and-manual-guards-v8",
-      "financial_line_items_schema_updated_at": "2026-10-29T05:00:00Z",
+      "financial_line_items_schema_version": "2026-10-27-other-statements-source-fields-v12",
+      "financial_line_items_schema_updated_at": "2026-10-30T10:57:27+00:00",
       "financial_line_items_source": "reports/raw/CTG/auto-ctg-20261021/8a6e2c169dd0bf19.zip",
-      "financial_line_items_updated_at": "2026-10-29T05:00:00Z",
-      "operating_cash_flow": 16134027,
-      "operating_cash_flow_calculation": "Standalone quarter = current selected YTD minus previous selected YTD in the same year.",
-      "investing_cash_flow": -178693,
-      "investing_cash_flow_calculation": "Standalone quarter = current selected YTD minus previous selected YTD in the same year.",
-      "net_cash_change": 15955334,
-      "net_cash_change_calculation": "Standalone quarter = current selected YTD minus previous selected YTD in the same year.",
-      "financial_line_items_prior_values": {},
+      "financial_line_items_updated_at": "2026-10-30T10:57:27+00:00",
+      "operating_cash_flow": 15521301,
+      "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "investing_cash_flow": -190948,
+      "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "net_cash_change": 15055334,
+      "net_cash_change_calculation": "current YTD minus previous quarter YTD",
+      "financial_line_items_prior_values": {
+        "bank_net_service_income": 1801449,
+        "bank_pre_provision_operating_profit": 22374022,
+        "cash_beginning_reported_ytd": 272303607,
+        "cash_ending": 372158367,
+        "cash_ending_reported_ytd": 372158367,
+        "financing_cash_flow": 0,
+        "foreign_exchange_effect": -151645,
+        "foreign_exchange_effect_ytd": -58889,
+        "investing_cash_flow": -178693,
+        "net_cash_change": 15955334,
+        "operating_cash_flow": 16134027,
+        "operating_cash_flow_ytd": 100518480,
+        "net_cash_change_ytd": 99913649,
+        "cash_beginning": 356354678,
+        "bank_non_controlling_profit": -33347
+      },
       "financial_line_items_rejected_values": {},
       "bank_net_service_income": 1801449,
       "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
@@ -775,11 +964,11 @@
       "cash_beginning_reported_ytd": 272303607,
       "bank_pre_provision_operating_profit": 22374022,
       "bank_pre_provision_operating_profit_calculation": "Lợi nhuận trước thuế + chi phí dự phòng tín dụng dương; khôi phục tổng phụ trước dự phòng.",
-      "cash_ending_reported_ytd": 372158367,
-      "foreign_exchange_effect_ytd": -58889,
-      "financing_cash_flow": 0,
-      "cash_ending": 372158367,
-      "foreign_exchange_effect": -151645,
+      "cash_ending_reported_ytd": null,
+      "foreign_exchange_effect_ytd": null,
+      "financing_cash_flow": 1537,
+      "cash_ending": null,
+      "foreign_exchange_effect": null,
       "cashflow_audit_revision": {
         "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%203/CTG_Baocaotaichinh_Q3_2025_Hopnhat.zip",
         "selected_source_index_url": "https://finance.vietstock.vn/CTG/tai-tai-lieu.htm?doctype=1",
@@ -875,10 +1064,90 @@
         },
         "source_ocr_correction": null
       },
-      "financing_cash_flow_calculation": "Standalone quarter = current selected YTD minus previous selected YTD in the same year.",
+      "financing_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "cash_beginning_calculation": "Previous quarter's selected reported closing cash.",
       "cash_ending_calculation": "Reported closing cash from the selected source report; never calculated to force reconciliation.",
-      "foreign_exchange_effect_calculation": "Standalone-quarter FX = current YTD FX minus previous quarter YTD FX; no FX amount inferred."
+      "foreign_exchange_effect_calculation": "Standalone-quarter FX = current YTD FX minus previous quarter YTD FX; no FX amount inferred.",
+      "financial_line_items_value_corrections": {
+        "bank_net_service_income": {
+          "previous_value": 1801449,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "bank_pre_provision_operating_profit": {
+          "previous_value": 22374022,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_beginning_reported_ytd": {
+          "previous_value": 272303607,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_ending": {
+          "previous_value": 372158367,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_ending_reported_ytd": {
+          "previous_value": 372158367,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "financing_cash_flow": {
+          "previous_value": 0,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "foreign_exchange_effect": {
+          "previous_value": -151645,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "foreign_exchange_effect_ytd": {
+          "previous_value": -58889,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "investing_cash_flow": {
+          "previous_value": -178693,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "net_cash_change": {
+          "previous_value": 15955334,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "operating_cash_flow": {
+          "previous_value": 16134027,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "operating_cash_flow_ytd": {
+          "previous_value": 100518480,
+          "new_value": 35072741,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "net_cash_change_ytd": {
+          "previous_value": 99913649,
+          "new_value": 99013649,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "cash_beginning": {
+          "previous_value": 356354678,
+          "new_value": 272303607,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "bank_non_controlling_profit": {
+          "previous_value": -33347,
+          "new_value": -33338,
+          "reason": "derived non-controlling profit from consolidated net profit minus net profit attributable to parent"
+        }
+      },
+      "income_tax_current": 1360167,
+      "income_tax_deferred": 0,
+      "bank_non_controlling_profit_calculation": "Lợi nhuận cổ đông không kiểm soát = lợi nhuận sau thuế hợp nhất − lợi nhuận sau thuế thuộc cổ đông ngân hàng mẹ."
     },
     {
       "symbol": "CTG",
@@ -940,7 +1209,7 @@
         "income_tax_tax_reconciliation_check"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-23T03:53:54+00:00",
-      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. CTG CASHFLOW NORMALIZATION 2026-10-29: use the final net cash-flow rows I/II/III/IV, not the subtotal before asset/liability movements. Standalone quarter = selected YTD current minus previous same-year YTD. Apply the 0.01% relative tolerance to arithmetic rounding only; source reclassification/OCR uncertainty above that threshold remains manually flagged. Status: NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT.",
+      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. CTG CASHFLOW NORMALIZATION 2026-10-29: use the final net cash-flow rows I/II/III/IV, not the subtotal before asset/liability movements. Standalone quarter = selected YTD current minus previous same-year YTD. Apply the 0.01% relative tolerance to arithmetic rounding only; source reclassification/OCR uncertainty above that threshold remains manually flagged. Status: NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan.",
       "fixed_assets": 10002157,
       "retained_earnings": 62405638,
       "bank_cash_on_hand": 11147549,
@@ -986,16 +1255,12 @@
         "bank_service_income",
         "bank_trading_securities",
         "bank_valuable_papers",
+        "capital_expenditure_ytd",
         "cash_beginning",
-        "cash_beginning_reported_ytd",
-        "cash_ending",
-        "cash_ending_reported_ytd",
         "cashflow_period_basis",
         "financing_cash_flow",
         "financing_cash_flow_ytd",
         "fixed_assets",
-        "foreign_exchange_effect",
-        "foreign_exchange_effect_ytd",
         "income_tax",
         "investing_cash_flow",
         "investing_cash_flow_ytd",
@@ -1003,18 +1268,35 @@
         "net_cash_change_ytd",
         "operating_cash_flow",
         "operating_cash_flow_ytd",
+        "operating_profit",
         "retained_earnings"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
-      "financial_line_items_schema_version": "2026-10-27-note-reference-alias-and-manual-guards-v8",
-      "financial_line_items_schema_updated_at": "2026-10-29T05:00:00Z",
+      "financial_line_items_schema_version": "2026-10-27-other-statements-source-fields-v12",
+      "financial_line_items_schema_updated_at": "2026-10-30T10:57:27+00:00",
       "financial_line_items_source": "reports/raw/CTG/auto-ctg-20261021/b963df1669e74bf0.pdf",
-      "financial_line_items_updated_at": "2026-10-29T05:00:00Z",
-      "operating_cash_flow_calculation": "Standalone quarter = current selected YTD minus previous selected YTD in the same year.",
-      "investing_cash_flow_calculation": "Standalone quarter = current selected YTD minus previous selected YTD in the same year.",
-      "financing_cash_flow_calculation": "Standalone quarter = current selected YTD minus previous selected YTD in the same year.",
-      "net_cash_change_calculation": "Standalone quarter = current selected YTD minus previous selected YTD in the same year.",
-      "financial_line_items_prior_values": {},
+      "financial_line_items_updated_at": "2026-10-30T10:57:27+00:00",
+      "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "financing_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "net_cash_change_calculation": "current YTD minus previous quarter YTD",
+      "financial_line_items_prior_values": {
+        "bank_net_service_income": 1239699,
+        "bank_pre_provision_operating_profit": 26955093,
+        "cash_beginning_reported_ytd": 272303607,
+        "cash_ending": 373319556,
+        "cash_ending_reported_ytd": 373319556,
+        "financing_cash_flow": 0,
+        "foreign_exchange_effect": 213638,
+        "foreign_exchange_effect_ytd": 154749,
+        "income_tax": 2374799,
+        "investing_cash_flow": -722655,
+        "net_cash_change": 947551,
+        "operating_cash_flow": 1670206,
+        "operating_cash_flow_ytd": 102188686,
+        "investing_cash_flow_ytd": -1329023,
+        "cash_beginning": 372158367
+      },
       "financial_line_items_rejected_values": {},
       "bank_net_service_income": 1239699,
       "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
@@ -1051,20 +1333,20 @@
       "bank_other_operating_net": 2630864,
       "bank_pre_provision_operating_profit": 26955093,
       "bank_pre_provision_operating_profit_calculation": "Lợi nhuận trước thuế + chi phí dự phòng tín dụng dương; khôi phục tổng phụ trước dự phòng.",
-      "operating_cash_flow_ytd": 102188686,
-      "investing_cash_flow_ytd": -1329023,
+      "operating_cash_flow_ytd": 102146448,
+      "investing_cash_flow_ytd": -1286785,
       "financing_cash_flow_ytd": 1537,
       "net_cash_change_ytd": 100861200,
       "cash_beginning_reported_ytd": 272303607,
-      "cash_ending_reported_ytd": 373319556,
-      "foreign_exchange_effect_ytd": 154749,
-      "operating_cash_flow": 1670206,
-      "investing_cash_flow": -722655,
+      "cash_ending_reported_ytd": null,
+      "foreign_exchange_effect_ytd": null,
+      "operating_cash_flow": 67073707,
+      "investing_cash_flow": -680417,
       "financing_cash_flow": 0,
-      "net_cash_change": 947551,
-      "cash_beginning": 372158367,
-      "cash_ending": 373319556,
-      "foreign_exchange_effect": 213638,
+      "net_cash_change": 1847551,
+      "cash_beginning": 272303607,
+      "cash_ending": null,
+      "foreign_exchange_effect": null,
       "cashflow_audit_revision": {
         "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/CTG_Baocaotaichinh_Q4_2025_Hopnhat.pdf",
         "selected_source_index_url": "https://finance.vietstock.vn/CTG/tai-tai-lieu.htm?doctype=1",
@@ -1199,7 +1481,87 @@
       },
       "cash_beginning_calculation": "Previous quarter's selected reported closing cash.",
       "cash_ending_calculation": "Reported closing cash from the selected source report; never calculated to force reconciliation.",
-      "foreign_exchange_effect_calculation": "Standalone-quarter FX = current YTD FX minus previous quarter YTD FX; no FX amount inferred."
+      "foreign_exchange_effect_calculation": "Standalone-quarter FX = current YTD FX minus previous quarter YTD FX; no FX amount inferred.",
+      "financial_line_items_value_corrections": {
+        "bank_net_service_income": {
+          "previous_value": 1239699,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "bank_pre_provision_operating_profit": {
+          "previous_value": 26955093,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_beginning_reported_ytd": {
+          "previous_value": 272303607,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_ending": {
+          "previous_value": 373319556,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_ending_reported_ytd": {
+          "previous_value": 373319556,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "financing_cash_flow": {
+          "previous_value": 0,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "foreign_exchange_effect": {
+          "previous_value": 213638,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "foreign_exchange_effect_ytd": {
+          "previous_value": 154749,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "income_tax": {
+          "previous_value": 2374799,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "investing_cash_flow": {
+          "previous_value": -722655,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "net_cash_change": {
+          "previous_value": 947551,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "operating_cash_flow": {
+          "previous_value": 1670206,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "operating_cash_flow_ytd": {
+          "previous_value": 102188686,
+          "new_value": 102146448,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "investing_cash_flow_ytd": {
+          "previous_value": -1329023,
+          "new_value": -1286785,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "cash_beginning": {
+          "previous_value": 372158367,
+          "new_value": 272303607,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        }
+      },
+      "capital_expenditure_ytd": -1319839,
+      "operating_profit": 26955093,
+      "operating_profit_calculation": "Lợi nhuận hoạt động chung của ngân hàng lấy từ dòng lợi nhuận thuần trước chi phí dự phòng rủi ro tín dụng trong cùng BCTC."
     },
     {
       "symbol": "CTG",
@@ -1260,7 +1622,7 @@
         "income_tax_tax_reconciliation_check"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-23T03:55:27+00:00",
-      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. CTG CASHFLOW NORMALIZATION 2026-10-29: use the final net cash-flow rows I/II/III/IV, not the subtotal before asset/liability movements. Standalone quarter = selected YTD current minus previous same-year YTD. Apply the 0.01% relative tolerance to arithmetic rounding only; source reclassification/OCR uncertainty above that threshold remains manually flagged. Status: PASS_ARITHMETIC_RECONCILED.",
+      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. CTG CASHFLOW NORMALIZATION 2026-10-29: use the final net cash-flow rows I/II/III/IV, not the subtotal before asset/liability movements. Standalone quarter = selected YTD current minus previous same-year YTD. Apply the 0.01% relative tolerance to arithmetic rounding only; source reclassification/OCR uncertainty above that threshold remains manually flagged. Status: PASS_ARITHMETIC_RECONCILED. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan.",
       "fixed_assets": 9800697,
       "retained_earnings": 63803161,
       "bank_cash_on_hand": 11517746,
@@ -1306,16 +1668,12 @@
         "bank_service_income",
         "bank_trading_securities",
         "bank_valuable_papers",
-        "cash_beginning",
-        "cash_beginning_reported_ytd",
-        "cash_ending",
-        "cash_ending_reported_ytd",
+        "capital_expenditure",
+        "capital_expenditure_ytd",
         "cashflow_period_basis",
         "financing_cash_flow",
         "financing_cash_flow_ytd",
         "fixed_assets",
-        "foreign_exchange_effect",
-        "foreign_exchange_effect_ytd",
         "income_tax",
         "investing_cash_flow",
         "investing_cash_flow_ytd",
@@ -1323,18 +1681,34 @@
         "net_cash_change_ytd",
         "operating_cash_flow",
         "operating_cash_flow_ytd",
+        "operating_profit",
         "retained_earnings"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
-      "financial_line_items_schema_version": "2026-10-27-note-reference-alias-and-manual-guards-v8",
-      "financial_line_items_schema_updated_at": "2026-10-29T05:00:00Z",
+      "financial_line_items_schema_version": "2026-10-27-other-statements-source-fields-v12",
+      "financial_line_items_schema_updated_at": "2026-10-30T10:57:27+00:00",
       "financial_line_items_source": "reports/raw/CTG/auto-ctg-20261021/244171fc77a8ab7e.pdf",
-      "financial_line_items_updated_at": "2026-10-29T05:00:00Z",
-      "operating_cash_flow_calculation": "Q1 equals the selected YTD row I/II/III/IV from the consolidated cash-flow statement.",
-      "investing_cash_flow_calculation": "Q1 equals the selected YTD row I/II/III/IV from the consolidated cash-flow statement.",
-      "financing_cash_flow_calculation": "Q1 equals the selected YTD row I/II/III/IV from the consolidated cash-flow statement.",
-      "net_cash_change_calculation": "Q1 equals the selected YTD row I/II/III/IV from the consolidated cash-flow statement.",
-      "financial_line_items_prior_values": {},
+      "financial_line_items_updated_at": "2026-10-30T10:57:27+00:00",
+      "operating_cash_flow_calculation": "Q1 equals YTD Q1",
+      "investing_cash_flow_calculation": "Q1 equals YTD Q1",
+      "financing_cash_flow_calculation": "Q1 equals YTD Q1",
+      "net_cash_change_calculation": "Q1 equals YTD Q1",
+      "financial_line_items_prior_values": {
+        "bank_net_service_income": 1610539,
+        "bank_pre_provision_operating_profit": 21757358,
+        "cash_beginning": 373319556,
+        "cash_beginning_reported_ytd": 373319556,
+        "cash_ending": 364315448,
+        "cash_ending_reported_ytd": 364315448,
+        "financing_cash_flow": 0,
+        "foreign_exchange_effect": -19670,
+        "foreign_exchange_effect_ytd": -19670,
+        "income_tax": 1323811,
+        "investing_cash_flow": -223497,
+        "net_cash_change": -8984438,
+        "operating_cash_flow": -8760941,
+        "operating_cash_flow_ytd": -8760941
+      },
       "financial_line_items_rejected_values": {},
       "bank_net_service_income": 1610539,
       "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
@@ -1371,20 +1745,20 @@
       "bank_other_operating_net": 2002321,
       "bank_pre_provision_operating_profit": 21757358,
       "bank_pre_provision_operating_profit_calculation": "Lợi nhuận trước thuế + chi phí dự phòng tín dụng dương; khôi phục tổng phụ trước dự phòng.",
-      "operating_cash_flow_ytd": -8760941,
+      "operating_cash_flow_ytd": 8159069,
       "investing_cash_flow_ytd": -223497,
       "financing_cash_flow_ytd": 0,
       "net_cash_change_ytd": -8984438,
-      "cash_beginning_reported_ytd": 373319556,
-      "cash_ending_reported_ytd": 364315448,
-      "foreign_exchange_effect_ytd": -19670,
-      "operating_cash_flow": -8760941,
+      "cash_beginning_reported_ytd": null,
+      "cash_ending_reported_ytd": null,
+      "foreign_exchange_effect_ytd": null,
+      "operating_cash_flow": 8159069,
       "investing_cash_flow": -223497,
       "financing_cash_flow": 0,
       "net_cash_change": -8984438,
-      "cash_beginning": 373319556,
-      "cash_ending": 364315448,
-      "foreign_exchange_effect": -19670,
+      "cash_beginning": null,
+      "cash_ending": null,
+      "foreign_exchange_effect": null,
       "cashflow_audit_revision": {
         "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/CTG_Baocaotaichinh_Q1_2026_Hopnhat.pdf",
         "selected_source_index_url": "https://finance.vietstock.vn/CTG/tai-tai-lieu.htm?doctype=1",
@@ -1495,7 +1869,84 @@
       },
       "cash_beginning_calculation": "Opening cash as reported for Q1.",
       "cash_ending_calculation": "Reported closing cash from the selected source report; never calculated to force reconciliation.",
-      "foreign_exchange_effect_calculation": "Q1 equals reported YTD FX effect."
+      "foreign_exchange_effect_calculation": "Q1 equals reported YTD FX effect.",
+      "financial_line_items_value_corrections": {
+        "bank_net_service_income": {
+          "previous_value": 1610539,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "bank_pre_provision_operating_profit": {
+          "previous_value": 21757358,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_beginning": {
+          "previous_value": 373319556,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_beginning_reported_ytd": {
+          "previous_value": 373319556,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_ending": {
+          "previous_value": 364315448,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_ending_reported_ytd": {
+          "previous_value": 364315448,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "financing_cash_flow": {
+          "previous_value": 0,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "foreign_exchange_effect": {
+          "previous_value": -19670,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "foreign_exchange_effect_ytd": {
+          "previous_value": -19670,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "income_tax": {
+          "previous_value": 1323811,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "investing_cash_flow": {
+          "previous_value": -223497,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "net_cash_change": {
+          "previous_value": -8984438,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "operating_cash_flow": {
+          "previous_value": -8760941,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "operating_cash_flow_ytd": {
+          "previous_value": -8760941,
+          "new_value": 8159069,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        }
+      },
+      "capital_expenditure_ytd": -225314,
+      "capital_expenditure": -225314,
+      "capital_expenditure_calculation": "Q1 equals YTD Q1",
+      "operating_profit": 21757358,
+      "operating_profit_calculation": "Lợi nhuận hoạt động chung của ngân hàng lấy từ dòng lợi nhuận thuần trước chi phí dự phòng rủi ro tín dụng trong cùng BCTC."
     },
     {
       "symbol": "CTG",
@@ -1574,10 +2025,10 @@
       "bank_provision_expense": 2972768,
       "bank_non_controlling_profit": 82120,
       "income_tax_current": 2345147,
-      "income_tax_deferred": 4339,
-      "income_tax": 2349486,
-      "operating_cash_flow_ytd": 18255640,
-      "investing_cash_flow_ytd": -581917,
+      "income_tax_deferred": 0,
+      "income_tax": 2345147,
+      "operating_cash_flow_ytd": 25876572,
+      "investing_cash_flow_ytd": -661227,
       "financing_cash_flow_ytd": 0,
       "net_cash_change_ytd": 17673723,
       "cashflow_period_basis": "year_to_date",
@@ -1605,16 +2056,12 @@
         "bank_service_income",
         "bank_trading_securities",
         "bank_valuable_papers",
-        "cash_beginning",
-        "cash_beginning_reported_ytd",
-        "cash_ending",
-        "cash_ending_reported_ytd",
+        "capital_expenditure",
+        "capital_expenditure_ytd",
         "cashflow_period_basis",
         "financing_cash_flow",
         "financing_cash_flow_ytd",
         "fixed_assets",
-        "foreign_exchange_effect",
-        "foreign_exchange_effect_ytd",
         "income_tax",
         "income_tax_current",
         "income_tax_deferred",
@@ -1624,15 +2071,33 @@
         "net_cash_change_ytd",
         "operating_cash_flow",
         "operating_cash_flow_ytd",
+        "operating_profit",
         "retained_earnings"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
-      "financial_line_items_schema_version": "2026-10-27-note-reference-alias-and-manual-guards-v8",
-      "financial_line_items_schema_updated_at": "2026-10-29T05:00:00Z",
+      "financial_line_items_schema_version": "2026-10-27-other-statements-source-fields-v12",
+      "financial_line_items_schema_updated_at": "2026-10-30T10:57:27+00:00",
       "financial_line_items_source": "reports/raw/CTG/auto-ctg-20261021/6fafb5d70e3dc9ca.pdf",
-      "financial_line_items_updated_at": "2026-10-29T05:00:00Z",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. CTG CASHFLOW NORMALIZATION 2026-10-29: use the final net cash-flow rows I/II/III/IV, not the subtotal before asset/liability movements. Standalone quarter = selected YTD current minus previous same-year YTD. Apply the 0.01% relative tolerance to arithmetic rounding only; source reclassification/OCR uncertainty above that threshold remains manually flagged. Status: NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT.",
-      "financial_line_items_prior_values": {},
+      "financial_line_items_updated_at": "2026-10-30T10:57:27+00:00",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. CTG CASHFLOW NORMALIZATION 2026-10-29: use the final net cash-flow rows I/II/III/IV, not the subtotal before asset/liability movements. Standalone quarter = selected YTD current minus previous same-year YTD. Apply the 0.01% relative tolerance to arithmetic rounding only; source reclassification/OCR uncertainty above that threshold remains manually flagged. Status: NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan.",
+      "financial_line_items_prior_values": {
+        "bank_net_service_income": 1434216,
+        "bank_pre_provision_operating_profit": 15069920,
+        "cash_beginning": 364315448,
+        "cash_beginning_reported_ytd": 373319556,
+        "cash_ending": 391174348,
+        "cash_ending_reported_ytd": 391174348,
+        "financing_cash_flow": 0,
+        "foreign_exchange_effect": 200739,
+        "foreign_exchange_effect_ytd": 181069,
+        "investing_cash_flow": -358420,
+        "net_cash_change": 26658161,
+        "operating_cash_flow": 27016581,
+        "income_tax_deferred": 4339,
+        "income_tax": 2349486,
+        "operating_cash_flow_ytd": 18255640,
+        "investing_cash_flow_ytd": -581917
+      },
       "financial_line_items_rejected_values": {},
       "bank_net_service_income": 1434216,
       "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
@@ -1663,16 +2128,16 @@
       "bank_other_operating_net": 2173402,
       "bank_pre_provision_operating_profit": 15069920,
       "bank_pre_provision_operating_profit_calculation": "Lợi nhuận trước thuế + chi phí dự phòng tín dụng dương; khôi phục tổng phụ trước dự phòng.",
-      "cash_beginning_reported_ytd": 373319556,
-      "cash_ending_reported_ytd": 391174348,
-      "foreign_exchange_effect_ytd": 181069,
-      "operating_cash_flow": 27016581,
-      "investing_cash_flow": -358420,
+      "cash_beginning_reported_ytd": null,
+      "cash_ending_reported_ytd": null,
+      "foreign_exchange_effect_ytd": null,
+      "operating_cash_flow": 17717503,
+      "investing_cash_flow": -437730,
       "financing_cash_flow": 0,
       "net_cash_change": 26658161,
-      "cash_beginning": 364315448,
-      "cash_ending": 391174348,
-      "foreign_exchange_effect": 200739,
+      "cash_beginning": null,
+      "cash_ending": null,
+      "foreign_exchange_effect": null,
       "cashflow_audit_revision": {
         "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/CTG_Baocaotaichinh_Q2_2026_Hopnhat.pdf",
         "selected_source_index_url": "https://finance.vietstock.vn/CTG/tai-tai-lieu.htm?doctype=1",
@@ -1759,14 +2224,101 @@
         },
         "source_ocr_correction": null
       },
-      "operating_cash_flow_calculation": "Standalone quarter = current selected YTD minus previous selected YTD in the same year.",
-      "investing_cash_flow_calculation": "Standalone quarter = current selected YTD minus previous selected YTD in the same year.",
-      "financing_cash_flow_calculation": "Standalone quarter = current selected YTD minus previous selected YTD in the same year.",
-      "net_cash_change_calculation": "Standalone quarter = current selected YTD minus previous selected YTD in the same year.",
+      "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "financing_cash_flow_calculation": "current YTD minus previous quarter YTD",
+      "net_cash_change_calculation": "current YTD minus previous quarter YTD",
       "cash_beginning_calculation": "Previous quarter's selected reported closing cash.",
       "cash_ending_calculation": "Reported closing cash from the selected source report; never calculated to force reconciliation.",
       "foreign_exchange_effect_calculation": "Standalone-quarter FX = current YTD FX minus previous quarter YTD FX; no FX amount inferred.",
-      "financial_line_items_rejected_fields": []
+      "financial_line_items_rejected_fields": [],
+      "financial_line_items_value_corrections": {
+        "bank_net_service_income": {
+          "previous_value": 1434216,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "bank_pre_provision_operating_profit": {
+          "previous_value": 15069920,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_beginning": {
+          "previous_value": 364315448,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_beginning_reported_ytd": {
+          "previous_value": 373319556,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_ending": {
+          "previous_value": 391174348,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_ending_reported_ytd": {
+          "previous_value": 391174348,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "financing_cash_flow": {
+          "previous_value": 0,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "foreign_exchange_effect": {
+          "previous_value": 200739,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "foreign_exchange_effect_ytd": {
+          "previous_value": 181069,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "investing_cash_flow": {
+          "previous_value": -358420,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "net_cash_change": {
+          "previous_value": 26658161,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "operating_cash_flow": {
+          "previous_value": 27016581,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "income_tax_deferred": {
+          "previous_value": 4339,
+          "new_value": 0,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "income_tax": {
+          "previous_value": 2349486,
+          "new_value": 2345147,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "operating_cash_flow_ytd": {
+          "previous_value": 18255640,
+          "new_value": 25876572,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "investing_cash_flow_ytd": {
+          "previous_value": -581917,
+          "new_value": -661227,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        }
+      },
+      "capital_expenditure_ytd": -707234,
+      "capital_expenditure": -481920,
+      "capital_expenditure_calculation": "current YTD minus previous quarter YTD",
+      "operating_profit": 15069920,
+      "operating_profit_calculation": "Lợi nhuận hoạt động chung của ngân hàng lấy từ dòng lợi nhuận thuần trước chi phí dự phòng rủi ro tín dụng trong cùng BCTC."
     },
     {
       "symbol": "CTG",
@@ -1821,30 +2373,33 @@
       "core_financial_extraction_evidence_attempt_count": 1,
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_extracted_fields": [
-        "cash_beginning",
-        "cash_beginning_reported_ytd",
-        "cash_ending",
-        "cash_ending_reported_ytd",
+        "bank_non_controlling_profit",
         "cashflow_period_basis",
-        "financing_cash_flow",
-        "financing_cash_flow_ytd",
-        "foreign_exchange_effect",
-        "foreign_exchange_effect_ytd",
-        "income_tax",
-        "investing_cash_flow",
-        "investing_cash_flow_ytd",
-        "net_cash_change",
-        "net_cash_change_ytd",
-        "operating_cash_flow",
-        "operating_cash_flow_ytd"
+        "income_tax"
       ],
       "financial_line_items_source": "reports/raw/CTG/auto-ctg-20261021/b13adc92b1c92734.zip",
-      "financial_line_items_updated_at": "2026-10-29T05:00:00Z",
+      "financial_line_items_updated_at": "2026-10-30T10:57:27+00:00",
       "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. CTG CASHFLOW NORMALIZATION 2026-10-29: use the final net cash-flow rows I/II/III/IV, not the subtotal before asset/liability movements. Standalone quarter = selected YTD current minus previous same-year YTD. Apply the 0.01% relative tolerance to arithmetic rounding only; source reclassification/OCR uncertainty above that threshold remains manually flagged. Status: NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT.",
-      "financial_line_items_prior_values": {},
+      "financial_line_items_prior_values": {
+        "cash_beginning": 391174348,
+        "cash_beginning_reported_ytd": 373319556,
+        "cash_ending": 457361974,
+        "cash_ending_reported_ytd": 457361974,
+        "financing_cash_flow": 0,
+        "financing_cash_flow_ytd": 0,
+        "foreign_exchange_effect": -6801,
+        "foreign_exchange_effect_ytd": 174268,
+        "income_tax": 2101927,
+        "investing_cash_flow": -572769,
+        "investing_cash_flow_ytd": -1154686,
+        "net_cash_change": 66194427,
+        "net_cash_change_ytd": 83868150,
+        "operating_cash_flow": 66767196,
+        "operating_cash_flow_ytd": 85022836
+      },
       "financial_line_items_rejected_values": {},
-      "financial_line_items_schema_version": "2026-10-27-note-reference-alias-and-manual-guards-v8",
-      "financial_line_items_schema_updated_at": "2026-10-29T05:00:00Z",
+      "financial_line_items_schema_version": "2026-10-27-other-statements-source-fields-v12",
+      "financial_line_items_schema_updated_at": "2026-10-30T10:57:20+00:00",
       "core_financial_extracted_fields": [
         "pretax_profit"
       ],
@@ -1906,20 +2461,20 @@
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "income_tax": 2101927,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "operating_cash_flow_ytd": 85022836,
-      "investing_cash_flow_ytd": -1154686,
-      "financing_cash_flow_ytd": 0,
-      "net_cash_change_ytd": 83868150,
-      "cash_beginning_reported_ytd": 373319556,
-      "cash_ending_reported_ytd": 457361974,
-      "foreign_exchange_effect_ytd": 174268,
-      "operating_cash_flow": 66767196,
-      "investing_cash_flow": -572769,
-      "financing_cash_flow": 0,
-      "net_cash_change": 66194427,
-      "cash_beginning": 391174348,
-      "cash_ending": 457361974,
-      "foreign_exchange_effect": -6801,
+      "operating_cash_flow_ytd": null,
+      "investing_cash_flow_ytd": null,
+      "financing_cash_flow_ytd": null,
+      "net_cash_change_ytd": null,
+      "cash_beginning_reported_ytd": null,
+      "cash_ending_reported_ytd": null,
+      "foreign_exchange_effect_ytd": null,
+      "operating_cash_flow": null,
+      "investing_cash_flow": null,
+      "financing_cash_flow": null,
+      "net_cash_change": null,
+      "cash_beginning": null,
+      "cash_ending": null,
+      "foreign_exchange_effect": null,
       "cashflow_audit_revision": {
         "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%203/CTG_Baocaotaichinh_Q3_2025_Hopnhat.zip",
         "selected_source_index_url": "https://finance.vietstock.vn/CTG/tai-tai-lieu.htm?doctype=1",
@@ -2028,7 +2583,86 @@
       "cash_beginning_calculation": "Previous quarter's selected reported closing cash.",
       "cash_ending_calculation": "Reported closing cash from the selected source report; never calculated to force reconciliation.",
       "foreign_exchange_effect_calculation": "Standalone-quarter FX = current YTD FX minus previous quarter YTD FX; no FX amount inferred.",
-      "financial_line_items_rejected_fields": []
+      "financial_line_items_rejected_fields": [],
+      "financial_line_items_value_corrections": {
+        "cash_beginning": {
+          "previous_value": 391174348,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_beginning_reported_ytd": {
+          "previous_value": 373319556,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_ending": {
+          "previous_value": 457361974,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_ending_reported_ytd": {
+          "previous_value": 457361974,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "financing_cash_flow": {
+          "previous_value": 0,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "financing_cash_flow_ytd": {
+          "previous_value": 0,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "foreign_exchange_effect": {
+          "previous_value": -6801,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "foreign_exchange_effect_ytd": {
+          "previous_value": 174268,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "income_tax": {
+          "previous_value": 2101927,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "investing_cash_flow": {
+          "previous_value": -572769,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "investing_cash_flow_ytd": {
+          "previous_value": -1154686,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "net_cash_change": {
+          "previous_value": 66194427,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "net_cash_change_ytd": {
+          "previous_value": 83868150,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "operating_cash_flow": {
+          "previous_value": 66767196,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "operating_cash_flow_ytd": {
+          "previous_value": 85022836,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        }
+      },
+      "bank_non_controlling_profit": 63679,
+      "bank_non_controlling_profit_calculation": "Lợi nhuận cổ đông không kiểm soát = lợi nhuận sau thuế hợp nhất − lợi nhuận sau thuế thuộc cổ đông ngân hàng mẹ."
     },
     {
       "symbol": "CTG",
@@ -2122,7 +2756,7 @@
       "income_tax_current": 2818031,
       "income_tax_deferred": -4540,
       "income_tax": 2813491,
-      "operating_cash_flow_ytd": 82644000,
+      "operating_cash_flow_ytd": 57641193,
       "investing_cash_flow_ytd": -1915192,
       "financing_cash_flow_ytd": -2416496,
       "net_cash_change_ytd": 78312312,
@@ -2147,35 +2781,39 @@
         "bank_provision_expense",
         "bank_service_expense",
         "bank_trading_securities",
-        "cash_beginning",
-        "cash_beginning_reported_ytd",
-        "cash_ending",
-        "cash_ending_reported_ytd",
+        "capital_expenditure_ytd",
         "cashflow_period_basis",
-        "financing_cash_flow",
         "financing_cash_flow_ytd",
         "fixed_assets",
-        "foreign_exchange_effect",
-        "foreign_exchange_effect_ytd",
         "income_tax",
         "income_tax_current",
         "income_tax_deferred",
-        "investing_cash_flow",
         "investing_cash_flow_ytd",
-        "net_cash_change",
         "net_cash_change_ytd",
-        "operating_cash_flow",
         "operating_cash_flow_ytd",
         "operating_profit",
         "retained_earnings"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
-      "financial_line_items_schema_version": "2026-10-27-note-reference-alias-and-manual-guards-v8",
-      "financial_line_items_schema_updated_at": "2026-10-29T05:00:00Z",
+      "financial_line_items_schema_version": "2026-10-27-other-statements-source-fields-v12",
+      "financial_line_items_schema_updated_at": "2026-10-30T10:57:24+00:00",
       "financial_line_items_source": "reports/raw/CTG/auto-ctg-20261021/4021fffc0b009734.pdf",
-      "financial_line_items_updated_at": "2026-10-29T05:00:00Z",
+      "financial_line_items_updated_at": "2026-10-30T10:57:27+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. CTG CASHFLOW NORMALIZATION 2026-10-29: use the final net cash-flow rows I/II/III/IV, not the subtotal before asset/liability movements. Standalone quarter = selected YTD current minus previous same-year YTD. Apply the 0.01% relative tolerance to arithmetic rounding only; source reclassification/OCR uncertainty above that threshold remains manually flagged. Status: PASS_ARITHMETIC_RECONCILED.",
-      "financial_line_items_prior_values": {},
+      "financial_line_items_prior_values": {
+        "bank_pre_provision_operating_profit": 14262131,
+        "cash_beginning": 457361974,
+        "cash_beginning_reported_ytd": 373319556,
+        "cash_ending": 451745475,
+        "cash_ending_reported_ytd": 451745475,
+        "financing_cash_flow": -2416496,
+        "foreign_exchange_effect": -60661,
+        "foreign_exchange_effect_ytd": 113607,
+        "investing_cash_flow": -760506,
+        "net_cash_change": -5555838,
+        "operating_cash_flow": -2378836,
+        "operating_cash_flow_ytd": 82644000
+      },
       "financial_line_items_rejected_values": {},
       "core_financial_extraction_manual_terminal": false,
       "average_total_assets": 2764625119,
@@ -2220,16 +2858,16 @@
       "bank_other_operating_net": 3088159,
       "bank_pre_provision_operating_profit": 14262131,
       "bank_pre_provision_operating_profit_calculation": "Lợi nhuận trước thuế + chi phí dự phòng tín dụng dương; khôi phục tổng phụ trước dự phòng.",
-      "cash_beginning_reported_ytd": 373319556,
-      "cash_ending_reported_ytd": 451745475,
-      "foreign_exchange_effect_ytd": 113607,
-      "operating_cash_flow": -2378836,
-      "investing_cash_flow": -760506,
-      "financing_cash_flow": -2416496,
-      "net_cash_change": -5555838,
-      "cash_beginning": 457361974,
-      "cash_ending": 451745475,
-      "foreign_exchange_effect": -60661,
+      "cash_beginning_reported_ytd": null,
+      "cash_ending_reported_ytd": null,
+      "foreign_exchange_effect_ytd": null,
+      "operating_cash_flow": null,
+      "investing_cash_flow": null,
+      "financing_cash_flow": null,
+      "net_cash_change": null,
+      "cash_beginning": null,
+      "cash_ending": null,
+      "foreign_exchange_effect": null,
       "cashflow_audit_revision": {
         "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/CTG_Baocaotaichinh_Q4_2025_Hopnhat.pdf",
         "selected_source_index_url": "https://finance.vietstock.vn/CTG/tai-tai-lieu.htm?doctype=1",
@@ -2305,7 +2943,70 @@
       "cash_beginning_calculation": "Previous quarter's selected reported closing cash.",
       "cash_ending_calculation": "Reported closing cash from the selected source report; never calculated to force reconciliation.",
       "foreign_exchange_effect_calculation": "Standalone-quarter FX = current YTD FX minus previous quarter YTD FX; no FX amount inferred.",
-      "financial_line_items_rejected_fields": []
+      "financial_line_items_rejected_fields": [],
+      "financial_line_items_value_corrections": {
+        "bank_pre_provision_operating_profit": {
+          "previous_value": 14262131,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_beginning": {
+          "previous_value": 457361974,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_beginning_reported_ytd": {
+          "previous_value": 373319556,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_ending": {
+          "previous_value": 451745475,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_ending_reported_ytd": {
+          "previous_value": 451745475,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "financing_cash_flow": {
+          "previous_value": -2416496,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "foreign_exchange_effect": {
+          "previous_value": -60661,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "foreign_exchange_effect_ytd": {
+          "previous_value": 113607,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "investing_cash_flow": {
+          "previous_value": -760506,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "net_cash_change": {
+          "previous_value": -5555838,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "operating_cash_flow": {
+          "previous_value": -2378836,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "operating_cash_flow_ytd": {
+          "previous_value": 82644000,
+          "new_value": 57641193,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        }
+      },
+      "capital_expenditure_ytd": -2004950
     },
     {
       "symbol": "CTG",
@@ -2402,8 +3103,8 @@
       "bank_provision_expense": 7700931,
       "bank_non_controlling_profit": 43062,
       "income_tax_current": 2179319,
-      "income_tax_deferred": 4339,
-      "income_tax": 2183658,
+      "income_tax_deferred": 0,
+      "income_tax": 2179319,
       "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
         "bank_cash_on_hand",
@@ -2430,16 +3131,12 @@
         "bank_service_income",
         "bank_trading_securities",
         "bank_valuable_papers",
-        "cash_beginning",
-        "cash_beginning_reported_ytd",
-        "cash_ending",
-        "cash_ending_reported_ytd",
+        "capital_expenditure",
+        "capital_expenditure_ytd",
         "cashflow_period_basis",
         "financing_cash_flow",
         "financing_cash_flow_ytd",
         "fixed_assets",
-        "foreign_exchange_effect",
-        "foreign_exchange_effect_ytd",
         "income_tax",
         "income_tax_current",
         "income_tax_deferred",
@@ -2449,19 +3146,37 @@
         "net_cash_change_ytd",
         "operating_cash_flow",
         "operating_cash_flow_ytd",
+        "operating_profit",
         "retained_earnings"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
-      "financial_line_items_schema_version": "2026-10-27-note-reference-alias-and-manual-guards-v8",
-      "financial_line_items_schema_updated_at": "2026-10-29T05:00:00Z",
+      "financial_line_items_schema_version": "2026-10-27-other-statements-source-fields-v12",
+      "financial_line_items_schema_updated_at": "2026-10-30T10:57:27+00:00",
       "financial_line_items_source": "reports/raw/CTG/auto-ctg-20261021/0bec0f8f23b67868.pdf",
-      "financial_line_items_updated_at": "2026-10-29T05:00:00Z",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. CTG CASHFLOW NORMALIZATION 2026-10-29: use the final net cash-flow rows I/II/III/IV, not the subtotal before asset/liability movements. Standalone quarter = selected YTD current minus previous same-year YTD. Apply the 0.01% relative tolerance to arithmetic rounding only; source reclassification/OCR uncertainty above that threshold remains manually flagged. Status: PASS_ARITHMETIC_RECONCILED.",
-      "operating_cash_flow_calculation": "Q1 equals the selected YTD row I/II/III/IV from the consolidated cash-flow statement.",
-      "investing_cash_flow_calculation": "Q1 equals the selected YTD row I/II/III/IV from the consolidated cash-flow statement.",
-      "financing_cash_flow_calculation": "Q1 equals the selected YTD row I/II/III/IV from the consolidated cash-flow statement.",
-      "net_cash_change_calculation": "Q1 equals the selected YTD row I/II/III/IV from the consolidated cash-flow statement.",
-      "financial_line_items_prior_values": {},
+      "financial_line_items_updated_at": "2026-10-30T10:57:27+00:00",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. CTG CASHFLOW NORMALIZATION 2026-10-29: use the final net cash-flow rows I/II/III/IV, not the subtotal before asset/liability movements. Standalone quarter = selected YTD current minus previous same-year YTD. Apply the 0.01% relative tolerance to arithmetic rounding only; source reclassification/OCR uncertainty above that threshold remains manually flagged. Status: PASS_ARITHMETIC_RECONCILED. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan.",
+      "operating_cash_flow_calculation": "Q1 equals YTD Q1",
+      "investing_cash_flow_calculation": "Q1 equals YTD Q1",
+      "financing_cash_flow_calculation": "Q1 equals YTD Q1",
+      "net_cash_change_calculation": "Q1 equals YTD Q1",
+      "financial_line_items_prior_values": {
+        "bank_net_service_income": 1847044,
+        "bank_pre_provision_operating_profit": 18840291,
+        "cash_beginning": 451745475,
+        "cash_beginning_reported_ytd": 451745475,
+        "cash_ending": 578995009,
+        "cash_ending_reported_ytd": 578995009,
+        "financing_cash_flow": 0,
+        "foreign_exchange_effect": 85384,
+        "foreign_exchange_effect_ytd": 85384,
+        "investing_cash_flow": -315503,
+        "net_cash_change": 127164150,
+        "operating_cash_flow": 127479653,
+        "income_tax_deferred": 4339,
+        "income_tax": 2183658,
+        "operating_cash_flow_ytd": 127479653,
+        "financing_cash_flow_ytd": 0
+      },
       "financial_line_items_rejected_values": {},
       "bank_net_service_income": 1847044,
       "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
@@ -2509,20 +3224,20 @@
       "bank_other_operating_net": 2264525,
       "bank_pre_provision_operating_profit": 18840291,
       "bank_pre_provision_operating_profit_calculation": "Lợi nhuận trước thuế + chi phí dự phòng tín dụng dương; khôi phục tổng phụ trước dự phòng.",
-      "operating_cash_flow_ytd": 127479653,
+      "operating_cash_flow_ytd": 9152054,
       "investing_cash_flow_ytd": -315503,
-      "financing_cash_flow_ytd": 0,
+      "financing_cash_flow_ytd": 127164150,
       "net_cash_change_ytd": 127164150,
-      "cash_beginning_reported_ytd": 451745475,
-      "cash_ending_reported_ytd": 578995009,
-      "foreign_exchange_effect_ytd": 85384,
-      "operating_cash_flow": 127479653,
+      "cash_beginning_reported_ytd": null,
+      "cash_ending_reported_ytd": null,
+      "foreign_exchange_effect_ytd": null,
+      "operating_cash_flow": 9152054,
       "investing_cash_flow": -315503,
-      "financing_cash_flow": 0,
+      "financing_cash_flow": 127164150,
       "net_cash_change": 127164150,
-      "cash_beginning": 451745475,
-      "cash_ending": 578995009,
-      "foreign_exchange_effect": 85384,
+      "cash_beginning": null,
+      "cash_ending": null,
+      "foreign_exchange_effect": null,
       "cashflow_audit_revision": {
         "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/CTG_Baocaotaichinh_Q1_2026_Hopnhat.pdf",
         "selected_source_index_url": "https://finance.vietstock.vn/CTG/tai-tai-lieu.htm?doctype=1",
@@ -2651,7 +3366,94 @@
       },
       "cash_beginning_calculation": "Opening cash as reported for Q1.",
       "cash_ending_calculation": "Reported closing cash from the selected source report; never calculated to force reconciliation.",
-      "foreign_exchange_effect_calculation": "Q1 equals reported YTD FX effect."
+      "foreign_exchange_effect_calculation": "Q1 equals reported YTD FX effect.",
+      "financial_line_items_value_corrections": {
+        "bank_net_service_income": {
+          "previous_value": 1847044,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "bank_pre_provision_operating_profit": {
+          "previous_value": 18840291,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_beginning": {
+          "previous_value": 451745475,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_beginning_reported_ytd": {
+          "previous_value": 451745475,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_ending": {
+          "previous_value": 578995009,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_ending_reported_ytd": {
+          "previous_value": 578995009,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "financing_cash_flow": {
+          "previous_value": 0,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "foreign_exchange_effect": {
+          "previous_value": 85384,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "foreign_exchange_effect_ytd": {
+          "previous_value": 85384,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "investing_cash_flow": {
+          "previous_value": -315503,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "net_cash_change": {
+          "previous_value": 127164150,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "operating_cash_flow": {
+          "previous_value": 127479653,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "income_tax_deferred": {
+          "previous_value": 4339,
+          "new_value": 0,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "income_tax": {
+          "previous_value": 2183658,
+          "new_value": 2179319,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "operating_cash_flow_ytd": {
+          "previous_value": 127479653,
+          "new_value": 9152054,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "financing_cash_flow_ytd": {
+          "previous_value": 0,
+          "new_value": 127164150,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        }
+      },
+      "capital_expenditure_ytd": -342626,
+      "capital_expenditure": -342626,
+      "capital_expenditure_calculation": "Q1 equals YTD Q1",
+      "operating_profit": 18840291,
+      "operating_profit_calculation": "Lợi nhuận hoạt động chung của ngân hàng lấy từ dòng lợi nhuận thuần trước chi phí dự phòng rủi ro tín dụng trong cùng BCTC."
     },
     {
       "symbol": "CTG",
@@ -2748,9 +3550,9 @@
       "bank_provision_expense": 5300282,
       "bank_non_controlling_profit": 43430,
       "income_tax_current": 2945255,
-      "income_tax_deferred": 4339,
-      "income_tax": 2949594,
-      "cashflow_period_basis": "year_to_date",
+      "income_tax_deferred": 0,
+      "income_tax": 2945255,
+      "cashflow_period_basis": "quarterly_reported",
       "financial_line_items_extracted_fields": [
         "bank_cash_on_hand",
         "bank_contributions_and_long_term_investments",
@@ -2776,16 +3578,12 @@
         "bank_service_income",
         "bank_trading_securities",
         "bank_valuable_papers",
-        "cash_beginning",
-        "cash_beginning_reported_ytd",
-        "cash_ending",
-        "cash_ending_reported_ytd",
+        "capital_expenditure",
+        "capital_expenditure_ytd",
         "cashflow_period_basis",
         "financing_cash_flow",
         "financing_cash_flow_ytd",
         "fixed_assets",
-        "foreign_exchange_effect",
-        "foreign_exchange_effect_ytd",
         "income_tax",
         "income_tax_current",
         "income_tax_deferred",
@@ -2795,19 +3593,36 @@
         "net_cash_change_ytd",
         "operating_cash_flow",
         "operating_cash_flow_ytd",
+        "operating_profit",
         "retained_earnings"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
-      "financial_line_items_schema_version": "2026-10-27-note-reference-alias-and-manual-guards-v8",
-      "financial_line_items_schema_updated_at": "2026-10-29T05:00:00Z",
+      "financial_line_items_schema_version": "2026-10-27-other-statements-source-fields-v12",
+      "financial_line_items_schema_updated_at": "2026-10-30T10:57:27+00:00",
       "financial_line_items_source": "reports/raw/CTG/auto-ctg-20261021/f7453816648cac21.pdf",
-      "financial_line_items_updated_at": "2026-10-29T05:00:00Z",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. CTG CASHFLOW NORMALIZATION 2026-10-29: use the final net cash-flow rows I/II/III/IV, not the subtotal before asset/liability movements. Standalone quarter = selected YTD current minus previous same-year YTD. Apply the 0.01% relative tolerance to arithmetic rounding only; source reclassification/OCR uncertainty above that threshold remains manually flagged. Status: PASS_ARITHMETIC_RECONCILED.",
-      "operating_cash_flow_calculation": "Standalone quarter = current selected YTD minus previous selected YTD in the same year.",
-      "investing_cash_flow_calculation": "Standalone quarter = current selected YTD minus previous selected YTD in the same year.",
-      "financing_cash_flow_calculation": "Standalone quarter = current selected YTD minus previous selected YTD in the same year.",
-      "net_cash_change_calculation": "Standalone quarter = current selected YTD minus previous selected YTD in the same year.",
-      "financial_line_items_prior_values": {},
+      "financial_line_items_updated_at": "2026-10-30T10:57:27+00:00",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. CTG CASHFLOW NORMALIZATION 2026-10-29: use the final net cash-flow rows I/II/III/IV, not the subtotal before asset/liability movements. Standalone quarter = selected YTD current minus previous same-year YTD. Apply the 0.01% relative tolerance to arithmetic rounding only; source reclassification/OCR uncertainty above that threshold remains manually flagged. Status: PASS_ARITHMETIC_RECONCILED. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan.",
+      "operating_cash_flow_calculation": "reported as standalone quarter",
+      "investing_cash_flow_calculation": "reported as standalone quarter",
+      "financing_cash_flow_calculation": "reported as standalone quarter",
+      "net_cash_change_calculation": "reported as standalone quarter",
+      "financial_line_items_prior_values": {
+        "bank_net_service_income": 2268592,
+        "bank_pre_provision_operating_profit": 20029027,
+        "cash_beginning": 578995009,
+        "cash_beginning_reported_ytd": 451745475,
+        "cash_ending": 542422671,
+        "cash_ending_reported_ytd": 542422671,
+        "financing_cash_flow": 0,
+        "foreign_exchange_effect": -108919,
+        "foreign_exchange_effect_ytd": -23535,
+        "investing_cash_flow": -351908,
+        "net_cash_change": -36463419,
+        "operating_cash_flow": -36111511,
+        "income_tax_deferred": 4339,
+        "income_tax": 2949594,
+        "operating_cash_flow_ytd": 91368142
+      },
       "financial_line_items_rejected_values": {},
       "bank_net_service_income": 2268592,
       "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
@@ -2855,20 +3670,20 @@
       "bank_other_operating_net": 2327833,
       "bank_pre_provision_operating_profit": 20029027,
       "bank_pre_provision_operating_profit_calculation": "Lợi nhuận trước thuế + chi phí dự phòng tín dụng dương; khôi phục tổng phụ trước dự phòng.",
-      "operating_cash_flow_ytd": 91368142,
+      "operating_cash_flow_ytd": 32005964,
       "investing_cash_flow_ytd": -667411,
       "financing_cash_flow_ytd": 0,
       "net_cash_change_ytd": 90700731,
-      "cash_beginning_reported_ytd": 451745475,
-      "cash_ending_reported_ytd": 542422671,
-      "foreign_exchange_effect_ytd": -23535,
-      "operating_cash_flow": -36111511,
-      "investing_cash_flow": -351908,
+      "cash_beginning_reported_ytd": null,
+      "cash_ending_reported_ytd": null,
+      "foreign_exchange_effect_ytd": null,
+      "operating_cash_flow": 32005964,
+      "investing_cash_flow": -667411,
       "financing_cash_flow": 0,
-      "net_cash_change": -36463419,
-      "cash_beginning": 578995009,
-      "cash_ending": 542422671,
-      "foreign_exchange_effect": -108919,
+      "net_cash_change": 90700731,
+      "cash_beginning": null,
+      "cash_ending": null,
+      "foreign_exchange_effect": null,
       "cashflow_audit_revision": {
         "selected_source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/CTG_Baocaotaichinh_Q2_2026_Hopnhat.pdf",
         "selected_source_index_url": "https://finance.vietstock.vn/CTG/tai-tai-lieu.htm?doctype=1",
@@ -2977,7 +3792,89 @@
       },
       "cash_beginning_calculation": "Previous quarter's selected reported closing cash.",
       "cash_ending_calculation": "Reported closing cash from the selected source report; never calculated to force reconciliation.",
-      "foreign_exchange_effect_calculation": "Standalone-quarter FX = current YTD FX minus previous quarter YTD FX; no FX amount inferred."
+      "foreign_exchange_effect_calculation": "Standalone-quarter FX = current YTD FX minus previous quarter YTD FX; no FX amount inferred.",
+      "financial_line_items_value_corrections": {
+        "bank_net_service_income": {
+          "previous_value": 2268592,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "bank_pre_provision_operating_profit": {
+          "previous_value": 20029027,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_beginning": {
+          "previous_value": 578995009,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_beginning_reported_ytd": {
+          "previous_value": 451745475,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_ending": {
+          "previous_value": 542422671,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "cash_ending_reported_ytd": {
+          "previous_value": 542422671,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "financing_cash_flow": {
+          "previous_value": 0,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "foreign_exchange_effect": {
+          "previous_value": -108919,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "foreign_exchange_effect_ytd": {
+          "previous_value": -23535,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "investing_cash_flow": {
+          "previous_value": -351908,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "net_cash_change": {
+          "previous_value": -36463419,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "operating_cash_flow": {
+          "previous_value": -36111511,
+          "new_value": null,
+          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+        },
+        "income_tax_deferred": {
+          "previous_value": 4339,
+          "new_value": 0,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "income_tax": {
+          "previous_value": 2949594,
+          "new_value": 2945255,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "operating_cash_flow_ytd": {
+          "previous_value": 91368142,
+          "new_value": 32005964,
+          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        }
+      },
+      "capital_expenditure_ytd": -712456,
+      "capital_expenditure": -712456,
+      "capital_expenditure_calculation": "reported as standalone quarter",
+      "operating_profit": 20029027,
+      "operating_profit_calculation": "Lợi nhuận hoạt động chung của ngân hàng lấy từ dòng lợi nhuận thuần trước chi phí dự phòng rủi ro tín dụng trong cùng BCTC."
     }
   ],
   "sync_status": "records_found",
@@ -2986,6 +3883,6 @@
   "bootstrap_status": "complete_needs_manual_review",
   "bootstrap_completed_at": "2026-10-23T04:04:17+00:00",
   "bootstrap_completion_note": "Các kỳ báo cáo có thể tự trích xuất đã được lưu; một số kỳ còn cần đối chiếu thủ công.",
-  "processedAt": "2026-10-29T05:00:00Z",
+  "processedAt": "2026-10-30T10:57:27+00:00",
   "note": " CTG cash-flow normalization 2026-10-29: ten periods 2024-Q1–2026-Q2 rebuilt from VietstockFinance consolidated reports. Direct PDF image corrected Q1/2026 closing-cash OCR from 578,095,009 to 578,995,009; every quarter/YTD flow sum and FX-aware bridge now reconciles. Source reclassifications and original Q3/2024 net-row OCR candidate remain documented; no balancing plug."
 }
