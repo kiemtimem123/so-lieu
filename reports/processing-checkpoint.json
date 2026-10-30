@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T14:24:59.990Z",
+  "updatedAt": "2026-10-30T14:42:30Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -649,9 +649,9 @@
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-10-30T02:10:00+07:00",
+      "updatedAt": "2026-10-30T14:42:30Z",
       "snapshotFetchedAt": "2026-10-25T23:45:00Z",
-      "note": "IDC cash-flow snapshot normalized and CI passed on 67f6245876386b329e2c7063b7e4460532800912; terminal manual review remains for direct visual source review, source revisions and Q2/2026 cross-year YTD opening-cash basis discrepancy. No balancing plugs."
+      "note": "IDC: Q1/2024–Q2/2026 (10 kỳ), dữ liệu lõi đã xử lý tự động; Q2/2024 net_profit_attributable đã khôi phục từ 26 về 432.485 triệu VND theo dòng 19 BCTC hợp nhất VietstockFinance (PDF trong ZIP, sidecar trang 13/trang in 9). Quarterly financial validation run 41073860617 SUCCESS. Vẫn giữ terminal_needs_manual_review cho kiểm tra trực quan PDF, rà soát source revisions và Q2/2026 cash-flow cross-period basis discrepancy; không balancing plug."
     },
     "KBC": {
       "status": "terminal_needs_manual_review",
@@ -2190,7 +2190,7 @@
   },
   "nextSymbolHint": "IDC",
   "lastSessionCheckpoint": {
-    "savedAt": "2026-10-30T11:08:45Z",
+    "savedAt": "2026-10-30T14:42:30Z",
     "branch": "main",
     "latestWorkflowFixCommit": "45424f32ab634e30497cbce105c51441cf65ef9e",
     "lastCompletedWork": [
@@ -2221,7 +2221,9 @@
       "KDH: OCR/enrich run 3013 giữ phần lớn cashflow nhưng đổi basis Q1/Q2 2026 và ẩn cash balances do discrepancy >0.01%; phục hồi toàn bộ cashflow từ commit 7d0f60a467303c5e9e2cadde9d4c5c28e24ab202, recovery 97c6f53010d73a9f8db2dafaa69b79f117cf3df4; hold KDH manual review.",
       "NVL: OCR/enrich run 3014 đã làm trống các dòng tiền H1/2026 do audit metadata khác schema; đã khôi phục 10 kỳ từ snapshot kiểm định commit 07d655a23211a1d0999748909f6eb42050050a11, recovery commit 285920c0ec9161c9d682153d0544b08bd6f6b94b; hold NVL manual review.",
       "HHV: OCR/enrich run 3016 completed for 10 periods Q1/2024–Q2/2026; next checkpoint DPG.",
-      "HHV: OCR/enrich run 3016 changed Q2/2026 cashflow basis/values despite documented source discrepancy; restored 10 periods from normalized snapshot commit dcdafc8b76bbfc20974a6b1d99f75958524510fd, recovery 9041cb94393c62aca3e5260f008e5263147cc46f; hold HHV manual review."
+      "HHV: OCR/enrich run 3016 changed Q2/2026 cashflow basis/values despite documented source discrepancy; restored 10 periods from normalized snapshot commit dcdafc8b76bbfc20974a6b1d99f75958524510fd, recovery 9041cb94393c62aca3e5260f008e5263147cc46f; hold HHV manual review.",
+      "IDC: khôi phục net_profit_attributable Q2/2024 từ giá trị OCR sai 26 về 432.485 triệu VND theo báo cáo hợp nhất VietstockFinance trang in 9; ghi lịch sử giá trị trước/sau và nguồn chứng minh. Commit 51918bc138a5e737434dfded5c418dbd7f22e97f; Validate quarterly financial data run 41073860617 SUCCESS.",
+      "IDC: giữ Q2/2026 cash-flow bridge discrepancy 0.1463479% và cross-year opening-cash residual 0.1608101% ở trạng thái manual review; không điều chỉnh số, không tạo balancing plug."
     ],
     "lastKnownValidation": {
       "siteAndData": "success",
@@ -2229,7 +2231,7 @@
       "hostingerPackage": "success",
       "validationRuns": {
         "siteAndData": 41044866172,
-        "quarterlyFinancialData": 41044783726,
+        "quarterlyFinancialData": 41073860617,
         "hostingerPackage": 41044783809
       },
       "note": "Site validation 1439 success includes CTG cashflow restoration and the new CTG-style audit preservation unit test. Quarterly validation 632 and package 199 passed after CTG restore."
@@ -2242,10 +2244,10 @@
       "For OCR dispatches, honor manual-review holds even when a ticker is passed as an explicit workflow input."
     ],
     "nextActions": [
-      "Confirm validation after HHV restoration; keep Q2/2026 cross-period cash discrepancy visible and no balancing plug.",
-      "Continue DPG from persisted checkpoint; one ticker only.",
-      "Verify new helper captures KDH/HHV/NVL-style no_balancing_plug + raw-source metadata and SSI/CTG tolerance audit formats.",
-      "After DPG, continue remaining tickers without reprocessing any manual-review-held ticker."
+      "IDC: chỉ hoàn tất manual review khi có thể kiểm tra trực quan trang PDF gốc cho các kỳ đang gắn cờ; không chạy lại OCR/enrich trên 10 kỳ đã đối chiếu.",
+      "IDC Q2/2026: giữ nguyên số nguồn và sai lệch cross-period cash basis 0.1608101%; không tạo balancing plug.",
+      "Kiểm tra danh mục VietstockFinance IDC để xác nhận khi BCTC hợp nhất Q3/2026 được đăng; chỉ bổ sung sau khi có document ID và PDF/ZIP được liên kết từ đúng danh mục.",
+      "Tiếp tục mã tiếp theo trong hàng đợi, một mã mỗi lần; checkpoint ngay sau khi qua kiểm định."
     ],
     "latestDataRecoveryCommit": "168342286eeb209974c91880c6ae6f8511790d66",
     "heldTickersUpdated": [
@@ -2280,6 +2282,7 @@
       "KDH": "97c6f53010d73a9f8db2dafaa69b79f117cf3df4",
       "NVL": "285920c0ec9161c9d682153d0544b08bd6f6b94b",
       "HHV": "9041cb94393c62aca3e5260f008e5263147cc46f"
-    }
+    },
+    "latestIdcCorrectionCommit": "51918bc138a5e737434dfded5c418dbd7f22e97f"
   }
 }
