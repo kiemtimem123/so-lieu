@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T03:05:00+07:00",
-  "processingMode": "one_ticker_at_a_time_checkpoint_on_pass_no_reload_of_passed_data",
+  "updatedAt": "2026-10-30T01:22:02Z",
+  "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
   "quarterRetentionTarget": 12,
@@ -39,41 +39,32 @@
     "VCK",
     "MBB"
   ],
-  "lastCompletedSymbol": "KBC",
-  "activeSymbol": "GEG",
-  "resumeSymbolHint": "ACB",
-  "resumeRule": "Read reports/processing-checkpoint.json first. Do not reload/re-OCR/re-parse a ticker already passed under the current standard unless explicit new evidence, an applicable standard change, or regression failure requires reopening. Finish one ticker, write its checkpoint immediately, then proceed.",
+  "lastCompletedSymbol": "GEG",
+  "activeSymbol": null,
+  "resumeSymbolHint": null,
+  "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "GEG",
-    "status": "in_progress_ci_validation",
-    "completeForAutomation": false,
+    "status": "automated_processing_complete",
+    "completeForAutomation": true,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-30T03:05:00+07:00",
+    "processedAt": "2026-10-30T01:22:02Z",
+    "workflowRunId": "40985334819",
+    "workflowRunNumber": 2596,
+    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/40985334819",
     "changedPaths": [
-      "data/financials-GEG.json",
-      "tests/test_cashflow_bridge.py",
-      "scripts/validate-bank-reconciliation.py",
-      "reports/financial-data-normalization-standard.md"
+      "data/financials-GEG.json"
     ],
     "periodCount": 10,
     "firstQuarter": "2024-Q1",
     "lastQuarter": "2026-Q2",
     "pendingCorePeriods": [],
-    "terminalManualReviewPeriods": [
-      "2025-Q2",
-      "2025-Q3",
-      "2026-Q2"
-    ],
+    "terminalManualReviewPeriods": [],
     "pendingDetailPeriods": [],
     "staleDetailSchemaPeriods": [],
-    "statementPagesPending": true,
+    "statementPagesPending": false,
     "skipUnconfirmedAutomation": false,
-    "skipUnconfirmedReason": null,
-    "ciRuns": [
-      40941571553,
-      40941571666
-    ],
-    "note": "GEG Q4/2025 direct PDF review resolved row-70 truncation flag; regression was extended, pending CI confirmation."
+    "skipUnconfirmedReason": null
   },
   "symbolStates": {
     "MBB": {
@@ -670,27 +661,22 @@
       "note": "KBC cash-flow normalization and CI regression passed through Q3/2026; terminal manual review remains for direct visual review, FY2025 ending-cash OCR truncation, Q1/2026 cross-year cash basis and Q3/2026 CFI total OCR mismatch. No balancing plugs."
     },
     "GEG": {
-      "status": "in_progress_ci_validation",
-      "completeForAutomation": false,
+      "status": "automated_processing_complete",
+      "completeForAutomation": true,
       "manualReviewRemaining": true,
       "periodCount": 10,
       "firstQuarter": "2024-Q1",
       "lastQuarter": "2026-Q2",
       "pendingCorePeriods": [],
-      "terminalManualReviewPeriods": [
-        "2025-Q2",
-        "2025-Q3",
-        "2026-Q2"
-      ],
+      "terminalManualReviewPeriods": [],
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
-      "statementPagesPending": true,
+      "statementPagesPending": false,
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-10-30T03:05:00+07:00",
-      "snapshotFetchedAt": "2026-10-23T20:45:50+00:00",
-      "note": "Q4/2025 cash-flow statement pages 4-5 visually confirmed on 2026-10-30; row-70 OCR blocker resolved. New regression checks added, awaiting CI confirmation. Source-basis discrepancies for H1/2025 and Q2/2026 remain manual."
+      "updatedAt": "2026-10-30T01:22:02Z",
+      "snapshotFetchedAt": "2026-10-23T20:45:50+00:00"
     },
     "SHS": {
       "status": "terminal_needs_manual_review",
@@ -813,16 +799,6 @@
     }
   },
   "progressHistory": [
-    {
-      "symbol": "MBB",
-      "status": "automated_processing_complete",
-      "completeForAutomation": true,
-      "processedAt": "2026-10-27T11:05:17Z",
-      "workflowRunId": "40493356765",
-      "changedPaths": [
-        "data/financials-MBB.json"
-      ]
-    },
     {
       "symbol": "ACB",
       "status": "automated_processing_complete",
@@ -1317,6 +1293,16 @@
       "workflowRunId": "40717117352",
       "changedPaths": [
         "data/financials-MBB.json"
+      ]
+    },
+    {
+      "symbol": "GEG",
+      "status": "automated_processing_complete",
+      "completeForAutomation": true,
+      "processedAt": "2026-10-30T01:22:02Z",
+      "workflowRunId": "40985334819",
+      "changedPaths": [
+        "data/financials-GEG.json"
       ]
     }
   ],
