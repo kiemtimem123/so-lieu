@@ -3872,6 +3872,10 @@ def capture_source_audited_cashflow_backups(items, symbol):
         source_values_selected = (
             audit.get("selected_values_not_adjusted_for_tolerance") is True
             or source_arithmetic_passed
+            or (
+                audit.get("no_balancing_plug") is True
+                and audit.get("source_values_original_unit_preserved") is True
+            )
         )
         if (
             item.get("source_index_url") != expected_index
