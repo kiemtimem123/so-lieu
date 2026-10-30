@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T10:45:32Z",
+  "updatedAt": "2026-10-30T10:45:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -171,11 +171,13 @@
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
-      "skipUnconfirmedAutomation": false,
+      "skipUnconfirmedAutomation": true,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 10,
       "updatedAt": "2026-10-30T09:26:17Z",
-      "snapshotFetchedAt": "2026-10-19T11:01:56.348Z"
+      "snapshotFetchedAt": "2026-10-19T11:01:56.348Z",
+      "skipUnconfirmedThroughPeriod": "2026-Q2",
+      "manualReviewReason": "OCR/enrich làm thay đổi dòng tiền so với snapshot chuẩn hóa đã kiểm định; đã phục hồi cash-flow 10 kỳ từ commit f777ae6b5208d689fa92c77ddf5f0d7f686930b9. Giữ các ngoại lệ nguồn đã ghi nhận; không chạy lại tự động đến khi cơ chế bảo toàn dữ liệu được sửa."
     },
     "VND": {
       "status": "automated_processing_complete",
@@ -769,11 +771,13 @@
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
-      "skipUnconfirmedAutomation": false,
+      "skipUnconfirmedAutomation": true,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 10,
       "updatedAt": "2026-10-30T10:45:32Z",
-      "snapshotFetchedAt": "2026-10-19T16:47:07.375Z"
+      "snapshotFetchedAt": "2026-10-19T16:47:07.375Z",
+      "skipUnconfirmedThroughPeriod": "2026-Q2",
+      "manualReviewReason": "OCR/enrich lần gần nhất làm mất các trường dòng tiền đã chuẩn hóa; đã phục hồi toàn bộ cash-flow 10 kỳ từ snapshot chuẩn hóa đã kiểm định commit 02acbc2b39309cfee310e84c9cdc64e57e83f940. Tạm giữ tự động đến khi cơ chế bảo toàn dữ liệu được sửa."
     },
     "TCB": {
       "status": "automated_processing_complete",
@@ -2153,7 +2157,7 @@
   },
   "nextSymbolHint": "SHS",
   "lastSessionCheckpoint": {
-    "savedAt": "2026-10-30T10:43:00Z",
+    "savedAt": "2026-10-30T10:45:00Z",
     "branch": "main",
     "latestWorkflowFixCommit": "45424f32ab634e30497cbce105c51441cf65ef9e",
     "lastCompletedWork": [
@@ -2163,7 +2167,10 @@
       "NLG held for manual review after repeated detail-schema enrichment failures; existing source-backed figures and archives preserved.",
       "Requested-symbol OCR path updated to honor skipUnconfirmedAutomation and refuse automated retry for tickers held for manual review.",
       "Phát hiện VND OCR/enrich regression: workflow đã thay đổi cashflow_period_basis từ year_to_date sang quarterly_reported và làm null nhiều dòng cash-flow.",
-      "Khôi phục 11 kỳ VND (2024-Q1 đến 2026-Q3) cho các trường cashflow basis, CFO/CFI/CFF/net cash, YTD, opening/closing cash và calculation metadata từ snapshot đã kiểm định commit 599fe737965b062e723daa9fc2c7543a86e3ce4d; giữ nguyên các trường khác."
+      "Khôi phục 11 kỳ VND (2024-Q1 đến 2026-Q3) cho các trường cashflow basis, CFO/CFI/CFF/net cash, YTD, opening/closing cash và calculation metadata từ snapshot đã kiểm định commit 599fe737965b062e723daa9fc2c7543a86e3ce4d; giữ nguyên các trường khác.",
+      "BSR: phục hồi 10 kỳ cash-flow từ snapshot đã kiểm định commit 02acbc2b39309cfee310e84c9cdc64e57e83f940 sau OCR/enrich regression.",
+      "HCM: phục hồi 10 kỳ cash-flow từ snapshot đã kiểm định commit f777ae6b5208d689fa92c77ddf5f0d7f686930b9 sau OCR/enrich regression.",
+      "Đặt BSR và HCM vào manual-review hold để tránh workflow tự động ghi đè dữ liệu đã phục hồi; mã tiếp theo trong hàng đợi là TCB."
     ],
     "lastKnownValidation": {
       "quarterlyFinancialData": "success",
@@ -2179,17 +2186,24 @@
       "For OCR dispatches, honor manual-review holds even when a ticker is passed as an explicit workflow input."
     ],
     "nextActions": [
-      "Xác nhận Validate Site and Data và Validate quarterly financial data sau khi phục hồi VND.",
-      "Đảm bảo workflow selector mới không dispatch lại NLG/VND/SHS/TCX đang giữ manual review.",
-      "Chỉ tiếp tục mã chưa hoàn tất sau khi validation xanh; kiểm tra lỗi enrichment trước khi commit snapshot.",
-      "Tiếp tục chuẩn hóa cash-flow GAS từ 10 PDF VietstockFinance đã lưu, OCR đúng trang báo cáo gốc; không tải lại hoặc suy diễn."
+      "Chạy kiểm định quarterly financial và site/data sau khi phục hồi BSR/HCM/VND; xử lý mọi lỗi còn lại trước khi mở hàng đợi.",
+      "Tiếp tục mã TCB nếu validation đạt; không reprocess BSR/HCM/VND/NLG/SHS/TCX.",
+      "Điều tra và sửa enrichment pipeline để merge/preserve cashflow fields đã chuẩn hóa trước khi nâng schema chi tiết.",
+      "Tiếp tục cash-flow GAS từ các PDF VietstockFinance đã lưu khi có khả năng OCR đúng trang; không tải lại hoặc suy diễn."
     ],
     "latestDataRecoveryCommit": "168342286eeb209974c91880c6ae6f8511790d66",
     "heldTickersUpdated": [
       "NLG",
       "VND",
       "SHS",
-      "TCX"
-    ]
+      "TCX",
+      "BSR",
+      "HCM"
+    ],
+    "latestDataRecoveryCommits": {
+      "VND": "168342286eeb209974c91880c6ae6f8511790d66",
+      "BSR": "11b373bbf5fb796a7bd4fc9bba225ee603e4e370",
+      "HCM": "c1abc317ba3b2237ea03a5c3184e0d6aef13610f"
+    }
   }
 }
