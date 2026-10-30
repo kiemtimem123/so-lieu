@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T15:05:00Z",
+  "updatedAt": "2026-10-30T15:20:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -700,9 +700,9 @@
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-10-30T09:30:00+07:00",
+      "updatedAt": "2026-10-30T15:20:00Z",
       "snapshotFetchedAt": "2026-10-23T20:45:50+00:00",
-      "note": "Automated processing complete. Source image review pending on 2024 periods and Q2/2026; Q2/2026 cash opening-basis exception is preserved without plug."
+      "note": "GEG review 2026-10-30: 10 quarters Q1/2024–Q2/2026; no confirmed core statement correction found in the archived VietstockFinance OCR source review. Core P&L/tax arithmetic and balance sheet totals appear internally consistent; negative NCI explains parent net profit exceeding consolidated net profit in several periods (e.g. Q2/2025: 165,820.759m parent + (-8,105.900m) NCI = 157,714.859m consolidated). Q2/2026 cash flow internally reconciles on reported YTD basis (begin 74,942.444m + net change 25,371.517m + FX 13.217m = end 100,327.179m); however quarter opening basis differs from Q1 closing (105,857m), yielding 10.22% quarter bridge exception. Preserve report's own YTD opening cash and manual review; no balancing plug. Visual/source review remains pending on 2024 periods and Q2/2026."
     },
     "SHS": {
       "status": "terminal_needs_manual_review",
@@ -2190,7 +2190,7 @@
   },
   "nextSymbolHint": "IDC",
   "lastSessionCheckpoint": {
-    "savedAt": "2026-10-30T15:05:00Z",
+    "savedAt": "2026-10-30T15:20:00Z",
     "branch": "main",
     "latestWorkflowFixCommit": "45424f32ab634e30497cbce105c51441cf65ef9e",
     "lastCompletedWork": [
@@ -2224,7 +2224,8 @@
       "HHV: OCR/enrich run 3016 changed Q2/2026 cashflow basis/values despite documented source discrepancy; restored 10 periods from normalized snapshot commit dcdafc8b76bbfc20974a6b1d99f75958524510fd, recovery 9041cb94393c62aca3e5260f008e5263147cc46f; hold HHV manual review.",
       "IDC: khôi phục net_profit_attributable Q2/2024 từ giá trị OCR sai 26 về 432.485 triệu VND theo báo cáo hợp nhất VietstockFinance trang in 9; ghi lịch sử giá trị trước/sau và nguồn chứng minh. Commit 51918bc138a5e737434dfded5c418dbd7f22e97f; Validate quarterly financial data run 41073860617 SUCCESS.",
       "IDC: giữ Q2/2026 cash-flow bridge discrepancy 0.1463479% và cross-year opening-cash residual 0.1608101% ở trạng thái manual review; không điều chỉnh số, không tạo balancing plug.",
-      "KBC Q3/2026: restored net_profit_attributable=917255.360 million VND from VietstockFinance consolidated PDF document 562815, printed page 6, line 61. Source composition does not reconcile to line 60 total by approx 6bn; retain manual review. Commit 7c2e3bbfb9c2dbafe43378f1db5850bb2cf4ca0b."
+      "KBC Q3/2026: restored net_profit_attributable=917255.360 million VND from VietstockFinance consolidated PDF document 562815, printed page 6, line 61. Source composition does not reconcile to line 60 total by approx 6bn; retain manual review. Commit 7c2e3bbfb9c2dbafe43378f1db5850bb2cf4ca0b.",
+      "GEG: reviewed existing 10-period snapshot and archived VietstockFinance OCR sidecars. No core P&L/BS correction confirmed. Explained parent profit > consolidated profit by negative NCI where supported. Q2/2026 YTD cash bridge passes; quarter opening-basis discrepancy remains manual review. No OCR rerun and no numeric overwrite."
     ],
     "lastKnownValidation": {
       "siteAndData": "success",
@@ -2239,7 +2240,11 @@
         "kbcCorrectionPackage": 41078614193
       },
       "note": "Site validation 1439 success includes CTG cashflow restoration and the new CTG-style audit preservation unit test. Quarterly validation 632 and package 199 passed after CTG restore.",
-      "kbcCorrection": "queued"
+      "kbcCorrection": "queued",
+      "kbcCorrectionQuarterly": "success",
+      "kbcCorrectionSite": "success",
+      "kbcCorrectionPackage": "success",
+      "gegReview": "source-sidecar-reviewed-no-core-edit"
     },
     "resumeRules": [
       "Resume from this checkpoint; do not reload or reprocess tickers already validated.",
@@ -2249,9 +2254,9 @@
       "For OCR dispatches, honor manual-review holds even when a ticker is passed as an explicit workflow input."
     ],
     "nextActions": [
-      "KBC: preserve six terminal manual-review periods; do not rerun OCR or alter cash flows absent direct visual/source proof.",
-      "Wait for KBC correction validation workflows 41078614187, 41078614164 and package 41078614193 to complete; investigate only if failed.",
-      "Continue next ticker GEG, one ticker at a time; first inspect existing snapshot/checkpoint and avoid reprocessing completed periods."
+      "GEG: preserve visual-review flags for 2024-Q1/Q2/Q3/Q4 and Q2/2026; no balancing plug or OCR rerun.",
+      "All currently enabled tickers in config/securities.json have checkpoint states; after completing GEG review, perform a final cross-ticker audit of snapshots/checkpoint consistency and look for newly added tickers/reports. Do not reload or reprocess already validated records.",
+      "Recheck KBC Q3/2026 manual composition difference only if original PDF image review becomes available."
     ],
     "latestDataRecoveryCommit": "168342286eeb209974c91880c6ae6f8511790d66",
     "heldTickersUpdated": [
