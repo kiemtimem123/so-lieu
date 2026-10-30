@@ -747,3 +747,10 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 - Q4/2025: OCR dòng 70 cuối kỳ bị cắt; candidate snapshot được giữ để xem ảnh. Q1/2026 residual bridge +900 VND nằm trong dung sai và được lưu.
 - Ảnh PDF trực tiếp còn pending. Snapshot hiện có đến Q2/2026; đã tìm nhưng chưa xác nhận được URL BCTC Q3/2026 hợp nhất từ danh mục nguồn VietstockFinance trong lượt này; không kết luận rằng Q3 chưa công bố.
 
+## Bảo toàn dòng tiền đã kiểm toán nguồn khi enrichment
+
+- Sau khi OCR/enrichment chung và `reconcile_detail_items` hoàn tất, gọi `restore_source_audited_cashflow_fields` cho các kỳ có audit nguồn đầy đủ: catalog VietstockFinance, PDF/sidecar được liên kết, raw VND, `selected_values_not_adjusted_for_tolerance=true` và `no_balancing_plug=true`.
+- Khôi phục trường quý, YTD, FX, tiền đầu/cuối theo raw VND; dùng `display_precision` và `display_period_basis` đã lưu. Đưa các trường hợp lệ vào allowlist, gỡ cờ rejected tương ứng, không sửa raw source audit.
+- Cầu nối quý vượt 0,01% vẫn hiển thị số nguồn và residual với trạng thái rà soát thủ công; không để quy tắc OCR chung ẩn số dư tiền. Việc khôi phục không đồng nghĩa cầu nối đã đạt.
+- Trạng thái xem ảnh PDF độc lập: chỉ kỳ có `visual_review` xác nhận trực quan mới giữ trạng thái đã xác minh ảnh; các kỳ còn lại tiếp tục pending.
+

@@ -3558,3 +3558,86 @@ class GEGCashFlowNormalizationTests(unittest.TestCase):
         self.assertEqual(ytd["cash_ending"], 86364663248)
         self.assertEqual(rec["status"], "PASS_WITHIN_TOLERANCE_SOURCE_ROWS_VISUALLY_VERIFIED")
 
+class GEGSourceAuditEnrichmentPreservationTests(unittest.TestCase):
+    """Generic enrichment must not hide source-audited GEG cash-flow fields."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.enricher = runpy.run_path(
+            str(ROOT / "scripts" / "enrich-financial-categories.py"),
+            run_name="cashflow_enricher_for_test",
+        )
+        cls.restore = cls.enricher["restore_source_audited_cashflow_fields"]
+
+    def test_geg_audited_cashflow_fields_survive_generic_enrichment(self):
+        snapshot = json.loads((ROOT / "data" / "financials-GEG.json").read_text(encoding="utf-8"))
+        cash_fields = (
+            "operating_cash_flow", "investing_cash_flow", "financing_cash_flow", "net_cash_change",
+            "operating_cash_flow_ytd", "investing_cash_flow_ytd", "financing_cash_flow_ytd", "net_cash_change_ytd",
+            "foreign_exchange_effect", "foreign_exchange_effect_ytd", "cash_beginning", "cash_ending",
+            "cash_beginning_reported_ytd", "cash_ending_reported_ytd", "cashflow_period_basis",
+        )
+        original_raw = {
+            row["period"]: json.loads(json.dumps(row["cashflow_source_reconciliation"]["selected_values_raw_vnd"]))
+            for row in snapshot["items"]
+        }
+        for row in snapshot["items"]:
+            row["cashflow_period_basis"] = "year_to_date"
+            for field in cash_fields:
+                if field != "cashflow_period_basis":
+                    row[field] = None
+            row["financial_line_items_extracted_fields"] = []
+            row["financial_line_items_rejected_fields"] = list(cash_fields)
+            row["financial_line_items_status"] = "auto_extracted_pending_visual_review"
+
+        changed, quarters, field_count = self.restore(snapshot["items"], "GEG")
+        self.assertTrue(changed)
+        self.assertEqual(quarters, 10)
+        self.assertGreater(field_count, 0)
+
+        rows = {row["period"]: row for row in snapshot["items"]}
+        self.assertEqual(set(rows), set(original_raw))
+
+        def million(raw_vnd):
+            return int((Decimal(str(raw_vnd)) / Decimal("1000000")).quantize(Decimal("1"), rounding=ROUND_HALF_UP))
+
+        for period, row in rows.items():
+            with self.subTest(period=period):
+                rec = row["cashflow_source_reconciliation"]
+                raw = original_raw[period]
+                quarter, ytd = raw["quarter"], raw["ytd"]
+                self.assertEqual(rec["selected_values_raw_vnd"], raw)
+                self.assertEqual(row["cashflow_period_basis"], rec["display_period_basis"])
+                self.assertEqual(row["operating_cash_flow"], million(quarter["cfo"]))
+                self.assertEqual(row["investing_cash_flow"], million(quarter["cfi"]))
+                self.assertEqual(row["financing_cash_flow"], million(quarter["cff"]))
+                self.assertEqual(row["net_cash_change"], million(quarter["net_cash_change"]))
+                self.assertEqual(row["foreign_exchange_effect"], million(quarter["fx"]))
+                self.assertEqual(row["cash_beginning"], million(quarter["cash_beginning"]))
+                self.assertEqual(row["cash_ending"], million(quarter["cash_ending"]))
+                self.assertEqual(row["operating_cash_flow_ytd"], million(ytd["cfo"]))
+                self.assertEqual(row["investing_cash_flow_ytd"], million(ytd["cfi"]))
+                self.assertEqual(row["financing_cash_flow_ytd"], million(ytd["cff"]))
+                self.assertEqual(row["net_cash_change_ytd"], million(ytd["net_cash_change"]))
+                self.assertEqual(row["foreign_exchange_effect_ytd"], million(ytd["fx"]))
+                self.assertEqual(row["cash_beginning_reported_ytd"], million(ytd["cash_beginning"]))
+                self.assertEqual(row["cash_ending_reported_ytd"], million(ytd["cash_ending"]))
+                extracted = set(row["financial_line_items_extracted_fields"])
+                rejected = set(row["financial_line_items_rejected_fields"])
+                for field in cash_fields:
+                    self.assertIn(field, extracted)
+                    self.assertNotIn(field, rejected)
+
+        # Keep three >0.01% quarterly bridge exceptions visible, never plug them.
+        for period, residual in (
+            ("2025-Q2", -12113208011),
+            ("2025-Q3", 12113208011),
+            ("2026-Q2", -11422219803),
+        ):
+            rec = rows[period]["cashflow_source_reconciliation"]
+            self.assertFalse(rec["quarter_cash_bridge_within_tolerance"])
+            self.assertEqual(rec["calculations"]["quarter_cash_bridge_residual_raw_vnd"], residual)
+            self.assertTrue(rec["no_balancing_plug"])
+
+        self.assertEqual(rows["2025-Q4"]["financial_line_items_status"], "cashflow_source_rows_visually_verified")
+

@@ -3569,6 +3569,156 @@ def repair_tcx_2026_source_rows(items,symbol):
    print("TCX 2026-Q3: statement-row repair skipped because archived VietstockFinance line-item evidence did not match.")
  return changed,quarter_count,field_count
 
+
+def restore_source_audited_cashflow_fields(items, symbol):
+    """Restore explicitly source-audited cash flows after generic OCR enrichment."""
+    from decimal import Decimal, ROUND_HALF_UP
+
+    symbol = str(symbol or "").strip().upper()
+    expected_index = f"https://finance.vietstock.vn/{symbol}/tai-tai-lieu.htm?doctype=1"
+    changed = False
+    affected_quarters = 0
+    changed_fields = 0
+
+    quarter_map = {
+        "cfo": "operating_cash_flow",
+        "cfi": "investing_cash_flow",
+        "cff": "financing_cash_flow",
+        "net_cash_change": "net_cash_change",
+        "fx": "foreign_exchange_effect",
+        "cash_beginning": "cash_beginning",
+        "cash_ending": "cash_ending",
+    }
+    ytd_map = {
+        "cfo": "operating_cash_flow_ytd",
+        "cfi": "investing_cash_flow_ytd",
+        "cff": "financing_cash_flow_ytd",
+        "net_cash_change": "net_cash_change_ytd",
+        "fx": "foreign_exchange_effect_ytd",
+        "cash_beginning": "cash_beginning_reported_ytd",
+        "cash_ending": "cash_ending_reported_ytd",
+    }
+
+    def finite_number(value):
+        return isinstance(value, (int, float)) and not isinstance(value, bool)
+
+    def to_display(value, precision):
+        displayed = (Decimal(str(value)) / Decimal("1000000")).quantize(
+            Decimal(1).scaleb(-precision), rounding=ROUND_HALF_UP
+        )
+        return int(displayed) if precision == 0 else float(displayed)
+
+    for item in (items if isinstance(items, list) else []):
+        if not isinstance(item, dict):
+            continue
+        audit = item.get("cashflow_source_reconciliation")
+        if not isinstance(audit, dict):
+            continue
+        if (
+            audit.get("no_balancing_plug") is not True
+            or audit.get("selected_values_not_adjusted_for_tolerance") is not True
+            or item.get("source_index_url") != expected_index
+            or audit.get("source_index_url") != expected_index
+            or not str(audit.get("selected_cashflow_source_url") or "").startswith("https://static2.vietstock.vn/")
+            or not str(audit.get("selected_cashflow_source_archive_file") or "").startswith(f"reports/raw/{symbol}/")
+            or item.get("unit") != "triệu VND"
+        ):
+            continue
+
+        raw = audit.get("selected_values_raw_vnd")
+        quarter = raw.get("quarter") if isinstance(raw, dict) else None
+        ytd = raw.get("ytd") if isinstance(raw, dict) else None
+        if not isinstance(quarter, dict) or not isinstance(ytd, dict):
+            continue
+        precision = audit.get("display_precision")
+        basis = audit.get("display_period_basis")
+        if not isinstance(precision, int) or precision < 0 or precision > 3:
+            continue
+        if basis not in {"quarterly_reported", "quarterly_normalized_from_ytd"}:
+            continue
+
+        required_keys = set(quarter_map) | set(ytd_map)
+        if not all(finite_number(quarter.get(key)) and finite_number(ytd.get(key)) for key in required_keys):
+            continue
+
+        q_sum = quarter["cfo"] + quarter["cfi"] + quarter["cff"]
+        y_sum = ytd["cfo"] + ytd["cfi"] + ytd["cff"]
+        q_rel = abs(q_sum - quarter["net_cash_change"]) / max(abs(q_sum), abs(quarter["net_cash_change"]), 1) * 100
+        y_rel = abs(y_sum - ytd["net_cash_change"]) / max(abs(y_sum), abs(ytd["net_cash_change"]), 1) * 100
+        if q_rel > 0.01 or y_rel > 0.01:
+            continue
+
+        restored = {}
+        for source_key, field in quarter_map.items():
+            restored[field] = to_display(quarter[source_key], precision)
+        for source_key, field in ytd_map.items():
+            restored[field] = to_display(ytd[source_key], precision)
+        restored["cashflow_period_basis"] = basis
+
+        row_changed = False
+        for field, value in restored.items():
+            if item.get(field) != value:
+                item[field] = value
+                row_changed = True
+                changed_fields += 1
+
+        extracted = set(item.get("financial_line_items_extracted_fields") or [])
+        rejected = set(item.get("financial_line_items_rejected_fields") or [])
+        for field, value in restored.items():
+            if field == "cashflow_period_basis" or finite_number(value):
+                extracted.add(field)
+                rejected.discard(field)
+        if extracted != set(item.get("financial_line_items_extracted_fields") or []):
+            item["financial_line_items_extracted_fields"] = sorted(extracted)
+            row_changed = True
+        if rejected != set(item.get("financial_line_items_rejected_fields") or []):
+            item["financial_line_items_rejected_fields"] = sorted(rejected)
+            row_changed = True
+
+        if item.pop("financial_line_items_cash_check", None) is not None:
+            row_changed = True
+        note = str(item.get("financial_line_items_note") or "")
+        stale_notes = (
+            "Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền thuần theo quý.",
+            "Số dư tiền đầu/cuối kỳ bị ẩn vì không khớp biến động tiền thuần theo quý.",
+            "Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý.",
+        )
+        cleaned_note = note
+        for stale_note in stale_notes:
+            cleaned_note = cleaned_note.replace(stale_note, " ")
+        cleaned_note = re.sub(r"\s{2,}", " ", cleaned_note).strip()
+        if cleaned_note != note:
+            item["financial_line_items_note"] = cleaned_note
+            row_changed = True
+
+        desired_status = (
+            "cashflow_source_rows_visually_verified"
+            if audit.get("visual_review") == "direct_image_verified_printed_pages_4_5"
+            else "cashflow_normalized_from_vietstock_source_visual_review_pending"
+        )
+        if item.get("financial_line_items_status") != desired_status:
+            item["financial_line_items_status"] = desired_status
+            row_changed = True
+        selected_archive = str(audit.get("selected_cashflow_source_archive_file") or "")
+        if item.get("financial_line_items_source") != selected_archive:
+            item["financial_line_items_source"] = selected_archive
+            row_changed = True
+
+        if row_changed:
+            audit["enrichment_preservation"] = {
+                "restored_from_selected_values_raw_vnd": True,
+                "display_unit": "triệu VND",
+                "display_precision": precision,
+                "quarterly_basis": basis,
+                "bridge_exceptions_kept_visible": True,
+                "no_balancing_plug": True,
+            }
+            item["financial_line_items_updated_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+            changed = True
+            affected_quarters += 1
+
+    return changed, affected_quarters, changed_fields
+
 def enrich_snapshot(path):
  snapshot=json.loads(path.read_text(encoding="utf-8"))
  symbol=str(snapshot.get("symbol") or path.stem.replace("financials-","")).upper()
@@ -4184,6 +4334,10 @@ def enrich_snapshot(path):
  changed=changed or reconciled
  quarter_count+=reconciled_quarters
  field_count+=reconciled_fields
+ source_cashflow_changed,source_cashflow_quarters,source_cashflow_fields=restore_source_audited_cashflow_fields(items,symbol)
+ changed=changed or source_cashflow_changed
+ quarter_count+=source_cashflow_quarters
+ field_count+=source_cashflow_fields
  if changed:
   # Record processing time separately from fetchedAt (source-download time).
   # The browser can now choose the newest processed snapshot across origins.
