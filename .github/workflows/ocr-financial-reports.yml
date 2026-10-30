@@ -353,7 +353,7 @@ jobs:
                       continue
                   if record.get("status") == "downloaded_needs_review":
                       successful.add(url)
-                  elif record.get("status") == "download_error":
+                  elif record.get("status") == "download_error" and record.get("manual_review_terminal") is not True:
                       state = failed.setdefault(url, {"attempts": 0, "last_attempt": 0.0})
                       try:
                           state["attempts"] += max(1, int(record.get("attempt_number") or 1))
