@@ -56,6 +56,24 @@ class CollectorRetryTests(unittest.TestCase):
         self.assertEqual(failures[key]["attempts"], 0)
         self.assertIn(key, retryable)
 
+    def test_terminal_manual_review_failure_is_not_retried(self):
+        url = "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%203/SHB_report.pdf"
+        now = datetime(2026, 10, 30, 9, tzinfo=timezone.utc)
+        jobs = [{
+            "symbol": "SHB",
+            "downloadedFiles": [{
+                "url": url,
+                "status": "download_error",
+                "manual_review_terminal": True,
+                "lastError": "Repeated source timeout; retain for manual review.",
+            }],
+        }]
+        successful, failures, retryable = collector.failed_url_retry_state(jobs, "SHB", now=now)
+        key = collector.retry_url_key(url)
+        self.assertNotIn(key, successful)
+        self.assertNotIn(key, failures)
+        self.assertNotIn(key, retryable)
+
     def test_stale_queue_urls_are_covered_by_successful_archive_in_another_job(self):
         archived = "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%203/TCX_Baocaotaichinh_Q3_2026.zip"
         success = {collector.retry_url_key(archived)}
