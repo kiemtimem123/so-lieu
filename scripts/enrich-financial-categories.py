@@ -3869,18 +3869,32 @@ def capture_source_audited_cashflow_backups(items, symbol):
             )
         )
         source_arithmetic_passed = ctg_style_arithmetic_passed or tolerance_style_arithmetic_passed
+        revision = item.get("cashflow_audit_revision")
+        revision = revision if isinstance(revision, dict) else {}
+        raw_source_present = any(
+            isinstance(candidate, dict)
+            for candidate in (
+                audit.get("source_values_raw_vnd"),
+                audit.get("source_values_raw_thousand_vnd"),
+                audit.get("selected_source_values_vnd"),
+                audit.get("source_line_values_vnd"),
+                revision.get("source_values_raw_vnd"),
+                revision.get("source_values_raw_thousand_vnd"),
+                revision.get("selected_source_values_vnd"),
+                revision.get("source_line_values_vnd"),
+            )
+        )
+        no_plug_source_preserved = (
+            audit.get("no_balancing_plug") is True
+            or revision.get("no_balancing_plug") is True
+        ) and (
+            audit.get("source_values_original_unit_preserved") is True
+            or raw_source_present
+        )
         source_values_selected = (
             audit.get("selected_values_not_adjusted_for_tolerance") is True
             or source_arithmetic_passed
-            or (
-                audit.get("no_balancing_plug") is True
-                and (
-                    audit.get("source_values_original_unit_preserved") is True
-                    or isinstance(audit.get("source_values_raw_vnd"), dict)
-                    or isinstance(audit.get("source_values_raw_thousand_vnd"), dict)
-                    or isinstance(audit.get("selected_source_values_vnd"), dict)
-                )
-            )
+            or no_plug_source_preserved
         )
         if (
             item.get("source_index_url") != expected_index
