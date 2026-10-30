@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T16:01:00Z",
+  "updatedAt": "2026-10-30T16:06:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -36,27 +36,26 @@
     "VCI",
     "VCK",
     "MBB",
-    "GAS"
+    "GAS",
+    "VDS"
   ],
-  "lastCompletedSymbol": "GAS",
-  "activeSymbol": "VDS",
-  "resumeSymbolHint": "VDS",
+  "lastCompletedSymbol": "VDS",
+  "activeSymbol": null,
+  "resumeSymbolHint": "IDC",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "VDS",
-    "status": "in_progress",
-    "completeForAutomation": false,
+    "status": "automated_processing_complete",
+    "completeForAutomation": true,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-30T16:01:00Z",
+    "processedAt": "2026-10-30T16:06:00Z",
     "changedPaths": [
       "data/financials-VDS.json"
     ],
     "periodCount": 10,
     "firstQuarter": "2024-Q1",
     "lastQuarter": "2026-Q2",
-    "pendingCorePeriods": [
-      "2025-Q1"
-    ],
+    "pendingCorePeriods": [],
     "terminalManualReviewPeriods": [],
     "pendingDetailPeriods": [],
     "staleDetailSchemaPeriods": [],
@@ -472,15 +471,13 @@
       "manualReviewReason": "OCR/enrich run 3010 changed 10-period normalized YTD cash-flow values, cash balances and FX; the earlier preservation guard did not yet recognize SSI's `*_within_tolerance` audit metadata. Restored all cash-flow fields and audit metadata from validated normalization commit a921930815dd64b490748ba850c96f494571a710, recovery commit 1bd47b45ff12e40571eda4cc7e5f935689c18322. The new helper now recognizes SSI's audit format; hold this existing snapshot until revalidated."
     },
     "VDS": {
-      "status": "in_progress",
-      "completeForAutomation": false,
+      "status": "terminal_needs_manual_review",
+      "completeForAutomation": true,
       "manualReviewRemaining": true,
       "periodCount": 10,
       "firstQuarter": "2024-Q1",
       "lastQuarter": "2026-Q2",
-      "pendingCorePeriods": [
-        "2025-Q1"
-      ],
+      "pendingCorePeriods": [],
       "terminalManualReviewPeriods": [],
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
@@ -488,23 +485,29 @@
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 6,
-      "updatedAt": "2026-10-30T16:01:00Z",
+      "updatedAt": "2026-10-30T16:06:00Z",
       "snapshotFetchedAt": "2026-10-23T11:20:31+00:00",
       "sourceReconciledPeriods": [
         "2024-Q2",
         "2024-Q3",
-        "2024-Q4"
+        "2024-Q4",
+        "2025-Q1"
       ],
       "lastSourceReconciliation": {
-        "periodRange": "2024-Q2 through 2024-Q4",
+        "periodRange": "2024-Q2 through 2025-Q1",
         "status": "core_source_text_reconciled_pending_visual_review",
-        "correctionCommit": "224c539ae53f54e0acc454e9e7c509d13ab74ce5",
-        "findings": [
-          "Q2/2024 restored: total assets/liabilities/equity and PBT/PAT; balance and tax bridge exact.",
-          "Q3/2024 restored: total assets/liabilities/equity and revenue/PBT/PAT; balance and tax bridge exact. Parent attribution OCR remains ambiguous and is intentionally blank.",
-          "Q4/2024 restored: total assets/liabilities/equity and revenue/PBT/PAT/parent PAT; balance and tax bridge exact."
+        "correctionCommits": [
+          "ee18b6fea58e7a10f80990fbd3b61238fcdd6237",
+          "224c539ae53f54e0acc454e9e7c509d13ab74ce5",
+          "05178255d732266071b0f456e6ca32023cffad1c"
         ],
-        "remaining": "Q1/2025 is the remaining core extraction gap. Visual PDF review remains pending for these periods; Q2/2024 cash-flow reclassification exception remains flagged."
+        "findings": [
+          "Q2/2024: restored total assets/liabilities/equity, revenue, PBT, PAT, parent PAT; raw balance and tax bridge exact.",
+          "Q3/2024: restored total assets/liabilities/equity, revenue, PBT and PAT; raw balance and tax bridge exact. Parent attribution remains withheld because OCR row is ambiguous.",
+          "Q4/2024: restored total assets/liabilities/equity, revenue, PBT, PAT and parent PAT; raw balance and tax bridge exact.",
+          "Q1/2025: restored total assets/liabilities/equity, revenue, PBT, PAT and parent PAT; raw balance and tax bridge exact."
+        ],
+        "remaining": "Core extraction gaps for VDS are closed. Keep visual PDF confirmation pending; preserve Q2/2024 cash-flow comparative reclassification exception and do not plug."
       }
     },
     "KDH": {
