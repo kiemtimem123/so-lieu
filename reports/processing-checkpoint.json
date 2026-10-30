@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T10:16:28.291Z",
+  "updatedAt": "2026-10-30T10:42:13Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -41,7 +41,7 @@
   ],
   "lastCompletedSymbol": "VND",
   "activeSymbol": null,
-  "resumeSymbolHint": "SHS",
+  "resumeSymbolHint": null,
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "VND",
@@ -2155,5 +2155,35 @@
       }
     ]
   },
-  "nextSymbolHint": "SHS"
+  "nextSymbolHint": "SHS",
+  "lastSessionCheckpoint": {
+    "savedAt": "2026-10-30T10:42:13Z",
+    "branch": "main",
+    "latestWorkflowFixCommit": "45424f32ab634e30497cbce105c51441cf65ef9e",
+    "lastCompletedWork": [
+      "SHB retry loop suppressed; source timeout retained for manual review.",
+      "SHB 2024 cash-flow YTD and standalone-quarter values corrected from archived VietstockFinance comparative reports.",
+      "FPT validated core financial fields restored from the last known-good snapshot after OCR enrichment regression.",
+      "NLG held for manual review after repeated detail-schema enrichment failures; existing source-backed figures and archives preserved.",
+      "Requested-symbol OCR path updated to honor skipUnconfirmedAutomation and refuse automated retry for tickers held for manual review."
+    ],
+    "lastKnownValidation": {
+      "quarterlyFinancialData": "success",
+      "siteAndData": "success",
+      "hostingerPackage": "success",
+      "note": "These passes preceded the latest workflow selector guard; new validation runs triggered by commit 45424f32ab634e30497cbce105c51441cf65ef9e are pending."
+    },
+    "resumeRules": [
+      "Resume from this checkpoint; do not reload or reprocess tickers already validated.",
+      "Process one ticker at a time and commit its checkpoint immediately after passing required validation.",
+      "Keep unresolved source/OCR anomalies for manual review; never fill missing figures or add balancing plugs.",
+      "Accept arithmetic residuals <=0.01% relative only; retain residual metadata.",
+      "For OCR dispatches, honor manual-review holds even when a ticker is passed as an explicit workflow input."
+    ],
+    "nextActions": [
+      "Confirm OCR workflow run 41042681319 selected a ticker or correctly held the queue after the selector guard.",
+      "Inspect the selected ticker only; finish OCR/enrichment and run quarterly/site validation before checkpointing it.",
+      "Continue cash-flow normalization from GAS using already archived VietstockFinance PDFs and targeted statement-page OCR; do not redownload or infer values."
+    ]
+  }
 }
