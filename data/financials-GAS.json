@@ -910,7 +910,7 @@
       "quarter_profit_basis": "Chỉ lưu số liệu khi cột phát sinh riêng của quý được trích xuất và cân đối hợp lệ.",
       "verification_status": "auto_extracted_pending_visual_review",
       "source_validation": {
-        "reviewed_at": "2026-10-30T17:45:00+07:00",
+        "reviewed_at": "2026-10-30T18:20:00+07:00",
         "single_source_policy": "Chỉ danh mục VietstockFinance và tệp do danh mục đó liên kết.",
         "source_catalog_url": "https://finance.vietstock.vn/GAS/tai-tai-lieu.htm?doctype=1",
         "source_document_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%202/GAS_Baocaotaichinh_Q2_2025_Hopnhat.pdf",
@@ -988,7 +988,19 @@
         "financial_statement_unit": "VND / 1,000,000 = triệu VND",
         "financial_statement_manual_review": "Đã đối chiếu dòng/cột OCR, các cầu nối được ghi rõ; vẫn chờ kiểm tra ảnh PDF trực quan.",
         "raw_vnd_fields_quarantined": true,
-        "raw_vnd_fields_quarantined_at": "2026-10-30T18:10:00+07:00"
+        "raw_vnd_fields_quarantined_at": "2026-10-30T18:10:00+07:00",
+        "additional_source_raw_vnd": {
+          "retained_earnings": 9553019715422
+        },
+        "additional_source_pages": {
+          "pdf_pages": [
+            5
+          ],
+          "printed_pages": [
+            2
+          ]
+        },
+        "additional_source_note": "Lợi nhuận sau thuế chưa phân phối được đổi đúng đơn vị từ dòng vốn chủ sở hữu; các dòng LCTT OCR chưa xác nhận được gỡ khỏi bảng."
       },
       "published_at": "2025-07-31",
       "source_archive_file": "reports/raw/GAS/auto-gas-20261021/c21bc4e88e2ce3d8.pdf",
@@ -1029,13 +1041,10 @@
         "current_liabilities",
         "financial_expense",
         "financial_income",
-        "fixed_assets",
         "income_tax",
         "income_tax_current",
         "interest_expense",
         "inventory",
-        "investing_cash_flow",
-        "investing_cash_flow_ytd",
         "long_term_liabilities",
         "net_profit_attributable",
         "non_current_assets",
@@ -1056,11 +1065,12 @@
         "income_tax_deferred",
         "net_profit",
         "bank_non_controlling_profit",
-        "eps"
+        "eps",
+        "retained_earnings"
       ],
       "financial_line_items_source": "reports/raw/GAS/auto-gas-20261021/c21bc4e88e2ce3d8.pdf.extracted.json",
-      "financial_line_items_updated_at": "2026-10-30T17:45:00+07:00",
-      "financial_line_items_note": "Q2/2025: các tổng tài sản và nợ được tái lập từ các tổng phụ rõ trên BCTC (tài sản ngắn+dài hạn; nợ ngắn+dài hạn); phương trình cân đối khớp chính xác. LNTT−thuế=LNST và phân bổ mẹ/NCI lệch 0,01 triệu VND, nhỏ hơn ngưỡng 0,01%; LCTT không đủ dòng OCR để công bố. Giá trị quy đổi sang triệu VND từ số raw VND; các dòng không đủ căn cứ vẫn để trống. Các giá trị OCR còn lưu nguyên VND (>1 tỷ) đã được gỡ khỏi trường hiển thị và lưu vào prior_values để tránh hiển thị sai đơn vị. Các giá trị OCR còn nguyên VND (>1 tỷ) đã được gỡ khỏi trường hiển thị và lưu vào prior_values; chỉ các trường đã chuyển đúng đơn vị triệu VND mới được giữ.",
+      "financial_line_items_updated_at": "2026-10-30T18:20:00+07:00",
+      "financial_line_items_note": "Q2/2025: các tổng tài sản và nợ được tái lập từ các tổng phụ rõ trên BCTC (tài sản ngắn+dài hạn; nợ ngắn+dài hạn); phương trình cân đối khớp chính xác. LNTT−thuế=LNST và phân bổ mẹ/NCI lệch 0,01 triệu VND, nhỏ hơn ngưỡng 0,01%; LCTT không đủ dòng OCR để công bố. Giá trị quy đổi sang triệu VND từ số raw VND; các dòng không đủ căn cứ vẫn để trống. Các giá trị OCR còn lưu nguyên VND (>1 tỷ) đã được gỡ khỏi trường hiển thị và lưu vào prior_values để tránh hiển thị sai đơn vị. Các giá trị OCR còn nguyên VND (>1 tỷ) đã được gỡ khỏi trường hiển thị và lưu vào prior_values; chỉ các trường đã chuyển đúng đơn vị triệu VND mới được giữ. Lợi nhuận sau thuế chưa phân phối được đổi đúng đơn vị từ dòng vốn chủ sở hữu; các dòng LCTT OCR chưa xác nhận được gỡ khỏi bảng. Các trường OCR dòng tiền/TS cố định không đủ rõ hoặc sai đơn vị đã được gỡ khỏi bảng.",
       "financial_line_items_prior_values": {
         "total_assets": null,
         "total_liabilities": null,
@@ -1093,7 +1103,7 @@
         "net_profit_attributable": 245209134,
         "bank_non_controlling_profit": null,
         "eps": 198,
-        "retained_earnings": 9553019715422,
+        "retained_earnings": null,
         "financing_cash_flow_ytd": 10167798761,
         "financing_cash_flow": -135742167967,
         "cash_beginning": 8166654567957,
@@ -1101,7 +1111,10 @@
         "operating_cash_flow_ytd": -1025956642702,
         "capital_expenditure_ytd": -1025956642702,
         "operating_cash_flow": -4454842128502,
-        "capital_expenditure": -530974023990
+        "capital_expenditure": -530974023990,
+        "investing_cash_flow_ytd": 100661152,
+        "investing_cash_flow": 100661152,
+        "fixed_assets": 0
       },
       "financial_line_items_rejected_values": {},
       "core_financial_extraction_manual_terminal": false,
@@ -1144,7 +1157,10 @@
         "operating_cash_flow_ytd",
         "capital_expenditure_ytd",
         "operating_cash_flow",
-        "capital_expenditure"
+        "capital_expenditure",
+        "investing_cash_flow_ytd",
+        "investing_cash_flow",
+        "fixed_assets"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-30T16:06:38+00:00",
       "current_assets": 64857286.42894,
@@ -1153,10 +1169,10 @@
       "short_term_receivables": 19777698.700821,
       "inventory": 3225558.512687,
       "non_current_assets": 23776852.681762,
-      "fixed_assets": 0,
+      "fixed_assets": null,
       "current_liabilities": 14439813.602726,
       "long_term_liabilities": 5420978.4254,
-      "retained_earnings": null,
+      "retained_earnings": 9553019.715422,
       "financial_income": 401552.949675,
       "financial_expense": 100459.839323,
       "interest_expense": 53907.699224,
@@ -1166,13 +1182,13 @@
       "income_tax_current": 1171157.475488,
       "income_tax": 1173003.48632,
       "operating_cash_flow_ytd": null,
-      "investing_cash_flow_ytd": 100661152,
+      "investing_cash_flow_ytd": null,
       "financing_cash_flow_ytd": null,
       "capital_expenditure_ytd": null,
       "cashflow_period_basis": "year_to_date",
       "operating_cash_flow": null,
       "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
-      "investing_cash_flow": 100661152,
+      "investing_cash_flow": null,
       "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "financing_cash_flow": null,
       "financing_cash_flow_calculation": "current YTD minus previous quarter YTD",
@@ -1345,7 +1361,6 @@
         "income_tax_current",
         "interest_expense",
         "inventory",
-        "investing_cash_flow",
         "investing_cash_flow_ytd",
         "long_term_liabilities",
         "net_cash_change_ytd",
@@ -1376,7 +1391,7 @@
       ],
       "financial_line_items_source": "reports/raw/GAS/auto-gas-20261021/e43210f30cce593e.pdf.extracted.json",
       "financial_line_items_updated_at": "2026-10-30T17:45:00+07:00",
-      "financial_line_items_note": "Q3/2025: bảng cân đối và kết quả kinh doanh khớp; LNST và phân bổ mẹ/NCI khớp. LCTT lũy kế 9 tháng: CFO+CFI+CFF=biến động tiền thuần; tiền đầu kỳ+biến động+tỷ giá=tiền cuối kỳ khớp. Giá trị quy đổi sang triệu VND từ số raw VND; các dòng không đủ căn cứ vẫn để trống. Các giá trị OCR còn lưu nguyên VND (>1 tỷ) đã được gỡ khỏi trường hiển thị và lưu vào prior_values để tránh hiển thị sai đơn vị. Các giá trị OCR còn nguyên VND (>1 tỷ) đã được gỡ khỏi trường hiển thị và lưu vào prior_values; chỉ các trường đã chuyển đúng đơn vị triệu VND mới được giữ.",
+      "financial_line_items_note": "Q3/2025: bảng cân đối và kết quả kinh doanh khớp; LNST và phân bổ mẹ/NCI khớp. LCTT lũy kế 9 tháng: CFO+CFI+CFF=biến động tiền thuần; tiền đầu kỳ+biến động+tỷ giá=tiền cuối kỳ khớp. Giá trị quy đổi sang triệu VND từ số raw VND; các dòng không đủ căn cứ vẫn để trống. Các giá trị OCR còn lưu nguyên VND (>1 tỷ) đã được gỡ khỏi trường hiển thị và lưu vào prior_values để tránh hiển thị sai đơn vị. Các giá trị OCR còn nguyên VND (>1 tỷ) đã được gỡ khỏi trường hiển thị và lưu vào prior_values; chỉ các trường đã chuyển đúng đơn vị triệu VND mới được giữ. Giá trị dòng tiền riêng quý OCR không rõ đơn vị/cột; chỉ giữ số lũy kế đã đối chiếu.",
       "financial_line_items_prior_values": {
         "total_assets": null,
         "total_liabilities": null,
@@ -1424,7 +1439,8 @@
         "financing_cash_flow": -914966533553,
         "capital_expenditure_ytd": -1510525930169,
         "operating_cash_flow": 13575123478376,
-        "capital_expenditure": -484569287467
+        "capital_expenditure": -484569287467,
+        "investing_cash_flow": 723030500
       },
       "financial_line_items_rejected_values": {},
       "core_financial_extraction_manual_terminal": false,
@@ -1451,7 +1467,8 @@
         "financing_cash_flow",
         "capital_expenditure_ytd",
         "operating_cash_flow",
-        "capital_expenditure"
+        "capital_expenditure",
+        "investing_cash_flow"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-30T16:11:15+00:00",
       "current_assets": 70160798.119085,
@@ -1483,7 +1500,7 @@
       "cashflow_period_basis": "year_to_date",
       "operating_cash_flow": null,
       "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
-      "investing_cash_flow": 723030500,
+      "investing_cash_flow": null,
       "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "financing_cash_flow": null,
       "financing_cash_flow_calculation": "current YTD minus previous quarter YTD",
@@ -1520,7 +1537,7 @@
       "quarter_profit_basis": "Chỉ lưu số liệu khi cột phát sinh riêng của quý được trích xuất và cân đối hợp lệ.",
       "verification_status": "manual_review_required_pending_extraction",
       "source_validation": {
-        "reviewed_at": "2026-10-30T17:45:00+07:00",
+        "reviewed_at": "2026-10-30T18:20:00+07:00",
         "single_source_policy": "Chỉ danh mục VietstockFinance và tệp do danh mục đó liên kết.",
         "source_catalog_url": "https://finance.vietstock.vn/GAS/tai-tai-lieu.htm?doctype=1",
         "source_document_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/GAS_Baocaotaichinh_Q4_2025_Hopnhat.pdf",
@@ -1589,7 +1606,28 @@
         "financial_statement_unit": "VND / 1,000,000 = triệu VND",
         "financial_statement_manual_review": "Q4/2025: kết quả kinh doanh khớp các cầu nối doanh thu−giá vốn, LNTT và thuế. Tổng tài sản và tài sản ngắn hạn đọc được; nợ/vốn chủ sở hữu và LCTT OCR không đủ rõ nên giữ trống, không ép cân đối. Cần kiểm tra ảnh PDF để xác nhận các dòng còn thiếu; không ép cân đối.",
         "raw_vnd_fields_quarantined": true,
-        "raw_vnd_fields_quarantined_at": "2026-10-30T18:10:00+07:00"
+        "raw_vnd_fields_quarantined_at": "2026-10-30T18:10:00+07:00",
+        "additional_source_raw_vnd": {
+          "cash_and_equivalents": 6876468282085,
+          "cash": 913368282085,
+          "cash_equivalents": 5963100000000,
+          "short_term_investments": 32890551400598,
+          "short_term_receivables": 24841172052688,
+          "inventory": 4732006717115,
+          "fixed_assets": 15574140285441,
+          "retained_earnings": 11212452052193
+        },
+        "additional_source_pages": {
+          "pdf_pages": [
+            4,
+            5
+          ],
+          "printed_pages": [
+            1,
+            2
+          ]
+        },
+        "additional_source_note": "Bổ sung tài sản ngắn hạn, tiền và tương đương tiền, đầu tư ngắn hạn, phải thu, hàng tồn kho, TSCĐ và lợi nhuận chưa phân phối từ BCTC trang in 1–2; các số được chuyển đúng từ VND sang triệu VND. Tổng nợ/vốn và LCTT vẫn giữ rà soát thủ công."
       },
       "published_at": "2026-02-03",
       "source_archive_file": "reports/raw/GAS/auto-gas-20261021/d93ac1474c125a66.pdf",
@@ -1619,7 +1657,6 @@
       "core_financial_extraction_evidence_attempt_count": 1,
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_extracted_fields": [
-        "capital_expenditure_ytd",
         "cash_and_equivalents",
         "cashflow_period_basis",
         "current_assets",
@@ -1645,11 +1682,15 @@
         "net_profit",
         "net_profit_attributable",
         "bank_non_controlling_profit",
-        "eps"
+        "eps",
+        "short_term_investments",
+        "short_term_receivables",
+        "fixed_assets",
+        "retained_earnings"
       ],
       "financial_line_items_source": "reports/raw/GAS/auto-gas-20261021/d93ac1474c125a66.pdf.extracted.json",
-      "financial_line_items_updated_at": "2026-10-30T17:45:00+07:00",
-      "financial_line_items_note": "Q4/2025: kết quả kinh doanh khớp các cầu nối doanh thu−giá vốn, LNTT và thuế. Tổng tài sản và tài sản ngắn hạn đọc được; nợ/vốn chủ sở hữu và LCTT OCR không đủ rõ nên giữ trống, không ép cân đối. Giá trị quy đổi sang triệu VND từ số raw VND; các dòng không đủ căn cứ vẫn để trống. Các giá trị OCR còn lưu nguyên VND (>1 tỷ) đã được gỡ khỏi trường hiển thị và lưu vào prior_values để tránh hiển thị sai đơn vị. Các giá trị OCR còn nguyên VND (>1 tỷ) đã được gỡ khỏi trường hiển thị và lưu vào prior_values; chỉ các trường đã chuyển đúng đơn vị triệu VND mới được giữ.",
+      "financial_line_items_updated_at": "2026-10-30T18:20:00+07:00",
+      "financial_line_items_note": "Q4/2025: kết quả kinh doanh khớp các cầu nối doanh thu−giá vốn, LNTT và thuế. Tổng tài sản và tài sản ngắn hạn đọc được; nợ/vốn chủ sở hữu và LCTT OCR không đủ rõ nên giữ trống, không ép cân đối. Giá trị quy đổi sang triệu VND từ số raw VND; các dòng không đủ căn cứ vẫn để trống. Các giá trị OCR còn lưu nguyên VND (>1 tỷ) đã được gỡ khỏi trường hiển thị và lưu vào prior_values để tránh hiển thị sai đơn vị. Các giá trị OCR còn nguyên VND (>1 tỷ) đã được gỡ khỏi trường hiển thị và lưu vào prior_values; chỉ các trường đã chuyển đúng đơn vị triệu VND mới được giữ. Bổ sung tài sản ngắn hạn, tiền và tương đương tiền, đầu tư ngắn hạn, phải thu, hàng tồn kho, TSCĐ và lợi nhuận chưa phân phối từ BCTC trang in 1–2; các số được chuyển đúng từ VND sang triệu VND. Tổng nợ/vốn và LCTT vẫn giữ rà soát thủ công. Dòng chi đầu tư OCR chỉ còn số rời rạc, không đủ căn cứ; đã gỡ khỏi hiển thị.",
       "financial_line_items_prior_values": {
         "total_assets": null,
         "current_assets": 69861417011215,
@@ -1674,9 +1715,9 @@
         "net_profit_attributable": null,
         "bank_non_controlling_profit": null,
         "eps": null,
-        "short_term_investments": 32890551400598,
-        "short_term_receivables": 24841172052688,
-        "fixed_assets": 38867115741,
+        "short_term_investments": null,
+        "short_term_receivables": null,
+        "fixed_assets": null,
         "current_liabilities": 933829846483,
         "investing_cash_flow_ytd": -2330869042369,
         "financing_cash_flow_ytd": -3352162410986,
@@ -1686,7 +1727,11 @@
         "cash_beginning_reported_ytd": 11641062000554,
         "operating_cash_flow_ytd": 13378374377362,
         "operating_cash_flow": 829207541688,
-        "capital_expenditure": 1510525931434
+        "capital_expenditure": 1510525931434,
+        "cash_and_equivalents": 1401150,
+        "inventory": 949317288,
+        "retained_earnings": null,
+        "capital_expenditure_ytd": 1265
       },
       "financial_line_items_rejected_values": {},
       "core_financial_extraction_manual_terminal": true,
@@ -1697,17 +1742,17 @@
       "core_financial_extraction_stable_evidence_updated_at": "2026-10-30T15:58:37+00:00",
       "core_financial_extraction_attempt_count": 1,
       "current_assets": 69861417.011215,
-      "cash_and_equivalents": 1401150,
-      "short_term_investments": null,
-      "short_term_receivables": null,
-      "inventory": 949317288,
+      "cash_and_equivalents": 6876468.282085,
+      "short_term_investments": 32890551.400598,
+      "short_term_receivables": 24841172.052688,
+      "inventory": 4732006.717115,
       "non_current_assets": 23670094.855461,
-      "fixed_assets": null,
+      "fixed_assets": 15574140.285441,
       "current_liabilities": null,
       "operating_cash_flow_ytd": null,
       "investing_cash_flow_ytd": null,
       "financing_cash_flow_ytd": null,
-      "capital_expenditure_ytd": 1265,
+      "capital_expenditure_ytd": null,
       "cashflow_period_basis": "year_to_date",
       "operating_cash_flow": null,
       "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
@@ -1749,8 +1794,10 @@
         "cash_beginning_reported_ytd",
         "operating_cash_flow_ytd",
         "operating_cash_flow",
-        "capital_expenditure"
-      ]
+        "capital_expenditure",
+        "capital_expenditure_ytd"
+      ],
+      "retained_earnings": 11212452.052193
     },
     {
       "symbol": "GAS",
@@ -1773,7 +1820,7 @@
       "quarter_profit_basis": "Chỉ lưu số liệu khi cột phát sinh riêng của quý được trích xuất và cân đối hợp lệ.",
       "verification_status": "manual_review_required_pending_extraction",
       "source_validation": {
-        "reviewed_at": "2026-10-30T17:45:00+07:00",
+        "reviewed_at": "2026-10-30T18:20:00+07:00",
         "single_source_policy": "Chỉ danh mục VietstockFinance và tệp do danh mục đó liên kết.",
         "source_catalog_url": "https://finance.vietstock.vn/GAS/tai-tai-lieu.htm?doctype=1",
         "source_document_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/GAS_Baocaotaichinh_Q1_2026_Hopnhat.pdf",
@@ -1838,7 +1885,19 @@
         "financial_statement_unit": "VND / 1,000,000 = triệu VND",
         "financial_statement_manual_review": "Q1/2026: khôi phục đầy đủ kết quả kinh doanh từ BCTC; bảng cân đối OCR không khớp giữa tổng tài sản và tổng nguồn vốn, LCTT không đọc đủ dòng nên giữ các phần đó ở trạng thái rà soát thủ công. Cần kiểm tra ảnh PDF để xác nhận các dòng còn thiếu; không ép cân đối.",
         "raw_vnd_fields_quarantined": true,
-        "raw_vnd_fields_quarantined_at": "2026-10-30T18:00:00+07:00"
+        "raw_vnd_fields_quarantined_at": "2026-10-30T18:00:00+07:00",
+        "additional_source_raw_vnd": {
+          "foreign_exchange_effect_ytd": 367185405
+        },
+        "additional_source_pages": {
+          "pdf_pages": [
+            7
+          ],
+          "printed_pages": [
+            4
+          ]
+        },
+        "additional_source_note": "Ảnh hưởng tỷ giá lũy kế Q1/2026 được đổi từ 367.185.405 VND sang 367,185405 triệu VND; không dùng để suy ra các dòng tiền khác."
       },
       "published_at": "2026-04-24",
       "source_archive_file": "reports/raw/GAS/auto-gas-20261021/853ad22dfe045d24.pdf",
@@ -1866,8 +1925,6 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_extracted_fields": [
         "admin_expense",
-        "capital_expenditure",
-        "capital_expenditure_ytd",
         "cashflow_period_basis",
         "financial_expense",
         "financial_income",
@@ -1889,8 +1946,8 @@
         "bank_non_controlling_profit"
       ],
       "financial_line_items_source": "reports/raw/GAS/auto-gas-20261021/853ad22dfe045d24.pdf.extracted.json",
-      "financial_line_items_updated_at": "2026-10-30T17:45:00+07:00",
-      "financial_line_items_note": "Q1/2026: khôi phục đầy đủ kết quả kinh doanh từ BCTC; bảng cân đối OCR không khớp giữa tổng tài sản và tổng nguồn vốn, LCTT không đọc đủ dòng nên giữ các phần đó ở trạng thái rà soát thủ công. Giá trị quy đổi sang triệu VND từ số raw VND; các dòng không đủ căn cứ vẫn để trống. Các giá trị OCR còn lưu nguyên VND (>1 tỷ) đã được gỡ khỏi trường hiển thị và lưu vào prior_values để tránh hiển thị sai đơn vị.",
+      "financial_line_items_updated_at": "2026-10-30T18:20:00+07:00",
+      "financial_line_items_note": "Q1/2026: khôi phục đầy đủ kết quả kinh doanh từ BCTC; bảng cân đối OCR không khớp giữa tổng tài sản và tổng nguồn vốn, LCTT không đọc đủ dòng nên giữ các phần đó ở trạng thái rà soát thủ công. Giá trị quy đổi sang triệu VND từ số raw VND; các dòng không đủ căn cứ vẫn để trống. Các giá trị OCR còn lưu nguyên VND (>1 tỷ) đã được gỡ khỏi trường hiển thị và lưu vào prior_values để tránh hiển thị sai đơn vị. Chi đầu tư OCR không đủ căn cứ, để trống. Ảnh hưởng tỷ giá lũy kế Q1/2026 được đổi từ 367.185.405 VND sang 367,185405 triệu VND; không dùng để suy ra các dòng tiền khác.",
       "financial_line_items_prior_values": {
         "revenue": null,
         "cost_of_goods_sold": null,
@@ -1913,7 +1970,10 @@
         "financing_cash_flow_ytd": 314542385295,
         "net_cash_change_ytd": 2599608383,
         "financing_cash_flow": 314542385295,
-        "net_cash_change": 2599608383
+        "net_cash_change": 2599608383,
+        "capital_expenditure_ytd": 1265,
+        "capital_expenditure": 1265,
+        "foreign_exchange_effect_ytd": 367185405
       },
       "financial_line_items_rejected_values": {},
       "core_financial_extraction_manual_terminal": true,
@@ -1934,7 +1994,9 @@
         "financing_cash_flow_ytd",
         "net_cash_change_ytd",
         "financing_cash_flow",
-        "net_cash_change"
+        "net_cash_change",
+        "capital_expenditure_ytd",
+        "capital_expenditure"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-30T16:16:07+00:00",
       "financial_income": 384755.468683,
@@ -1945,13 +2007,13 @@
       "income_tax_current": 764142.169569,
       "income_tax": 760568.383274,
       "financing_cash_flow_ytd": null,
-      "capital_expenditure_ytd": 1265,
+      "capital_expenditure_ytd": null,
       "net_cash_change_ytd": null,
-      "foreign_exchange_effect_ytd": 367185405,
+      "foreign_exchange_effect_ytd": 367.185405,
       "cashflow_period_basis": "year_to_date",
       "financing_cash_flow": null,
       "financing_cash_flow_calculation": "Q1 equals YTD Q1",
-      "capital_expenditure": 1265,
+      "capital_expenditure": null,
       "capital_expenditure_calculation": "Q1 equals YTD Q1",
       "net_cash_change": null,
       "net_cash_change_calculation": "Q1 equals YTD Q1",
