@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T10:55:17Z",
+  "updatedAt": "2026-10-30T10:56:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -295,11 +295,13 @@
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
-      "skipUnconfirmedAutomation": false,
+      "skipUnconfirmedAutomation": true,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 7,
       "updatedAt": "2026-10-30T10:55:17Z",
-      "snapshotFetchedAt": "2026-10-24T06:40:00Z"
+      "snapshotFetchedAt": "2026-10-24T06:40:00Z",
+      "skipUnconfirmedThroughPeriod": "2026-Q2",
+      "manualReviewReason": "OCR/enrich run 3004 changed multiple source-backed cash-flow YTD/quarter values, FX and cash opening/closing fields; it also changed bank_cash_on_hand. Restored 10 periods of these fields and source reconciliation/audit metadata from validated normalized snapshot commit d0a5df06755c70d457e294690ff2b4e9b0ef232c, recovery commit c7adf9bd17134110ee85d6169a3a7f3a9f09ddac. Hold STB pending enrichment-preservation fix."
     },
     "CTG": {
       "status": "automated_processing_complete",
@@ -2172,7 +2174,7 @@
   },
   "nextSymbolHint": "SHS",
   "lastSessionCheckpoint": {
-    "savedAt": "2026-10-30T10:54:30Z",
+    "savedAt": "2026-10-30T10:56:00Z",
     "branch": "main",
     "latestWorkflowFixCommit": "45424f32ab634e30497cbce105c51441cf65ef9e",
     "lastCompletedWork": [
@@ -2193,7 +2195,8 @@
       "VHM: OCR/enrich run 2998 làm mất cashflow YTD đã chuẩn hóa; phục hồi 10 kỳ và metadata từ snapshot kiểm định commit b20b69844b7cd6d2b01f907cda5fac3340a701f2; giữ VHM manual review.",
       "VHM: run 2999 là handoff cũ đã khởi chạy trước manual hold, ghi đè cashflow sau lần khôi phục đầu tiên; đã khôi phục lần hai sau khi run hoàn tất và khóa VHM ở checkpoint mới nhất.",
       "TPB: OCR/enrich run 3001 làm thay đổi cash-flow YTD đã chuẩn hóa dù kiểm định snapshot cục bộ và bank regression pass; đã khôi phục 10 kỳ từ snapshot chuẩn hóa đã kiểm định commit 74e1dd9cf36ba2ae5726cc54a8685ac6e35bc074 và đặt TPB vào manual-review hold.",
-      "VPB: OCR/enrich run 3003 làm thay đổi dòng tiền đã chuẩn hóa dù local validators pass; đã khôi phục 11 kỳ từ snapshot kiểm định commit 56b2e28388f0c140a669192187872c36af850578 và chuyển VPB sang manual-review hold."
+      "VPB: OCR/enrich run 3003 làm thay đổi dòng tiền đã chuẩn hóa dù local validators pass; đã khôi phục 11 kỳ từ snapshot kiểm định commit 56b2e28388f0c140a669192187872c36af850578 và chuyển VPB sang manual-review hold.",
+      "STB: OCR/enrich run 3004 làm thay đổi cash-flow và bank_cash_on_hand; đã khôi phục 10 kỳ từ snapshot kiểm định commit d0a5df06755c70d457e294690ff2b4e9b0ef232c, commit phục hồi c7adf9bd17134110ee85d6169a3a7f3a9f09ddac; giữ STB ở manual review."
     ],
     "lastKnownValidation": {
       "quarterlyFinancialData": "success",
@@ -2214,10 +2217,10 @@
       "For OCR dispatches, honor manual-review holds even when a ticker is passed as an explicit workflow input."
     ],
     "nextActions": [
-      "Xác nhận site/data và quarterly validation sau phục hồi VPB.",
-      "Tiếp tục STB sau khi xác nhận không còn handoff cũ của VPB; một mã mỗi lần.",
-      "Giữ các mã đã phục hồi ở manual-review hold đến khi sửa enrichment pipeline; không re-OCR/re-enrich snapshot đã xác nhận.",
-      "Sửa enrichment pipeline: merge dữ liệu mới theo từng field, không đổi cashflow_period_basis hoặc ghi đè giá trị đã xác minh bằng null/giá trị không cùng cơ sở."
+      "Xác nhận validation site/data và quarterly sau phục hồi STB.",
+      "Tiếp tục VCB theo checkpoint nếu không còn workflow handoff cũ; chỉ xử lý một mã.",
+      "Sửa enrichment pipeline trước khi tiếp tục các mã ngân hàng; giữ các mã đã phục hồi ở trạng thái hold.",
+      "Bảo toàn tất cả trường dòng tiền đã có cashflow_source_reconciliation và không đổi basis YTD/quarterly khi không có chứng cứ nguồn mới."
     ],
     "latestDataRecoveryCommit": "168342286eeb209974c91880c6ae6f8511790d66",
     "heldTickersUpdated": [
@@ -2230,7 +2233,8 @@
       "TCB",
       "VHM",
       "TPB",
-      "VPB"
+      "VPB",
+      "STB"
     ],
     "latestDataRecoveryCommits": {
       "VND": "168342286eeb209974c91880c6ae6f8511790d66",
@@ -2238,7 +2242,8 @@
       "HCM": "c1abc317ba3b2237ea03a5c3184e0d6aef13610f",
       "VHM": "187049422e6406cad17b8d02512b2161050b4a0a",
       "TPB": "02b68225e73bd36bff7a3940aea26f99f6ee3294",
-      "VPB": "f8e978f7d4b962b00061101e62c8a183f11389c5"
+      "VPB": "f8e978f7d4b962b00061101e62c8a183f11389c5",
+      "STB": "c7adf9bd17134110ee85d6169a3a7f3a9f09ddac"
     }
   }
 }
