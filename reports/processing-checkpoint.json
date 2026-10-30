@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T10:47:46Z",
+  "updatedAt": "2026-10-30T10:49:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -810,11 +810,13 @@
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
-      "skipUnconfirmedAutomation": false,
+      "skipUnconfirmedAutomation": true,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 10,
       "updatedAt": "2026-10-30T10:47:46Z",
-      "snapshotFetchedAt": "2026-10-20T06:44:06.791Z"
+      "snapshotFetchedAt": "2026-10-20T06:44:06.791Z",
+      "skipUnconfirmedThroughPeriod": "2026-Q2",
+      "manualReviewReason": "OCR/enrich run 2998 passed its local snapshot validator but overwrote the normalized YTD cash-flow basis with quarterly_reported and removed multiple source-backed cash-flow fields. Restored the cash-flow fields, source reconciliation and audit metadata from the validated snapshot at commit b20b69844b7cd6d2b01f907cda5fac3340a701f2. Hold VHM from automatic enrichment until the preservation regression is fixed."
     }
   },
   "progressHistory": [
@@ -2162,7 +2164,7 @@
   },
   "nextSymbolHint": "SHS",
   "lastSessionCheckpoint": {
-    "savedAt": "2026-10-30T10:47:00Z",
+    "savedAt": "2026-10-30T10:49:00Z",
     "branch": "main",
     "latestWorkflowFixCommit": "45424f32ab634e30497cbce105c51441cf65ef9e",
     "lastCompletedWork": [
@@ -2179,7 +2181,8 @@
       "Validate quarterly financial data run 41043061862 SUCCESS.",
       "Validate Site and Data run 41043062024 SUCCESS after restoring HCM.",
       "Package Hostinger Stock Dashboard run 41043062033 SUCCESS.",
-      "TCB OCR run 2997 failed bank-specific regression for Q3/2026 gross interest income and capital-contribution income; commit step skipped, so stored TCB snapshot was preserved and the ticker is held for manual review."
+      "TCB OCR run 2997 failed bank-specific regression for Q3/2026 gross interest income and capital-contribution income; commit step skipped, so stored TCB snapshot was preserved and the ticker is held for manual review.",
+      "VHM: OCR/enrich run 2998 làm mất cashflow YTD đã chuẩn hóa; phục hồi 10 kỳ và metadata từ snapshot kiểm định commit b20b69844b7cd6d2b01f907cda5fac3340a701f2; giữ VHM manual review."
     ],
     "lastKnownValidation": {
       "quarterlyFinancialData": "success",
@@ -2200,10 +2203,10 @@
       "For OCR dispatches, honor manual-review holds even when a ticker is passed as an explicit workflow input."
     ],
     "nextActions": [
-      "Tiếp tục mã VHM theo hàng đợi sau khi TCB được giữ manual review; chỉ xử lý một mã và kiểm tra regression trước commit.",
-      "Nếu mã tiếp theo làm thay đổi trường đã xác nhận hoặc fail regression, khôi phục từ snapshot đã kiểm định, ghi checkpoint hold và chuyển mã tiếp theo.",
-      "Điều tra cơ chế enrich bảo toàn trường chi tiết đã xác minh trước khi tiếp tục nâng schema hàng loạt.",
-      "Tiếp tục cash-flow GAS bằng OCR trang báo cáo gốc từ các PDF VietstockFinance đã lưu; không tải lại hoặc suy diễn."
+      "Xác nhận kiểm định sau khi phục hồi VHM; không xử lý lại VHM/TCB/BSR/HCM/VND/NLG/SHS/TCX.",
+      "Tiếp tục TPB theo checkpoint nếu validation xanh; một mã mỗi lần.",
+      "Sửa enrichment pipeline để không thay cashflow_period_basis, không null các dòng tiền và không ghi đè số đã xác minh trước khi tiếp tục schema migration.",
+      "Sau đó tiếp tục chuẩn hóa cash-flow GAS từ PDF VietstockFinance đã lưu, OCR đúng trang."
     ],
     "latestDataRecoveryCommit": "168342286eeb209974c91880c6ae6f8511790d66",
     "heldTickersUpdated": [
@@ -2212,12 +2215,15 @@
       "SHS",
       "TCX",
       "BSR",
-      "HCM"
+      "HCM",
+      "TCB",
+      "VHM"
     ],
     "latestDataRecoveryCommits": {
       "VND": "168342286eeb209974c91880c6ae6f8511790d66",
       "BSR": "11b373bbf5fb796a7bd4fc9bba225ee603e4e370",
-      "HCM": "c1abc317ba3b2237ea03a5c3184e0d6aef13610f"
+      "HCM": "c1abc317ba3b2237ea03a5c3184e0d6aef13610f",
+      "VHM": "b159e4341bdd25a07750e71332fb7f3603e43f4c"
     }
   }
 }
