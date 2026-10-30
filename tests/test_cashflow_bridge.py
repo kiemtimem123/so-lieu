@@ -3724,5 +3724,81 @@ class ManualCoreValueEnrichmentPreservationTests(unittest.TestCase):
         self.assertEqual(row["pretax_profit"]-row["net_profit"],row["income_tax"])
 
 
+ENRICHER = runpy.run_path(
+    str(ROOT / "scripts" / "enrich-financial-categories.py"),
+    run_name="cashflow_enrichment_module",
+)
+capture_source_audited_cashflow_backups = ENRICHER["capture_source_audited_cashflow_backups"]
+restore_source_audited_cashflow_backups = ENRICHER["restore_source_audited_cashflow_backups"]
+
+
+class EnrichmentCashflowPreservationTests(unittest.TestCase):
+    def test_source_audited_ytd_cashflow_survives_detail_enrichment(self):
+        symbol = "VND"
+        source_index = "https://finance.vietstock.vn/VND/tai-tai-lieu.htm?doctype=1"
+        row = {
+            "period": "2025-Q1",
+            "unit": "triệu VND",
+            "source_index_url": source_index,
+            "source_archive_file": "reports/raw/VND/test-source.pdf",
+            "cashflow_period_basis": "year_to_date",
+            "operating_cash_flow": -5202620,
+            "operating_cash_flow_ytd": -5202620,
+            "investing_cash_flow": -3575,
+            "investing_cash_flow_ytd": -3575,
+            "financing_cash_flow": 5302391,
+            "financing_cash_flow_ytd": 5302391,
+            "net_cash_change": 96197,
+            "net_cash_change_ytd": 96197,
+            "cash_beginning": 881176,
+            "cash_beginning_reported_ytd": 881176,
+            "cash_ending": 977372,
+            "cash_ending_reported_ytd": 977372,
+            "foreign_exchange_effect": None,
+            "foreign_exchange_effect_ytd": None,
+            "financial_line_items_extracted_fields": [
+                "operating_cash_flow", "operating_cash_flow_ytd",
+                "investing_cash_flow", "investing_cash_flow_ytd",
+                "financing_cash_flow", "financing_cash_flow_ytd",
+                "net_cash_change", "net_cash_change_ytd",
+                "cash_beginning", "cash_ending",
+            ],
+            "financial_line_items_rejected_fields": [],
+            "cashflow_source_reconciliation": {
+                "source_index_url": source_index,
+                "selected_values_not_adjusted_for_tolerance": True,
+                "relative_tolerance_percent": 0.01,
+                "status": "PASS_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT",
+            },
+            "cashflow_audit_revision": {"selected_basis": "validated YTD source"},
+        }
+        rows = [row]
+        backups = capture_source_audited_cashflow_backups(rows, symbol)
+
+        # Simulate the regression caused by generic OCR/enrichment.
+        row["cashflow_period_basis"] = "quarterly_reported"
+        row["operating_cash_flow_ytd"] = 123456
+        row["financing_cash_flow"] = None
+        row["cash_ending"] = None
+        row["financial_line_items_extracted_fields"] = ["brokerage_revenue"]
+        row["financial_line_items_rejected_fields"] = ["operating_cash_flow_ytd"]
+        row["cashflow_source_reconciliation"] = {"status": "overwritten"}
+
+        changed, affected, restored = restore_source_audited_cashflow_backups(rows, backups)
+
+        self.assertTrue(changed)
+        self.assertEqual(affected, 1)
+        self.assertGreater(restored, 0)
+        self.assertEqual(row["cashflow_period_basis"], "year_to_date")
+        self.assertEqual(row["operating_cash_flow_ytd"], -5202620)
+        self.assertEqual(row["financing_cash_flow"], 5302391)
+        self.assertEqual(row["cash_ending"], 977372)
+        self.assertEqual(row["cashflow_source_reconciliation"]["status"],
+                         "PASS_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT")
+        self.assertIn("brokerage_revenue", row["financial_line_items_extracted_fields"])
+        self.assertIn("operating_cash_flow_ytd", row["financial_line_items_extracted_fields"])
+        self.assertNotIn("operating_cash_flow_ytd", row["financial_line_items_rejected_fields"])
+
+
 if __name__ == "__main__":
     unittest.main()
