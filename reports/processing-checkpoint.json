@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T15:41:38Z",
+  "updatedAt": "2026-10-30T15:56:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -24,7 +24,6 @@
     "CTG",
     "BID",
     "SSI",
-    "VDS",
     "KDH",
     "HHV",
     "DPG",
@@ -40,40 +39,30 @@
     "GAS"
   ],
   "lastCompletedSymbol": "GAS",
-  "activeSymbol": null,
-  "resumeSymbolHint": "PLX",
+  "activeSymbol": "VDS",
+  "resumeSymbolHint": "VDS",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
-    "symbol": "GAS",
-    "status": "automated_processing_complete",
-    "completeForAutomation": true,
+    "symbol": "VDS",
+    "status": "in_progress",
+    "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-30T15:41:38Z",
-    "workflowRunId": "41082830982",
-    "workflowRunNumber": 3025,
-    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/41082830982",
+    "processedAt": "2026-10-30T15:56:00Z",
     "changedPaths": [
-      "data/financials-GAS.json",
-      "reports/raw/GAS/auto-gas-20261021/7fa3b1653ff606d1.pdf.extracted.json",
-      "reports/raw/GAS/auto-gas-20261021/f677e2c325486c99.pdf.extracted.json"
+      "data/financials-VDS.json"
     ],
     "periodCount": 10,
     "firstQuarter": "2024-Q1",
     "lastQuarter": "2026-Q2",
-    "pendingCorePeriods": [],
-    "terminalManualReviewPeriods": [
+    "pendingCorePeriods": [
       "2024-Q3",
       "2024-Q4",
-      "2025-Q1",
-      "2025-Q2",
-      "2025-Q3",
-      "2025-Q4",
-      "2026-Q1",
-      "2026-Q2"
+      "2025-Q1"
     ],
+    "terminalManualReviewPeriods": [],
     "pendingDetailPeriods": [],
     "staleDetailSchemaPeriods": [],
-    "statementPagesPending": false,
+    "statementPagesPending": true,
     "skipUnconfirmedAutomation": false,
     "skipUnconfirmedReason": null
   },
@@ -485,27 +474,40 @@
       "manualReviewReason": "OCR/enrich run 3010 changed 10-period normalized YTD cash-flow values, cash balances and FX; the earlier preservation guard did not yet recognize SSI's `*_within_tolerance` audit metadata. Restored all cash-flow fields and audit metadata from validated normalization commit a921930815dd64b490748ba850c96f494571a710, recovery commit 1bd47b45ff12e40571eda4cc7e5f935689c18322. The new helper now recognizes SSI's audit format; hold this existing snapshot until revalidated."
     },
     "VDS": {
-      "status": "automated_processing_complete",
-      "completeForAutomation": true,
+      "status": "in_progress",
+      "completeForAutomation": false,
       "manualReviewRemaining": true,
       "periodCount": 10,
       "firstQuarter": "2024-Q1",
       "lastQuarter": "2026-Q2",
-      "pendingCorePeriods": [],
-      "terminalManualReviewPeriods": [
-        "2024-Q2",
+      "pendingCorePeriods": [
         "2024-Q3",
         "2024-Q4",
         "2025-Q1"
       ],
+      "terminalManualReviewPeriods": [],
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
-      "statementPagesPending": false,
+      "statementPagesPending": true,
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 6,
-      "updatedAt": "2026-10-30T11:03:56Z",
-      "snapshotFetchedAt": "2026-10-23T11:20:31+00:00"
+      "updatedAt": "2026-10-30T15:56:00Z",
+      "snapshotFetchedAt": "2026-10-23T11:20:31+00:00",
+      "sourceReconciledPeriods": [
+        "2024-Q2"
+      ],
+      "lastSourceReconciliation": {
+        "periodRange": "2024-Q2",
+        "status": "core_source_text_reconciled_pending_visual_review",
+        "correctionCommit": "ee18b6fea58e7a10f80990fbd3b61238fcdd6237",
+        "findings": [
+          "Khôi phục tổng tài sản, nợ phải trả, vốn chủ sở hữu, doanh thu, LNTT, LNST và lợi nhuận thuộc cổ đông công ty mẹ từ sidecar PDF VietstockFinance.",
+          "Tổng nợ + vốn chủ sở hữu khớp tổng tài sản; LNST khớp LNTT trừ thuế TNDN.",
+          "Ngoại lệ phân loại CFO/CFI/CFF từ báo cáo so sánh Q2/2025 được giữ nguyên, không điều chỉnh theo hướng ép số."
+        ],
+        "remaining": "Cần xử lý Q3/2024, Q4/2024, Q1/2025; kiểm tra trực quan ảnh PDF và giữ ngoại lệ dòng tiền Q2/2024."
+      }
     },
     "KDH": {
       "status": "automated_processing_complete",
