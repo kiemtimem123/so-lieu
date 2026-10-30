@@ -425,7 +425,7 @@ def main():
         geg_expected = {"2024-Q1","2024-Q2","2024-Q3","2024-Q4","2025-Q1","2025-Q2","2025-Q3","2025-Q4","2026-Q1","2026-Q2"}
         if set(geg_rows) != geg_expected or len(geg.get("items") or []) != 10:
             ERRORS.append("GEG cash-flow regression: expected 10 unique quarters 2024-Q1 through 2026-Q2")
-        q_exceptions = {"2025-Q2","2025-Q3","2026-Q2"}
+        q_exceptions = {"2026-Q2"}
         flow_keys = ("operating_cash_flow","investing_cash_flow","financing_cash_flow","net_cash_change")
         ytd_keys = tuple(k + "_ytd" for k in flow_keys)
         for period, row in geg_rows.items():
@@ -500,8 +500,22 @@ def main():
             ERRORS.append("GEG Q4/2025: direct image review status missing")
         if q4_rec.get("status") != "PASS_WITHIN_TOLERANCE_SOURCE_ROWS_VISUALLY_VERIFIED":
             ERRORS.append("GEG Q4/2025: visually verified source rows should not remain flagged as OCR-truncated")
-        if geg_rows.get("2025-Q2",{}).get("cashflow_source_reconciliation",{}).get("source_revision",{}).get("selected_minus_prior_source_values_raw_vnd",{}).get("net") != 336385390:
-            ERRORS.append("GEG H1/2025 comparative net-cash revision not traceable")
+        q2_2025_rec = (geg_rows.get("2025-Q2", {}).get("cashflow_source_reconciliation") or {})
+        q2_h1_raw = (q2_2025_rec.get("selected_values_raw_vnd") or {}).get("ytd") or {}
+        if not str(q2_2025_rec.get("selected_cashflow_source_url") or "").endswith("GEG_Baocaotaichinh_Q2_2025_Hopnhat.pdf"):
+            ERRORS.append("GEG 2025-Q2: original Q2/2025 source must be selected for the 2025 time series")
+        if q2_h1_raw.get("cfo") != 555421075993 or q2_h1_raw.get("cfi") != 476067298075 or q2_h1_raw.get("cff") != -721712954268 or q2_h1_raw.get("net_cash_change") != 309775419800:
+            ERRORS.append("GEG 2025-Q2: original H1/2025 selected raw values changed")
+        q2_alt = q2_2025_rec.get("source_revision", {}).get("later_comparative_alternative", {})
+        if q2_alt.get("raw_values_vnd", {}).get("net_cash_change") != 310111805190 or q2_alt.get("differences_vs_selected_original_raw_vnd", {}).get("net_cash_change") != 336385390:
+            ERRORS.append("GEG 2025-Q2: later Q2/2026 comparative must remain traceable as alternate source")
+        if q2_2025_rec.get("visual_review") != "direct_image_verified_printed_pages_4_5" or q2_2025_rec.get("quarter_cash_bridge_within_tolerance") is not True:
+            ERRORS.append("GEG 2025-Q2: direct source review or corrected quarterly cash bridge is missing")
+        q3_2025_rec = geg_rows.get("2025-Q3", {}).get("cashflow_source_reconciliation", {})
+        if q3_2025_rec.get("calculations", {}).get("quarter_cash_bridge_residual_raw_vnd") != 0 or q3_2025_rec.get("quarter_cash_bridge_within_tolerance") is not True:
+            ERRORS.append("GEG 2025-Q3: quarter bridge must reconcile against original H1/2025 source")
+        if q3_2025_rec.get("visual_review") != "direct_image_verified_printed_pages_4_5":
+            ERRORS.append("GEG 2025-Q3: direct source page review is missing")
         q1_bridge = geg_rows.get("2026-Q1",{}).get("cashflow_source_reconciliation",{}).get("calculations",{}).get("quarter_cash_bridge_residual_raw_vnd")
         if q1_bridge != 900:
             ERRORS.append("GEG Q1/2026 expected +900 VND bridge residual not preserved")
