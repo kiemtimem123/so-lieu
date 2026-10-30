@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T11:16:40Z",
+  "updatedAt": "2026-10-30T14:24:59.990Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -41,7 +41,7 @@
   ],
   "lastCompletedSymbol": "GAS",
   "activeSymbol": null,
-  "resumeSymbolHint": "PLX",
+  "resumeSymbolHint": "IDC",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "GAS",
@@ -620,12 +620,14 @@
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": true,
-      "skipUnconfirmedAutomation": false,
+      "skipUnconfirmedAutomation": true,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 10,
       "updatedAt": "2026-10-30T02:00:00+07:00",
       "snapshotFetchedAt": "2026-10-25T21:25:00Z",
-      "note": "Quarter/YTD flow sums, FX-aware bridges, and quarter-to-YTD delta tests pass within <=0.01% for 9 complete periods. Terminal manual review remains for two cross-year cash-basis discrepancies >0.01%, source visual review, and unreadable Q2/2026 cash-flow OCR. Source amounts preserved with no balancing plugs."
+      "note": "Quarter/YTD flow sums, FX-aware bridges, and quarter-to-YTD delta tests pass within <=0.01% for 9 complete periods. Terminal manual review remains for two cross-year cash-basis discrepancies >0.01%, source visual review, and unreadable Q2/2026 cash-flow OCR. Source amounts preserved with no balancing plugs.",
+      "skipUnconfirmedThroughPeriod": "2026-Q2",
+      "manualReviewReason": "OCR workflow #3023 đã chạy nhưng kiểm định snapshot tạm thời báo thiếu pretax_profit/net_profit tại PLX 2025-Q2. Bản snapshot đã commit vẫn giữ hai số 1,637,976 và 1,368,319 triệu VND; không có bằng chứng cho phép ghi đè. Các ngoại lệ dòng tiền PLX đã được ghi nhận riêng (Q1/2025, Q1/2026 lệch số dư đầu kỳ >0.01%, Q2/2026 OCR không đọc được). Tạm dừng tự động, giữ nguyên dữ liệu và chuyển các điểm này sang rà soát PDF thủ công."
     },
     "IDC": {
       "status": "terminal_needs_manual_review",
@@ -1515,9 +1517,9 @@
     "standardVersion": "2.7",
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
-    "activeSymbol": "GAS",
-    "status": "active_gas_source_page_ocr_pending",
-    "lastUpdatedAt": "2026-10-30T16:24:00+07:00",
+    "activeSymbol": null,
+    "status": "gas_source_ocr_attempted_manual_review_required",
+    "lastUpdatedAt": "2026-10-30T14:24:59.993Z",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -2101,7 +2103,7 @@
       }
     ],
     "lastCompletedSymbol": "GEG",
-    "nextSymbolHint": "GAS",
+    "nextSymbolHint": null,
     "userRules": [
       "Accept arithmetic discrepancies at or below 0.01% relative error, retain the residual and ratio in metadata, and do not insert a balancing plug.",
       "For each ticker that passes the required checks, commit a durable checkpoint immediately before starting the next ticker.",
@@ -2109,22 +2111,27 @@
     ],
     "activeTickerFindings": {
       "ticker": "GAS",
-      "status": "source_page_ocr_required_before_cashflow_normalization",
+      "status": "manual_review_required_source_ocr_low_confidence",
       "periodCount": 10,
       "firstQuarter": "2024-Q1",
       "lastQuarter": "2026-Q2",
-      "sourcePolicy": "VietstockFinance consolidated PDF/ZIP only",
+      "sourcePolicy": "Chỉ BCTC hợp nhất PDF/ZIP từ danh mục VietstockFinance",
       "archivedSourceCount": 10,
-      "cashflowReconciliationCount": 0,
-      "missingData": "Cash-flow fields are blank; existing extracted sidecars do not contain the cash-flow statement page text.",
-      "nextStep": "OCR only the cash-flow statement pages from the already archived source PDFs; do not re-download reports or infer missing figures."
+      "targetedOcrRuns": [
+        41046423087,
+        41046689941
+      ],
+      "pagesTargeted": "3–18",
+      "finding": "OCR 240dpi đã tạo lại văn bản các trang báo cáo, ví dụ trang lưu chuyển tiền tệ Q1/2024 có tiêu đề và một số dòng nhưng các dòng CFO/CFI/FX bị rơi hoặc dính ký tự, không đủ tin cậy để nhập số. Các trường cash-flow vẫn để trống; không suy diễn hoặc bù số.",
+      "nextStep": "Giữ GAS ở manual review. Chỉ nhập cash-flow khi có bản PDF trang rõ hoặc OCR chất lượng đủ để xác định từng dòng 20/30/40/50/60/61/70; đối chiếu sai số tương đối <=0.01%, không tạo balancing plug."
     },
     "tickerComplete": false,
     "manualReviewRemaining": [
       "PLX: direct visual review of OCR-derived source pages remains pending.",
       "PLX Q1/2025: opening cash 14,933,069 vs FY2024 closing 15,062,136 million VND; residual -129,067 million (0.856897%), above tolerance.",
       "PLX Q1/2026: opening cash 7,588,240 vs FY2025 closing 10,803,154 million VND; residual -3,214,914 million (29.759031%), above tolerance.",
-      "PLX Q2/2026: cash-flow table OCR unreadable on source pages 6-7; flow values remain null; no bridge-derived imputation."
+      "PLX Q2/2026: cash-flow table OCR unreadable on source pages 6-7; flow values remain null; no bridge-derived imputation.",
+      "GAS: OCR lại trang báo cáo lưu chuyển tiền tệ từ 10 PDF lưu trữ nhưng văn bản OCR vẫn thiếu/nhòe các dòng trọng yếu; cash-flow để trống, chờ kiểm tra PDF trực quan."
     ],
     "lastTickerReview": {
       "ticker": "GEG",
@@ -2181,7 +2188,7 @@
       }
     ]
   },
-  "nextSymbolHint": "SHS",
+  "nextSymbolHint": "IDC",
   "lastSessionCheckpoint": {
     "savedAt": "2026-10-30T11:08:45Z",
     "branch": "main",
