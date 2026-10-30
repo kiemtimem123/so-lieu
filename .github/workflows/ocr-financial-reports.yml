@@ -94,6 +94,8 @@ jobs:
               for item in config.get("securities", [])
               if isinstance(item, dict) and item.get("enabled") is not False and item.get("symbol")
           ]
+          # Per-ticker rescan requests are used only for explicitly registered
+          # low-information source pages; validated tickers are not rescanned.
           rescan_pages_by_symbol = {
               str(item.get("symbol") or "").strip().upper(): {
                   int(page) for page in (item.get("ocrRescanPages") or [])
