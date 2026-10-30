@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T10:45:00Z",
+  "updatedAt": "2026-10-30T10:47:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -41,7 +41,7 @@
   ],
   "lastCompletedSymbol": "BSR",
   "activeSymbol": null,
-  "resumeSymbolHint": "TCB",
+  "resumeSymbolHint": "VHM",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "BSR",
@@ -793,7 +793,10 @@
       "statementPagesPending": false,
       "sourceArchivesChecked": 11,
       "updatedAt": "2026-10-25T20:13:20Z",
-      "snapshotFetchedAt": "2026-10-22T05:57:26+00:00"
+      "snapshotFetchedAt": "2026-10-22T05:57:26+00:00",
+      "skipUnconfirmedAutomation": true,
+      "skipUnconfirmedThroughPeriod": "2026-Q3",
+      "manualReviewReason": "TCB đã có snapshot 11 kỳ và các trường dữ liệu nguồn đã lưu. OCR/enrich tự động tiếp tục làm thay đổi hai chỉ tiêu ngân hàng Q3/2026 (gross interest income và capital-contribution income), khiến bank reconciliation regression fail; commit dữ liệu không được thực hiện. Giữ nguyên snapshot đã lưu, tạm chuyển phần nâng schema/đối chiếu hai chỉ tiêu sang rà soát thủ công; không lặp lại tự động."
     },
     "VHM": {
       "status": "automated_processing_complete",
@@ -2157,7 +2160,7 @@
   },
   "nextSymbolHint": "SHS",
   "lastSessionCheckpoint": {
-    "savedAt": "2026-10-30T10:45:00Z",
+    "savedAt": "2026-10-30T10:47:00Z",
     "branch": "main",
     "latestWorkflowFixCommit": "45424f32ab634e30497cbce105c51441cf65ef9e",
     "lastCompletedWork": [
@@ -2170,13 +2173,22 @@
       "Khôi phục 11 kỳ VND (2024-Q1 đến 2026-Q3) cho các trường cashflow basis, CFO/CFI/CFF/net cash, YTD, opening/closing cash và calculation metadata từ snapshot đã kiểm định commit 599fe737965b062e723daa9fc2c7543a86e3ce4d; giữ nguyên các trường khác.",
       "BSR: phục hồi 10 kỳ cash-flow từ snapshot đã kiểm định commit 02acbc2b39309cfee310e84c9cdc64e57e83f940 sau OCR/enrich regression.",
       "HCM: phục hồi 10 kỳ cash-flow từ snapshot đã kiểm định commit f777ae6b5208d689fa92c77ddf5f0d7f686930b9 sau OCR/enrich regression.",
-      "Đặt BSR và HCM vào manual-review hold để tránh workflow tự động ghi đè dữ liệu đã phục hồi; mã tiếp theo trong hàng đợi là TCB."
+      "Đặt BSR và HCM vào manual-review hold để tránh workflow tự động ghi đè dữ liệu đã phục hồi; mã tiếp theo trong hàng đợi là TCB.",
+      "Validate quarterly financial data run 41043061862 SUCCESS.",
+      "Validate Site and Data run 41043062024 SUCCESS after restoring HCM.",
+      "Package Hostinger Stock Dashboard run 41043062033 SUCCESS.",
+      "TCB OCR run 2997 failed bank-specific regression for Q3/2026 gross interest income and capital-contribution income; commit step skipped, so stored TCB snapshot was preserved and the ticker is held for manual review."
     ],
     "lastKnownValidation": {
       "quarterlyFinancialData": "success",
       "siteAndData": "success",
       "hostingerPackage": "success",
-      "note": "These passes preceded the latest workflow selector guard; new validation runs triggered by commit 45424f32ab634e30497cbce105c51441cf65ef9e are pending."
+      "validationRuns": {
+        "quarterlyFinancialData": 41043061862,
+        "siteAndData": 41043062024,
+        "hostingerPackage": 41043062033
+      },
+      "note": "All three checks passed after restoring HCM and BSR cash-flow snapshots. TCB OCR run 2997 passed enrichment validation but failed bank-specific regression; no data commit was made."
     },
     "resumeRules": [
       "Resume from this checkpoint; do not reload or reprocess tickers already validated.",
@@ -2186,10 +2198,10 @@
       "For OCR dispatches, honor manual-review holds even when a ticker is passed as an explicit workflow input."
     ],
     "nextActions": [
-      "Chạy kiểm định quarterly financial và site/data sau khi phục hồi BSR/HCM/VND; xử lý mọi lỗi còn lại trước khi mở hàng đợi.",
-      "Tiếp tục mã TCB nếu validation đạt; không reprocess BSR/HCM/VND/NLG/SHS/TCX.",
-      "Điều tra và sửa enrichment pipeline để merge/preserve cashflow fields đã chuẩn hóa trước khi nâng schema chi tiết.",
-      "Tiếp tục cash-flow GAS từ các PDF VietstockFinance đã lưu khi có khả năng OCR đúng trang; không tải lại hoặc suy diễn."
+      "Tiếp tục mã VHM theo hàng đợi sau khi TCB được giữ manual review; chỉ xử lý một mã và kiểm tra regression trước commit.",
+      "Nếu mã tiếp theo làm thay đổi trường đã xác nhận hoặc fail regression, khôi phục từ snapshot đã kiểm định, ghi checkpoint hold và chuyển mã tiếp theo.",
+      "Điều tra cơ chế enrich bảo toàn trường chi tiết đã xác minh trước khi tiếp tục nâng schema hàng loạt.",
+      "Tiếp tục cash-flow GAS bằng OCR trang báo cáo gốc từ các PDF VietstockFinance đã lưu; không tải lại hoặc suy diễn."
     ],
     "latestDataRecoveryCommit": "168342286eeb209974c91880c6ae6f8511790d66",
     "heldTickersUpdated": [
