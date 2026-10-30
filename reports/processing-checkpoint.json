@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T15:31:20.719Z",
+  "updatedAt": "2026-10-30T15:31:56.369Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -779,9 +779,29 @@
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-10-30T15:20:00Z",
+      "updatedAt": "2026-10-30T15:31:56.369Z",
       "snapshotFetchedAt": "2026-10-23T20:45:50+00:00",
-      "note": "GEG review 2026-10-30: 10 quarters Q1/2024–Q2/2026; no confirmed core statement correction found in the archived VietstockFinance OCR source review. Core P&L/tax arithmetic and balance sheet totals appear internally consistent; negative NCI explains parent net profit exceeding consolidated net profit in several periods (e.g. Q2/2025: 165,820.759m parent + (-8,105.900m) NCI = 157,714.859m consolidated). Q2/2026 cash flow internally reconciles on reported YTD basis (begin 74,942.444m + net change 25,371.517m + FX 13.217m = end 100,327.179m); however quarter opening basis differs from Q1 closing (105,857m), yielding 10.22% quarter bridge exception. Preserve report's own YTD opening cash and manual review; no balancing plug. Visual/source review remains pending on 2024 periods and Q2/2026."
+      "note": "GEG review 2026-10-30: 10 quarters Q1/2024–Q2/2026; no confirmed core statement correction found in the archived VietstockFinance OCR source review. Core P&L/tax arithmetic and balance sheet totals appear internally consistent; negative NCI explains parent net profit exceeding consolidated net profit in several periods (e.g. Q2/2025: 165,820.759m parent + (-8,105.900m) NCI = 157,714.859m consolidated). Q2/2026 cash flow internally reconciles on reported YTD basis (begin 74,942.444m + net change 25,371.517m + FX 13.217m = end 100,327.179m); however quarter opening basis differs from Q1 closing (105,857m), yielding 10.22% quarter bridge exception. Preserve report's own YTD opening cash and manual review; no balancing plug. Visual/source review remains pending on 2024 periods and Q2/2026.",
+      "sourceReconciledPeriods": [
+        "2024-Q1",
+        "2024-Q2",
+        "2024-Q3",
+        "2024-Q4",
+        "2026-Q2"
+      ],
+      "lastSourceReconciliation": {
+        "periodRange": "2024-Q1 through 2024-Q4, plus 2026-Q2",
+        "status": "source_text_reconciled_pending_visual_review",
+        "correctionCommit": "5db4a6d612b7e6add9805694cb9c68ca1efb7be5",
+        "findings": [
+          "2024-Q1 revenue field was incorrectly populated with operating profit 137,395 million VND; corrected revenue to 739,215 million VND from B02a line 10, while operating_profit remains 137,395 million.",
+          "2024-Q2, Q3 and Q4 consolidated profit attribution differences are explained by negative NCI; parent profit values can exceed consolidated net profit without being an error.",
+          "2024-Q1 cash-flow statement sums and opening/closing cash bridge reconcile exactly from selected Q1/2025 comparative.",
+          "2024-Q2 to Q4 cash-flow comparisons use later VietstockFinance comparative statements; source revisions and bridge checks are preserved.",
+          "2026-Q2 YTD cash-flow sum and YTD cash bridge reconcile exactly; standalone-quarter cash bridge residual is 10.2213% and cross-period opening cash basis differs from Q1 close by 29.2039%. Preserve manual review and do not plug."
+        ],
+        "remaining": "Archived OCR text reviewed. PDF page images not visually inspected; keep all five terminal manual-review periods until visual confirmation."
+      }
     },
     "SHS": {
       "status": "terminal_needs_manual_review",
@@ -2393,8 +2413,8 @@
     "codeFix": "scripts/validate-financials.mjs now reports chronological first/last periods from sorted unique period keys instead of relying on insertion order."
   },
   "nextActions": [
-    "Continue GEG: inspect its five flagged quarters against the saved VietstockFinance PDF/ZIP sidecars; preserve unresolved visual/cash-flow bridge flags.",
-    "After GEG, review PLX only if its user-directed skip hold is lifted; do not override the explicit hold.",
-    "Do not reload/reprocess validated snapshots; only make source-backed corrections and checkpoint after one ticker."
+    "GEG source-text reconciliation completed for five flagged periods; Q1/2024 revenue correction committed. Visual PDF page review remains pending.",
+    "Next: review remaining unheld tickers with terminal manual-review periods; preserve user-directed skip holds for PLX, VCI/VIX/VCK and other held periods.",
+    "Do not rerun OCR or reload completed data; do not change source values to force cross-period cash continuity."
   ]
 }
