@@ -222,7 +222,15 @@ jobs:
           if requested:
               if requested not in symbols:
                   raise SystemExit(f"Ticker {requested} is not enabled in config/securities.json")
-              selected = requested
+              requested_snapshot = load_json(Path("data") / f"financials-{requested}.json")
+              if requested_snapshot is not None and should_skip_unconfirmed(
+                  requested, requested_snapshot, checkpoint_states.get(requested)
+              ):
+                  limit = skip_through_by_symbol.get(requested) or (checkpoint_states.get(requested) or {}).get("skipUnconfirmedThroughPeriod") or (checkpoint_states.get(requested) or {}).get("lastQuarter") or ""
+                  print(f"Requested ticker {requested} is held for manual review through {limit}; refusing automated OCR retry.")
+                  selected = ""
+              else:
+                  selected = requested
           else:
               selected = ""
               now = __import__("datetime").datetime.now(__import__("datetime").timezone.utc).timestamp()
