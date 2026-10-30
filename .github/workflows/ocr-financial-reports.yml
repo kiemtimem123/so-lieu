@@ -224,11 +224,24 @@ jobs:
               if requested not in symbols:
                   raise SystemExit(f"Ticker {requested} is not enabled in config/securities.json")
               requested_snapshot = load_json(Path("data") / f"financials-{requested}.json")
-              if requested_snapshot is not None and should_skip_unconfirmed(
-                  requested, requested_snapshot, checkpoint_states.get(requested)
-              ):
-                  limit = skip_through_by_symbol.get(requested) or (checkpoint_states.get(requested) or {}).get("skipUnconfirmedThroughPeriod") or (checkpoint_states.get(requested) or {}).get("lastQuarter") or ""
+              requested_state = checkpoint_states.get(requested) or {}
+              requested_latest = latest_quarter(requested_snapshot)
+              requested_last_completed = str(requested_state.get("lastQuarter") or "").strip()
+              held_for_manual_review = requested_snapshot is not None and should_skip_unconfirmed(
+                  requested, requested_snapshot, requested_state
+              )
+              already_completed_without_new_quarter = (
+                  requested_state.get("completeForAutomation") is True
+                  and requested_latest
+                  and requested_last_completed
+                  and requested_latest <= requested_last_completed
+              )
+              if held_for_manual_review:
+                  limit = skip_through_by_symbol.get(requested) or requested_state.get("skipUnconfirmedThroughPeriod") or requested_last_completed or ""
                   print(f"Requested ticker {requested} is held for manual review through {limit}; refusing automated OCR retry.")
+                  selected = ""
+              elif already_completed_without_new_quarter:
+                  print(f"Requested ticker {requested} is already complete through {requested_last_completed}; no newer quarter exists, so refusing to reprocess validated data.")
                   selected = ""
               else:
                   selected = requested
