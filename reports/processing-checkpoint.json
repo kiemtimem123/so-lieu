@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T11:06:13Z",
+  "updatedAt": "2026-10-30T11:06:30Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -497,11 +497,13 @@
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
-      "skipUnconfirmedAutomation": false,
+      "skipUnconfirmedAutomation": true,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 6,
       "updatedAt": "2026-10-30T11:04:45Z",
-      "snapshotFetchedAt": "2026-10-29T09:45:17.109Z"
+      "snapshotFetchedAt": "2026-10-29T09:45:17.109Z",
+      "skipUnconfirmedThroughPeriod": "2026-Q2",
+      "manualReviewReason": "KDH Q1/Q2 2026 cash-flow reports have source-supported values but documented >0.01% cash-flow-vs-balance-sheet residual (Q1 0.8233%; Q2 inherits the Q1 residual). OCR/enrich changed the YTD basis and removed reported opening/closing cash; restored all cash-flow fields and source audit metadata from validated normalized snapshot commit 7d0f60a467303c5e9e2cadde9d4c5c28e24ab202, recovery commit 97c6f53010d73a9f8db2dafaa69b79f117cf3df4. Preserve both source values, no balancing plug; hold KDH for manual review."
     },
     "NVL": {
       "status": "automated_processing_complete",
@@ -2178,7 +2180,7 @@
   },
   "nextSymbolHint": "SHS",
   "lastSessionCheckpoint": {
-    "savedAt": "2026-10-30T11:03:00Z",
+    "savedAt": "2026-10-30T11:06:30Z",
     "branch": "main",
     "latestWorkflowFixCommit": "45424f32ab634e30497cbce105c51441cf65ef9e",
     "lastCompletedWork": [
@@ -2204,7 +2206,9 @@
       "CTG: OCR/enrich run 3006 làm sai lệch dòng tiền đã đối chiếu; phục hồi 10 kỳ từ snapshot kiểm định commit 7220e11068fa1a4de3de76ac44ecf6bc4915ccce, commit phục hồi 3f7bc603929872a84a78f02383e0568abeefa7a3; mở rộng guard nhận diện schema audit riêng của CTG.",
       "CTG: lần phục hồi cuối cùng lấy từ commit 67e122544b25d194056600705f442c1c96dcab59, recovery commit df8ff59afe73d796bca7cfaeaf87f421ad594bf5; test suite site đã pass ở run 1438.",
       "BID: OCR/enrich run 3008 hoàn tất 10 kỳ Q1/2024–Q2/2026; source-audited YTD cashflow values remain unchanged compared with normalized commit 1af2c5379049ed8795ff0ae7700b03d904d41fee; only additional bank cash detail fields were extracted.",
-      "SSI: OCR/enrich run 3010 làm thay đổi dòng tiền đã chuẩn hóa; phục hồi 10 kỳ từ snapshot kiểm định commit a921930815dd64b490748ba850c96f494571a710, recovery commit 1bd47b45ff12e40571eda4cc7e5f935689c18322; khóa SSI manual review."
+      "SSI: OCR/enrich run 3010 làm thay đổi dòng tiền đã chuẩn hóa; phục hồi 10 kỳ từ snapshot kiểm định commit a921930815dd64b490748ba850c96f494571a710, recovery commit 1bd47b45ff12e40571eda4cc7e5f935689c18322; khóa SSI manual review.",
+      "SSI: phục hồi thêm capital_expenditure quý riêng cho 10 kỳ từ snapshot kiểm định; site validation 1445, quarterly validation 636 và Hostinger package 201 đều pass sau phục hồi.",
+      "KDH: OCR/enrich run 3013 giữ phần lớn cashflow nhưng đổi basis Q1/Q2 2026 và ẩn cash balances do discrepancy >0.01%; phục hồi toàn bộ cashflow từ commit 7d0f60a467303c5e9e2cadde9d4c5c28e24ab202, recovery 97c6f53010d73a9f8db2dafaa69b79f117cf3df4; hold KDH manual review."
     ],
     "lastKnownValidation": {
       "siteAndData": "success",
@@ -2225,10 +2229,10 @@
       "For OCR dispatches, honor manual-review holds even when a ticker is passed as an explicit workflow input."
     ],
     "nextActions": [
-      "Xác nhận site/data và quarterly validation sau phục hồi SSI.",
-      "Tiếp tục VDS theo checkpoint sau khi các workflow handoff cũ kết thúc.",
-      "Bảo đảm helper preservation nhận diện SSI audit metadata dạng *_within_tolerance; test regression đã được cập nhật.",
-      "Không xử lý lại SSI hoặc mã đã phục hồi; chỉ chạy các mã còn thiếu."
+      "Kiểm tra dữ liệu NVL vừa hoàn tất so với snapshot chuẩn hóa trước đó; giữ nguyên các ngoại lệ đã ghi nhận.",
+      "Tiếp tục HHV theo checkpoint; một mã mỗi lần.",
+      "Đảm bảo preservation helper bảo vệ các báo cáo có no_balancing_plug=true và residual vượt 0.01%, giữ nguyên trạng thái manual review.",
+      "Sau HHV, tiếp tục các mã còn lại; không reprocess các mã đã hold."
     ],
     "latestDataRecoveryCommit": "168342286eeb209974c91880c6ae6f8511790d66",
     "heldTickersUpdated": [
@@ -2244,7 +2248,8 @@
       "VPB",
       "STB",
       "CTG",
-      "SSI"
+      "SSI",
+      "KDH"
     ],
     "latestDataRecoveryCommits": {
       "VND": "168342286eeb209974c91880c6ae6f8511790d66",
@@ -2256,7 +2261,8 @@
       "STB": "c7adf9bd17134110ee85d6169a3a7f3a9f09ddac",
       "CTG": "df8ff59afe73d796bca7cfaeaf87f421ad594bf5",
       "BID": "5cdd3a676483cb53b02e63e803264c6ddc3d3916",
-      "SSI": "1bd47b45ff12e40571eda4cc7e5f935689c18322"
+      "SSI": "125f8d6dcfc66007e9651e1c6472c8e99b0481c0",
+      "KDH": "97c6f53010d73a9f8db2dafaa69b79f117cf3df4"
     }
   }
 }
