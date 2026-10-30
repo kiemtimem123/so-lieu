@@ -479,7 +479,26 @@ def core_extraction_pages_complete(item,symbol,pages,max_pages=14):
   int(page.get("page")) for page in pages
   if isinstance(page,dict) and str(page.get("page","")).isdigit()
  }
- return all(number in existing for number in range(1,target_count+1))
+ if not all(number in existing for number in range(1,target_count+1)):
+  return False
+ # GAS scanned filings may contain only the electronic-verification stamp on
+ # statement pages. Page presence alone is not evidence that the financial
+ # statements were OCR'd. Require identifiable balance-sheet and income rows
+ # before treating its core source pages as complete.
+ if symbol=="GAS":
+  by_page={
+   int(page.get("page")):norm(page.get("text",""))
+   for page in pages
+   if isinstance(page,dict) and str(page.get("page","")).isdigit()
+  }
+  balance_text=" ".join(by_page.get(number,"") for number in (4,5))
+  income_text=" ".join(by_page.get(number,"") for number in (6,7))
+  has_balance=("bang can doi ke toan" in balance_text and "no phai tra" in balance_text)
+  has_pretax=bool(re.search(r"loi nhuan (?:ke toan )?truoc thue",income_text))
+  has_pat="loi nhuan sau thue" in income_text
+  if not (has_balance and has_pretax and has_pat):
+   return False
+ return True
 
 def value_by_row_prefix(pages,prefix_patterns,factor,threshold=1000):
  patterns=[re.compile(pattern) for pattern in prefix_patterns]
