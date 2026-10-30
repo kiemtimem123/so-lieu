@@ -1482,9 +1482,9 @@
     "standardVersion": "2.7",
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "cashflow",
-    "activeSymbol": null,
-    "status": "terminal_manual_review_recorded_repo_validation_warning",
-    "lastUpdatedAt": "2026-10-30T09:30:00+07:00",
+    "activeSymbol": "GAS",
+    "status": "active_gas_source_page_ocr_pending",
+    "lastUpdatedAt": "2026-10-30T16:18:00+07:00",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -1843,10 +1843,11 @@
       "HHV NEEDS_MANUAL_REVIEW_SOURCE_RECONCILIATION_GT_0_01_PERCENT — original Q4/2024 OCR sidecar has a -30,000,000,000 VND flow-total and cash bridge discrepancy. FY2024 comparison from Q4/2025 selected; old values and new comparison retained; direct source image review pending.",
       "HHV NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT — H1/2025 later comparative in Q2/2026 materially reclassifies CFO/CFI/CFF versus original H1/2025, although net movement/closing cash differ under 0.01%. Preserve both source bases; no plug.",
       "HHV NEEDS_MANUAL_REVIEW_CROSS_PERIOD_CASH_BASIS_GT_0_01_PERCENT — Q2/2026 YTD opening cash differs from FY2025 close by -15,039,846,885 VND; Q2 standalone bridge residual against Q1 close is -15,039,808,794 VND (~2.96%). Keep both printed source balances and no balancing plug.",
-      "HHV source-page direct image review remains pending because the direct PDF viewer could not render the archived VietstockFinance PDFs; OCR sidecars and arithmetic checks are not presented as visual verification."
+      "HHV source-page direct image review remains pending because the direct PDF viewer could not render the archived VietstockFinance PDFs; OCR sidecars and arithmetic checks are not presented as visual verification.",
+      "GAS NEEDS_SOURCE_PAGE_OCR — all 10 consolidated VietstockFinance PDFs are archived, but current OCR sidecars do not contain the cash-flow statement pages. Do not infer CFO/CFI/CFF/net cash/FX/opening/closing balances. Resume with targeted OCR of archived pages."
     ],
-    "nextStep": "GEG terminal for automated processing; manual review remains only for specified source/image exceptions.",
-    "previousCompletedSymbol": "HHV",
+    "nextStep": "Continue GAS as the next incomplete cash-flow ticker. All 10 consolidated VietstockFinance quarterly PDFs are already archived (2024-Q1 through 2026-Q2), but existing OCR sidecars contain only cover/verification text on statement pages and the snapshot has no usable cash-flow values. OCR the archived source statement pages, then reconcile CFO/CFI/CFF/net cash/FX/opening and closing cash on raw VND values; accept residuals <=0.01%, preserve larger source exceptions without plugs, and commit a per-ticker checkpoint before moving on.",
+    "previousCompletedSymbol": "GEG",
     "validationRuns": [
       {
         "name": "Validate Site and Data",
@@ -2066,35 +2067,24 @@
         "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/40889650791"
       }
     ],
-    "lastCompletedSymbol": "BID",
-    "nextSymbolHint": "VIX",
+    "lastCompletedSymbol": "GEG",
+    "nextSymbolHint": "GAS",
     "userRules": [
       "Accept arithmetic discrepancies at or below 0.01% relative error, retain the residual and ratio in metadata, and do not insert a balancing plug.",
       "For each ticker that passes the required checks, commit a durable checkpoint immediately before starting the next ticker.",
       "Do not reload, re-OCR, or re-parse data already passed under the current standard unless a new source, explicit correction, standard change affecting it, or regression failure requires reopening."
     ],
     "activeTickerFindings": {
-      "ticker": "GEG",
-      "status": "terminal_needs_manual_review",
-      "periodsReviewedThrough": "2026-Q2",
-      "latestAvailablePeriodInSnapshot": "2026-Q2",
+      "ticker": "GAS",
+      "status": "source_page_ocr_required_before_cashflow_normalization",
       "periodCount": 10,
-      "dataCommit": "538c6a45b62c668c5aa53440fada18650c3ba098",
-      "testCommit": "71a7d8f9fe7b18fb9c9677120a6f8e0e0b58b5e8",
-      "validatorCommit": "e172b4593473ebc623be3b3d181bac3349b99b91",
-      "documentationCommit": "9f27df243befba575ef5721cfdff75913880e3a3",
-      "sourcePolicy": "Only VietstockFinance catalog and linked official consolidated BCTC.",
-      "manualReviewRemaining": [
-        "2024-Q1 through 2024-Q4: numeric reconciliations pass, but direct PDF image review remains pending.",
-        "Q2/2026 YTD opening cash 74,942,444,345 VND differs from Q1/2026 closing cash 105,856,793,049 VND by -30,914,348,704 VND; YTD bridge passes but standalone Q2 bridge residual is -11,422,219,803 VND (~10.22%). Preserve source values; no plug.",
-        "GEG Q3/2026 official consolidated report URL has not been confirmed from the approved VietstockFinance index. Snapshot latest remains Q2/2026; do not infer that Q3 is unpublished."
-      ],
-      "ci": {
-        "quarterlyFinancialData": "PASS #608, run 40990954587",
-        "siteAndData": "FAIL repository-wide run 40991135791 due FPT/SHB tests; no GEG-specific failing tests in that run log.",
-        "packageHostinger": "PASS #178, run 40990833878"
-      },
-      "nextStep": "GEG is complete for automated processing. Retain the Q2/2026 exception and visual/source-listing review items. Do not reprocess already verified quarters."
+      "firstQuarter": "2024-Q1",
+      "lastQuarter": "2026-Q2",
+      "sourcePolicy": "VietstockFinance consolidated PDF/ZIP only",
+      "archivedSourceCount": 10,
+      "cashflowReconciliationCount": 0,
+      "missingData": "Cash-flow fields are blank; existing extracted sidecars do not contain the cash-flow statement page text.",
+      "nextStep": "OCR only the cash-flow statement pages from the already archived source PDFs; do not re-download reports or infer missing figures."
     },
     "tickerComplete": false,
     "manualReviewRemaining": [
