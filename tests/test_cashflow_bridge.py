@@ -2858,8 +2858,6 @@ class NVLCashFlowNormalizationTests(unittest.TestCase):
         self.assertEqual(q2rec["quarter_cash_bridge_residual"], -188_812)
         self.assertTrue(q2rec["no_balancing_plug"])
 
-if __name__ == "__main__":
-    unittest.main()
 
 
 class HHVCashFlowNormalizationTests(unittest.TestCase):
@@ -3641,3 +3639,57 @@ class GEGSourceAuditEnrichmentPreservationTests(unittest.TestCase):
 
         self.assertEqual(rows["2025-Q4"]["financial_line_items_status"], "cashflow_source_rows_visually_verified")
 
+class ManualCoreValueEnrichmentPreservationTests(unittest.TestCase):
+    """Generic parser enrichment must not delete manually verified core values."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.enricher = runpy.run_path(
+            str(ROOT / "scripts" / "enrich-financial-categories.py"),
+            run_name="manual_core_enricher_for_test",
+        )
+        cls.capture = cls.enricher["capture_manually_verified_core_fields"]
+        cls.restore = cls.enricher["restore_manually_verified_core_fields"]
+
+    def test_fpt_q4_2024_manually_verified_core_values_survive_parser_migration(self):
+        snapshot = json.loads((ROOT / "data" / "financials-FPT.json").read_text(encoding="utf-8"))
+        row = next(item for item in snapshot["items"] if item["period"] == "2024-Q4")
+        fields = ("total_assets", "total_liabilities", "equity", "pretax_profit", "net_profit")
+        expected = {field: row[field] for field in fields}
+        backups = self.capture([row])
+        self.assertIn("2024-Q4", backups)
+        for field in fields:
+            row[field] = None
+        row["verification_status"] = "auto_pending_extraction"
+        row["core_financial_extracted_fields"] = []
+        row["core_financial_extraction_status"] = "auto_pending_extraction"
+        changed, quarters, field_count = self.restore([row], "FPT", backups)
+        self.assertTrue(changed)
+        self.assertEqual(quarters, 1)
+        self.assertEqual(field_count, 5)
+        self.assertEqual({field: row[field] for field in fields}, expected)
+        self.assertEqual(row["verification_status"], "verified_manual_visual_reconciliation")
+        self.assertTrue(set(fields).issubset(set(row["core_financial_extracted_fields"])))
+        self.assertTrue(set(fields).issubset(set(row["core_financial_extraction_manually_verified_fields"])))
+
+    def test_fpt_q4_2024_visually_verified_income_statement_values(self):
+        snapshot = json.loads((ROOT / "data" / "financials-FPT.json").read_text(encoding="utf-8"))
+        row = next(item for item in snapshot["items"] if item["period"] == "2024-Q4")
+        self.assertTrue(row["source_extract_review"]["manually_visual_reviewed"])
+        self.assertEqual(row["source_extract_review"]["source_pages"], [8])
+        self.assertEqual(row["source_extract_review"]["printed_pages"], [6])
+        for field, expected in {
+            "revenue":17607818,"cost_of_goods_sold":11128844,"gross_profit":6478973,
+            "financial_income":576398,"financial_expense":831375,"interest_expense":134854,
+            "selling_expense":1684354,"admin_expense":1735410,"operating_profit":2922047,
+            "pretax_profit":2959667,"income_tax_current":536404,"income_tax_deferred":-70239,
+            "income_tax":466165,"net_profit":2493502,"net_profit_attributable":2086993,
+            "eps":994,"diluted_eps":994,"roa":14.29,"roe":28.03
+        }.items():
+            with self.subTest(field=field):
+                self.assertEqual(row[field], expected)
+        self.assertEqual(row["pretax_profit"]-row["net_profit"],row["income_tax"])
+
+
+if __name__ == "__main__":
+    unittest.main()

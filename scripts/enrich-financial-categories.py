@@ -3719,11 +3719,111 @@ def restore_source_audited_cashflow_fields(items, symbol):
 
     return changed, affected_quarters, changed_fields
 
+
+def capture_manually_verified_core_fields(items):
+    """Snapshot core values with explicit manual visual verification before enrichment."""
+    core_fields = ("total_assets", "total_liabilities", "equity", "pretax_profit", "net_profit", "roa", "roe")
+    backups = {}
+    for item in (items if isinstance(items, list) else []):
+        if not isinstance(item, dict) or not period_key(item):
+            continue
+        manual_fields = set(item.get("core_financial_extraction_manually_verified_fields") or [])
+        if item.get("verification_status") == "verified_manual_visual_reconciliation":
+            manual_fields.update(
+                field for field in core_fields
+                if isinstance(item.get(field), (int, float)) and not isinstance(item.get(field), bool)
+            )
+        values = {
+            field: item[field] for field in manual_fields
+            if field in core_fields and isinstance(item.get(field), (int, float)) and not isinstance(item.get(field), bool)
+        }
+        if values:
+            backups[item["period"]] = {
+                "values": values,
+                "manual_fields": sorted(values),
+                "source_url": item.get("source_url"),
+                "source_index_url": item.get("source_index_url"),
+                "verification_status": item.get("verification_status"),
+                "verification_status_note": item.get("verification_status_note"),
+                "core_financial_extraction_status": item.get("core_financial_extraction_status"),
+                "core_financial_extraction_note": item.get("core_financial_extraction_note"),
+                "core_financial_extraction_source": item.get("core_financial_extraction_source"),
+                "core_financial_extracted_fields": list(item.get("core_financial_extracted_fields") or []),
+                "core_financial_extraction_pages": list(item.get("core_financial_extraction_pages") or []),
+            }
+    return backups
+
+
+def restore_manually_verified_core_fields(items, symbol, backups):
+    """Prevent generic parser migrations from removing/changing manually verified core values."""
+    symbol = str(symbol or "").strip().upper()
+    expected_index = f"https://finance.vietstock.vn/{symbol}/tai-tai-lieu.htm?doctype=1"
+    changed = False
+    affected_quarters = 0
+    changed_fields = 0
+    for item in (items if isinstance(items, list) else []):
+        if not isinstance(item, dict):
+            continue
+        backup = backups.get(str(item.get("period") or ""))
+        if not isinstance(backup, dict):
+            continue
+        if item.get("source_url") != backup.get("source_url") or item.get("source_index_url") != expected_index:
+            continue
+        row_changed = False
+        values = backup.get("values") or {}
+        for field, value in values.items():
+            current = item.get(field)
+            if current != value:
+                if isinstance(current, (int, float)) and not isinstance(current, bool):
+                    item.setdefault("core_financial_extraction_unverified_values", {}).setdefault(field, current)
+                item[field] = value
+                row_changed = True
+                changed_fields += 1
+        manual_fields = set(backup.get("manual_fields") or [])
+        core_fields = set(item.get("core_financial_extracted_fields") or [])
+        detail_fields = set(item.get("financial_line_items_extracted_fields") or [])
+        core_fields.update(manual_fields)
+        detail_fields.update(manual_fields)
+        if sorted(core_fields) != sorted(item.get("core_financial_extracted_fields") or []):
+            item["core_financial_extracted_fields"] = sorted(core_fields)
+            row_changed = True
+        if sorted(detail_fields) != sorted(item.get("financial_line_items_extracted_fields") or []):
+            item["financial_line_items_extracted_fields"] = sorted(detail_fields)
+            row_changed = True
+        manual_allowlist = set(item.get("core_financial_extraction_manually_verified_fields") or [])
+        manual_allowlist.update(manual_fields)
+        if sorted(manual_allowlist) != sorted(item.get("core_financial_extraction_manually_verified_fields") or []):
+            item["core_financial_extraction_manually_verified_fields"] = sorted(manual_allowlist)
+            row_changed = True
+        for key in ("verification_status", "verification_status_note", "core_financial_extraction_status",
+                    "core_financial_extraction_note", "core_financial_extraction_source"):
+            prior_value = backup.get(key)
+            if prior_value is not None and item.get(key) != prior_value:
+                item[key] = prior_value
+                row_changed = True
+        prior_pages = backup.get("core_financial_extraction_pages") or []
+        if prior_pages and list(item.get("core_financial_extraction_pages") or []) != prior_pages:
+            item["core_financial_extraction_pages"] = prior_pages
+            row_changed = True
+        if row_changed:
+            item["core_financial_extraction_preservation"] = {
+                "restored_manually_verified_fields": sorted(manual_fields),
+                "source_url": backup.get("source_url"),
+                "source_index_url": expected_index,
+                "source_values_unchanged": True,
+                "parser_migration_must_not_overwrite": True,
+            }
+            item["core_financial_extraction_updated_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+            changed = True
+            affected_quarters += 1
+    return changed, affected_quarters, changed_fields
+
 def enrich_snapshot(path):
  snapshot=json.loads(path.read_text(encoding="utf-8"))
  symbol=str(snapshot.get("symbol") or path.stem.replace("financials-","")).upper()
  items=snapshot.get("items")
  if not isinstance(items,list): return False,0,0
+ manually_verified_core_backups=capture_manually_verified_core_fields(items)
  changed=False; quarter_count=0; field_count=0
  for item in items:
   if not isinstance(item,dict) or not period_key(item): continue
@@ -4338,6 +4438,10 @@ def enrich_snapshot(path):
  changed=changed or source_cashflow_changed
  quarter_count+=source_cashflow_quarters
  field_count+=source_cashflow_fields
+ manual_core_changed,manual_core_quarters,manual_core_fields=restore_manually_verified_core_fields(items,symbol,manually_verified_core_backups)
+ changed=changed or manual_core_changed
+ quarter_count+=manual_core_quarters
+ field_count+=manual_core_fields
  if changed:
   # Record processing time separately from fetchedAt (source-download time).
   # The browser can now choose the newest processed snapshot across origins.

@@ -754,3 +754,10 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 - Cầu nối quý vượt 0,01% vẫn hiển thị số nguồn và residual với trạng thái rà soát thủ công; không để quy tắc OCR chung ẩn số dư tiền. Việc khôi phục không đồng nghĩa cầu nối đã đạt.
 - Trạng thái xem ảnh PDF độc lập: chỉ kỳ có `visual_review` xác nhận trực quan mới giữ trạng thái đã xác minh ảnh; các kỳ còn lại tiếp tục pending.
 
+## Xác minh trực quan FPT Q4/2024 và bảo vệ chỉ tiêu lõi đã xác minh
+
+- Ảnh PDF BCTC hợp nhất FPT Q4/2024, bảng B02-DN/HN, PDF page 8 (trang in 6), cho thấy PBT cột Quý IV là 2.959.667,491092 triệu VND và LNST là 2.493.502,474938 triệu VND. Snapshot cũ 2.958.495 và 2.500.840 không khớp ảnh nguồn; đã sửa về 2.959.667 và 2.493.502.
+- Các trường B02-DN/HN cùng cột Quý IV được điều chỉnh theo ảnh: doanh thu 17.607.818; giá vốn 11.128.844; lãi gộp 6.478.973; doanh thu tài chính 576.398; chi phí tài chính 831.375; chi phí lãi vay 134.854; bán hàng 1.684.354; quản lý 1.735.410; lợi nhuận hoạt động 2.922.047; thuế hiện hành 536.404; thuế hoãn lại -70.239; thuế tổng 466.165; lợi nhuận thuộc cổ đông công ty mẹ 2.086.993; EPS và diluted EPS 994 (đơn vị triệu VND, trừ EPS).
+- Tổng thuế khớp PBT-LNST; ROA/ROE tính lại theo LNST riêng quý và bình quân số dư đầu/cuối quý là 14,29% và 28,03%. Giá trị trước sửa được lưu riêng trong `financial_line_items_prior_values` / `financial_line_items_value_corrections`; trường lõi được đánh dấu manual visual và allowlisted.
+- Bổ sung safeguard: snapshot các trường lõi đã có `verification_status=verified_manual_visual_reconciliation` trước parser migration; sau enrichment phục hồi nguyên giá trị, source URL, allowlist và trạng thái xác minh nếu parser làm mất/ghi đè. Chỉ phục hồi khi URL nguồn và catalog vẫn y nguyên; không áp lên báo cáo nguồn mới.
+- Đã chuyển `unittest.main()` xuống cuối `tests/test_cashflow_bridge.py` để mọi class kiểm thử được đăng ký trước khi runner thực thi.
