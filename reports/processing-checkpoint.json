@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T11:02:20Z",
+  "updatedAt": "2026-10-30T11:03:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -441,11 +441,13 @@
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
-      "skipUnconfirmedAutomation": false,
+      "skipUnconfirmedAutomation": true,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 8,
       "updatedAt": "2026-10-30T11:02:20Z",
-      "snapshotFetchedAt": "2026-10-23T10:46:00+00:00"
+      "snapshotFetchedAt": "2026-10-23T10:46:00+00:00",
+      "skipUnconfirmedThroughPeriod": "2026-Q2",
+      "manualReviewReason": "OCR/enrich run 3010 changed 10-period normalized YTD cash-flow values, cash balances and FX; the earlier preservation guard did not yet recognize SSI's `*_within_tolerance` audit metadata. Restored all cash-flow fields and audit metadata from validated normalization commit a921930815dd64b490748ba850c96f494571a710, recovery commit 1bd47b45ff12e40571eda4cc7e5f935689c18322. The new helper now recognizes SSI's audit format; hold this existing snapshot until revalidated."
     },
     "VDS": {
       "status": "automated_processing_complete",
@@ -2165,7 +2167,7 @@
   },
   "nextSymbolHint": "SHS",
   "lastSessionCheckpoint": {
-    "savedAt": "2026-10-30T11:01:30Z",
+    "savedAt": "2026-10-30T11:03:00Z",
     "branch": "main",
     "latestWorkflowFixCommit": "45424f32ab634e30497cbce105c51441cf65ef9e",
     "lastCompletedWork": [
@@ -2190,7 +2192,8 @@
       "STB: OCR/enrich run 3004 làm thay đổi cash-flow và bank_cash_on_hand; đã khôi phục 10 kỳ từ snapshot kiểm định commit d0a5df06755c70d457e294690ff2b4e9b0ef232c, commit phục hồi c7adf9bd17134110ee85d6169a3a7f3a9f09ddac; giữ STB ở manual review.",
       "CTG: OCR/enrich run 3006 làm sai lệch dòng tiền đã đối chiếu; phục hồi 10 kỳ từ snapshot kiểm định commit 7220e11068fa1a4de3de76ac44ecf6bc4915ccce, commit phục hồi 3f7bc603929872a84a78f02383e0568abeefa7a3; mở rộng guard nhận diện schema audit riêng của CTG.",
       "CTG: lần phục hồi cuối cùng lấy từ commit 67e122544b25d194056600705f442c1c96dcab59, recovery commit df8ff59afe73d796bca7cfaeaf87f421ad594bf5; test suite site đã pass ở run 1438.",
-      "BID: OCR/enrich run 3008 hoàn tất 10 kỳ Q1/2024–Q2/2026; source-audited YTD cashflow values remain unchanged compared with normalized commit 1af2c5379049ed8795ff0ae7700b03d904d41fee; only additional bank cash detail fields were extracted."
+      "BID: OCR/enrich run 3008 hoàn tất 10 kỳ Q1/2024–Q2/2026; source-audited YTD cashflow values remain unchanged compared with normalized commit 1af2c5379049ed8795ff0ae7700b03d904d41fee; only additional bank cash detail fields were extracted.",
+      "SSI: OCR/enrich run 3010 làm thay đổi dòng tiền đã chuẩn hóa; phục hồi 10 kỳ từ snapshot kiểm định commit a921930815dd64b490748ba850c96f494571a710, recovery commit 1bd47b45ff12e40571eda4cc7e5f935689c18322; khóa SSI manual review."
     ],
     "lastKnownValidation": {
       "siteAndData": "success",
@@ -2211,10 +2214,10 @@
       "For OCR dispatches, honor manual-review holds even when a ticker is passed as an explicit workflow input."
     ],
     "nextActions": [
-      "Tiếp tục mã VCI sau khi collector handoff hiện tại kết thúc; mã tiếp theo theo checkpoint là VCI.",
-      "Kiểm tra VCI cashflow preservation after enrichment; if any source-audited fields change, restore from prior normalized snapshot and hold ticker.",
-      "Keep all previously restored tickers in manual-review hold; no repeated OCR/enrich without a new quarter or changed source.",
-      "Continue fix/validation of source-audited cashflow preservation across all audit metadata formats."
+      "Xác nhận site/data và quarterly validation sau phục hồi SSI.",
+      "Tiếp tục VDS theo checkpoint sau khi các workflow handoff cũ kết thúc.",
+      "Bảo đảm helper preservation nhận diện SSI audit metadata dạng *_within_tolerance; test regression đã được cập nhật.",
+      "Không xử lý lại SSI hoặc mã đã phục hồi; chỉ chạy các mã còn thiếu."
     ],
     "latestDataRecoveryCommit": "168342286eeb209974c91880c6ae6f8511790d66",
     "heldTickersUpdated": [
@@ -2229,7 +2232,8 @@
       "TPB",
       "VPB",
       "STB",
-      "CTG"
+      "CTG",
+      "SSI"
     ],
     "latestDataRecoveryCommits": {
       "VND": "168342286eeb209974c91880c6ae6f8511790d66",
@@ -2240,7 +2244,8 @@
       "VPB": "f8e978f7d4b962b00061101e62c8a183f11389c5",
       "STB": "c7adf9bd17134110ee85d6169a3a7f3a9f09ddac",
       "CTG": "df8ff59afe73d796bca7cfaeaf87f421ad594bf5",
-      "BID": "5cdd3a676483cb53b02e63e803264c6ddc3d3916"
+      "BID": "5cdd3a676483cb53b02e63e803264c6ddc3d3916",
+      "SSI": "1bd47b45ff12e40571eda4cc7e5f935689c18322"
     }
   }
 }
