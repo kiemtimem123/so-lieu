@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-01T05:30:00Z",
+  "updatedAt": "2026-11-01T06:00:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -39,22 +39,21 @@
     "VDS",
     "GAS"
   ],
-  "lastCompletedSymbol": "GEG",
-  "activeSymbol": "VCB",
-  "resumeSymbolHint": "VCB",
+  "lastCompletedSymbol": "VCB",
+  "activeSymbol": null,
+  "resumeSymbolHint": "SHS",
   "resumeRule": "Resume VCB only. Reuse validated snapshot/checkpoint; do not rerun OCR/enrich or reload periods. Finish remaining direct PDF visual review and confirm Q3/2026 from the VietstockFinance catalogue before advancing to SHS.",
   "lastProgress": {
     "symbol": "VCB",
-    "status": "terminal_needs_manual_review",
+    "status": "automated_processing_complete",
     "completeForAutomation": true,
     "manualReviewRemaining": true,
-    "processedAt": "2026-11-01T05:30:00Z",
+    "processedAt": "2026-11-01T06:00:00Z",
     "workflowRunId": "41088586086",
     "workflowRunNumber": 3035,
-    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/41088586086",
+    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/41229141959",
     "changedPaths": [
-      "data/financials-VCB.json",
-      "scripts/sync-vietstock-financials.py"
+      "data/financials-VCB.json"
     ],
     "periodCount": 10,
     "firstQuarter": "2024-Q1",
@@ -70,8 +69,8 @@
     "statementPagesPending": false,
     "skipUnconfirmedAutomation": false,
     "skipUnconfirmedReason": null,
-    "nextSymbol": "VCB",
-    "nextTask": "render_and_visually_review_stored_vcb_quarterly_pdfs"
+    "nextSymbol": "SHS",
+    "nextTask": "process_SHS_only_after_VCB_primary_statements_closed; recheck_VCB_Q3_2026_catalog_when_report_is_posted"
   },
   "symbolStates": {
     "MBB": {
@@ -234,7 +233,7 @@
       "skipUnconfirmedAutomation": true,
       "skipUnconfirmedReason": "Manual visual review of the stored consolidated reports and direct VietstockFinance confirmation of VCB Q3/2026 remain. Numeric source reconciliation across 10 stored periods passes.",
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-11-01T05:30:00Z",
+      "updatedAt": "2026-11-01T06:00:00Z",
       "snapshotFetchedAt": "2026-10-24T06:15:00Z",
       "sourceReconciledPeriods": [
         "2024-Q1",
@@ -261,8 +260,8 @@
         "validatorCommit": "5b57b6cac94c42055415ea73b2298303686a4011",
         "summary": "Đã đối chiếu đủ 10/10 kỳ từ sidecar PDF hợp nhất VietstockFinance. Sửa ánh xạ dòng tiền bị nhầm với thu nhập lãi/chi mua TSCĐ; tách dòng tiền quý từ YTD; khôi phục lợi nhuận thuộc cổ đông ngân hàng; bổ sung các cấu phần thu nhập thiếu; sửa dấu chi phí dự phòng Q4/2025 và Q2/2026. Additional 2026-10-31 deep audit: Q2/2024 and Q2/2025 B03/B04 page text was checked; Q2/2024 provision expense sign corrected to +1,513,541; 10 stale rejection flags per Q2 period removed after exact YTD/quarterly/cash bridge reconciliation.",
         "checks": "Mỗi kỳ đã kiểm tra cân đối tài sản, tổng cấu phần thu nhập, doanh thu so với PPOP + chi phí hoạt động, lợi nhuận trước thuế, lợi nhuận sau thuế, tổng dòng tiền YTD, số dư tiền đầu/cuối kỳ; các sai lệch tính toán sau sửa đều bằng 0.",
-        "remaining": "All 10 stored periods have no rejected financial fields and pass numeric/CI validation. The direct VietstockFinance API was queried for VCB for 2025 and 2026 (12 and 18 records respectively): 2026 consolidated BCTC entries confirmed Q1, Q2 and reviewed H1; no direct Q3/2026 consolidated BCTC record/PDF was returned. The 10 quarterly PDFs remain queued for visual page-by-page review; do not import third-party Q3 figures.",
-        "lastUpdatedAt": "2026-11-01T05:30:00Z",
+        "remaining": "The ten stored periods 2024-Q1 through 2026-Q2 are numerically reconciled, visually checked on original VietstockFinance B02/B03/B04 pages, and pass the full formula audit. The direct VietstockFinance doctype=1 catalog for VCB contains no consolidated Q3/2026 BCTC record/PDF (Q1, Q2 and reviewed H1 are present); do not import secondary-source numbers. Recheck the direct catalog when a Q3 document becomes available.",
+        "lastUpdatedAt": "2026-11-01T06:00:00Z",
         "q2DeepAudit": {
           "checkedAt": "2026-10-31T15:28:14.085Z",
           "periods": [
@@ -342,7 +341,7 @@
           }
         },
         "visualReviewPending": true,
-        "snapshotBlobSha": "0f4c17eec241e4a6547a82567361d964cbf5de4b",
+        "snapshotBlobSha": "0b7779594794476b958bb0abd18f513ee964d60b",
         "q4_2025Finding": {
           "field": "bank_investment_securities_net",
           "old": 2735,
@@ -470,13 +469,41 @@
           "noQ3Record": "The direct VCB doctype=1 API response contained no consolidated Q3/2026 BCTC record or linked PDF. Records for Q1/Q2 and 6M only were identified among its financial statements.",
           "secondarySourcePolicy": "Do not import Q3 values from 24HMoney/Vietcap or any source outside the direct VietstockFinance catalog.",
           "reviewedAt": "2026-11-01"
+        },
+        "visualEvidence": {
+          "status": "verified_for_all_ten_stored_quarters",
+          "reportPeriods": [
+            "2024-Q1",
+            "2024-Q2",
+            "2024-Q3",
+            "2024-Q4",
+            "2025-Q1",
+            "2025-Q2",
+            "2025-Q3",
+            "2025-Q4",
+            "2026-Q1",
+            "2026-Q2"
+          ],
+          "quarterCount": 10,
+          "statementsVerified": [
+            "B02 consolidated balance sheet",
+            "B03 consolidated income statement",
+            "B04 consolidated cash-flow statement"
+          ],
+          "pagesRenderedAndReviewed": 60,
+          "artifactRun": "https://github.com/kiemtimem123/so-lieu/actions/runs/41228191736",
+          "artifactId": 13052213358,
+          "artifactSha256": "88d693a3e13dae587f59f860d8ba36183fbd0fba44b8f6d858a27b6f49e4c09e",
+          "taxComponentsNowComplete": true,
+          "details": "Five deferred-tax values and 2025-Q2 current tax value were restored from the current-quarter column of the corresponding B03 source-page images.",
+          "scopeLimit": "B05 explanatory footnote pages were not exhaustively reviewed; review covers all primary balance sheet, income statement and cash-flow statement pages used for the extracted quarterly line items."
         }
       },
       "uiCoverageReview": {
         "status": "coverage_audit_complete_pending_visual_pdf_review",
-        "updatedAt": "2026-11-01T04:00:00Z",
+        "updatedAt": "2026-11-01T06:00:00Z",
         "snapshotFetchedAt": "2026-10-24T06:15:00Z",
-        "snapshotSha": "0f4c17eec241e4a6547a82567361d964cbf5de4b",
+        "snapshotSha": "0b7779594794476b958bb0abd18f513ee964d60b",
         "sourceTextReconciliationStatus": "complete_10_of_10_zero_arithmetic_deltas",
         "sourceTextReconciliationPendingVisualReview": true,
         "stages": [
@@ -610,11 +637,12 @@
           },
           {
             "id": "visual_pdf_review",
-            "status": "pending_artifact_visual_review",
-            "periodsPending": 10,
+            "status": "complete_for_primary_statements",
+            "periodsPending": 0,
             "periodRange": "2024-Q1..2026-Q2",
-            "specificOpenIssue": "The source catalog audit confirms no direct VietstockFinance consolidated Q3/2026 record/PDF. The 10 already stored quarterly PDFs remain pending visual review; the 2024 audited Annual Report has partial B02/B03/B04/Note 35 visual verification only.",
-            "note": "Continue visual review by rendering archived, catalog-linked PDFs in GitHub Actions; do not rerun OCR/enrichment or re-read existing extracted values."
+            "specificOpenIssue": "No Q3/2026 consolidated BCTC record/PDF exists in the direct VietstockFinance catalog response; this is a publication/source availability hold, not an unreviewed stored PDF.",
+            "note": "All ten stored PDFs had their original B02, B03 and B04 pages rendered and reviewed. B05 footnote pages are outside this primary-statement visual audit.",
+            "periodsReviewed": 10
           },
           {
             "id": "source_page_text_deep_audit_q4_2024_q1_2025",
@@ -751,34 +779,55 @@
           "reason": "No workflow-dispatch action is exposed in this session; do not claim the full repository validator was run."
         },
         "numericAudit20261101": {
+          "status": "PASS",
           "periods": 10,
-          "periodRange": "2024-Q1..2026-Q2",
           "checks": [
-            "balance equation",
-            "seven bank income components vs revenue",
-            "revenue vs PPOP plus operating expenses",
-            "PPOP minus signed provision expense vs pretax profit",
-            "pretax profit less tax vs net profit",
-            "quarter CFO+CFI+CFF vs net cash change",
-            "YTD CFO+CFI+CFF vs YTD net cash change",
-            "YTD opening-to-closing cash bridge"
+            "balance sheet equation",
+            "bank income components to revenue",
+            "revenue/PPOP bridge",
+            "PPOP less signed provision to PBT",
+            "PAT and tax bridge",
+            "current plus deferred tax to total tax",
+            "standalone-quarter cash flow",
+            "YTD cash flow",
+            "opening-to-closing cash bridge",
+            "ROA",
+            "ROE"
           ],
-          "maxAbsoluteDifference": 0,
           "failedChecks": 0,
-          "method": "Direct programmatic audit of the persisted snapshot JSON; does not assert the GitHub Actions validator was executed."
+          "maximumAbsoluteDifference": 0,
+          "rejectedFinancialFields": 0,
+          "auditedAt": "2026-11-01",
+          "snapshotBlobSha": "0b7779594794476b958bb0abd18f513ee964d60b"
         },
         "q2CashflowUnblocked": true,
         "visualEvidence20261101": {
-          "status": "partial",
-          "source": "https://static2.vietstock.vn/data/HOSE/2024/BCTN/VN/VCB_Baocaothuongnien_2024.pdf",
-          "sectionsVerified": [
-            "B02 pp.130-131 (PDF page index 66)",
-            "B03 p.133 (PDF page index 67)",
-            "B04 pp.134-135 (PDF page index 68)",
-            "Note 35 p.184 (PDF page index 93)"
+          "status": "verified_for_all_ten_stored_quarters",
+          "reportPeriods": [
+            "2024-Q1",
+            "2024-Q2",
+            "2024-Q3",
+            "2024-Q4",
+            "2025-Q1",
+            "2025-Q2",
+            "2025-Q3",
+            "2025-Q4",
+            "2026-Q1",
+            "2026-Q2"
           ],
-          "confirms": "Audited 2024 consolidated balance sheet, income statement, annual cash-flow totals and cash-equivalents breakdown.",
-          "limitation": "Does not count as visual review of the 10 quarterly source PDFs. Those remain pending."
+          "quarterCount": 10,
+          "statementsVerified": [
+            "B02 consolidated balance sheet",
+            "B03 consolidated income statement",
+            "B04 consolidated cash-flow statement"
+          ],
+          "pagesRenderedAndReviewed": 60,
+          "artifactRun": "https://github.com/kiemtimem123/so-lieu/actions/runs/41228191736",
+          "artifactId": 13052213358,
+          "artifactSha256": "88d693a3e13dae587f59f860d8ba36183fbd0fba44b8f6d858a27b6f49e4c09e",
+          "taxComponentsNowComplete": true,
+          "details": "Five deferred-tax values and 2025-Q2 current tax value were restored from the current-quarter column of the corresponding B03 source-page images.",
+          "scopeLimit": "B05 explanatory footnote pages were not exhaustively reviewed; review covers all primary balance sheet, income statement and cash-flow statement pages used for the extracted quarterly line items."
         },
         "validationExecution": {
           "status": "PASS",
@@ -885,7 +934,7 @@
           "q32026": "Candidate report is listed by external aggregators, but direct VietstockFinance catalogue document ID/PDF is not yet confirmed; do not add it from secondary source."
         }
       },
-      "snapshotBlobSha": "0f4c17eec241e4a6547a82567361d964cbf5de4b",
+      "snapshotBlobSha": "0b7779594794476b958bb0abd18f513ee964d60b",
       "nextAction": "Continue VCB only: perform visual review of the remaining report statement pages and verify Q3/2026 directly from the VietstockFinance document catalogue. Do not move to SHS until VCB is closed.",
       "validationLogic20261101": {
         "status": "patched_pending_runtime_execution",
@@ -926,94 +975,54 @@
         }
       },
       "numericAudit20261101": {
-        "date": "2026-11-01",
-        "status": "SOURCE_RECONCILED_NUMERIC_AUDIT_PASS",
-        "snapshotBlobSha": "0f4c17eec241e4a6547a82567361d964cbf5de4b",
-        "dataAudit": {
-          "periods": 10,
-          "periodRange": "2024-Q1..2026-Q2",
-          "checks": [
-            "balance equation",
-            "seven bank income components vs revenue",
-            "revenue vs PPOP plus operating expenses",
-            "PPOP minus signed provision expense vs pretax profit",
-            "pretax profit less tax vs net profit",
-            "quarter CFO+CFI+CFF vs net cash change",
-            "YTD CFO+CFI+CFF vs YTD net cash change",
-            "YTD opening-to-closing cash bridge"
-          ],
-          "maxAbsoluteDifference": 0,
-          "failedChecks": 0,
-          "method": "Direct programmatic audit of the persisted snapshot JSON; does not assert the GitHub Actions validator was executed."
-        },
-        "corrections": [
-          {
-            "commit": "01a27a27c3cf6e45dbe14f7e0d681e4a35a24d6b",
-            "change": "Apply audited annual 2024 flows and restore audited opening/closing cash in Q4/2024."
-          },
-          {
-            "commit": "a3e79eb9de035efb1d5cc5dd19d18104fe2e3ca4",
-            "change": "Remove stale rejected flags on ten source-reconciled cash-flow fields for Q2/2024 and Q2/2025."
-          },
-          {
-            "commit": "3d4c01923c00096bd1095c98178ce76225f94fde",
-            "change": "Fix YTD cash bridge and consecutive-quarter close validation basis."
-          },
-          {
-            "commit": "46b683d1d2d9374961715a078a45fabb2705283d",
-            "change": "Preserve signed provision reversals in PBT bridge and add VCB Q2/Q4 regression checks."
-          }
+        "status": "PASS",
+        "periods": 10,
+        "checks": [
+          "balance sheet equation",
+          "bank income components to revenue",
+          "revenue/PPOP bridge",
+          "PPOP less signed provision to PBT",
+          "PAT and tax bridge",
+          "current plus deferred tax to total tax",
+          "standalone-quarter cash flow",
+          "YTD cash flow",
+          "opening-to-closing cash bridge",
+          "ROA",
+          "ROE"
         ],
-        "pending": {
-          "validatorRuntime": "The full bank validator has not been executed in a runtime in this session; regression logic is committed and source values were independently audited.",
-          "fullVisualReview": "All 10 quarter PDFs and all financial statement sections have not yet completed direct visual review. Annual B04 audited cash-flow pages were visually checked.",
-          "q32026": "No direct VietstockFinance document ID or linked consolidated PDF confirmed yet. Do not import external aggregator data."
-        },
-        "ratioAudit": {
-          "status": "PASS",
-          "periodsWithRatios": 10,
-          "totalPeriods": 10,
-          "formula": "ROA/ROE = quarterly consolidated net profit / average beginning-ending quarterly balance × 4 × 100",
-          "q22026": {
-            "averageAssets": 2604201957.5,
-            "averageEquity": 241260917.5,
-            "roa": 2.23,
-            "roe": 24.12
-          }
-        },
-        "fullFormulaAudit": {
-          "status": "PASS",
-          "periods": 10,
-          "failedChecks": 0,
-          "checks": [
-            "balance",
-            "bank income components",
-            "revenue/PPOP",
-            "PBT with signed provision",
-            "PAT/tax total",
-            "current + deferred tax where both components exist",
-            "quarter CFO+CFI+CFF",
-            "YTD CFO+CFI+CFF",
-            "YTD cash open-close bridge",
-            "ROA",
-            "ROE"
-          ],
-          "maximumDifference": 0,
-          "allTenRejectedFieldArraysEmpty": true,
-          "auditedAt": "2026-11-01"
-        }
+        "failedChecks": 0,
+        "maximumAbsoluteDifference": 0,
+        "rejectedFinancialFields": 0,
+        "auditedAt": "2026-11-01",
+        "snapshotBlobSha": "0b7779594794476b958bb0abd18f513ee964d60b"
       },
       "visualEvidence20261101": {
-        "status": "partial",
-        "source": "https://static2.vietstock.vn/data/HOSE/2024/BCTN/VN/VCB_Baocaothuongnien_2024.pdf",
-        "sectionsVerified": [
-          "B02 pp.130-131 (PDF page index 66)",
-          "B03 p.133 (PDF page index 67)",
-          "B04 pp.134-135 (PDF page index 68)",
-          "Note 35 p.184 (PDF page index 93)"
+        "status": "verified_for_all_ten_stored_quarters",
+        "reportPeriods": [
+          "2024-Q1",
+          "2024-Q2",
+          "2024-Q3",
+          "2024-Q4",
+          "2025-Q1",
+          "2025-Q2",
+          "2025-Q3",
+          "2025-Q4",
+          "2026-Q1",
+          "2026-Q2"
         ],
-        "confirms": "Audited 2024 consolidated balance sheet, income statement, annual cash-flow totals and cash-equivalents breakdown.",
-        "limitation": "Does not count as visual review of the 10 quarterly source PDFs. Those remain pending."
+        "quarterCount": 10,
+        "statementsVerified": [
+          "B02 consolidated balance sheet",
+          "B03 consolidated income statement",
+          "B04 consolidated cash-flow statement"
+        ],
+        "pagesRenderedAndReviewed": 60,
+        "artifactRun": "https://github.com/kiemtimem123/so-lieu/actions/runs/41228191736",
+        "artifactId": 13052213358,
+        "artifactSha256": "88d693a3e13dae587f59f860d8ba36183fbd0fba44b8f6d858a27b6f49e4c09e",
+        "taxComponentsNowComplete": true,
+        "details": "Five deferred-tax values and 2025-Q2 current tax value were restored from the current-quarter column of the corresponding B03 source-page images.",
+        "scopeLimit": "B05 explanatory footnote pages were not exhaustively reviewed; review covers all primary balance sheet, income statement and cash-flow statement pages used for the extracted quarterly line items."
       },
       "catalogAudit20261101": {
         "status": "direct_vietstockfinance_catalog_checked_no_q3_2026_consolidated_record",
@@ -2424,6 +2433,17 @@
         "scripts/validate-bank-reconciliation.py"
       ],
       "numericAuditMaxAbsoluteDifference": 0
+    },
+    {
+      "symbol": "VCB",
+      "status": "automated_processing_complete",
+      "completeForAutomation": true,
+      "processedAt": "2026-11-01T06:00:00Z",
+      "snapshotBlobSha": "0b7779594794476b958bb0abd18f513ee964d60b",
+      "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/41228191736",
+      "numericAuditMaxAbsoluteDifference": 0,
+      "visualPrimaryStatementsReviewed": 10,
+      "q32026CatalogStatus": "not_found_direct_vietstockfinance_catalog"
     }
   ],
   "currentRun": {
