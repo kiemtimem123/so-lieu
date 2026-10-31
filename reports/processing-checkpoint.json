@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-31T18:45:00+07:00",
+  "updatedAt": "2026-10-31T18:52:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -2690,7 +2690,9 @@
       "c638ce3dd18f808ed341ad77f2cff84ed2658351",
       "9df950a1f379889ed573496feba2d84afe465ee2",
       "1e0a0875ea93c0097def824f0d554199a7d60b98",
-      "pending"
+      "pending",
+      "bd594d6311836516e54bf2abf9dd0e176644ba51",
+      "8a3de1ba0829c11ada32a1427e91630d835a66c8"
     ],
     "finding": "STB snapshot-only banking financial-table review, 10 periods 2024-Q1–2026-Q2, consolidated. No OCR/enrich and no data/financials-STB.json numeric values changed.\nCoverage measured after current rowsFor allow-list and rejected-field sanitizer: CĐKT 88/340 cells (25.9%); KQKD 70/220 (31.8%); LCTT 70/90 (77.8%); ROA/ROE 4/20 (20.0%). Banking row keys only; no generic/broker aliases added.\nConfirmed renderer bug: non-manual rows (e.g. auto_extracted_pending_visual_review) bypassed rowsFor sanitization even when financial_line_items_rejected_fields retained a numeric OCR candidate. STB Q3/2024, Q1/2025 and Q4/2025 contained rejected numeric values in PBT, net profit, total assets/liabilities/equity, EPS, tax or ratios. These could have appeared in the table despite being marked rejected.\nFixed rowsFor fast path to copy and blank numeric financial metrics listed in financial_line_items_rejected_fields for every status, while preserving other extracted values. Rejected-field check now takes precedence over manual/extracted/correction allow-lists. resolveStatementValue also blocks a rejected target key, rejected aliases, and rejected formula inputs so formulas cannot recreate a rejected value.\nRegression fixture reads data/financials-STB.json and confirms rejected values at Q3/2024, Q1/2025 and Q4/2025 are blank in the sanitized display copy while the source snapshot remains unchanged and an unrelated approved bank cash field stays intact.\nSTB direct rows after filtering: CĐKT 88/340; KQKD 70/220; LCTT 70/90 (CFO/CFI/CFF/FX/net change/opening/closing 10/10; capex and dividends paid absent 10/10); ROA/ROE 4/20, present only Q2/2024 and Q4/2024. Q1/2025 and Q4/2025 ratios are rejected and now hidden.\nNCI: bank_non_controlling_profit appears only at Q1/2024 (0, included in extracted detail with same-period calculation metadata); remaining periods lack an accepted NCI value or complete net-profit bridge. No NCI backfill.\nManual/source holds preserved: Q2/2025, Q3/2025 and Q2/2026 remain manual_review_required_pending_extraction; Q2/2024 source cash reclassification >0.01%, Q3/2024 FX bridge residual ~2,000 million VND but <0.01% of closing cash, and H1/2026 component-sum mismatch remain noted. No balancing plug.\nValidate Site and Data run 41193103186 passed on STB regression test commit c638ce3dd18f808ed341ad77f2cff84ed2658351. Hostinger package run 41193089231 passed on renderer commit d77b2746308691f07854b541bcaf5e44e0c21e66. Neither result proves live Hostinger deployment.\nCache version bumped from financial-line-items-20261031-v22 to financial-line-items-20261031-v23 in index.html to bust old app.js browser cache.",
     "correction": "Blank rejected numeric metrics for all verification statuses; rejected fields override manual/extracted/correction allow-lists. resolveStatementValue blocks rejected direct keys, aliases and inputs to formulas.",
@@ -2713,16 +2715,16 @@
     ],
     "regressionTest": "tests/test_financial_table_allowlist.mjs reads STB fixture and asserts rejected numeric metrics at 2024-Q3, 2025-Q1, 2025-Q4 are hidden, approved bank_cash_on_hand remains, raw snapshot remains unchanged; resolver guard assertions.",
     "validationRun": {
-      "id": 41193103186,
+      "id": 41193358266,
       "workflow": "Validate Site and Data",
       "conclusion": "success",
-      "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/41193103186"
+      "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/41193358266"
     },
     "packageRun": {
-      "id": 41193089231,
+      "id": 41193358311,
       "workflow": "Package Hostinger Stock Dashboard",
       "conclusion": "success",
-      "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/41193089231"
+      "url": "https://github.com/kiemtimem123/so-lieu/actions/runs/41193358311"
     },
     "remaining": "STB coverage and rejected-field fix saved; main page cache tag v23. Continue VCB next.",
     "newRows": [
