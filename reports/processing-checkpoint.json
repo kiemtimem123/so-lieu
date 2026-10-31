@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-31T13:45:00+07:00",
+  "updatedAt": "2026-10-31T10:25:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -44,31 +44,29 @@
   "resumeSymbolHint": "KBC",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
-    "symbol": "GEG",
-    "status": "source_text_detail_reconciled_pending_visual_review",
+    "symbol": "GAS",
+    "status": "terminal_needs_manual_review",
     "completeForAutomation": true,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-31T13:45:00+07:00",
+    "processedAt": "2026-10-31T10:25:00+07:00",
     "workflowRunId": "41088586086",
     "workflowRunNumber": 3035,
     "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/41088586086",
     "changedPaths": [
-      "data/financials-GEG.json"
+      "data/financials-GAS.json"
     ],
     "periodCount": 10,
     "firstQuarter": "2024-Q1",
     "lastQuarter": "2026-Q2",
     "pendingCorePeriods": [],
     "terminalManualReviewPeriods": [
-      "2024-Q1",
-      "2024-Q2",
-      "2024-Q3",
       "2024-Q4",
-      "2026-Q2"
+      "2025-Q4",
+      "2026-Q1"
     ],
     "pendingDetailPeriods": [],
     "staleDetailSchemaPeriods": [],
-    "statementPagesPending": true,
+    "statementPagesPending": false,
     "skipUnconfirmedAutomation": false,
     "skipUnconfirmedReason": null,
     "nextSymbol": "KBC",
@@ -637,7 +635,7 @@
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-10-30T18:25:00+07:00",
+      "updatedAt": "2026-10-31T10:25:00+07:00",
       "snapshotFetchedAt": "2026-10-23T18:00:37+00:00",
       "sourceReconciledPeriods": [
         "2024-Q1",
@@ -680,6 +678,21 @@
           "Q2/2026: CĐKT, KQKD và LCTT lũy kế khớp, gồm cả cầu nối tỷ giá."
         ],
         "remaining": "Không còn kỳ chờ OCR tự động. Cần rà soát ảnh PDF trực quan; các ngoại lệ bảng cân đối/dòng tiền nêu trên được giữ trống hoặc terminal manual review, không tự cân đối."
+      },
+      "detailSourceReconciledPeriods": [
+        "2025-Q4",
+        "2026-Q1"
+      ],
+      "lastDetailSourceReconciliation": {
+        "periodRange": "GAS Q4/2025 and Q1/2026 cash-flow statement partial extraction",
+        "status": "source_text_reconciled_pending_visual_review_with_unresolved_rows",
+        "correctionCommit": "a2c37ccd645c107bad9e251345c4b9ebfe6c5e70",
+        "findings": [
+          "Q4/2025: restored YTD CFO 13,378,374.377362m, YTD CFF -3,352,162.410986m and YTD capex -2,330,869.042369m from VietstockFinance consolidated cash-flow page 4. Quarter CFO and CFF can be derived as Q4 YTD less Q3 YTD; capex is only shown in YTD mode because Q3 baseline is absent.",
+          "Q1/2026: restored CFI 509,484.606752m, beginning cash 5,567,998.965715m and FX effect 367.185405m from VietstockFinance consolidated cash-flow page 4.",
+          "Q4/2025 CFI/net cash change/closing cash and Q1/2026 CFO/CFF/net cash change remain blank due OCR uncertainty; no plug or balancing inference."
+        ],
+        "remaining": "Keep visual PDF review pending. Q4/2024 balance sheet liabilities and Q4/2025 balance sheet liabilities/equity, plus Q1/2026 balance sheet totals and missing cash-flow rows, remain unresolved pending visual inspection/source-readable rows."
       }
     },
     "PLX": {
