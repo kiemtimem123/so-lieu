@@ -1582,6 +1582,21 @@
       }
       if (validNumber(item[key])) return { value: item[key], formula: '' };
 
+      // Normalize source-field aliases used by different statement extractors.
+      // Keep the report-specific source field authoritative; only fall back when
+      // the display key is absent and an equivalent source field is numeric.
+      const statementFieldAliases = {
+        share_of_profit_in_associates: ['share_of_profit_associates'],
+        non_controlling_interest_profit: ['bank_non_controlling_profit']
+      };
+      const sourceAlias = (statementFieldAliases[key] || []).find(alias => validNumber(item[alias]));
+      if (sourceAlias) {
+        return {
+          value: item[sourceAlias],
+          formula: 'Ánh xạ từ trường nguồn ' + sourceAlias + ' của cùng kỳ báo cáo.'
+        };
+      }
+
       // rowsForBasis has already removed every value that is not manually
       // verified, explicitly corrected, or matched to an accepted source row.
       // A row-level manual-review badge must not suppress formulas whose every
