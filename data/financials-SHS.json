@@ -4363,7 +4363,7 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/5fe69d1fa2a83054.zip",
       "financial_line_items_updated_at": "2026-10-27T07:54:05+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã rà soát trực quan B02 gốc: khôi phục tổng doanh thu hoạt động dòng 20 = 564,698 triệu VND; thuế hiện hành 43,592, thuế hoãn lại 4,572 triệu VND. Không dùng dòng doanh thu thành phần thay tổng doanh thu.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã rà soát trực quan B02 gốc: khôi phục tổng doanh thu hoạt động dòng 20 = 564,698 triệu VND; thuế hiện hành 43,592, thuế hoãn lại 4,572 triệu VND. Không dùng dòng doanh thu thành phần thay tổng doanh thu. Sửa lại theo ảnh phóng lớn B02 PDF trang 11: thuế hoãn lại đúng 4.577.671.017 VND (4.578 triệu), không phải 4.571.671.017; tổng thuế đúng 48.170.035.356 VND (48.170 triệu), khớp LNTT 279.994.199.272 trừ LNST 231.824.163.916.",
       "operating_cash_flow": 531012,
       "operating_cash_flow_calculation": "Q1 equals YTD from source line 60",
       "financial_line_items_prior_values": {
@@ -4372,7 +4372,7 @@
         "operating_cash_flow_ytd": 279994
       },
       "financial_line_items_rejected_values": {},
-      "income_tax": 48164,
+      "income_tax": 48170,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
       "broker_held_to_maturity_assets": 0,
       "broker_lending_assets": 10502276,
@@ -4461,7 +4461,7 @@
         }
       },
       "income_tax_current": 43592,
-      "income_tax_deferred": 4572,
+      "income_tax_deferred": 4578,
       "net_cash_change_ytd": -301096,
       "cash_ending_reported_ytd": 586519,
       "net_cash_change": -301096,
@@ -4646,21 +4646,27 @@
           },
           "deferredTax": {
             "row": "100.2 — Chi phí thuế TNDN hoãn lại",
-            "valueVND": 4571671017,
-            "valueMillionVND": 4572
+            "valueVND": 4577671017,
+            "valueMillionVND": 4578
           },
           "totalTax": {
             "row": "100 — Chi phí thuế TNDN",
-            "valueVND": 48164035356,
-            "valueMillionVND": 48164
+            "valueVND": 48170035356,
+            "valueMillionVND": 48170
           }
         },
-        "existingIncomeTaxTotalMillionVND": 48164,
-        "roundedComponentSumMillionVND": 48164,
+        "existingIncomeTaxTotalMillionVND": 48170,
+        "roundedComponentSumMillionVND": 48170,
         "reconciliationDifferenceMillionVND": 0,
         "relativeDifferencePercent": 0,
         "signPolicy": "Preserve the report sign, including tax benefits/negative deferred tax.",
-        "checkedAt": "2026-11-01"
+        "checkedAt": "2026-11-01",
+        "priorSidecarMisread": {
+          "oldIncomeTax": 48164,
+          "oldDeferredTaxVND": 4571671017,
+          "oldDeferredTaxMillionVND": 4572,
+          "reason": "Original B02 PDF page 11 at high-resolution crop shows deferred tax 4,577,671,017 VND; archived text sidecar had dropped the 7 in the thousand group."
+        }
       }
     },
     {
