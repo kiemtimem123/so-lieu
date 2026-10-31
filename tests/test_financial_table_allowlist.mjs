@@ -21,6 +21,10 @@ assert.equal(deriveNci(175208, 147786, true), 27422);
 assert.equal(deriveNci(574345, 511014, true), 63331);
 assert.equal(deriveNci(415964, 297573, true), 118391);
 assert.equal(deriveNci(1001241, 880406, true), 120835);
+// GAS source rows where no separate top-level/alias NCI value is present.
+assert.ok(Math.abs(deriveNci(2052338.999441, 2044102.438055, true) - 8236.561386) < 1e-9);
+assert.equal(deriveNci(2543605, 2511656, true), 31949);
+assert.equal(deriveNci(3416067, 3320817, true), 95250);
 assert.equal(deriveNci(175208, 147786, false), null);
 assert.equal(deriveNci(null, 147786, true), null);
 
