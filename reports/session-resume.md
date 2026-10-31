@@ -199,3 +199,12 @@ Ghi chú này là lối tắt tiếp nối, không thay thế checkpoint sống.
 - Applied the same project ROA/ROE formula as the prior nine VCB periods (consolidated quarterly net profit / average balance × 4 × 100): ROA 2.23%, ROE 24.12%. The alternative ROE 24.11% using profit attributable to the bank's shareholders is retained in metadata, not mixed into the display formula.
 - All ten quarters now have ROA/ROE populated; data coverage updated to 20/20 ratio cells (100%). New snapshot blob SHA `f7524add586e543b099cc24358d1313f0c9b010b`.
 - Remaining: full direct visual review of the ten quarterly PDFs is incomplete and direct VietstockFinance catalogue record/document ID for Q3/2026 is not verified. Keep VCB active.
+
+
+## 2026-11-01 VCB final tax and all-period numeric audit
+
+- Corrected Q2/2024 deferred tax from -4,956 to +754 from B03 page 8, Quý II/Năm nay; corrected Q3/2024 deferred tax from -1,020 to -258 from B03 page 8, Quý III/Năm nay. Both now match current tax + deferred tax = total tax exactly. Commit `f01c589593128cc234f5d032d87cb17d5f84b9c9`.
+- Restored Q4/2025 current tax -1,269,144 and deferred tax -984,376 from B03 page 8; sum -2,253,520 equals negative total tax and pretax less total tax equals net profit. Commit `1e21437da745ec0f57abaa05ebfa623ca5593a0b`.
+- Re-audited all 10 stored VCB quarters; all accounting and flow bridges plus tax checks (where components exist) and ROA/ROE all reconcile to zero. All ten `financial_line_items_rejected_fields` arrays are now empty. Current snapshot blob SHA: `9e7aa5c509dcf68083aeb9567bbb179353f3fdf1`.
+- GitHub Actions on `1e21437da745ec0f57abaa05ebfa623ca5593a0b` passed both Validate Site and Data and Validate quarterly financial data. Latest commit with Q2/Q3 2024 tax correction is still awaiting its current run IDs 41227484928 (site), 41227484882 (quarterly validator); package run 41227484921.
+- Remaining: visual review of the 10 source quarterly PDFs is still incomplete; direct VietstockFinance document ID/PDF for Q3/2026 is not confirmed. Keep VCB active.
