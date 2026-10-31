@@ -145,3 +145,11 @@ Ghi chú này là lối tắt tiếp nối, không thay thế checkpoint sống.
 - Audited B04 annual report page 134–135 (embedded PDF page 68) was visually checked. This is partial visual verification only; full review of the 10 report PDFs and all other statement sections remains pending.
 - Q3/2026 still must be confirmed by document ID and PDF directly from `https://finance.vietstock.vn/VCB/tai-tai-lieu.htm?doctype=1`. Do not import figures from 24HMoney or Vietcap.
 - Next: continue VCB only; do not advance to SHS before the remaining direct visual review and Q3/2026 source confirmation are resolved.
+
+
+## 2026-11-01 VCB bank-validator basis correction
+
+- Found a validator logic defect: B04 opening/closing cash fields are year-to-date basis, but the bank reconciliation script compared them against standalone-quarter net cash change and treated annual opening cash as the quarter opening balance.
+- Patched `scripts/validate-bank-reconciliation.py` in commit `3d4c01923c00096bd1095c98178ce76225f94fde`: YTD cash bridge now uses `net_cash_change_ytd`; Q2-Q4 continuity compares the movement between consecutive quarter-end cash balances with the standalone-quarter net flow; added source-backed VCB Q4/2024 regression values.
+- The script content was re-fetched and the new logic/regression presence was checked. The full script has not yet been executed; do not claim test PASS until the repository validator runs.
+- Continue VCB only. Remaining: runtime execution of validator; full visual review of all report PDFs/statement pages; direct VietstockFinance catalog verification for Q3/2026.
