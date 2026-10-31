@@ -62,14 +62,20 @@ def require_close(symbol, period, label, actual, expected, tolerance=EPS):
     )
 
 def cash_bridge_delta(item):
-    """Return closing - opening - net flow - FX effect, or None if core inputs are absent."""
-    required = ("cash_beginning", "cash_ending", "net_cash_change")
+    """Return the cash bridge on the same basis as the reported opening/closing balances."""
+    if item.get("cashflow_period_basis") == "year_to_date":
+        flow_key = "net_cash_change_ytd"
+        fx_key = "foreign_exchange_effect_ytd"
+    else:
+        flow_key = "net_cash_change"
+        fx_key = "foreign_exchange_effect"
+    required = ("cash_beginning", "cash_ending", flow_key)
     if not all(number(item.get(key)) for key in required):
         return None
-    fx_effect = item.get("foreign_exchange_effect")
+    fx_effect = item.get(fx_key)
     if not number(fx_effect):
         fx_effect = 0
-    return item["cash_ending"] - item["cash_beginning"] - item["net_cash_change"] - fx_effect
+    return item["cash_ending"] - item["cash_beginning"] - item[flow_key] - fx_effect
 
 
 def audit_item(symbol, item, by_period):
@@ -166,20 +172,42 @@ def audit_item(symbol, item, by_period):
                     if number(item.get(qfield)) and number(item.get(yfield)) and number(previous.get(yfield)):
                         require_close(symbol, period, f"{qfield} vs current YTD minus prior YTD",
                                       item[qfield], item[yfield]-previous[yfield])
-                if number(previous.get("cash_ending")) and number(item.get("cash_beginning")):
-                    require_close(symbol, period, "quarter opening cash vs prior quarter close",
-                                  item["cash_beginning"], previous["cash_ending"])
-    if all(number(item.get(k)) for k in ("cash_beginning","cash_ending","net_cash_change")):
-        # B04 cash balance movement includes the separately reported foreign-exchange effect.
-        # net_cash_change itself is the sum of operating, investing and financing flows;
-        # do not mistake FX translation for an OCR/accounting error.
-        fx_available = number(item.get("foreign_exchange_effect"))
+                # These B04 snapshots store annual opening cash and YTD closing cash,
+                # not a standalone quarter opening balance. Validate the quarter movement
+                # using consecutive closing balances and the standalone-quarter net flow.
+                if (
+                    item.get("cashflow_period_basis") == "year_to_date"
+                    and number(previous.get("cash_ending"))
+                    and number(item.get("cash_ending"))
+                    and number(item.get("net_cash_change"))
+                ):
+                    quarter_fx = item.get("foreign_exchange_effect")
+                    if not number(quarter_fx):
+                        quarter_fx = 0
+                    require_close(
+                        symbol, period, "quarter closing cash movement vs standalone net flow",
+                        item["cash_ending"] - previous["cash_ending"],
+                        item["net_cash_change"] + quarter_fx
+                    )
+    bridge_flow_key = (
+        "net_cash_change_ytd"
+        if item.get("cashflow_period_basis") == "year_to_date"
+        else "net_cash_change"
+    )
+    bridge_fx_key = (
+        "foreign_exchange_effect_ytd"
+        if item.get("cashflow_period_basis") == "year_to_date"
+        else "foreign_exchange_effect"
+    )
+    if all(number(item.get(k)) for k in ("cash_beginning","cash_ending",bridge_flow_key)):
+        # Cash opening/closing balances and flow must use the same period basis.
+        # For bank B04 snapshots, cash_beginning/cash_ending are annual opening and
+        # YTD closing, while net_cash_change is normalized to the standalone quarter.
+        fx_available = number(item.get(bridge_fx_key))
+        fx_effect = item.get(bridge_fx_key) if fx_available else 0
         bridge_delta = cash_bridge_delta(item)
-        bridge_label = "cash opening/closing bridge after FX" if fx_available else "cash opening/closing bridge (FX unavailable)"
-        expected_closing_cash = item["cash_beginning"] + item["net_cash_change"] + (
-            item.get("foreign_exchange_effect")
-            if fx_available else 0
-        )
+        bridge_label = "cash opening/closing YTD bridge after FX" if fx_available else "cash opening/closing YTD bridge (FX unavailable)"
+        expected_closing_cash = item["cash_beginning"] + item[bridge_flow_key] + fx_effect
         if not within_relative_tolerance(item["cash_ending"], expected_closing_cash):
             if abs(bridge_delta) > 50:
                 reconciliation_issue(
@@ -532,6 +560,43 @@ def main():
             ERRORS.append("GEG Q1/2026 expected +900 VND bridge residual not preserved")
         if geg_rows.get("2026-Q2",{}).get("cashflow_source_reconciliation",{}).get("cross_period_cash_basis",{}).get("residual_raw_vnd") != -30914348704:
             ERRORS.append("GEG Q2/2026 opening-cash basis exception missing")
+
+    # VCB Q4/2024 audited cash-flow restatement regression.
+    # Q4 standalone values are derived from audited annual YTD less Q3/2024 YTD.
+    vcb_path = DATA_DIR / "financials-VCB.json"
+    if vcb_path.exists():
+        vcb = json.loads(vcb_path.read_text(encoding="utf-8"))
+        vcb_rows = {
+            str(row.get("period")): row
+            for row in (vcb.get("items") or [])
+            if isinstance(row, dict)
+        }
+        vcb_q4 = vcb_rows.get("2024-Q4")
+        expected_vcb_q4 = {
+            "cash_beginning": 372818730,
+            "cash_ending": 430614185,
+            "operating_cash_flow_ytd": 59122831,
+            "investing_cash_flow_ytd": -1307413,
+            "financing_cash_flow_ytd": -19963,
+            "net_cash_change_ytd": 57795455,
+            "operating_cash_flow": 117112806,
+            "investing_cash_flow": -501783,
+            "financing_cash_flow": -19963,
+            "net_cash_change": 116591060,
+        }
+        if not isinstance(vcb_q4, dict):
+            ERRORS.append("VCB 2024-Q4: missing audited cash-flow restatement row")
+        else:
+            for field, expected in expected_vcb_q4.items():
+                actual = vcb_q4.get(field)
+                if actual != expected:
+                    ERRORS.append(
+                        f"VCB 2024-Q4: audited cash-flow regression {field} must be {expected}, got {actual!r}"
+                    )
+            if "cash_beginning" in (vcb_q4.get("financial_line_items_rejected_fields") or []) or "cash_ending" in (vcb_q4.get("financial_line_items_rejected_fields") or []):
+                ERRORS.append("VCB 2024-Q4: audited opening/closing cash must not remain rejected")
+            if cash_bridge_delta(vcb_q4) != 0:
+                ERRORS.append("VCB 2024-Q4: audited YTD cash bridge must reconcile exactly to zero")
 
     print("Bank financial reconciliation regression checks")
     print(f"Bank snapshots checked: {symbols_checked}; rows on current schema: {audited_rows}")
