@@ -190,3 +190,12 @@ Ghi chú này là lối tắt tiếp nối, không thay thế checkpoint sống.
 - GitHub Actions `Validate Site and Data` run 1671 (ID 41227083853) completed successfully. Steps include `Test cash-flow bridge reconciliation`, `Test financial table source allow-list`, JavaScript syntax and JSON snapshot validation; all PASS.
 - Follow-up metadata commits also passed Validate Site and Data: run 1672 (ID 41227118703) and run 1673 (ID 41227122396).
 - Remaining to close VCB: complete direct visual review for all ten quarterly source PDFs/statement sections, and directly confirm the VCB Q3/2026 document ID and linked PDF from the VietstockFinance catalogue. Do not advance to SHS until these are resolved or explicitly retained for manual review.
+
+
+## 2026-11-01 VCB Q2/2026 ROA and ROE completion
+
+- Read saved VietstockFinance PDF text sidecar `reports/raw/VCB/auto-vcb-20261021/fb0bc8ebbad76c17.pdf.extracted.json`, pages 7–8 and 11: B02 total assets/equity and B03 Q2 standalone net profit / attributable profit.
+- Used the adjacent Q1/2026 closing balances as 31/03/2026 opening balances. Average assets = 2,604,201,957.5 million VND; average equity = 241,260,917.5 million VND.
+- Applied the same project ROA/ROE formula as the prior nine VCB periods (consolidated quarterly net profit / average balance × 4 × 100): ROA 2.23%, ROE 24.12%. The alternative ROE 24.11% using profit attributable to the bank's shareholders is retained in metadata, not mixed into the display formula.
+- All ten quarters now have ROA/ROE populated; data coverage updated to 20/20 ratio cells (100%). New snapshot blob SHA `f7524add586e543b099cc24358d1313f0c9b010b`.
+- Remaining: full direct visual review of the ten quarterly PDFs is incomplete and direct VietstockFinance catalogue record/document ID for Q3/2026 is not verified. Keep VCB active.
