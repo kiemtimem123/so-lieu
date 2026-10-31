@@ -988,7 +988,7 @@
     };
     // Scope-blocked/unconfirmed reports may retain source OCR values for audit, but
     // never let those values enter public charts, comparisons, overview KPIs, or tables.
-    const scopeUnverifiedMetricField = /^(?:revenue|cost_of_goods_sold|gross_profit|financial_income|financial_expense|interest_expense|share_of_profit_in_associates|selling_expense|admin_expense|operating_profit|other_income|other_expense|other_profit|income_tax(?:_current|_deferred)?|pretax_profit|net_profit(?:_attributable)?|total_assets|total_liabilities|equity|roa|roe|pb|pe|eps|price|market_cap|enterprise_value|ev_ebitda|current_assets|non_current_assets|short_term_.*|current_liabilities|long_term_liabilities|fixed_assets|inventory|cash(?:_.*)?|retained_earnings|capital_expenditure(?:_ytd)?|dividends_paid(?:_ytd)?|operating_cash_flow(?:_ytd)?|investing_cash_flow(?:_ytd)?|financing_cash_flow(?:_ytd)?|foreign_exchange_effect(?:_ytd)?|net_cash_change(?:_ytd)?|bank_.*|broker_.*)$/i;
+    const scopeUnverifiedMetricField = /^(?:revenue|cost_of_goods_sold|gross_profit|financial_income|financial_expense|interest_expense|share_of_profit_in_associates|selling_expense|admin_expense|operating_profit|other_income|other_expense|other_profit|income_tax(?:_current|_deferred)?|pretax_profit|net_profit(?:_attributable)?|total_assets|total_liabilities|equity|roa|roe|pb|pe|eps|price|market_cap|enterprise_value|ev_ebitda|current_assets|non_current_assets|short_term_.*|current_liabilities|long_term_liabilities|fixed_assets|inventory|cash(?:_.*)?|retained_earnings|capital_expenditure(?:_ytd)?|dividends_paid(?:_ytd)?|operating_cash_flow(?:_ytd)?|investing_cash_flow(?:_ytd)?|financing_cash_flow(?:_ytd)?|foreign_exchange_effect(?:_ytd)?|net_cash_change(?:_ytd)?|bank_.*|broker_.*|investment_property_disposal_gain)$/i;
     const hasUnverifiedReportScope = item =>
       item?.source_validation?.scope_validation_required === true ||
       item?.source_validation?.manual_review_blocking_automatic_extraction === true;
@@ -1979,7 +1979,7 @@
           { label: 'LNST thuộc cổ đông công ty mẹ', key: 'net_profit_attributable', level: 1 },
           { label: 'EPS cơ bản (đồng/cp)', key: 'eps', ratio: true, level: 1 }
         ];
-        return [
+        const genericIncomeRows = [
         { label: 'KẾT QUẢ HOẠT ĐỘNG KINH DOANH', type: 'section' },
         { label: revenueRowLabel, key: 'revenue', level: 1 },
         { label: 'Giá vốn hàng bán', key: 'cost_of_goods_sold', level: 1, negativeExpense: true },
@@ -2002,6 +2002,13 @@
         { label: 'Lợi nhuận sau thuế', key: 'net_profit', strong: true },
         { label: 'Trong đó: LNST thuộc cổ đông công ty mẹ', key: 'net_profit_attributable', level: 1 }
         ];
+        if (activeIndustry === 'real_estate') {
+          genericIncomeRows.splice(4, 0, {
+            label: 'Lãi/(lỗ) từ bán, thanh lý bất động sản đầu tư (dòng riêng)',
+            key: 'investment_property_disposal_gain', level: 1
+          });
+        }
+        return genericIncomeRows;
       }
       if (activeStatement === 'cashflow') return [
         { label: 'LƯU CHUYỂN TIỀN TỆ', type: 'section' },
