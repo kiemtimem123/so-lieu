@@ -119,25 +119,32 @@ jobs:
               actual_pages = len(reader.pages)
 
               starts = {}
+              # Match an actual statement header near the top of the page.
+              # The cover and contents pages also mention B01/B02/B03b; they must not
+              # be selected as financial statement pages.
               for form, (header, title_terms) in forms.items():
                   found = []
                   for page_number, text in page_texts.items():
-                      if header.search(text) or any(term in text for term in title_terms):
+                      header_region = text[:550]
+                      title_region = text[:1800]
+                      if header.search(header_region) and any(term in title_region for term in title_terms):
                           found.append(page_number)
                   found = [p for p in sorted(set(found)) if 1 <= p <= actual_pages]
                   if found:
                       starts[form] = found[0]
-              # Use nearby page context as review candidates if OCR could not read a statement title.
+
               if "B01" not in starts:
-                  raise RuntimeError(f"{period}: cannot locate B01 balance sheet from saved source sidecar")
-              if "B02" not in starts:
-                  starts["B02_candidates"] = max(1, starts["B01"] + 4)
+                  raise RuntimeError(f"{period}: cannot locate actual B01 balance-sheet header in the saved sidecar")
               if "B03b" not in starts:
-                  raise RuntimeError(f"{period}: cannot locate B03b cash-flow statement from saved source sidecar")
+                  raise RuntimeError(f"{period}: cannot locate actual B03b cash-flow header in the saved sidecar")
+              if "B02" not in starts:
+                  # A few older scanned B02 pages have no usable text layer.
+                  # Their location is between the balance sheet (B01) and cash flow (B03b).
+                  starts["B02_candidates"] = max(starts["B01"] + 3, starts["B03b"] - 3)
 
               pages_by_form = {}
               for form, start in starts.items():
-                  span = 3 if form == "B02" else 2
+                  span = 3 if form in ("B01", "B02", "B02_candidates") else 2
                   selected = [p for p in range(start, min(actual_pages, start + span - 1) + 1)]
                   pages_by_form[form] = selected
 
