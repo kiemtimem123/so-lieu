@@ -217,3 +217,13 @@ Ghi chú này là lối tắt tiếp nối, không thay thế checkpoint sống.
 - No consolidated Q3/2026 BCTC title, document ID, or direct PDF URL appeared in the API response's financial-statement records. No Q3 figure has been imported. Do not use 24HMoney/Vietcap for the project's snapshot.
 - The sync run retained all 10 already validated periods and did not re-extract them. Latest VCB snapshot SHA: `0f4c17eec241e4a6547a82567361d964cbf5de4b`.
 - Next: render the ten archived, catalog-linked PDFs to page images in GitHub Actions and visually inspect the relevant B02/B03/B04 pages. Annual report B02/B03/B04/Note 35 visual evidence remains partial only.
+
+
+## 2026-11-01 VCB 10-quarter review close
+
+- All ten stored VCB periods (2024-Q1..2026-Q2) have the original VietstockFinance B02/B03/B04 primary statement pages rendered and visually reviewed. Rendered artifact: run `https://github.com/kiemtimem123/so-lieu/actions/runs/41228191736`, artifact `vcb-quarterly-pdf-visual-review`, 60 primary-statement page images plus contact sheets.
+- Visual review found missing deferred-tax details in 2025-Q1 (+392), 2025-Q2 (+1,868), 2025-Q3 (+3,416), 2026-Q1 (+3,206), 2026-Q2 (+2,802) and missing current tax in 2025-Q2 (-2,198,412). These are now filled from the current-quarter column of original B03 pages. Snapshot commit for status/visual evidence: `998dd71b491c3f8fc35d6f155d81ec582ecb2e51`; subsequent tax detail commits `b57f6d5ec3493e5810e35d28643317de51646363` and `e0763b2bff1d3c55321925ec56432db718e407a8`.
+- The full 10-period programmatic audit after these corrections has zero differences for all balance, income, PPOP/provision/PBT, PAT/tax, tax-component, quarter/YTD cash-flow, cash-balance, ROA and ROE checks; all ten rejection lists are empty. Snapshot SHA: `0b7779594794476b958bb0abd18f513ee964d60b`.
+- CI is running for snapshot commit `998dd71b491c3f8fc35d6f155d81ec582ecb2e51` (quarterly validator run 41229141959, site run 41229142059, package run 41229142016). Do not call the latest commit CI-passing until these runs finish.
+- Q3/2026: direct VietstockFinance `doctype=1` API scan for VCB returned no consolidated Q3 report/document ID/PDF; it did return Q1, Q2 and reviewed H1 2026. No secondary source was imported. Recheck when the Q3 record is published.
+- VCB primary statements are closed through Q2/2026. Resume the user-specified next ticker SHS; retain a source-availability note to recheck VCB Q3/2026 when directly listed.
