@@ -989,9 +989,16 @@
     // Scope-blocked/unconfirmed reports may retain source OCR values for audit, but
     // never let those values enter public charts, comparisons, overview KPIs, or tables.
     const scopeUnverifiedMetricField = /^(?:revenue|cost_of_goods_sold|gross_profit|financial_income|financial_expense|interest_expense|share_of_profit_in_associates|selling_expense|admin_expense|operating_profit|other_income|other_expense|other_profit|income_tax(?:_current|_deferred)?|pretax_profit|net_profit(?:_attributable)?|total_assets|total_liabilities|equity|roa|roe|pb|pe|eps|price|market_cap|enterprise_value|ev_ebitda|current_assets|non_current_assets|short_term_.*|current_liabilities|long_term_liabilities|fixed_assets|inventory|cash(?:_.*)?|retained_earnings|capital_expenditure(?:_ytd)?|dividends_paid(?:_ytd)?|operating_cash_flow(?:_ytd)?|investing_cash_flow(?:_ytd)?|financing_cash_flow(?:_ytd)?|foreign_exchange_effect(?:_ytd)?|net_cash_change(?:_ytd)?|bank_.*|broker_.*|investment_property_disposal_gain|non_controlling_interest_profit)$/i;
-    const hasUnverifiedReportScope = item =>
-      item?.source_validation?.scope_validation_required === true ||
-      item?.source_validation?.manual_review_blocking_automatic_extraction === true;
+    const hasUnverifiedReportScope = item => {
+      const scopeNote = String(item?.source_validation?.report_scope_note || item?.source_validation?.scope_validation_note || '').toLowerCase();
+      const reportLabel = String(item?.report_type || '').toLowerCase();
+      const scopeNotEstablished =
+        /no scope has been inferred|không ghi nhãn.{0,100}(hợp nhất|riêng lẻ)|chưa xác nhận.{0,100}(hợp nhất|riêng lẻ)/i.test(scopeNote) ||
+        /phạm vi hợp nhất chưa xác nhận|chưa xác nhận là hợp nhất|không xác nhận được phạm vi/i.test(reportLabel);
+      return item?.source_validation?.scope_validation_required === true ||
+        item?.source_validation?.manual_review_blocking_automatic_extraction === true ||
+        scopeNotEstablished;
+    };
     const rowsFor = ticker => {
       const snapshot = snapshots.get(ticker);
       return (snapshot?.items || []).filter(item => item && validPeriod(item.period)).map(item => {
