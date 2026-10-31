@@ -1007,7 +1007,30 @@
         const blockForManualExtraction = rawVerification === 'manual_review_required_pending_extraction' ||
           rawCoreStatus === 'manual_review_required_pending_extraction';
         const scopeBlocked = hasUnverifiedReportScope(item);
-        if (!scopeBlocked && !blockForManualExtraction) return item;
+        const rejectedDetailFields = new Set(
+          Array.isArray(item?.financial_line_items_rejected_fields)
+            ? item.financial_line_items_rejected_fields.map(String)
+            : []
+        );
+
+        // Rejected source fields must stay hidden even when the period is not
+        // globally marked for manual extraction. Some older snapshots retain
+        // the rejected OCR candidate as a numeric top-level value.
+        if (!scopeBlocked && !blockForManualExtraction) {
+          const hasRejectedNumericMetric = Object.keys(item).some(key =>
+            scopeUnverifiedMetricField.test(key) &&
+            rejectedDetailFields.has(key) &&
+            validNumber(item[key])
+          );
+          if (!hasRejectedNumericMetric) return item;
+          const safe = { ...item };
+          Object.keys(safe).forEach(key => {
+            if (scopeUnverifiedMetricField.test(key) &&
+                rejectedDetailFields.has(key) &&
+                validNumber(safe[key])) safe[key] = null;
+          });
+          return safe;
+        }
 
         const safe = { ...item };
         const manuallyVerifiedFields = new Set(
@@ -1042,12 +1065,6 @@
             ? item.core_financial_extracted_fields.map(String)
             : []
         );
-        const rejectedDetailFields = new Set(
-          Array.isArray(item?.financial_line_items_rejected_fields)
-            ? item.financial_line_items_rejected_fields.map(String)
-            : []
-        );
-
         Object.keys(safe).forEach(key => {
           if (!scopeUnverifiedMetricField.test(key) || !validNumber(safe[key])) return;
           // An unconfirmed consolidation/reporting scope remains a hard block.
@@ -1579,12 +1596,20 @@
     // values remain presentation-only and carry a tooltip explaining the formula.
     const resolveStatementValue = (item, key, rows = [], ticker = String(symbolSelect?.value || 'MBB').toUpperCase()) => {
       if (!item) return { value: null, formula: '' };
+      const rejectedDetailFields = new Set(
+        Array.isArray(item?.financial_line_items_rejected_fields)
+          ? item.financial_line_items_rejected_fields.map(String)
+          : []
+      );
+      if (rejectedDetailFields.has(key)) return { value: null, formula: '' };
       const industry = industryFor(String(ticker || 'MBB').toUpperCase());
 
       // For securities companies the official statement's operating-revenue
       // subtotal is the comparable top-line measure; the generic "revenue"
       // field may refer to a different extracted line.
-      if (key === 'revenue' && industry === 'securities' && validNumber(item.broker_total_operating_revenue)) {
+      if (key === 'revenue' && industry === 'securities' &&
+          !rejectedDetailFields.has('broker_total_operating_revenue') &&
+          validNumber(item.broker_total_operating_revenue)) {
         return { value: item.broker_total_operating_revenue, formula: 'Lấy trực tiếp từ trường Tổng doanh thu hoạt động của BCTC công ty chứng khoán.' };
       }
       if (validNumber(item[key])) return { value: item[key], formula: '' };
@@ -1596,7 +1621,9 @@
         share_of_profit_in_associates: ['share_of_profit_associates'],
         non_controlling_interest_profit: ['bank_non_controlling_profit']
       };
-      const sourceAlias = (statementFieldAliases[key] || []).find(alias => validNumber(item[alias]));
+      const sourceAlias = (statementFieldAliases[key] || []).find(alias =>
+        !rejectedDetailFields.has(alias) && validNumber(item[alias])
+      );
       if (sourceAlias) {
         return {
           value: item[sourceAlias],
@@ -1613,7 +1640,7 @@
         return { value: item[key] ?? null, formula: '' };
       }
 
-      const num = field => validNumber(item[field]) ? Number(item[field]) : null;
+      const num = field => !rejectedDetailFields.has(field) && validNumber(item[field]) ? Number(item[field]) : null;
       if (key === 'revenue') {
         if (industry === 'banking' &&
             /lợi nhuận trước dự phòng/i.test(String(item.revenue_calculation || '')) &&
