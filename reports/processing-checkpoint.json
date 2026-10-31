@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-01T03:30:00Z",
+  "updatedAt": "2026-11-01T04:00:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -48,7 +48,7 @@
     "status": "terminal_needs_manual_review",
     "completeForAutomation": true,
     "manualReviewRemaining": true,
-    "processedAt": "2026-11-01T03:30:00Z",
+    "processedAt": "2026-11-01T04:00:00Z",
     "workflowRunId": "41088586086",
     "workflowRunNumber": 3035,
     "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/41088586086",
@@ -71,7 +71,7 @@
     "skipUnconfirmedAutomation": false,
     "skipUnconfirmedReason": null,
     "nextSymbol": "VCB",
-    "nextTask": "confirm_CI_after_bank_scoped_validator_fix_then_visual_review_and_Q3_2026"
+    "nextTask": "finish_quarterly_pdf_visual_review_and_q3_2026_direct_vietstock_catalog_check"
   },
   "symbolStates": {
     "MBB": {
@@ -234,7 +234,7 @@
       "skipUnconfirmedAutomation": true,
       "skipUnconfirmedReason": "Manual visual review of the stored consolidated reports and direct VietstockFinance confirmation of VCB Q3/2026 remain. Numeric source reconciliation across 10 stored periods passes.",
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-11-01T03:30:00Z",
+      "updatedAt": "2026-11-01T04:00:00Z",
       "snapshotFetchedAt": "2026-10-24T06:15:00Z",
       "sourceReconciledPeriods": [
         "2024-Q1",
@@ -261,8 +261,8 @@
         "validatorCommit": "5b57b6cac94c42055415ea73b2298303686a4011",
         "summary": "Đã đối chiếu đủ 10/10 kỳ từ sidecar PDF hợp nhất VietstockFinance. Sửa ánh xạ dòng tiền bị nhầm với thu nhập lãi/chi mua TSCĐ; tách dòng tiền quý từ YTD; khôi phục lợi nhuận thuộc cổ đông ngân hàng; bổ sung các cấu phần thu nhập thiếu; sửa dấu chi phí dự phòng Q4/2025 và Q2/2026. Additional 2026-10-31 deep audit: Q2/2024 and Q2/2025 B03/B04 page text was checked; Q2/2024 provision expense sign corrected to +1,513,541; 10 stale rejection flags per Q2 period removed after exact YTD/quarterly/cash bridge reconciliation.",
         "checks": "Mỗi kỳ đã kiểm tra cân đối tài sản, tổng cấu phần thu nhập, doanh thu so với PPOP + chi phí hoạt động, lợi nhuận trước thuế, lợi nhuận sau thuế, tổng dòng tiền YTD, số dư tiền đầu/cuối kỳ; các sai lệch tính toán sau sửa đều bằng 0.",
-        "remaining": "All 8 programmed accounting/cash-flow checks across 10 stored quarters return zero difference using the signed provision convention. Q2/2024 and Q2/2025 source-reconciled cash-flow fields are no longer blocked. Pending: full direct visual review of all 10 reports, runtime execution of the patched bank validator, and direct VietstockFinance catalogue confirmation for Q3/2026.",
-        "lastUpdatedAt": "2026-11-01T02:45:00Z",
+        "remaining": "All ten stored periods pass the source-backed numeric audit and the actual GitHub Actions bank reconciliation regression workflow. Q4/2024 audited cash restatement and Q2/2024 + Q2/2025 cash-flow unblocking are applied. Remaining: direct visual review of the 10 quarterly PDFs is incomplete (audited annual B02/B03/B04/Note 35 sections only partially verified) and no direct VietstockFinance Q3/2026 document ID/PDF is confirmed. Keep VCB as active until the remaining source/manual review is closed.",
+        "lastUpdatedAt": "2026-11-01T04:00:00Z",
         "q2DeepAudit": {
           "checkedAt": "2026-10-31T15:28:14.085Z",
           "periods": [
@@ -417,11 +417,28 @@
           "maxAbsoluteDifference": 0,
           "failedChecks": 0,
           "method": "Direct programmatic audit of the persisted snapshot JSON; does not assert the GitHub Actions validator was executed."
+        },
+        "validatorExecution": {
+          "status": "PASS",
+          "validatorWorkflowRun": "https://github.com/kiemtimem123/so-lieu/actions/runs/41227083864",
+          "validatorWorkflowRunId": "41227083864",
+          "bankRegressionStep": "Run bank statement reconciliation regression checks — success",
+          "siteWorkflowRun": "https://github.com/kiemtimem123/so-lieu/actions/runs/41227083853",
+          "siteWorkflowRunId": "41227083853",
+          "siteChecks": [
+            "Test cash-flow bridge reconciliation — success",
+            "Test financial table source allow-list — success",
+            "Check JavaScript syntax — success",
+            "Validate JSON snapshots — success"
+          ],
+          "sharedHelperScopeFixCommit": "2c9b357b157397ecd61dac5035b7748c53816ddc",
+          "latestMetadataCheckpointRun": "https://github.com/kiemtimem123/so-lieu/actions/runs/41227122396",
+          "executedAt": "2026-11-01"
         }
       },
       "uiCoverageReview": {
         "status": "coverage_audit_complete_pending_visual_pdf_review",
-        "updatedAt": "2026-11-01T02:45:00Z",
+        "updatedAt": "2026-11-01T04:00:00Z",
         "snapshotFetchedAt": "2026-10-24T06:15:00Z",
         "snapshotSha": "d126e7771e6b9bdb5dabb4523215439c19aa3368",
         "sourceTextReconciliationStatus": "complete_10_of_10_zero_arithmetic_deltas",
@@ -729,6 +746,23 @@
           ],
           "confirms": "Audited 2024 consolidated balance sheet, income statement, annual cash-flow totals and cash-equivalents breakdown.",
           "limitation": "Does not count as visual review of the 10 quarterly source PDFs. Those remain pending."
+        },
+        "validationExecution": {
+          "status": "PASS",
+          "validatorWorkflowRun": "https://github.com/kiemtimem123/so-lieu/actions/runs/41227083864",
+          "validatorWorkflowRunId": "41227083864",
+          "bankRegressionStep": "Run bank statement reconciliation regression checks — success",
+          "siteWorkflowRun": "https://github.com/kiemtimem123/so-lieu/actions/runs/41227083853",
+          "siteWorkflowRunId": "41227083853",
+          "siteChecks": [
+            "Test cash-flow bridge reconciliation — success",
+            "Test financial table source allow-list — success",
+            "Check JavaScript syntax — success",
+            "Validate JSON snapshots — success"
+          ],
+          "sharedHelperScopeFixCommit": "2c9b357b157397ecd61dac5035b7748c53816ddc",
+          "latestMetadataCheckpointRun": "https://github.com/kiemtimem123/so-lieu/actions/runs/41227122396",
+          "executedAt": "2026-11-01"
         }
       },
       "snapshotSha": "de81130194d8d0da5e1f909d7fae1251a531ad57",
@@ -785,12 +819,29 @@
           "PBT bridge uses signed bank_provision_expense; negative reversal increases PBT.",
           "Regression checks added for VCB Q4/2024 audited flows, Q4 provision reversal and Q2 cash-field unblocking."
         ],
-        "executed": false,
+        "executed": true,
         "globalHelperRegressionFix": {
           "commit": "2c9b357b157397ecd61dac5035b7748c53816ddc",
           "reason": "The first YTD helper replacement changed the shared standalone-period cash_bridge_delta and caused 45 failures in the shared regression suite for other tickers.",
           "fix": "Restored the generic cash_bridge_delta contract and added bank_cash_bridge_delta; only bank audit and VCB Q4 regression use the YTD helper.",
           "status": "awaiting_latest_CI_run"
+        },
+        "executionResult": {
+          "status": "PASS",
+          "validatorWorkflowRun": "https://github.com/kiemtimem123/so-lieu/actions/runs/41227083864",
+          "validatorWorkflowRunId": "41227083864",
+          "bankRegressionStep": "Run bank statement reconciliation regression checks — success",
+          "siteWorkflowRun": "https://github.com/kiemtimem123/so-lieu/actions/runs/41227083853",
+          "siteWorkflowRunId": "41227083853",
+          "siteChecks": [
+            "Test cash-flow bridge reconciliation — success",
+            "Test financial table source allow-list — success",
+            "Check JavaScript syntax — success",
+            "Validate JSON snapshots — success"
+          ],
+          "sharedHelperScopeFixCommit": "2c9b357b157397ecd61dac5035b7748c53816ddc",
+          "latestMetadataCheckpointRun": "https://github.com/kiemtimem123/so-lieu/actions/runs/41227122396",
+          "executedAt": "2026-11-01"
         }
       },
       "numericAudit20261101": {
