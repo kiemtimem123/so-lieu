@@ -99,3 +99,25 @@ Ghi chú này là lối tắt tiếp nối, không thay thế checkpoint sống.
 - Visual page review remains pending for all 10 VCB periods. This audit is source-text/OCR reconciliation only; it is not visual PDF confirmation. Continue VCB only; do not start SHS until all pending VCB review stages are closed.
 
 - Validation passed after the Q4/2024 cash-flow display correction: [Validate Site and Data #1644](https://github.com/kiemtimem123/so-lieu/actions/runs/41211937050). Passed cash-flow bridge reconciliation, financial-table source allow-list, JSON snapshot validation, and JavaScript syntax checks. Checkpoint metadata commit: [9f7df44bba249137551582868ab5d9146a64c6fb](https://github.com/kiemtimem123/so-lieu/commit/9f7df44bba249137551582868ab5d9146a64c6fb).
+
+
+## 2026-10-31 VCB Q2/2024 và Q2/2025 đối chiếu sâu B03/B04
+
+- Tiếp tục **VCB בלבד**; chưa chuyển sang mã tiếp theo.
+- Chỉ tái sử dụng sidecar OCR đã có; **không chạy OCR/enrich lại** và không nạp lại dữ liệu 10 kỳ từ đầu.
+- Q2/2024 — tài liệu VietstockFinance document ID `472851`, PDF `reports/raw/VCB/auto-vcb-20261021/725730719cacd00b.pdf`:
+  - B03 PDF trang 7–8: thu nhập lãi thuần 13.907.711; lãi thuần dịch vụ 1.498.953; ngoại hối 1.160.895; mua bán chứng khoán kinh doanh -1.324; chứng khoán đầu tư 1.854; lãi thuần hoạt động khác 24.387; góp vốn/cổ phần 159.133; tổng thu nhập hoạt động 16.751.609; chi phí hoạt động -5.121.793; PPOP 11.629.816; chi phí dự phòng (1.513.541); LNTT 10.116.275; thuế 1.991.566; LNST 8.124.709; lợi nhuận thuộc cổ đông ngân hàng 8.119.414 triệu VND.
+  - **Sửa dấu sai** `bank_provision_expense`: từ -1.513.541 sang +1.513.541. Với quy ước trường chi phí dương, 11.629.816 - 1.513.541 = 10.116.275.
+  - B04 PDF trang 9–10: CFO YTD -43.570.203; CFI -360.765; CFF 0; net cash YTD -43.930.968; cash đầu kỳ 372.818.730; cash cuối kỳ 328.887.762. Dòng tiền riêng Q2 = YTD Q2 trừ YTD Q1: CFO 19.604.283; CFI -230.231; CFF 0; net cash 19.374.052. Cash bridge và các tổng đều khớp 0.
+  - Xóa 10 cờ rejected cũ cho CFO/CFI/CFF/net cash (quý và YTD) cùng cash_beginning/cash_ending; số liệu nay được phép hiển thị.
+- Q2/2025 — tài liệu VietstockFinance document ID `514224`, PDF `reports/raw/VCB/auto-vcb-20261021/789948b37004bdfc.pdf`:
+  - B03 PDF trang 7–8: PPOP 11.843.505; chi phí dự phòng 809.590; LNTT 11.033.915; thuế 2.196.544; LNST 8.837.371; lợi nhuận thuộc cổ đông ngân hàng 8.831.885 triệu VND.
+  - B04 PDF trang 9–10: CFO YTD 24.736.707; CFI -354.102; CFF 0; net cash YTD 24.382.605; cash đầu kỳ 430.614.185; cash cuối kỳ 454.996.790. Dòng tiền riêng Q2: CFO 37.917.302; CFI -179.204; CFF 0; net cash 37.738.098. Cash bridge và các tổng đều khớp 0.
+  - Xóa 10 cờ rejected cũ giống Q2/2024 vì dữ liệu YTD/riêng quý và cash bridge khớp báo cáo.
+- Không thay đổi các số liệu nguồn khác; hai kỳ vẫn ở trạng thái `auto_extracted_pending_visual_review`. Đối chiếu này là **source text/OCR only**, không phải xác minh ảnh PDF.
+- Commit snapshot: [cbd2ee88543d1c93ff1a3293e1ec003c13bf0b18](https://github.com/kiemtimem123/so-lieu/commit/cbd2ee88543d1c93ff1a3293e1ec003c13bf0b18).
+- Commit checkpoint: [476fa10abf0c8dfe191cdd8b86f6fa3402c948ae](https://github.com/kiemtimem123/so-lieu/commit/476fa10abf0c8dfe191cdd8b86f6fa3402c948ae).
+- Validate Site and Data #1647: [run 41214877946](https://github.com/kiemtimem123/so-lieu/actions/runs/41214877946), success; đã qua cash-flow bridge, source allow-list, JSON snapshot và JavaScript checks.
+- Package Hostinger Stock Dashboard #301: [run 41214877956](https://github.com/kiemtimem123/so-lieu/actions/runs/41214877956), success; đây là đóng gói artifact, không xác nhận đã upload/deploy lên Hostinger.
+- **Kỳ mới cần kiểm tra:** các trang công khai báo hiệu VCB đã có BCTC hợp nhất Q3/2026 vào cuối tháng 10/2026, nhưng hiện chưa xác nhận được document ID/PDF trực tiếp từ danh mục VietstockFinance theo policy nguồn duy nhất. Không lấy số liệu từ 24HMoney/Vietcap hay bất kỳ nguồn trung gian để ghi vào snapshot; chờ xác minh link VietstockFinance.
+- **Việc còn mở, chỉ tiếp tục VCB:** (1) giải thích chênh cash 2.546.277 triệu VND giữa Q4/2024 và đầu Q1/2025 bằng thuyết minh; (2) visual PDF review cho 10 kỳ đã lưu; (3) xác minh Q3/2026 từ danh mục VietstockFinance và PDF được liên kết. Không chuyển SHS trước khi đóng hoặc ghi trạng thái giữ thủ công minh bạch.
