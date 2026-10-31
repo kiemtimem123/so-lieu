@@ -1016,6 +1016,45 @@ class SHSCashFlowNormalizationTests(unittest.TestCase):
         )
         self.assertEqual(rec["selected_values_not_adjusted_for_tolerance"], True)
 
+    def test_shs_revenue_row20_and_tax_components_match_original_b02_for_all_ten_periods(self):
+        expected = {
+            "2024-Q1": (564565, 46789, 40783, 87572),
+            "2024-Q2": (599421, 70596, 10098, 80694),
+            "2024-Q3": (276104, 51829, -46773, 5056),
+            "2024-Q4": (551216, 35988, 13444, 49432),
+            "2025-Q1": (561529, 37191, 25742, 62933),
+            "2025-Q2": (693913, 38933, 41295, 80228),
+            "2025-Q3": (815909, 129285, -16676, 112609),
+            "2025-Q4": (1595794, -5987, 56025, 50038),
+            "2026-Q1": (564698, 43592, 4572, 48164),
+            "2026-Q2": (450340, 178309, -164367, 13942),
+        }
+        tax_flags = {
+            "income_tax_current_tax_reconciliation_check",
+            "income_tax_deferred_tax_reconciliation_check",
+            "income_tax_tax_reconciliation_check",
+        }
+        self.assertEqual(set(self.rows), set(expected))
+        for period, values in expected.items():
+            with self.subTest(period=period):
+                row = self.rows[period]
+                revenue, current, deferred, total = values
+                self.assertEqual(row["revenue"], revenue)
+                self.assertEqual(row["income_tax_current"], current)
+                self.assertEqual(row["income_tax_deferred"], deferred)
+                self.assertEqual(row["income_tax"], total)
+                self.assertEqual(current + deferred, total)
+                self.assertEqual(
+                    row["revenue_source_reconciliation_20261101"]["status"],
+                    "source_visually_verified",
+                )
+                self.assertEqual(
+                    row["income_tax_detail_source_reconciliation_20261101"]["status"],
+                    "source_visually_verified",
+                )
+                self.assertNotIn("revenue", row.get("financial_line_items_rejected_values", {}))
+                self.assertFalse(tax_flags.intersection(row.get("financial_line_items_rejected_fields", [])))
+
 
 class NLGCashFlowNormalizationTests(unittest.TestCase):
     """Regression tests for NLG source-line mapping, relative tolerance and source holds."""
