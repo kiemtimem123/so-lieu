@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-31T12:15:00+07:00",
+  "updatedAt": "2026-10-31T13:45:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -44,25 +44,31 @@
   "resumeSymbolHint": "KBC",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
-    "symbol": "IDC",
-    "status": "core_and_income_statement_source_text_reconciled",
+    "symbol": "GEG",
+    "status": "source_text_detail_reconciled_pending_visual_review",
     "completeForAutomation": true,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-31T11:15:00+07:00",
+    "processedAt": "2026-10-31T13:45:00+07:00",
     "workflowRunId": "41088586086",
     "workflowRunNumber": 3035,
     "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/41088586086",
     "changedPaths": [
-      "data/financials-IDC.json"
+      "data/financials-GEG.json"
     ],
     "periodCount": 10,
     "firstQuarter": "2024-Q1",
     "lastQuarter": "2026-Q2",
     "pendingCorePeriods": [],
-    "terminalManualReviewPeriods": [],
+    "terminalManualReviewPeriods": [
+      "2024-Q1",
+      "2024-Q2",
+      "2024-Q3",
+      "2024-Q4",
+      "2026-Q2"
+    ],
     "pendingDetailPeriods": [],
     "staleDetailSchemaPeriods": [],
-    "statementPagesPending": false,
+    "statementPagesPending": true,
     "skipUnconfirmedAutomation": false,
     "skipUnconfirmedReason": null,
     "nextSymbol": "KBC",
@@ -871,7 +877,7 @@
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-10-31T09:58:00+07:00",
+      "updatedAt": "2026-10-31T13:45:00+07:00",
       "snapshotFetchedAt": "2026-10-23T20:45:50+00:00",
       "note": "GEG review 2026-10-30: 10 quarters Q1/2024–Q2/2026; no confirmed core statement correction found in the archived VietstockFinance OCR source review. Core P&L/tax arithmetic and balance sheet totals appear internally consistent; negative NCI explains parent net profit exceeding consolidated net profit in several periods (e.g. Q2/2025: 165,820.759m parent + (-8,105.900m) NCI = 157,714.859m consolidated). Q2/2026 cash flow internally reconciles on reported YTD basis (begin 74,942.444m + net change 25,371.517m + FX 13.217m = end 100,327.179m); however quarter opening basis differs from Q1 closing (105,857m), yielding 10.22% quarter bridge exception. Preserve report's own YTD opening cash and manual review; no balancing plug. Visual/source review remains pending on 2024 periods and Q2/2026.",
       "sourceReconciledPeriods": [
@@ -901,6 +907,7 @@
         ]
       },
       "detailSourceReconciledPeriods": [
+        "2024-Q1",
         "2024-Q2",
         "2024-Q3",
         "2024-Q4",
@@ -912,24 +919,19 @@
         "2026-Q2"
       ],
       "lastDetailSourceReconciliation": {
-        "periodRange": "2024-Q2 through 2026-Q2",
-        "status": "income_statement_source_text_reconciled_pending_visual_review",
-        "correctionCommit": "9ab2c0c087c63e4b39c759dc4413908a83b645ed",
+        "periodRange": "GEG Q1/2024 through Q2/2026 (10 periods)",
+        "status": "source_text_reconciled_pending_visual_review",
+        "correctionCommit": "9e6df1ed1df371674dfaa36de03c1e136f302430",
         "findings": [
-          "Khôi phục giá vốn và lợi nhuận gộp cho 9 kỳ từ B02-DN/HN hợp nhất VietstockFinance, lấy cột phát sinh riêng quý, không lấy nhầm cột lũy kế.",
-          "Các phép tính doanh thu thuần - giá vốn = lợi nhuận gộp khớp; Q4/2025 sai số OCR 0,6 triệu VND, tương đương khoảng 0,0002%, thấp hơn ngưỡng 0,01% đã chấp nhận.",
-          "Các giá trị được lưu theo triệu VND; raw VND, trang PDF, trang in và cột quý được lưu trong metadata để truy xuất.",
-          "Không đánh dấu kiểm tra trực quan PDF; vẫn giữ cờ rà soát hình ảnh nguồn cho các kỳ đang treo.",
-          "Đã bổ sung raw revenue VND cho từng kỳ để kiểm tra đúng phép tính gross profit; 8/9 kỳ residual = 0, Q4/2025 residual = -600.000 VND (0,0002%, trong ngưỡng 0,01%).",
-          "Restored GEG balance-sheet detail fields: Q2/2024 cash/short-term investments/receivables/noncurrent assets/fixed assets; Q3/2024 current and long-term liabilities; Q1/2025 current/noncurrent assets and current/long-term liabilities; Q4/2025 current assets/fixed assets; Q1/Q2 2026 current/long-term liabilities.",
-          "Corrected Q4/2025 noncurrent assets subtotal to 13,317,555.791672m from source page 1; total assets = current + noncurrent assets."
+          "Q1/2024: bổ sung lợi nhuận gộp, lãi/lỗ công ty liên kết, thu nhập/chi phí khác, thuế hiện hành/hoãn lại, NCI và capex; các cầu nối lợi nhuận, thuế, NCI, dòng tiền khớp.",
+          "Q2/2024: bổ sung lãi/lỗ công ty liên kết, thu nhập/chi phí khác, thuế và NCI; các cầu nối khớp.",
+          "Q3/Q4/2024: bổ sung lãi/lỗ công ty liên kết, lợi nhuận khác, thuế, NCI và capex; giữ sai số OCR 90 VND ở Q3/2024.",
+          "Q1/2025: bổ sung các dòng còn thiếu; thuế hoãn lại dùng comparative Q1/2026 của VietstockFinance (-37.686.301.526 VND), residual 200.000 VND dưới 0,01%.",
+          "Q2/Q3/2025: bổ sung lãi/lỗ công ty liên kết, thu nhập/chi phí khác, NCI và capex; capex quý tách từ lũy kế.",
+          "Q4/2025: bổ sung lãi/lỗ công ty liên kết, thu nhập/chi phí khác, NCI và capex năm.",
+          "Q1/Q2/2026: bổ sung lãi/lỗ công ty liên kết, thu nhập/chi phí khác, thuế, NCI và capex; hai báo cáo theo mẫu 2026 không trình bày riêng chi phí bán hàng nên giữ ô trống, không gán 0."
         ],
-        "remaining": "Visual confirmation pending. Preserve all manual-review flags; source-text extraction complete for these detail fields.",
-        "correctionCommits": [
-          "9ab2c0c087c63e4b39c759dc4413908a83b645ed",
-          "f2734dd63cb5f8656c8a7af697ba0a55e8777b97",
-          "4865b3a7ed6dc3362a3daddd54dadaeb8e6a39fa"
-        ]
+        "remaining": "Không còn trường bảng lõi/chi tiết thiếu do chưa trích xuất. Giữ cờ rà soát ảnh PDF cho Q1-Q4/2024 và Q2/2026 cashflow basis exception; không plug."
       }
     },
     "SHS": {
