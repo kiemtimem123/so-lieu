@@ -80,3 +80,20 @@ Ghi chú này là lối tắt tiếp nối, không thay thế checkpoint sống.
 - Resume rule: continue only `visual_pdf_review` using existing archived VietstockFinance PDFs. Do not reload/reprocess completed VCB reconciliation, rerun OCR/enrich, or alter normalized values without an image-confirmed correction. Once a period is visually confirmed, save a period-level checkpoint immediately; move to CTG only after VCB's pending stage is resolved or explicitly held for manual review.
 - VCB checkpoint commit: `50e80378f99d1c5b5ecd231e69932c449f55776e`.
 
+
+
+## 2026-10-31 VCB Q4/2024–Q1/2025 deep source-text audit
+
+- Continued **VCB only**; do not move to SHS until VCB is fully closed.
+- Reused existing OCR/text sidecars; no OCR/enrich rerun and no numeric source values changed.
+- Q4/2024 VietstockFinance-linked report (reports/raw/VCB/auto-vcb-20261021/842e77aefd580828.pdf), B02 pages 5–6, B03 pages 8–9, B04 pages 10–11:
+  - B02 originally reports total assets 2,085,397,244; liabilities 1,886,441,134; equity 198,956,110 million VND.
+  - B03 Q4 reports interest income 23,581,262; net interest income 13,842,332; pre-provision profit 10,670,350; provision expense 32,330; PBT 10,702,680; PAT 8,569,931; attributable profit 8,565,388 million VND.
+  - B04 annual values: CFO 56,572,468; CFI -1,303,327; CFF -19,963; net cash change 55,249,178; opening cash 372,818,730; closing cash 428,067,908 million VND. The cash-flow component and opening-to-closing bridges reconcile exactly.
+- Q1/2025 VietstockFinance-linked report (reports/raw/VCB/auto-vcb-20261021/f25bf036ad962541.pdf), B02 pages 4–5, B03 pages 7–8, B04 pages 9–10:
+  - Q1 B02 comparative restates 31/12/2024 balance values to assets 2,085,873,522; liabilities 1,889,664,354; equity 196,209,168 million VND. Q4 snapshot retains this restated comparative basis and the equation reconciles exactly.
+  - Q1 B04 confirms CFO -13,180,595; CFI -174,898; CFF 0; net cash change -13,355,493; opening cash 430,614,185; closing cash 417,258,692 million VND. Q1 cash bridge reconciles exactly.
+- **Material unresolved cross-period gap:** Q4/2024 B04 closing cash 428,067,908 vs Q1/2025 B04 opening cash 430,614,185 = 2,546,277 million VND (0.594830% of Q4 closing cash), above the user's 0.01% tolerance. Both source-reported cash balance values remain in the rejected-value audit and hidden from display until the source explanatory note and visual PDF pages establish the reason. Do not invent an FX effect, overwrite either amount, or force continuity.
+- Corrected a stale renderer block on Q4/2024: eight cash-flow movement fields (CFO/CFI/CFF/net cash change, quarterly and YTD) were removed from financial_line_items_rejected_fields because the existing B04 page text proves they reconcile to zero. Only cash_beginning and cash_ending remain blocked for the inter-period gap. Commit: [605edf6c4025aa4149d2ad46fc2a0d51ecd57b3a](https://github.com/kiemtimem123/so-lieu/commit/605edf6c4025aa4149d2ad46fc2a0d51ecd57b3a).
+- Checkpoint commit: [3472732c2c54bee39a31a243e8cad910fc88be8d](https://github.com/kiemtimem123/so-lieu/commit/3472732c2c54bee39a31a243e8cad910fc88be8d).
+- Visual page review remains pending for all 10 VCB periods. This audit is source-text/OCR reconciliation only; it is not visual PDF confirmation. Continue VCB only; do not start SHS until all pending VCB review stages are closed.
