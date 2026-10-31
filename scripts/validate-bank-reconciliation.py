@@ -62,7 +62,18 @@ def require_close(symbol, period, label, actual, expected, tolerance=EPS):
     )
 
 def cash_bridge_delta(item):
-    """Return the cash bridge on the same basis as the reported opening/closing balances."""
+    """Return the generic standalone-period cash bridge (legacy shared test contract)."""
+    required = ("cash_beginning", "cash_ending", "net_cash_change")
+    if not all(number(item.get(key)) for key in required):
+        return None
+    fx_effect = item.get("foreign_exchange_effect")
+    if not number(fx_effect):
+        fx_effect = 0
+    return item["cash_ending"] - item["cash_beginning"] - item["net_cash_change"] - fx_effect
+
+
+def bank_cash_bridge_delta(item):
+    """Return the bank B04 bridge using YTD net cash when balances are annual/YTD."""
     if item.get("cashflow_period_basis") == "year_to_date":
         flow_key = "net_cash_change_ytd"
         fx_key = "foreign_exchange_effect_ytd"
@@ -206,7 +217,7 @@ def audit_item(symbol, item, by_period):
         # YTD closing, while net_cash_change is normalized to the standalone quarter.
         fx_available = number(item.get(bridge_fx_key))
         fx_effect = item.get(bridge_fx_key) if fx_available else 0
-        bridge_delta = cash_bridge_delta(item)
+        bridge_delta = bank_cash_bridge_delta(item)
         bridge_label = "cash opening/closing YTD bridge after FX" if fx_available else "cash opening/closing YTD bridge (FX unavailable)"
         expected_closing_cash = item["cash_beginning"] + item[bridge_flow_key] + fx_effect
         if not within_relative_tolerance(item["cash_ending"], expected_closing_cash):
@@ -597,7 +608,7 @@ def main():
                     )
             if "cash_beginning" in (vcb_q4.get("financial_line_items_rejected_fields") or []) or "cash_ending" in (vcb_q4.get("financial_line_items_rejected_fields") or []):
                 ERRORS.append("VCB 2024-Q4: audited opening/closing cash must not remain rejected")
-            if cash_bridge_delta(vcb_q4) != 0:
+            if bank_cash_bridge_delta(vcb_q4) != 0:
                 ERRORS.append("VCB 2024-Q4: audited YTD cash bridge must reconcile exactly to zero")
         vcb_q2_2024 = vcb_rows.get("2024-Q2")
         if isinstance(vcb_q2_2024, dict):
