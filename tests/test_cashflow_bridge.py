@@ -975,16 +975,27 @@ class SHSCashFlowNormalizationTests(unittest.TestCase):
         self.assertEqual(rec["source_candidates_pending_manual_review"], [])
         self.assertEqual(rec["quarter_cash_bridge_residual_million_vnd"], 0)
 
-    def test_shs_q4_2024_later_comparator_reclassification_remains_flagged(self):
+    def test_shs_q4_2024_uses_original_period_pdf_and_preserves_later_comparator_difference(self):
         row = self.rows["2024-Q4"]
         rec = row["cashflow_source_reconciliation"]
-        self.assertEqual(rec["status"], "NEEDS_MANUAL_REVIEW_PRIOR_YEAR_COMPARATIVE_RECLASS_GT_0_01_PERCENT")
-        self.assertEqual(row["operating_cash_flow_ytd"], -1403639)
-        self.assertEqual(row["investing_cash_flow_ytd"], -16486)
-        self.assertEqual(row["financing_cash_flow_ytd"], 1248994)
+        self.assertEqual(
+            rec["status"],
+            "ORIGINAL_PERIOD_REPORT_VISUALLY_VERIFIED_LATER_COMPARATOR_DIFFERENCE_RETAINED",
+        )
+        self.assertEqual(row["operating_cash_flow_ytd"], -1404020)
+        self.assertEqual(row["investing_cash_flow_ytd"], -16092)
+        self.assertEqual(row["financing_cash_flow_ytd"], 1248982)
         self.assertEqual(row["net_cash_change_ytd"], -171130)
-        review = rec["source_reclassification_review"]
-        self.assertGreater(review["relative_differences_percent"]["investing_cash_flow"], 0.01)
+        self.assertEqual(row["operating_cash_flow"], -305330)
+        self.assertEqual(row["investing_cash_flow"], -10385)
+        self.assertEqual(row["financing_cash_flow"], 556000)
+        self.assertEqual(row["net_cash_change"], 240285)
+        self.assertEqual(row["cash_beginning"], 440474)
+        self.assertEqual(row["cash_ending"], 680759)
+        self.assertEqual(rec["source_pdf_pages"], [13, 14])
+        review = rec["later_comparative"]
+        self.assertGreater(review["relative_differences_percent"]["cfi"], 0.01)
+        self.assertEqual(review["same_net_cash_and_balance_bridge"], True)
         self.assertEqual(row["cash_ending_reported_ytd"], 680759)
         self.assertTrue(rec["selected_values_not_adjusted_for_tolerance"])
 
