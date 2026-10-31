@@ -181,3 +181,12 @@ Ghi chú này là lối tắt tiếp nối, không thay thế checkpoint sống.
 
 - CI exposed that changing the shared `cash_bridge_delta` helper to YTD basis broke 45 cross-ticker tests. Corrected the scope in commit `2c9b357b157397ecd61dac5035b7748c53816ddc`: restored generic `cash_bridge_delta` standalone-period semantics and introduced `bank_cash_bridge_delta` for bank B04 YTD opening/closing balances only. Bank audit and VCB Q4 regression now use the bank-specific helper.
 - Both `Validate quarterly financial data` and `Validate Site and Data` workflows were in progress on commit `2c9b357b157397ecd61dac5035b7748c53816ddc` at checkpoint time. Do not claim CI passed until both complete.
+
+
+## 2026-11-01 VCB validator runtime PASS
+
+- The bank-scoped helper fix is committed in `2c9b357b157397ecd61dac5035b7748c53816ddc`; generic cash_bridge_delta behavior is restored for other tickers, YTD cash bridge is isolated to bank_cash_bridge_delta.
+- GitHub Actions `Validate quarterly financial data` run 725 (ID 41227083864) completed successfully. Steps include `Validate quarterly financial snapshots` and `Run bank statement reconciliation regression checks`; both PASS.
+- GitHub Actions `Validate Site and Data` run 1671 (ID 41227083853) completed successfully. Steps include `Test cash-flow bridge reconciliation`, `Test financial table source allow-list`, JavaScript syntax and JSON snapshot validation; all PASS.
+- Follow-up metadata commits also passed Validate Site and Data: run 1672 (ID 41227118703) and run 1673 (ID 41227122396).
+- Remaining to close VCB: complete direct visual review for all ten quarterly source PDFs/statement sections, and directly confirm the VCB Q3/2026 document ID and linked PDF from the VietstockFinance catalogue. Do not advance to SHS until these are resolved or explicitly retained for manual review.
