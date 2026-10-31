@@ -260,11 +260,11 @@
         "validatorCommit": "5b57b6cac94c42055415ea73b2298303686a4011",
         "summary": "Đã đối chiếu đủ 10/10 kỳ từ sidecar PDF hợp nhất VietstockFinance. Sửa ánh xạ dòng tiền bị nhầm với thu nhập lãi/chi mua TSCĐ; tách dòng tiền quý từ YTD; khôi phục lợi nhuận thuộc cổ đông ngân hàng; bổ sung các cấu phần thu nhập thiếu; sửa dấu chi phí dự phòng Q4/2025 và Q2/2026.",
         "checks": "Mỗi kỳ đã kiểm tra cân đối tài sản, tổng cấu phần thu nhập, doanh thu so với PPOP + chi phí hoạt động, lợi nhuận trước thuế, lợi nhuận sau thuế, tổng dòng tiền YTD, số dư tiền đầu/cuối kỳ; các sai lệch tính toán sau sửa đều bằng 0.",
-        "remaining": "Ảnh PDF gốc chưa được kiểm tra trực quan. Giữ nguyên verification_status pending_visual_review và schema v4; không giả mạo nâng version parser. Kiểm tra Q1/2025 opening cash so với Q4/2024 closing cash vẫn là điểm cần xem ảnh/giải thích bản so sánh."
+        "remaining": "Visual PDF review remains pending for all 10 periods. Deep source-text review of Q4/2024 and Q1/2025 confirms the Q4 cash-flow components internally reconcile, but a 2,546,277 million VND (0.594830%) gap exists between Q4 closing cash and Q1 opening cash. Both cash balance cells stay hidden until explanatory note and visual confirmation. Q4 flow fields are now released after exact reconciliation."
       },
       "uiCoverageReview": {
         "status": "coverage_audit_complete_pending_visual_pdf_review",
-        "updatedAt": "2026-10-31T09:00:00+07:00",
+        "updatedAt": "2026-10-31T21:46:00+07:00",
         "snapshotFetchedAt": "2026-10-24T06:15:00Z",
         "snapshotSha": "bcca9d7c9bd45d0bf753aae70c8d78b3cb4db581",
         "sourceTextReconciliationStatus": "complete_10_of_10_reused_no_reprocessing",
@@ -405,15 +405,7 @@
               ],
               "2024-Q4": [
                 "cash_beginning",
-                "cash_ending",
-                "financing_cash_flow",
-                "financing_cash_flow_ytd",
-                "investing_cash_flow",
-                "investing_cash_flow_ytd",
-                "net_cash_change",
-                "net_cash_change_ytd",
-                "operating_cash_flow",
-                "operating_cash_flow_ytd"
+                "cash_ending"
               ],
               "2025-Q2": [
                 "cash_beginning",
@@ -432,20 +424,80 @@
                 "income_tax_tax_reconciliation_check"
               ]
             },
-            "note": "Những trường bị từ chối giữ trống. Capital expenditure, dividends paid, foreign exchange effect chưa có trường nguồn trực tiếp trong 10 kỳ. Bank interest expense thiếu trường trực tiếp 10/10 nhưng renderer chỉ tái lập khi có đồng thời income và net interest cùng kỳ; ô công thức không tính vào coverage trực tiếp."
+            "note": "Q4/2024 stale rejection on 8 cash-flow fields was removed after existing B04 page text confirmed the annual and standalone cash-flow components reconcile exactly. Only opening/closing cash remain hidden because Q4 closing cash and Q1 opening cash differ by 2,546,277 million VND (>0.01%). Capex, dividends paid and FX effect remain blank where source fields are absent."
           },
           {
             "id": "visual_pdf_review",
             "status": "pending",
             "periodsPending": 10,
             "periodRange": "2024-Q1..2026-Q2",
-            "specificOpenIssue": "Q1/2025 opening cash is 430,614,185 triệu VND; Q4/2024 cash-flow close is currently rejected/blank. Visual comparison of the same VietstockFinance PDF statement is still required before changing either field.",
+            "specificOpenIssue": "Source text confirms Q4/2024 B04 closing cash 428,067,908 and Q1/2025 B04 opening cash 430,614,185; difference 2,546,277 million VND (0.594830%, >0.01%). Both direct report values are retained in rejected-value audit and hidden pending explanatory-note review and visual PDF verification. Q4/2024 cash-flow component rows were released after exact internal reconciliation. No visual page review claimed.",
             "note": "PDF Q1/2025 14.95 MB could not be opened in the web PDF viewer due content-size limit; no visual validation claimed. Keep existing values/statuses."
+          },
+          {
+            "id": "source_page_text_deep_audit_q4_2024_q1_2025",
+            "status": "complete_source_text_only_pending_visual_pdf_review",
+            "periodsChecked": [
+              "2024-Q4",
+              "2025-Q1"
+            ],
+            "documents": [
+              {
+                "period": "2024-Q4",
+                "archive": "reports/raw/VCB/auto-vcb-20261021/842e77aefd580828.pdf",
+                "pages": {
+                  "balance": [
+                    5,
+                    6
+                  ],
+                  "income": [
+                    8,
+                    9
+                  ],
+                  "cashflow": [
+                    10,
+                    11
+                  ]
+                },
+                "existingSidecar": "reports/raw/VCB/auto-vcb-20261021/842e77aefd580828.pdf.extracted.json"
+              },
+              {
+                "period": "2025-Q1",
+                "archive": "reports/raw/VCB/auto-vcb-20261021/f25bf036ad962541.pdf",
+                "pages": {
+                  "balance": [
+                    4,
+                    5
+                  ],
+                  "income": [
+                    7,
+                    8
+                  ],
+                  "cashflow": [
+                    9,
+                    10
+                  ]
+                },
+                "existingSidecar": "reports/raw/VCB/auto-vcb-20261021/f25bf036ad962541.pdf.extracted.json"
+              }
+            ],
+            "findings": [
+              "Q4/2024 B02 originally reports assets 2,085,397,244; liabilities 1,886,441,134; equity 198,956,110 million VND. Q1/2025 B02 comparative restates these to 2,085,873,522; 1,889,664,354; 196,209,168. Snapshot Q4 balance values use the Q1 comparative restatement and balance exactly.",
+              "Q4/2024 B03 pages 8-9 confirm Q4 interest income 23,581,262; net interest income 13,842,332; pre-provision profit 10,670,350; credit provision expense 32,330; PBT 10,702,680; PAT 8,569,931; attributable profit 8,565,388 million VND.",
+              "Q4/2024 B04 pages 10-11 confirm annual operating cash flow 56,572,468; investing -1,303,327; financing -19,963; net change 55,249,178; opening cash 372,818,730; closing cash 428,067,908. Component and cash bridges both reconcile to zero.",
+              "Q1/2025 B04 pages 9-10 confirm operating cash flow -13,180,595; investing -174,898; financing 0; net change -13,355,493; opening cash 430,614,185; closing cash 417,258,692. Cash bridge reconciles to zero.",
+              "Q4 closing cash and Q1 opening cash differ by 2,546,277 million VND (0.594830% of Q4 closing cash), above 0.01%. Both source values remain blocked pending explanatory note/visual confirmation; no FX plug or forced continuity."
+            ],
+            "snapshotCommit": "605edf6c4025aa4149d2ad46fc2a0d51ecd57b3a",
+            "numericSourceValuesChanged": false,
+            "visualPdfReviewPending": true
           }
         ],
-        "dataSnapshotChanged": false,
+        "dataSnapshotChanged": true,
         "ocrOrEnrichRun": false,
-        "nextAction": "Continue only the pending visual PDF review for VCB using existing archived VietstockFinance PDFs; do not repeat OCR/text reconciliation, do not replace normalized values, and do not reopen completed stages."
+        "nextAction": "Continue VCB only: resolve the Q4/2024 closing cash vs Q1/2025 opening cash discrepancy from VietstockFinance explanatory notes and complete visual review of all 10 periods. Do not move to SHS until VCB is closed.",
+        "numericSnapshotFieldsChanged": false,
+        "snapshotCommit": "605edf6c4025aa4149d2ad46fc2a0d51ecd57b3a"
       }
     },
     "TPB": {
@@ -2808,34 +2860,37 @@
     "note": "Gói Hostinger đã build thành công; chưa có thao tác triển khai trực tiếp lên hosting."
   },
   "lastUiWorkCheckpoint": {
-    "processedAt": "2026-10-31T09:00:00+07:00",
+    "processedAt": "2026-10-31T21:46:00+07:00",
     "task": "financial_report_table_display",
     "symbol": "VCB",
-    "status": "VCB_coverage_audit_complete_pending_visual_pdf_review",
-    "snapshotSha": "bcca9d7c9bd45d0bf753aae70c8d78b3cb4db581",
+    "status": "VCB_Q4_Q1_cashflow_reconciled_cross_period_cash_gap_pending_visual_review",
+    "snapshotSha": "f5b51c887b79bb936fce3a2c1a3c0ca5269690f4",
     "changedPaths": [
+      "data/financials-VCB.json",
       "reports/processing-checkpoint.json",
       "reports/session-resume.md"
     ],
     "completedStages": [
+      "source_text_reconciliation",
       "period_scope_source_inventory",
       "bank_statement_row_mapping_and_coverage",
       "rejected_field_and_blank_cell_review",
-      "source_text_reconciliation"
+      "source_page_text_deep_audit_q4_2024_q1_2025"
     ],
     "pendingStages": [
-      "visual_pdf_review"
+      "explanatory_note_review_for_cash_gap",
+      "visual_pdf_review_all_10_periods"
     ],
     "findings": [
-      "Reused the previous VCB source-text reconciliation for 10/10 periods; no OCR/enrich and no source numeric fields changed.",
-      "10/10 periods 2024-Q1 through 2026-Q2 are consolidated and linked from the single VietstockFinance document index; no scope blocker was found.",
-      "Bank-specific table mapping is 34 CĐKT rows, 22 KQKD rows, 9 LCTT rows and 2 direct ROA/ROE rows.",
-      "Direct-value coverage: CĐKT 171/340 (50.3%), KQKD 200/220 (90.9%), LCTT 54/90 (60.0%), ROA/ROE 18/20 (90.0%); total 443/670 (66.1%).",
-      "Rejected cash-flow fields at Q2/2024, Q4/2024 and Q2/2025 remain hidden; Q4/2025 rejected tax reconciliation fields also stay blocked.",
-      "Capex, dividends paid and FX effect remain blank where source fields are absent. Do not infer or plug them.",
-      "Visual PDF review is still pending for 10/10 periods. Q1/2025 opening cash vs Q4/2024 closing cash remains an explicit review point. PDF web viewer rejected the 14.95 MB source as too large; no visual review is claimed."
+      "Q4/2024 B02 originally reports assets 2,085,397,244; liabilities 1,886,441,134; equity 198,956,110 million VND. Q1/2025 B02 comparative restates these to 2,085,873,522; 1,889,664,354; 196,209,168. Snapshot Q4 balance values use the Q1 comparative restatement and balance exactly.",
+      "Q4/2024 B03 pages 8-9 confirm Q4 interest income 23,581,262; net interest income 13,842,332; pre-provision profit 10,670,350; credit provision expense 32,330; PBT 10,702,680; PAT 8,569,931; attributable profit 8,565,388 million VND.",
+      "Q4/2024 B04 pages 10-11 confirm annual operating cash flow 56,572,468; investing -1,303,327; financing -19,963; net change 55,249,178; opening cash 372,818,730; closing cash 428,067,908. Component and cash bridges both reconcile to zero.",
+      "Q1/2025 B04 pages 9-10 confirm operating cash flow -13,180,595; investing -174,898; financing 0; net change -13,355,493; opening cash 430,614,185; closing cash 417,258,692. Cash bridge reconciles to zero.",
+      "Q4 closing cash and Q1 opening cash differ by 2,546,277 million VND (0.594830% of Q4 closing cash), above 0.01%. Both source values remain blocked pending explanatory note/visual confirmation; no FX plug or forced continuity."
     ],
-    "next": "VCB: continue from pending visual_pdf_review only. Reuse all completed source reconciliation and coverage stages; after visual review, checkpoint each confirmed period before moving to CTG."
+    "numericSourceValuesChanged": false,
+    "ocrOrEnrichRun": false,
+    "next": "Continue VCB only. Resolve the 2,546,277 million VND cash balance discontinuity using the existing VietstockFinance source notes and complete visual review; do not process SHS until VCB is closed."
   },
   "lastUiWork": {
     "workstream": "financial-report-tables",
