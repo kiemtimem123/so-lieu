@@ -2787,12 +2787,9 @@
       "core_financial_extraction_calculations": {
         "balance_totals_withheld": "asset/liability/equity totals did not fully reconcile"
       },
-      "financial_line_items_rejected_fields": [
-        "income_tax_current_tax_reconciliation_check",
-        "income_tax_tax_reconciliation_check"
-      ],
+      "financial_line_items_rejected_fields": [],
       "financial_line_items_rejected_updated_at": "2026-10-23T03:11:29+00:00",
-      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Đính chính nguồn 2026-10-30: đối chiếu KQKD hợp nhất, bổ sung lợi nhuận phân bổ cổ đông/các cấu phần thu nhập còn thiếu, sửa dấu chi phí dự phòng sai và dòng tiền YTD/riêng quý. Vẫn chờ rà soát trực quan. Rà soát văn bản nguồn 2026-10-31: sửa bank_investment_securities_net từ 2.735 về 0; B03 PDF trang 7 ghi dấu gạch ngang ở cột Quý IV năm nay, 2.735 là cột Quý IV năm trước. Không lấy số so sánh làm dữ liệu kỳ 2025.",
+      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Đính chính nguồn 2026-10-30: đối chiếu KQKD hợp nhất, bổ sung lợi nhuận phân bổ cổ đông/các cấu phần thu nhập còn thiếu, sửa dấu chi phí dự phòng sai và dòng tiền YTD/riêng quý. Vẫn chờ rà soát trực quan. Rà soát văn bản nguồn 2026-10-31: sửa bank_investment_securities_net từ 2.735 về 0; B03 PDF trang 7 ghi dấu gạch ngang ở cột Quý IV năm nay, 2.735 là cột Quý IV năm trước. Không lấy số so sánh làm dữ liệu kỳ 2025. Khôi phục thuế TNDN hiện hành -1.269.144 và thuế TNDN hoãn lại -984.376 từ B03 PDF trang 8; tổng -2.253.520 khớp thuế TNDN tổng, cầu nối LNTT-LNST bằng 0. Chờ rà soát trực quan PDF.",
       "fixed_assets": 8232904,
       "retained_earnings": 102027572,
       "bank_cash_on_hand": 15542768,
@@ -2869,7 +2866,9 @@
         "operating_cash_flow_ytd",
         "operating_profit",
         "retained_earnings",
-        "revenue"
+        "revenue",
+        "income_tax_current",
+        "income_tax_deferred"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
@@ -3051,6 +3050,25 @@
         },
         "source_basis": "Existing VietstockFinance-linked PDF extracted text sidecar only; no OCR/enrich rerun.",
         "visual_pdf_review": "pending"
+      },
+      "income_tax_current": -1269144,
+      "income_tax_deferred": -984376,
+      "income_tax_reconciliation_20261101": {
+        "status": "source_text_reconciled_pending_visual_review",
+        "sourceIndexUrl": "https://finance.vietstock.vn/VCB/tai-tai-lieu.htm?doctype=1",
+        "sourcePdfUrl": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/VCB_Baocaotaichinh_Q4_2025_Hopnhat.pdf",
+        "sourceArchive": "reports/raw/VCB/auto-vcb-20261021/1f71919eae463bd2.pdf",
+        "sourcePage": 8,
+        "currentTaxExpense": -1269144,
+        "deferredTaxExpense": -984376,
+        "totalTaxExpense": 2253520,
+        "checks": {
+          "componentSum": -2253520,
+          "matchesNegativeTotalTax": -2253520,
+          "pretaxLessTotalTax": 8633783,
+          "matchesNetProfit": true
+        },
+        "reviewedAt": "2026-11-01"
       }
     },
     {
