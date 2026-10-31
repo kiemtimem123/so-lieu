@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-01T04:30:00Z",
+  "updatedAt": "2026-11-01T05:00:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -48,7 +48,7 @@
     "status": "terminal_needs_manual_review",
     "completeForAutomation": true,
     "manualReviewRemaining": true,
-    "processedAt": "2026-11-01T04:30:00Z",
+    "processedAt": "2026-11-01T05:00:00Z",
     "workflowRunId": "41088586086",
     "workflowRunNumber": 3035,
     "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/41088586086",
@@ -70,7 +70,7 @@
     "skipUnconfirmedAutomation": false,
     "skipUnconfirmedReason": null,
     "nextSymbol": "VCB",
-    "nextTask": "visual_review_ten_quarterly_pdfs_and_direct_q3_2026_catalog_confirmation"
+    "nextTask": "verify_tax_correction_CI_then_quarterly_pdf_visual_and_q3_catalog"
   },
   "symbolStates": {
     "MBB": {
@@ -233,7 +233,7 @@
       "skipUnconfirmedAutomation": true,
       "skipUnconfirmedReason": "Manual visual review of the stored consolidated reports and direct VietstockFinance confirmation of VCB Q3/2026 remain. Numeric source reconciliation across 10 stored periods passes.",
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-11-01T04:30:00Z",
+      "updatedAt": "2026-11-01T05:00:00Z",
       "snapshotFetchedAt": "2026-10-24T06:15:00Z",
       "sourceReconciledPeriods": [
         "2024-Q1",
@@ -260,8 +260,8 @@
         "validatorCommit": "5b57b6cac94c42055415ea73b2298303686a4011",
         "summary": "Đã đối chiếu đủ 10/10 kỳ từ sidecar PDF hợp nhất VietstockFinance. Sửa ánh xạ dòng tiền bị nhầm với thu nhập lãi/chi mua TSCĐ; tách dòng tiền quý từ YTD; khôi phục lợi nhuận thuộc cổ đông ngân hàng; bổ sung các cấu phần thu nhập thiếu; sửa dấu chi phí dự phòng Q4/2025 và Q2/2026. Additional 2026-10-31 deep audit: Q2/2024 and Q2/2025 B03/B04 page text was checked; Q2/2024 provision expense sign corrected to +1,513,541; 10 stale rejection flags per Q2 period removed after exact YTD/quarterly/cash bridge reconciliation.",
         "checks": "Mỗi kỳ đã kiểm tra cân đối tài sản, tổng cấu phần thu nhập, doanh thu so với PPOP + chi phí hoạt động, lợi nhuận trước thuế, lợi nhuận sau thuế, tổng dòng tiền YTD, số dư tiền đầu/cuối kỳ; các sai lệch tính toán sau sửa đều bằng 0.",
-        "remaining": "All ten stored periods pass the repository's bank reconciliation regression workflow; site/data validation is also PASS. ROA and ROE are now populated for 10/10 quarters under the existing project formula. Q4/2024 cash restatement and Q2 cash flags are corrected. Remaining: direct visual review of all 10 quarterly PDFs/statement sections is incomplete; direct VietstockFinance Q3/2026 document ID/PDF is unconfirmed. Keep VCB as active until these are closed.",
-        "lastUpdatedAt": "2026-11-01T04:30:00Z",
+        "remaining": "All ten stored periods now have no rejected financial fields. Full programmatic audit across balance, seven bank income components, revenue/PPOP, signed provision/PBT, PAT, tax components where available, quarter and YTD cash flows, cash bridge, ROA and ROE all returns zero difference. GitHub Actions bank and site validation previously PASS; the latest tax corrections are awaiting final CI confirmation. Remaining: visual review of all ten quarterly PDFs and direct VietstockFinance confirmation of VCB Q3/2026.",
+        "lastUpdatedAt": "2026-11-01T05:00:00Z",
         "q2DeepAudit": {
           "checkedAt": "2026-10-31T15:28:14.085Z",
           "periods": [
@@ -341,7 +341,7 @@
           }
         },
         "visualReviewPending": true,
-        "snapshotBlobSha": "f7524add586e543b099cc24358d1313f0c9b010b",
+        "snapshotBlobSha": "9e7aa5c509dcf68083aeb9567bbb179353f3fdf1",
         "q4_2025Finding": {
           "field": "bank_investment_securities_net",
           "old": 2735,
@@ -439,7 +439,7 @@
         "status": "coverage_audit_complete_pending_visual_pdf_review",
         "updatedAt": "2026-11-01T04:00:00Z",
         "snapshotFetchedAt": "2026-10-24T06:15:00Z",
-        "snapshotSha": "f7524add586e543b099cc24358d1313f0c9b010b",
+        "snapshotSha": "9e7aa5c509dcf68083aeb9567bbb179353f3fdf1",
         "sourceTextReconciliationStatus": "complete_10_of_10_zero_arithmetic_deltas",
         "sourceTextReconciliationPendingVisualReview": true,
         "stages": [
@@ -487,9 +487,9 @@
                 "percent": 50.3
               },
               "income": {
-                "populated": 200,
+                "populated": 202,
                 "total": 220,
-                "percent": 90.9
+                "percent": 91.8
               },
               "cashflow": {
                 "populated": 54,
@@ -502,9 +502,9 @@
                 "percent": 100
               },
               "combined": {
-                "populated": 445,
+                "populated": 447,
                 "total": 670,
-                "percent": 66.4
+                "percent": 66.7
               }
             },
             "coverageMethod": "Direct numeric source values after the existing rowsFor rejected-field sanitizer; presentation-only formula-derived cells are excluded from these coverage counts.",
@@ -529,7 +529,7 @@
                 "2025-Q1": 20,
                 "2025-Q2": 19,
                 "2025-Q3": 20,
-                "2025-Q4": 19,
+                "2025-Q4": 21,
                 "2026-Q1": 20,
                 "2026-Q2": 19
               },
@@ -565,14 +565,11 @@
             "status": "complete",
             "rejected": {
               "2024-Q4": [],
-              "2025-Q4": [
-                "income_tax_current_tax_reconciliation_check",
-                "income_tax_tax_reconciliation_check"
-              ],
+              "2025-Q4": [],
               "2024-Q2": [],
               "2025-Q2": []
             },
-            "note": "Q2/2024 and Q2/2025: removed all 10 stale rejected cash-flow fields after B04 text/source reconciliation; values have zero YTD/quarter/cash bridges. Q4/2024: audited annual restatement applied, opening/closing cash restored, signed provision reversal retained; only unrelated Q4/2025 tax reconciliation fields remain blocked."
+            "note": "Q2/Q3 2024 deferred tax wrong comparative-column values corrected from B03; Q4 2025 current/deferred tax restored from B03 page 8; all cashflow block flags in Q2/2024 and Q2/2025 removed; no remaining rejected fields in the 10 stored VCB quarters."
           },
           {
             "id": "visual_pdf_review",
@@ -781,7 +778,7 @@
         "date": "2026-11-01",
         "status": "Q4_2024_AUDITED_CASH_RESTATEMENT_APPLIED",
         "commit": "01a27a27c3cf6e45dbe14f7e0d681e4a35a24d6b",
-        "snapshotBlobSha": "f7524add586e543b099cc24358d1313f0c9b010b",
+        "snapshotBlobSha": "9e7aa5c509dcf68083aeb9567bbb179353f3fdf1",
         "finding": "The 2,546,277 million VND Q4/2024 vs Q1/2025 difference was caused by the preliminary Q4/2024 cash-flow report being superseded by audited 2024 consolidated statements. Q1/2025 comparative and audited 2024 statement agree at 430,614,185.",
         "sourceIndex": "https://finance.vietstock.vn/VCB/tai-tai-lieu.htm?doctype=1",
         "sourceDocuments": {
@@ -815,7 +812,7 @@
           "q32026": "Candidate report is listed by external aggregators, but direct VietstockFinance catalogue document ID/PDF is not yet confirmed; do not add it from secondary source."
         }
       },
-      "snapshotBlobSha": "f7524add586e543b099cc24358d1313f0c9b010b",
+      "snapshotBlobSha": "9e7aa5c509dcf68083aeb9567bbb179353f3fdf1",
       "nextAction": "Continue VCB only: perform visual review of the remaining report statement pages and verify Q3/2026 directly from the VietstockFinance document catalogue. Do not move to SHS until VCB is closed.",
       "validationLogic20261101": {
         "status": "patched_pending_runtime_execution",
@@ -858,7 +855,7 @@
       "numericAudit20261101": {
         "date": "2026-11-01",
         "status": "SOURCE_RECONCILED_NUMERIC_AUDIT_PASS",
-        "snapshotBlobSha": "f7524add586e543b099cc24358d1313f0c9b010b",
+        "snapshotBlobSha": "9e7aa5c509dcf68083aeb9567bbb179353f3fdf1",
         "dataAudit": {
           "periods": 10,
           "periodRange": "2024-Q1..2026-Q2",
@@ -910,6 +907,27 @@
             "roa": 2.23,
             "roe": 24.12
           }
+        },
+        "fullFormulaAudit": {
+          "status": "PASS",
+          "periods": 10,
+          "failedChecks": 0,
+          "checks": [
+            "balance",
+            "bank income components",
+            "revenue/PPOP",
+            "PBT with signed provision",
+            "PAT/tax total",
+            "current + deferred tax where both components exist",
+            "quarter CFO+CFI+CFF",
+            "YTD CFO+CFI+CFF",
+            "YTD cash open-close bridge",
+            "ROA",
+            "ROE"
+          ],
+          "maximumDifference": 0,
+          "allTenRejectedFieldArraysEmpty": true,
+          "auditedAt": "2026-11-01"
         }
       },
       "visualEvidence20261101": {
