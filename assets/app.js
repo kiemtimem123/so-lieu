@@ -988,7 +988,7 @@
     };
     // Scope-blocked/unconfirmed reports may retain source OCR values for audit, but
     // never let those values enter public charts, comparisons, overview KPIs, or tables.
-    const scopeUnverifiedMetricField = /^(?:revenue|cost_of_goods_sold|gross_profit|financial_income|financial_expense|interest_expense|selling_expense|admin_expense|operating_profit|income_tax(?:_current|_deferred)?|pretax_profit|net_profit(?:_attributable)?|total_assets|total_liabilities|equity|roa|roe|pb|pe|eps|price|market_cap|enterprise_value|ev_ebitda|current_assets|non_current_assets|short_term_.*|current_liabilities|long_term_liabilities|fixed_assets|inventory|cash(?:_.*)?|retained_earnings|capital_expenditure(?:_ytd)?|dividends_paid(?:_ytd)?|operating_cash_flow(?:_ytd)?|investing_cash_flow(?:_ytd)?|financing_cash_flow(?:_ytd)?|foreign_exchange_effect(?:_ytd)?|net_cash_change(?:_ytd)?|bank_.*|broker_.*)$/i;
+    const scopeUnverifiedMetricField = /^(?:revenue|cost_of_goods_sold|gross_profit|financial_income|financial_expense|interest_expense|share_of_profit_in_associates|selling_expense|admin_expense|operating_profit|other_income|other_expense|other_profit|income_tax(?:_current|_deferred)?|pretax_profit|net_profit(?:_attributable)?|total_assets|total_liabilities|equity|roa|roe|pb|pe|eps|price|market_cap|enterprise_value|ev_ebitda|current_assets|non_current_assets|short_term_.*|current_liabilities|long_term_liabilities|fixed_assets|inventory|cash(?:_.*)?|retained_earnings|capital_expenditure(?:_ytd)?|dividends_paid(?:_ytd)?|operating_cash_flow(?:_ytd)?|investing_cash_flow(?:_ytd)?|financing_cash_flow(?:_ytd)?|foreign_exchange_effect(?:_ytd)?|net_cash_change(?:_ytd)?|bank_.*|broker_.*)$/i;
     const hasUnverifiedReportScope = item =>
       item?.source_validation?.scope_validation_required === true ||
       item?.source_validation?.manual_review_blocking_automatic_extraction === true;
@@ -1705,10 +1705,11 @@
 
       if (key === 'operating_profit' && industry !== 'banking' && industry !== 'securities' &&
           ['gross_profit','financial_income','financial_expense','selling_expense','admin_expense'].every(field => num(field) !== null)) {
+        const associateProfit = num('share_of_profit_in_associates') ?? 0;
         return {
-          value: num('gross_profit') + num('financial_income') - Math.abs(num('financial_expense')) -
-            Math.abs(num('selling_expense')) - Math.abs(num('admin_expense')),
-          formula: 'Lợi nhuận hoạt động = lợi nhuận gộp + doanh thu tài chính − chi phí tài chính − chi phí bán hàng − chi phí quản lý doanh nghiệp.'
+          value: num('gross_profit') + num('financial_income') - Math.abs(num('financial_expense')) +
+            associateProfit - Math.abs(num('selling_expense')) - Math.abs(num('admin_expense')),
+          formula: 'Lợi nhuận hoạt động = lợi nhuận gộp + doanh thu tài chính − chi phí tài chính + lãi/lỗ công ty liên kết − chi phí bán hàng − chi phí quản lý doanh nghiệp.'
         };
       }
 
@@ -1975,9 +1976,13 @@
         { label: 'Doanh thu hoạt động tài chính', key: 'financial_income', level: 1 },
         { label: 'Chi phí tài chính', key: 'financial_expense', level: 1, negativeExpense: true },
         { label: 'Trong đó: Chi phí lãi vay', key: 'interest_expense', level: 1, negativeExpense: true },
+        { label: 'Lãi/lỗ từ công ty liên kết', key: 'share_of_profit_in_associates', level: 1 },
         { label: 'Chi phí bán hàng', key: 'selling_expense', level: 1, negativeExpense: true },
         { label: 'Chi phí quản lý doanh nghiệp', key: 'admin_expense', level: 1, negativeExpense: true },
         { label: 'Lợi nhuận từ hoạt động kinh doanh', key: 'operating_profit', strong: true },
+        { label: 'Thu nhập khác', key: 'other_income', level: 1 },
+        { label: 'Chi phí khác', key: 'other_expense', level: 1, negativeExpense: true },
+        { label: 'Lợi nhuận khác', key: 'other_profit', level: 1 },
         { label: 'Lợi nhuận trước thuế', key: 'pretax_profit', strong: true },
         { label: 'Thuế thu nhập doanh nghiệp (tổng)', key: 'income_tax', level: 1, negativeExpense: true },
         { label: 'Thuế TNDN hiện hành', key: 'income_tax_current', level: 1, negativeExpense: true },
