@@ -1724,18 +1724,29 @@
         };
       }
 
-      // For non-bank, non-broker consolidated statements, some snapshots retain
-      // consolidated net profit and parent-attributable profit but not a separate
-      // top-level NCI field. Derive NCI only from those two approved values in
-      // this same consolidated report row; never derive it for standalone scope.
+      // For non-bank, non-broker consolidated statements, derive NCI only when
+      // the same-period parent/NCI bridge is explicitly reconciled or the raw
+      // source NCI line independently matches the two displayed profit values.
+      // This avoids exposing a residual when an OCR parent-profit candidate is
+      // present but has not passed a source reconciliation.
       if (key === 'non_controlling_interest_profit' &&
           industry !== 'banking' && industry !== 'securities' &&
           /hợp nhất|consolidated/i.test(String(item.report_type || '')) &&
           num('net_profit') !== null && num('net_profit_attributable') !== null) {
-        return {
-          value: num('net_profit') - num('net_profit_attributable'),
-          formula: 'Lợi ích cổ đông không kiểm soát = lợi nhuận sau thuế hợp nhất − lợi nhuận sau thuế thuộc cổ đông công ty mẹ; hai số lấy từ cùng kỳ và cùng BCTC hợp nhất.'
-        };
+        const nciDifference = num('net_profit') - num('net_profit_attributable');
+        const nciCheck = item.income_statement_source_checks?.parent_nci_residual_vnd ??
+          item.core_source_checks?.parent_nci_residual_vnd;
+        const rawNciVnd = item.income_statement_source_raw_vnd?.nci_profit ??
+          item.core_source_raw_vnd?.nci_profit;
+        const rawNciMillion = validNumber(rawNciVnd) ? Number(rawNciVnd) / 1000000 : null;
+        const rawNciMatches = rawNciMillion !== null &&
+          Math.abs(nciDifference - rawNciMillion) <= Math.max(0.000001, Math.abs(rawNciMillion) * 0.0001);
+        if (nciCheck === 0 || rawNciMatches) {
+          return {
+            value: nciDifference,
+            formula: 'Lợi ích cổ đông không kiểm soát = lợi nhuận sau thuế hợp nhất − lợi nhuận sau thuế thuộc cổ đông công ty mẹ; cầu nối NCI phải được xác nhận bằng kiểm tra nguồn hoặc dòng NCI raw cùng kỳ.'
+          };
+        }
       }
 
       if (key === 'broker_net_operating_profit' && industry === 'securities' &&
