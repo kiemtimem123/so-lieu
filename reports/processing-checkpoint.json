@@ -2570,9 +2570,9 @@
   },
   "nextActions": [
     "Không chạy lại OCR/enrich hoặc ghi đè snapshot của mã đã hoàn thành/đang giữ rà soát thủ công; tiếp tục xử lý bảng hiển thị theo từng mã.",
-    "KBC: đã kiểm tra 11/11 kỳ; giữ các cờ rà soát trực quan. Công thức doanh thu/lợi nhuận gộp đã sửa để tôn trọng dấu nguồn của giá vốn; không thay số liệu nguồn.",
-    "NLG là mã tiếp theo cho lượt rà soát độ phủ bảng: Q2/2025 còn thiếu nhiều dòng chi tiết CĐKT/KQKD; Q1-Q2/2026 còn thiếu các dòng CFO/CFI/CFF. NLG đang có manual hold do lỗi nâng schema; chỉ xử lý hiển thị và đối chiếu snapshot hiện có, không OCR/enrich lại hoặc ghi đè dữ liệu.",
-    "ROA/ROE chỉ hiển thị từ số liệu nguồn hoặc phép tính có đủ lợi nhuận quý và số dư bình quân cùng phạm vi; P/B để trống khi thiếu giá thị trường và số cổ phiếu/giá trị sổ sách tương ứng.",
+    "KBC: 11/11 kỳ đã rà soát; signed-COGS formula fix committed and CI passed. Không xử lý lại nếu không có lỗi mới.",
+    "NLG: đã rà soát độ phủ bảng từ snapshot hiện có; các ô trống Q2/2025 là trường thiếu/bị loại sau kiểm tra chéo, CFO Q1/2026 giữ trống do lệch 100 tỷ VND, Q1/Q2 2026 chưa đủ cơ sở tách luồng tiền quý. Không OCR/enrich lại khi manual hold còn hiệu lực.",
+    "ROA/ROE chỉ hiển thị từ nguồn hoặc phép tính có đủ lợi nhuận quý và số dư bình quân cùng phạm vi; P/B để trống khi thiếu giá thị trường và giá trị sổ sách/cổ phiếu.",
     "Mọi bảng phải giữ cùng bộ lọc mã, kỳ, đơn vị và phạm vi hợp nhất/riêng lẻ; trường bị từ chối hoặc scope chưa xác nhận tiếp tục bị ẩn."
   ],
   "lastUiUpdate": {
@@ -2633,7 +2633,7 @@
   },
   "lastUiWork": {
     "workstream": "financial-report-tables",
-    "status": "signed_cogs_formula_fix_committed_ci_passed",
+    "status": "signed_cogs_fix_ci_passed_nlg_coverage_reviewed",
     "updatedAt": "2026-10-31T10:22:00+07:00",
     "commits": [
       "4023bbca7d9a94f5ef29c1b2917bbecf2b516efe",
@@ -2648,15 +2648,21 @@
       "25a5c9014ed3af1814dbce5597e434f656db07cf",
       "b6e2cf970cef265200c208b7a65059f98bbe8146"
     ],
-    "finding": "Một số BCTC ghi giá vốn là số âm (dòng giảm trừ), trong khi các mã/kỳ khác ghi giá vốn là số dương. Công thức cũ dùng Math.abs() nên có thể tính sai khi cần tái lập doanh thu hoặc lợi nhuận gộp từ trường còn lại.",
+    "finding": "Một số BCTC ghi giá vốn là số âm (dòng giảm trừ), trong khi các mã/kỳ khác ghi giá vốn là số dương. Công thức cũ dùng Math.abs() nên có thể tính sai khi cần tái lập doanh thu hoặc lợi nhuận gộp từ trường còn lại.\nNLG coverage review (2026-10-31): rowsFor() does not blanket-hide NLG detail rows because its quarter verification statuses are verified_ocr_reconciled/verified_manual_visual_reconciliation; detail rows remain visible when present. Q2/2025 sparse balance/income fields are absent from the normalized snapshot after extraction/reconciliation rejects; do not synthesize or re-run OCR under manual hold. Q1/2026 operating cash flow remains withheld due 100,000,000,000 VND reconciliation delta; Q1/Q2 2026 quarterly CFO/CFI/CFF cannot be derived safely where Q1 base is rejected or absent. Q2/2026 opening cash discrepancy (~33,084.7 million VND) remains source anomaly; retain source values. ROA/ROE recalc metadata matches stored values for reviewed periods.",
     "correction": "Đổi công thức sang dùng giá vốn có dấu nguồn: gross_profit = revenue - cost_of_goods_sold; revenue = gross_profit + cost_of_goods_sold. Không đổi giá trị gốc trong snapshot.",
     "affectedSymbols": [
-      "KBC"
+      "KBC",
+      "NLG"
     ],
     "affectedFields": [
       "cost_of_goods_sold",
       "gross_profit",
-      "revenue"
+      "revenue",
+      "operating_cash_flow",
+      "investing_cash_flow",
+      "financing_cash_flow",
+      "roa",
+      "roe"
     ],
     "regressionTest": "tests/test_financial_table_allowlist.mjs — thêm kiểm tra cả giá vốn dương và âm, bao gồm KBC 2025-Q2 (doanh thu 578664; giá vốn -9920; lợi nhuận gộp 588584; đơn vị triệu VND).",
     "validationRun": {
@@ -2669,7 +2675,7 @@
       "workflow": "Package Hostinger Stock Dashboard",
       "conclusion": "success"
     },
-    "remaining": "KBC 11/11 kỳ đã có dữ liệu lõi/chi tiết được rà soát theo văn bản nguồn; cờ rà soát trực quan vẫn giữ nguyên. Tiếp tục lượt kiểm tra độ phủ bảng NLG, chỉ dùng snapshot hiện có và không chạy lại OCR/enrich do manual hold.",
+    "remaining": "NLG: coverage gaps are genuine missing/rejected source extractions, not a blanket UI filter; preserve manual hold and leave unverified fields blank. Next continue to the next ticker in checkpoint order and resume statement UI coverage only where source-backed data exists.",
     "newRows": [
       "Lãi/(lỗ) từ bán, thanh lý bất động sản đầu tư (dòng riêng) — nhóm bất động sản",
       "Lợi ích cổ đông không kiểm soát (NCI) — bảng KQKD nhóm doanh nghiệp thông thường"
@@ -2680,7 +2686,9 @@
       "conclusion": "success"
     },
     "affectedPeriods": [
-      "2025-Q2"
+      "2025-Q2",
+      "2026-Q1",
+      "2026-Q2"
     ]
   }
 }
