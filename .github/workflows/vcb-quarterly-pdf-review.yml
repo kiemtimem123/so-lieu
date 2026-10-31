@@ -1,0 +1,196 @@
+name: Render VCB quarterly PDF pages for visual review
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "reports/vcb-quarterly-pdf-review.trigger.json"
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout only saved VCB PDFs and snapshot
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /data/financials-VCB.json
+            /reports/raw/VCB/**
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install PDF rendering tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+          python -m pip install --upgrade pypdf pdf2image pillow
+
+      - name: Render source-backed B02, B03 and B04 pages from the ten saved reports
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import json
+          import re
+          import unicodedata
+          from pathlib import Path
+
+          from pdf2image import convert_from_path
+          from PIL import Image, ImageDraw, ImageFont
+          from pypdf import PdfReader
+
+          root = Path(".")
+          snapshot = json.loads((root / "data/financials-VCB.json").read_text(encoding="utf-8"))
+          output = root / "vcb-visual-review"
+          output.mkdir(parents=True, exist_ok=True)
+
+          def norm(value):
+              value = str(value or "").lower().replace("đ", "d")
+              value = unicodedata.normalize("NFD", value)
+              value = "".join(ch for ch in value if unicodedata.category(ch) != "Mn")
+              return re.sub(r"[^a-z0-9]+", " ", value).strip()
+
+          form_patterns = {
+              "B02": re.compile(r"mau b02[a-z]? tctd"),
+              "B03": re.compile(r"mau b03[a-z]? tctd"),
+              "B04": re.compile(r"mau b04[a-z]? tctd"),
+          }
+          fallback_terms = {
+              "B02": ("tong tai san co", "tong no phai tra", "tong von chu so huu"),
+              "B03": ("loi nhuan truoc thue", "loi nhuan sau thue", "chi phi thue tndn"),
+              "B04": ("tien thuan tu hoat dong kinh doanh", "tien va cac khoan tuong duong tien tai thoi diem"),
+          }
+
+          manifest = []
+          for item in snapshot.get("items", []):
+              period = str(item.get("period") or "")
+              archive_rel = item.get("source_archive_file") or item.get("financial_line_items_source")
+              if not archive_rel:
+                  raise RuntimeError(f"{period}: missing saved source archive path")
+              pdf_path = root / archive_rel
+              if not pdf_path.is_file() or pdf_path.suffix.lower() != ".pdf":
+                  raise RuntimeError(f"{period}: saved archive is not an available PDF: {archive_rel}")
+
+              reader = PdfReader(str(pdf_path), strict=False)
+              page_texts = []
+              for page in reader.pages:
+                  try:
+                      page_texts.append(norm(page.extract_text() or ""))
+                  except Exception:
+                      page_texts.append("")
+
+              chosen = {}
+              for form, pattern in form_patterns.items():
+                  matched = [i + 1 for i, text in enumerate(page_texts) if pattern.search(text)]
+                  if len(matched) >= 2:
+                      chosen[form] = matched[:2]
+                  elif len(matched) == 1:
+                      first = matched[0]
+                      candidate = first + 1 if first < len(page_texts) else first - 1
+                      chosen[form] = [first, candidate] if candidate >= 1 else [first]
+                  else:
+                      fallback = [
+                          i + 1 for i, text in enumerate(page_texts)
+                          if any(term in text for term in fallback_terms[form])
+                      ]
+                      chosen[form] = fallback[:2]
+
+              selected = sorted({p for pages in chosen.values() for p in pages if 1 <= p <= len(reader.pages)})
+              if not selected:
+                  raise RuntimeError(f"{period}: could not identify B02/B03/B04 pages")
+
+              digest = hashlib.sha256(pdf_path.read_bytes()).hexdigest()
+              rendered = convert_from_path(
+                  str(pdf_path),
+                  dpi=115,
+                  first_page=min(selected),
+                  last_page=max(selected),
+                  fmt="png",
+                  thread_count=2,
+              )
+              image_by_page = {
+                  page_number: rendered[page_number - min(selected)]
+                  for page_number in range(min(selected), max(selected) + 1)
+              }
+
+              for form, pages in chosen.items():
+                  for page_number in pages:
+                      if page_number not in image_by_page:
+                          continue
+                      image_by_page[page_number].save(
+                          output / f"{period}_{form}_page{page_number:02d}.png"
+                      )
+
+              # Three horizontal statement bands; each band keeps both source pages readable.
+              bands = []
+              band_width = 1120
+              for form in ("B02", "B03", "B04"):
+                  pages = [p for p in chosen[form] if p in image_by_page]
+                  if not pages:
+                      continue
+                  thumbs = []
+                  for page_number in pages[:2]:
+                      img = image_by_page[page_number].convert("RGB")
+                      new_h = int(img.height * band_width / img.width)
+                      thumbs.append(img.resize((band_width, new_h), Image.Resampling.LANCZOS))
+                  band_h = max(img.height for img in thumbs)
+                  band = Image.new("RGB", (band_width * len(thumbs), band_h + 38), "white")
+                  draw = ImageDraw.Draw(band)
+                  draw.text((8, 8), f"{period} | {form} | PDF pages {', '.join(map(str, pages[:2]))}", fill="black")
+                  for index, img in enumerate(thumbs):
+                      band.paste(img, (index * band_width, 38))
+                  bands.append(band)
+
+              sheet = Image.new(
+                  "RGB",
+                  (max(b.width for b in bands), sum(b.height for b in bands)),
+                  "white",
+              )
+              y = 0
+              for band in bands:
+                  sheet.paste(band, (0, y))
+                  y += band.height
+              sheet.save(output / f"{period}_B02_B03_B04_contact.png", optimize=True)
+
+              manifest.append({
+                  "symbol": "VCB",
+                  "period": period,
+                  "source_archive": archive_rel,
+                  "source_url": item.get("source_url"),
+                  "source_sha256": digest,
+                  "page_count": len(reader.pages),
+                  "selected_pages": chosen,
+                  "rendered_pages": selected,
+                  "snapshot_verification_status": item.get("verification_status"),
+              })
+
+          (output / "manifest.json").write_text(
+              json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps({
+              "periods_rendered": len(manifest),
+              "total_page_images": sum(len(x["rendered_pages"]) for x in manifest),
+              "output": str(output),
+              "periods": [x["period"] for x in manifest],
+          }, ensure_ascii=False))
+          PY
+
+      - name: Upload rendered source pages for visual verification
+        uses: actions/upload-artifact@v6
+        with:
+          name: vcb-quarterly-pdf-visual-review
+          path: vcb-visual-review/
+          if-no-files-found: error
+          retention-days: 7
