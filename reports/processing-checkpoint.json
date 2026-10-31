@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-01T02:30:00Z",
+  "updatedAt": "2026-11-01T02:45:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -48,7 +48,7 @@
     "status": "terminal_needs_manual_review",
     "completeForAutomation": true,
     "manualReviewRemaining": true,
-    "processedAt": "2026-11-01T02:30:00Z",
+    "processedAt": "2026-11-01T02:45:00Z",
     "workflowRunId": "41088586086",
     "workflowRunNumber": 3035,
     "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/41088586086",
@@ -71,7 +71,7 @@
     "skipUnconfirmedAutomation": false,
     "skipUnconfirmedReason": null,
     "nextSymbol": "VCB",
-    "nextTask": "execute_bank_validator_then_finish_vcb_visual_review_and_q3_2026_source_verification"
+    "nextTask": "finish_visual_review_q3_2026_catalog_verification_and_run_validator"
   },
   "symbolStates": {
     "MBB": {
@@ -232,9 +232,9 @@
       ],
       "statementPagesPending": false,
       "skipUnconfirmedAutomation": true,
-      "skipUnconfirmedReason": "Manual source review remains: visual review for the stored consolidated PDFs and direct VietstockFinance verification of VCB Q3/2026. Q4/2024 audited cash restatement is resolved.",
+      "skipUnconfirmedReason": "Manual visual review of the stored consolidated reports and direct VietstockFinance confirmation of VCB Q3/2026 remain. Numeric source reconciliation across 10 stored periods passes.",
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-11-01T02:30:00Z",
+      "updatedAt": "2026-11-01T02:45:00Z",
       "snapshotFetchedAt": "2026-10-24T06:15:00Z",
       "sourceReconciledPeriods": [
         "2024-Q1",
@@ -261,8 +261,8 @@
         "validatorCommit": "5b57b6cac94c42055415ea73b2298303686a4011",
         "summary": "Đã đối chiếu đủ 10/10 kỳ từ sidecar PDF hợp nhất VietstockFinance. Sửa ánh xạ dòng tiền bị nhầm với thu nhập lãi/chi mua TSCĐ; tách dòng tiền quý từ YTD; khôi phục lợi nhuận thuộc cổ đông ngân hàng; bổ sung các cấu phần thu nhập thiếu; sửa dấu chi phí dự phòng Q4/2025 và Q2/2026. Additional 2026-10-31 deep audit: Q2/2024 and Q2/2025 B03/B04 page text was checked; Q2/2024 provision expense sign corrected to +1,513,541; 10 stale rejection flags per Q2 period removed after exact YTD/quarterly/cash bridge reconciliation.",
         "checks": "Mỗi kỳ đã kiểm tra cân đối tài sản, tổng cấu phần thu nhập, doanh thu so với PPOP + chi phí hoạt động, lợi nhuận trước thuế, lợi nhuận sau thuế, tổng dòng tiền YTD, số dư tiền đầu/cuối kỳ; các sai lệch tính toán sau sửa đều bằng 0.",
-        "remaining": "Q4/2024 cash discontinuity resolved by applying audited annual restatement; Q4 standalone and annual flow bridges reconcile to zero. Validator logic updated in commit 3d4c01923c00096bd1095c98178ce76225f94fde but execution is pending. Visual review of all 10 stored reports is still incomplete. Candidate Q3/2026 not imported until direct VietstockFinance catalogue document ID and linked PDF are confirmed.",
-        "lastUpdatedAt": "2026-11-01T02:15:00Z",
+        "remaining": "All 8 programmed accounting/cash-flow checks across 10 stored quarters return zero difference using the signed provision convention. Q2/2024 and Q2/2025 source-reconciled cash-flow fields are no longer blocked. Pending: full direct visual review of all 10 reports, runtime execution of the patched bank validator, and direct VietstockFinance catalogue confirmation for Q3/2026.",
+        "lastUpdatedAt": "2026-11-01T02:45:00Z",
         "q2DeepAudit": {
           "checkedAt": "2026-10-31T15:28:14.085Z",
           "periods": [
@@ -400,13 +400,30 @@
             "fullPdfVisualReview": "Remaining 9 reports plus non-cashflow pages of Q4/2024; do not mark all 10 periods visually reviewed.",
             "q32026": "Candidate report is listed by external aggregators, but direct VietstockFinance catalogue document ID/PDF is not yet confirmed; do not add it from secondary source."
           }
+        },
+        "numericAudit": {
+          "periods": 10,
+          "periodRange": "2024-Q1..2026-Q2",
+          "checks": [
+            "balance equation",
+            "seven bank income components vs revenue",
+            "revenue vs PPOP plus operating expenses",
+            "PPOP minus signed provision expense vs pretax profit",
+            "pretax profit less tax vs net profit",
+            "quarter CFO+CFI+CFF vs net cash change",
+            "YTD CFO+CFI+CFF vs YTD net cash change",
+            "YTD opening-to-closing cash bridge"
+          ],
+          "maxAbsoluteDifference": 0,
+          "failedChecks": 0,
+          "method": "Direct programmatic audit of the persisted snapshot JSON; does not assert the GitHub Actions validator was executed."
         }
       },
       "uiCoverageReview": {
         "status": "coverage_audit_complete_pending_visual_pdf_review",
-        "updatedAt": "2026-11-01T02:00:00Z",
+        "updatedAt": "2026-11-01T02:45:00Z",
         "snapshotFetchedAt": "2026-10-24T06:15:00Z",
-        "snapshotSha": "b79deb1aeb34e0d3dc67a185877670db36f7267f",
+        "snapshotSha": "8a5ce5f19eeec09df7f4cc59bf7c35599cfaf797",
         "sourceTextReconciliationStatus": "complete_10_of_10_zero_arithmetic_deltas",
         "sourceTextReconciliationPendingVisualReview": true,
         "stages": [
@@ -535,9 +552,11 @@
               "2025-Q4": [
                 "income_tax_current_tax_reconciliation_check",
                 "income_tax_tax_reconciliation_check"
-              ]
+              ],
+              "2024-Q2": [],
+              "2025-Q2": []
             },
-            "note": "Q4/2024 cash_beginning/cash_ending are restored from audited annual comparative values; two tax reconciliation checks for Q4/2025 remain held. Q4/2024 quarter/YTD cash-flow values now use audited restatement. Validator bug fixed in 3d4c01923c00096bd1095c98178ce76225f94fde; YTD cash bridge now uses YTD net flow and quarter continuity uses closing-balance movement. Runtime execution still pending."
+            "note": "Q2/2024 and Q2/2025: removed all 10 stale rejected cash-flow fields after B04 text/source reconciliation; values have zero YTD/quarter/cash bridges. Q4/2024: audited annual restatement applied, opening/closing cash restored, signed provision reversal retained; only unrelated Q4/2025 tax reconciliation fields remain blocked."
           },
           {
             "id": "visual_pdf_review",
@@ -680,7 +699,25 @@
           "fix": "Use net_cash_change_ytd and foreign_exchange_effect_ytd for YTD opening/closing cash bridge; validate Q2-Q4 cash movement with current close minus prior quarter close against standalone quarter net cash flow; add VCB 2024-Q4 audited-restatement regression.",
           "executed": false,
           "reason": "No workflow-dispatch action is exposed in this session; do not claim the full repository validator was run."
-        }
+        },
+        "numericAudit20261101": {
+          "periods": 10,
+          "periodRange": "2024-Q1..2026-Q2",
+          "checks": [
+            "balance equation",
+            "seven bank income components vs revenue",
+            "revenue vs PPOP plus operating expenses",
+            "PPOP minus signed provision expense vs pretax profit",
+            "pretax profit less tax vs net profit",
+            "quarter CFO+CFI+CFF vs net cash change",
+            "YTD CFO+CFI+CFF vs YTD net cash change",
+            "YTD opening-to-closing cash bridge"
+          ],
+          "maxAbsoluteDifference": 0,
+          "failedChecks": 0,
+          "method": "Direct programmatic audit of the persisted snapshot JSON; does not assert the GitHub Actions validator was executed."
+        },
+        "q2CashflowUnblocked": true
       },
       "snapshotSha": "de81130194d8d0da5e1f909d7fae1251a531ad57",
       "sourceReconciliation20261101": {
@@ -721,16 +758,66 @@
           "q32026": "Candidate report is listed by external aggregators, but direct VietstockFinance catalogue document ID/PDF is not yet confirmed; do not add it from secondary source."
         }
       },
-      "snapshotBlobSha": "b79deb1aeb34e0d3dc67a185877670db36f7267f",
+      "snapshotBlobSha": "8a5ce5f19eeec09df7f4cc59bf7c35599cfaf797",
       "nextAction": "Continue VCB only: perform visual review of the remaining report statement pages and verify Q3/2026 directly from the VietstockFinance document catalogue. Do not move to SHS until VCB is closed.",
       "validationLogic20261101": {
-        "status": "patched_pending_execution",
-        "commit": "3d4c01923c00096bd1095c98178ce76225f94fde",
-        "file": "scripts/validate-bank-reconciliation.py",
-        "issue": "Bank B04 cash balances are stored on year-to-date basis, but validator used standalone-quarter net_cash_change for the cash opening/closing bridge and compared annual opening cash with the previous quarter closing cash.",
-        "fix": "Use net_cash_change_ytd and foreign_exchange_effect_ytd for YTD opening/closing cash bridge; validate Q2-Q4 cash movement with current close minus prior quarter close against standalone quarter net cash flow; add VCB 2024-Q4 audited-restatement regression.",
-        "executed": false,
-        "reason": "No workflow-dispatch action is exposed in this session; do not claim the full repository validator was run."
+        "status": "patched_pending_runtime_execution",
+        "commits": [
+          "3d4c01923c00096bd1095c98178ce76225f94fde",
+          "46b683d1d2d9374961715a078a45fabb2705283d"
+        ],
+        "changes": [
+          "YTD cash opening/closing bridge uses net_cash_change_ytd and YTD FX field.",
+          "Quarter-end cash movement compares consecutive closing balances to standalone quarter net cash flow.",
+          "PBT bridge uses signed bank_provision_expense; negative reversal increases PBT.",
+          "Regression checks added for VCB Q4/2024 audited flows, Q4 provision reversal and Q2 cash-field unblocking."
+        ],
+        "executed": false
+      },
+      "numericAudit20261101": {
+        "date": "2026-11-01",
+        "status": "SOURCE_RECONCILED_NUMERIC_AUDIT_PASS",
+        "snapshotBlobSha": "8a5ce5f19eeec09df7f4cc59bf7c35599cfaf797",
+        "dataAudit": {
+          "periods": 10,
+          "periodRange": "2024-Q1..2026-Q2",
+          "checks": [
+            "balance equation",
+            "seven bank income components vs revenue",
+            "revenue vs PPOP plus operating expenses",
+            "PPOP minus signed provision expense vs pretax profit",
+            "pretax profit less tax vs net profit",
+            "quarter CFO+CFI+CFF vs net cash change",
+            "YTD CFO+CFI+CFF vs YTD net cash change",
+            "YTD opening-to-closing cash bridge"
+          ],
+          "maxAbsoluteDifference": 0,
+          "failedChecks": 0,
+          "method": "Direct programmatic audit of the persisted snapshot JSON; does not assert the GitHub Actions validator was executed."
+        },
+        "corrections": [
+          {
+            "commit": "01a27a27c3cf6e45dbe14f7e0d681e4a35a24d6b",
+            "change": "Apply audited annual 2024 flows and restore audited opening/closing cash in Q4/2024."
+          },
+          {
+            "commit": "a3e79eb9de035efb1d5cc5dd19d18104fe2e3ca4",
+            "change": "Remove stale rejected flags on ten source-reconciled cash-flow fields for Q2/2024 and Q2/2025."
+          },
+          {
+            "commit": "3d4c01923c00096bd1095c98178ce76225f94fde",
+            "change": "Fix YTD cash bridge and consecutive-quarter close validation basis."
+          },
+          {
+            "commit": "46b683d1d2d9374961715a078a45fabb2705283d",
+            "change": "Preserve signed provision reversals in PBT bridge and add VCB Q2/Q4 regression checks."
+          }
+        ],
+        "pending": {
+          "validatorRuntime": "The full bank validator has not been executed in a runtime in this session; regression logic is committed and source values were independently audited.",
+          "fullVisualReview": "All 10 quarter PDFs and all financial statement sections have not yet completed direct visual review. Annual B04 audited cash-flow pages were visually checked.",
+          "q32026": "No direct VietstockFinance document ID or linked consolidated PDF confirmed yet. Do not import external aggregator data."
+        }
       }
     },
     "TPB": {
@@ -2089,6 +2176,22 @@
         "data/financials-VCB.json",
         "scripts/validate-bank-reconciliation.py"
       ]
+    },
+    {
+      "symbol": "VCB",
+      "status": "terminal_needs_manual_review",
+      "completeForAutomation": true,
+      "processedAt": "2026-11-01T02:45:00Z",
+      "snapshotBlobSha": "8a5ce5f19eeec09df7f4cc59bf7c35599cfaf797",
+      "commits": [
+        "a3e79eb9de035efb1d5cc5dd19d18104fe2e3ca4",
+        "46b683d1d2d9374961715a078a45fabb2705283d"
+      ],
+      "changedPaths": [
+        "data/financials-VCB.json",
+        "scripts/validate-bank-reconciliation.py"
+      ],
+      "numericAuditMaxAbsoluteDifference": 0
     }
   ],
   "currentRun": {
