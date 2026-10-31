@@ -5,6 +5,20 @@ const app = fs.readFileSync("assets/app.js", "utf8");
 assert.ok(app.includes("const extractedCoreFields = new Set("));
 assert.ok(app.includes("(extractedDetailFields.has(key) || extractedCoreFields.has(key))"));
 assert.ok(app.includes("!rejectedDetailFields.has(key)"));
+
+assert.ok(app.includes("item?.source_validation?.report_scope_note"));
+assert.ok(app.includes("no scope has been inferred"));
+const hasUnverifiedScope = item => {
+  const note = String(item?.source_validation?.report_scope_note || item?.source_validation?.scope_validation_note || "").toLowerCase();
+  const label = String(item?.report_type || "").toLowerCase();
+  return item?.source_validation?.scope_validation_required === true ||
+    item?.source_validation?.manual_review_blocking_automatic_extraction === true ||
+    /no scope has been inferred|không ghi nhãn.{0,100}(hợp nhất|riêng lẻ)|chưa xác nhận.{0,100}(hợp nhất|riêng lẻ)/i.test(note) ||
+    /phạm vi hợp nhất chưa xác nhận|chưa xác nhận là hợp nhất|không xác nhận được phạm vi/i.test(label);
+};
+assert.equal(hasUnverifiedScope({ source_validation: { report_scope_note: "Vietstock does not consistently label consolidated or standalone; no scope has been inferred beyond the source document." } }), true);
+assert.equal(hasUnverifiedScope({ report_type: "BCTC riêng VIX 2024-Q3" }), false);
+assert.equal(hasUnverifiedScope({ report_type: "BCTC quý VCK (phạm vi hợp nhất chưa xác nhận)" }), true);
 assert.ok(app.includes("investment_property_disposal_gain"));
 assert.ok(app.includes("non_controlling_interest_profit"));
 
