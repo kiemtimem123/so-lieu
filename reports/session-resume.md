@@ -135,3 +135,13 @@ Ghi chú này là lối tắt tiếp nối, không thay thế checkpoint sống.
 - Checkpoint commit: [8405e889e4afd72772c4907f15633b53e4d09f5b](https://github.com/kiemtimem123/so-lieu/commit/8405e889e4afd72772c4907f15633b53e4d09f5b).
 - Pending: (1) Q4/2024 cash close 428,067,908 vs Q1/2025 cash opening 430,614,185, gap 2,546,277 million VND / 0.594830%, unresolved; keep both Q4 cash fields hidden; (2) visual PDF review remains pending for all 10 reports; (3) external report listings indicate VCB Q3/2026 has been posted, but the direct VietstockFinance catalog page is inaccessible in the current lookup and no direct catalog document ID/PDF has been verified; do not import secondary-source figures.
 - VCB remains `terminal_needs_manual_review`, `manualReviewRemaining=true`, and automation is skipped. Do not move to SHS until these pending items are cleared or explicitly held as manual review.
+
+
+## 2026-11-01 VCB audited Q4/2024 cash-flow restatement
+
+- Reused the existing validated VCB snapshot and PDF sidecars; no OCR/enrich rerun and no reload of the 10 source periods.
+- Resolved the apparent 2,546,277 million VND difference between preliminary Q4/2024 closing cash and Q1/2025 opening cash. The Q4 publication was superseded by audited 2024 consolidated statements; Q1/2025 comparative cash and audited annual closing cash both equal 430,614,185.
+- Updated `data/financials-VCB.json` in commit `01a27a27c3cf6e45dbe14f7e0d681e4a35a24d6b`: restored cash opening/closing and revised annual YTD flows to audited values (CFO 59,122,831; CFI -1,307,413; CFF -19,963; net 57,795,455). Standalone Q4 values are derived from audited YTD less Q3 YTD (CFO 117,112,806; CFI -501,783; CFF -19,963; net 116,591,060). All three arithmetic bridges equal zero.
+- Audited B04 annual report page 134–135 (embedded PDF page 68) was visually checked. This is partial visual verification only; full review of the 10 report PDFs and all other statement sections remains pending.
+- Q3/2026 still must be confirmed by document ID and PDF directly from `https://finance.vietstock.vn/VCB/tai-tai-lieu.htm?doctype=1`. Do not import figures from 24HMoney or Vietcap.
+- Next: continue VCB only; do not advance to SHS before the remaining direct visual review and Q3/2026 source confirmation are resolved.
