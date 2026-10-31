@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-31T10:25:00+07:00",
+  "updatedAt": "2026-10-31T10:22:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -2569,9 +2569,11 @@
     "codeFix": "scripts/validate-financials.mjs now reports chronological first/last periods from sorted unique period keys instead of relying on insertion order."
   },
   "nextActions": [
-    "GAS active: run targeted OCR against archived VietstockFinance consolidated PDFs, pages 3-18, up to two reports per run; do not advance to another ticker until GAS queue finishes.",
-    "After OCR, validate all core figures, source units, balance sheet, income statement and cash-flow bridges; keep unresolved fields blank and preserve manual review where source OCR remains unclear.",
-    "Then continue with the next ticker having missing core fields; do not override explicit skip/scope holds."
+    "Không chạy lại OCR/enrich hoặc ghi đè snapshot của mã đã hoàn thành/đang giữ rà soát thủ công; tiếp tục xử lý bảng hiển thị theo từng mã.",
+    "KBC: đã kiểm tra 11/11 kỳ; giữ các cờ rà soát trực quan. Công thức doanh thu/lợi nhuận gộp đã sửa để tôn trọng dấu nguồn của giá vốn; không thay số liệu nguồn.",
+    "NLG là mã tiếp theo cho lượt rà soát độ phủ bảng: Q2/2025 còn thiếu nhiều dòng chi tiết CĐKT/KQKD; Q1-Q2/2026 còn thiếu các dòng CFO/CFI/CFF. NLG đang có manual hold do lỗi nâng schema; chỉ xử lý hiển thị và đối chiếu snapshot hiện có, không OCR/enrich lại hoặc ghi đè dữ liệu.",
+    "ROA/ROE chỉ hiển thị từ số liệu nguồn hoặc phép tính có đủ lợi nhuận quý và số dư bình quân cùng phạm vi; P/B để trống khi thiếu giá thị trường và số cổ phiếu/giá trị sổ sách tương ứng.",
+    "Mọi bảng phải giữ cùng bộ lọc mã, kỳ, đơn vị và phạm vi hợp nhất/riêng lẻ; trường bị từ chối hoặc scope chưa xác nhận tiếp tục bị ẩn."
   ],
   "lastUiUpdate": {
     "updatedAt": "2026-10-30T18:35:00+07:00",
@@ -2631,8 +2633,8 @@
   },
   "lastUiWork": {
     "workstream": "financial-report-tables",
-    "status": "implemented_and_ci_validated_pending_live_browser_review",
-    "updatedAt": "2026-10-31T12:15:00+07:00",
+    "status": "signed_cogs_formula_fix_committed_ci_passed",
+    "updatedAt": "2026-10-31T10:22:00+07:00",
     "commits": [
       "4023bbca7d9a94f5ef29c1b2917bbecf2b516efe",
       "558b6a129a671d60c3e3e92c69cae888c05660fb",
@@ -2642,18 +2644,13 @@
       "61d983fa76fe258885c670a0f842a75216f16d07",
       "0418880ff2aab091f412892dc553a2169a87ad88",
       "61d983fa76fe258885c670a0f842a75216f16d07",
-      "0418880ff2aab091f412892dc553a2169a87ad88"
+      "0418880ff2aab091f412892dc553a2169a87ad88",
+      "25a5c9014ed3af1814dbce5597e434f656db07cf",
+      "b6e2cf970cef265200c208b7a65059f98bbe8146"
     ],
-    "finding": "rowsFor() blanked source-extracted core metrics on manual-review rows because the allow-list only included financial_line_items_extracted_fields and omitted core_financial_extracted_fields.",
-    "correction": "Allow explicitly extracted core fields and detailed extracted fields to pass the source allow-list; explicitly rejected fields and unconfirmed report scope remain blocked.",
+    "finding": "Một số BCTC ghi giá vốn là số âm (dòng giảm trừ), trong khi các mã/kỳ khác ghi giá vốn là số dương. Công thức cũ dùng Math.abs() nên có thể tính sai khi cần tái lập doanh thu hoặc lợi nhuận gộp từ trường còn lại.",
+    "correction": "Đổi công thức sang dùng giá vốn có dấu nguồn: gross_profit = revenue - cost_of_goods_sold; revenue = gross_profit + cost_of_goods_sold. Không đổi giá trị gốc trong snapshot.",
     "affectedSymbols": [
-      "VND",
-      "VPB",
-      "STB",
-      "VIX",
-      "SSI",
-      "KDH",
-      "NVL",
       "KBC"
     ],
     "affectedFields": [
@@ -2665,18 +2662,18 @@
       "investment_property_disposal_gain",
       "non_controlling_interest_profit"
     ],
-    "regressionTest": "tests/test_financial_table_allowlist.mjs",
+    "regressionTest": "tests/test_financial_table_allowlist.mjs — thêm kiểm tra cả giá vốn dương và âm, bao gồm KBC 2025-Q2 (doanh thu 578664; giá vốn -9920; lợi nhuận gộp 588584; đơn vị triệu VND).",
     "validationRun": {
-      "id": 41162147353,
+      "id": 41163881062,
       "workflow": "Validate Site and Data",
       "conclusion": "success"
     },
     "packageRun": {
-      "id": 41162147423,
+      "id": 41163878266,
       "workflow": "Package Hostinger Stock Dashboard",
       "conclusion": "success"
     },
-    "remaining": "KBC 11/11 periods now have source-text review for core/detail fields and capex; visual review flags remain. Continue next ticker's table gaps after CI validates latest commits.",
+    "remaining": "KBC 11/11 kỳ đã có dữ liệu lõi/chi tiết được rà soát theo văn bản nguồn; cờ rà soát trực quan vẫn giữ nguyên. Tiếp tục lượt kiểm tra độ phủ bảng NLG, chỉ dùng snapshot hiện có và không chạy lại OCR/enrich do manual hold.",
     "newRows": [
       "Lãi/(lỗ) từ bán, thanh lý bất động sản đầu tư (dòng riêng) — nhóm bất động sản",
       "Lợi ích cổ đông không kiểm soát (NCI) — bảng KQKD nhóm doanh nghiệp thông thường"
@@ -2685,6 +2682,9 @@
       "id": 41162147351,
       "workflow": "Validate quarterly financial data",
       "conclusion": "success"
-    }
+    },
+    "affectedPeriods": [
+      "2025-Q2"
+    ]
   }
 }
