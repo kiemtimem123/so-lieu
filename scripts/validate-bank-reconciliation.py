@@ -126,7 +126,8 @@ def audit_item(symbol, item, by_period):
         require_close(symbol, period, "operating income vs PPOP plus operating expenses",
                       item["bank_pre_provision_operating_profit"]+abs(item["bank_operating_expenses"]), item["revenue"])
     if number(item.get("pretax_profit")) and number(item.get("bank_pre_provision_operating_profit")) and number(item.get("bank_provision_expense")):
-        require_close(symbol, period, "pretax profit", item["bank_pre_provision_operating_profit"]-abs(item["bank_provision_expense"]), item["pretax_profit"])
+        # Preserve the signed provision line: positive is expense, negative is a reversal/income.
+        require_close(symbol, period, "pretax profit", item["bank_pre_provision_operating_profit"]-item["bank_provision_expense"], item["pretax_profit"])
     if number(item.get("pretax_profit")) and number(item.get("net_profit")) and number(item.get("income_tax")):
         require_close(symbol, period, "net profit vs pretax less tax", item["pretax_profit"]-item["income_tax"], item["net_profit"])
     if number(item.get("roa")) and number(item.get("average_total_assets")) and number(item.get("net_profit")):
@@ -583,6 +584,7 @@ def main():
             "investing_cash_flow": -501783,
             "financing_cash_flow": -19963,
             "net_cash_change": 116591060,
+            "bank_provision_expense": -32330,
         }
         if not isinstance(vcb_q4, dict):
             ERRORS.append("VCB 2024-Q4: missing audited cash-flow restatement row")
@@ -597,6 +599,18 @@ def main():
                 ERRORS.append("VCB 2024-Q4: audited opening/closing cash must not remain rejected")
             if cash_bridge_delta(vcb_q4) != 0:
                 ERRORS.append("VCB 2024-Q4: audited YTD cash bridge must reconcile exactly to zero")
+        vcb_q2_2024 = vcb_rows.get("2024-Q2")
+        if isinstance(vcb_q2_2024, dict):
+            if vcb_q2_2024.get("bank_provision_expense") != 1513541:
+                ERRORS.append("VCB 2024-Q2: signed provision expense regression value must be 1,513,541")
+            for field in ("cash_beginning","cash_ending","operating_cash_flow","operating_cash_flow_ytd","investing_cash_flow","investing_cash_flow_ytd","financing_cash_flow","financing_cash_flow_ytd","net_cash_change","net_cash_change_ytd"):
+                if field in (vcb_q2_2024.get("financial_line_items_rejected_fields") or []):
+                    ERRORS.append(f"VCB 2024-Q2: source-reconciled cash-flow field {field} must not remain rejected")
+        vcb_q2_2025 = vcb_rows.get("2025-Q2")
+        if isinstance(vcb_q2_2025, dict):
+            for field in ("cash_beginning","cash_ending","operating_cash_flow","operating_cash_flow_ytd","investing_cash_flow","investing_cash_flow_ytd","financing_cash_flow","financing_cash_flow_ytd","net_cash_change","net_cash_change_ytd"):
+                if field in (vcb_q2_2025.get("financial_line_items_rejected_fields") or []):
+                    ERRORS.append(f"VCB 2025-Q2: source-reconciled cash-flow field {field} must not remain rejected")
 
     print("Bank financial reconciliation regression checks")
     print(f"Bank snapshots checked: {symbols_checked}; rows on current schema: {audited_rows}")
