@@ -71,4 +71,49 @@ assert.equal(revenueFromSource(588584, -9920), 578664);
 assert.ok(app.includes("num('revenue') - num('cost_of_goods_sold')"));
 assert.ok(app.includes("num('gross_profit') + num('cost_of_goods_sold')"));
 
+
+assert.ok(app.includes("if (rejectedDetailFields.has(key)) return { value: null, formula: '' };"));
+assert.ok(app.includes("rejectedDetailFields.has(key) &&\n                validNumber(safe[key])"));
+assert.ok(app.includes("!rejectedDetailFields.has(alias) && validNumber(item[alias])"));
+assert.ok(app.includes("!rejectedDetailFields.has(field) && validNumber(item[field])"));
+
+// STB snapshots retained some rejected OCR candidates as numbers while the
+// period status was only pending visual review. They must be hidden without
+// changing the archived snapshot or unrelated approved fields.
+const stb = JSON.parse(fs.readFileSync("data/financials-STB.json", "utf8"));
+const rejectedMetricView = (item, metricKeys) => {
+  const safe = { ...item };
+  const rejected = new Set(item.financial_line_items_rejected_fields || []);
+  for (const key of metricKeys) {
+    if (rejected.has(key) && Number.isFinite(Number(safe[key])) && safe[key] !== null) {
+      safe[key] = null;
+    }
+  }
+  return safe;
+};
+const bankMetricKeys = [
+  "pretax_profit", "net_profit", "eps", "income_tax",
+  "total_assets", "total_liabilities", "equity", "roa", "roe"
+];
+for (const [period, mustHide] of [
+  ["2024-Q3", ["pretax_profit", "net_profit", "eps", "income_tax", "total_assets", "total_liabilities", "equity"]],
+  ["2025-Q1", ["pretax_profit", "net_profit", "eps", "total_assets", "total_liabilities", "equity", "roa", "roe"]],
+  ["2025-Q4", ["pretax_profit", "net_profit", "eps", "income_tax", "total_assets", "total_liabilities", "equity", "roa", "roe"]]
+]) {
+  const sourceRow = stb.items.find(item => item.period === period);
+  assert.ok(sourceRow, "STB fixture period " + period);
+  const safeRow = rejectedMetricView(sourceRow, bankMetricKeys);
+  for (const field of mustHide) {
+    assert.ok((sourceRow.financial_line_items_rejected_fields || []).includes(field), period + " rejected " + field);
+    assert.equal(typeof sourceRow[field], "number", period + " retains raw audit candidate " + field);
+    assert.equal(safeRow[field], null, period + " must hide rejected " + field);
+  }
+  assert.deepEqual(sourceRow.total_assets, stb.items.find(item => item.period === period).total_assets);
+}
+const stbQ3Source = stb.items.find(item => item.period === "2024-Q3");
+const stbQ3Safe = rejectedMetricView(stbQ3Source, bankMetricKeys);
+assert.equal(stbQ3Safe.bank_cash_on_hand, stbQ3Source.bank_cash_on_hand);
+assert.equal(stbQ3Source.net_profit, 2201173); // source snapshot remains unchanged
+assert.equal(stbQ3Safe.net_profit, null); // rejected OCR candidate is not displayed
+
 console.log("Financial table source allow-list and signed-COGS regression checks passed.");
