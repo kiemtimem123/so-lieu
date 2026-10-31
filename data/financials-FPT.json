@@ -1330,12 +1330,17 @@
         "short_term_investments",
         "short_term_receivables",
         "total_assets",
-        "total_liabilities"
+        "total_liabilities",
+        "share_of_profit_in_associates",
+        "other_income",
+        "other_expense",
+        "other_profit",
+        "non_controlling_interest_profit"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/FPT/vietstock-fpt-20261019/2f9096cf597f0ee3.pdf",
-      "financial_line_items_updated_at": "2026-10-30T01:35:00+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Đã khôi phục tài sản ngắn hạn/dài hạn từ các dòng tổng mục 100/200 trong BCTC VietstockFinance; tổng hai dòng khớp tổng tài sản. Khôi phục dòng tiền 9 tháng/2024 từ PDF VietstockFinance trang 10–11; dòng tiền quý III tính bằng YTD 9 tháng trừ H1. Giá trị tiền cuối Q3 sửa từ OCR thiếu chữ số 936 thành 7.935.632 triệu đồng, khớp dòng tiền cuối kỳ và bảng cân đối. CASHFLOW NORMALIZATION 2026-10-28: YTD values mapped to lines 20/30/40/50/60/61/70 in VietstockFinance consolidated cash-flow statement; current source-basis and rounding residuals recorded in cashflow_source_reconciliation. Rule: accept <=0.01% relative difference but do not alter source values or fabricate balancing plugs. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần.",
+      "financial_line_items_updated_at": "2026-10-31T14:20:00+07:00",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Đã khôi phục tài sản ngắn hạn/dài hạn từ các dòng tổng mục 100/200 trong BCTC VietstockFinance; tổng hai dòng khớp tổng tài sản. Khôi phục dòng tiền 9 tháng/2024 từ PDF VietstockFinance trang 10–11; dòng tiền quý III tính bằng YTD 9 tháng trừ H1. Giá trị tiền cuối Q3 sửa từ OCR thiếu chữ số 936 thành 7.935.632 triệu đồng, khớp dòng tiền cuối kỳ và bảng cân đối. CASHFLOW NORMALIZATION 2026-10-28: YTD values mapped to lines 20/30/40/50/60/61/70 in VietstockFinance consolidated cash-flow statement; current source-basis and rounding residuals recorded in cashflow_source_reconciliation. Rule: accept <=0.01% relative difference but do not alter source values or fabricate balancing plugs. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Số dư tiền đầu/cuối kỳ bị ẩn do không khớp biến động tiền theo quý. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Đã bổ sung lãi/lỗ công ty liên kết, thu nhập/chi phí khác, NCI và capex theo BCTC hợp nhất Q3/2024. Capex riêng quý = số lũy kế 9T/2024 trừ lũy kế 6T/2024.",
       "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "financing_cash_flow_calculation": "current YTD minus previous quarter YTD",
@@ -1579,7 +1584,7 @@
       "net_cash_change_ytd_source_document_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%203/FPT_Baocaotaichinh_Q3_2024_Hopnhat.pdf",
       "net_cash_change_ytd_source_index_url": "https://finance.vietstock.vn/FPT/tai-tai-lieu.htm?doctype=1",
       "net_cash_change_ytd_ytd_source_basis": "reported cumulative YTD column",
-      "capital_expenditure_ytd": null,
+      "capital_expenditure_ytd": -2437235.019502,
       "capital_expenditure_ytd_calculation": "Số lũy kế YTD được lấy từ cột Lũy kế của BCTC hợp nhất VietstockFinance.",
       "capital_expenditure_ytd_source_pages": [
         10,
@@ -1645,7 +1650,7 @@
       ],
       "net_cash_change_source_document_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%203/FPT_Baocaotaichinh_Q3_2024_Hopnhat.pdf",
       "net_cash_change_source_index_url": "https://finance.vietstock.vn/FPT/tai-tai-lieu.htm?doctype=1",
-      "capital_expenditure": null,
+      "capital_expenditure": -824484.963414,
       "capital_expenditure_calculation": "Giá trị quý riêng = tổng lũy kế kỳ hiện tại trừ tổng lũy kế quý trước.",
       "capital_expenditure_source_pages": [
         10,
@@ -1806,7 +1811,55 @@
       "operating_cash_flow": 3183476,
       "investing_cash_flow": -74839,
       "financing_cash_flow": -1972319,
-      "net_cash_change": 1136317
+      "net_cash_change": 1136317,
+      "share_of_profit_in_associates": 142580.948775,
+      "other_income": 34674.999189,
+      "other_expense": 74280.370385,
+      "other_profit": -39605.371196,
+      "non_controlling_interest_profit": 389745.410092,
+      "source_validation": {
+        "manually_visual_reviewed": false,
+        "detail_source_text_reconciled": true,
+        "detail_source_pages": {
+          "pdf_pages": [
+            8,
+            10,
+            11
+          ],
+          "printed_pages": [
+            6,
+            8,
+            9
+          ]
+        },
+        "detail_source_raw_vnd": {
+          "share_of_profit_in_associates": 142580948775,
+          "other_income": 34674999189,
+          "other_expense": 74280370385,
+          "other_profit": -39605371196,
+          "non_controlling_interest_profit": 389745410092,
+          "capital_expenditure": -824484963414,
+          "capital_expenditure_ytd": -2437235019502
+        },
+        "detail_checks": {
+          "pretax_profit_bridge_residual_vnd": 0,
+          "other_profit_bridge_residual_vnd": 0,
+          "parent_plus_nci_minus_net_profit_vnd": 0,
+          "cashflow_bridge_residual_vnd": 0,
+          "capex_ytd_source_vnd": -2437235019502,
+          "capex_prior_ytd_vnd": -1612750056088
+        },
+        "detail_previous_values": {
+          "share_of_profit_in_associates": null,
+          "other_income": null,
+          "other_expense": null,
+          "other_profit": null,
+          "non_controlling_interest_profit": null,
+          "capital_expenditure": null,
+          "capital_expenditure_ytd": null
+        },
+        "detail_source_note": "FPT BCTC hợp nhất Q3/2024: B02a-DN/HN page 8; B03a-DN/HN pages 10–11. Values normalized from VND to million VND. Capex quarter standalone derived from YTD delta; visual PDF review remains pending."
+      }
     },
     {
       "symbol": "FPT",
