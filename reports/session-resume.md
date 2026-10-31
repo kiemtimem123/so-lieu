@@ -208,3 +208,12 @@ Ghi chú này là lối tắt tiếp nối, không thay thế checkpoint sống.
 - Re-audited all 10 stored VCB quarters; all accounting and flow bridges plus tax checks (where components exist) and ROA/ROE all reconcile to zero. All ten `financial_line_items_rejected_fields` arrays are now empty. Current snapshot blob SHA: `9e7aa5c509dcf68083aeb9567bbb179353f3fdf1`.
 - GitHub Actions on `1e21437da745ec0f57abaa05ebfa623ca5593a0b` passed both Validate Site and Data and Validate quarterly financial data. Latest commit with Q2/Q3 2024 tax correction is still awaiting its current run IDs 41227484928 (site), 41227484882 (quarterly validator); package run 41227484921.
 - Remaining: visual review of the 10 source quarterly PDFs is still incomplete; direct VietstockFinance document ID/PDF for Q3/2026 is not confirmed. Keep VCB active.
+
+
+## 2026-11-01 Direct VCB VietstockFinance catalog API audit
+
+- Queried `https://finance.vietstock.vn/data/getdocument` through the repository's existing VietstockFinance-only sync workflow, with explicit `FINANCIAL_SYNC_SYMBOL=VCB`, doctype=1, years 2025 and 2026. Run: `https://github.com/kiemtimem123/so-lieu/actions/runs/41227887980`.
+- API returned 12 catalog records in 2025 and 18 in 2026. Recognized 2026 consolidated BCTC rows: Q1 document ID `544554`, Q2 document ID `555860`, and reviewed H1 document ID `558380`.
+- No consolidated Q3/2026 BCTC title, document ID, or direct PDF URL appeared in the API response's financial-statement records. No Q3 figure has been imported. Do not use 24HMoney/Vietcap for the project's snapshot.
+- The sync run retained all 10 already validated periods and did not re-extract them. Latest VCB snapshot SHA: `0f4c17eec241e4a6547a82567361d964cbf5de4b`.
+- Next: render the ten archived, catalog-linked PDFs to page images in GitHub Actions and visually inspect the relevant B02/B03/B04 pages. Annual report B02/B03/B04/Note 35 visual evidence remains partial only.
