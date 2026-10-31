@@ -153,3 +153,9 @@ Ghi chú này là lối tắt tiếp nối, không thay thế checkpoint sống.
 - Patched `scripts/validate-bank-reconciliation.py` in commit `3d4c01923c00096bd1095c98178ce76225f94fde`: YTD cash bridge now uses `net_cash_change_ytd`; Q2-Q4 continuity compares the movement between consecutive quarter-end cash balances with the standalone-quarter net flow; added source-backed VCB Q4/2024 regression values.
 - The script content was re-fetched and the new logic/regression presence was checked. The full script has not yet been executed; do not claim test PASS until the repository validator runs.
 - Continue VCB only. Remaining: runtime execution of validator; full visual review of all report PDFs/statement pages; direct VietstockFinance catalog verification for Q3/2026.
+
+
+## 2026-11-01 VCB source-link correction
+
+- Corrected the audited annual-report URL in the Q4/2024 source audit metadata to the verified Vietstock-hosted original: `https://static2.vietstock.vn/data/HOSE/2024/BCTN/VN/VCB_Baocaothuongnien_2024.pdf`.
+- No financial values changed in this correction; the audited annual report values remain visually checked from B04 page 134–135.
