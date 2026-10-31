@@ -61,3 +61,22 @@ Ghi chú này là lối tắt tiếp nối, không thay thế checkpoint sống.
 - Latest STB checkpoint commit: [`9df950a1f379889ed573496feba2d84afe465ee2`](https://github.com/kiemtimem123/so-lieu/commit/9df950a1f379889ed573496feba2d84afe465ee2).
 
 - Cache busting: `index.html` now loads `assets/app.js?v=financial-line-items-20261031-v23` (was v22) so the rejected-field sanitizer is not masked by the browser cache. Commit: [`1e0a0875ea93c0097def824f0d554199a7d60b98`](https://github.com/kiemtimem123/so-lieu/commit/1e0a0875ea93c0097def824f0d554199a7d60b98).
+
+## 2026-10-31 VCB staged financial-table coverage checkpoint
+
+- **STB remains completed and preserved** in `uiCoverageHistory`; do not revisit or reload its already validated snapshot. STB's last completed UI stage and rejected-OCR display regression fix remain unchanged.
+- **VCB completed stages (reuse, do not repeat):**
+  1. Source-text reconciliation for 10/10 periods, 2024-Q1–2026-Q2, reused from existing checkpoint. Existing validator commit: `5b57b6cac94c42055415ea73b2298303686a4011`; source correction commits: `8c7d327e3996a862cadfab2b9be244ce5f9f3a3f`, `a285b735946f7f1bcd62e1dd203dbab3e7a648ce`, `ee68cf5d177e98a071dd60c97e51e935006020aa`, `97951b4e9ad79031c17aeeeb4c657283ca9063cc`, `2a40b3a19dc49451f1f1cdacf960135356302b91`.
+  2. Source/scope inventory: all 10 period entries use the VietstockFinance document index `https://finance.vietstock.vn/VCB/tai-tai-lieu.htm?doctype=1`; report scope is consolidated; no scope blocker was found.
+  3. Banking statement row mapping and direct-value coverage, from existing snapshot SHA `bcca9d7c9bd45d0bf753aae70c8d78b3cb4db581`:
+     - CĐKT 171/340 (50.3%), 34 rows.
+     - KQKD 200/220 (90.9%), 22 rows.
+     - LCTT 54/90 (60.0%), 9 rows.
+     - ROA/ROE 18/20 (90.0%), 2 direct rows.
+     - Combined direct coverage 443/670 (66.1%). Formula-derived presentation cells are excluded from these coverage figures.
+  4. Rejected-field/blank-cell review: rejected cash-flow metrics at 2024-Q2, 2024-Q4 and 2025-Q2 stay hidden; 2025-Q4 rejected tax-reconciliation fields stay blocked. Capex, dividends paid and FX effect remain blank without source values. Bank interest expense has no direct field in the 10 rows; the renderer may calculate it only when same-period interest income and net-interest-income inputs both exist.
+- No OCR/enrich was run, no source PDF text reconciliation was repeated, and no numeric value in `data/financials-VCB.json` was changed.
+- **Pending stage only:** visual PDF review for 10/10 periods. Q1/2025 opening cash is recorded as 430,614,185 million VND, while the Q4/2024 closing cash field is currently rejected/blank; inspect the existing archived Q1/2025 source page before changing either field. The browser PDF viewer refused the 14.95 MB PDF for exceeding its content-size limit, so no visual validation is claimed.
+- Resume rule: continue only `visual_pdf_review` using existing archived VietstockFinance PDFs. Do not reload/reprocess completed VCB reconciliation, rerun OCR/enrich, or alter normalized values without an image-confirmed correction. Once a period is visually confirmed, save a period-level checkpoint immediately; move to CTG only after VCB's pending stage is resolved or explicitly held for manual review.
+- VCB checkpoint commit: `50e80378f99d1c5b5ecd231e69932c449f55776e`.
+
