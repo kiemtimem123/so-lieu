@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-31T12:10:00+07:00",
+  "updatedAt": "2026-10-31T12:15:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -835,7 +835,19 @@
           "Q2/2026: chênh 3.000 VND giữa nợ ngắn+dài và tổng nợ; capex quý lấy từ YTD delta.",
           "Q3/2026: OCR nợ dài hạn lệch tổng nợ 100 tỷ VND nên giữ trống; lợi nhuận mẹ + NCI lệch LNST hợp nhất khoảng 6 tỷ VND nên giữ riêng từng dòng; other profit bridge lệch 3 triệu VND."
         ],
-        "remaining": "Kiểm tra trực quan PDF các kỳ có cờ; không plug các chênh lệch vượt 0,01% hoặc giá trị OCR chưa rõ."
+        "remaining": "Kiểm tra trực quan PDF các kỳ có cờ; không plug các chênh lệch vượt 0,01% hoặc giá trị OCR chưa rõ.",
+        "validationRun": {
+          "id": 41162147351,
+          "conclusion": "success"
+        },
+        "siteValidationRun": {
+          "id": 41162147353,
+          "conclusion": "success"
+        },
+        "packageRun": {
+          "id": 41162147423,
+          "conclusion": "success"
+        }
       }
     },
     "GEG": {
@@ -2604,8 +2616,8 @@
   },
   "lastUiWork": {
     "workstream": "financial-report-tables",
-    "status": "implemented_ci_validated_pending_live_browser_review",
-    "updatedAt": "2026-10-31T12:10:00+07:00",
+    "status": "implemented_and_ci_validated_pending_live_browser_review",
+    "updatedAt": "2026-10-31T12:15:00+07:00",
     "commits": [
       "4023bbca7d9a94f5ef29c1b2917bbecf2b516efe",
       "558b6a129a671d60c3e3e92c69cae888c05660fb",
@@ -2640,12 +2652,12 @@
     ],
     "regressionTest": "tests/test_financial_table_allowlist.mjs",
     "validationRun": {
-      "id": 41161023324,
+      "id": 41162147353,
       "workflow": "Validate Site and Data",
       "conclusion": "success"
     },
     "packageRun": {
-      "id": 41160986681,
+      "id": 41162147423,
       "workflow": "Package Hostinger Stock Dashboard",
       "conclusion": "success"
     },
@@ -2653,6 +2665,11 @@
     "newRows": [
       "Lãi/(lỗ) từ bán, thanh lý bất động sản đầu tư (dòng riêng) — nhóm bất động sản",
       "Lợi ích cổ đông không kiểm soát (NCI) — bảng KQKD nhóm doanh nghiệp thông thường"
-    ]
+    ],
+    "financialValidationRun": {
+      "id": 41162147351,
+      "workflow": "Validate quarterly financial data",
+      "conclusion": "success"
+    }
   }
 }
