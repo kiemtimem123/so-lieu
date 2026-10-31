@@ -74,7 +74,51 @@
           "total_liabilities_subtotal_residual_vnd": 0,
           "balance_sheet_residual_vnd": 0
         },
-        "equity_calculation": "total_assets - total_liabilities; source OCR on equity row had a missing leading digit; derived from reported totals"
+        "equity_calculation": "total_assets - total_liabilities; source OCR on equity row had a missing leading digit; derived from reported totals",
+        "detail_source_text_reconciled": true,
+        "detail_source_pages": {
+          "pdf_pages": [
+            5,
+            6,
+            7
+          ],
+          "printed_pages": [
+            3,
+            4,
+            5
+          ]
+        },
+        "detail_source_raw_vnd": {
+          "share_of_profit_in_associates": -4728790117,
+          "other_income": 2301079814,
+          "other_expense": 1329573447,
+          "other_profit": 971506367,
+          "income_tax_current": 13175931414,
+          "income_tax_deferred": 14717521128,
+          "non_controlling_interest_profit": -20464798243,
+          "capital_expenditure": -71397742625,
+          "capital_expenditure_ytd": -74137239651
+        },
+        "detail_checks": {
+          "other_profit_bridge_residual_vnd": 0,
+          "pretax_profit_bridge_residual_vnd": -90,
+          "tax_component_bridge_residual_vnd": -90,
+          "parent_plus_nci_minus_net_profit_vnd": 0,
+          "capex_ytd_source_vnd": -74137239651,
+          "capex_prior_ytd_vnd": -2739497026
+        },
+        "detail_previous_values": {
+          "share_of_profit_in_associates": null,
+          "other_income": null,
+          "other_expense": null,
+          "other_profit": null,
+          "income_tax_current": 13176,
+          "income_tax_deferred": 14718,
+          "non_controlling_interest_profit": null,
+          "capital_expenditure": null,
+          "capital_expenditure_ytd": null
+        },
+        "detail_source_note": "GEG BCTC hợp nhất 2024-Q3: B02a-DN/HN page 5, B03a-DN/HN pages 6–7. Values normalized from VND to million VND. Capex quarter = current YTD less prior quarter YTD. OCR image review remains pending."
       },
       "published_at": "2024-11-04",
       "source_archive_file": "reports/raw/GEG/auto-geg-20261021/92f6d2a0ac2dccae.pdf",
@@ -110,8 +154,6 @@
         "total_liabilities": "total_assets minus reported equity; total sources matched total assets"
       },
       "financial_line_items_rejected_fields": [
-        "capital_expenditure",
-        "capital_expenditure_ytd",
         "current_liabilities_liability_total_check",
         "dividends_paid",
         "dividends_paid_ytd",
@@ -119,7 +161,7 @@
         "revenue_gross_profit_equation_check"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-23T21:00:45+00:00",
-      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Normalized from archived VietstockFinance sidecar; source image review pending. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Bổ sung giá vốn và lợi nhuận gộp từ BCTC hợp nhất VietstockFinance, trang in 3 (PDF trang 5), lấy cột phát sinh riêng quý; số raw VND quy đổi sang triệu VND. Đang chờ kiểm tra ảnh PDF trực quan. Bổ sung các dòng bảng cân đối kế toán đọc rõ từ BCTC hợp nhất VietstockFinance, trang in 2 (PDF 4); raw VND quy đổi sang triệu VND. Chờ kiểm tra ảnh PDF trực quan.",
+      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Normalized from archived VietstockFinance sidecar; source image review pending. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Bổ sung giá vốn và lợi nhuận gộp từ BCTC hợp nhất VietstockFinance, trang in 3 (PDF trang 5), lấy cột phát sinh riêng quý; số raw VND quy đổi sang triệu VND. Đang chờ kiểm tra ảnh PDF trực quan. Bổ sung các dòng bảng cân đối kế toán đọc rõ từ BCTC hợp nhất VietstockFinance, trang in 2 (PDF 4); raw VND quy đổi sang triệu VND. Chờ kiểm tra ảnh PDF trực quan. Đã bổ sung phần lãi/lỗ công ty liên kết, thu nhập/chi phí khác, thuế hiện hành/hoãn lại, NCI và capex từ B02a/B03a-DN/HN VietstockFinance. Dòng capex riêng quý được tách từ số lũy kế trừ kỳ trước; các cầu nối được lưu riêng, không plug.",
       "current_assets": 2059776,
       "cash_and_equivalents": 860529,
       "short_term_investments": 239996,
@@ -134,8 +176,8 @@
       "selling_expense": 207,
       "admin_expense": 33083,
       "operating_profit": -20881,
-      "income_tax_current": 13176,
-      "income_tax_deferred": 14718,
+      "income_tax_current": 13175.931414,
+      "income_tax_deferred": 14717.521128,
       "income_tax": 27894,
       "foreign_exchange_effect_ytd": 32,
       "diluted_eps": -81,
@@ -179,13 +221,20 @@
         "current_liabilities",
         "long_term_liabilities",
         "total_liabilities",
-        "equity"
+        "equity",
+        "share_of_profit_in_associates",
+        "other_income",
+        "other_expense",
+        "other_profit",
+        "non_controlling_interest_profit",
+        "capital_expenditure",
+        "capital_expenditure_ytd"
       ],
       "financial_line_items_status": "cashflow_normalized_from_vietstock_source_visual_review_pending",
       "financial_line_items_schema_version": "2026-10-27-other-statements-source-fields-v12",
       "financial_line_items_schema_updated_at": "2026-10-30T01:22:02+00:00",
       "financial_line_items_source": "reports/raw/GEG/auto-geg-20261021/770d2246aaa4f701.pdf.extracted.json",
-      "financial_line_items_updated_at": "2026-10-31T09:48:00+07:00",
+      "financial_line_items_updated_at": "2026-10-31T13:00:00+07:00",
       "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "financing_cash_flow_calculation": "current YTD minus previous quarter YTD",
@@ -474,7 +523,14 @@
       },
       "balance_sheet_source_checks": {
         "balance_sheet_residual_vnd": 0
-      }
+      },
+      "share_of_profit_in_associates": -4728.790117,
+      "other_income": 2301.079814,
+      "other_expense": 1329.573447,
+      "other_profit": 971.506367,
+      "non_controlling_interest_profit": -20464.798243,
+      "capital_expenditure": -71397.742625,
+      "capital_expenditure_ytd": -74137.239651
     },
     {
       "symbol": "GEG",
@@ -524,7 +580,51 @@
         "income_statement_source_review": "Lấy số cột phát sinh riêng quý; OCR văn bản đã đối chiếu doanh thu − giá vốn ≈ lợi nhuận gộp (chênh lệch Q4/2025 là 0,6 triệu VND, dưới ngưỡng 0,01%). Chờ kiểm tra ảnh PDF.",
         "income_statement_source_checks": {
           "gross_profit_minus_revenue_less_cogs_vnd": 0
-        }
+        },
+        "detail_source_text_reconciled": true,
+        "detail_source_pages": {
+          "pdf_pages": [
+            5,
+            6,
+            7
+          ],
+          "printed_pages": [
+            3,
+            4,
+            5
+          ]
+        },
+        "detail_source_raw_vnd": {
+          "share_of_profit_in_associates": 12749592517,
+          "other_income": 1497146411,
+          "other_expense": 10610793,
+          "other_profit": 1486535618,
+          "income_tax_current": 14850552832,
+          "income_tax_deferred": 16271720547,
+          "non_controlling_interest_profit": -18666044397,
+          "capital_expenditure": -47421682145,
+          "capital_expenditure_ytd": -121558921796
+        },
+        "detail_checks": {
+          "other_profit_bridge_residual_vnd": 0,
+          "pretax_profit_bridge_residual_vnd": 0,
+          "tax_component_bridge_residual_vnd": 0,
+          "parent_plus_nci_minus_net_profit_vnd": 0,
+          "capex_ytd_source_vnd": -121558921796,
+          "capex_prior_ytd_vnd": -74137239651
+        },
+        "detail_previous_values": {
+          "share_of_profit_in_associates": null,
+          "other_income": null,
+          "other_expense": null,
+          "other_profit": null,
+          "income_tax_current": 14851,
+          "income_tax_deferred": 16272,
+          "non_controlling_interest_profit": null,
+          "capital_expenditure": null,
+          "capital_expenditure_ytd": null
+        },
+        "detail_source_note": "GEG BCTC hợp nhất 2024-Q4: B02a-DN/HN page 5, B03a-DN/HN pages 6–7. Values normalized from VND to million VND. Capex quarter = current YTD less prior quarter YTD. OCR image review remains pending."
       },
       "published_at": "2025-01-24",
       "source_archive_file": "reports/raw/GEG/auto-geg-20261021/cfe0d5be553d8698.pdf",
@@ -586,11 +686,18 @@
         "short_term_investments",
         "short_term_receivables",
         "cost_of_goods_sold",
-        "gross_profit"
+        "gross_profit",
+        "share_of_profit_in_associates",
+        "other_income",
+        "other_expense",
+        "other_profit",
+        "non_controlling_interest_profit",
+        "capital_expenditure",
+        "capital_expenditure_ytd"
       ],
       "financial_line_items_source": "reports/raw/GEG/auto-geg-20261021/a5dc3fd9e734420f.pdf.extracted.json",
-      "financial_line_items_updated_at": "2026-10-31T09:32:00+07:00",
-      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Normalized from archived VietstockFinance sidecar; source image review pending. Dòng tiền đầu tư được đối chiếu với tổng lưu chuyển tiền thuần vì OCR bắt nhầm dòng mua sắm TSCĐ; giá trị trước sửa và lý do đã được lưu. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Bổ sung giá vốn và lợi nhuận gộp từ BCTC hợp nhất VietstockFinance, trang in 3 (PDF trang 5), lấy cột phát sinh riêng quý; số raw VND quy đổi sang triệu VND. Đang chờ kiểm tra ảnh PDF trực quan.",
+      "financial_line_items_updated_at": "2026-10-31T13:00:00+07:00",
+      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Normalized from archived VietstockFinance sidecar; source image review pending. Dòng tiền đầu tư được đối chiếu với tổng lưu chuyển tiền thuần vì OCR bắt nhầm dòng mua sắm TSCĐ; giá trị trước sửa và lý do đã được lưu. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Bổ sung giá vốn và lợi nhuận gộp từ BCTC hợp nhất VietstockFinance, trang in 3 (PDF trang 5), lấy cột phát sinh riêng quý; số raw VND quy đổi sang triệu VND. Đang chờ kiểm tra ảnh PDF trực quan. Đã bổ sung phần lãi/lỗ công ty liên kết, thu nhập/chi phí khác, thuế hiện hành/hoãn lại, NCI và capex từ B02a/B03a-DN/HN VietstockFinance. Dòng capex riêng quý được tách từ số lũy kế trừ kỳ trước; các cầu nối được lưu riêng, không plug.",
       "financial_line_items_prior_values": {
         "capital_expenditure_ytd": -121559,
         "dividends_paid_ytd": -16163,
@@ -683,8 +790,6 @@
         "total_liabilities": "total_assets minus reported equity; total sources matched total assets"
       },
       "financial_line_items_rejected_fields": [
-        "capital_expenditure",
-        "capital_expenditure_ytd",
         "dividends_paid",
         "dividends_paid_ytd",
         "revenue_gross_profit_equation_check"
@@ -706,8 +811,8 @@
       "selling_expense": 9853,
       "admin_expense": 20774,
       "operating_profit": 42008,
-      "income_tax_current": 14851,
-      "income_tax_deferred": 16272,
+      "income_tax_current": 14850.552832,
+      "income_tax_deferred": 16271.720547,
       "income_tax": 31123,
       "foreign_exchange_effect_ytd": 47,
       "cashflow_period_basis": "quarterly_normalized_from_ytd",
@@ -926,7 +1031,14 @@
       },
       "income_statement_source_checks": {
         "gross_profit_minus_revenue_less_cogs_vnd": 0
-      }
+      },
+      "share_of_profit_in_associates": 12749.592517,
+      "other_income": 1497.146411,
+      "other_expense": 10.610793,
+      "other_profit": 1486.535618,
+      "non_controlling_interest_profit": -18666.044397,
+      "capital_expenditure": -47421.682145,
+      "capital_expenditure_ytd": -121558.921796
     },
     {
       "symbol": "GEG",
