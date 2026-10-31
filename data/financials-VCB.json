@@ -1194,14 +1194,16 @@
         "operating_cash_flow_ytd",
         "operating_profit",
         "retained_earnings",
-        "revenue"
+        "revenue",
+        "cash_beginning",
+        "cash_ending"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-23T03:07:34+00:00",
       "financial_line_items_source": "reports/raw/VCB/auto-vcb-20261021/842e77aefd580828.pdf",
       "financial_line_items_updated_at": "2026-10-23T03:07:36+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Đính chính nguồn 2026-10-30: bổ sung lợi nhuận thuộc cổ đông ngân hàng và các cấu phần thu nhập còn thiếu; sửa dòng tiền theo B04 lũy kế, tách dòng tiền riêng quý bằng chênh lệch giữa các kỳ lũy kế. Vẫn chờ rà soát trực quan. Rà soát sâu nguồn chữ 2026-10-31: B04 Q4/2024 trang 10–11 và B04 Q1/2025 trang 9–10 xác nhận các cấu phần dòng tiền Q4/2024 cộng khớp 0; đã gỡ cờ từ chối cũ khỏi 8 trường dòng tiền. Riêng số dư tiền cuối Q4/2024 (428.067.908) khác số đầu Q1/2025 (430.614.185) 2.546.277 triệu VND (>0,01%); giữ hai ô số dư ẩn đến khi giải thích được chênh lệch từ thuyết minh, không tự gán là chênh lệch tỷ giá.",
+      "financial_line_items_note": "Đã thay số B04 Q4/2024 công bố ban đầu bằng số liệu năm 2024 đã kiểm toán, được xác nhận lại tại BCTC hợp nhất Q1/2025 và BCTC hợp nhất năm 2024. Số YTD đã kiểm toán: CFO 59.122.831; CFI -1.307.413; CFF -19.963; lưu chuyển tiền thuần 57.795.455; tiền đầu năm 372.818.730; cuối năm 430.614.185 triệu VND. Các số quý IV độc lập được tính bằng YTD kiểm toán trừ YTD Q3/2024. Bằng chứng chữ và ảnh PDF B04 đã đối chiếu; các chỉ tiêu khác vẫn cần rà soát trực quan toàn bộ báo cáo.",
       "operating_cash_flow_calculation": "Standalone quarter = current cumulative YTD minus prior cumulative YTD.",
       "investing_cash_flow_calculation": "Standalone quarter = current cumulative YTD minus prior cumulative YTD.",
       "financing_cash_flow_calculation": "Source B04 cash flow; dash is recorded as 0, or Q4 standalone is derived from annual less prior YTD.",
@@ -1222,16 +1224,7 @@
         "financing_cash_flow": null,
         "net_cash_change": null
       },
-      "financial_line_items_rejected_values": {
-        "cash_beginning": {
-          "value": 372818730,
-          "reason": "B04/TCTD-HN Q4/2024 trang 11 ghi tiền và tương đương tiền đầu kỳ 372.818.730; B04 Q1/2025 trang 10 ghi số đầu kỳ 430.614.185. Chênh lệch liên kỳ 2.546.277 triệu VND (>0,01%) chưa có thuyết minh xác nhận; giữ ẩn, không thay thế."
-        },
-        "cash_ending": {
-          "value": 428067908,
-          "reason": "B04/TCTD-HN Q4/2024 trang 11 ghi số cuối kỳ 428.067.908; B04 Q1/2025 trang 10 ghi số đầu kỳ 430.614.185. Chênh lệch liên kỳ 2.546.277 triệu VND (>0,01%) chưa có thuyết minh xác nhận; giữ ẩn, không thay thế."
-        }
-      },
+      "financial_line_items_rejected_values": {},
       "bank_net_service_income": 923783,
       "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
       "revenue_calculation": "Lợi nhuận trước dự phòng + chi phí hoạt động; đối chiếu theo tổng phụ BCTC ngân hàng.",
@@ -1305,10 +1298,7 @@
       },
       "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_rejected_fields": [
-        "cash_beginning",
-        "cash_ending"
-      ],
+      "financial_line_items_rejected_fields": [],
       "average_total_assets": 2009117715,
       "average_equity": 193253084.5,
       "reconciliation": {
@@ -1351,21 +1341,70 @@
           "recalculated_roa_percent": 1.71,
           "recalculated_roe_percent": 17.61
         },
-        "note": "Số báo cáo ban đầu được giữ lại trong reconciliation; dùng số so sánh trình bày lại theo BCTC Q1/2025 do VietstockFinance liên kết. Chờ kiểm tra trực quan."
+        "note": "Số báo cáo ban đầu được giữ lại trong reconciliation; dùng số so sánh trình bày lại theo BCTC Q1/2025 do VietstockFinance liên kết. Chờ kiểm tra trực quan.",
+        "audited_cashflow_restatement_20261101": {
+          "status": "source_confirmed_and_visual_pdf_verified",
+          "sourcePolicy": "VietstockFinance VCB document catalogue as the sole lookup index; use linked Vietstock PDF documents",
+          "originalQuarterlyReport": {
+            "documentId": "490546",
+            "url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%204/VCB_Baocaotaichinh_Q4_2024_Hopnhat.pdf",
+            "cash_end": 428067908,
+            "cfo_ytd": 56572468,
+            "cfi_ytd": -1303327,
+            "cff_ytd": -19963,
+            "net_ytd": 55249178
+          },
+          "auditedAnnualReport": {
+            "url": "https://static2.vietstock.vn/data/HOSE/2024/BCTN/VN/VCB_Baocaotaichinh_2024_Hopnhat.pdf",
+            "comparativeQ1Report": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%201/VCB_Baocaotaichinh_Q1_2025_Hopnhat.pdf",
+            "printedPages": "B04 pages 134–135; PDF page 68",
+            "annual": {
+              "cfo": 59122831,
+              "cfi": -1307413,
+              "cff": -19963,
+              "net": 57795455,
+              "cash_open": 372818730,
+              "cash_close": 430614185
+            }
+          },
+          "priorQuarterYtd": {
+            "cfo": -57989975,
+            "cfi": -805630,
+            "cff": 0,
+            "net": -58795605
+          },
+          "normalizedQ4Standalone": {
+            "cfo": 117112806,
+            "cfi": -501783,
+            "cff": -19963,
+            "net": 116591060
+          },
+          "checks": {
+            "auditedAnnualFlowSum": 0,
+            "auditedAnnualCashBridge": 0,
+            "q4StandaloneFlowSum": 0,
+            "q4ClosingMatchesQ12025AuditedOpening": true,
+            "priorReportedGapExplained": true,
+            "noBalancingPlug": true
+          },
+          "conclusion": "The Q4/2024 preliminary B04 closing cash 428,067,908 and YTD net flow 55,249,178 were superseded by the audited 2024 consolidated statements: closing cash 430,614,185 and net flow 57,795,455. Q1/2025 consolidated comparative/ opening cash agrees with the audited annual report. The earlier 2,546,277 gap is a reporting revision, not an unexplained quarter-to-quarter cash movement.",
+          "reviewedAt": "2026-11-01",
+          "visualReview": "direct_screenshot_verified_B04_cashflow_pages_134_135"
+        }
       },
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "verification_status_note": "Các chỉ tiêu lõi đã được trích xuất tự động từ BCTC hợp nhất VietstockFinance; cần đối chiếu trực quan trước khi coi là xác minh.",
       "bank_net_interest_income": 13842332,
       "bank_trading_securities_net": 4472,
       "bank_other_operating_net": 1284653,
-      "operating_cash_flow_ytd": 56572468,
-      "investing_cash_flow_ytd": -1303327,
+      "operating_cash_flow_ytd": 59122831,
+      "investing_cash_flow_ytd": -1307413,
       "financing_cash_flow_ytd": -19963,
-      "net_cash_change_ytd": 55249178,
-      "operating_cash_flow": 114562443,
-      "investing_cash_flow": -497697,
+      "net_cash_change_ytd": 57795455,
+      "operating_cash_flow": 117112806,
+      "investing_cash_flow": -501783,
       "financing_cash_flow": -19963,
-      "net_cash_change": 114044783,
+      "net_cash_change": 116591060,
       "source_reconciliation_20261031": {
         "status": "source_text_deep_review_complete_pending_visual_pdf_review",
         "sourcePolicy": "VietstockFinance document index and linked PDF only",
@@ -1465,6 +1504,61 @@
         "visualPdfReviewPending": true,
         "numericSourceValuesChanged": false,
         "reviewedAt": "2026-10-31"
+      },
+      "cash_beginning": 372818730,
+      "cash_ending": 430614185,
+      "cashflow_restated_source_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTN/VN/VCB_Baocaotaichinh_2024_Hopnhat.pdf",
+      "cashflow_restated_source_document": "BCTC hợp nhất năm 2024 đã kiểm toán; BCTN 2024, B04/TCTD-HN trang in 134–135 (PDF trang 68)",
+      "cashflow_restated_source_index_url": "https://finance.vietstock.vn/VCB/tai-tai-lieu.htm?doctype=1",
+      "cashflow_restated_comparative_source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%201/VCB_Baocaotaichinh_Q1_2025_Hopnhat.pdf",
+      "audited_cashflow_restatement_20261101": {
+        "status": "source_confirmed_and_visual_pdf_verified",
+        "sourcePolicy": "VietstockFinance VCB document catalogue as the sole lookup index; use linked Vietstock PDF documents",
+        "originalQuarterlyReport": {
+          "documentId": "490546",
+          "url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%204/VCB_Baocaotaichinh_Q4_2024_Hopnhat.pdf",
+          "cash_end": 428067908,
+          "cfo_ytd": 56572468,
+          "cfi_ytd": -1303327,
+          "cff_ytd": -19963,
+          "net_ytd": 55249178
+        },
+        "auditedAnnualReport": {
+          "url": "https://static2.vietstock.vn/data/HOSE/2024/BCTN/VN/VCB_Baocaotaichinh_2024_Hopnhat.pdf",
+          "comparativeQ1Report": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%201/VCB_Baocaotaichinh_Q1_2025_Hopnhat.pdf",
+          "printedPages": "B04 pages 134–135; PDF page 68",
+          "annual": {
+            "cfo": 59122831,
+            "cfi": -1307413,
+            "cff": -19963,
+            "net": 57795455,
+            "cash_open": 372818730,
+            "cash_close": 430614185
+          }
+        },
+        "priorQuarterYtd": {
+          "cfo": -57989975,
+          "cfi": -805630,
+          "cff": 0,
+          "net": -58795605
+        },
+        "normalizedQ4Standalone": {
+          "cfo": 117112806,
+          "cfi": -501783,
+          "cff": -19963,
+          "net": 116591060
+        },
+        "checks": {
+          "auditedAnnualFlowSum": 0,
+          "auditedAnnualCashBridge": 0,
+          "q4StandaloneFlowSum": 0,
+          "q4ClosingMatchesQ12025AuditedOpening": true,
+          "priorReportedGapExplained": true,
+          "noBalancingPlug": true
+        },
+        "conclusion": "The Q4/2024 preliminary B04 closing cash 428,067,908 and YTD net flow 55,249,178 were superseded by the audited 2024 consolidated statements: closing cash 430,614,185 and net flow 57,795,455. Q1/2025 consolidated comparative/ opening cash agrees with the audited annual report. The earlier 2,546,277 gap is a reporting revision, not an unexplained quarter-to-quarter cash movement.",
+        "reviewedAt": "2026-11-01",
+        "visualReview": "direct_screenshot_verified_B04_cashflow_pages_134_135"
       }
     },
     {
