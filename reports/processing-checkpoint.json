@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-31T11:15:00+07:00",
+  "updatedAt": "2026-10-31T09:45:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -2560,5 +2560,46 @@
       "IDC: all 10 periods have source-text-reconciled core balance-sheet and income-statement rows; Q2/2025 tax bridge and Q2/2026 cashflow exceptions remain flagged; Q4/2025 interest expense stays blank."
     ],
     "next": "Move to KBC for the next one-ticker statement coverage pass, then continue remaining eligible tickers without reloading completed source data."
+  },
+  "lastUiWork": {
+    "workstream": "financial-report-tables",
+    "status": "implemented_and_ci_validated_pending_live_browser_review",
+    "updatedAt": "2026-10-31T09:45:00+07:00",
+    "commits": [
+      "4023bbca7d9a94f5ef29c1b2917bbecf2b516efe",
+      "558b6a129a671d60c3e3e92c69cae888c05660fb",
+      "3fd8df6a163dcd2933278d8581b69e9a9374fc05",
+      "c64f3bec3a05cad9028e2bf9a7a465026aa28e84"
+    ],
+    "finding": "rowsFor() blanked source-extracted core metrics on manual-review rows because the allow-list only included financial_line_items_extracted_fields and omitted core_financial_extracted_fields.",
+    "correction": "Allow explicitly extracted core fields and detailed extracted fields to pass the source allow-list; explicitly rejected fields and unconfirmed report scope remain blocked.",
+    "affectedSymbols": [
+      "VND",
+      "VPB",
+      "STB",
+      "VIX",
+      "SSI",
+      "KDH",
+      "NVL"
+    ],
+    "affectedFields": [
+      "eps",
+      "revenue",
+      "pretax_profit",
+      "net_profit",
+      "net_profit_attributable"
+    ],
+    "regressionTest": "tests/test_financial_table_allowlist.mjs",
+    "validationRun": {
+      "id": 41161023324,
+      "workflow": "Validate Site and Data",
+      "conclusion": "success"
+    },
+    "packageRun": {
+      "id": 41160986681,
+      "workflow": "Package Hostinger Stock Dashboard",
+      "conclusion": "success"
+    },
+    "remaining": "Review table coverage and visual PDF exceptions; no OCR/core/detail backlog remains in the 32-symbol queue."
   }
 }
