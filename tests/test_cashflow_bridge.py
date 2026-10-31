@@ -831,9 +831,9 @@ class SHSCashFlowNormalizationTests(unittest.TestCase):
             "2025-Q1", "2025-Q2", "2025-Q3", "2025-Q4",
             "2026-Q1", "2026-Q2",
         })
-        manual_only = {"2024-Q2", "2024-Q3"}
-        complete_ytd = set(self.rows) - {"2024-Q2"}
-        complete_quarter = set(self.rows) - manual_only
+        manual_only = set()
+        complete_ytd = set(self.rows)
+        complete_quarter = set(self.rows)
 
         for period, row in self.rows.items():
             with self.subTest(period=period):
@@ -932,15 +932,48 @@ class SHSCashFlowNormalizationTests(unittest.TestCase):
         self.assertEqual(row["cashflow_audit_revision"]["previous_incorrect_mapping"]["reason"].split()[0],
                          "The")
 
-    def test_shs_q2_2024_comparator_is_not_used_to_fill_unreadable_h1_flows(self):
+    def test_shs_q2_2024_uses_company_cash_not_customer_brokerage_cash(self):
         row = self.rows["2024-Q2"]
         rec = row["cashflow_source_reconciliation"]
-        self.assertEqual(row["cash_ending"], 971739)
+        self.assertEqual(row["cash_beginning"], 422664)
+        self.assertEqual(row["cash_ending"], 1637337)
         self.assertEqual(row["cash_beginning_reported_ytd"], 851889)
-        self.assertEqual(rec["status"], "NEEDS_MANUAL_REVIEW_H1_2024_SOURCE_TOTALS_UNREADABLE")
-        self.assertEqual(len(rec["source_candidates_pending_manual_review"]), 1)
-        self.assertTrue(all(row.get(field) is None for field in self.ytd))
-        self.assertTrue(all(row.get(field) is None for field in self.flows))
+        self.assertEqual(row["cash_ending_reported_ytd"], 1637337)
+        self.assertEqual(
+            [row[field] for field in self.ytd],
+            [785602, -4136, 3982, 785448],
+        )
+        self.assertEqual(
+            [row[field] for field in self.flows],
+            [1168178, -3486, 49982, 1214674],
+        )
+        self.assertEqual(rec["status"], "SOURCE_VISUALLY_VERIFIED_AND_RECONCILED")
+        self.assertEqual(rec["relative_tolerance_percent"], 0.01)
+        self.assertEqual(rec["source_pdf_pages"], [9, 10])
+        self.assertEqual(rec["source_ytd_values_vnd"]["ending_cash"], 1637337337561)
+        self.assertEqual(rec["source_candidates_pending_manual_review"], [])
+        self.assertLessEqual(rec["quarter_cash_bridge_relative_difference_percent"], 0.01)
+
+    def test_shs_q3_2024_uses_h1_ytd_difference_and_correct_company_cash_opening(self):
+        row = self.rows["2024-Q3"]
+        rec = row["cashflow_source_reconciliation"]
+        self.assertEqual(row["cash_beginning"], 1637337)
+        self.assertEqual(row["cash_ending"], 440474)
+        self.assertEqual(row["cash_beginning_reported_ytd"], 851889)
+        self.assertEqual(row["cash_ending_reported_ytd"], 440474)
+        self.assertEqual(
+            [row[field] for field in self.ytd],
+            [-1098690, -5707, 692982, -411415],
+        )
+        self.assertEqual(
+            [row[field] for field in self.flows],
+            [-1884292, -1571, 689000, -1196863],
+        )
+        self.assertEqual(rec["status"], "SOURCE_VISUALLY_VERIFIED_AND_RECONCILED")
+        self.assertEqual(rec["relative_tolerance_percent"], 0.01)
+        self.assertEqual(rec["source_pdf_pages"], [10, 11])
+        self.assertEqual(rec["source_candidates_pending_manual_review"], [])
+        self.assertEqual(rec["quarter_cash_bridge_residual_million_vnd"], 0)
 
     def test_shs_q4_2024_later_comparator_reclassification_remains_flagged(self):
         row = self.rows["2024-Q4"]
