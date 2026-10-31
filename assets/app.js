@@ -1067,6 +1067,10 @@
         );
         Object.keys(safe).forEach(key => {
           if (!scopeUnverifiedMetricField.test(key) || !validNumber(safe[key])) return;
+          if (rejectedDetailFields.has(key)) {
+            safe[key] = null;
+            return;
+          }
           // An unconfirmed consolidation/reporting scope remains a hard block.
           // For a known-scope report awaiting visual review, retain values that
           // the VietstockFinance PDF extractor explicitly matched to statement
