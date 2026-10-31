@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-31T09:20:00+07:00",
+  "updatedAt": "2026-10-31T09:24:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -48,7 +48,7 @@
     "status": "financial_report_table_display_in_progress",
     "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-31T09:20:00+07:00",
+    "processedAt": "2026-10-31T09:24:00+07:00",
     "workflowRunId": "41088586086",
     "workflowRunNumber": 3035,
     "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/41088586086",
@@ -67,7 +67,7 @@
     "skipUnconfirmedAutomation": false,
     "skipUnconfirmedReason": null,
     "nextSymbol": "GEG",
-    "nextTask": "financial_report_table_display"
+    "nextTask": "industry_table_coverage_audit"
   },
   "symbolStates": {
     "MBB": {
@@ -2443,19 +2443,21 @@
     "note": "Gói Hostinger đã build thành công; chưa có thao tác triển khai trực tiếp lên hosting."
   },
   "lastUiWorkCheckpoint": {
-    "processedAt": "2026-10-31T09:20:00+07:00",
-    "commit": "c4a704486618f2da36d4af4b5a4b1de3f1498e0a",
+    "processedAt": "2026-10-31T09:24:00+07:00",
+    "commit": "5b5920b235ff9311892468cb86fec65719aa7f05",
     "changedPaths": [
       "assets/app.js"
     ],
     "task": "financial_report_table_display",
-    "status": "cashflow_quarter_basis_source_approved_ytd_fallback_added",
+    "status": "safe_formulas_enabled_for_source_approved_fields",
     "findings": [
       "GAS OCR queue completed; 10/10 periods source-text reviewed. Remaining visual/manual exceptions are retained and not fabricated.",
       "Fixed quarterly cash-flow table mode: explicitly extracted YTD values can display as Q1 flow or be differenced against the previous quarter's accepted YTD/quarterly baseline, even when the row has a general manual-review badge.",
       "Rows are filtered through rowsFor/explicit extracted fields/rejected fields before calculation, so rejected or unapproved OCR values remain blank.",
-      "Validate Site and Data succeeded; Package Hostinger Stock Dashboard succeeded."
+      "Validate Site and Data succeeded; Package Hostinger Stock Dashboard succeeded.",
+      "For rows flagged manual extraction, formulas can now use only the source-approved values retained by rowsFor allow-list; unconfirmed report scope remains a hard block. This enables valid derived gross profit, tax, bank subtotals, and quarterly cashflow without exposing rejected OCR values.",
+      "Validate Site and Data completed successfully after the change."
     ],
-    "next": "Continue industry-specific financial table coverage audit and fill source-backed missing statement rows one ticker at a time; prioritize bank and securities templates, then generic balance/income/cashflow/ratios. Preserve completed ticker checkpoints and all source holds."
+    "next": "Continue auditing table field coverage by industry. Fill only source-backed missing rows; preserve scope holds and terminal manual-review periods."
   }
 }
