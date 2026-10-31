@@ -1890,14 +1890,15 @@
         "operating_cash_flow_ytd",
         "operating_profit",
         "retained_earnings",
-        "revenue"
+        "revenue",
+        "income_tax_deferred"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-22T17:39:59+00:00",
       "financial_line_items_source": "reports/raw/VCB/auto-vcb-20261021/f25bf036ad962541.pdf",
       "financial_line_items_updated_at": "2026-10-22T17:39:59+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Đính chính nguồn 2026-10-30: bổ sung lợi nhuận thuộc cổ đông ngân hàng và các cấu phần thu nhập còn thiếu; sửa dòng tiền theo B04 lũy kế, tách dòng tiền riêng quý bằng chênh lệch giữa các kỳ lũy kế. Vẫn chờ rà soát trực quan.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Đính chính nguồn 2026-10-30: bổ sung lợi nhuận thuộc cổ đông ngân hàng và các cấu phần thu nhập còn thiếu; sửa dòng tiền theo B04 lũy kế, tách dòng tiền riêng quý bằng chênh lệch giữa các kỳ lũy kế. Vẫn chờ rà soát trực quan. Đã bổ sung thuế TNDN hoãn lại từ đúng cột quý hiện tại trên B03 PDF sau rà soát ảnh gốc: 392 triệu VND; đối chiếu với thuế hiện hành và tổng thuế bằng 0.",
       "operating_cash_flow": -13180595,
       "operating_cash_flow_calculation": "Q1 equals YTD; source B04 consolidated cash-flow statement.",
       "investing_cash_flow": -174898,
@@ -2034,7 +2035,23 @@
       "bank_other_operating_net": 662878,
       "financing_cash_flow_ytd": 0,
       "financing_cash_flow": 0,
-      "financing_cash_flow_calculation": "Source B04 cash flow; dash is recorded as 0, or Q4 standalone is derived from annual less prior YTD."
+      "financing_cash_flow_calculation": "Source B04 cash flow; dash is recorded as 0, or Q4 standalone is derived from annual less prior YTD.",
+      "income_tax_deferred": 392,
+      "income_tax_detail_visual_review_20261101": {
+        "status": "visually_verified_from_original_vietstock_pdf",
+        "statement": "B03 consolidated income statement",
+        "sourceUrl": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%201/VCB_Baocaotaichinh_Q1_2025_Hopnhat.pdf",
+        "sourceArchive": "reports/raw/VCB/auto-vcb-20261021/f25bf036ad962541.pdf",
+        "page": 8,
+        "column": "Quarter — current year",
+        "previousValue": null,
+        "correctedValue": 392,
+        "taxCurrent": -2158599,
+        "totalTax": 2158207,
+        "reconciliationDifference": 0,
+        "checkedAt": "2026-11-01",
+        "imageArtifactRun": "https://github.com/kiemtimem123/so-lieu/actions/runs/41228191736"
+      }
     },
     {
       "symbol": "VCB",
@@ -2191,14 +2208,16 @@
         "retained_earnings",
         "revenue",
         "cash_beginning",
-        "cash_ending"
+        "cash_ending",
+        "income_tax_current",
+        "income_tax_deferred"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-22T17:43:12+00:00",
       "financial_line_items_source": "reports/raw/VCB/auto-vcb-20261021/789948b37004bdfc.pdf",
       "financial_line_items_updated_at": "2026-10-22T17:43:12+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Đính chính nguồn 2026-10-30: đối chiếu KQKD hợp nhất, bổ sung lợi nhuận phân bổ cổ đông/các cấu phần thu nhập còn thiếu, sửa dấu chi phí dự phòng sai và dòng tiền YTD/riêng quý. Vẫn chờ rà soát trực quan. Rà soát văn bản nguồn 2026-10-31: Đối chiếu sidecar của BCTC hợp nhất VietstockFinance: B03 PDF 7–8, B04 PDF 9–10. Các số B04 là YTD; dòng riêng Q2 = YTD Q2 trừ YTD Q1. CFO/CFI/CFF/net cash movement và tiền đầu/cuối kỳ đều khớp. Chỉ xác minh văn bản/OCR; chưa rà soát ảnh PDF. Đã gỡ 10 cờ từ chối dòng tiền vào 2026-11-01 sau khi đối chiếu lại B04 PDF VietstockFinance trang 9–10; các giá trị YTD và riêng Q2 đã cân bằng, cho phép hiển thị. Vẫn chờ kiểm tra trực quan toàn bộ PDF.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Đính chính nguồn 2026-10-30: đối chiếu KQKD hợp nhất, bổ sung lợi nhuận phân bổ cổ đông/các cấu phần thu nhập còn thiếu, sửa dấu chi phí dự phòng sai và dòng tiền YTD/riêng quý. Vẫn chờ rà soát trực quan. Rà soát văn bản nguồn 2026-10-31: Đối chiếu sidecar của BCTC hợp nhất VietstockFinance: B03 PDF 7–8, B04 PDF 9–10. Các số B04 là YTD; dòng riêng Q2 = YTD Q2 trừ YTD Q1. CFO/CFI/CFF/net cash movement và tiền đầu/cuối kỳ đều khớp. Chỉ xác minh văn bản/OCR; chưa rà soát ảnh PDF. Đã gỡ 10 cờ từ chối dòng tiền vào 2026-11-01 sau khi đối chiếu lại B04 PDF VietstockFinance trang 9–10; các giá trị YTD và riêng Q2 đã cân bằng, cho phép hiển thị. Vẫn chờ kiểm tra trực quan toàn bộ PDF. Đã bổ sung thuế TNDN hoãn lại từ đúng cột quý hiện tại trên B03 PDF sau rà soát ảnh gốc: 1,868 triệu VND; đối chiếu với thuế hiện hành và tổng thuế bằng 0.",
       "operating_cash_flow_calculation": "Standalone quarter = current cumulative YTD minus prior cumulative YTD.",
       "investing_cash_flow_calculation": "Standalone quarter = current cumulative YTD minus prior cumulative YTD.",
       "financing_cash_flow_calculation": "B04 financing flow; report dash is recorded as 0, except Q4 reported non-zero financing flow.",
@@ -2426,6 +2445,21 @@
         },
         "reviewedAt": "2026-11-01",
         "visualReview": "pending"
+      },
+      "income_tax_deferred": 1868,
+      "income_tax_detail_visual_review_20261101": {
+        "status": "visually_verified_from_original_vietstock_pdf",
+        "statement": "B03 consolidated income statement",
+        "sourceUrl": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%202/VCB_Baocaotaichinh_Q2_2025_Hopnhat.pdf",
+        "sourceArchive": "reports/raw/VCB/auto-vcb-20261021/789948b37004bdfc.pdf",
+        "page": 8,
+        "column": "Quarter — current year",
+        "previousValue": null,
+        "correctedValue": 1868,
+        "totalTax": 2196544,
+        "reconciliationDifference": null,
+        "checkedAt": "2026-11-01",
+        "imageArtifactRun": "https://github.com/kiemtimem123/so-lieu/actions/runs/41228191736"
       }
     },
     {
@@ -2584,14 +2618,15 @@
         "operating_cash_flow",
         "operating_cash_flow_ytd",
         "retained_earnings",
-        "revenue"
+        "revenue",
+        "income_tax_deferred"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-23T03:09:32+00:00",
       "financial_line_items_source": "reports/raw/VCB/auto-vcb-20261021/3afd2b964267c9ec.pdf",
       "financial_line_items_updated_at": "2026-10-23T03:09:32+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Đính chính nguồn 2026-10-30: đối chiếu KQKD hợp nhất, bổ sung lợi nhuận phân bổ cổ đông/các cấu phần thu nhập còn thiếu, sửa dấu chi phí dự phòng sai và dòng tiền YTD/riêng quý. Vẫn chờ rà soát trực quan. Bổ sung trường cấu phần ngân hàng còn thiếu theo dòng công bố chính thức; dấu gạch ngang được ghi nhận 0, không suy diễn.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Đính chính nguồn 2026-10-30: đối chiếu KQKD hợp nhất, bổ sung lợi nhuận phân bổ cổ đông/các cấu phần thu nhập còn thiếu, sửa dấu chi phí dự phòng sai và dòng tiền YTD/riêng quý. Vẫn chờ rà soát trực quan. Bổ sung trường cấu phần ngân hàng còn thiếu theo dòng công bố chính thức; dấu gạch ngang được ghi nhận 0, không suy diễn. Đã bổ sung thuế TNDN hoãn lại từ đúng cột quý hiện tại trên B03 PDF sau rà soát ảnh gốc: 3,416 triệu VND; đối chiếu với thuế hiện hành và tổng thuế bằng 0.",
       "operating_cash_flow": 81546582,
       "operating_cash_flow_calculation": "Standalone quarter = current cumulative YTD minus prior cumulative YTD.",
       "investing_cash_flow": -364267,
@@ -2737,7 +2772,23 @@
         }
       },
       "financing_cash_flow_calculation": "B04 financing flow; report dash is recorded as 0, except Q4 reported non-zero financing flow.",
-      "bank_dividend_and_capital_income": 138839
+      "bank_dividend_and_capital_income": 138839,
+      "income_tax_deferred": 3416,
+      "income_tax_detail_visual_review_20261101": {
+        "status": "visually_verified_from_original_vietstock_pdf",
+        "statement": "B03 consolidated income statement",
+        "sourceUrl": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%203/VCB_Baocaotaichinh_Q3_2025_Hopnhat.pdf",
+        "sourceArchive": "reports/raw/VCB/auto-vcb-20261021/3afd2b964267c9ec.pdf",
+        "page": 9,
+        "column": "Quarter — current year",
+        "previousValue": null,
+        "correctedValue": 3416,
+        "taxCurrent": -2216968,
+        "totalTax": 2213552,
+        "reconciliationDifference": 0,
+        "checkedAt": "2026-11-01",
+        "imageArtifactRun": "https://github.com/kiemtimem123/so-lieu/actions/runs/41228191736"
+      }
     },
     {
       "symbol": "VCB",
@@ -3272,14 +3323,15 @@
         "operating_cash_flow_ytd",
         "operating_profit",
         "retained_earnings",
-        "revenue"
+        "revenue",
+        "income_tax_deferred"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-23T03:13:26+00:00",
       "financial_line_items_source": "reports/raw/VCB/auto-vcb-20261021/fd4d634f10478caa.pdf",
       "financial_line_items_updated_at": "2026-10-23T03:13:26+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Đính chính nguồn 2026-10-30: đối chiếu KQKD hợp nhất, bổ sung lợi nhuận phân bổ cổ đông/các cấu phần thu nhập còn thiếu, sửa dấu chi phí dự phòng sai và dòng tiền YTD/riêng quý. Vẫn chờ rà soát trực quan. Bổ sung trường cấu phần ngân hàng còn thiếu theo dòng công bố chính thức; dấu gạch ngang được ghi nhận 0, không suy diễn.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Đính chính nguồn 2026-10-30: đối chiếu KQKD hợp nhất, bổ sung lợi nhuận phân bổ cổ đông/các cấu phần thu nhập còn thiếu, sửa dấu chi phí dự phòng sai và dòng tiền YTD/riêng quý. Vẫn chờ rà soát trực quan. Bổ sung trường cấu phần ngân hàng còn thiếu theo dòng công bố chính thức; dấu gạch ngang được ghi nhận 0, không suy diễn. Đã bổ sung thuế TNDN hoãn lại từ đúng cột quý hiện tại trên B03 PDF sau rà soát ảnh gốc: 3,206 triệu VND; đối chiếu với thuế hiện hành và tổng thuế bằng 0.",
       "operating_cash_flow": 35398194,
       "operating_cash_flow_calculation": "Q1 equals YTD; source B04 consolidated cash-flow statement.",
       "investing_cash_flow": -294108,
@@ -3402,7 +3454,23 @@
       "financing_cash_flow_ytd": 0,
       "financing_cash_flow": 0,
       "financing_cash_flow_calculation": "B04 financing flow; report dash is recorded as 0, except Q4 reported non-zero financing flow.",
-      "bank_investment_securities_net": 0
+      "bank_investment_securities_net": 0,
+      "income_tax_deferred": 3206,
+      "income_tax_detail_visual_review_20261101": {
+        "status": "visually_verified_from_original_vietstock_pdf",
+        "statement": "B03 consolidated income statement",
+        "sourceUrl": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/VCB_Baocaotaichinh_Q1_2026_Hopnhat.pdf",
+        "sourceArchive": "reports/raw/VCB/auto-vcb-20261021/fd4d634f10478caa.pdf",
+        "page": 9,
+        "column": "Quarter — current year",
+        "previousValue": null,
+        "correctedValue": 3206,
+        "taxCurrent": -2343764,
+        "totalTax": 2340558,
+        "reconciliationDifference": 0,
+        "checkedAt": "2026-11-01",
+        "imageArtifactRun": "https://github.com/kiemtimem123/so-lieu/actions/runs/41228191736"
+      }
     },
     {
       "symbol": "VCB",
@@ -3549,14 +3617,15 @@
         "average_total_assets",
         "average_equity",
         "roa",
-        "roe"
+        "roe",
+        "income_tax_deferred"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-23T03:14:47+00:00",
       "financial_line_items_source": "reports/raw/VCB/auto-vcb-20261021/fb0bc8ebbad76c17.pdf",
       "financial_line_items_updated_at": "2026-10-23T03:14:47+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Đính chính nguồn 2026-10-30: đối chiếu KQKD hợp nhất, bổ sung lợi nhuận phân bổ cổ đông/các cấu phần thu nhập còn thiếu, sửa dấu chi phí dự phòng sai và dòng tiền YTD/riêng quý. Vẫn chờ rà soát trực quan. Đã bổ sung ROA/ROE Q2/2026 theo công thức bình quân số dư đầu/cuối quý từ nguồn VietstockFinance; giá trị 2,23% và 24,11%, vẫn chờ rà soát trực quan PDF. ROE chuẩn hóa theo cùng công thức LNST hợp nhất/bình quân VCSH như 9 kỳ trước: 24,12%; số phụ 24,11% khi dùng lợi nhuận thuộc cổ đông được lưu để truy vết, không dùng làm số hiển thị.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Đính chính nguồn 2026-10-30: đối chiếu KQKD hợp nhất, bổ sung lợi nhuận phân bổ cổ đông/các cấu phần thu nhập còn thiếu, sửa dấu chi phí dự phòng sai và dòng tiền YTD/riêng quý. Vẫn chờ rà soát trực quan. Đã bổ sung ROA/ROE Q2/2026 theo công thức bình quân số dư đầu/cuối quý từ nguồn VietstockFinance; giá trị 2,23% và 24,11%, vẫn chờ rà soát trực quan PDF. ROE chuẩn hóa theo cùng công thức LNST hợp nhất/bình quân VCSH như 9 kỳ trước: 24,12%; số phụ 24,11% khi dùng lợi nhuận thuộc cổ đông được lưu để truy vết, không dùng làm số hiển thị. Đã bổ sung thuế TNDN hoãn lại từ đúng cột quý hiện tại trên B03 PDF sau rà soát ảnh gốc: 2,802 triệu VND; đối chiếu với thuế hiện hành và tổng thuế bằng 0.",
       "operating_cash_flow": 95598249,
       "operating_cash_flow_calculation": "Standalone quarter = current cumulative YTD minus prior cumulative YTD.",
       "investing_cash_flow": -351473,
@@ -3727,6 +3796,22 @@
         "note": "The OCR sidecar also calculated 24.11% using attributable profit; this is retained as an alternative audit value, while the standardized project formula gives 24.12%.",
         "alternativeRoeUsingAttributableProfit": 24.11,
         "formulaPolicy": "Use consolidated net profit for both ROA and ROE consistently across all stored VCB periods."
+      },
+      "income_tax_deferred": 2802,
+      "income_tax_detail_visual_review_20261101": {
+        "status": "visually_verified_from_original_vietstock_pdf",
+        "statement": "B03 consolidated income statement",
+        "sourceUrl": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/VCB_Baocaotaichinh_Q2_2026_Hopnhat.pdf",
+        "sourceArchive": "reports/raw/VCB/auto-vcb-20261021/fb0bc8ebbad76c17.pdf",
+        "page": 11,
+        "column": "Quarter — current year",
+        "previousValue": null,
+        "correctedValue": 2802,
+        "taxCurrent": -2871568,
+        "totalTax": 2868766,
+        "reconciliationDifference": 0,
+        "checkedAt": "2026-11-01",
+        "imageArtifactRun": "https://github.com/kiemtimem123/so-lieu/actions/runs/41228191736"
       }
     }
   ],
