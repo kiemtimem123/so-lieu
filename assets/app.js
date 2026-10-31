@@ -1307,7 +1307,36 @@
       });
     };
     const cashflowValue = (item, field, rows, ticker) => {
-      if ((cashflowBasisSelect?.value || 'quarter') !== 'ytd') {
+      const mode = cashflowBasisSelect?.value || 'quarter';
+      if (mode !== 'ytd') {
+        // Prefer a source-matched quarterly figure already present in the row.
+        // rowsForBasis has already removed values that are not source-approved.
+        if (validNumber(item?.[field])) return Number(item[field]);
+
+        // A manually reviewed/pending row may still contain explicitly extracted
+        // YTD cash-flow fields. Do not let its general review badge suppress a
+        // valid Q1 amount or a Q2-Q4 difference when both source rows are present.
+        // The allow-list/rejected-field filter in rowsFor remains the authority.
+        if (String(item?.cashflow_period_basis || '').toLowerCase() === 'year_to_date') {
+          const ytdKey = field + '_ytd';
+          const currentYtd = validNumber(item?.[ytdKey]) ? Number(item[ytdKey]) : null;
+          const match = String(item?.period || '').match(/^(\d{4})-Q([1-4])$/);
+          if (currentYtd !== null && match) {
+            const year = Number(match[1]), quarter = Number(match[2]);
+            if (quarter === 1) return currentYtd;
+            const prior = rows.find(row => row.period === year + '-Q' + (quarter - 1));
+            const priorBasis = String(prior?.cashflow_period_basis || '').toLowerCase();
+            const priorYtd = priorBasis === 'year_to_date' && validNumber(prior?.[ytdKey])
+              ? Number(prior[ytdKey])
+              : null;
+            const priorQ1Quarter = quarter === 2 && prior?.period === year + '-Q1' &&
+              priorBasis === 'quarterly_reported' && validNumber(prior?.[field])
+              ? Number(prior[field])
+              : null;
+            if (priorYtd !== null) return currentYtd - priorYtd;
+            if (priorQ1Quarter !== null) return currentYtd - priorQ1Quarter;
+          }
+        }
         return resolveStatementValue(item, field, rows, ticker).value;
       }
       if (field === 'cash_beginning') {
@@ -1325,7 +1354,7 @@
       }
       const ytdKey = field + '_ytd';
       if (validNumber(item?.[ytdKey])) return Number(item[ytdKey]);
-      const quarterOne = /^\\d{4}-Q1$/.test(String(item?.period || ''));
+      const quarterOne = /^\d{4}-Q1$/.test(String(item?.period || ''));
       return quarterOne && validNumber(item?.[field]) ? Number(item[field]) : null;
     };
     const displayPeriod = value => String(value || '').replace(/^(\d{4})-Q([1-4])$/, (_, year, quarter) => 'Q' + quarter + '/' + year);
