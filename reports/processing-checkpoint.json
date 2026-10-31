@@ -2570,8 +2570,9 @@
   },
   "nextActions": [
     "Không chạy lại OCR/enrich hoặc ghi đè snapshot của mã đã hoàn thành/đang giữ rà soát thủ công; tiếp tục xử lý bảng hiển thị theo từng mã.",
-    "KBC: 11/11 kỳ đã rà soát; signed-COGS formula fix committed and CI passed. Không xử lý lại nếu không có lỗi mới.",
-    "NLG: đã rà soát độ phủ bảng từ snapshot hiện có; các ô trống Q2/2025 là trường thiếu/bị loại sau kiểm tra chéo, CFO Q1/2026 giữ trống do lệch 100 tỷ VND, Q1/Q2 2026 chưa đủ cơ sở tách luồng tiền quý. Không OCR/enrich lại khi manual hold còn hiệu lực.",
+    "KBC: 11/11 kỳ; signed-COGS formula fix committed and CI passed. Không xử lý lại nếu không có lỗi mới.",
+    "NLG: coverage review đã lưu; các ô trống Q2/2025 và LCTT Q1/Q2 2026 là trường thiếu/bị loại hoặc chưa đủ cơ sở tách quý. Không OCR/enrich lại khi manual hold còn hiệu lực.",
+    "BSR: coverage review snapshot-only đã thực hiện; 10 kỳ hợp nhất, đơn vị triệu VND. Các trường chi tiết thiếu ở các kỳ đầu vẫn để trống; giữ trạng thái chờ rà soát trực quan và không chạy lại OCR/enrich.",
     "ROA/ROE chỉ hiển thị từ nguồn hoặc phép tính có đủ lợi nhuận quý và số dư bình quân cùng phạm vi; P/B để trống khi thiếu giá thị trường và giá trị sổ sách/cổ phiếu.",
     "Mọi bảng phải giữ cùng bộ lọc mã, kỳ, đơn vị và phạm vi hợp nhất/riêng lẻ; trường bị từ chối hoặc scope chưa xác nhận tiếp tục bị ẩn."
   ],
@@ -2633,7 +2634,7 @@
   },
   "lastUiWork": {
     "workstream": "financial-report-tables",
-    "status": "signed_cogs_fix_ci_passed_nlg_coverage_reviewed",
+    "status": "NLG_review_saved_BSR_coverage_audited",
     "updatedAt": "2026-10-31T10:22:00+07:00",
     "commits": [
       "4023bbca7d9a94f5ef29c1b2917bbecf2b516efe",
@@ -2648,11 +2649,12 @@
       "25a5c9014ed3af1814dbce5597e434f656db07cf",
       "b6e2cf970cef265200c208b7a65059f98bbe8146"
     ],
-    "finding": "Một số BCTC ghi giá vốn là số âm (dòng giảm trừ), trong khi các mã/kỳ khác ghi giá vốn là số dương. Công thức cũ dùng Math.abs() nên có thể tính sai khi cần tái lập doanh thu hoặc lợi nhuận gộp từ trường còn lại.\nNLG coverage review (2026-10-31): rowsFor() does not blanket-hide NLG detail rows because its quarter verification statuses are verified_ocr_reconciled/verified_manual_visual_reconciliation; detail rows remain visible when present. Q2/2025 sparse balance/income fields are absent from the normalized snapshot after extraction/reconciliation rejects; do not synthesize or re-run OCR under manual hold. Q1/2026 operating cash flow remains withheld due 100,000,000,000 VND reconciliation delta; Q1/Q2 2026 quarterly CFO/CFI/CFF cannot be derived safely where Q1 base is rejected or absent. Q2/2026 opening cash discrepancy (~33,084.7 million VND) remains source anomaly; retain source values. ROA/ROE recalc metadata matches stored values for reviewed periods.",
+    "finding": "Một số BCTC ghi giá vốn là số âm (dòng giảm trừ), trong khi các mã/kỳ khác ghi giá vốn là số dương. Công thức cũ dùng Math.abs() nên có thể tính sai khi cần tái lập doanh thu hoặc lợi nhuận gộp từ trường còn lại.\nNLG coverage review (2026-10-31): rowsFor() does not blanket-hide NLG detail rows because its quarter verification statuses are verified_ocr_reconciled/verified_manual_visual_reconciliation; detail rows remain visible when present. Q2/2025 sparse balance/income fields are absent from the normalized snapshot after extraction/reconciliation rejects; do not synthesize or re-run OCR under manual hold. Q1/2026 operating cash flow remains withheld due 100,000,000,000 VND reconciliation delta; Q1/Q2 2026 quarterly CFO/CFI/CFF cannot be derived safely where Q1 base is rejected or absent. Q2/2026 opening cash discrepancy (~33,084.7 million VND) remains source anomaly; retain source values. ROA/ROE recalc metadata matches stored values for reviewed periods.\nBSR coverage audit (snapshot-only; no OCR/enrich): 10 periods 2024-Q1–2026-Q2, consolidated, million VND. Raw stored numeric-field coverage against generic statement row keys: balance 71/130, income 87/210, cash flow 70/90, ROA/ROE 20/20. This is a raw-field count; renderer can additionally derive explicitly supported values from same-period inputs/YTD deltas. Early periods 2024-Q1 through 2025-Q2 have sparse balance/income detail (3–6 direct balance rows and 4–6 income rows per quarter); detailed rows absent from snapshot must remain blank. Cash-flow source normalization exists across all 10 quarters, but several fields are absent/rejected and remain subject to audit notes. Q1/Q2 2026 contain source-backed normalized cash-flow aggregates; Q2/2026 is an unaudited consolidated report and remains marked pending visual review.",
     "correction": "Đổi công thức sang dùng giá vốn có dấu nguồn: gross_profit = revenue - cost_of_goods_sold; revenue = gross_profit + cost_of_goods_sold. Không đổi giá trị gốc trong snapshot.",
     "affectedSymbols": [
       "KBC",
-      "NLG"
+      "NLG",
+      "BSR"
     ],
     "affectedFields": [
       "cost_of_goods_sold",
@@ -2675,7 +2677,7 @@
       "workflow": "Package Hostinger Stock Dashboard",
       "conclusion": "success"
     },
-    "remaining": "NLG: coverage gaps are genuine missing/rejected source extractions, not a blanket UI filter; preserve manual hold and leave unverified fields blank. Next continue to the next ticker in checkpoint order and resume statement UI coverage only where source-backed data exists.",
+    "remaining": "BSR: coverage review only; do not rerun OCR/enrich while preservation guard/manual hold remains. Continue checking renderer and source-backed coverage for the next ticker without altering validated snapshots.",
     "newRows": [
       "Lãi/(lỗ) từ bán, thanh lý bất động sản đầu tư (dòng riêng) — nhóm bất động sản",
       "Lợi ích cổ đông không kiểm soát (NCI) — bảng KQKD nhóm doanh nghiệp thông thường"
@@ -2686,6 +2688,7 @@
       "conclusion": "success"
     },
     "affectedPeriods": [
+      "2024-Q1",
       "2025-Q2",
       "2026-Q1",
       "2026-Q2"
