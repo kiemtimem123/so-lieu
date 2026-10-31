@@ -1025,6 +1025,16 @@
             ? item.financial_line_items_extracted_fields.map(String)
             : []
         );
+        // Core statement extraction and detailed line-item extraction are tracked
+        // independently. Preserve explicitly extracted core fields when a row is
+        // held for manual review; otherwise the detail allow-list can accidentally
+        // blank assets, liabilities, equity, revenue, profit, EPS, etc. even though
+        // those values were already extracted and reconciled from the source PDF.
+        const extractedCoreFields = new Set(
+          Array.isArray(item?.core_financial_extracted_fields)
+            ? item.core_financial_extracted_fields.map(String)
+            : []
+        );
         const rejectedDetailFields = new Set(
           Array.isArray(item?.financial_line_items_rejected_fields)
             ? item.financial_line_items_rejected_fields.map(String)
@@ -1041,7 +1051,8 @@
           // described as verified in the notes. This lets the income/cash-flow
           // tabs show source-extracted data without inventing missing values.
           const sourceExtractedAndNotRejected =
-            extractedDetailFields.has(key) && !rejectedDetailFields.has(key);
+            (extractedDetailFields.has(key) || extractedCoreFields.has(key)) &&
+            !rejectedDetailFields.has(key);
           if (!scopeBlocked && (
             manuallyVerifiedFields.has(key) ||
             explicitCorrectionFields.has(key) ||
