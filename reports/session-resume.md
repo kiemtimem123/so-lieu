@@ -121,3 +121,17 @@ Ghi chú này là lối tắt tiếp nối, không thay thế checkpoint sống.
 - Package Hostinger Stock Dashboard #301: [run 41214877956](https://github.com/kiemtimem123/so-lieu/actions/runs/41214877956), success; đây là đóng gói artifact, không xác nhận đã upload/deploy lên Hostinger.
 - **Kỳ mới cần kiểm tra:** các trang công khai báo hiệu VCB đã có BCTC hợp nhất Q3/2026 vào cuối tháng 10/2026, nhưng hiện chưa xác nhận được document ID/PDF trực tiếp từ danh mục VietstockFinance theo policy nguồn duy nhất. Không lấy số liệu từ 24HMoney/Vietcap hay bất kỳ nguồn trung gian để ghi vào snapshot; chờ xác minh link VietstockFinance.
 - **Việc còn mở, chỉ tiếp tục VCB:** (1) giải thích chênh cash 2.546.277 triệu VND giữa Q4/2024 và đầu Q1/2025 bằng thuyết minh; (2) visual PDF review cho 10 kỳ đã lưu; (3) xác minh Q3/2026 từ danh mục VietstockFinance và PDF được liên kết. Không chuyển SHS trước khi đóng hoặc ghi trạng thái giữ thủ công minh bạch.
+
+
+## 2026-10-31 VCB final source-text arithmetic pass
+
+- Continued VCB only; no OCR/enrich rerun; reused the existing VietstockFinance PDF text sidecars.
+- Q4/2025 B03 PDF page 7 shows the investment-securities net income row as a dash in the current-year Q4 column; the number 2,735 belongs to the prior-year comparative column. Corrected `bank_investment_securities_net` from 2,735 to 0. After correction, current-year revenue components sum to 19,172,495 and exactly match reported revenue; PPOP bridge also reconciles. Snapshot commit: [87306b7ec0858b6c074983f237fbbc65a72a969c](https://github.com/kiemtimem123/so-lieu/commit/87306b7ec0858b6c074983f237fbbc65a72a969c).
+- Q2/2024 B04 pages 9–10: restored `cash_beginning=372,818,730`, `cash_ending=328,887,762` from report text; net cash YTD -43,930,968, bridge delta 0.
+- Q2/2025 B04 pages 9–10: restored `cash_beginning=430,614,185`, `cash_ending=454,996,790`; net cash YTD 24,382,605, bridge delta 0.
+- Snapshot commit for Q2 opening/closing balances: [e8b493569bba2636c6599dc2e0702f3b4cb4857c](https://github.com/kiemtimem123/so-lieu/commit/e8b493569bba2636c6599dc2e0702f3b4cb4857c).
+- Full arithmetic recheck across all 10 stored periods (2024-Q1 to 2026-Q2): balance equation, revenue component sum, revenue-to-PPOP bridge, PPOP-to-PBT provision bridge, PBT-tax-to-PAT bridge, quarterly CFO+CFI+CFF, YTD CFO+CFI+CFF, and YTD opening-to-closing cash bridge all have zero difference, except Q4/2024 cash bridge is intentionally not calculated because both cash balance values remain hidden. All discrepancies checked are exact zero; there is no tolerance exception being used here.
+- Latest snapshot blob SHA: `de81130194d8d0da5e1f909d7fae1251a531ad57`.
+- Checkpoint commit: [8405e889e4afd72772c4907f15633b53e4d09f5b](https://github.com/kiemtimem123/so-lieu/commit/8405e889e4afd72772c4907f15633b53e4d09f5b).
+- Pending: (1) Q4/2024 cash close 428,067,908 vs Q1/2025 cash opening 430,614,185, gap 2,546,277 million VND / 0.594830%, unresolved; keep both Q4 cash fields hidden; (2) visual PDF review remains pending for all 10 reports; (3) external report listings indicate VCB Q3/2026 has been posted, but the direct VietstockFinance catalog page is inaccessible in the current lookup and no direct catalog document ID/PDF has been verified; do not import secondary-source figures.
+- VCB remains `terminal_needs_manual_review`, `manualReviewRemaining=true`, and automation is skipped. Do not move to SHS until these pending items are cleared or explicitly held as manual review.
