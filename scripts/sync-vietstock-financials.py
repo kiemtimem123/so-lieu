@@ -1167,6 +1167,22 @@ def process_symbol(
         start_year = min(start_year, min(unresolved_years))
     years = list(range(start_year, current_year + 1))
     records = fetch_symbol_documents(session, token, symbol, years)
+    # Keep a compact source-catalog audit trail for explicit one-ticker refreshes.
+    # This helps distinguish "catalog API returned records" from "a record was
+    # recognized as a consolidated quarterly BCTC candidate" without changing data.
+    for record in records:
+        title = doc_title(record)
+        normalized_title = norm(unquote(title))
+        if (
+            "bao cao tai chinh" in normalized_title
+            or "bctc" in normalized_title
+            or "financial statement" in normalized_title
+        ):
+            record_id = record.get("FileInfoID") or record.get("ID") or record.get("Id") or ""
+            print(
+                f"  CATALOG BCTC id={record_id} | "
+                f"title={title[:220]} | url={doc_url(record)}"
+            )
 
     want_consolidated = desired_consolidated(items)
     candidates: dict[str, list[tuple[tuple[int, int, int], dict, bool]]] = {}
