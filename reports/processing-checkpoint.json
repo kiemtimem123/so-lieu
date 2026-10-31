@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-31T09:35:00+07:00",
+  "updatedAt": "2026-10-31T09:40:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -759,7 +759,7 @@
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-10-31T09:35:00+07:00",
+      "updatedAt": "2026-10-31T09:40:00+07:00",
       "snapshotFetchedAt": "2026-10-23T20:45:50+00:00",
       "note": "GEG review 2026-10-30: 10 quarters Q1/2024–Q2/2026; no confirmed core statement correction found in the archived VietstockFinance OCR source review. Core P&L/tax arithmetic and balance sheet totals appear internally consistent; negative NCI explains parent net profit exceeding consolidated net profit in several periods (e.g. Q2/2025: 165,820.759m parent + (-8,105.900m) NCI = 157,714.859m consolidated). Q2/2026 cash flow internally reconciles on reported YTD basis (begin 74,942.444m + net change 25,371.517m + FX 13.217m = end 100,327.179m); however quarter opening basis differs from Q1 closing (105,857m), yielding 10.22% quarter bridge exception. Preserve report's own YTD opening cash and manual review; no balancing plug. Visual/source review remains pending on 2024 periods and Q2/2026.",
       "sourceReconciledPeriods": [
@@ -801,9 +801,14 @@
           "Khôi phục giá vốn và lợi nhuận gộp cho 9 kỳ từ B02-DN/HN hợp nhất VietstockFinance, lấy cột phát sinh riêng quý, không lấy nhầm cột lũy kế.",
           "Các phép tính doanh thu thuần - giá vốn = lợi nhuận gộp khớp; Q4/2025 sai số OCR 0,6 triệu VND, tương đương khoảng 0,0002%, thấp hơn ngưỡng 0,01% đã chấp nhận.",
           "Các giá trị được lưu theo triệu VND; raw VND, trang PDF, trang in và cột quý được lưu trong metadata để truy xuất.",
-          "Không đánh dấu kiểm tra trực quan PDF; vẫn giữ cờ rà soát hình ảnh nguồn cho các kỳ đang treo."
+          "Không đánh dấu kiểm tra trực quan PDF; vẫn giữ cờ rà soát hình ảnh nguồn cho các kỳ đang treo.",
+          "Đã bổ sung raw revenue VND cho từng kỳ để kiểm tra đúng phép tính gross profit; 8/9 kỳ residual = 0, Q4/2025 residual = -600.000 VND (0,0002%, trong ngưỡng 0,01%)."
         ],
-        "remaining": "Đối chiếu ảnh PDF trực quan khi có khả năng; tiếp tục hoàn thiện các bảng biểu theo trường dữ liệu đã có. Q2/2026 cash-flow bridge exception remains unchanged."
+        "remaining": "Ảnh PDF trực quan vẫn cần kiểm tra; dữ liệu văn bản đã đối chiếu và có raw VND để tái kiểm tra.",
+        "correctionCommits": [
+          "9ab2c0c087c63e4b39c759dc4413908a83b645ed",
+          "f2734dd63cb5f8656c8a7af697ba0a55e8777b97"
+        ]
       }
     },
     "SHS": {
@@ -2466,14 +2471,14 @@
     "note": "Gói Hostinger đã build thành công; chưa có thao tác triển khai trực tiếp lên hosting."
   },
   "lastUiWorkCheckpoint": {
-    "processedAt": "2026-10-31T09:35:00+07:00",
-    "commit": "9ab2c0c087c63e4b39c759dc4413908a83b645ed",
+    "processedAt": "2026-10-31T09:40:00+07:00",
+    "commit": "f2734dd63cb5f8656c8a7af697ba0a55e8777b97",
     "changedPaths": [
       "data/financials-GEG.json",
       "assets/app.js"
     ],
     "task": "financial_report_table_display",
-    "status": "GEG_income_statement_gross_profit_and_cogs_restored",
+    "status": "GEG_income_statement_source_values_reconciled",
     "findings": [
       "GAS OCR queue completed; 10/10 periods source-text reviewed. Remaining visual/manual exceptions are retained and not fabricated.",
       "Fixed quarterly cash-flow table mode: explicitly extracted YTD values can display as Q1 flow or be differenced against the previous quarter's accepted YTD/quarterly baseline, even when the row has a general manual-review badge.",
@@ -2481,8 +2486,9 @@
       "Validate Site and Data succeeded; Package Hostinger Stock Dashboard succeeded.",
       "For rows flagged manual extraction, formulas can now use only the source-approved values retained by rowsFor allow-list; unconfirmed report scope remains a hard block. This enables valid derived gross profit, tax, bank subtotals, and quarterly cashflow without exposing rejected OCR values.",
       "Validate Site and Data completed successfully after the change.",
-      "GEG: restored quarterly cost of goods sold and gross profit for Q2/2024–Q2/2026 (9 periods) from VietstockFinance consolidated income statements; Q1/2024 gross profit remains derivable from source-approved revenue and COGS."
+      "GEG: restored quarterly cost of goods sold and gross profit for Q2/2024–Q2/2026 (9 periods) from VietstockFinance consolidated income statements; Q1/2024 gross profit remains derivable from source-approved revenue and COGS.",
+      "GEG gross profit source bridge rechecked using exact raw VND revenue, COGS and gross-profit values: eight periods exact, Q4/2025 residual -600,000 VND (0.0002%)."
     ],
-    "next": "Continue GEG statement coverage audit, then apply the same source-backed detail completion procedure to the next eligible ticker. Do not override ticker holds."
+    "next": "Continue statement coverage audit for GEG and then the next eligible ticker."
   }
 }
