@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-01T03:00:00Z",
+  "updatedAt": "2026-11-01T03:30:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -48,7 +48,7 @@
     "status": "terminal_needs_manual_review",
     "completeForAutomation": true,
     "manualReviewRemaining": true,
-    "processedAt": "2026-11-01T03:00:00Z",
+    "processedAt": "2026-11-01T03:30:00Z",
     "workflowRunId": "41088586086",
     "workflowRunNumber": 3035,
     "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/41088586086",
@@ -71,7 +71,7 @@
     "skipUnconfirmedAutomation": false,
     "skipUnconfirmedReason": null,
     "nextSymbol": "VCB",
-    "nextTask": "execute_validator_and_finish_quarterly_visual_review_and_q3_2026_catalog_check"
+    "nextTask": "confirm_CI_after_bank_scoped_validator_fix_then_visual_review_and_Q3_2026"
   },
   "symbolStates": {
     "MBB": {
@@ -234,7 +234,7 @@
       "skipUnconfirmedAutomation": true,
       "skipUnconfirmedReason": "Manual visual review of the stored consolidated reports and direct VietstockFinance confirmation of VCB Q3/2026 remain. Numeric source reconciliation across 10 stored periods passes.",
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-11-01T03:00:00Z",
+      "updatedAt": "2026-11-01T03:30:00Z",
       "snapshotFetchedAt": "2026-10-24T06:15:00Z",
       "sourceReconciledPeriods": [
         "2024-Q1",
@@ -776,7 +776,8 @@
         "status": "patched_pending_runtime_execution",
         "commits": [
           "3d4c01923c00096bd1095c98178ce76225f94fde",
-          "46b683d1d2d9374961715a078a45fabb2705283d"
+          "46b683d1d2d9374961715a078a45fabb2705283d",
+          "2c9b357b157397ecd61dac5035b7748c53816ddc"
         ],
         "changes": [
           "YTD cash opening/closing bridge uses net_cash_change_ytd and YTD FX field.",
@@ -784,7 +785,13 @@
           "PBT bridge uses signed bank_provision_expense; negative reversal increases PBT.",
           "Regression checks added for VCB Q4/2024 audited flows, Q4 provision reversal and Q2 cash-field unblocking."
         ],
-        "executed": false
+        "executed": false,
+        "globalHelperRegressionFix": {
+          "commit": "2c9b357b157397ecd61dac5035b7748c53816ddc",
+          "reason": "The first YTD helper replacement changed the shared standalone-period cash_bridge_delta and caused 45 failures in the shared regression suite for other tickers.",
+          "fix": "Restored the generic cash_bridge_delta contract and added bank_cash_bridge_delta; only bank audit and VCB Q4 regression use the YTD helper.",
+          "status": "awaiting_latest_CI_run"
+        }
       },
       "numericAudit20261101": {
         "date": "2026-11-01",
