@@ -1,0 +1,210 @@
+name: Render SHS quarterly PDF pages for visual review
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "reports/shs-quarterly-pdf-review.trigger.json"
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout only saved SHS reports and snapshot
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /data/financials-SHS.json
+            /reports/raw/SHS/**
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install PDF rendering tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+          python -m pip install --upgrade pypdf pdf2image pillow
+
+      - name: Render source-backed B01, B02 and B03b pages from saved SHS reports
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import io
+          import json
+          import re
+          import unicodedata
+          import zipfile
+          from pathlib import Path
+
+          from pdf2image import convert_from_bytes
+          from PIL import Image, ImageDraw
+          from pypdf import PdfReader
+
+          root = Path(".")
+          snapshot = json.loads((root / "data/financials-SHS.json").read_text(encoding="utf-8"))
+          out = root / "shs-visual-review"
+          out.mkdir(parents=True, exist_ok=True)
+
+          def norm(value):
+              value = str(value or "").lower().replace("đ", "d")
+              value = unicodedata.normalize("NFD", value)
+              value = "".join(c for c in value if unicodedata.category(c) != "Mn")
+              return re.sub(r"[^a-z0-9]+", " ", value).strip()
+
+          forms = {
+              "B01": (re.compile(r"mau so b01[a-z]?"), ("bao cao tinh hinh tai chinh",)),
+              "B02": (re.compile(r"mau so b02[a-z]?"), ("bao cao ket qua hoat dong",)),
+              "B03b": (re.compile(r"mau so b03b"), ("bao cao luu chuyen tien te",)),
+          }
+
+          manifest = []
+          for item in snapshot.get("items", []):
+              period = str(item.get("period") or "")
+              archive_rel = item.get("source_archive_file")
+              if not archive_rel:
+                  raise RuntimeError(f"{period}: missing saved SHS source archive")
+              archive_path = root / archive_rel
+              if not archive_path.is_file():
+                  raise RuntimeError(f"{period}: archive not found: {archive_rel}")
+
+              sidecar_path = Path(str(archive_path) + ".extracted.json")
+              if not sidecar_path.is_file():
+                  raise RuntimeError(f"{period}: saved extraction sidecar missing")
+              sidecar = json.loads(sidecar_path.read_text(encoding="utf-8"))
+              archive_bytes = archive_path.read_bytes()
+              selected_member = None
+              selected_member_bytes = None
+
+              if archive_path.suffix.lower() == ".zip":
+                  with zipfile.ZipFile(io.BytesIO(archive_bytes)) as zf:
+                      candidates = []
+                      for member in sidecar.get("members", []):
+                          if member.get("kind") != "pdf":
+                              continue
+                          name = member.get("name") or ""
+                          if name not in zf.namelist():
+                              continue
+                          pages = member.get("pages", [])
+                          all_text = norm(" ".join(p.get("text") or "" for p in pages[:18]))
+                          score = sum(1 for key in ("mau so b01", "mau so b02", "mau so b03b") if key in all_text)
+                          score += 5 if "bctc" in norm(name) or "baocaotaichinh" in norm(name) else 0
+                          score -= 10 if name.lower().startswith("en_") else 0
+                          candidates.append((score, member, zf.read(name)))
+                      if not candidates:
+                          raise RuntimeError(f"{period}: no PDF member found in saved ZIP")
+                      candidates.sort(key=lambda x: (x[0], len(x[1].get("pages", []))), reverse=True)
+                      _, selected_member, selected_member_bytes = candidates[0]
+              else:
+                  selected_member = sidecar
+                  selected_member_bytes = archive_bytes
+
+              page_texts = {
+                  int(p.get("page")): norm(p.get("text") or "")
+                  for p in selected_member.get("pages", [])
+                  if str(p.get("page", "")).isdigit()
+              }
+              reader = PdfReader(io.BytesIO(selected_member_bytes), strict=False)
+              actual_pages = len(reader.pages)
+
+              starts = {}
+              for form, (header, title_terms) in forms.items():
+                  found = []
+                  for page_number, text in page_texts.items():
+                      if header.search(text) or any(term in text for term in title_terms):
+                          found.append(page_number)
+                  found = [p for p in sorted(set(found)) if 1 <= p <= actual_pages]
+                  if found:
+                      starts[form] = found[0]
+              # Use nearby page context as review candidates if OCR could not read a statement title.
+              if "B01" not in starts:
+                  raise RuntimeError(f"{period}: cannot locate B01 balance sheet from saved source sidecar")
+              if "B02" not in starts:
+                  starts["B02_candidates"] = max(1, starts["B01"] + 4)
+              if "B03b" not in starts:
+                  raise RuntimeError(f"{period}: cannot locate B03b cash-flow statement from saved source sidecar")
+
+              pages_by_form = {}
+              for form, start in starts.items():
+                  span = 3 if form == "B02" else 2
+                  selected = [p for p in range(start, min(actual_pages, start + span - 1) + 1)]
+                  pages_by_form[form] = selected
+
+              all_selected = sorted({p for values in pages_by_form.values() for p in values if 1 <= p <= actual_pages})
+              images = {}
+              for page_number in all_selected:
+                  rendered = convert_from_bytes(
+                      selected_member_bytes,
+                      dpi=115,
+                      first_page=page_number,
+                      last_page=page_number,
+                      fmt="png",
+                      thread_count=2,
+                  )[0]
+                  images[page_number] = rendered
+                  rendered.save(out / f"{period}_pdfpage{page_number:02d}.png")
+
+              bands = []
+              width = 1100
+              for form, page_numbers in pages_by_form.items():
+                  thumbs = []
+                  for page_number in page_numbers:
+                      img = images[page_number].convert("RGB")
+                      h = int(img.height * width / img.width)
+                      thumbs.append(img.resize((width, h), Image.Resampling.LANCZOS))
+                  if not thumbs:
+                      continue
+                  band_h = max(x.height for x in thumbs)
+                  band = Image.new("RGB", (width * len(thumbs), band_h + 38), "white")
+                  draw = ImageDraw.Draw(band)
+                  draw.text((8, 8), f"{period} | {form} | PDF pages {', '.join(map(str, page_numbers))}", fill="black")
+                  for i, img in enumerate(thumbs):
+                      band.paste(img, (i * width, 38))
+                  bands.append(band)
+
+              sheet = Image.new("RGB", (max(b.width for b in bands), sum(b.height for b in bands)), "white")
+              y = 0
+              for band in bands:
+                  sheet.paste(band, (0, y))
+                  y += band.height
+              sheet.save(out / f"{period}_B01_B02_B03b_contact.png", optimize=True)
+
+              manifest.append({
+                  "symbol": "SHS",
+                  "period": period,
+                  "source_archive": archive_rel,
+                  "source_url": item.get("source_url"),
+                  "archive_sha256": hashlib.sha256(archive_bytes).hexdigest(),
+                  "pdf_member": selected_member.get("name") or archive_path.name,
+                  "pdf_page_count": actual_pages,
+                  "selected_pdf_pages": pages_by_form,
+                  "unresolved_cashflow_quarter": period in ("2024-Q2", "2024-Q3"),
+              })
+
+          (out / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+          print(json.dumps({
+              "periods_rendered": len(manifest),
+              "periods": [x["period"] for x in manifest],
+              "unresolved_cashflow_periods": [x["period"] for x in manifest if x["unresolved_cashflow_quarter"]],
+              "page_count": sum(len(pages) for x in manifest for pages in x["selected_pdf_pages"].values()),
+          }, ensure_ascii=False))
+          PY
+
+      - name: Upload SHS visual-review images
+        uses: actions/upload-artifact@v6
+        with:
+          name: shs-quarterly-pdf-visual-review
+          path: shs-visual-review/
+          if-no-files-found: error
+          retention-days: 7
