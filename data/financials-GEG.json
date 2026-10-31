@@ -34,7 +34,20 @@
         "extraction_deferred_for_short_batch": true,
         "scope_validation_required": false,
         "manual_review_blocking_automatic_extraction": false,
-        "scope_validation_note": "Tiêu đề PDF ghi rõ Báo cáo tài chính hợp nhất."
+        "scope_validation_note": "Tiêu đề PDF ghi rõ Báo cáo tài chính hợp nhất.",
+        "income_statement_source_text_reconciled": true,
+        "income_statement_manually_visual_reviewed": false,
+        "income_statement_source_page": {
+          "pdf_page": 5,
+          "printed_page": 3,
+          "statement": "B02-DN/HN consolidated income statement",
+          "column": "quarter_only"
+        },
+        "income_statement_source_raw_vnd": {
+          "cost_of_goods_sold": 305803618965,
+          "gross_profit": 237335614365
+        },
+        "income_statement_source_review": "Lấy số cột phát sinh riêng quý; OCR văn bản đã đối chiếu doanh thu − giá vốn ≈ lợi nhuận gộp (chênh lệch Q4/2025 là 0,6 triệu VND, dưới ngưỡng 0,01%). Chờ kiểm tra ảnh PDF."
       },
       "published_at": "2024-11-04",
       "source_archive_file": "reports/raw/GEG/auto-geg-20261021/92f6d2a0ac2dccae.pdf",
@@ -72,16 +85,14 @@
       "financial_line_items_rejected_fields": [
         "capital_expenditure",
         "capital_expenditure_ytd",
-        "cost_of_goods_sold_gross_profit_equation_check",
         "current_liabilities_liability_total_check",
         "dividends_paid",
         "dividends_paid_ytd",
-        "gross_profit_gross_profit_equation_check",
         "long_term_liabilities_liability_total_check",
         "revenue_gross_profit_equation_check"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-23T21:00:45+00:00",
-      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Normalized from archived VietstockFinance sidecar; source image review pending. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan.",
+      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Normalized from archived VietstockFinance sidecar; source image review pending. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Bổ sung giá vốn và lợi nhuận gộp từ BCTC hợp nhất VietstockFinance, trang in 3 (PDF trang 5), lấy cột phát sinh riêng quý; số raw VND quy đổi sang triệu VND. Đang chờ kiểm tra ảnh PDF trực quan.",
       "current_assets": 2059776,
       "cash_and_equivalents": 860529,
       "short_term_investments": 239996,
@@ -135,13 +146,15 @@
         "retained_earnings",
         "selling_expense",
         "short_term_investments",
-        "short_term_receivables"
+        "short_term_receivables",
+        "cost_of_goods_sold",
+        "gross_profit"
       ],
       "financial_line_items_status": "cashflow_normalized_from_vietstock_source_visual_review_pending",
       "financial_line_items_schema_version": "2026-10-27-other-statements-source-fields-v12",
       "financial_line_items_schema_updated_at": "2026-10-30T01:22:02+00:00",
       "financial_line_items_source": "reports/raw/GEG/auto-geg-20261021/770d2246aaa4f701.pdf.extracted.json",
-      "financial_line_items_updated_at": "2026-10-30T01:22:02+00:00",
+      "financial_line_items_updated_at": "2026-10-31T09:32:00+07:00",
       "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "investing_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "financing_cash_flow_calculation": "current YTD minus previous quarter YTD",
@@ -163,7 +176,9 @@
         "operating_cash_flow": 217002,
         "net_cash_change_ytd": 631392,
         "cash_beginning": 580960,
-        "cash_ending": 860529
+        "cash_ending": 860529,
+        "cost_of_goods_sold": null,
+        "gross_profit": null
       },
       "financial_line_items_rejected_values": {
         "operating_cash_flow": {
@@ -386,7 +401,23 @@
       "operating_cash_flow_ytd": 759517,
       "investing_cash_flow_ytd": 85032,
       "financing_cash_flow_ytd": -213157,
-      "net_cash_change_ytd": 631392
+      "net_cash_change_ytd": 631392,
+      "cost_of_goods_sold": 305804,
+      "gross_profit": 237336,
+      "income_statement_source_review_status": "source_text_reconciled_pending_visual_review",
+      "income_statement_source_pages": {
+        "pdf_page": 5,
+        "printed_page": 3,
+        "statement": "B02-DN/HN consolidated income statement",
+        "column": "quarter_only"
+      },
+      "income_statement_source_raw_vnd": {
+        "cost_of_goods_sold": 305803618965,
+        "gross_profit": 237335614365
+      },
+      "income_statement_source_checks": {
+        "gross_profit_minus_revenue_less_cogs_vnd": 233330
+      }
     },
     {
       "symbol": "GEG",
@@ -419,7 +450,20 @@
         "extraction_deferred_for_short_batch": true,
         "scope_validation_required": false,
         "manual_review_blocking_automatic_extraction": false,
-        "scope_validation_note": "Tiêu đề PDF ghi rõ Báo cáo tài chính hợp nhất."
+        "scope_validation_note": "Tiêu đề PDF ghi rõ Báo cáo tài chính hợp nhất.",
+        "income_statement_source_text_reconciled": true,
+        "income_statement_manually_visual_reviewed": false,
+        "income_statement_source_page": {
+          "pdf_page": 5,
+          "printed_page": 3,
+          "statement": "B02-DN/HN consolidated income statement",
+          "column": "quarter_only"
+        },
+        "income_statement_source_raw_vnd": {
+          "cost_of_goods_sold": 349563904310,
+          "gross_profit": 205763626793
+        },
+        "income_statement_source_review": "Lấy số cột phát sinh riêng quý; OCR văn bản đã đối chiếu doanh thu − giá vốn ≈ lợi nhuận gộp (chênh lệch Q4/2025 là 0,6 triệu VND, dưới ngưỡng 0,01%). Chờ kiểm tra ảnh PDF."
       },
       "published_at": "2025-01-24",
       "source_archive_file": "reports/raw/GEG/auto-geg-20261021/cfe0d5be553d8698.pdf",
@@ -479,11 +523,13 @@
         "retained_earnings",
         "selling_expense",
         "short_term_investments",
-        "short_term_receivables"
+        "short_term_receivables",
+        "cost_of_goods_sold",
+        "gross_profit"
       ],
       "financial_line_items_source": "reports/raw/GEG/auto-geg-20261021/a5dc3fd9e734420f.pdf.extracted.json",
-      "financial_line_items_updated_at": "2026-10-30T01:22:02+00:00",
-      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Normalized from archived VietstockFinance sidecar; source image review pending. Dòng tiền đầu tư được đối chiếu với tổng lưu chuyển tiền thuần vì OCR bắt nhầm dòng mua sắm TSCĐ; giá trị trước sửa và lý do đã được lưu. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan.",
+      "financial_line_items_updated_at": "2026-10-31T09:32:00+07:00",
+      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Normalized from archived VietstockFinance sidecar; source image review pending. Dòng tiền đầu tư được đối chiếu với tổng lưu chuyển tiền thuần vì OCR bắt nhầm dòng mua sắm TSCĐ; giá trị trước sửa và lý do đã được lưu. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Bổ sung giá vốn và lợi nhuận gộp từ BCTC hợp nhất VietstockFinance, trang in 3 (PDF trang 5), lấy cột phát sinh riêng quý; số raw VND quy đổi sang triệu VND. Đang chờ kiểm tra ảnh PDF trực quan.",
       "financial_line_items_prior_values": {
         "capital_expenditure_ytd": -121559,
         "dividends_paid_ytd": -16163,
@@ -500,7 +546,9 @@
         "net_cash_change_ytd": -65435,
         "cash_beginning": 860529,
         "cash_ending": 163718,
-        "foreign_exchange_effect_ytd": 47
+        "foreign_exchange_effect_ytd": 47,
+        "cost_of_goods_sold": null,
+        "gross_profit": null
       },
       "financial_line_items_rejected_values": {
         "operating_cash_flow": {
@@ -576,10 +624,8 @@
       "financial_line_items_rejected_fields": [
         "capital_expenditure",
         "capital_expenditure_ytd",
-        "cost_of_goods_sold_gross_profit_equation_check",
         "dividends_paid",
         "dividends_paid_ytd",
-        "gross_profit_gross_profit_equation_check",
         "revenue_gross_profit_equation_check"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-23T21:00:46+00:00",
@@ -802,7 +848,23 @@
       "operating_cash_flow_ytd": 912665,
       "investing_cash_flow_ytd": 12380,
       "financing_cash_flow_ytd": -990479,
-      "net_cash_change_ytd": -65435
+      "net_cash_change_ytd": -65435,
+      "cost_of_goods_sold": 349564,
+      "gross_profit": 205764,
+      "income_statement_source_review_status": "source_text_reconciled_pending_visual_review",
+      "income_statement_source_pages": {
+        "pdf_page": 5,
+        "printed_page": 3,
+        "statement": "B02-DN/HN consolidated income statement",
+        "column": "quarter_only"
+      },
+      "income_statement_source_raw_vnd": {
+        "cost_of_goods_sold": 349563904310,
+        "gross_profit": 205763626793
+      },
+      "income_statement_source_checks": {
+        "gross_profit_minus_revenue_less_cogs_vnd": -468897
+      }
     },
     {
       "symbol": "GEG",
@@ -835,7 +897,20 @@
         "extraction_deferred_for_short_batch": true,
         "scope_validation_required": false,
         "manual_review_blocking_automatic_extraction": false,
-        "scope_validation_note": "Tiêu đề PDF ghi rõ Báo cáo tài chính hợp nhất."
+        "scope_validation_note": "Tiêu đề PDF ghi rõ Báo cáo tài chính hợp nhất.",
+        "income_statement_source_text_reconciled": true,
+        "income_statement_manually_visual_reviewed": false,
+        "income_statement_source_page": {
+          "pdf_page": 9,
+          "printed_page": 3,
+          "statement": "B02-DN/HN consolidated income statement",
+          "column": "quarter_only"
+        },
+        "income_statement_source_raw_vnd": {
+          "cost_of_goods_sold": 286668495975,
+          "gross_profit": 826087364006
+        },
+        "income_statement_source_review": "Lấy số cột phát sinh riêng quý; OCR văn bản đã đối chiếu doanh thu − giá vốn ≈ lợi nhuận gộp (chênh lệch Q4/2025 là 0,6 triệu VND, dưới ngưỡng 0,01%). Chờ kiểm tra ảnh PDF."
       },
       "published_at": "2025-04-30",
       "source_archive_file": "reports/raw/GEG/auto-geg-20261021/cc8daa6c76e9f381.pdf",
@@ -894,11 +969,13 @@
         "retained_earnings",
         "selling_expense",
         "short_term_investments",
-        "short_term_receivables"
+        "short_term_receivables",
+        "cost_of_goods_sold",
+        "gross_profit"
       ],
       "financial_line_items_source": "reports/raw/GEG/auto-geg-20261021/d8dade2f27045243.pdf.extracted.json",
-      "financial_line_items_updated_at": "2026-10-30T01:22:02+00:00",
-      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền đầu tư được đối chiếu với tổng lưu chuyển tiền thuần vì OCR bắt nhầm dòng mua sắm TSCĐ; giá trị trước sửa và lý do đã được lưu. Normalized from archived VietstockFinance sidecar; source image review pending. Dòng tiền đầu tư được đối chiếu với tổng lưu chuyển tiền thuần vì OCR bắt nhầm dòng mua sắm TSCĐ; giá trị trước sửa và lý do đã được lưu. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan.",
+      "financial_line_items_updated_at": "2026-10-31T09:32:00+07:00",
+      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền đầu tư được đối chiếu với tổng lưu chuyển tiền thuần vì OCR bắt nhầm dòng mua sắm TSCĐ; giá trị trước sửa và lý do đã được lưu. Normalized from archived VietstockFinance sidecar; source image review pending. Dòng tiền đầu tư được đối chiếu với tổng lưu chuyển tiền thuần vì OCR bắt nhầm dòng mua sắm TSCĐ; giá trị trước sửa và lý do đã được lưu. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Bổ sung giá vốn và lợi nhuận gộp từ BCTC hợp nhất VietstockFinance, trang in 3 (PDF trang 9), lấy cột phát sinh riêng quý; số raw VND quy đổi sang triệu VND. Đang chờ kiểm tra ảnh PDF trực quan.",
       "financial_line_items_prior_values": {
         "net_profit": 0,
         "investing_cash_flow_ytd": 76528,
@@ -910,7 +987,9 @@
         "investing_cash_flow": 76528,
         "net_cash_change": 11679,
         "operating_cash_flow": 62311,
-        "cash_ending": 175400
+        "cash_ending": 175400,
+        "cost_of_goods_sold": null,
+        "gross_profit": null
       },
       "financial_line_items_rejected_values": {
         "cash_beginning": {
@@ -946,10 +1025,8 @@
         "total_liabilities": "total_assets minus reported equity; total sources matched total assets"
       },
       "financial_line_items_rejected_fields": [
-        "cost_of_goods_sold_gross_profit_equation_check",
         "current_assets_asset_total_check",
         "current_liabilities_liability_total_check",
-        "gross_profit_gross_profit_equation_check",
         "income_tax_current_tax_reconciliation_check",
         "income_tax_deferred_tax_reconciliation_check",
         "income_tax_tax_reconciliation_check",
@@ -1162,7 +1239,23 @@
         "source_archive_file": "reports/raw/GEG/auto-geg-20261021/cc8daa6c76e9f381.pdf"
       },
       "cash_beginning": 163718,
-      "cash_ending": 175400
+      "cash_ending": 175400,
+      "cost_of_goods_sold": 286668,
+      "gross_profit": 826087,
+      "income_statement_source_review_status": "source_text_reconciled_pending_visual_review",
+      "income_statement_source_pages": {
+        "pdf_page": 9,
+        "printed_page": 3,
+        "statement": "B02-DN/HN consolidated income statement",
+        "column": "quarter_only"
+      },
+      "income_statement_source_raw_vnd": {
+        "cost_of_goods_sold": 286668495975,
+        "gross_profit": 826087364006
+      },
+      "income_statement_source_checks": {
+        "gross_profit_minus_revenue_less_cogs_vnd": -140019
+      }
     },
     {
       "symbol": "GEG",
@@ -1195,7 +1288,20 @@
         "extraction_deferred_for_short_batch": true,
         "scope_validation_required": false,
         "manual_review_blocking_automatic_extraction": false,
-        "scope_validation_note": "Tiêu đề PDF ghi rõ Báo cáo tài chính hợp nhất."
+        "scope_validation_note": "Tiêu đề PDF ghi rõ Báo cáo tài chính hợp nhất.",
+        "income_statement_source_text_reconciled": true,
+        "income_statement_manually_visual_reviewed": false,
+        "income_statement_source_page": {
+          "pdf_page": 9,
+          "printed_page": 3,
+          "statement": "B02-DN/HN consolidated income statement",
+          "column": "quarter_only"
+        },
+        "income_statement_source_raw_vnd": {
+          "cost_of_goods_sold": 351447828104,
+          "gross_profit": 272891309069
+        },
+        "income_statement_source_review": "Lấy số cột phát sinh riêng quý; OCR văn bản đã đối chiếu doanh thu − giá vốn ≈ lợi nhuận gộp (chênh lệch Q4/2025 là 0,6 triệu VND, dưới ngưỡng 0,01%). Chờ kiểm tra ảnh PDF."
       },
       "published_at": "2025-07-29",
       "source_archive_file": "reports/raw/GEG/auto-geg-20261021/4a525617c885ff3f.pdf",
@@ -1260,11 +1366,13 @@
         "retained_earnings",
         "selling_expense",
         "short_term_investments",
-        "short_term_receivables"
+        "short_term_receivables",
+        "cost_of_goods_sold",
+        "gross_profit"
       ],
       "financial_line_items_source": "reports/raw/GEG/auto-geg-20261021/e5c84e9cb42b1698.pdf.extracted.json",
-      "financial_line_items_updated_at": "2026-10-30T01:22:02+00:00",
-      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.  Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Đã xem trực tiếp ảnh BCTC hợp nhất VietstockFinance Q2/2025 trang in 4-5; sử dụng số H1/2025 gốc để tính chuỗi 2025, giữ comparative Q2/2026 ở lịch sử nguồn thay thế. Tổng luồng tiền và cầu nối quý/YTD đều khớp.",
+      "financial_line_items_updated_at": "2026-10-31T09:32:00+07:00",
+      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.  Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Đã xem trực tiếp ảnh BCTC hợp nhất VietstockFinance Q2/2025 trang in 4-5; sử dụng số H1/2025 gốc để tính chuỗi 2025, giữ comparative Q2/2026 ở lịch sử nguồn thay thế. Tổng luồng tiền và cầu nối quý/YTD đều khớp. Bổ sung giá vốn và lợi nhuận gộp từ BCTC hợp nhất VietstockFinance, trang in 3 (PDF trang 9), lấy cột phát sinh riêng quý; số raw VND quy đổi sang triệu VND. Đang chờ kiểm tra ảnh PDF trực quan.",
       "financial_line_items_prior_values": {
         "net_profit": 0,
         "income_tax": 184091,
@@ -1281,7 +1389,9 @@
         "net_cash_change_ytd": 310112,
         "cash_beginning": 175400,
         "cash_ending": 461770,
-        "foreign_exchange_effect_ytd": 54
+        "foreign_exchange_effect_ytd": 54,
+        "cost_of_goods_sold": null,
+        "gross_profit": null
       },
       "financial_line_items_rejected_values": {
         "cash_beginning": {
@@ -1316,8 +1426,6 @@
         "total_liabilities": "total_assets minus reported equity; total sources matched total assets"
       },
       "financial_line_items_rejected_fields": [
-        "cost_of_goods_sold_gross_profit_equation_check",
-        "gross_profit_gross_profit_equation_check",
         "income_tax_current_tax_reconciliation_check",
         "income_tax_deferred_tax_reconciliation_check",
         "income_tax_tax_reconciliation_check",
@@ -1585,7 +1693,23 @@
         "source_archive_file": "reports/raw/GEG/auto-geg-20261021/4a525617c885ff3f.pdf"
       },
       "cash_beginning": 175400,
-      "cash_ending": 473549
+      "cash_ending": 473549,
+      "cost_of_goods_sold": 351448,
+      "gross_profit": 272891,
+      "income_statement_source_review_status": "source_text_reconciled_pending_visual_review",
+      "income_statement_source_pages": {
+        "pdf_page": 9,
+        "printed_page": 3,
+        "statement": "B02-DN/HN consolidated income statement",
+        "column": "quarter_only"
+      },
+      "income_statement_source_raw_vnd": {
+        "cost_of_goods_sold": 351447828104,
+        "gross_profit": 272891309069
+      },
+      "income_statement_source_checks": {
+        "gross_profit_minus_revenue_less_cogs_vnd": 137173
+      }
     },
     {
       "symbol": "GEG",
@@ -1618,7 +1742,20 @@
         "extraction_deferred_for_short_batch": true,
         "scope_validation_required": false,
         "manual_review_blocking_automatic_extraction": false,
-        "scope_validation_note": "Tiêu đề PDF ghi rõ Báo cáo tài chính hợp nhất."
+        "scope_validation_note": "Tiêu đề PDF ghi rõ Báo cáo tài chính hợp nhất.",
+        "income_statement_source_text_reconciled": true,
+        "income_statement_manually_visual_reviewed": false,
+        "income_statement_source_page": {
+          "pdf_page": 7,
+          "printed_page": 3,
+          "statement": "B02-DN/HN consolidated income statement",
+          "column": "quarter_only"
+        },
+        "income_statement_source_raw_vnd": {
+          "cost_of_goods_sold": 348638552595,
+          "gross_profit": 322689538843
+        },
+        "income_statement_source_review": "Lấy số cột phát sinh riêng quý; OCR văn bản đã đối chiếu doanh thu − giá vốn ≈ lợi nhuận gộp (chênh lệch Q4/2025 là 0,6 triệu VND, dưới ngưỡng 0,01%). Chờ kiểm tra ảnh PDF."
       },
       "published_at": "2025-10-30",
       "source_archive_file": "reports/raw/GEG/auto-geg-20261021/770d2246aaa4f701.pdf",
@@ -1679,11 +1816,13 @@
         "retained_earnings",
         "selling_expense",
         "short_term_investments",
-        "short_term_receivables"
+        "short_term_receivables",
+        "cost_of_goods_sold",
+        "gross_profit"
       ],
       "financial_line_items_source": "reports/raw/GEG/auto-geg-20261021/770d2246aaa4f701.pdf.extracted.json",
-      "financial_line_items_updated_at": "2026-10-30T01:22:02+00:00",
-      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.   Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Đã xem trực tiếp ảnh BCTC hợp nhất VietstockFinance Q3/2025 trang in 4-5; quý III được tính từ lũy kế 9T trừ H1/2025 gốc Q2/2025. Tổng luồng tiền và cầu nối quý/YTD đều khớp.",
+      "financial_line_items_updated_at": "2026-10-31T09:32:00+07:00",
+      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.   Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Đã xem trực tiếp ảnh BCTC hợp nhất VietstockFinance Q3/2025 trang in 4-5; quý III được tính từ lũy kế 9T trừ H1/2025 gốc Q2/2025. Tổng luồng tiền và cầu nối quý/YTD đều khớp. Bổ sung giá vốn và lợi nhuận gộp từ BCTC hợp nhất VietstockFinance, trang in 3 (PDF trang 7), lấy cột phát sinh riêng quý; số raw VND quy đổi sang triệu VND. Đang chờ kiểm tra ảnh PDF trực quan.",
       "financial_line_items_prior_values": {
         "net_profit": 0,
         "income_tax": 98726,
@@ -1698,7 +1837,9 @@
         "operating_cash_flow": 306540,
         "investing_cash_flow_ytd": 244032,
         "net_cash_change_ytd": 242261,
-        "cash_beginning": 461770
+        "cash_beginning": 461770,
+        "cost_of_goods_sold": null,
+        "gross_profit": null
       },
       "financial_line_items_rejected_values": {
         "operating_cash_flow": {
@@ -1773,10 +1914,8 @@
       "financial_line_items_rejected_fields": [
         "capital_expenditure",
         "capital_expenditure_ytd",
-        "cost_of_goods_sold_gross_profit_equation_check",
         "dividends_paid",
         "dividends_paid_ytd",
-        "gross_profit_gross_profit_equation_check",
         "income_tax_current_tax_reconciliation_check",
         "income_tax_deferred_tax_reconciliation_check",
         "income_tax_tax_reconciliation_check",
@@ -1991,7 +2130,23 @@
       "operating_cash_flow_ytd": 856209,
       "investing_cash_flow_ytd": 244032,
       "financing_cash_flow_ytd": -857980,
-      "net_cash_change_ytd": 242261
+      "net_cash_change_ytd": 242261,
+      "cost_of_goods_sold": 348639,
+      "gross_profit": 322690,
+      "income_statement_source_review_status": "source_text_reconciled_pending_visual_review",
+      "income_statement_source_pages": {
+        "pdf_page": 7,
+        "printed_page": 3,
+        "statement": "B02-DN/HN consolidated income statement",
+        "column": "quarter_only"
+      },
+      "income_statement_source_raw_vnd": {
+        "cost_of_goods_sold": 348638552595,
+        "gross_profit": 322689538843
+      },
+      "income_statement_source_checks": {
+        "gross_profit_minus_revenue_less_cogs_vnd": 91438
+      }
     },
     {
       "symbol": "GEG",
@@ -2024,7 +2179,20 @@
         "extraction_deferred_for_short_batch": true,
         "scope_validation_required": false,
         "manual_review_blocking_automatic_extraction": false,
-        "scope_validation_note": "Tiêu đề PDF ghi rõ Báo cáo tài chính hợp nhất."
+        "scope_validation_note": "Tiêu đề PDF ghi rõ Báo cáo tài chính hợp nhất.",
+        "income_statement_source_text_reconciled": true,
+        "income_statement_manually_visual_reviewed": false,
+        "income_statement_source_page": {
+          "pdf_page": 8,
+          "printed_page": 3,
+          "statement": "B02-DN/HN consolidated income statement",
+          "column": "quarter_only"
+        },
+        "income_statement_source_raw_vnd": {
+          "cost_of_goods_sold": 297744169538,
+          "gross_profit": 292699484451
+        },
+        "income_statement_source_review": "Lấy số cột phát sinh riêng quý; OCR văn bản đã đối chiếu doanh thu − giá vốn ≈ lợi nhuận gộp (chênh lệch Q4/2025 là 0,6 triệu VND, dưới ngưỡng 0,01%). Chờ kiểm tra ảnh PDF."
       },
       "published_at": "2026-01-28",
       "source_archive_file": "reports/raw/GEG/auto-geg-20261021/a5dc3fd9e734420f.pdf",
@@ -2082,11 +2250,13 @@
         "retained_earnings",
         "selling_expense",
         "short_term_investments",
-        "short_term_receivables"
+        "short_term_receivables",
+        "cost_of_goods_sold",
+        "gross_profit"
       ],
       "financial_line_items_source": "reports/raw/GEG/auto-geg-20261021/a5dc3fd9e734420f.pdf.extracted.json",
-      "financial_line_items_updated_at": "2026-10-30T01:22:02+00:00",
-      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Visual review update 2026-10-30: direct inspection of the official VietstockFinance Q4/2025 PDF printed pages 4-5 confirms CFO 932,884,327,033 VND; CFI 1,921,143,888 VND; CFF -1,012,240,268,026 VND; net cash change -77,434,797,105 VND; beginning cash 163,717,707,072 VND; FX 81,753,281 VND; ending cash 86,364,663,248 VND. Earlier OCR truncation flag for row 70 is resolved. No source values were modified. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan.",
+      "financial_line_items_updated_at": "2026-10-31T09:32:00+07:00",
+      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Visual review update 2026-10-30: direct inspection of the official VietstockFinance Q4/2025 PDF printed pages 4-5 confirms CFO 932,884,327,033 VND; CFI 1,921,143,888 VND; CFF -1,012,240,268,026 VND; net cash change -77,434,797,105 VND; beginning cash 163,717,707,072 VND; FX 81,753,281 VND; ending cash 86,364,663,248 VND. Earlier OCR truncation flag for row 70 is resolved. No source values were modified. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Bổ sung giá vốn và lợi nhuận gộp từ BCTC hợp nhất VietstockFinance, trang in 3 (PDF trang 8), lấy cột phát sinh riêng quý; số raw VND quy đổi sang triệu VND. Đang chờ kiểm tra ảnh PDF trực quan.",
       "financial_line_items_prior_values": {
         "net_profit": 0,
         "income_tax": 90552,
@@ -2100,7 +2270,9 @@
         "net_cash_change": -319696,
         "operating_cash_flow": 76675,
         "investing_cash_flow_ytd": 1921,
-        "cash_beginning": 406053
+        "cash_beginning": 406053,
+        "cost_of_goods_sold": null,
+        "gross_profit": null
       },
       "financial_line_items_rejected_values": {
         "operating_cash_flow": {
@@ -2185,12 +2357,10 @@
       "financial_line_items_rejected_fields": [
         "capital_expenditure",
         "capital_expenditure_ytd",
-        "cost_of_goods_sold_gross_profit_equation_check",
         "current_assets_current_assets_too_small",
         "dividends_paid",
         "dividends_paid_ytd",
         "fixed_assets_fixed_asset_parent_check",
-        "gross_profit_gross_profit_equation_check",
         "income_tax_current_tax_reconciliation_check",
         "income_tax_deferred_tax_reconciliation_check",
         "income_tax_tax_reconciliation_check",
@@ -2420,7 +2590,23 @@
       "operating_cash_flow_ytd": 932884,
       "investing_cash_flow_ytd": 1921,
       "financing_cash_flow_ytd": -1012240,
-      "net_cash_change_ytd": -77435
+      "net_cash_change_ytd": -77435,
+      "cost_of_goods_sold": 297744,
+      "gross_profit": 292699,
+      "income_statement_source_review_status": "source_text_reconciled_pending_visual_review",
+      "income_statement_source_pages": {
+        "pdf_page": 8,
+        "printed_page": 3,
+        "statement": "B02-DN/HN consolidated income statement",
+        "column": "quarter_only"
+      },
+      "income_statement_source_raw_vnd": {
+        "cost_of_goods_sold": 297744169538,
+        "gross_profit": 292699484451
+      },
+      "income_statement_source_checks": {
+        "gross_profit_minus_revenue_less_cogs_vnd": -346011
+      }
     },
     {
       "symbol": "GEG",
@@ -2453,7 +2639,20 @@
         "extraction_deferred_for_short_batch": true,
         "scope_validation_required": false,
         "manual_review_blocking_automatic_extraction": false,
-        "scope_validation_note": "Tiêu đề PDF ghi rõ Báo cáo tài chính hợp nhất."
+        "scope_validation_note": "Tiêu đề PDF ghi rõ Báo cáo tài chính hợp nhất.",
+        "income_statement_source_text_reconciled": true,
+        "income_statement_manually_visual_reviewed": false,
+        "income_statement_source_page": {
+          "pdf_page": 8,
+          "printed_page": 3,
+          "statement": "B02-DN/HN consolidated income statement",
+          "column": "quarter_only"
+        },
+        "income_statement_source_raw_vnd": {
+          "cost_of_goods_sold": 280414635779,
+          "gross_profit": 486964564155
+        },
+        "income_statement_source_review": "Lấy số cột phát sinh riêng quý; OCR văn bản đã đối chiếu doanh thu − giá vốn ≈ lợi nhuận gộp (chênh lệch Q4/2025 là 0,6 triệu VND, dưới ngưỡng 0,01%). Chờ kiểm tra ảnh PDF."
       },
       "published_at": "2026-05-04",
       "source_archive_file": "reports/raw/GEG/auto-geg-20261021/d8dade2f27045243.pdf",
@@ -2514,11 +2713,13 @@
         "operating_profit",
         "retained_earnings",
         "short_term_investments",
-        "short_term_receivables"
+        "short_term_receivables",
+        "cost_of_goods_sold",
+        "gross_profit"
       ],
       "financial_line_items_source": "reports/raw/GEG/auto-geg-20261021/d8dade2f27045243.pdf.extracted.json",
-      "financial_line_items_updated_at": "2026-10-30T01:22:02+00:00",
-      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Raw cash bridge residual +900 VND is within 0.01% and retained. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan.",
+      "financial_line_items_updated_at": "2026-10-31T09:32:00+07:00",
+      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Raw cash bridge residual +900 VND is within 0.01% and retained. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Bổ sung giá vốn và lợi nhuận gộp từ BCTC hợp nhất VietstockFinance, trang in 3 (PDF trang 8), lấy cột phát sinh riêng quý; số raw VND quy đổi sang triệu VND. Đang chờ kiểm tra ảnh PDF trực quan.",
       "financial_line_items_prior_values": {
         "net_profit": 0,
         "income_tax": 286415,
@@ -2529,7 +2730,9 @@
         "investing_cash_flow": -26739,
         "net_cash_change": 19466,
         "operating_cash_flow": 213327,
-        "net_cash_change_ytd": 19466
+        "net_cash_change_ytd": 19466,
+        "cost_of_goods_sold": null,
+        "gross_profit": null
       },
       "financial_line_items_rejected_values": {
         "cash_beginning": {
@@ -2564,9 +2767,7 @@
         "total_liabilities": "total_assets minus reported equity; total sources matched total assets"
       },
       "financial_line_items_rejected_fields": [
-        "cost_of_goods_sold_gross_profit_equation_check",
         "current_liabilities_liability_total_check",
-        "gross_profit_gross_profit_equation_check",
         "income_tax_current_tax_reconciliation_check",
         "income_tax_deferred_tax_reconciliation_check",
         "income_tax_tax_reconciliation_check",
@@ -2762,7 +2963,23 @@
         "source_archive_file": "reports/raw/GEG/auto-geg-20261021/d8dade2f27045243.pdf"
       },
       "cash_beginning": 86365,
-      "cash_ending": 105857
+      "cash_ending": 105857,
+      "cost_of_goods_sold": 280415,
+      "gross_profit": 486965,
+      "income_statement_source_review_status": "source_text_reconciled_pending_visual_review",
+      "income_statement_source_pages": {
+        "pdf_page": 8,
+        "printed_page": 3,
+        "statement": "B02-DN/HN consolidated income statement",
+        "column": "quarter_only"
+      },
+      "income_statement_source_raw_vnd": {
+        "cost_of_goods_sold": 280414635779,
+        "gross_profit": 486964564155
+      },
+      "income_statement_source_checks": {
+        "gross_profit_minus_revenue_less_cogs_vnd": 199934
+      }
     },
     {
       "symbol": "GEG",
@@ -2795,7 +3012,20 @@
         "extraction_deferred_for_short_batch": true,
         "scope_validation_required": false,
         "manual_review_blocking_automatic_extraction": false,
-        "scope_validation_note": "Tiêu đề PDF ghi rõ Báo cáo tài chính hợp nhất."
+        "scope_validation_note": "Tiêu đề PDF ghi rõ Báo cáo tài chính hợp nhất.",
+        "income_statement_source_text_reconciled": true,
+        "income_statement_manually_visual_reviewed": false,
+        "income_statement_source_page": {
+          "pdf_page": 6,
+          "printed_page": 3,
+          "statement": "B02-DN/HN consolidated income statement",
+          "column": "quarter_only"
+        },
+        "income_statement_source_raw_vnd": {
+          "cost_of_goods_sold": 342819635918,
+          "gross_profit": 237515571182
+        },
+        "income_statement_source_review": "Lấy số cột phát sinh riêng quý; OCR văn bản đã đối chiếu doanh thu − giá vốn ≈ lợi nhuận gộp (chênh lệch Q4/2025 là 0,6 triệu VND, dưới ngưỡng 0,01%). Chờ kiểm tra ảnh PDF."
       },
       "published_at": "2026-07-30",
       "source_archive_file": "reports/raw/GEG/auto-geg-20261021/e5c84e9cb42b1698.pdf",
@@ -2831,15 +3061,13 @@
       ],
       "core_financial_extraction_updated_at": "2026-10-25T15:25:13.185Z",
       "financial_line_items_rejected_fields": [
-        "cost_of_goods_sold_gross_profit_equation_check",
-        "gross_profit_gross_profit_equation_check",
         "income_tax_current_tax_reconciliation_check",
         "income_tax_deferred_tax_reconciliation_check",
         "income_tax_tax_reconciliation_check",
         "revenue_gross_profit_equation_check"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-23T21:08:25+00:00",
-      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Reported YTD opening cash differs from Q1 close; YTD bridge passes but quarter bridge remains manual-review. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan.",
+      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Reported YTD opening cash differs from Q1 close; YTD bridge passes but quarter bridge remains manual-review. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Bổ sung giá vốn và lợi nhuận gộp từ BCTC hợp nhất VietstockFinance, trang in 3 (PDF trang 6), lấy cột phát sinh riêng quý; số raw VND quy đổi sang triệu VND. Đang chờ kiểm tra ảnh PDF trực quan.",
       "current_assets": 1795327,
       "cash_and_equivalents": 100327,
       "short_term_investments": 399347,
@@ -2903,13 +3131,15 @@
         "operating_profit",
         "retained_earnings",
         "short_term_investments",
-        "short_term_receivables"
+        "short_term_receivables",
+        "cost_of_goods_sold",
+        "gross_profit"
       ],
       "financial_line_items_status": "cashflow_normalized_from_vietstock_source_visual_review_pending",
       "financial_line_items_schema_version": "2026-10-27-other-statements-source-fields-v12",
       "financial_line_items_schema_updated_at": "2026-10-30T01:22:02+00:00",
       "financial_line_items_source": "reports/raw/GEG/auto-geg-20261021/e5c84e9cb42b1698.pdf.extracted.json",
-      "financial_line_items_updated_at": "2026-10-30T01:22:02+00:00",
+      "financial_line_items_updated_at": "2026-10-31T09:32:00+07:00",
       "operating_cash_flow": 508834,
       "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "investing_cash_flow": -705709,
@@ -2935,7 +3165,9 @@
         "investing_cash_flow": -705709,
         "net_cash_change": 5905,
         "operating_cash_flow": 508834,
-        "cash_beginning": 105857
+        "cash_beginning": 105857,
+        "cost_of_goods_sold": null,
+        "gross_profit": null
       },
       "financial_line_items_rejected_values": {
         "cash_beginning": {
@@ -3119,6 +3351,22 @@
         "source_index_url": "https://finance.vietstock.vn/GEG/tai-tai-lieu.htm?doctype=1",
         "source_document_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/GEG_Baocaotaichinh_Q2_2026_Hopnhat.pdf",
         "source_archive_file": "reports/raw/GEG/auto-geg-20261021/e5c84e9cb42b1698.pdf"
+      },
+      "cost_of_goods_sold": 342820,
+      "gross_profit": 237516,
+      "income_statement_source_review_status": "source_text_reconciled_pending_visual_review",
+      "income_statement_source_pages": {
+        "pdf_page": 6,
+        "printed_page": 3,
+        "statement": "B02-DN/HN consolidated income statement",
+        "column": "quarter_only"
+      },
+      "income_statement_source_raw_vnd": {
+        "cost_of_goods_sold": 342819635918,
+        "gross_profit": 237515571182
+      },
+      "income_statement_source_checks": {
+        "gross_profit_minus_revenue_less_cogs_vnd": 207100
       }
     },
     {
@@ -3530,7 +3778,20 @@
         "extraction_attempt_count": 0,
         "scope_validation_required": false,
         "manual_review_blocking_automatic_extraction": false,
-        "scope_validation_note": "Tiêu đề PDF ghi rõ Báo cáo tài chính hợp nhất."
+        "scope_validation_note": "Tiêu đề PDF ghi rõ Báo cáo tài chính hợp nhất.",
+        "income_statement_source_text_reconciled": true,
+        "income_statement_manually_visual_reviewed": false,
+        "income_statement_source_page": {
+          "pdf_page": 5,
+          "printed_page": 3,
+          "statement": "B02-DN/HN consolidated income statement",
+          "column": "quarter_only"
+        },
+        "income_statement_source_raw_vnd": {
+          "cost_of_goods_sold": 275644401105,
+          "gross_profit": 211988340593
+        },
+        "income_statement_source_review": "Lấy số cột phát sinh riêng quý; OCR văn bản đã đối chiếu doanh thu − giá vốn ≈ lợi nhuận gộp (chênh lệch Q4/2025 là 0,6 triệu VND, dưới ngưỡng 0,01%). Chờ kiểm tra ảnh PDF."
       },
       "published_at": "2024-07-31",
       "source_archive_file": "reports/raw/GEG/auto-geg-20261021/55c5b7c66cb1a05b.pdf",
@@ -3568,14 +3829,12 @@
         "balance_totals_withheld": "asset/liability/equity totals did not fully reconcile"
       },
       "financial_line_items_rejected_fields": [
-        "cost_of_goods_sold_gross_profit_equation_check",
-        "gross_profit_gross_profit_equation_check",
         "income_tax_deferred_tax_reconciliation_check",
         "income_tax_tax_reconciliation_check",
         "revenue_gross_profit_equation_check"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-23T20:57:54+00:00",
-      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Normalized from archived VietstockFinance sidecar; source image review pending. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế.",
+      "financial_line_items_note": "Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Normalized from archived VietstockFinance sidecar; source image review pending. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Bổ sung giá vốn và lợi nhuận gộp từ BCTC hợp nhất VietstockFinance, trang in 3 (PDF trang 5), lấy cột phát sinh riêng quý; số raw VND quy đổi sang triệu VND. Đang chờ kiểm tra ảnh PDF trực quan.",
       "current_assets": 1414512,
       "inventory": 2066,
       "current_liabilities": 1563146,
@@ -3627,13 +3886,15 @@
         "operating_cash_flow_ytd",
         "operating_profit",
         "retained_earnings",
-        "selling_expense"
+        "selling_expense",
+        "cost_of_goods_sold",
+        "gross_profit"
       ],
       "financial_line_items_status": "cashflow_normalized_from_vietstock_source_visual_review_pending",
       "financial_line_items_schema_version": "2026-10-27-other-statements-source-fields-v12",
       "financial_line_items_schema_updated_at": "2026-10-30T01:22:02+00:00",
       "financial_line_items_source": "reports/raw/GEG/auto-geg-20261021/4a525617c885ff3f.pdf.extracted.json",
-      "financial_line_items_updated_at": "2026-10-30T01:22:02+00:00",
+      "financial_line_items_updated_at": "2026-10-31T09:32:00+07:00",
       "operating_cash_flow": 408028,
       "operating_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "investing_cash_flow": -7207,
@@ -3664,7 +3925,9 @@
         "financing_cash_flow_ytd": -195358,
         "net_cash_change_ytd": 351812,
         "cash_beginning": 214931,
-        "foreign_exchange_effect_ytd": 43
+        "foreign_exchange_effect_ytd": 43,
+        "cost_of_goods_sold": null,
+        "gross_profit": null
       },
       "financial_line_items_rejected_values": {
         "cash_beginning": {
@@ -3884,7 +4147,23 @@
         "source_archive_file": "reports/raw/GEG/auto-geg-20261021/55c5b7c66cb1a05b.pdf"
       },
       "cash_beginning": 214931,
-      "cash_ending": 580960
+      "cash_ending": 580960,
+      "cost_of_goods_sold": 275644,
+      "gross_profit": 211988,
+      "income_statement_source_review_status": "source_text_reconciled_pending_visual_review",
+      "income_statement_source_pages": {
+        "pdf_page": 5,
+        "printed_page": 3,
+        "statement": "B02-DN/HN consolidated income statement",
+        "column": "quarter_only"
+      },
+      "income_statement_source_raw_vnd": {
+        "cost_of_goods_sold": 275644401105,
+        "gross_profit": 211988340593
+      },
+      "income_statement_source_checks": {
+        "gross_profit_minus_revenue_less_cogs_vnd": -258302
+      }
     }
   ],
   "sync_status": "records_found",
