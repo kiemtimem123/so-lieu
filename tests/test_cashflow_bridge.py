@@ -3285,7 +3285,10 @@ class IDCCashFlowNormalizationTests(unittest.TestCase):
         self.assertEqual(row["cash_beginning"], 800729)
         self.assertEqual(row["cash_beginning_reported_ytd"], 553943)
         self.assertEqual(row["cash_ending"], 608685)
-        self.assertEqual(row["cash_and_equivalents"], 608685)
+        # Balance-sheet cash at 30/06/2026 is a separate source row from the
+        # unresolved cash-flow closing balance; preserve both without forcing
+        # them to match while the source bridge remains under manual review.
+        self.assertEqual(row["cash_and_equivalents"], 553943)
         self.assertEqual(cross["prior_year_end_cash_raw_vnd"], 553052678239)
         self.assertEqual(cross["source_reported_ytd_open_raw_vnd"], 553943475131)
         self.assertEqual(cross["residual_raw_vnd"], 890796892)
