@@ -1620,8 +1620,11 @@
         if (industry !== 'banking' && industry !== 'securities' &&
             num('gross_profit') !== null && num('cost_of_goods_sold') !== null) {
           return {
-            value: num('gross_profit') + Math.abs(num('cost_of_goods_sold')),
-            formula: 'Doanh thu tái lập = lợi nhuận gộp + giá vốn hàng bán; hai chỉ tiêu đầu vào lấy từ cùng kỳ báo cáo.'
+            // Vietstock extractors may encode cost of goods sold as either a
+            // positive expense or a negative deduction. The signed source value
+            // is authoritative: revenue = gross profit + signed COGS.
+            value: num('gross_profit') + num('cost_of_goods_sold'),
+            formula: 'Doanh thu tái lập = lợi nhuận gộp + giá vốn hàng bán theo dấu ghi nhận trong cùng kỳ báo cáo.'
           };
         }
       }
@@ -1629,8 +1632,9 @@
       if (key === 'gross_profit' && industry !== 'banking' && industry !== 'securities' &&
           num('revenue') !== null && num('cost_of_goods_sold') !== null) {
         return {
-          value: num('revenue') - Math.abs(num('cost_of_goods_sold')),
-          formula: 'Lợi nhuận gộp = doanh thu thuần − giá vốn hàng bán; tính từ hai dòng của cùng kỳ.'
+          // Preserve the source sign convention; do not force COGS positive.
+          value: num('revenue') - num('cost_of_goods_sold'),
+          formula: 'Lợi nhuận gộp = doanh thu thuần − giá vốn hàng bán theo dấu ghi nhận trong cùng kỳ.'
         };
       }
 
