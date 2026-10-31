@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-01T06:00:00Z",
+  "updatedAt": "2026-11-01T06:10:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -48,29 +48,26 @@
     "status": "automated_processing_complete",
     "completeForAutomation": true,
     "manualReviewRemaining": true,
-    "processedAt": "2026-11-01T06:00:00Z",
-    "workflowRunId": "41088586086",
-    "workflowRunNumber": 3035,
-    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/41229141959",
+    "processedAt": "2026-11-01T06:10:00Z",
     "changedPaths": [
-      "data/financials-VCB.json"
+      "data/financials-VCB.json",
+      "scripts/validate-bank-reconciliation.py"
     ],
     "periodCount": 10,
     "firstQuarter": "2024-Q1",
     "lastQuarter": "2026-Q2",
     "pendingCorePeriods": [],
-    "terminalManualReviewPeriods": [
-      "2024-Q4",
-      "2025-Q4",
-      "2026-Q1"
-    ],
     "pendingDetailPeriods": [],
     "staleDetailSchemaPeriods": [],
     "statementPagesPending": false,
-    "skipUnconfirmedAutomation": false,
-    "skipUnconfirmedReason": null,
+    "workflowRuns": {
+      "quarterly": "https://github.com/kiemtimem123/so-lieu/actions/runs/41229141959",
+      "site": "https://github.com/kiemtimem123/so-lieu/actions/runs/41229142059",
+      "package": "https://github.com/kiemtimem123/so-lieu/actions/runs/41229142016",
+      "visualReview": "https://github.com/kiemtimem123/so-lieu/actions/runs/41228191736"
+    },
     "nextSymbol": "SHS",
-    "nextTask": "process_SHS_only_after_VCB_primary_statements_closed; recheck_VCB_Q3_2026_catalog_when_report_is_posted"
+    "nextTask": "visually_review_SHS_source_PDFs_and_resolve_manual_cashflow_exceptions"
   },
   "symbolStates": {
     "MBB": {
@@ -208,7 +205,7 @@
       "manualReviewReason": "Đã phát hiện workflow OCR/enrich ghi đè các trường cash-flow đã chuẩn hóa (basis YTD, CFO/CFI/CFF/net cash và số dư tiền) thành quarterly_reported hoặc null. Đã khôi phục đúng các trường cash-flow từ snapshot đã kiểm định ở commit 599fe737965b062e723daa9fc2c7543a86e3ce4d; giữ nguyên các trường khác mới hơn. Tạm dừng tự động nâng schema VND đến khi sửa được cơ chế bảo toàn dữ liệu, không OCR/enrich lại dữ liệu đã xác nhận."
     },
     "VCB": {
-      "status": "terminal_needs_manual_review",
+      "status": "automated_processing_complete",
       "completeForAutomation": true,
       "manualReviewRemaining": true,
       "periodCount": 10,
@@ -217,23 +214,12 @@
       "pendingCorePeriods": [],
       "terminalManualReviewPeriods": [],
       "pendingDetailPeriods": [],
-      "staleDetailSchemaPeriods": [
-        "2024-Q1",
-        "2024-Q2",
-        "2024-Q3",
-        "2024-Q4",
-        "2025-Q1",
-        "2025-Q2",
-        "2025-Q3",
-        "2025-Q4",
-        "2026-Q1",
-        "2026-Q2"
-      ],
+      "staleDetailSchemaPeriods": [],
       "statementPagesPending": false,
       "skipUnconfirmedAutomation": true,
-      "skipUnconfirmedReason": "Manual visual review of the stored consolidated reports and direct VietstockFinance confirmation of VCB Q3/2026 remain. Numeric source reconciliation across 10 stored periods passes.",
+      "skipUnconfirmedReason": "Only source-availability watch remains: direct VietstockFinance catalog has no consolidated VCB Q3/2026 record. All stored quarters through Q2/2026 are source-checked, visually reviewed on B02/B03/B04, reconciled and CI-validated.",
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-11-01T06:00:00Z",
+      "updatedAt": "2026-11-01T06:10:00Z",
       "snapshotFetchedAt": "2026-10-24T06:15:00Z",
       "sourceReconciledPeriods": [
         "2024-Q1",
@@ -249,7 +235,7 @@
       ],
       "lastSourceReconciliation": {
         "periodRange": "2024-Q1 through 2026-Q2",
-        "status": "source_text_reconciled_pending_visual_pdf_review",
+        "status": "verified_10_of_10_primary_statements_and_numeric_audit_pass",
         "correctionCommits": [
           "8c7d327e3996a862cadfab2b9be244ce5f9f3a3f",
           "a285b735946f7f1bcd62e1dd203dbab3e7a648ce",
@@ -260,8 +246,8 @@
         "validatorCommit": "5b57b6cac94c42055415ea73b2298303686a4011",
         "summary": "Đã đối chiếu đủ 10/10 kỳ từ sidecar PDF hợp nhất VietstockFinance. Sửa ánh xạ dòng tiền bị nhầm với thu nhập lãi/chi mua TSCĐ; tách dòng tiền quý từ YTD; khôi phục lợi nhuận thuộc cổ đông ngân hàng; bổ sung các cấu phần thu nhập thiếu; sửa dấu chi phí dự phòng Q4/2025 và Q2/2026. Additional 2026-10-31 deep audit: Q2/2024 and Q2/2025 B03/B04 page text was checked; Q2/2024 provision expense sign corrected to +1,513,541; 10 stale rejection flags per Q2 period removed after exact YTD/quarterly/cash bridge reconciliation.",
         "checks": "Mỗi kỳ đã kiểm tra cân đối tài sản, tổng cấu phần thu nhập, doanh thu so với PPOP + chi phí hoạt động, lợi nhuận trước thuế, lợi nhuận sau thuế, tổng dòng tiền YTD, số dư tiền đầu/cuối kỳ; các sai lệch tính toán sau sửa đều bằng 0.",
-        "remaining": "The ten stored periods 2024-Q1 through 2026-Q2 are numerically reconciled, visually checked on original VietstockFinance B02/B03/B04 pages, and pass the full formula audit. The direct VietstockFinance doctype=1 catalog for VCB contains no consolidated Q3/2026 BCTC record/PDF (Q1, Q2 and reviewed H1 are present); do not import secondary-source numbers. Recheck the direct catalog when a Q3 document becomes available.",
-        "lastUpdatedAt": "2026-11-01T06:00:00Z",
+        "remaining": "All ten stored VCB quarters are closed for currently available source periods. One future source-availability watch remains: direct VietstockFinance catalog has not published/returned a consolidated Q3/2026 document ID/PDF as of 2026-11-01. Recheck the catalog when newly published; do not import secondary-source data.",
+        "lastUpdatedAt": "2026-11-01T06:10:00Z",
         "q2DeepAudit": {
           "checkedAt": "2026-10-31T15:28:14.085Z",
           "periods": [
@@ -340,7 +326,7 @@
             "visualReview": "pending"
           }
         },
-        "visualReviewPending": true,
+        "visualReviewPending": false,
         "snapshotBlobSha": "0b7779594794476b958bb0abd18f513ee964d60b",
         "q4_2025Finding": {
           "field": "bank_investment_securities_net",
@@ -500,8 +486,8 @@
         }
       },
       "uiCoverageReview": {
-        "status": "coverage_audit_complete_pending_visual_pdf_review",
-        "updatedAt": "2026-11-01T06:00:00Z",
+        "status": "complete_for_available_primary_statements",
+        "updatedAt": "2026-11-01T06:10:00Z",
         "snapshotFetchedAt": "2026-10-24T06:15:00Z",
         "snapshotSha": "0b7779594794476b958bb0abd18f513ee964d60b",
         "sourceTextReconciliationStatus": "complete_10_of_10_zero_arithmetic_deltas",
@@ -893,7 +879,8 @@
           "noQ3Record": "The direct VCB doctype=1 API response contained no consolidated Q3/2026 BCTC record or linked PDF. Records for Q1/Q2 and 6M only were identified among its financial statements.",
           "secondarySourcePolicy": "Do not import Q3 values from 24HMoney/Vietcap or any source outside the direct VietstockFinance catalog.",
           "reviewedAt": "2026-11-01"
-        }
+        },
+        "sourceReconciliationPendingVisualReview": false
       },
       "snapshotSha": "de81130194d8d0da5e1f909d7fae1251a531ad57",
       "sourceReconciliation20261101": {
@@ -958,20 +945,10 @@
         },
         "executionResult": {
           "status": "PASS",
-          "validatorWorkflowRun": "https://github.com/kiemtimem123/so-lieu/actions/runs/41227083864",
-          "validatorWorkflowRunId": "41227083864",
-          "bankRegressionStep": "Run bank statement reconciliation regression checks — success",
-          "siteWorkflowRun": "https://github.com/kiemtimem123/so-lieu/actions/runs/41227083853",
-          "siteWorkflowRunId": "41227083853",
-          "siteChecks": [
-            "Test cash-flow bridge reconciliation — success",
-            "Test financial table source allow-list — success",
-            "Check JavaScript syntax — success",
-            "Validate JSON snapshots — success"
-          ],
-          "sharedHelperScopeFixCommit": "2c9b357b157397ecd61dac5035b7748c53816ddc",
-          "latestMetadataCheckpointRun": "https://github.com/kiemtimem123/so-lieu/actions/runs/41227122396",
-          "executedAt": "2026-11-01"
+          "quarterlyWorkflowRun": "https://github.com/kiemtimem123/so-lieu/actions/runs/41229141959",
+          "siteWorkflowRun": "https://github.com/kiemtimem123/so-lieu/actions/runs/41229142059",
+          "packageWorkflowRun": "https://github.com/kiemtimem123/so-lieu/actions/runs/41229142016",
+          "testedCommit": "998dd71b491c3f8fc35d6f155d81ec582ecb2e51"
         }
       },
       "numericAudit20261101": {
@@ -2444,6 +2421,18 @@
       "numericAuditMaxAbsoluteDifference": 0,
       "visualPrimaryStatementsReviewed": 10,
       "q32026CatalogStatus": "not_found_direct_vietstockfinance_catalog"
+    },
+    {
+      "symbol": "VCB",
+      "status": "automated_processing_complete",
+      "completeForAutomation": true,
+      "manualReviewRemaining": true,
+      "processedAt": "2026-11-01T06:10:00Z",
+      "snapshotBlobSha": "0b7779594794476b958bb0abd18f513ee964d60b",
+      "numericAuditMaxAbsoluteDifference": 0,
+      "primaryStatementVisualPeriods": 10,
+      "ci": "PASS",
+      "nextSymbol": "SHS"
     }
   ],
   "currentRun": {
