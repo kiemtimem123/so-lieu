@@ -10,27 +10,28 @@ assert.ok(app.includes("non_controlling_interest_profit"));
 
 assert.ok(app.includes("key === 'non_controlling_interest_profit'"));
 assert.ok(app.includes("/hợp nhất|consolidated/i.test(String(item.report_type || ''))"));
-assert.ok(app.includes("num('net_profit') - num('net_profit_attributable')"));
+assert.ok(app.includes("nciCheck === 0 || rawNciMatches"));
+assert.ok(app.includes("item.income_statement_source_raw_vnd?.nci_profit"));
 
-const deriveNci = (netProfit, parentProfit, consolidated) =>
-  consolidated && Number.isFinite(netProfit) && Number.isFinite(parentProfit)
-    ? netProfit - parentProfit
-    : null;
-// IDC source-backed NCI rows, using same-period consolidated figures.
-assert.equal(deriveNci(175208, 147786, true), 27422);
-assert.equal(deriveNci(574345, 511014, true), 63331);
-assert.equal(deriveNci(415964, 297573, true), 118391);
-assert.equal(deriveNci(1001241, 880406, true), 120835);
-// GAS source rows where no separate top-level/alias NCI value is present.
-assert.ok(Math.abs(deriveNci(2052338.999441, 2044102.438055, true) - 8236.561386) < 1e-9);
-assert.equal(deriveNci(2543605, 2511656, true), 31949);
-assert.equal(deriveNci(3416067, 3320817, true), 95250);
-// PLX consolidated reports also carry same-period net and parent-attributable profit.
-assert.equal(deriveNci(130485, 65874, true), 64611);
-assert.equal(deriveNci(612081, 254, true), 611827);
-assert.equal(deriveNci(-662477, -762974, true), 100497);
-assert.equal(deriveNci(175208, 147786, false), null);
-assert.equal(deriveNci(null, 147786, true), null);
+const deriveNci = (netProfit, parentProfit, consolidated, sourceCheck, rawNciVnd) => {
+  if (!consolidated || !Number.isFinite(netProfit) || !Number.isFinite(parentProfit)) return null;
+  const difference = netProfit - parentProfit;
+  const rawNciMillion = Number.isFinite(rawNciVnd) ? rawNciVnd / 1_000_000 : null;
+  const rawMatches = rawNciMillion !== null &&
+    Math.abs(difference - rawNciMillion) <= Math.max(0.000001, Math.abs(rawNciMillion) * 0.0001);
+  return sourceCheck === 0 || rawMatches ? difference : null;
+};
+// IDC: source check or independently matching raw NCI line confirms the same-period bridge.
+assert.equal(deriveNci(175208, 147786, true, 0, 27421352041), 27422);
+assert.equal(deriveNci(574345, 511014, true, undefined, 63331304360), 63331);
+assert.equal(deriveNci(415964, 297573, true, 0, 118390806095), 118391);
+assert.equal(deriveNci(1001241, 880406, true, 0, 120834657407), 120835);
+// Do not expose a residual where the source bridge/raw NCI has not been verified.
+assert.equal(deriveNci(2052338.999441, 2044102.438055, true), null); // GAS no raw NCI/check for this quarter
+assert.equal(deriveNci(612081, 254, true), null); // PLX has no independent NCI reconciliation
+assert.equal(deriveNci(770051, 263, true), null); // KDH OCR parent-profit candidate is not reconciled
+assert.equal(deriveNci(175208, 147786, false, 0), null);
+assert.equal(deriveNci(null, 147786, true, 0), null);
 
 const allowed = (key, detail, core, rejected) =>
   (detail.has(key) || core.has(key)) && !rejected.has(key);
