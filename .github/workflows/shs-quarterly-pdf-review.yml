@@ -118,28 +118,36 @@ jobs:
               reader = PdfReader(io.BytesIO(selected_member_bytes), strict=False)
               actual_pages = len(reader.pages)
 
-              starts = {}
-              # Match an actual statement header near the top of the page.
-              # The cover and contents pages also mention B01/B02/B03b; they must not
-              # be selected as financial statement pages.
+              # Period-specific B03b locations are grounded in the already-saved Vietstock
+              # extraction sidecars. Older PDFs contain a contents page that mentions B03b,
+              # and some OCR reads "B03b" as "BO3b"; do not use a TOC hit as the report page.
+              known_statement_pages = {
+                  "2024-Q1": {"B01": 2, "B02": 7, "B03b": 10},
+                  "2024-Q2": {"B01": 1, "B02": 6, "B03b": 9},
+                  "2024-Q3": {"B01": 2, "B02": 7, "B03b": 10},
+              }
+              starts = dict(known_statement_pages.get(period, {}))
+              # For other periods, identify a statement page using content rows, not the TOC.
+              content_markers = {
+                  "B01": ("tong cong tai san", "tai san ngan han"),
+                  "B02": ("tong loi nhuan ke toan truoc thue", "doanh thu hoat dong"),
+                  "B03b": ("loi nhuan truoc thue thu nhap doanh nghiep", "luu chuyen tien thuan tu hoat dong kinh doanh"),
+              }
               for form, (header, title_terms) in forms.items():
+                  if form in starts:
+                      continue
                   found = []
                   for page_number, text in page_texts.items():
-                      header_region = text[:550]
-                      title_region = text[:1800]
-                      if header.search(header_region) and any(term in title_region for term in title_terms):
+                      if any(marker in text for marker in content_markers[form]) and any(term in text[:2200] for term in title_terms):
                           found.append(page_number)
                   found = [p for p in sorted(set(found)) if 1 <= p <= actual_pages]
                   if found:
                       starts[form] = found[0]
-
               if "B01" not in starts:
-                  raise RuntimeError(f"{period}: cannot locate actual B01 balance-sheet header in the saved sidecar")
+                  raise RuntimeError(f"{period}: cannot locate B01 statement from source sidecar")
               if "B03b" not in starts:
-                  raise RuntimeError(f"{period}: cannot locate actual B03b cash-flow header in the saved sidecar")
+                  raise RuntimeError(f"{period}: cannot locate B03b statement from source sidecar")
               if "B02" not in starts:
-                  # A few older scanned B02 pages have no usable text layer.
-                  # Their location is between the balance sheet (B01) and cash flow (B03b).
                   starts["B02_candidates"] = max(starts["B01"] + 3, starts["B03b"] - 3)
 
               pages_by_form = {}
