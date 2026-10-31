@@ -83,12 +83,29 @@ jobs:
                   raise RuntimeError(f"{period}: saved archive is not an available PDF: {archive_rel}")
 
               reader = PdfReader(str(pdf_path), strict=False)
+              # Prefer the already-saved extraction sidecar for locating statement pages.
+              # The sidecar records the exact source page indices even where the PDF text
+              # layer has encoding quirks; it is not used to re-extract or alter any values.
+              sidecar_path = Path(str(pdf_path) + ".extracted.json")
+              sidecar_page_text = {}
+              if sidecar_path.is_file():
+                  sidecar = json.loads(sidecar_path.read_text(encoding="utf-8"))
+                  for row in sidecar.get("pages", []):
+                      try:
+                          page_number = int(row.get("page"))
+                      except (TypeError, ValueError):
+                          continue
+                      sidecar_page_text[page_number] = norm(row.get("text") or "")
+
               page_texts = []
-              for page in reader.pages:
-                  try:
-                      page_texts.append(norm(page.extract_text() or ""))
-                  except Exception:
-                      page_texts.append("")
+              for page_number, page in enumerate(reader.pages, start=1):
+                  text = sidecar_page_text.get(page_number, "")
+                  if not text:
+                      try:
+                          text = norm(page.extract_text() or "")
+                      except Exception:
+                          text = ""
+                  page_texts.append(text)
 
               chosen = {}
               for form, pattern in form_patterns.items():
