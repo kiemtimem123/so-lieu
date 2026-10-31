@@ -59,3 +59,5 @@ Ghi chú này là lối tắt tiếp nối, không thay thế checkpoint sống.
 - NCI remains source-backed only where an accepted field exists (Q1/2024 value 0); do not backfill other periods. ROA/ROE remain only Q2/2024 and Q4/2024; rejected Q1/2025 and Q4/2025 ratios stay hidden.
 - **Next UI coverage ticker: VCB.** Read only the VCB snapshot, one ticker at a time. Preserve all existing holds and do not run OCR/enrich.
 - Latest STB checkpoint commit: [`9df950a1f379889ed573496feba2d84afe465ee2`](https://github.com/kiemtimem123/so-lieu/commit/9df950a1f379889ed573496feba2d84afe465ee2).
+
+- Cache busting: `index.html` now loads `assets/app.js?v=financial-line-items-20261031-v23` (was v22) so the rejected-field sanitizer is not masked by the browser cache. Commit: [`1e0a0875ea93c0097def824f0d554199a7d60b98`](https://github.com/kiemtimem123/so-lieu/commit/1e0a0875ea93c0097def824f0d554199a7d60b98).
