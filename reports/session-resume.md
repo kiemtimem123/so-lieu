@@ -46,3 +46,16 @@ Ghi chú này là lối tắt tiếp nối, không thay thế checkpoint sống.
 - Latest validation for the VCK closure: [Validate Site and Data #971](https://github.com/kiemtimem123/so-lieu/actions/runs/40265424833) passed on the closure commit. The previous financial-data validation also passed: [#416](https://github.com/kiemtimem123/so-lieu/actions/runs/40235360954).
 - The most recent OCR run checked was [#1614](https://github.com/kiemtimem123/so-lieu/actions/runs/40253954933), which succeeded and skipped processing because the current configured queue was already complete. Independent market/economic data sync failures are not VCK financial-report failures.
 - On continuation, read only this note and `reports/processing-checkpoint.json`; load a ticker snapshot only if a new quarter is added or a validator identifies a concrete issue. Never make unverified VCK numbers visible or manufacture missing values.
+
+
+## 2026-10-31 STB financial-table coverage checkpoint
+
+- STB was reviewed from `data/financials-STB.json` only (10 quarters, 2024-Q1 through 2026-Q2). No OCR/enrich was run and no snapshot values were changed.
+- Effective coverage after applying the current `rowsFor` allow-list and rejected-field rules: CĐKT 88/340; KQKD 70/220; LCTT 70/90; ROA/ROE 4/20. Use the banking-specific row keys in `assets/app.js`.
+- Found and fixed a renderer issue: rows with `auto_extracted_pending_visual_review` could bypass rejected-field sanitization, allowing numeric OCR candidates listed in `financial_line_items_rejected_fields` to remain visible. The fast path now blanks rejected numeric metrics for every status; rejected keys also block direct values, aliases, and formula inputs in `resolveStatementValue`.
+- Regression tests in `tests/test_financial_table_allowlist.mjs` use the STB snapshot fixture to verify rejected values at 2024-Q3, 2025-Q1 and 2025-Q4 are hidden while approved unrelated fields remain and the source snapshot is unchanged.
+- Validation passed: [Validate Site and Data #41193103186](https://github.com/kiemtimem123/so-lieu/actions/runs/41193103186). Hostinger package passed: [#41193089231](https://github.com/kiemtimem123/so-lieu/actions/runs/41193089231). Packaging is not confirmation of live deployment.
+- Cashflow holds and source anomalies remain unchanged: H1/2024 reclassification above 0.01%; Q3/2024 FX bridge residual ~2,000 million VND but less than 0.01% of closing cash; H1/2026 component-sum mismatch above 0.01%. Manual review remains for 2025-Q2, 2025-Q3 and 2026-Q2. No balancing plug.
+- NCI remains source-backed only where an accepted field exists (Q1/2024 value 0); do not backfill other periods. ROA/ROE remain only Q2/2024 and Q4/2024; rejected Q1/2025 and Q4/2025 ratios stay hidden.
+- **Next UI coverage ticker: VCB.** Read only the VCB snapshot, one ticker at a time. Preserve all existing holds and do not run OCR/enrich.
+- Latest STB checkpoint commit: [`9df950a1f379889ed573496feba2d84afe465ee2`](https://github.com/kiemtimem123/so-lieu/commit/9df950a1f379889ed573496feba2d84afe465ee2).
