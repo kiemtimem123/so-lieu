@@ -175,3 +175,9 @@ Ghi chú này là lối tắt tiếp nối, không thay thế checkpoint sống.
 - The Note 35 visual table confirms 31/12/2024 cash equivalents 430,614,185 = cash 14,268,064 + NHNN deposits 49,340,493 + TCTD deposits/loans up to 3 months 367,005,628.
 - This is partial visual confirmation of the audited annual report only, not completion of visual review for all ten quarterly PDFs. Leave VCB in manual review.
 - Current snapshot blob SHA: `d126e7771e6b9bdb5dabb4523215439c19aa3368`.
+
+
+## 2026-11-01 Shared test regression isolated and fixed
+
+- CI exposed that changing the shared `cash_bridge_delta` helper to YTD basis broke 45 cross-ticker tests. Corrected the scope in commit `2c9b357b157397ecd61dac5035b7748c53816ddc`: restored generic `cash_bridge_delta` standalone-period semantics and introduced `bank_cash_bridge_delta` for bank B04 YTD opening/closing balances only. Bank audit and VCB Q4 regression now use the bank-specific helper.
+- Both `Validate quarterly financial data` and `Validate Site and Data` workflows were in progress on commit `2c9b357b157397ecd61dac5035b7748c53816ddc` at checkpoint time. Do not claim CI passed until both complete.
