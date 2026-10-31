@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-31T09:58:00+07:00",
+  "updatedAt": "2026-10-31T11:15:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -41,24 +41,23 @@
   ],
   "lastCompletedSymbol": "GEG",
   "activeSymbol": null,
-  "resumeSymbolHint": "GEG",
+  "resumeSymbolHint": "KBC",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
-    "symbol": "UI",
-    "status": "financial_report_table_display_in_progress",
-    "completeForAutomation": false,
+    "symbol": "IDC",
+    "status": "core_and_income_statement_source_text_reconciled",
+    "completeForAutomation": true,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-31T09:24:00+07:00",
+    "processedAt": "2026-10-31T11:15:00+07:00",
     "workflowRunId": "41088586086",
     "workflowRunNumber": 3035,
     "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/41088586086",
     "changedPaths": [
-      "assets/app.js",
-      "reports/processing-checkpoint.json"
+      "data/financials-IDC.json"
     ],
-    "periodCount": 11,
+    "periodCount": 10,
     "firstQuarter": "2024-Q1",
-    "lastQuarter": "2026-Q3",
+    "lastQuarter": "2026-Q2",
     "pendingCorePeriods": [],
     "terminalManualReviewPeriods": [],
     "pendingDetailPeriods": [],
@@ -66,8 +65,8 @@
     "statementPagesPending": false,
     "skipUnconfirmedAutomation": false,
     "skipUnconfirmedReason": null,
-    "nextSymbol": "GEG",
-    "nextTask": "industry_table_coverage_audit"
+    "nextSymbol": "KBC",
+    "nextTask": "financial_report_table_display"
   },
   "symbolStates": {
     "MBB": {
@@ -703,7 +702,7 @@
       "manualReviewReason": "OCR workflow #3023 đã chạy nhưng kiểm định snapshot tạm thời báo thiếu pretax_profit/net_profit tại PLX 2025-Q2. Bản snapshot đã commit vẫn giữ hai số 1,637,976 và 1,368,319 triệu VND; không có bằng chứng cho phép ghi đè. Các ngoại lệ dòng tiền PLX đã được ghi nhận riêng (Q1/2025, Q1/2026 lệch số dư đầu kỳ >0.01%, Q2/2026 OCR không đọc được). Tạm dừng tự động, giữ nguyên dữ liệu và chuyển các điểm này sang rà soát PDF thủ công."
     },
     "IDC": {
-      "status": "automated_processing_complete",
+      "status": "terminal_needs_manual_review",
       "completeForAutomation": true,
       "manualReviewRemaining": true,
       "periodCount": 10,
@@ -717,8 +716,68 @@
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-10-30T16:17:33Z",
-      "snapshotFetchedAt": "2026-10-25T23:45:00Z"
+      "updatedAt": "2026-10-31T11:15:00+07:00",
+      "snapshotFetchedAt": "2026-10-25T23:45:00Z",
+      "sourceReconciledPeriods": [
+        "2024-Q1",
+        "2024-Q2",
+        "2024-Q3",
+        "2024-Q4",
+        "2025-Q1",
+        "2025-Q2",
+        "2025-Q3",
+        "2025-Q4",
+        "2026-Q1",
+        "2026-Q2"
+      ],
+      "detailSourceReconciledPeriods": [
+        "2024-Q1",
+        "2024-Q2",
+        "2024-Q3",
+        "2024-Q4",
+        "2025-Q1",
+        "2025-Q2",
+        "2025-Q3",
+        "2025-Q4",
+        "2026-Q1",
+        "2026-Q2"
+      ],
+      "lastSourceReconciliation": {
+        "periodRange": "2024-Q1 through 2026-Q2",
+        "status": "core_and_income_statement_source_text_reconciled_pending_visual_review",
+        "correctionCommits": [
+          "0eab5cd6f7d3763bc68ab84213e5bfd6e4d5acfa",
+          "25229b0086defc1136156b8b5c4a04100191694b",
+          "1e09afcef938b56009ebe11751b48c6212932ac0",
+          "c2c0ab6346ebe831bf371d3ad80726138c00f396",
+          "8d277ab82e027160aeb8189843f12c24a6ebd4d2"
+        ],
+        "findings": [
+          "Khôi phục các chỉ tiêu lõi CĐKT và KQKD còn thiếu cho đủ 10 kỳ từ Q1/2024 đến Q2/2026 bằng BCTC hợp nhất VietstockFinance.",
+          "Q1/2024: sửa nhầm cột so sánh Q1/2023, thay bằng cột quý hiện tại; tổng tài sản/nợ/vốn và các cầu nối lợi nhuận khớp.",
+          "Q2/2024: khôi phục chi tiết CĐKT/KQKD; giữ lịch sử điều chỉnh cơ sở dòng tiền so sánh.",
+          "Q3-Q4/2024 và Q1-Q4/2025, Q1-Q2/2026: khôi phục các dòng tài sản, nợ, vốn, doanh thu, giá vốn, lợi nhuận gộp, thu nhập/chi phí tài chính, thuế, lợi nhuận mẹ và NCI theo từng quý.",
+          "Q2/2025 cầu nối thuế lệch 100 triệu VND (~0,024% LNST), vượt ngưỡng 0,01%; giữ cờ rà soát, không ép số.",
+          "Q4/2025 chi phí lãi vay OCR không khớp tổng chi phí tài chính; trường này vẫn bị loại khỏi hiển thị.",
+          "Q2/2026 giữ nguyên ngoại lệ cầu nối tiền và cơ sở tiền đầu kỳ; không thay đổi dòng tiền đã được rà soát trước."
+        ],
+        "remaining": "Cần kiểm tra trực quan ảnh PDF; một số chi tiết dòng tiền/các khoản ngắn hạn Q1/2026 chưa đủ rõ nên vẫn để trống. Không có kỳ lõi hoặc kỳ KQKD nào còn chờ trích xuất."
+      },
+      "lastDetailSourceReconciliation": {
+        "periodRange": "2024-Q1 through 2026-Q2",
+        "status": "balance_income_source_text_reconciled_pending_visual_review",
+        "correctionCommits": [
+          "0eab5cd6f7d3763bc68ab84213e5bfd6e4d5acfa",
+          "25229b0086defc1136156b8b5c4a04100191694b",
+          "c2c0ab6346ebe831bf371d3ad80726138c00f396"
+        ],
+        "findings": [
+          "Các trường CĐKT/KQKD đã được đưa vào allow-list extracted fields để bảng biểu chỉ hiện giá trị có căn cứ nguồn.",
+          "Dấu thuế hoãn lại được chuẩn hóa theo quy ước chi phí: dương là chi phí, âm là thu nhập; cầu nối LNST khớp ngoại trừ Q2/2025 lệch 100 triệu VND.",
+          "Các dòng dòng tiền còn thiếu capex/cổ tức ở một số kỳ vẫn để trống nếu chưa đủ nguồn xác nhận; không tự suy diễn."
+        ],
+        "remaining": "Chờ rà soát ảnh PDF và bổ sung dòng tiền thiếu khi nguồn rõ."
+      }
     },
     "KBC": {
       "status": "automated_processing_complete",
@@ -2480,14 +2539,14 @@
     "note": "Gói Hostinger đã build thành công; chưa có thao tác triển khai trực tiếp lên hosting."
   },
   "lastUiWorkCheckpoint": {
-    "processedAt": "2026-10-31T09:58:00+07:00",
-    "commit": "e3b42df914f8284a46067bacf671e9278f8331ce",
+    "processedAt": "2026-10-31T11:15:00+07:00",
+    "commit": "0eab5cd6f7d3763bc68ab84213e5bfd6e4d5acfa",
     "changedPaths": [
       "data/financials-GEG.json",
       "assets/app.js"
     ],
     "task": "financial_report_table_display",
-    "status": "GEG_balance_sheet_mapping_corrected_and_details_restored",
+    "status": "IDC_core_income_statement_fields_reconciled",
     "findings": [
       "GAS OCR queue completed; 10/10 periods source-text reviewed. Remaining visual/manual exceptions are retained and not fabricated.",
       "Fixed quarterly cash-flow table mode: explicitly extracted YTD values can display as Q1 flow or be differenced against the previous quarter's accepted YTD/quarterly baseline, even when the row has a general manual-review badge.",
@@ -2497,8 +2556,9 @@
       "Validate Site and Data completed successfully after the change.",
       "GEG: restored quarterly cost of goods sold and gross profit for Q2/2024–Q2/2026 (9 periods) from VietstockFinance consolidated income statements; Q1/2024 gross profit remains derivable from source-approved revenue and COGS.",
       "GEG gross profit source bridge rechecked using exact raw VND revenue, COGS and gross-profit values: eight periods exact, Q4/2025 residual -600,000 VND (0.0002%).",
-      "GEG balance-sheet source corrections: Q3/2024 liabilities/equity mapping fixed; Q2/2024 current-assets subtotal fixed; Q4/2025 non-current-assets subtotal fixed. Core balance equations reconcile within <=0.01%."
+      "GEG balance-sheet source corrections: Q3/2024 liabilities/equity mapping fixed; Q2/2024 current-assets subtotal fixed; Q4/2025 non-current-assets subtotal fixed. Core balance equations reconcile within <=0.01%.",
+      "IDC: all 10 periods have source-text-reconciled core balance-sheet and income-statement rows; Q2/2025 tax bridge and Q2/2026 cashflow exceptions remain flagged; Q4/2025 interest expense stays blank."
     ],
-    "next": "Continue GEG coverage review; then next eligible ticker for table detail completion. Visual PDF confirmation remains pending."
+    "next": "Move to KBC for the next one-ticker statement coverage pass, then continue remaining eligible tickers without reloading completed source data."
   }
 }
