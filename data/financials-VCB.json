@@ -467,14 +467,16 @@
         "operating_cash_flow",
         "operating_cash_flow_ytd",
         "retained_earnings",
-        "revenue"
+        "revenue",
+        "cash_beginning",
+        "cash_ending"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-22T17:33:18+00:00",
       "financial_line_items_source": "reports/raw/VCB/auto-vcb-20261021/725730719cacd00b.pdf",
       "financial_line_items_updated_at": "2026-10-22T17:33:18+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Đính chính đối chiếu nguồn 2026-10-30: khôi phục thu nhập hoạt động và lợi nhuận phân bổ cổ đông; sửa cơ sở dòng tiền từ nhầm cột sang YTD 6 tháng, tách Q2 bằng phép trừ Q1 đã xác minh. Trạng thái vẫn chờ rà soát trực quan. Rà soát văn bản nguồn 2026-10-31: Đọc lại đúng trang B03 PDF 7–8 và B04 PDF 9–10 từ sidecar của PDF VietstockFinance đã lưu. B04 dùng lũy kế 6 tháng; dòng tiền riêng Q2 được tính bằng YTD Q2 trừ YTD Q1 đã xác nhận. Dấu ngoặc của chi phí dự phòng biểu thị khoản chi phí 1.513.541; trường chuẩn hóa lưu số dương để PPOP - provision = PBT. Chỉ xác minh văn bản/OCR; chưa rà soát ảnh PDF.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Đính chính đối chiếu nguồn 2026-10-30: khôi phục thu nhập hoạt động và lợi nhuận phân bổ cổ đông; sửa cơ sở dòng tiền từ nhầm cột sang YTD 6 tháng, tách Q2 bằng phép trừ Q1 đã xác minh. Trạng thái vẫn chờ rà soát trực quan. Rà soát văn bản nguồn 2026-10-31: Đọc lại đúng trang B03 PDF 7–8 và B04 PDF 9–10 từ sidecar của PDF VietstockFinance đã lưu. B04 dùng lũy kế 6 tháng; dòng tiền riêng Q2 được tính bằng YTD Q2 trừ YTD Q1 đã xác nhận. Dấu ngoặc của chi phí dự phòng biểu thị khoản chi phí 1.513.541; trường chuẩn hóa lưu số dương để PPOP - provision = PBT. Chỉ xác minh văn bản/OCR; chưa rà soát ảnh PDF. Đã gỡ 10 cờ từ chối dòng tiền vào 2026-11-01 sau khi đối chiếu lại B04 PDF VietstockFinance trang 9–10; các giá trị YTD và riêng Q2 đã cân bằng, cho phép hiển thị. Vẫn chờ kiểm tra trực quan toàn bộ PDF.",
       "operating_cash_flow_calculation": "Quý II riêng = B04 YTD 6 tháng trừ B04 Q1 đã đối chiếu.",
       "investing_cash_flow_calculation": "Quý II riêng = B04 YTD 6 tháng trừ B04 Q1 đã đối chiếu.",
       "financing_cash_flow_calculation": "BCTC Q1 và 6 tháng đều ghi dấu gạch ngang; quý II bằng 0.",
@@ -499,18 +501,7 @@
       "bank_net_service_income": 1498953,
       "bank_net_service_income_calculation": "Thu nhập dịch vụ - |chi phí dịch vụ| theo BCTC ngân hàng.",
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_rejected_fields": [
-        "cash_beginning",
-        "cash_ending",
-        "financing_cash_flow",
-        "financing_cash_flow_ytd",
-        "investing_cash_flow",
-        "investing_cash_flow_ytd",
-        "net_cash_change",
-        "net_cash_change_ytd",
-        "operating_cash_flow",
-        "operating_cash_flow_ytd"
-      ],
+      "financial_line_items_rejected_fields": [],
       "core_financial_extraction_evidence_fingerprint": "ed6a523516314538fa81e35c7d0e805fec9d32bace69bce5157d0454840bd2f3",
       "core_financial_extraction_evidence_attempt_count": 0,
       "average_total_assets": 1839676214.5,
@@ -703,7 +694,33 @@
         "note": "Đọc lại đúng trang B03 PDF 7–8 và B04 PDF 9–10 từ sidecar của PDF VietstockFinance đã lưu. B04 dùng lũy kế 6 tháng; dòng tiền riêng Q2 được tính bằng YTD Q2 trừ YTD Q1 đã xác nhận. Dấu ngoặc của chi phí dự phòng biểu thị khoản chi phí 1.513.541; trường chuẩn hóa lưu số dương để PPOP - provision = PBT. Chỉ xác minh văn bản/OCR; chưa rà soát ảnh PDF."
       },
       "cash_beginning": 372818730,
-      "cash_ending": 328887762
+      "cash_ending": 328887762,
+      "financial_line_items_rejected_values": {},
+      "cashflow_visibility_unblocked_20261101": {
+        "status": "source_reconciled_unblocked_pending_visual_pdf_review",
+        "sourceUrl": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%202/VCB_Baocaotaichinh_Q2_2024_Hopnhat.pdf",
+        "sourceIndexUrl": "https://finance.vietstock.vn/VCB/tai-tai-lieu.htm?doctype=1",
+        "sourcePages": "B04/TCTD-HN PDF pages 9–10",
+        "unblockedFields": [
+          "cash_beginning",
+          "cash_ending",
+          "operating_cash_flow",
+          "operating_cash_flow_ytd",
+          "investing_cash_flow",
+          "investing_cash_flow_ytd",
+          "financing_cash_flow",
+          "financing_cash_flow_ytd",
+          "net_cash_change",
+          "net_cash_change_ytd"
+        ],
+        "validation": {
+          "ytdFlowSum": 0,
+          "quarterFlowSum": 0,
+          "cashYtdBridge": 0
+        },
+        "reviewedAt": "2026-11-01",
+        "visualReview": "pending"
+      }
     },
     {
       "symbol": "VCB",
@@ -2030,14 +2047,16 @@
         "operating_cash_flow_ytd",
         "operating_profit",
         "retained_earnings",
-        "revenue"
+        "revenue",
+        "cash_beginning",
+        "cash_ending"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-22-bank-statement-qc-v4",
       "financial_line_items_schema_updated_at": "2026-10-22T17:43:12+00:00",
       "financial_line_items_source": "reports/raw/VCB/auto-vcb-20261021/789948b37004bdfc.pdf",
       "financial_line_items_updated_at": "2026-10-22T17:43:12+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Đính chính nguồn 2026-10-30: đối chiếu KQKD hợp nhất, bổ sung lợi nhuận phân bổ cổ đông/các cấu phần thu nhập còn thiếu, sửa dấu chi phí dự phòng sai và dòng tiền YTD/riêng quý. Vẫn chờ rà soát trực quan. Rà soát văn bản nguồn 2026-10-31: Đối chiếu sidecar của BCTC hợp nhất VietstockFinance: B03 PDF 7–8, B04 PDF 9–10. Các số B04 là YTD; dòng riêng Q2 = YTD Q2 trừ YTD Q1. CFO/CFI/CFF/net cash movement và tiền đầu/cuối kỳ đều khớp. Chỉ xác minh văn bản/OCR; chưa rà soát ảnh PDF.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Đính chính nguồn 2026-10-30: đối chiếu KQKD hợp nhất, bổ sung lợi nhuận phân bổ cổ đông/các cấu phần thu nhập còn thiếu, sửa dấu chi phí dự phòng sai và dòng tiền YTD/riêng quý. Vẫn chờ rà soát trực quan. Rà soát văn bản nguồn 2026-10-31: Đối chiếu sidecar của BCTC hợp nhất VietstockFinance: B03 PDF 7–8, B04 PDF 9–10. Các số B04 là YTD; dòng riêng Q2 = YTD Q2 trừ YTD Q1. CFO/CFI/CFF/net cash movement và tiền đầu/cuối kỳ đều khớp. Chỉ xác minh văn bản/OCR; chưa rà soát ảnh PDF. Đã gỡ 10 cờ từ chối dòng tiền vào 2026-11-01 sau khi đối chiếu lại B04 PDF VietstockFinance trang 9–10; các giá trị YTD và riêng Q2 đã cân bằng, cho phép hiển thị. Vẫn chờ kiểm tra trực quan toàn bộ PDF.",
       "operating_cash_flow_calculation": "Standalone quarter = current cumulative YTD minus prior cumulative YTD.",
       "investing_cash_flow_calculation": "Standalone quarter = current cumulative YTD minus prior cumulative YTD.",
       "financing_cash_flow_calculation": "B04 financing flow; report dash is recorded as 0, except Q4 reported non-zero financing flow.",
@@ -2135,18 +2154,7 @@
       },
       "bank_provision_expense_calculation": "Lợi nhuận trước dự phòng - lợi nhuận trước thuế; chi phí dự phòng ghi dương như BCTC.",
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
-      "financial_line_items_rejected_fields": [
-        "cash_beginning",
-        "cash_ending",
-        "financing_cash_flow",
-        "financing_cash_flow_ytd",
-        "investing_cash_flow",
-        "investing_cash_flow_ytd",
-        "net_cash_change",
-        "net_cash_change_ytd",
-        "operating_cash_flow",
-        "operating_cash_flow_ytd"
-      ],
+      "financial_line_items_rejected_fields": [],
       "core_financial_extraction_evidence_fingerprint": "8eef0f74d08c783253962a69beff37578e8a1f89a0441e4cade9f1b0a0433d76",
       "core_financial_extraction_evidence_attempt_count": 0,
       "average_total_assets": 2163600857,
@@ -2250,7 +2258,33 @@
         "note": "Đối chiếu sidecar của BCTC hợp nhất VietstockFinance: B03 PDF 7–8, B04 PDF 9–10. Các số B04 là YTD; dòng riêng Q2 = YTD Q2 trừ YTD Q1. CFO/CFI/CFF/net cash movement và tiền đầu/cuối kỳ đều khớp. Chỉ xác minh văn bản/OCR; chưa rà soát ảnh PDF."
       },
       "cash_beginning": 430614185,
-      "cash_ending": 454996790
+      "cash_ending": 454996790,
+      "financial_line_items_rejected_values": {},
+      "cashflow_visibility_unblocked_20261101": {
+        "status": "source_reconciled_unblocked_pending_visual_pdf_review",
+        "sourceUrl": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%202/VCB_Baocaotaichinh_Q2_2025_Hopnhat.pdf",
+        "sourceIndexUrl": "https://finance.vietstock.vn/VCB/tai-tai-lieu.htm?doctype=1",
+        "sourcePages": "B04/TCTD-HN PDF pages 9–10",
+        "unblockedFields": [
+          "cash_beginning",
+          "cash_ending",
+          "operating_cash_flow",
+          "operating_cash_flow_ytd",
+          "investing_cash_flow",
+          "investing_cash_flow_ytd",
+          "financing_cash_flow",
+          "financing_cash_flow_ytd",
+          "net_cash_change",
+          "net_cash_change_ytd"
+        ],
+        "validation": {
+          "ytdFlowSum": 0,
+          "quarterFlowSum": 0,
+          "cashYtdBridge": 0
+        },
+        "reviewedAt": "2026-11-01",
+        "visualReview": "pending"
+      }
     },
     {
       "symbol": "VCB",
