@@ -173,12 +173,15 @@
         "non_current_assets",
         "operating_cash_flow",
         "operating_cash_flow_ytd",
-        "retained_earnings"
+        "retained_earnings",
+        "revenue",
+        "income_tax_current",
+        "income_tax_deferred"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/6f6b826b3132547a.zip",
       "financial_line_items_updated_at": "2026-10-27T09:26:18+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã rà soát trực quan B02 gốc: khôi phục tổng doanh thu hoạt động dòng 20 = 564,565 triệu VND; thuế hiện hành 46,789, thuế hoãn lại 40,783 triệu VND. Không dùng dòng doanh thu thành phần thay tổng doanh thu.",
       "operating_cash_flow": -382576,
       "operating_cash_flow_calculation": "Q1 equals YTD from source line 60",
       "foreign_exchange_effect_ytd": 0,
@@ -191,12 +194,7 @@
         "retained_earnings": 1738086,
         "foreign_exchange_effect_ytd": 1320000
       },
-      "financial_line_items_rejected_values": {
-        "revenue": {
-          "prior_value": null,
-          "reason": "Trường doanh thu chưa có; bổ sung theo phép trừ doanh thu lũy kế H1 trừ doanh thu riêng Q2 trên cùng B02-CTCK."
-        }
-      },
+      "financial_line_items_rejected_values": {},
       "income_tax": 87572,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
       "broker_fvtpl_assets": 5332952,
@@ -219,7 +217,7 @@
       "cash_beginning": 851889,
       "investing_cash_flow": -650,
       "investing_cash_flow_calculation": "Q1 equals YTD from source line 70",
-      "revenue": null,
+      "revenue": 564565,
       "core_financial_extracted_fields": [
         "revenue"
       ],
@@ -463,7 +461,52 @@
         "source_reclassification_review": null,
         "note": null
       },
-      "financial_line_items_rejected_fields": []
+      "financial_line_items_rejected_fields": [],
+      "income_tax_current": 46789,
+      "income_tax_deferred": 40783,
+      "revenue_source_reconciliation_20261101": {
+        "status": "source_visually_verified",
+        "sourceStatement": "B02-CTCK",
+        "sourceUrl": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2024.zip",
+        "sourceArchive": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/6f6b826b3132547a.zip",
+        "sourcePdfPage": 7,
+        "sourceRow": "20 — Cộng doanh thu hoạt động",
+        "sourceValueVND": 564564801064,
+        "valueMillionVND": 564565,
+        "previousValue": null,
+        "selection": "Current-period, current-year column; not a component revenue row or comparative column.",
+        "checkedAt": "2026-11-01"
+      },
+      "income_tax_detail_source_reconciliation_20261101": {
+        "status": "source_visually_verified",
+        "sourceStatement": "B02-CTCK",
+        "sourceUrl": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2024.zip",
+        "sourceArchive": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/6f6b826b3132547a.zip",
+        "sourcePdfPage": 9,
+        "sourceRows": {
+          "currentTax": {
+            "row": "100.1 — Chi phí thuế TNDN hiện hành",
+            "valueVND": 46789464788,
+            "valueMillionVND": 46789
+          },
+          "deferredTax": {
+            "row": "100.2 — Chi phí thuế TNDN hoãn lại",
+            "valueVND": 40782689190,
+            "valueMillionVND": 40783
+          },
+          "totalTax": {
+            "row": "100 — Chi phí thuế TNDN",
+            "valueVND": 87572153978,
+            "valueMillionVND": 87572
+          }
+        },
+        "existingIncomeTaxTotalMillionVND": 87572,
+        "roundedComponentSumMillionVND": 87572,
+        "reconciliationDifferenceMillionVND": 0,
+        "relativeDifferencePercent": 0,
+        "signPolicy": "Preserve the report sign, including tax benefits/negative deferred tax.",
+        "checkedAt": "2026-11-01"
+      }
     },
     {
       "symbol": "SHS",
@@ -607,7 +650,7 @@
       },
       "cash_and_equivalents": 1637337,
       "fixed_assets": 11265,
-      "revenue": 2636,
+      "revenue": 599421,
       "operating_cash_flow_ytd": 785602,
       "cash_ending": 1637337,
       "cashflow_period_basis": "year_to_date",
@@ -658,12 +701,14 @@
         "financing_cash_flow",
         "financing_cash_flow_ytd",
         "net_cash_change",
-        "net_cash_change_ytd"
+        "net_cash_change_ytd",
+        "income_tax_current",
+        "income_tax_deferred"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/ea899ceb74febb51.zip",
       "financial_line_items_updated_at": "2026-10-27T09:26:18+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã khôi phục đầy đủ dòng tiền công ty từ B03b-CTCK; loại trừ phần lưu chuyển tiền môi giới/ủy thác của khách hàng.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã khôi phục đầy đủ dòng tiền công ty từ B03b-CTCK; loại trừ phần lưu chuyển tiền môi giới/ủy thác của khách hàng. Đã rà soát trực quan B02 gốc: khôi phục tổng doanh thu hoạt động dòng 20 = 599,421 triệu VND; thuế hiện hành 70,596, thuế hoãn lại 10,098 triệu VND. Không dùng dòng doanh thu thành phần thay tổng doanh thu.",
       "operating_cash_flow": 1168178,
       "operating_cash_flow_calculation": "H1/2024 YTD B03b line 60 minus Q1/2024 YTD line 60; rounded at the source-to-million-VND convention.",
       "foreign_exchange_effect_ytd": 0,
@@ -678,12 +723,7 @@
         "broker_interest_expense": 13457,
         "foreign_exchange_effect_ytd": 971739
       },
-      "financial_line_items_rejected_values": {
-        "revenue": {
-          "prior_value": 2636,
-          "reason": "Giá trị cũ 2.636 triệu khớp dòng doanh thu hoạt động tư vấn tài chính, không phải tổng doanh thu hoạt động B02-CTCK."
-        }
-      },
+      "financial_line_items_rejected_values": {},
       "income_tax": 80694,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
       "broker_fvtpl_assets": 5041819,
@@ -696,10 +736,7 @@
       "financial_line_items_schema_version": "2026-10-27-bank-split-column-and-cashflow-statement-v9",
       "financial_line_items_schema_updated_at": "2026-10-27T09:25:55+00:00",
       "financial_line_items_rejected_fields": [
-        "current_assets_current_assets_too_small",
-        "income_tax_current_tax_reconciliation_check",
-        "income_tax_deferred_tax_reconciliation_check",
-        "income_tax_tax_reconciliation_check"
+        "current_assets_current_assets_too_small"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-27T07:53:48+00:00",
       "broker_total_operating_revenue": 599421,
@@ -747,8 +784,8 @@
       "broker_financial_income": 672,
       "broker_financial_expense": 13457,
       "broker_interest_expense": 0,
-      "income_tax_current": null,
-      "income_tax_deferred": null,
+      "income_tax_current": 70596,
+      "income_tax_deferred": 10098,
       "verification_status_note": "Doanh thu tổng hợp được đối chiếu với dòng “Cộng doanh thu hoạt động” trên B02-CTCK; vẫn cần kiểm tra trực quan PDF.",
       "financial_line_items_value_corrections": {
         "income_tax": {
@@ -974,6 +1011,49 @@
         "quarter_flow_components_relative_difference_percent": 0,
         "quarter_cash_bridge_residual_million_vnd": -1,
         "quarter_cash_bridge_relative_difference_percent": 0.00006107474449380641
+      },
+      "revenue_source_reconciliation_20261101": {
+        "status": "source_visually_verified",
+        "sourceStatement": "B02-CTCK",
+        "sourceUrl": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2024.zip",
+        "sourceArchive": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/ea899ceb74febb51.zip",
+        "sourcePdfPage": 6,
+        "sourceRow": "20 — Cộng doanh thu hoạt động",
+        "sourceValueVND": 599420756149,
+        "valueMillionVND": 599421,
+        "previousValue": 2636,
+        "selection": "Current-period, current-year column; not a component revenue row or comparative column.",
+        "checkedAt": "2026-11-01"
+      },
+      "income_tax_detail_source_reconciliation_20261101": {
+        "status": "source_visually_verified",
+        "sourceStatement": "B02-CTCK",
+        "sourceUrl": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2024.zip",
+        "sourceArchive": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/ea899ceb74febb51.zip",
+        "sourcePdfPage": 8,
+        "sourceRows": {
+          "currentTax": {
+            "row": "100.1 — Chi phí thuế TNDN hiện hành",
+            "valueVND": 70596341775,
+            "valueMillionVND": 70596
+          },
+          "deferredTax": {
+            "row": "100.2 — Chi phí thuế TNDN hoãn lại",
+            "valueVND": 10098186085,
+            "valueMillionVND": 10098
+          },
+          "totalTax": {
+            "row": "100 — Chi phí thuế TNDN",
+            "valueVND": 80694527860,
+            "valueMillionVND": 80695
+          }
+        },
+        "existingIncomeTaxTotalMillionVND": 80694,
+        "roundedComponentSumMillionVND": 80694,
+        "reconciliationDifferenceMillionVND": 0,
+        "relativeDifferencePercent": 0,
+        "signPolicy": "Preserve the report sign, including tax benefits/negative deferred tax.",
+        "checkedAt": "2026-11-01"
       }
     },
     {
@@ -1149,12 +1229,15 @@
         "operating_cash_flow",
         "investing_cash_flow",
         "financing_cash_flow",
-        "net_cash_change"
+        "net_cash_change",
+        "revenue",
+        "income_tax_current",
+        "income_tax_deferred"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/e6d456f3b0aa85a5.zip",
       "financial_line_items_updated_at": "2026-10-27T09:26:18+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã khôi phục đầy đủ dòng tiền công ty từ B03b-CTCK; loại trừ phần lưu chuyển tiền môi giới/ủy thác của khách hàng.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã khôi phục đầy đủ dòng tiền công ty từ B03b-CTCK; loại trừ phần lưu chuyển tiền môi giới/ủy thác của khách hàng. Đã rà soát trực quan B02 gốc: khôi phục tổng doanh thu hoạt động dòng 20 = 276,104 triệu VND; thuế hiện hành 51,829, thuế hoãn lại -46,773 triệu VND. Không dùng dòng doanh thu thành phần thay tổng doanh thu.",
       "cash_beginning": 1637337,
       "cash_beginning_calculation": "Q3 standalone opening cash equals Q2/2024 B03b closing company cash.",
       "foreign_exchange_effect_ytd": 0,
@@ -1166,12 +1249,7 @@
         "broker_lending_assets": 38812,
         "foreign_exchange_effect_ytd": 989144
       },
-      "financial_line_items_rejected_values": {
-        "revenue": {
-          "prior_value": null,
-          "reason": "Trường doanh thu chưa có giá trị; bổ sung theo cột so sánh Quý III năm trước trên B02-CTCK trong BCTC Q3/2025 do VietstockFinance liên kết."
-        }
-      },
+      "financial_line_items_rejected_values": {},
       "income_tax": 5056,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
       "broker_fvtpl_assets": 0,
@@ -1200,7 +1278,7 @@
       "cash_ending": 440474,
       "operating_cash_flow": -1884292,
       "operating_cash_flow_calculation": "Q3/2024 standalone = nine-month YTD B03b line 60 minus H1/2024 YTD line 60.",
-      "revenue": null,
+      "revenue": 276104,
       "core_financial_extracted_fields": [
         "revenue"
       ],
@@ -1349,6 +1427,51 @@
         "quarter_flow_components_relative_difference_percent": 0,
         "quarter_cash_bridge_residual_million_vnd": 0,
         "quarter_cash_bridge_relative_difference_percent": 0
+      },
+      "income_tax_current": 51829,
+      "income_tax_deferred": -46773,
+      "revenue_source_reconciliation_20261101": {
+        "status": "source_visually_verified",
+        "sourceStatement": "B02-CTCK",
+        "sourceUrl": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2024.zip",
+        "sourceArchive": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/e6d456f3b0aa85a5.zip",
+        "sourcePdfPage": 7,
+        "sourceRow": "20 — Cộng doanh thu hoạt động",
+        "sourceValueVND": 276103690675,
+        "valueMillionVND": 276104,
+        "previousValue": null,
+        "selection": "Current-period, current-year column; not a component revenue row or comparative column.",
+        "checkedAt": "2026-11-01"
+      },
+      "income_tax_detail_source_reconciliation_20261101": {
+        "status": "source_visually_verified",
+        "sourceStatement": "B02-CTCK",
+        "sourceUrl": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2024.zip",
+        "sourceArchive": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/e6d456f3b0aa85a5.zip",
+        "sourcePdfPage": 9,
+        "sourceRows": {
+          "currentTax": {
+            "row": "100.1 — Chi phí thuế TNDN hiện hành",
+            "valueVND": 51828534413,
+            "valueMillionVND": 51829
+          },
+          "deferredTax": {
+            "row": "100.2 — Chi phí thuế TNDN hoãn lại",
+            "valueVND": -46772765463,
+            "valueMillionVND": -46773
+          },
+          "totalTax": {
+            "row": "100 — Chi phí thuế TNDN",
+            "valueVND": 5055768950,
+            "valueMillionVND": 5056
+          }
+        },
+        "existingIncomeTaxTotalMillionVND": 5056,
+        "roundedComponentSumMillionVND": 5056,
+        "reconciliationDifferenceMillionVND": 0,
+        "relativeDifferencePercent": 0,
+        "signPolicy": "Preserve the report sign, including tax benefits/negative deferred tax.",
+        "checkedAt": "2026-11-01"
       }
     },
     {
@@ -1524,7 +1647,7 @@
       "non_current_assets": 92617,
       "fixed_assets": 29872,
       "retained_earnings": 2373710,
-      "revenue": 35,
+      "revenue": 551216,
       "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
         "admin_expense",
@@ -1578,12 +1701,14 @@
         "operating_cash_flow",
         "operating_cash_flow_ytd",
         "retained_earnings",
-        "revenue"
+        "revenue",
+        "income_tax_current",
+        "income_tax_deferred"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/cc0a692f672abc5d.pdf",
       "financial_line_items_updated_at": "2026-10-27T07:53:54+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã ưu tiên B03b Q4/2024 gốc (trang PDF 13–14) sau rà soát trực quan; giữ chênh lệch với cột so sánh Q4/2025 trong metadata, không thay số nguồn gốc.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã ưu tiên B03b Q4/2024 gốc (trang PDF 13–14) sau rà soát trực quan; giữ chênh lệch với cột so sánh Q4/2025 trong metadata, không thay số nguồn gốc. Đã rà soát trực quan B02 gốc: khôi phục tổng doanh thu hoạt động dòng 20 = 551,216 triệu VND; thuế hiện hành 35,988, thuế hoãn lại 13,444 triệu VND. Không dùng dòng doanh thu thành phần thay tổng doanh thu.",
       "interest_expense": 0,
       "financial_line_items_prior_values": {
         "revenue": 35,
@@ -1593,12 +1718,7 @@
         "broker_brokerage_expense": 5154,
         "broker_interest_expense": 23633
       },
-      "financial_line_items_rejected_values": {
-        "revenue": {
-          "prior_value": 35,
-          "reason": "Giá trị cũ 35 triệu không khớp dòng cộng doanh thu hoạt động B02-CTCK."
-        }
-      },
+      "financial_line_items_rejected_values": {},
       "broker_fvtpl_assets": 8144360,
       "broker_lending_assets": 0,
       "broker_afs_assets": 612636,
@@ -1614,10 +1734,7 @@
       "financial_line_items_schema_version": "2026-10-27-bank-split-column-and-cashflow-statement-v9",
       "financial_line_items_schema_updated_at": "2026-10-27T09:26:03+00:00",
       "financial_line_items_rejected_fields": [
-        "current_assets_current_assets_too_small",
-        "income_tax_current_tax_reconciliation_check",
-        "income_tax_deferred_tax_reconciliation_check",
-        "income_tax_tax_reconciliation_check"
+        "current_assets_current_assets_too_small"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-24T04:20:08+00:00",
       "broker_total_operating_revenue": 551216,
@@ -1918,6 +2035,51 @@
         "source_candidates_pending_manual_review": [],
         "source_comparison_manual_review": false,
         "note": "Original Q4/2024 company cash-flow statement visually confirmed. Later FY2024 comparator differs in CFO/CFI/CFF while preserving the net change and cash balances; original-period values remain the selected source."
+      },
+      "income_tax_current": 35988,
+      "income_tax_deferred": 13444,
+      "revenue_source_reconciliation_20261101": {
+        "status": "source_visually_verified",
+        "sourceStatement": "B02-CTCK",
+        "sourceUrl": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2024.pdf",
+        "sourceArchive": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/cc0a692f672abc5d.pdf",
+        "sourcePdfPage": 10,
+        "sourceRow": "20 — Cộng doanh thu hoạt động",
+        "sourceValueVND": 551216301300,
+        "valueMillionVND": 551216,
+        "previousValue": 35,
+        "selection": "Current-period, current-year column; not a component revenue row or comparative column.",
+        "checkedAt": "2026-11-01"
+      },
+      "income_tax_detail_source_reconciliation_20261101": {
+        "status": "source_visually_verified",
+        "sourceStatement": "B02-CTCK",
+        "sourceUrl": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2024.pdf",
+        "sourceArchive": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/cc0a692f672abc5d.pdf",
+        "sourcePdfPage": 12,
+        "sourceRows": {
+          "currentTax": {
+            "row": "100.1 — Chi phí thuế TNDN hiện hành",
+            "valueVND": 35988444975,
+            "valueMillionVND": 35988
+          },
+          "deferredTax": {
+            "row": "100.2 — Chi phí thuế TNDN hoãn lại",
+            "valueVND": 13443687889,
+            "valueMillionVND": 13444
+          },
+          "totalTax": {
+            "row": "100 — Chi phí thuế TNDN",
+            "valueVND": 49432132864,
+            "valueMillionVND": 49432
+          }
+        },
+        "existingIncomeTaxTotalMillionVND": 49432,
+        "roundedComponentSumMillionVND": 49432,
+        "reconciliationDifferenceMillionVND": 0,
+        "relativeDifferencePercent": 0,
+        "signPolicy": "Preserve the report sign, including tax benefits/negative deferred tax.",
+        "checkedAt": "2026-11-01"
       }
     },
     {
@@ -2083,12 +2245,15 @@
         "non_current_assets",
         "operating_cash_flow",
         "operating_cash_flow_ytd",
-        "retained_earnings"
+        "retained_earnings",
+        "revenue",
+        "income_tax_current",
+        "income_tax_deferred"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/be10b6b2bb57c581.pdf",
       "financial_line_items_updated_at": "2026-10-27T09:26:18+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã rà soát trực quan B02 gốc: khôi phục tổng doanh thu hoạt động dòng 20 = 561,529 triệu VND; thuế hiện hành 37,191, thuế hoãn lại 25,742 triệu VND. Không dùng dòng doanh thu thành phần thay tổng doanh thu.",
       "foreign_exchange_effect_ytd": 0,
       "foreign_exchange_effect": 0,
       "foreign_exchange_effect_calculation": "Q1 equals YTD Q1",
@@ -2099,12 +2264,7 @@
         "cash_ending": 789447,
         "foreign_exchange_effect_ytd": 789447
       },
-      "financial_line_items_rejected_values": {
-        "revenue": {
-          "prior_value": null,
-          "reason": "Tổng doanh thu hoạt động Q1/2025 = doanh thu hoạt động lũy kế H1/2025 1.255.442.296.306 VND trừ doanh thu riêng Q2/2025 693.913.488.666 VND, đối chiếu cột so sánh trong B02a-CTCK Q2/2026."
-        }
-      },
+      "financial_line_items_rejected_values": {},
       "income_tax": 62933,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
       "broker_fvtpl_assets": 8804564,
@@ -2129,7 +2289,7 @@
       "cash_beginning": 680759,
       "investing_cash_flow": -4434,
       "investing_cash_flow_calculation": "Q1 equals YTD from source line 70",
-      "revenue": null,
+      "revenue": 561529,
       "core_financial_extracted_fields": [
         "revenue"
       ],
@@ -2342,6 +2502,51 @@
         "source_candidates_pending_manual_review": [],
         "source_reclassification_review": null,
         "note": null
+      },
+      "income_tax_current": 37191,
+      "income_tax_deferred": 25742,
+      "revenue_source_reconciliation_20261101": {
+        "status": "source_visually_verified",
+        "sourceStatement": "B02-CTCK",
+        "sourceUrl": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2025.pdf",
+        "sourceArchive": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/be10b6b2bb57c581.pdf",
+        "sourcePdfPage": 13,
+        "sourceRow": "20 — Cộng doanh thu hoạt động",
+        "sourceValueVND": 561528807640,
+        "valueMillionVND": 561529,
+        "previousValue": null,
+        "selection": "Current-period, current-year column; not a component revenue row or comparative column.",
+        "checkedAt": "2026-11-01"
+      },
+      "income_tax_detail_source_reconciliation_20261101": {
+        "status": "source_visually_verified",
+        "sourceStatement": "B02-CTCK",
+        "sourceUrl": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2025.pdf",
+        "sourceArchive": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/be10b6b2bb57c581.pdf",
+        "sourcePdfPage": 15,
+        "sourceRows": {
+          "currentTax": {
+            "row": "100.1 — Chi phí thuế TNDN hiện hành",
+            "valueVND": 37191133811,
+            "valueMillionVND": 37191
+          },
+          "deferredTax": {
+            "row": "100.2 — Chi phí thuế TNDN hoãn lại",
+            "valueVND": 25742335511,
+            "valueMillionVND": 25742
+          },
+          "totalTax": {
+            "row": "100 — Chi phí thuế TNDN",
+            "valueVND": 62933469322,
+            "valueMillionVND": 62933
+          }
+        },
+        "existingIncomeTaxTotalMillionVND": 62933,
+        "roundedComponentSumMillionVND": 62933,
+        "reconciliationDifferenceMillionVND": 0,
+        "relativeDifferencePercent": 0,
+        "signPolicy": "Preserve the report sign, including tax benefits/negative deferred tax.",
+        "checkedAt": "2026-11-01"
       }
     },
     {
@@ -2514,7 +2719,7 @@
       "current_liabilities": 5985582,
       "long_term_liabilities": 157780,
       "retained_earnings": 1763205,
-      "revenue": 417153,
+      "revenue": 693913,
       "financial_income": 877,
       "financial_expense": 52507,
       "interest_expense": 52507,
@@ -2585,19 +2790,14 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/12d2061881d334c4.pdf",
       "financial_line_items_updated_at": "2026-10-27T09:26:09+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã rà soát trực quan B02 gốc: khôi phục tổng doanh thu hoạt động dòng 20 = 693,913 triệu VND; thuế hiện hành 38,933, thuế hoãn lại 41,295 triệu VND. Không dùng dòng doanh thu thành phần thay tổng doanh thu.",
       "cash_beginning_calculation": "Prior same-year quarter's reported ending cash; Q2/2024 ending balance remains OCR-text only, pending visual check.",
       "foreign_exchange_effect_ytd": 0,
       "financial_line_items_prior_values": {
         "revenue": 417153,
         "cash_beginning": 789447
       },
-      "financial_line_items_rejected_values": {
-        "revenue": {
-          "prior_value": 417153,
-          "reason": "Tổng doanh thu hoạt động Q2/2025 lấy từ cột so sánh Quý II năm trước trên B02a-CTCK Q2/2026: 693.913.488.666 VND; số cũ 417.153 triệu là dòng FVTPL Q1/2025, không phải tổng doanh thu Q2."
-        }
-      },
+      "financial_line_items_rejected_values": {},
       "income_tax": 80228,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
       "broker_fvtpl_assets": 0,
@@ -2617,11 +2817,7 @@
       "broker_admin_expenses": 23316,
       "financial_line_items_schema_version": "2026-10-27-bank-split-column-and-cashflow-statement-v9",
       "financial_line_items_schema_updated_at": "2026-10-27T09:26:09+00:00",
-      "financial_line_items_rejected_fields": [
-        "income_tax_current_tax_reconciliation_check",
-        "income_tax_deferred_tax_reconciliation_check",
-        "income_tax_tax_reconciliation_check"
-      ],
+      "financial_line_items_rejected_fields": [],
       "financial_line_items_rejected_updated_at": "2026-10-22T13:13:21+00:00",
       "broker_total_operating_revenue": 693913,
       "broker_total_operating_expenses": 156008,
@@ -2897,6 +3093,49 @@
         },
         "note": "Later H1/2025 comparative from Q2/2026 is internally reconciled and selected for the snapshot. However, its investing cash-flow comparator differs from original Q2/2025 by 43,270,000 VND (about 0.84% of the component), above the 0.01% threshold. Preserve the selected source values and both source histories; direct comparative-page review is required. No balancing plug.",
         "source_comparison_manual_review": true
+      },
+      "revenue_source_reconciliation_20261101": {
+        "status": "source_visually_verified",
+        "sourceStatement": "B02-CTCK",
+        "sourceUrl": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2025.pdf",
+        "sourceArchive": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/12d2061881d334c4.pdf",
+        "sourcePdfPage": 10,
+        "sourceRow": "20 — Cộng doanh thu hoạt động",
+        "sourceValueVND": 693913488666,
+        "valueMillionVND": 693913,
+        "previousValue": 417153,
+        "selection": "Current-period, current-year column; not a component revenue row or comparative column.",
+        "checkedAt": "2026-11-01"
+      },
+      "income_tax_detail_source_reconciliation_20261101": {
+        "status": "source_visually_verified",
+        "sourceStatement": "B02-CTCK",
+        "sourceUrl": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2025.pdf",
+        "sourceArchive": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/12d2061881d334c4.pdf",
+        "sourcePdfPage": 11,
+        "sourceRows": {
+          "currentTax": {
+            "row": "100.1 — Chi phí thuế TNDN hiện hành",
+            "valueVND": 38933256643,
+            "valueMillionVND": 38933
+          },
+          "deferredTax": {
+            "row": "100.2 — Chi phí thuế TNDN hoãn lại",
+            "valueVND": 41294598531,
+            "valueMillionVND": 41295
+          },
+          "totalTax": {
+            "row": "100 — Chi phí thuế TNDN",
+            "valueVND": 80227855174,
+            "valueMillionVND": 80228
+          }
+        },
+        "existingIncomeTaxTotalMillionVND": 80228,
+        "roundedComponentSumMillionVND": 80228,
+        "reconciliationDifferenceMillionVND": 0,
+        "relativeDifferencePercent": 0,
+        "signPolicy": "Preserve the report sign, including tax benefits/negative deferred tax.",
+        "checkedAt": "2026-11-01"
       }
     },
     {
@@ -3043,7 +3282,7 @@
       "cash_and_equivalents": 664843,
       "non_current_assets": 79459,
       "fixed_assets": 31896,
-      "revenue": 394096,
+      "revenue": 815909,
       "financial_income": 1419,
       "financial_expense": 71723,
       "interest_expense": 71723,
@@ -3112,7 +3351,7 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/83437c9fa49105ec.zip",
       "financial_line_items_updated_at": "2026-10-27T09:26:11+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã rà soát trực quan B02 gốc: khôi phục tổng doanh thu hoạt động dòng 20 = 815,909 triệu VND; thuế hiện hành 129,285, thuế hoãn lại -16,676 triệu VND. Không dùng dòng doanh thu thành phần thay tổng doanh thu.",
       "operating_cash_flow": -1798914,
       "operating_cash_flow_calculation": "current YTD minus prior same-year YTD; source line 60",
       "financial_line_items_prior_values": {
@@ -3137,11 +3376,7 @@
       "broker_admin_expenses": 34454,
       "financial_line_items_schema_version": "2026-10-27-bank-split-column-and-cashflow-statement-v9",
       "financial_line_items_schema_updated_at": "2026-10-27T09:26:11+00:00",
-      "financial_line_items_rejected_fields": [
-        "income_tax_current_tax_reconciliation_check",
-        "income_tax_deferred_tax_reconciliation_check",
-        "income_tax_tax_reconciliation_check"
-      ],
+      "financial_line_items_rejected_fields": [],
       "financial_line_items_rejected_updated_at": "2026-10-22T13:13:21+00:00",
       "broker_total_operating_revenue": 815909,
       "broker_total_operating_expenses": 120123,
@@ -3368,6 +3603,49 @@
         "source_candidates_pending_manual_review": [],
         "source_reclassification_review": null,
         "note": null
+      },
+      "revenue_source_reconciliation_20261101": {
+        "status": "source_visually_verified",
+        "sourceStatement": "B02-CTCK",
+        "sourceUrl": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2025.zip",
+        "sourceArchive": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/83437c9fa49105ec.zip",
+        "sourcePdfPage": 10,
+        "sourceRow": "20 — Cộng doanh thu hoạt động",
+        "sourceValueVND": 815908995590,
+        "valueMillionVND": 815909,
+        "previousValue": 394096,
+        "selection": "Current-period, current-year column; not a component revenue row or comparative column.",
+        "checkedAt": "2026-11-01"
+      },
+      "income_tax_detail_source_reconciliation_20261101": {
+        "status": "source_visually_verified",
+        "sourceStatement": "B02-CTCK",
+        "sourceUrl": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2025.zip",
+        "sourceArchive": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/83437c9fa49105ec.zip",
+        "sourcePdfPage": 11,
+        "sourceRows": {
+          "currentTax": {
+            "row": "100.1 — Chi phí thuế TNDN hiện hành",
+            "valueVND": 129285011049,
+            "valueMillionVND": 129285
+          },
+          "deferredTax": {
+            "row": "100.2 — Chi phí thuế TNDN hoãn lại",
+            "valueVND": -16676015076,
+            "valueMillionVND": -16676
+          },
+          "totalTax": {
+            "row": "100 — Chi phí thuế TNDN",
+            "valueVND": 112608995973,
+            "valueMillionVND": 112609
+          }
+        },
+        "existingIncomeTaxTotalMillionVND": 112609,
+        "roundedComponentSumMillionVND": 112609,
+        "reconciliationDifferenceMillionVND": 0,
+        "relativeDifferencePercent": 0,
+        "signPolicy": "Preserve the report sign, including tax benefits/negative deferred tax.",
+        "checkedAt": "2026-11-01"
       }
     },
     {
@@ -3530,22 +3808,20 @@
         "net_cash_change",
         "net_cash_change_ytd",
         "operating_cash_flow",
-        "operating_cash_flow_ytd"
+        "operating_cash_flow_ytd",
+        "revenue",
+        "income_tax_current",
+        "income_tax_deferred"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-ocr-refresh-20261019/6b19d1aa37e72f9a.zip",
       "financial_line_items_updated_at": "2026-10-27T09:26:18+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã rà soát trực quan B02 gốc: khôi phục tổng doanh thu hoạt động dòng 20 = 1,595,794 triệu VND; thuế hiện hành -5,987, thuế hoãn lại 56,025 triệu VND. Không dùng dòng doanh thu thành phần thay tổng doanh thu.",
       "financial_line_items_prior_values": {
         "revenue": null,
         "income_tax": 50038
       },
-      "financial_line_items_rejected_values": {
-        "revenue": {
-          "prior_value": null,
-          "reason": "Tổng doanh thu hoạt động Q4/2025 lấy từ B02-CTCK trang 9–10 của báo cáo Q4/2025: 1.595.793.972.144 VND."
-        }
-      },
+      "financial_line_items_rejected_values": {},
       "income_tax": 50038,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
       "broker_afs_assets": 7432,
@@ -3586,16 +3862,12 @@
         "financial_income_magnitude",
         "financing_cash_flow_ytd_magnitude",
         "fixed_assets_magnitude",
-        "income_tax_current_tax_reconciliation_check",
-        "income_tax_deferred_tax_reconciliation_check",
-        "income_tax_tax_reconciliation_check",
         "interest_expense_magnitude",
         "investing_cash_flow_ytd_magnitude",
         "long_term_liabilities_magnitude",
         "non_current_assets_magnitude",
         "operating_cash_flow_ytd_magnitude",
         "retained_earnings_magnitude",
-        "revenue_magnitude",
         "selling_expense_magnitude"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-24T04:20:13+00:00",
@@ -3630,7 +3902,7 @@
       "broker_fvtpl_assets": 63213,
       "foreign_exchange_effect": 0,
       "foreign_exchange_effect_calculation": "current YTD minus previous quarter YTD",
-      "revenue": null,
+      "revenue": 1595794,
       "verification_status_note": "Doanh thu đã được đối chiếu với dòng tổng doanh thu hoạt động trên B02-CTCK/B02a-CTCK hoặc phép trừ lũy kế trừ quý; cần rà soát trực quan PDF.",
       "cash_beginning_reported_ytd": 680759,
       "financial_line_items_value_corrections": {
@@ -3838,6 +4110,51 @@
         "source_candidates_pending_manual_review": [],
         "source_reclassification_review": null,
         "note": null
+      },
+      "income_tax_current": -5987,
+      "income_tax_deferred": 56025,
+      "revenue_source_reconciliation_20261101": {
+        "status": "source_visually_verified",
+        "sourceStatement": "B02-CTCK",
+        "sourceUrl": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2025.zip",
+        "sourceArchive": "reports/raw/SHS/vietstock-shs-ocr-refresh-20261019/6b19d1aa37e72f9a.zip",
+        "sourcePdfPage": 9,
+        "sourceRow": "20 — Cộng doanh thu hoạt động",
+        "sourceValueVND": 1595793972144,
+        "valueMillionVND": 1595794,
+        "previousValue": null,
+        "selection": "Current-period, current-year column; not a component revenue row or comparative column.",
+        "checkedAt": "2026-11-01"
+      },
+      "income_tax_detail_source_reconciliation_20261101": {
+        "status": "source_visually_verified",
+        "sourceStatement": "B02-CTCK",
+        "sourceUrl": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2025.zip",
+        "sourceArchive": "reports/raw/SHS/vietstock-shs-ocr-refresh-20261019/6b19d1aa37e72f9a.zip",
+        "sourcePdfPage": 10,
+        "sourceRows": {
+          "currentTax": {
+            "row": "100.1 — Chi phí thuế TNDN hiện hành",
+            "valueVND": -5986984297,
+            "valueMillionVND": -5987
+          },
+          "deferredTax": {
+            "row": "100.2 — Chi phí thuế TNDN hoãn lại",
+            "valueVND": 56024937826,
+            "valueMillionVND": 56025
+          },
+          "totalTax": {
+            "row": "100 — Chi phí thuế TNDN",
+            "valueVND": 50037953529,
+            "valueMillionVND": 50038
+          }
+        },
+        "existingIncomeTaxTotalMillionVND": 50038,
+        "roundedComponentSumMillionVND": 50038,
+        "reconciliationDifferenceMillionVND": 0,
+        "relativeDifferencePercent": 0,
+        "signPolicy": "Preserve the report sign, including tax benefits/negative deferred tax.",
+        "checkedAt": "2026-11-01"
       }
     },
     {
@@ -3975,7 +4292,7 @@
       "cash_and_equivalents": 586519,
       "non_current_assets": 98503,
       "fixed_assets": 32437,
-      "revenue": 181500,
+      "revenue": 564698,
       "financial_income": 1133,
       "financial_expense": 165122,
       "interest_expense": 0,
@@ -4046,7 +4363,7 @@
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/5fe69d1fa2a83054.zip",
       "financial_line_items_updated_at": "2026-10-27T07:54:05+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã rà soát trực quan B02 gốc: khôi phục tổng doanh thu hoạt động dòng 20 = 564,698 triệu VND; thuế hiện hành 43,592, thuế hoãn lại 4,572 triệu VND. Không dùng dòng doanh thu thành phần thay tổng doanh thu.",
       "operating_cash_flow": 531012,
       "operating_cash_flow_calculation": "Q1 equals YTD from source line 60",
       "financial_line_items_prior_values": {
@@ -4054,12 +4371,7 @@
         "income_tax": 48170,
         "operating_cash_flow_ytd": 279994
       },
-      "financial_line_items_rejected_values": {
-        "revenue": {
-          "prior_value": 181500,
-          "reason": "Doanh thu hoạt động Q1/2026 = doanh thu hoạt động lũy kế H1/2026 1.015.037.906.522 VND trừ doanh thu riêng Q2/2026 450.339.589.586 VND trên B02a-CTCK."
-        }
-      },
+      "financial_line_items_rejected_values": {},
       "income_tax": 48164,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
       "broker_held_to_maturity_assets": 0,
@@ -4078,11 +4390,7 @@
       "broker_admin_expenses": 28354,
       "financial_line_items_schema_version": "2026-10-27-bank-split-column-and-cashflow-statement-v9",
       "financial_line_items_schema_updated_at": "2026-10-27T09:26:14+00:00",
-      "financial_line_items_rejected_fields": [
-        "income_tax_current_tax_reconciliation_check",
-        "income_tax_deferred_tax_reconciliation_check",
-        "income_tax_tax_reconciliation_check"
-      ],
+      "financial_line_items_rejected_fields": [],
       "financial_line_items_rejected_updated_at": "2026-10-22T13:13:23+00:00",
       "broker_total_operating_revenue": 564698,
       "broker_total_operating_expenses": 91874,
@@ -4310,6 +4618,49 @@
         "source_candidates_pending_manual_review": [],
         "source_reclassification_review": null,
         "note": null
+      },
+      "revenue_source_reconciliation_20261101": {
+        "status": "source_visually_verified",
+        "sourceStatement": "B02-CTCK",
+        "sourceUrl": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2026.zip",
+        "sourceArchive": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/5fe69d1fa2a83054.zip",
+        "sourcePdfPage": 9,
+        "sourceRow": "20 — Cộng doanh thu hoạt động",
+        "sourceValueVND": 564698316936,
+        "valueMillionVND": 564698,
+        "previousValue": 181500,
+        "selection": "Current-period, current-year column; not a component revenue row or comparative column.",
+        "checkedAt": "2026-11-01"
+      },
+      "income_tax_detail_source_reconciliation_20261101": {
+        "status": "source_visually_verified",
+        "sourceStatement": "B02-CTCK",
+        "sourceUrl": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2026.zip",
+        "sourceArchive": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/5fe69d1fa2a83054.zip",
+        "sourcePdfPage": 11,
+        "sourceRows": {
+          "currentTax": {
+            "row": "100.1 — Chi phí thuế TNDN hiện hành",
+            "valueVND": 43592364339,
+            "valueMillionVND": 43592
+          },
+          "deferredTax": {
+            "row": "100.2 — Chi phí thuế TNDN hoãn lại",
+            "valueVND": 4571671017,
+            "valueMillionVND": 4572
+          },
+          "totalTax": {
+            "row": "100 — Chi phí thuế TNDN",
+            "valueVND": 48164035356,
+            "valueMillionVND": 48164
+          }
+        },
+        "existingIncomeTaxTotalMillionVND": 48164,
+        "roundedComponentSumMillionVND": 48164,
+        "reconciliationDifferenceMillionVND": 0,
+        "relativeDifferencePercent": 0,
+        "signPolicy": "Preserve the report sign, including tax benefits/negative deferred tax.",
+        "checkedAt": "2026-11-01"
       }
     },
     {
@@ -4471,22 +4822,20 @@
         "net_cash_change",
         "net_cash_change_ytd",
         "operating_cash_flow",
-        "operating_cash_flow_ytd"
+        "operating_cash_flow_ytd",
+        "revenue",
+        "income_tax_current",
+        "income_tax_deferred"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/9246a0423b1cd4aa.zip",
       "financial_line_items_updated_at": "2026-10-27T09:26:18+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs.",
+      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã rà soát trực quan B02 gốc: khôi phục tổng doanh thu hoạt động dòng 20 = 450,340 triệu VND; thuế hiện hành 178,309, thuế hoãn lại -164,367 triệu VND. Không dùng dòng doanh thu thành phần thay tổng doanh thu.",
       "financial_line_items_prior_values": {
         "revenue": null,
         "income_tax": 13942
       },
-      "financial_line_items_rejected_values": {
-        "revenue": {
-          "prior_value": null,
-          "reason": "Tổng doanh thu hoạt động Q2/2026 lấy đúng dòng “Cộng doanh thu hoạt động” trên B02a-CTCK trang 9: 450.339.589.586 VND; số cũ 181.500 triệu không phải tổng doanh thu hoạt động."
-        }
-      },
+      "financial_line_items_rejected_values": {},
       "income_tax": 13942,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
       "financial_line_items_schema_version": "2026-10-27-bank-split-column-and-cashflow-statement-v9",
@@ -4496,7 +4845,7 @@
       "core_financial_extraction_evidence_attempt_count": 0,
       "cash_beginning": 586519,
       "cash_beginning_calculation": "Prior same-year quarter's reported ending cash; Q2/2024 ending balance remains OCR-text only, pending visual check.",
-      "revenue": null,
+      "revenue": 450340,
       "core_financial_extracted_fields": [
         "revenue"
       ],
@@ -4716,7 +5065,52 @@
         "source_reclassification_review": null,
         "note": null
       },
-      "financial_line_items_rejected_fields": []
+      "financial_line_items_rejected_fields": [],
+      "income_tax_current": 178309,
+      "income_tax_deferred": -164367,
+      "revenue_source_reconciliation_20261101": {
+        "status": "source_visually_verified",
+        "sourceStatement": "B02a-CTCK",
+        "sourceUrl": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2026.zip",
+        "sourceArchive": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/9246a0423b1cd4aa.zip",
+        "sourcePdfPage": 9,
+        "sourceRow": "20 — Cộng doanh thu hoạt động",
+        "sourceValueVND": 450339589586,
+        "valueMillionVND": 450340,
+        "previousValue": null,
+        "selection": "Current-period, current-year column; not a component revenue row or comparative column.",
+        "checkedAt": "2026-11-01"
+      },
+      "income_tax_detail_source_reconciliation_20261101": {
+        "status": "source_visually_verified",
+        "sourceStatement": "B02-CTCK",
+        "sourceUrl": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2026.zip",
+        "sourceArchive": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/9246a0423b1cd4aa.zip",
+        "sourcePdfPage": 11,
+        "sourceRows": {
+          "currentTax": {
+            "row": "100.1 — Chi phí thuế TNDN hiện hành",
+            "valueVND": 178309422828,
+            "valueMillionVND": 178309
+          },
+          "deferredTax": {
+            "row": "100.2 — Chi phí thuế TNDN hoãn lại",
+            "valueVND": -164366969637,
+            "valueMillionVND": -164367
+          },
+          "totalTax": {
+            "row": "100 — Chi phí thuế TNDN",
+            "valueVND": 13942453191,
+            "valueMillionVND": 13942
+          }
+        },
+        "existingIncomeTaxTotalMillionVND": 13942,
+        "roundedComponentSumMillionVND": 13942,
+        "reconciliationDifferenceMillionVND": 0,
+        "relativeDifferencePercent": 0,
+        "signPolicy": "Preserve the report sign, including tax benefits/negative deferred tax.",
+        "checkedAt": "2026-11-01"
+      }
     }
   ],
   "note": "SHS: 10 kỳ BCTC Q1/2024–Q2/2026 từ VietstockFinance. Lợi nhuận quý ưu tiên cột phát sinh riêng và kiểm tra bằng lũy kế khi có. Q4/2024 đã sửa từ lỗi đọc nhầm LNTT/LNST và được đối chiếu trực tiếp PDF; Q2/2025 bảng cân đối và KQHĐ cũng đã kiểm tra trực quan. Các kỳ còn lại được đối chiếu bằng văn bản trích xuất/OCR của đúng PDF/ZIP VietstockFinance, chưa gắn nhãn kiểm tra trực quan toàn bộ tài liệu. SHS cash-flow normalization 2026-10-29: corrected 10-period series to B03b-CTCK final cash-flow lines and consistent YTD basis; selected newer comparative for FY2024 and H1/2025 with documented source-revision differences. H1/2024 final flow subtotals remain blank due OCR/source-comparator inconsistency, with Q3/2024 standalone flows withheld because the H1 baseline is unresolved. No unsupported cash flow or balancing amount was inserted.",
