@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30T18:35:00+07:00",
+  "updatedAt": "2026-10-31T09:20:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -44,16 +44,17 @@
   "resumeSymbolHint": "GEG",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
-    "symbol": "KBC",
-    "status": "automated_processing_complete",
-    "completeForAutomation": true,
+    "symbol": "UI",
+    "status": "financial_report_table_display_in_progress",
+    "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-10-30T16:18:37Z",
+    "processedAt": "2026-10-31T09:20:00+07:00",
     "workflowRunId": "41088586086",
     "workflowRunNumber": 3035,
     "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/41088586086",
     "changedPaths": [
-      "data/financials-KBC.json"
+      "assets/app.js",
+      "reports/processing-checkpoint.json"
     ],
     "periodCount": 11,
     "firstQuarter": "2024-Q1",
@@ -64,7 +65,9 @@
     "staleDetailSchemaPeriods": [],
     "statementPagesPending": false,
     "skipUnconfirmedAutomation": false,
-    "skipUnconfirmedReason": null
+    "skipUnconfirmedReason": null,
+    "nextSymbol": "GEG",
+    "nextTask": "financial_report_table_display"
   },
   "symbolStates": {
     "MBB": {
@@ -2438,5 +2441,21 @@
     },
     "deploymentStatus": "package_built_not_deployed",
     "note": "Gói Hostinger đã build thành công; chưa có thao tác triển khai trực tiếp lên hosting."
+  },
+  "lastUiWorkCheckpoint": {
+    "processedAt": "2026-10-31T09:20:00+07:00",
+    "commit": "c4a704486618f2da36d4af4b5a4b1de3f1498e0a",
+    "changedPaths": [
+      "assets/app.js"
+    ],
+    "task": "financial_report_table_display",
+    "status": "cashflow_quarter_basis_source_approved_ytd_fallback_added",
+    "findings": [
+      "GAS OCR queue completed; 10/10 periods source-text reviewed. Remaining visual/manual exceptions are retained and not fabricated.",
+      "Fixed quarterly cash-flow table mode: explicitly extracted YTD values can display as Q1 flow or be differenced against the previous quarter's accepted YTD/quarterly baseline, even when the row has a general manual-review badge.",
+      "Rows are filtered through rowsFor/explicit extracted fields/rejected fields before calculation, so rejected or unapproved OCR values remain blank.",
+      "Validate Site and Data succeeded; Package Hostinger Stock Dashboard succeeded."
+    ],
+    "next": "Continue industry-specific financial table coverage audit and fill source-backed missing statement rows one ticker at a time; prioritize bank and securities templates, then generic balance/income/cashflow/ratios. Preserve completed ticker checkpoints and all source holds."
   }
 }
