@@ -8,6 +8,22 @@ assert.ok(app.includes("!rejectedDetailFields.has(key)"));
 assert.ok(app.includes("investment_property_disposal_gain"));
 assert.ok(app.includes("non_controlling_interest_profit"));
 
+assert.ok(app.includes("key === 'non_controlling_interest_profit'"));
+assert.ok(app.includes("/hợp nhất|consolidated/i.test(String(item.report_type || ''))"));
+assert.ok(app.includes("num('net_profit') - num('net_profit_attributable')"));
+
+const deriveNci = (netProfit, parentProfit, consolidated) =>
+  consolidated && Number.isFinite(netProfit) && Number.isFinite(parentProfit)
+    ? netProfit - parentProfit
+    : null;
+// IDC source-backed NCI rows, using same-period consolidated figures.
+assert.equal(deriveNci(175208, 147786, true), 27422);
+assert.equal(deriveNci(574345, 511014, true), 63331);
+assert.equal(deriveNci(415964, 297573, true), 118391);
+assert.equal(deriveNci(1001241, 880406, true), 120835);
+assert.equal(deriveNci(175208, 147786, false), null);
+assert.equal(deriveNci(null, 147786, true), null);
+
 const allowed = (key, detail, core, rejected) =>
   (detail.has(key) || core.has(key)) && !rejected.has(key);
 const detail = new Set(["current_assets", "gross_profit"]);
