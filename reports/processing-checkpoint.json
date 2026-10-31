@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-31T09:45:00+07:00",
+  "updatedAt": "2026-10-31T11:10:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -794,8 +794,35 @@
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 11,
-      "updatedAt": "2026-10-30T16:18:37Z",
-      "snapshotFetchedAt": "2026-10-25T09:45:00Z"
+      "updatedAt": "2026-10-31T11:10:00+07:00",
+      "snapshotFetchedAt": "2026-10-25T09:45:00Z",
+      "detailSourceReconciledPeriods": [
+        "2025-Q3",
+        "2025-Q4",
+        "2026-Q1",
+        "2026-Q2",
+        "2026-Q3"
+      ],
+      "lastDetailSourceReconciliation": {
+        "periodRange": "KBC Q3/2025 through Q3/2026",
+        "status": "source_text_reconciled_pending_visual_review",
+        "correctionCommits": [
+          "f97d2883dfde1e1efacf8c1732bb27c2b84c9890",
+          "def425b87e54edbbd0b503fa0c8670aba330a857",
+          "54e7a2759926de8291af22706630439d88aafc1a",
+          "15652fda285c32e6bb2a0f46ba951369c5b9b6d7",
+          "be0c6f7acd3a6f70eaddde916b8ce30c77ffe3e7",
+          "698f210f2ff2d77991e2f19936ba4c0a9c178940"
+        ],
+        "findings": [
+          "Q3/2025: khôi phục CĐKT và các dòng KQKD; cân đối tài sản/nợ/vốn, doanh thu-giá vốn-lợi nhuận gộp, thuế/LNST khớp; LNST mẹ + NCI lệch 30 VND.",
+          "Q4/2025: khôi phục CĐKT/KQKD; sửa cash và đầu tư ngắn hạn bị sai đơn vị/giá trị; các cầu nối CĐKT và KQKD khớp tuyệt đối. LCTT giữ ngoại lệ OCR dòng 70.",
+          "Q1/2026: khôi phục CĐKT/KQKD và capex; CĐKT cân bằng; thuế hiện hành có hai ứng viên OCR nên để trống, tổng thuế tính từ LNTT-LNST; LCTT quý khớp.",
+          "Q2/2026: khôi phục CĐKT/KQKD và dòng lãi/lỗ bán, thanh lý BĐS đầu tư; LCTT quý tách từ lũy kế trừ Q1, cầu nối dòng tiền khớp; chênh 3.000 VND ở tổng nợ ngắn+dài.",
+          "Q3/2026: khôi phục CĐKT/KQKD; giữ riêng dòng lãi/lỗ bán, thanh lý BĐS đầu tư; giữ trống nợ dài hạn do OCR lệch tổng nợ 100 tỷ VND; giữ riêng LNST mẹ/NCI theo nguồn do lệch tổng thành phần khoảng 6 tỷ VND."
+        ],
+        "remaining": "Chờ kiểm tra ảnh PDF trực quan. Không ép các ngoại lệ Q1/2026 thuế hiện hành, Q2/2026 nợ ngắn+dài, Q3/2026 nợ dài hạn và phân bổ LNST mẹ/NCI."
+      }
     },
     "GEG": {
       "status": "terminal_needs_manual_review",
@@ -2563,13 +2590,16 @@
   },
   "lastUiWork": {
     "workstream": "financial-report-tables",
-    "status": "implemented_and_ci_validated_pending_live_browser_review",
-    "updatedAt": "2026-10-31T09:45:00+07:00",
+    "status": "implemented_ci_validated_pending_live_browser_review",
+    "updatedAt": "2026-10-31T11:10:00+07:00",
     "commits": [
       "4023bbca7d9a94f5ef29c1b2917bbecf2b516efe",
       "558b6a129a671d60c3e3e92c69cae888c05660fb",
       "3fd8df6a163dcd2933278d8581b69e9a9374fc05",
-      "c64f3bec3a05cad9028e2bf9a7a465026aa28e84"
+      "c64f3bec3a05cad9028e2bf9a7a465026aa28e84",
+      "5dc07076709608aa2a71f8171f858b1200928a33",
+      "61d983fa76fe258885c670a0f842a75216f16d07",
+      "0418880ff2aab091f412892dc553a2169a87ad88"
     ],
     "finding": "rowsFor() blanked source-extracted core metrics on manual-review rows because the allow-list only included financial_line_items_extracted_fields and omitted core_financial_extracted_fields.",
     "correction": "Allow explicitly extracted core fields and detailed extracted fields to pass the source allow-list; explicitly rejected fields and unconfirmed report scope remain blocked.",
@@ -2580,14 +2610,17 @@
       "VIX",
       "SSI",
       "KDH",
-      "NVL"
+      "NVL",
+      "KBC"
     ],
     "affectedFields": [
       "eps",
       "revenue",
       "pretax_profit",
       "net_profit",
-      "net_profit_attributable"
+      "net_profit_attributable",
+      "investment_property_disposal_gain",
+      "non_controlling_interest_profit"
     ],
     "regressionTest": "tests/test_financial_table_allowlist.mjs",
     "validationRun": {
@@ -2600,6 +2633,10 @@
       "workflow": "Package Hostinger Stock Dashboard",
       "conclusion": "success"
     },
-    "remaining": "Review table coverage and visual PDF exceptions; no OCR/core/detail backlog remains in the 32-symbol queue."
+    "remaining": "KBC Q3/2025–Q3/2026 detail source text restored; continue KBC earlier periods and audit remaining ticker tables, while visual PDF review exceptions remain.",
+    "newRows": [
+      "Lãi/(lỗ) từ bán, thanh lý bất động sản đầu tư (dòng riêng) — nhóm bất động sản",
+      "Lợi ích cổ đông không kiểm soát (NCI) — bảng KQKD nhóm doanh nghiệp thông thường"
+    ]
   }
 }
