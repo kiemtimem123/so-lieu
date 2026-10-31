@@ -7,8 +7,8 @@
       "symbol": "GEG",
       "period": "2024-Q3",
       "total_assets": 16025449,
-      "total_liabilities": 15203205,
-      "equity": 822244,
+      "total_liabilities": 10203205,
+      "equity": 5822244,
       "pretax_profit": -19909,
       "net_profit": -47803,
       "net_profit_attributable": -27338,
@@ -64,9 +64,17 @@
         },
         "balance_sheet_source_raw_vnd": {
           "current_liabilities": 1278205547821,
-          "long_term_liabilities": 8924999693534
+          "long_term_liabilities": 8924999693534,
+          "total_assets": 16025449228114,
+          "total_liabilities": 10203205241355,
+          "equity": 5822243986759
         },
-        "balance_sheet_source_review": "Các chỉ tiêu được lấy từ cột ngày cuối kỳ trên BCTC hợp nhất; phép cộng tổng tài sản = tổng nợ + vốn chủ sở hữu đã được kiểm tra theo tổng gốc khi có đủ số liệu. Chờ kiểm tra ảnh PDF."
+        "balance_sheet_source_review": "Các chỉ tiêu được lấy từ cột ngày cuối kỳ trên BCTC hợp nhất; phép cộng tổng tài sản = tổng nợ + vốn chủ sở hữu đã được kiểm tra theo tổng gốc khi có đủ số liệu. Chờ kiểm tra ảnh PDF.",
+        "balance_sheet_source_checks": {
+          "total_liabilities_subtotal_residual_vnd": 0,
+          "balance_sheet_residual_vnd": 0
+        },
+        "equity_calculation": "total_assets - total_liabilities; source OCR on equity row had a missing leading digit; derived from reported totals"
       },
       "published_at": "2024-11-04",
       "source_archive_file": "reports/raw/GEG/auto-geg-20261021/92f6d2a0ac2dccae.pdf",
@@ -85,7 +93,7 @@
         "net_profit_attributable"
       ],
       "core_financial_extraction_status": "auto_extracted_pending_visual_review",
-      "core_financial_extraction_note": "PDF BCTC hợp nhất VietstockFinance, KQKD trang 5. Doanh thu thuần 543.139.233.330 VND; LNTT -19.909.346.709 VND; LNST -47.802.799.341 VND; LNST công ty mẹ -27.338.001.098 VND. Cột số quý III, không dùng lũy kế.",
+      "core_financial_extraction_note": "PDF BCTC hợp nhất VietstockFinance, KQKD trang 5. Doanh thu thuần 543.139.233.330 VND; LNTT -19.909.346.709 VND; LNST -47.802.799.341 VND; LNST công ty mẹ -27.338.001.098 VND. Cột số quý III, không dùng lũy kế. Sửa ánh xạ Q3/2024: tổng nợ phải trả 10.203.205,241355 triệu VND; vốn chủ sở hữu 5.822.243,986759 triệu VND. Vốn chủ sở hữu được xác định từ tổng tài sản trừ tổng nợ; khớp chính xác tổng nguồn vốn. Giá trị cũ đã lưu để kiểm toán.",
       "verification_status_note": "Trích xuất từ PDF/ZIP được liên kết trực tiếp bởi danh mục VietstockFinance; chưa xác minh trực quan ảnh PDF.",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "8ea971be0b25624870b0949eaace52c37d98280c7b4d2e6c01374d8a0acbc519",
@@ -169,7 +177,9 @@
         "cost_of_goods_sold",
         "gross_profit",
         "current_liabilities",
-        "long_term_liabilities"
+        "long_term_liabilities",
+        "total_liabilities",
+        "equity"
       ],
       "financial_line_items_status": "cashflow_normalized_from_vietstock_source_visual_review_pending",
       "financial_line_items_schema_version": "2026-10-27-other-statements-source-fields-v12",
@@ -201,7 +211,9 @@
         "cost_of_goods_sold": null,
         "gross_profit": null,
         "current_liabilities": null,
-        "long_term_liabilities": null
+        "long_term_liabilities": null,
+        "total_liabilities": 15203205,
+        "equity": 822244
       },
       "financial_line_items_rejected_values": {
         "operating_cash_flow": {
@@ -447,9 +459,11 @@
       "balance_sheet_source_review_status": "source_text_reconciled_pending_visual_review",
       "balance_sheet_source_pages": {
         "pdf_pages": [
+          3,
           4
         ],
         "printed_pages": [
+          1,
           2
         ],
         "statement": "B01-DN/HN consolidated balance sheet"
@@ -2324,9 +2338,14 @@
         },
         "balance_sheet_source_raw_vnd": {
           "current_assets": 1793332240030,
-          "fixed_assets": 12506295684512
+          "fixed_assets": 12506295684512,
+          "non_current_assets": 13317555791672,
+          "total_assets": 15110888031702
         },
-        "balance_sheet_source_review": "Các chỉ tiêu được lấy từ cột ngày cuối kỳ trên BCTC hợp nhất; phép cộng tổng tài sản = tổng nợ + vốn chủ sở hữu đã được kiểm tra theo tổng gốc khi có đủ số liệu. Chờ kiểm tra ảnh PDF."
+        "balance_sheet_source_review": "Các chỉ tiêu được lấy từ cột ngày cuối kỳ trên BCTC hợp nhất; phép cộng tổng tài sản = tổng nợ + vốn chủ sở hữu đã được kiểm tra theo tổng gốc khi có đủ số liệu. Chờ kiểm tra ảnh PDF.",
+        "balance_sheet_source_checks": {
+          "total_assets_less_current_and_noncurrent_vnd": 0
+        }
       },
       "published_at": "2026-01-28",
       "source_archive_file": "reports/raw/GEG/auto-geg-20261021/a5dc3fd9e734420f.pdf",
@@ -2391,8 +2410,8 @@
         "fixed_assets"
       ],
       "financial_line_items_source": "reports/raw/GEG/auto-geg-20261021/a5dc3fd9e734420f.pdf.extracted.json",
-      "financial_line_items_updated_at": "2026-10-31T09:48:00+07:00",
-      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Visual review update 2026-10-30: direct inspection of the official VietstockFinance Q4/2025 PDF printed pages 4-5 confirms CFO 932,884,327,033 VND; CFI 1,921,143,888 VND; CFF -1,012,240,268,026 VND; net cash change -77,434,797,105 VND; beginning cash 163,717,707,072 VND; FX 81,753,281 VND; ending cash 86,364,663,248 VND. Earlier OCR truncation flag for row 70 is resolved. No source values were modified. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Bổ sung giá vốn và lợi nhuận gộp từ BCTC hợp nhất VietstockFinance, trang in 3 (PDF trang 8), lấy cột phát sinh riêng quý; số raw VND quy đổi sang triệu VND. Đang chờ kiểm tra ảnh PDF trực quan. Bổ sung các dòng bảng cân đối kế toán đọc rõ từ BCTC hợp nhất VietstockFinance, trang in 1 (PDF 6); raw VND quy đổi sang triệu VND. Chờ kiểm tra ảnh PDF trực quan.",
+      "financial_line_items_updated_at": "2026-10-31T09:52:00+07:00",
+      "financial_line_items_note": "Không nhận diện chắc chắn được chỉ tiêu chi tiết từ văn bản đã lưu; giữ trống và cần đối chiếu báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. Dòng tiền tự trích xuất bị ẩn vì tổng các luồng tiền không khớp biến động tiền thuần. Visual review update 2026-10-30: direct inspection of the official VietstockFinance Q4/2025 PDF printed pages 4-5 confirms CFO 932,884,327,033 VND; CFI 1,921,143,888 VND; CFF -1,012,240,268,026 VND; net cash change -77,434,797,105 VND; beginning cash 163,717,707,072 VND; FX 81,753,281 VND; ending cash 86,364,663,248 VND. Earlier OCR truncation flag for row 70 is resolved. No source values were modified. Lưu chuyển tiền quý được đối chiếu từ cột lũy kế báo cáo; công thức được ghi ở trường *_calculation và vẫn cần rà soát trực quan. Bổ sung giá vốn và lợi nhuận gộp từ BCTC hợp nhất VietstockFinance, trang in 3 (PDF trang 8), lấy cột phát sinh riêng quý; số raw VND quy đổi sang triệu VND. Đang chờ kiểm tra ảnh PDF trực quan. Bổ sung các dòng bảng cân đối kế toán đọc rõ từ BCTC hợp nhất VietstockFinance, trang in 1 (PDF 6); raw VND quy đổi sang triệu VND. Chờ kiểm tra ảnh PDF trực quan. Sửa ánh xạ tài sản dài hạn Q4/2025: giá trị đúng 13.317.555,791672 triệu VND; giá trị cũ 33.100,995517 triệu VND được lưu trong prior_values.",
       "financial_line_items_prior_values": {
         "net_profit": 0,
         "income_tax": 90552,
@@ -2410,7 +2429,8 @@
         "cost_of_goods_sold": null,
         "gross_profit": null,
         "current_assets": null,
-        "fixed_assets": null
+        "fixed_assets": null,
+        "non_current_assets": 33101
       },
       "financial_line_items_rejected_values": {
         "operating_cash_flow": {
@@ -2509,7 +2529,7 @@
       "short_term_investments": 335163,
       "short_term_receivables": 1279926,
       "inventory": 46145,
-      "non_current_assets": 33101,
+      "non_current_assets": 13317556,
       "current_liabilities": 884098,
       "long_term_liabilities": 7729079,
       "retained_earnings": 705959,
@@ -2760,10 +2780,13 @@
       },
       "balance_sheet_source_raw_vnd": {
         "current_assets": 1793332240030,
-        "fixed_assets": 12506295684512
+        "fixed_assets": 12506295684512,
+        "non_current_assets": 13317555791672,
+        "total_assets": 15110888031702
       },
       "balance_sheet_source_checks": {
-        "balance_sheet_residual_vnd": 0
+        "balance_sheet_residual_vnd": 0,
+        "total_assets_less_current_and_noncurrent_vnd": 0
       }
     },
     {
