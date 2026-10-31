@@ -988,7 +988,7 @@
     };
     // Scope-blocked/unconfirmed reports may retain source OCR values for audit, but
     // never let those values enter public charts, comparisons, overview KPIs, or tables.
-    const scopeUnverifiedMetricField = /^(?:revenue|cost_of_goods_sold|gross_profit|financial_income|financial_expense|interest_expense|share_of_profit_in_associates|selling_expense|admin_expense|operating_profit|other_income|other_expense|other_profit|income_tax(?:_current|_deferred)?|pretax_profit|net_profit(?:_attributable)?|total_assets|total_liabilities|equity|roa|roe|pb|pe|eps|price|market_cap|enterprise_value|ev_ebitda|current_assets|non_current_assets|short_term_.*|current_liabilities|long_term_liabilities|fixed_assets|inventory|cash(?:_.*)?|retained_earnings|capital_expenditure(?:_ytd)?|dividends_paid(?:_ytd)?|operating_cash_flow(?:_ytd)?|investing_cash_flow(?:_ytd)?|financing_cash_flow(?:_ytd)?|foreign_exchange_effect(?:_ytd)?|net_cash_change(?:_ytd)?|bank_.*|broker_.*|investment_property_disposal_gain)$/i;
+    const scopeUnverifiedMetricField = /^(?:revenue|cost_of_goods_sold|gross_profit|financial_income|financial_expense|interest_expense|share_of_profit_in_associates|selling_expense|admin_expense|operating_profit|other_income|other_expense|other_profit|income_tax(?:_current|_deferred)?|pretax_profit|net_profit(?:_attributable)?|total_assets|total_liabilities|equity|roa|roe|pb|pe|eps|price|market_cap|enterprise_value|ev_ebitda|current_assets|non_current_assets|short_term_.*|current_liabilities|long_term_liabilities|fixed_assets|inventory|cash(?:_.*)?|retained_earnings|capital_expenditure(?:_ytd)?|dividends_paid(?:_ytd)?|operating_cash_flow(?:_ytd)?|investing_cash_flow(?:_ytd)?|financing_cash_flow(?:_ytd)?|foreign_exchange_effect(?:_ytd)?|net_cash_change(?:_ytd)?|bank_.*|broker_.*|investment_property_disposal_gain|non_controlling_interest_profit)$/i;
     const hasUnverifiedReportScope = item =>
       item?.source_validation?.scope_validation_required === true ||
       item?.source_validation?.manual_review_blocking_automatic_extraction === true;
@@ -2000,7 +2000,8 @@
         { label: 'Thuế TNDN hoãn lại', key: 'income_tax_deferred', level: 1 },
         { label: 'Lãi cơ bản trên cổ phiếu (EPS)', key: 'eps', ratio: true, level: 1 },
         { label: 'Lợi nhuận sau thuế', key: 'net_profit', strong: true },
-        { label: 'Trong đó: LNST thuộc cổ đông công ty mẹ', key: 'net_profit_attributable', level: 1 }
+        { label: 'Trong đó: LNST thuộc cổ đông công ty mẹ', key: 'net_profit_attributable', level: 1 },
+        { label: 'Lợi ích cổ đông không kiểm soát (NCI)', key: 'non_controlling_interest_profit', level: 1 }
         ];
         if (activeIndustry === 'real_estate') {
           genericIncomeRows.splice(4, 0, {
