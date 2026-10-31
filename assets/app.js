@@ -1571,13 +1571,12 @@
       }
       if (validNumber(item[key])) return { value: item[key], formula: '' };
 
-      const verification = String(item.verification_status || '').toLowerCase();
-      const coreStatus = String(item.core_financial_extraction_status || '').toLowerCase();
-      // Never derive additional figures from reports whose consolidation scope
-      // or core extraction is explicitly blocked for manual review.
-      if (hasUnverifiedReportScope(item) ||
-          verification === 'manual_review_required_pending_extraction' ||
-          coreStatus === 'manual_review_required_pending_extraction') {
+      // rowsForBasis has already removed every value that is not manually
+      // verified, explicitly corrected, or matched to an accepted source row.
+      // A row-level manual-review badge must not suppress formulas whose every
+      // input survived that allow-list (for example gross profit, tax, or bank
+      // subtotals). An unconfirmed report scope remains a hard block.
+      if (hasUnverifiedReportScope(item)) {
         return { value: item[key] ?? null, formula: '' };
       }
 
