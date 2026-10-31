@@ -25,6 +25,10 @@ assert.equal(deriveNci(1001241, 880406, true), 120835);
 assert.ok(Math.abs(deriveNci(2052338.999441, 2044102.438055, true) - 8236.561386) < 1e-9);
 assert.equal(deriveNci(2543605, 2511656, true), 31949);
 assert.equal(deriveNci(3416067, 3320817, true), 95250);
+// PLX consolidated reports also carry same-period net and parent-attributable profit.
+assert.equal(deriveNci(130485, 65874, true), 64611);
+assert.equal(deriveNci(612081, 254, true), 611827);
+assert.equal(deriveNci(-662477, -762974, true), 100497);
 assert.equal(deriveNci(175208, 147786, false), null);
 assert.equal(deriveNci(null, 147786, true), null);
 
