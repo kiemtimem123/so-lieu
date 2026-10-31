@@ -1336,7 +1336,8 @@
           "net_profit": 849100945743,
           "net_profit_attributable": 782712304442,
           "nci_profit": 66388641301,
-          "eps": 1020
+          "eps": 1020,
+          "income_tax_deferred_expense": 10541455319
         },
         "core_source_checks": {
           "balance_sheet_residual_vnd": 0,
@@ -1345,7 +1346,7 @@
           "gross_profit_residual_vnd": 0,
           "operating_profit_residual_vnd": 0,
           "pretax_profit_residual_vnd": 0,
-          "net_profit_residual_vnd": 10541455319,
+          "net_profit_residual_vnd": 544681,
           "parent_nci_residual_vnd": 0
         },
         "source_scope": "VietstockFinance consolidated report"
@@ -1464,14 +1465,15 @@
         "income_tax_current",
         "net_profit",
         "net_profit_attributable",
-        "eps"
+        "eps",
+        "income_tax_deferred"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_schema_version": "2026-10-27-other-statements-source-fields-v12",
       "financial_line_items_schema_updated_at": "2026-10-30T16:18:23+00:00",
       "financial_line_items_source": "reports/raw/KBC/auto-kbc-20261021/f85f2884a9b02629.pdf",
       "financial_line_items_updated_at": "2026-10-31T12:05:00+07:00",
-      "financial_line_items_note": "Khôi phục BCTC hợp nhất Q1/2025. Dòng thuế hoãn lại OCR chưa thống nhất với cầu nối LNST nên để trống; tổng thuế được tính từ LNTT - LNST. Chờ ảnh PDF trực quan.",
+      "financial_line_items_note": "Khôi phục BCTC hợp nhất Q1/2025. Dòng thuế hoãn lại OCR chưa thống nhất với cầu nối LNST nên để trống; tổng thuế được tính từ LNTT - LNST. Chờ ảnh PDF trực quan. Thuế hoãn lại Q1/2025 được tính từ LNTT - thuế hiện hành - LNST = 10.541.455.319 VND; OCR cột thuế hoãn lại không đủ rõ để lấy trực tiếp.",
       "financing_cash_flow": 7409944.829,
       "financing_cash_flow_calculation": "Theo dòng 40 báo cáo Q1, không lấy riêng dòng 33 tiền thu từ đi vay.",
       "capital_expenditure": null,
@@ -1566,7 +1568,7 @@
       "admin_expense": 147361,
       "operating_profit": 1100497,
       "income_tax_current": 264950,
-      "income_tax_deferred": null,
+      "income_tax_deferred": 10541,
       "eps": 1020,
       "operating_cash_flow": -7272526.014,
       "investing_cash_flow": -122486.767,
@@ -1597,8 +1599,7 @@
         "revenue_magnitude",
         "selling_expense_magnitude",
         "short_term_investments_magnitude",
-        "short_term_receivables_magnitude",
-        "income_tax_deferred"
+        "short_term_receivables_magnitude"
       ],
       "capital_expenditure_audit_note": "Tạm để trống: dòng chi mua sắm TSCĐ trong OCR chưa được đối chiếu theo cột và cơ sở lũy kế; không dùng số chưa xác minh.",
       "cashflow_ytd_basis": "year_to_date",
@@ -1893,7 +1894,7 @@
         "net_profit_residual_vnd": 10541455319,
         "parent_nci_residual_vnd": 0
       },
-      "income_statement_source_review_status": "source_text_reconciled_tax_detail_pending_visual_review",
+      "income_statement_source_review_status": "source_text_reconciled_pending_visual_review_with_derived_deferred_tax",
       "income_statement_source_pages": {
         "pdf_pages": [
           9,
@@ -1939,7 +1940,8 @@
         "net_profit": 849100945743,
         "net_profit_attributable": 782712304442,
         "nci_profit": 66388641301,
-        "eps": 1020
+        "eps": 1020,
+        "income_tax_deferred_expense": 10541455319
       },
       "income_statement_source_checks": {
         "balance_sheet_residual_vnd": 0,
@@ -1950,6 +1952,11 @@
         "pretax_profit_residual_vnd": 0,
         "net_profit_residual_vnd": 10541455319,
         "parent_nci_residual_vnd": 0
+      },
+      "income_tax_deferred_calculation": {
+        "raw_vnd": 10541455319,
+        "formula": "pretax_profit - income_tax_current - net_profit",
+        "reason": "OCR column ordering for deferred tax is ambiguous; this amount is derived exactly from the reported PBT, current tax and net profit totals."
       }
     },
     {
