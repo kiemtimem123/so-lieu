@@ -1724,6 +1724,20 @@
         };
       }
 
+      // For non-bank, non-broker consolidated statements, some snapshots retain
+      // consolidated net profit and parent-attributable profit but not a separate
+      // top-level NCI field. Derive NCI only from those two approved values in
+      // this same consolidated report row; never derive it for standalone scope.
+      if (key === 'non_controlling_interest_profit' &&
+          industry !== 'banking' && industry !== 'securities' &&
+          /hợp nhất|consolidated/i.test(String(item.report_type || '')) &&
+          num('net_profit') !== null && num('net_profit_attributable') !== null) {
+        return {
+          value: num('net_profit') - num('net_profit_attributable'),
+          formula: 'Lợi ích cổ đông không kiểm soát = lợi nhuận sau thuế hợp nhất − lợi nhuận sau thuế thuộc cổ đông công ty mẹ; hai số lấy từ cùng kỳ và cùng BCTC hợp nhất.'
+        };
+      }
+
       if (key === 'broker_net_operating_profit' && industry === 'securities' &&
           ['broker_total_operating_revenue','broker_total_operating_expenses','broker_financial_income','broker_financial_expense','broker_admin_expenses'].every(field => num(field) !== null)) {
         return {
