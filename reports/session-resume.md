@@ -227,3 +227,11 @@ Ghi chú này là lối tắt tiếp nối, không thay thế checkpoint sống.
 - CI is running for snapshot commit `998dd71b491c3f8fc35d6f155d81ec582ecb2e51` (quarterly validator run 41229141959, site run 41229142059, package run 41229142016). Do not call the latest commit CI-passing until these runs finish.
 - Q3/2026: direct VietstockFinance `doctype=1` API scan for VCB returned no consolidated Q3 report/document ID/PDF; it did return Q1, Q2 and reviewed H1 2026. No secondary source was imported. Recheck when the Q3 record is published.
 - VCB primary statements are closed through Q2/2026. Resume the user-specified next ticker SHS; retain a source-availability note to recheck VCB Q3/2026 when directly listed.
+
+
+## 2026-11-01 VCB closed for available periods; SHS next
+
+- VCB is marked `automated_processing_complete` through Q2/2026. All 10 stored quarters are numerically audited, B02/B03/B04 page images visually reviewed, and no rejected fields remain.
+- Latest CI on commit `998dd71b491c3f8fc35d6f155d81ec582ecb2e51` passed: quarterly financial data validation run `41229141959`, site/data validation run `41229142059`, Hostinger package run `41229142016`.
+- Direct VietstockFinance catalog audit shows no consolidated Q3/2026 document ID/PDF. Keep a future source-availability watch; do not insert third-party figures.
+- Resume with SHS per the user-given order. Existing SHS snapshot has 10 quarters through Q2/2026; cash-flow exceptions for 2024-Q2 and 2024-Q3 remain withheld pending visual source inspection. Existing report archive files are under `reports/raw/SHS/`; reuse them, no OCR/enrich rerun unless the visual source audit proves necessary.
