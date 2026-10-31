@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "scripts/sync-vietstock-financials.py"
+      - "reports/vcb-catalog-refresh.trigger.json"
   schedule:
     - cron: "17 2 * * *"
 
@@ -62,9 +63,9 @@ jobs:
       - name: Check VietstockFinance catalog and append new quarters
         env:
           PYTHONUTF8: "1"
-          FINANCIAL_SYNC_SYMBOL: ${{ github.event.inputs.symbol || '' }}
+          FINANCIAL_SYNC_SYMBOL: ${{ github.event.inputs.symbol || (github.event_name == 'push' && 'VCB') || '' }}
           FINANCIAL_SYNC_BOOTSTRAP_ONLY: "1"
-          # A deliberate script push is the operator's retry signal; scheduled runs still honor the cooldown.
+          # A deliberate push to the script or VCB catalog trigger is an explicit one-ticker VCB lookup; scheduled runs still honor the cooldown.
           FINANCIAL_SYNC_FORCE_RETRY: ${{ github.event_name == 'push' && '1' || '0' }}
         run: python scripts/sync-vietstock-financials.py
 
