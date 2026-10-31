@@ -167,3 +167,11 @@ Ghi chú này là lối tắt tiếp nối, không thay thế checkpoint sống.
 - Confirmed Q4/2024 `bank_provision_expense=-32,330` is a reversal/income; the validator must preserve the sign, so PPOP - (-32,330) = PBT. Q2/2024 provision expense remains +1,513,541. Patched signed provision logic and regressions in commit `46b683d1d2d9374961715a078a45fabb2705283d`.
 - Re-audited all ten persisted VCB quarters (2024-Q1..2026-Q2) programmatically: balance, income composition, revenue/PPOP, PBT signed-provision bridge, PAT, quarter flow, YTD flow and YTD cash bridge all have zero absolute difference. This was a direct snapshot audit, not a runtime execution of the repository's full validator.
 - Continue VCB only. Pending: execute the validator after its patches, finish visual review of all ten report PDFs and all statement sections, and verify VCB Q3/2026 from the direct VietstockFinance catalog before importing.
+
+
+## 2026-11-01 VCB audited annual report visual evidence
+
+- Visually checked the Vietstock-hosted 2024 Annual Report: B02 consolidated financial position (printed pp.130–131 / PDF index 66), B03 income statement (p.133 / index 67), B04 cash flow (pp.134–135 / index 68), and Note 35 cash and cash equivalents (p.184 / index 93).
+- The Note 35 visual table confirms 31/12/2024 cash equivalents 430,614,185 = cash 14,268,064 + NHNN deposits 49,340,493 + TCTD deposits/loans up to 3 months 367,005,628.
+- This is partial visual confirmation of the audited annual report only, not completion of visual review for all ten quarterly PDFs. Leave VCB in manual review.
+- Current snapshot blob SHA: `d126e7771e6b9bdb5dabb4523215439c19aa3368`.
