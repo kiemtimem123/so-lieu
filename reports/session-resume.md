@@ -159,3 +159,11 @@ Ghi chú này là lối tắt tiếp nối, không thay thế checkpoint sống.
 
 - Corrected the audited annual-report URL in the Q4/2024 source audit metadata to the verified Vietstock-hosted original: `https://static2.vietstock.vn/data/HOSE/2024/BCTN/VN/VCB_Baocaothuongnien_2024.pdf`.
 - No financial values changed in this correction; the audited annual report values remain visually checked from B04 page 134–135.
+
+
+## 2026-11-01 VCB Q2 cash-flow visibility and signed provision audit
+
+- Removed stale rejection flags from the ten B04 cash/cash-flow fields in VCB 2024-Q2 and 2025-Q2 after their source-text reconciliation; both rows' YTD sum, standalone-quarter sum and cash bridge each equal zero. Snapshot commit `a3e79eb9de035efb1d5cc5dd19d18104fe2e3ca4`.
+- Confirmed Q4/2024 `bank_provision_expense=-32,330` is a reversal/income; the validator must preserve the sign, so PPOP - (-32,330) = PBT. Q2/2024 provision expense remains +1,513,541. Patched signed provision logic and regressions in commit `46b683d1d2d9374961715a078a45fabb2705283d`.
+- Re-audited all ten persisted VCB quarters (2024-Q1..2026-Q2) programmatically: balance, income composition, revenue/PPOP, PBT signed-provision bridge, PAT, quarter flow, YTD flow and YTD cash bridge all have zero absolute difference. This was a direct snapshot audit, not a runtime execution of the repository's full validator.
+- Continue VCB only. Pending: execute the validator after its patches, finish visual review of all ten report PDFs and all statement sections, and verify VCB Q3/2026 from the direct VietstockFinance catalog before importing.
