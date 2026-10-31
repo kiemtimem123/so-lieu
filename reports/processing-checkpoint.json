@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-01T05:00:00Z",
+  "updatedAt": "2026-11-01T05:30:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -48,12 +48,13 @@
     "status": "terminal_needs_manual_review",
     "completeForAutomation": true,
     "manualReviewRemaining": true,
-    "processedAt": "2026-11-01T05:00:00Z",
+    "processedAt": "2026-11-01T05:30:00Z",
     "workflowRunId": "41088586086",
     "workflowRunNumber": 3035,
     "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/41088586086",
     "changedPaths": [
-      "data/financials-VCB.json"
+      "data/financials-VCB.json",
+      "scripts/sync-vietstock-financials.py"
     ],
     "periodCount": 10,
     "firstQuarter": "2024-Q1",
@@ -70,7 +71,7 @@
     "skipUnconfirmedAutomation": false,
     "skipUnconfirmedReason": null,
     "nextSymbol": "VCB",
-    "nextTask": "verify_tax_correction_CI_then_quarterly_pdf_visual_and_q3_catalog"
+    "nextTask": "render_and_visually_review_stored_vcb_quarterly_pdfs"
   },
   "symbolStates": {
     "MBB": {
@@ -233,7 +234,7 @@
       "skipUnconfirmedAutomation": true,
       "skipUnconfirmedReason": "Manual visual review of the stored consolidated reports and direct VietstockFinance confirmation of VCB Q3/2026 remain. Numeric source reconciliation across 10 stored periods passes.",
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-11-01T05:00:00Z",
+      "updatedAt": "2026-11-01T05:30:00Z",
       "snapshotFetchedAt": "2026-10-24T06:15:00Z",
       "sourceReconciledPeriods": [
         "2024-Q1",
@@ -260,8 +261,8 @@
         "validatorCommit": "5b57b6cac94c42055415ea73b2298303686a4011",
         "summary": "Đã đối chiếu đủ 10/10 kỳ từ sidecar PDF hợp nhất VietstockFinance. Sửa ánh xạ dòng tiền bị nhầm với thu nhập lãi/chi mua TSCĐ; tách dòng tiền quý từ YTD; khôi phục lợi nhuận thuộc cổ đông ngân hàng; bổ sung các cấu phần thu nhập thiếu; sửa dấu chi phí dự phòng Q4/2025 và Q2/2026. Additional 2026-10-31 deep audit: Q2/2024 and Q2/2025 B03/B04 page text was checked; Q2/2024 provision expense sign corrected to +1,513,541; 10 stale rejection flags per Q2 period removed after exact YTD/quarterly/cash bridge reconciliation.",
         "checks": "Mỗi kỳ đã kiểm tra cân đối tài sản, tổng cấu phần thu nhập, doanh thu so với PPOP + chi phí hoạt động, lợi nhuận trước thuế, lợi nhuận sau thuế, tổng dòng tiền YTD, số dư tiền đầu/cuối kỳ; các sai lệch tính toán sau sửa đều bằng 0.",
-        "remaining": "All ten stored periods now have no rejected financial fields. Full programmatic audit across balance, seven bank income components, revenue/PPOP, signed provision/PBT, PAT, tax components where available, quarter and YTD cash flows, cash bridge, ROA and ROE all returns zero difference. GitHub Actions bank and site validation previously PASS; the latest tax corrections are awaiting final CI confirmation. Remaining: visual review of all ten quarterly PDFs and direct VietstockFinance confirmation of VCB Q3/2026.",
-        "lastUpdatedAt": "2026-11-01T05:00:00Z",
+        "remaining": "All 10 stored periods have no rejected financial fields and pass numeric/CI validation. The direct VietstockFinance API was queried for VCB for 2025 and 2026 (12 and 18 records respectively): 2026 consolidated BCTC entries confirmed Q1, Q2 and reviewed H1; no direct Q3/2026 consolidated BCTC record/PDF was returned. The 10 quarterly PDFs remain queued for visual page-by-page review; do not import third-party Q3 figures.",
+        "lastUpdatedAt": "2026-11-01T05:30:00Z",
         "q2DeepAudit": {
           "checkedAt": "2026-10-31T15:28:14.085Z",
           "periods": [
@@ -341,7 +342,7 @@
           }
         },
         "visualReviewPending": true,
-        "snapshotBlobSha": "9e7aa5c509dcf68083aeb9567bbb179353f3fdf1",
+        "snapshotBlobSha": "0f4c17eec241e4a6547a82567361d964cbf5de4b",
         "q4_2025Finding": {
           "field": "bank_investment_securities_net",
           "old": 2735,
@@ -433,13 +434,49 @@
           "sharedHelperScopeFixCommit": "2c9b357b157397ecd61dac5035b7748c53816ddc",
           "latestMetadataCheckpointRun": "https://github.com/kiemtimem123/so-lieu/actions/runs/41227122396",
           "executedAt": "2026-11-01"
+        },
+        "catalogAudit": {
+          "status": "direct_vietstockfinance_catalog_checked_no_q3_2026_consolidated_record",
+          "sourceIndex": "https://finance.vietstock.vn/VCB/tai-tai-lieu.htm?doctype=1",
+          "apiEndpoint": "https://finance.vietstock.vn/data/getdocument",
+          "workflowRun": "https://github.com/kiemtimem123/so-lieu/actions/runs/41227887980",
+          "workflowRunId": "41227887980",
+          "requestedSymbol": "VCB",
+          "yearsChecked": [
+            2025,
+            2026
+          ],
+          "recordsReturned": {
+            "2025": 12,
+            "2026": 18
+          },
+          "bctcRecords2026": [
+            {
+              "id": "544554",
+              "title": "Báo cáo tài chính Hợp nhất quý 1 năm 2026",
+              "url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/VCB_Baocaotaichinh_Q1_2026_Hopnhat.pdf"
+            },
+            {
+              "id": "555860",
+              "title": "Báo cáo tài chính Hợp nhất quý 2 năm 2026",
+              "url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/VCB_Baocaotaichinh_Q2_2026_Hopnhat.pdf"
+            },
+            {
+              "id": "558380",
+              "title": "Báo cáo tài chính Hợp nhất Soát xét 6 tháng đầu năm 2026",
+              "url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/VCB_Baocaotaichinh_6T_2026_Soatxet_Hopnhat.pdf"
+            }
+          ],
+          "noQ3Record": "The direct VCB doctype=1 API response contained no consolidated Q3/2026 BCTC record or linked PDF. Records for Q1/Q2 and 6M only were identified among its financial statements.",
+          "secondarySourcePolicy": "Do not import Q3 values from 24HMoney/Vietcap or any source outside the direct VietstockFinance catalog.",
+          "reviewedAt": "2026-11-01"
         }
       },
       "uiCoverageReview": {
         "status": "coverage_audit_complete_pending_visual_pdf_review",
         "updatedAt": "2026-11-01T04:00:00Z",
         "snapshotFetchedAt": "2026-10-24T06:15:00Z",
-        "snapshotSha": "9e7aa5c509dcf68083aeb9567bbb179353f3fdf1",
+        "snapshotSha": "0f4c17eec241e4a6547a82567361d964cbf5de4b",
         "sourceTextReconciliationStatus": "complete_10_of_10_zero_arithmetic_deltas",
         "sourceTextReconciliationPendingVisualReview": true,
         "stages": [
@@ -573,11 +610,11 @@
           },
           {
             "id": "visual_pdf_review",
-            "status": "partially_complete",
+            "status": "pending_artifact_visual_review",
             "periodsPending": 10,
             "periodRange": "2024-Q1..2026-Q2",
-            "specificOpenIssue": "Audited 2024 annual report has been visually checked for B02 pp.130–131, B03 p.133, B04 pp.134–135 and Note 35 p.184. The 10 stored quarterly source PDFs themselves are still not fully visually reviewed; Q3/2026 still needs direct VietstockFinance catalogue confirmation.",
-            "note": "Do not claim full quarterly PDF visual completion. Screenshot-verified annual report sections establish the audited 2024 restatement only."
+            "specificOpenIssue": "The source catalog audit confirms no direct VietstockFinance consolidated Q3/2026 record/PDF. The 10 already stored quarterly PDFs remain pending visual review; the 2024 audited Annual Report has partial B02/B03/B04/Note 35 visual verification only.",
+            "note": "Continue visual review by rendering archived, catalog-linked PDFs in GitHub Actions; do not rerun OCR/enrichment or re-read existing extracted values."
           },
           {
             "id": "source_page_text_deep_audit_q4_2024_q1_2025",
@@ -771,6 +808,42 @@
             "roa": 2.23,
             "roe": 24.12
           }
+        },
+        "catalogAudit20261101": {
+          "status": "direct_vietstockfinance_catalog_checked_no_q3_2026_consolidated_record",
+          "sourceIndex": "https://finance.vietstock.vn/VCB/tai-tai-lieu.htm?doctype=1",
+          "apiEndpoint": "https://finance.vietstock.vn/data/getdocument",
+          "workflowRun": "https://github.com/kiemtimem123/so-lieu/actions/runs/41227887980",
+          "workflowRunId": "41227887980",
+          "requestedSymbol": "VCB",
+          "yearsChecked": [
+            2025,
+            2026
+          ],
+          "recordsReturned": {
+            "2025": 12,
+            "2026": 18
+          },
+          "bctcRecords2026": [
+            {
+              "id": "544554",
+              "title": "Báo cáo tài chính Hợp nhất quý 1 năm 2026",
+              "url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/VCB_Baocaotaichinh_Q1_2026_Hopnhat.pdf"
+            },
+            {
+              "id": "555860",
+              "title": "Báo cáo tài chính Hợp nhất quý 2 năm 2026",
+              "url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/VCB_Baocaotaichinh_Q2_2026_Hopnhat.pdf"
+            },
+            {
+              "id": "558380",
+              "title": "Báo cáo tài chính Hợp nhất Soát xét 6 tháng đầu năm 2026",
+              "url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/VCB_Baocaotaichinh_6T_2026_Soatxet_Hopnhat.pdf"
+            }
+          ],
+          "noQ3Record": "The direct VCB doctype=1 API response contained no consolidated Q3/2026 BCTC record or linked PDF. Records for Q1/Q2 and 6M only were identified among its financial statements.",
+          "secondarySourcePolicy": "Do not import Q3 values from 24HMoney/Vietcap or any source outside the direct VietstockFinance catalog.",
+          "reviewedAt": "2026-11-01"
         }
       },
       "snapshotSha": "de81130194d8d0da5e1f909d7fae1251a531ad57",
@@ -778,7 +851,7 @@
         "date": "2026-11-01",
         "status": "Q4_2024_AUDITED_CASH_RESTATEMENT_APPLIED",
         "commit": "01a27a27c3cf6e45dbe14f7e0d681e4a35a24d6b",
-        "snapshotBlobSha": "9e7aa5c509dcf68083aeb9567bbb179353f3fdf1",
+        "snapshotBlobSha": "0f4c17eec241e4a6547a82567361d964cbf5de4b",
         "finding": "The 2,546,277 million VND Q4/2024 vs Q1/2025 difference was caused by the preliminary Q4/2024 cash-flow report being superseded by audited 2024 consolidated statements. Q1/2025 comparative and audited 2024 statement agree at 430,614,185.",
         "sourceIndex": "https://finance.vietstock.vn/VCB/tai-tai-lieu.htm?doctype=1",
         "sourceDocuments": {
@@ -812,7 +885,7 @@
           "q32026": "Candidate report is listed by external aggregators, but direct VietstockFinance catalogue document ID/PDF is not yet confirmed; do not add it from secondary source."
         }
       },
-      "snapshotBlobSha": "9e7aa5c509dcf68083aeb9567bbb179353f3fdf1",
+      "snapshotBlobSha": "0f4c17eec241e4a6547a82567361d964cbf5de4b",
       "nextAction": "Continue VCB only: perform visual review of the remaining report statement pages and verify Q3/2026 directly from the VietstockFinance document catalogue. Do not move to SHS until VCB is closed.",
       "validationLogic20261101": {
         "status": "patched_pending_runtime_execution",
@@ -855,7 +928,7 @@
       "numericAudit20261101": {
         "date": "2026-11-01",
         "status": "SOURCE_RECONCILED_NUMERIC_AUDIT_PASS",
-        "snapshotBlobSha": "9e7aa5c509dcf68083aeb9567bbb179353f3fdf1",
+        "snapshotBlobSha": "0f4c17eec241e4a6547a82567361d964cbf5de4b",
         "dataAudit": {
           "periods": 10,
           "periodRange": "2024-Q1..2026-Q2",
@@ -941,6 +1014,42 @@
         ],
         "confirms": "Audited 2024 consolidated balance sheet, income statement, annual cash-flow totals and cash-equivalents breakdown.",
         "limitation": "Does not count as visual review of the 10 quarterly source PDFs. Those remain pending."
+      },
+      "catalogAudit20261101": {
+        "status": "direct_vietstockfinance_catalog_checked_no_q3_2026_consolidated_record",
+        "sourceIndex": "https://finance.vietstock.vn/VCB/tai-tai-lieu.htm?doctype=1",
+        "apiEndpoint": "https://finance.vietstock.vn/data/getdocument",
+        "workflowRun": "https://github.com/kiemtimem123/so-lieu/actions/runs/41227887980",
+        "workflowRunId": "41227887980",
+        "requestedSymbol": "VCB",
+        "yearsChecked": [
+          2025,
+          2026
+        ],
+        "recordsReturned": {
+          "2025": 12,
+          "2026": 18
+        },
+        "bctcRecords2026": [
+          {
+            "id": "544554",
+            "title": "Báo cáo tài chính Hợp nhất quý 1 năm 2026",
+            "url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/VCB_Baocaotaichinh_Q1_2026_Hopnhat.pdf"
+          },
+          {
+            "id": "555860",
+            "title": "Báo cáo tài chính Hợp nhất quý 2 năm 2026",
+            "url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/VCB_Baocaotaichinh_Q2_2026_Hopnhat.pdf"
+          },
+          {
+            "id": "558380",
+            "title": "Báo cáo tài chính Hợp nhất Soát xét 6 tháng đầu năm 2026",
+            "url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/VCB_Baocaotaichinh_6T_2026_Soatxet_Hopnhat.pdf"
+          }
+        ],
+        "noQ3Record": "The direct VCB doctype=1 API response contained no consolidated Q3/2026 BCTC record or linked PDF. Records for Q1/Q2 and 6M only were identified among its financial statements.",
+        "secondarySourcePolicy": "Do not import Q3 values from 24HMoney/Vietcap or any source outside the direct VietstockFinance catalog.",
+        "reviewedAt": "2026-11-01"
       }
     },
     "TPB": {
