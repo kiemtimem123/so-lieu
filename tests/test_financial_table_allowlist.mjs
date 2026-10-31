@@ -20,4 +20,16 @@ for (const field of ["current_assets", "total_assets", "net_profit_attributable"
 for (const field of ["gross_profit", "cash_and_equivalents"]) {
   assert.equal(allowed(field, detail, core, rejected), false, field);
 }
-console.log("Financial table source allow-list regression checks passed.");
+
+const grossProfitFromSource = (revenue, signedCogs) => revenue - signedCogs;
+const revenueFromSource = (grossProfit, signedCogs) => grossProfit + signedCogs;
+
+// Positive-expense and negative-deduction source conventions must both reconcile.
+assert.equal(grossProfitFromSource(950374, 590717), 359657);
+assert.equal(revenueFromSource(359657, 590717), 950374);
+assert.equal(grossProfitFromSource(578664, -9920), 588584);
+assert.equal(revenueFromSource(588584, -9920), 578664);
+assert.ok(app.includes("num('revenue') - num('cost_of_goods_sold')"));
+assert.ok(app.includes("num('gross_profit') + num('cost_of_goods_sold')"));
+
+console.log("Financial table source allow-list and signed-COGS regression checks passed.");
