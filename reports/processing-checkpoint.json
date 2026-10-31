@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-31T10:22:00+07:00",
+  "updatedAt": "2026-10-31T12:40:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -2569,14 +2569,11 @@
     "codeFix": "scripts/validate-financials.mjs now reports chronological first/last periods from sorted unique period keys instead of relying on insertion order."
   },
   "nextActions": [
-    "Không chạy lại OCR/enrich hoặc ghi đè snapshot của mã đã hoàn thành/đang giữ rà soát thủ công; tiếp tục xử lý bảng hiển thị theo từng mã.",
-    "KBC: 11/11 kỳ; signed-COGS formula fix committed and CI passed. Không xử lý lại nếu không có lỗi mới.",
-    "NLG: coverage review đã lưu; các ô trống Q2/2025 và LCTT Q1/Q2 2026 là trường thiếu/bị loại hoặc chưa đủ cơ sở tách quý. Không OCR/enrich lại khi manual hold còn hiệu lực.",
-    "BSR: coverage review snapshot-only đã lưu; các dòng chi tiết thiếu ở kỳ đầu không tự bổ sung.",
-    "TCB: 11 kỳ ngân hàng; KQKD đủ 22/22 dòng mỗi kỳ; LCTT thiếu 3 ô (cổ tức Q4/2024, Q1/2025 và tỷ giá Q3/2026); CĐKT còn nhiều dòng chi tiết vắng trong snapshot. Không map trường gần giống hoặc tự suy diễn.",
-    "VHM: 10 kỳ BĐS; CĐKT 95/130, KQKD 85/220, LCTT 63/90, ROA/ROE 20/20. Q2/2024 và Q2/2025 thiếu nhiều dòng KQKD sau đối chiếu lũy kế; Q3/2024 và Q1/2026 thiếu chi tiết CĐKT. Không OCR/enrich lại khi manual hold còn hiệu lực.",
-    "ROA/ROE chỉ hiển thị từ nguồn hoặc phép tính có đủ lợi nhuận quý và số dư bình quân cùng phạm vi; P/B để trống khi thiếu giá thị trường và giá trị sổ sách/cổ phiếu.",
-    "Mọi bảng phải giữ cùng bộ lọc mã, kỳ, đơn vị và phạm vi hợp nhất/riêng lẻ; trường bị từ chối hoặc scope chưa xác nhận tiếp tục bị ẩn."
+    "KBC: 11 kỳ 2024-Q1–2026-Q3; coverage audit đã lưu. CĐKT thiếu nợ dài hạn Q3/2026 do OCR lệch tổng nợ 100 tỷ VND; KQKD thiếu một số dòng chi tiết; LCTT thiếu FX riêng và cổ tức ở nhiều kỳ. Không plug/khôi phục từ mã khác.",
+    "IDC: tiếp tục rà soát độ phủ bảng theo row keys trong assets/app.js; chỉ đọc snapshot IDC hiện có, không chạy lại OCR/enrich; giữ cờ manual review ở Q2/2025 tax bridge và Q2/2026 cashflow, Q4/2025 interest expense để trống.",
+    "NLG, BSR, TCB, VHM: coverage audit đã lưu; không đọc lại snapshot hoặc xử lý lại trừ khi phát hiện lỗi cụ thể mới.",
+    "ROA/ROE chỉ hiển thị khi cùng phạm vi có lợi nhuận quý và số dư bình quân; P/B để trống khi thiếu giá thị trường và BVPS/số cổ phiếu phù hợp.",
+    "Mọi bảng tiếp tục dùng cùng mã, kỳ, đơn vị và phạm vi hợp nhất/riêng lẻ; trường bị từ chối hoặc scope chưa xác nhận tiếp tục để trống."
   ],
   "lastUiUpdate": {
     "updatedAt": "2026-10-30T18:35:00+07:00",
@@ -2612,32 +2609,28 @@
     "note": "Gói Hostinger đã build thành công; chưa có thao tác triển khai trực tiếp lên hosting."
   },
   "lastUiWorkCheckpoint": {
-    "processedAt": "2026-10-31T11:15:00+07:00",
-    "commit": "0eab5cd6f7d3763bc68ab84213e5bfd6e4d5acfa",
+    "processedAt": "2026-10-31T12:40:00+07:00",
+    "commit": "pending",
     "changedPaths": [
-      "data/financials-GEG.json",
-      "assets/app.js"
+      "reports/processing-checkpoint.json"
     ],
     "task": "financial_report_table_display",
-    "status": "IDC_core_income_statement_fields_reconciled",
+    "status": "KBC_statement_table_coverage_review_saved",
     "findings": [
-      "GAS OCR queue completed; 10/10 periods source-text reviewed. Remaining visual/manual exceptions are retained and not fabricated.",
-      "Fixed quarterly cash-flow table mode: explicitly extracted YTD values can display as Q1 flow or be differenced against the previous quarter's accepted YTD/quarterly baseline, even when the row has a general manual-review badge.",
-      "Rows are filtered through rowsFor/explicit extracted fields/rejected fields before calculation, so rejected or unapproved OCR values remain blank.",
-      "Validate Site and Data succeeded; Package Hostinger Stock Dashboard succeeded.",
-      "For rows flagged manual extraction, formulas can now use only the source-approved values retained by rowsFor allow-list; unconfirmed report scope remains a hard block. This enables valid derived gross profit, tax, bank subtotals, and quarterly cashflow without exposing rejected OCR values.",
-      "Validate Site and Data completed successfully after the change.",
-      "GEG: restored quarterly cost of goods sold and gross profit for Q2/2024–Q2/2026 (9 periods) from VietstockFinance consolidated income statements; Q1/2024 gross profit remains derivable from source-approved revenue and COGS.",
-      "GEG gross profit source bridge rechecked using exact raw VND revenue, COGS and gross-profit values: eight periods exact, Q4/2025 residual -600,000 VND (0.0002%).",
-      "GEG balance-sheet source corrections: Q3/2024 liabilities/equity mapping fixed; Q2/2024 current-assets subtotal fixed; Q4/2025 non-current-assets subtotal fixed. Core balance equations reconcile within <=0.01%.",
-      "IDC: all 10 periods have source-text-reconciled core balance-sheet and income-statement rows; Q2/2025 tax bridge and Q2/2026 cashflow exceptions remain flagged; Q4/2025 interest expense stays blank."
+      "KBC: snapshot-only financial table coverage review, 11 periods 2024-Q1–2026-Q3, consolidated, million VND; no OCR/enrich and no snapshot values changed.",
+      "Generic business balance sheet rows: 12/13 keys populated in all 11 periods; long_term_liabilities is blank only in 2026-Q3 because the source OCR candidate differed from total liabilities by VND 100bn. Keep blank; do not derive as a balancing plug.",
+      "Generic income statement: revenue, COGS, gross profit, financial income/expense, associates, selling/admin expense, operating profit, other profit, pretax profit, total tax, deferred tax, net profit, parent profit, NCI and EPS populated in all 11 periods. interest_expense missing 2024-Q4; other_income and other_expense missing 2025-Q2; income_tax_current missing 2026-Q1 because OCR had competing candidates. Do not infer these details.",
+      "Cash flow: CFO, CFI, CFF, capex, net cash change, opening cash and closing cash populated in all 11 periods. foreign_exchange_effect has no populated values; source notes indicate no separate FX line in selected statement. dividends_paid populated only 2/11 periods; leave the rest blank. Cash-flow source/visual anomalies remain manual review: 2024-Q1 source page missing, 2024-Q2 quarter flow unavailable from saved YTD source, 2026-Q1 opening cash bridge, 2026-Q3 component-sum OCR candidate, and other source-text-only periods.",
+      "Ratios: ROA/ROE values present in all 11 periods, but source metadata says OCR-derived and not visually verified; preserve review status. Valuation P/B remains blank without matching market price/book value inputs.",
+      "Renderer audit: KBC is industry 'other'; rowsForBasis filters consolidated vs separate based on report_type, rowsFor removes only explicit manual-extraction/scope blockers and rejected/unapproved fields, and resolveStatementValue returns same-period values/approved calculations. No KBC-specific cross-ticker/cross-period fallback or blanket row hiding found. Missing cells align with absent/rejected snapshot values.",
+      "Q1/2025 metadata discrepancy: core_source_checks.net_profit_residual_vnd=544,681 VND (within 0.01% tolerance), while income_statement_source_checks.net_profit_residual_vnd=10,541,455,319 VND. Source raw figures show current tax 264,950,376,777 + deferred tax 10,541,455,319 = total tax 275,491,832,096; pretax 1,124,592,777,839 - total tax = net profit 849,100,945,743. Keep source numbers; flag the secondary check metadata as inconsistent rather than rewriting financial values."
     ],
-    "next": "Move to KBC for the next one-ticker statement coverage pass, then continue remaining eligible tickers without reloading completed source data."
+    "next": "Continue one-ticker snapshot-only statement coverage audit with IDC; do not reprocess KBC or any previously validated ticker unless a new explicit error is confirmed."
   },
   "lastUiWork": {
     "workstream": "financial-report-tables",
-    "status": "financial_table_coverage_review_NLG_BSR_TCB_VHM",
-    "updatedAt": "2026-10-31T10:22:00+07:00",
+    "status": "financial_table_coverage_review_KBC",
+    "updatedAt": "2026-10-31T12:40:00+07:00",
     "commits": [
       "4023bbca7d9a94f5ef29c1b2917bbecf2b516efe",
       "558b6a129a671d60c3e3e92c69cae888c05660fb",
@@ -2649,41 +2642,33 @@
       "61d983fa76fe258885c670a0f842a75216f16d07",
       "0418880ff2aab091f412892dc553a2169a87ad88",
       "25a5c9014ed3af1814dbce5597e434f656db07cf",
-      "b6e2cf970cef265200c208b7a65059f98bbe8146"
+      "b6e2cf970cef265200c208b7a65059f98bbe8146",
+      "pending"
     ],
-    "finding": "Một số BCTC ghi giá vốn là số âm (dòng giảm trừ), trong khi các mã/kỳ khác ghi giá vốn là số dương. Công thức cũ dùng Math.abs() nên có thể tính sai khi cần tái lập doanh thu hoặc lợi nhuận gộp từ trường còn lại.\nNLG coverage review (2026-10-31): rowsFor() does not blanket-hide NLG detail rows because its quarter verification statuses are verified_ocr_reconciled/verified_manual_visual_reconciliation; detail rows remain visible when present. Q2/2025 sparse balance/income fields are absent from the normalized snapshot after extraction/reconciliation rejects; do not synthesize or re-run OCR under manual hold. Q1/2026 operating cash flow remains withheld due 100,000,000,000 VND reconciliation delta; Q1/Q2 2026 quarterly CFO/CFI/CFF cannot be derived safely where Q1 base is rejected or absent. Q2/2026 opening cash discrepancy (~33,084.7 million VND) remains source anomaly; retain source values. ROA/ROE recalc metadata matches stored values for reviewed periods.\nBSR coverage audit (snapshot-only; no OCR/enrich): 10 periods 2024-Q1–2026-Q2, consolidated, million VND. Raw stored numeric-field coverage against generic statement row keys: balance 71/130, income 87/210, cash flow 70/90, ROA/ROE 20/20. This is a raw-field count; renderer can additionally derive explicitly supported values from same-period inputs/YTD deltas. Early periods 2024-Q1 through 2025-Q2 have sparse balance/income detail (3–6 direct balance rows and 4–6 income rows per quarter); detailed rows absent from snapshot must remain blank. Cash-flow source normalization exists across all 10 quarters, but several fields are absent/rejected and remain subject to audit notes. Q1/Q2 2026 contain source-backed normalized cash-flow aggregates; Q2/2026 is an unaudited consolidated report and remains marked pending visual review.\nTCB banking-table coverage audit (snapshot-only; no OCR/enrich): 11 periods 2024-Q1–2026-Q3, consolidated, million VND. Using the actual banking row keys from getStatementRows(), KQKD is 242/242 populated cells (all 22 rows per quarter), LCTT is 96/99 (missing dividends_paid Q4/2024, Q1/2025 and foreign_exchange_effect Q3/2026), and banking CĐKT is 175/374 populated cells across 34 detail/total rows. The CĐKT gaps are mostly line items not present in the normalized snapshot; do not alias similarly named generic fields or infer them. Cash-flow missing cells remain blank; source notes document the 3 missing fields. No cross-ticker or cross-period fallback identified in the inspected render path; selected ticker is passed through rowsForBasis/resolveStatementValue and period lookup.\nVHM real-estate table coverage audit (snapshot-only; no OCR/enrich): 10 periods 2024-Q1–2026-Q2, consolidated, million VND. Generic real-estate CĐKT 95/130; KQKD 85/220; LCTT 63/90; ROA/ROE 20/20. Q2/2024 and Q2/2025 income statements have only 4 directly stored metrics after cumulative reconciliation; other missing line items are not in the snapshot and must remain blank. Q3/2024 CĐKT only 5 fields and Q1/2026 only 3 fields; preserve the missing detail rows. Cash-flow gaps (capex, FX, dividends) are absent in multiple periods. No evidence of a blanket renderer filter or safe source-backed alias for these missing fields.",
-    "correction": "Đổi công thức sang dùng giá vốn có dấu nguồn: gross_profit = revenue - cost_of_goods_sold; revenue = gross_profit + cost_of_goods_sold. Không đổi giá trị gốc trong snapshot.",
+    "finding": "Một số BCTC ghi giá vốn là số âm (dòng giảm trừ), trong khi các mã/kỳ khác ghi giá vốn là số dương. Công thức cũ dùng Math.abs() nên có thể tính sai khi cần tái lập doanh thu hoặc lợi nhuận gộp từ trường còn lại.\nNLG coverage review (2026-10-31): rowsFor() does not blanket-hide NLG detail rows because its quarter verification statuses are verified_ocr_reconciled/verified_manual_visual_reconciliation; detail rows remain visible when present. Q2/2025 sparse balance/income fields are absent from the normalized snapshot after extraction/reconciliation rejects; do not synthesize or re-run OCR under manual hold. Q1/2026 operating cash flow remains withheld due 100,000,000,000 VND reconciliation delta; Q1/Q2 2026 quarterly CFO/CFI/CFF cannot be derived safely where Q1 base is rejected or absent. Q2/2026 opening cash discrepancy (~33,084.7 million VND) remains source anomaly; retain source values. ROA/ROE recalc metadata matches stored values for reviewed periods.\nBSR coverage audit (snapshot-only; no OCR/enrich): 10 periods 2024-Q1–2026-Q2, consolidated, million VND. Raw stored numeric-field coverage against generic statement row keys: balance 71/130, income 87/210, cash flow 70/90, ROA/ROE 20/20. This is a raw-field count; renderer can additionally derive explicitly supported values from same-period inputs/YTD deltas. Early periods 2024-Q1 through 2025-Q2 have sparse balance/income detail (3–6 direct balance rows and 4–6 income rows per quarter); detailed rows absent from snapshot must remain blank. Cash-flow source normalization exists across all 10 quarters, but several fields are absent/rejected and remain subject to audit notes. Q1/Q2 2026 contain source-backed normalized cash-flow aggregates; Q2/2026 is an unaudited consolidated report and remains marked pending visual review.\nTCB banking-table coverage audit (snapshot-only; no OCR/enrich): 11 periods 2024-Q1–2026-Q3, consolidated, million VND. Using the actual banking row keys from getStatementRows(), KQKD is 242/242 populated cells (all 22 rows per quarter), LCTT is 96/99 (missing dividends_paid Q4/2024, Q1/2025 and foreign_exchange_effect Q3/2026), and banking CĐKT is 175/374 populated cells across 34 detail/total rows. The CĐKT gaps are mostly line items not present in the normalized snapshot; do not alias similarly named generic fields or infer them. Cash-flow missing cells remain blank; source notes document the 3 missing fields. No cross-ticker or cross-period fallback identified in the inspected render path; selected ticker is passed through rowsForBasis/resolveStatementValue and period lookup.\nVHM real-estate table coverage audit (snapshot-only; no OCR/enrich): 10 periods 2024-Q1–2026-Q2, consolidated, million VND. Generic real-estate CĐKT 95/130; KQKD 85/220; LCTT 63/90; ROA/ROE 20/20. Q2/2024 and Q2/2025 income statements have only 4 directly stored metrics after cumulative reconciliation; other missing line items are not in the snapshot and must remain blank. Q3/2024 CĐKT only 5 fields and Q1/2026 only 3 fields; preserve the missing detail rows. Cash-flow gaps (capex, FX, dividends) are absent in multiple periods. No evidence of a blanket renderer filter or safe source-backed alias for these missing fields.\nKBC: snapshot-only financial table coverage review, 11 periods 2024-Q1–2026-Q3, consolidated, million VND; no OCR/enrich and no snapshot values changed.\nGeneric business balance sheet rows: 12/13 keys populated in all 11 periods; long_term_liabilities is blank only in 2026-Q3 because the source OCR candidate differed from total liabilities by VND 100bn. Keep blank; do not derive as a balancing plug.\nGeneric income statement: revenue, COGS, gross profit, financial income/expense, associates, selling/admin expense, operating profit, other profit, pretax profit, total tax, deferred tax, net profit, parent profit, NCI and EPS populated in all 11 periods. interest_expense missing 2024-Q4; other_income and other_expense missing 2025-Q2; income_tax_current missing 2026-Q1 because OCR had competing candidates. Do not infer these details.\nCash flow: CFO, CFI, CFF, capex, net cash change, opening cash and closing cash populated in all 11 periods. foreign_exchange_effect has no populated values; source notes indicate no separate FX line in selected statement. dividends_paid populated only 2/11 periods; leave the rest blank. Cash-flow source/visual anomalies remain manual review: 2024-Q1 source page missing, 2024-Q2 quarter flow unavailable from saved YTD source, 2026-Q1 opening cash bridge, 2026-Q3 component-sum OCR candidate, and other source-text-only periods.\nRatios: ROA/ROE values present in all 11 periods, but source metadata says OCR-derived and not visually verified; preserve review status. Valuation P/B remains blank without matching market price/book value inputs.\nRenderer audit: KBC is industry 'other'; rowsForBasis filters consolidated vs separate based on report_type, rowsFor removes only explicit manual-extraction/scope blockers and rejected/unapproved fields, and resolveStatementValue returns same-period values/approved calculations. No KBC-specific cross-ticker/cross-period fallback or blanket row hiding found. Missing cells align with absent/rejected snapshot values.\nQ1/2025 metadata discrepancy: core_source_checks.net_profit_residual_vnd=544,681 VND (within 0.01% tolerance), while income_statement_source_checks.net_profit_residual_vnd=10,541,455,319 VND. Source raw figures show current tax 264,950,376,777 + deferred tax 10,541,455,319 = total tax 275,491,832,096; pretax 1,124,592,777,839 - total tax = net profit 849,100,945,743. Keep source numbers; flag the secondary check metadata as inconsistent rather than rewriting financial values.",
+    "correction": "No financial snapshot values or rendering logic changed. KBC table blanks correspond to absent/rejected fields; preserve manual review holds and source scope.",
     "affectedSymbols": [
-      "KBC",
-      "NLG",
-      "BSR",
-      "TCB",
-      "VHM"
+      "KBC"
     ],
     "affectedFields": [
-      "cost_of_goods_sold",
-      "gross_profit",
-      "revenue",
-      "operating_cash_flow",
-      "investing_cash_flow",
-      "financing_cash_flow",
+      "long_term_liabilities",
+      "interest_expense",
+      "other_income",
+      "other_expense",
+      "income_tax_current",
       "foreign_exchange_effect",
       "dividends_paid",
       "roa",
       "roe"
     ],
-    "regressionTest": "tests/test_financial_table_allowlist.mjs — thêm kiểm tra cả giá vốn dương và âm, bao gồm KBC 2025-Q2 (doanh thu 578664; giá vốn -9920; lợi nhuận gộp 588584; đơn vị triệu VND).",
+    "regressionTest": "Existing table renderer inspected: rowsForBasis/resolveStatementValue preserve ticker, period and basis; no safe new alias or missing-field backfill identified.",
     "validationRun": {
-      "id": 41163881062,
+      "id": 41169906779,
       "workflow": "Validate Site and Data",
       "conclusion": "success"
     },
-    "packageRun": {
-      "id": 41163878266,
-      "workflow": "Package Hostinger Stock Dashboard",
-      "conclusion": "success"
-    },
-    "remaining": "TCB: KQKD 100%, LCTT 96.97%, banking CĐKT 46.8% direct fields; blank balance-sheet lines are absent from normalized snapshot. VHM: real-estate CĐKT 73.1%, KQKD 38.6%, LCTT 70%, ROA/ROE 100%; many blanks are source-absent after reconciliation. Do not rerun OCR/enrich or invent values. Continue with next checkpoint symbol / UI-specific coverage audit.",
+    "packageRun": null,
+    "remaining": "KBC coverage pass complete. Continue IDC as next one-ticker table coverage review; do not run OCR/enrich.",
     "newRows": [
       "Lãi/(lỗ) từ bán, thanh lý bất động sản đầu tư (dòng riêng) — nhóm bất động sản",
       "Lợi ích cổ đông không kiểm soát (NCI) — bảng KQKD nhóm doanh nghiệp thông thường"
