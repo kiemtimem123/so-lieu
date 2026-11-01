@@ -2,7 +2,7 @@
 
 Phiên bản: 3.4  
 Ngày thiết lập: 2026-10-28  
-Cập nhật gần nhất: 2026-11-01  
+Cập nhật gần nhất: 2026-11-02  
 Phạm vi: `kiemtimem123/so-lieu`, dữ liệu BCTC quý từ 2024-Q1 trở đi.
 
 ## Nguyên tắc bắt buộc
