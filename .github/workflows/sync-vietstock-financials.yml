@@ -41,12 +41,35 @@ jobs:
             /config/securities.json
             /data/financials-*.json
             /scripts/sync-vietstock-financials.py
+            /scripts/financial_units.py
             /scripts/validate-financials.mjs
+            /reports/processing-checkpoint.json
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
+      - name: Resolve active ticker from durable checkpoint
+        id: select
+        env:
+          REQUESTED_SYMBOL: ${{ github.event.inputs.symbol || '' }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          requested = os.environ.get("REQUESTED_SYMBOL", "").strip().upper()
+          checkpoint = json.loads(Path("reports/processing-checkpoint.json").read_text(encoding="utf-8"))
+          symbol = requested or str(checkpoint.get("activeSymbol") or checkpoint.get("resumeSymbolHint") or "").strip().upper()
+          if not symbol:
+              raise SystemExit("No explicit symbol or active checkpoint ticker; refusing to guess a ticker.")
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              output.write(f"symbol={symbol}\\n")
+          print(f"Selected one ticker from saved checkpoint: {symbol}")
+          PY
 
       - name: Keep short sync batches lightweight
         shell: bash
@@ -63,9 +86,9 @@ jobs:
       - name: Check VietstockFinance catalog and append new quarters
         env:
           PYTHONUTF8: "1"
-          FINANCIAL_SYNC_SYMBOL: ${{ github.event.inputs.symbol || (github.event_name == 'push' && 'VCB') || '' }}
+          FINANCIAL_SYNC_SYMBOL: ${{ steps.select.outputs.symbol }}
           FINANCIAL_SYNC_BOOTSTRAP_ONLY: "1"
-          # A deliberate push to the script or VCB catalog trigger is an explicit one-ticker VCB lookup; scheduled runs still honor the cooldown.
+          # Script pushes and scheduled runs resume the durable active ticker; choose a specific ticker via workflow_dispatch.
           FINANCIAL_SYNC_FORCE_RETRY: ${{ github.event_name == 'push' && '1' || '0' }}
         run: python scripts/sync-vietstock-financials.py
 
