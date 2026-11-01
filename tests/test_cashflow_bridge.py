@@ -1211,6 +1211,50 @@ class SHSCashFlowNormalizationTests(unittest.TestCase):
                 self.assertEqual(row["eps_source_reconciliation"]["source_value"], value)
                 self.assertEqual(row["eps_source_reconciliation"]["selected_column"], "Quý hiện tại")
 
+    def test_shs_securities_table_aliases_match_verified_b02_rows_for_all_eleven_periods(self):
+        snapshot = json.loads(
+            (ROOT / "data" / "financials-SHS.json").read_text(encoding="utf-8")
+        )
+        expected_rows = {
+            "broker_total_operating_revenue": ("revenue", 20),
+            "broker_total_operating_expenses": ("broker_operating_expenses", 40),
+            "broker_financial_income": ("financial_income", 50),
+            "broker_financial_expense": ("financial_expense", 60),
+            "broker_interest_expense": ("interest_expense", 52),
+            "broker_admin_expenses": ("admin_expense", 62),
+            "broker_net_operating_profit": ("operating_profit", 70),
+        }
+        self.assertEqual(len(snapshot["items"]), 11)
+        for row in snapshot["items"]:
+            with self.subTest(period=row["period"]):
+                reconciliation = row["securities_table_alias_reconciliation"]
+                self.assertEqual(reconciliation["status"], "source_visually_verified")
+                self.assertEqual(reconciliation["source_url"], row["b02_detail_source_reconciliation"]["source_url"])
+                self.assertEqual(
+                    row["b02_detail_source_reconciliation"]["status"],
+                    "source_visually_verified",
+                )
+                for alias, (base_field, source_row) in expected_rows.items():
+                    self.assertIsInstance(row.get(base_field), (int, float))
+                    self.assertEqual(row.get(alias), row[base_field])
+                    self.assertEqual(reconciliation["mapping"][alias]["source_row"], source_row)
+                    self.assertEqual(
+                        reconciliation["mapping"][alias]["normalized_value_million_vnd"],
+                        row[base_field],
+                    )
+                    self.assertIn(alias, row["financial_line_items_extracted_fields"])
+                    self.assertIn(alias, row["financial_line_items_manually_verified_fields"])
+                    self.assertNotIn(alias, row.get("financial_line_items_rejected_fields", []))
+
+        # Regression cases: separate borrowing-cost row 52 from total finance row 60,
+        # and keep the CTCK total expenses row 40 rather than an OCR component subtotal.
+        self.assertEqual(self.all_rows["2024-Q2"]["broker_interest_expense"], 13457)
+        self.assertEqual(self.all_rows["2024-Q4"]["broker_total_operating_expenses"], 202588)
+        self.assertEqual(self.all_rows["2025-Q3"]["broker_financial_expense"], 72324)
+        self.assertEqual(self.all_rows["2025-Q3"]["broker_interest_expense"], 71723)
+        self.assertEqual(self.all_rows["2026-Q1"]["broker_financial_expense"], 165608)
+        self.assertEqual(self.all_rows["2026-Q1"]["broker_interest_expense"], 165122)
+
     def test_shs_revenue_row20_and_tax_components_match_original_b02_for_all_ten_periods(self):
         expected = {
             "2024-Q1": (564565, 46789, 40783, 87572),
