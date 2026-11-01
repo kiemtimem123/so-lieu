@@ -629,6 +629,16 @@ def extract_statement(
     lines = [line.strip() for line in text.splitlines() if line.strip()]
 
     asset_series = row_numbers(lines, ASSET_LABELS)
+    # Securities-company B01 uses code 270 (270=100+200) for total assets.
+    # OCR sometimes destroys the label but preserves the formula and amounts.
+    if symbol in BROKERS and not asset_series:
+        for source_line in lines:
+            if re.search(r"100\s*\+\s*200", norm(source_line)):
+                code_values = [number_value(token) for token in NUMBER_RE.findall(source_line)]
+                code_values = [value for value in code_values if value is not None and abs(value) >= 1000]
+                if code_values:
+                    asset_series = code_values[:5]
+                    break
     liability_series = row_numbers(lines, LIABILITY_LABELS)
     equity_series = row_numbers(lines, EQUITY_LABELS)
     source_total_series = row_numbers(lines, SOURCE_TOTAL_LABELS)
