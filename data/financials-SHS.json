@@ -4075,11 +4075,12 @@
         "other_expense",
         "other_profit",
         "broker_fvtpl_gain",
-        "broker_afs_income"
+        "broker_afs_income",
+        "broker_held_to_maturity_assets"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/cc0a692f672abc5d.pdf",
-      "financial_line_items_updated_at": "2026-10-27T07:53:54+00:00",
+      "financial_line_items_updated_at": "2026-11-01",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã ưu tiên B03b Q4/2024 gốc (trang PDF 13–14) sau rà soát trực quan; giữ chênh lệch với cột so sánh Q4/2025 trong metadata, không thay số nguồn gốc. Đã rà soát trực quan B02 gốc: khôi phục tổng doanh thu hoạt động dòng 20 = 551,216 triệu VND; thuế hiện hành 35,988, thuế hoãn lại 13,444 triệu VND. Không dùng dòng doanh thu thành phần thay tổng doanh thu. Đã rà soát B01 ảnh PDF gốc, khôi phục các tổng tài sản/ngắn hạn/dài hạn và nguồn vốn có dòng hiển thị rõ; các cờ chặn tổng phụ tương ứng đã gỡ.",
       "interest_expense": 23633,
       "financial_line_items_prior_values": {
@@ -4293,6 +4294,11 @@
           "old_value": 0,
           "new_value": 3454,
           "reason": "Đối chiếu trực tiếp cột “Quý hiện tại” B02-CTCK, mã dòng 08, trang PDF 10; chuẩn hóa VND sang triệu VND theo quy tắc làm tròn gần nhất."
+        },
+        "broker_held_to_maturity_assets": {
+          "old_value": null,
+          "new_value": 0,
+          "reason": "Đối chiếu trực tiếp B01-CTCK dòng 113, PDF trang 5; VND gốc 0, quy đổi triệu VND."
         }
       },
       "cash_beginning_reported_ytd": 851889,
@@ -4615,7 +4621,8 @@
         "broker_brokerage_revenue",
         "broker_underwriting_revenue",
         "broker_advisory_revenue",
-        "broker_custody_revenue"
+        "broker_custody_revenue",
+        "broker_held_to_maturity_assets"
       ],
       "eps_source_reconciliation": {
         "status": "source_visually_verified",
@@ -5101,6 +5108,19 @@
           }
         },
         "note": "Các dòng chi tiết lấy từ cột Quý hiện tại, không lấy cột lũy kế. Dấu gạch ngang trên BCTC được ghi 0; số âm giữ nguyên dấu như báo cáo. Không tự suy diễn các dòng phụ không có trong biểu mẫu."
+      },
+      "broker_held_to_maturity_assets": 0,
+      "financial_line_items_source_row_audit": {
+        "broker_held_to_maturity_assets": {
+          "status": "source_visually_verified",
+          "source_statement": "B01-CTCK",
+          "source_row": "113",
+          "source_pdf_page": 5,
+          "source_value_vnd": 0,
+          "normalized_value_million_vnd": 0,
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2024.pdf"
+        }
       }
     },
     {
@@ -5330,11 +5350,13 @@
         "broker_brokerage_revenue",
         "broker_underwriting_revenue",
         "broker_advisory_revenue",
-        "broker_custody_revenue"
+        "broker_custody_revenue",
+        "broker_lending_assets",
+        "broker_short_term_bonds"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/be10b6b2bb57c581.pdf",
-      "financial_line_items_updated_at": "2026-10-27T09:26:18+00:00",
+      "financial_line_items_updated_at": "2026-11-01",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã rà soát trực quan B02 gốc: khôi phục tổng doanh thu hoạt động dòng 20 = 561,529 triệu VND; thuế hiện hành 37,191, thuế hoãn lại 25,742 triệu VND. Không dùng dòng doanh thu thành phần thay tổng doanh thu. Đã rà soát B01 ảnh PDF gốc, khôi phục các tổng tài sản/ngắn hạn/dài hạn và nguồn vốn có dòng hiển thị rõ; các cờ chặn tổng phụ tương ứng đã gỡ.",
       "foreign_exchange_effect_ytd": 0,
       "foreign_exchange_effect": 0,
@@ -5590,6 +5612,26 @@
           "old_value": null,
           "new_value": 3616,
           "reason": "Đối chiếu trực tiếp cột “Quý hiện tại” B02-CTCK, mã dòng 09, trang PDF 13; chuẩn hóa VND sang triệu VND theo quy tắc làm tròn gần nhất."
+        },
+        "broker_held_to_maturity_assets": {
+          "old_value": 0,
+          "new_value": 0,
+          "reason": "Đối chiếu trực tiếp B01-CTCK dòng 113, PDF trang 5; VND gốc 0, quy đổi triệu VND."
+        },
+        "broker_lending_assets": {
+          "old_value": null,
+          "new_value": 4643619,
+          "reason": "Đối chiếu trực tiếp B01-CTCK dòng 114, PDF trang 5; VND gốc 4643619143257, quy đổi triệu VND."
+        },
+        "broker_receivables": {
+          "old_value": 151525,
+          "new_value": 151525,
+          "reason": "Đối chiếu trực tiếp B01-CTCK dòng 117, PDF trang 5; VND gốc 151525193212, quy đổi triệu VND."
+        },
+        "broker_short_term_bonds": {
+          "old_value": null,
+          "new_value": 0,
+          "reason": "Đối chiếu trực tiếp B01-CTCK dòng 316, PDF trang 6; VND gốc 0, quy đổi triệu VND."
         }
       },
       "operating_cash_flow_ytd": -909328,
@@ -5897,7 +5939,11 @@
         "broker_brokerage_revenue",
         "broker_underwriting_revenue",
         "broker_advisory_revenue",
-        "broker_custody_revenue"
+        "broker_custody_revenue",
+        "broker_held_to_maturity_assets",
+        "broker_lending_assets",
+        "broker_receivables",
+        "broker_short_term_bonds"
       ],
       "eps_source_reconciliation": {
         "status": "source_visually_verified",
@@ -6406,7 +6452,51 @@
           }
         },
         "note": "Các dòng chi tiết lấy từ cột Quý hiện tại, không lấy cột lũy kế. Dấu gạch ngang trên BCTC được ghi 0; số âm giữ nguyên dấu như báo cáo. Không tự suy diễn các dòng phụ không có trong biểu mẫu."
-      }
+      },
+      "financial_line_items_source_row_audit": {
+        "broker_held_to_maturity_assets": {
+          "status": "source_visually_verified",
+          "source_statement": "B01-CTCK",
+          "source_row": "113",
+          "source_pdf_page": 5,
+          "source_value_vnd": 0,
+          "normalized_value_million_vnd": 0,
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2025.pdf"
+        },
+        "broker_lending_assets": {
+          "status": "source_visually_verified",
+          "source_statement": "B01-CTCK",
+          "source_row": "114",
+          "source_pdf_page": 5,
+          "source_value_vnd": 4643619143257,
+          "normalized_value_million_vnd": 4643619,
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2025.pdf"
+        },
+        "broker_receivables": {
+          "status": "source_visually_verified",
+          "source_statement": "B01-CTCK",
+          "source_row": "117",
+          "source_pdf_page": 5,
+          "source_value_vnd": 151525193212,
+          "normalized_value_million_vnd": 151525,
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2025.pdf"
+        },
+        "broker_short_term_bonds": {
+          "status": "source_visually_verified",
+          "source_statement": "B01-CTCK",
+          "source_row": "316",
+          "source_pdf_page": 6,
+          "source_value_vnd": 0,
+          "normalized_value_million_vnd": 0,
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2025.pdf"
+        }
+      },
+      "broker_lending_assets": 4643619,
+      "broker_short_term_bonds": 0
     },
     {
       "symbol": "SHS",
@@ -6677,11 +6767,12 @@
         "other_expense",
         "other_profit",
         "broker_fvtpl_gain",
-        "broker_afs_income"
+        "broker_afs_income",
+        "broker_held_to_maturity_assets"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/12d2061881d334c4.pdf",
-      "financial_line_items_updated_at": "2026-10-27T09:26:09+00:00",
+      "financial_line_items_updated_at": "2026-11-01",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã rà soát trực quan B02 gốc: khôi phục tổng doanh thu hoạt động dòng 20 = 693,913 triệu VND; thuế hiện hành 38,933, thuế hoãn lại 41,295 triệu VND. Không dùng dòng doanh thu thành phần thay tổng doanh thu.",
       "cash_beginning_calculation": "Prior same-year quarter's reported ending cash; Q2/2024 ending balance remains OCR-text only, pending visual check.",
       "foreign_exchange_effect_ytd": 0,
@@ -6860,6 +6951,11 @@
           "old_value": 540,
           "new_value": 0,
           "reason": "Đối chiếu trực tiếp cột “Quý hiện tại” B02-CTCK, mã dòng 07, trang PDF 10; chuẩn hóa VND sang triệu VND theo quy tắc làm tròn gần nhất."
+        },
+        "broker_held_to_maturity_assets": {
+          "old_value": null,
+          "new_value": 0,
+          "reason": "Đối chiếu trực tiếp B01-CTCK dòng 113, PDF trang 6; VND gốc 0, quy đổi triệu VND."
         }
       },
       "income_tax_current": 38933,
@@ -7169,7 +7265,8 @@
         "broker_brokerage_revenue",
         "broker_underwriting_revenue",
         "broker_advisory_revenue",
-        "broker_custody_revenue"
+        "broker_custody_revenue",
+        "broker_held_to_maturity_assets"
       ],
       "eps_source_reconciliation": {
         "status": "source_visually_verified",
@@ -7655,6 +7752,19 @@
           }
         },
         "note": "Các dòng chi tiết lấy từ cột Quý hiện tại, không lấy cột lũy kế. Dấu gạch ngang trên BCTC được ghi 0; số âm giữ nguyên dấu như báo cáo. Không tự suy diễn các dòng phụ không có trong biểu mẫu."
+      },
+      "broker_held_to_maturity_assets": 0,
+      "financial_line_items_source_row_audit": {
+        "broker_held_to_maturity_assets": {
+          "status": "source_visually_verified",
+          "source_statement": "B01-CTCK",
+          "source_row": "113",
+          "source_pdf_page": 6,
+          "source_value_vnd": 0,
+          "normalized_value_million_vnd": 0,
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2025.pdf"
+        }
       }
     },
     {
@@ -9054,11 +9164,17 @@
         "other_expense",
         "other_income",
         "other_profit",
-        "revenue"
+        "revenue",
+        "broker_lending_assets",
+        "broker_receivables",
+        "broker_short_term_borrowings",
+        "broker_short_term_bonds",
+        "retained_earnings",
+        "broker_customer_deposits"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-ocr-refresh-20261019/6b19d1aa37e72f9a.zip",
-      "financial_line_items_updated_at": "2026-10-27T09:26:18+00:00",
+      "financial_line_items_updated_at": "2026-11-01",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã rà soát trực quan B02 gốc: khôi phục tổng doanh thu hoạt động dòng 20 = 1,595,794 triệu VND; thuế hiện hành -5,987, thuế hoãn lại 56,025 triệu VND. Không dùng dòng doanh thu thành phần thay tổng doanh thu. Đã rà soát B01 ảnh PDF gốc, khôi phục các tổng tài sản/ngắn hạn/dài hạn và nguồn vốn có dòng hiển thị rõ; các cờ chặn tổng phụ tương ứng đã gỡ.",
       "financial_line_items_prior_values": {
         "revenue": null,
@@ -9347,6 +9463,36 @@
           "old_value": null,
           "new_value": 175408,
           "reason": "Bổ sung dòng 2.3: lỗ đánh giá lại tài sản tài chính sẵn sàng để bán (AFS), mã dòng 23, cột Quý IV/2025, trang PDF 9; giá trị 175,408,400,000 VND."
+        },
+        "broker_lending_assets": {
+          "old_value": null,
+          "new_value": 9097723,
+          "reason": "Đối chiếu trực tiếp B01-CTCK dòng 114, PDF trang 5; VND gốc 9097723485457, quy đổi triệu VND."
+        },
+        "broker_receivables": {
+          "old_value": null,
+          "new_value": 181805,
+          "reason": "Đối chiếu trực tiếp B01-CTCK dòng 117, PDF trang 5; VND gốc 181805318599, quy đổi triệu VND."
+        },
+        "broker_short_term_borrowings": {
+          "old_value": null,
+          "new_value": 8220000,
+          "reason": "Đối chiếu trực tiếp B01-CTCK dòng 311, PDF trang 6; VND gốc 8220000000000, quy đổi triệu VND."
+        },
+        "broker_short_term_bonds": {
+          "old_value": null,
+          "new_value": 1130000,
+          "reason": "Đối chiếu trực tiếp B01-CTCK dòng 316, PDF trang 6; VND gốc 1130000000000, quy đổi triệu VND."
+        },
+        "retained_earnings": {
+          "old_value": null,
+          "new_value": 2462493,
+          "reason": "Đối chiếu trực tiếp B01-CTCK dòng 417, PDF trang 6; VND gốc 2462492507749, quy đổi triệu VND."
+        },
+        "broker_customer_deposits": {
+          "old_value": null,
+          "new_value": 1486043,
+          "reason": "Đối chiếu trực tiếp B01-CTCK dòng 26, PDF trang 7; VND gốc 1486042954183, quy đổi triệu VND."
         }
       },
       "operating_cash_flow_ytd": -6222977,
@@ -9674,7 +9820,13 @@
         "operating_profit",
         "other_expense",
         "other_income",
-        "other_profit"
+        "other_profit",
+        "broker_lending_assets",
+        "broker_receivables",
+        "broker_short_term_borrowings",
+        "broker_short_term_bonds",
+        "retained_earnings",
+        "broker_customer_deposits"
       ],
       "eps_source_reconciliation": {
         "status": "source_visually_verified",
@@ -10193,7 +10345,75 @@
         },
         "note": "Các dòng chi tiết lấy từ cột Quý hiện tại, không lấy cột lũy kế. Dấu gạch ngang trên BCTC được ghi 0; số âm giữ nguyên dấu như báo cáo. Không tự suy diễn các dòng phụ không có trong biểu mẫu."
       },
-      "broker_afs_revaluation_loss": 175408
+      "broker_afs_revaluation_loss": 175408,
+      "broker_lending_assets": 9097723,
+      "financial_line_items_source_row_audit": {
+        "broker_lending_assets": {
+          "status": "source_visually_verified",
+          "source_statement": "B01-CTCK",
+          "source_row": "114",
+          "source_pdf_page": 5,
+          "source_value_vnd": 9097723485457,
+          "normalized_value_million_vnd": 9097723,
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2025.zip"
+        },
+        "broker_receivables": {
+          "status": "source_visually_verified",
+          "source_statement": "B01-CTCK",
+          "source_row": "117",
+          "source_pdf_page": 5,
+          "source_value_vnd": 181805318599,
+          "normalized_value_million_vnd": 181805,
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2025.zip"
+        },
+        "broker_short_term_borrowings": {
+          "status": "source_visually_verified",
+          "source_statement": "B01-CTCK",
+          "source_row": "311",
+          "source_pdf_page": 6,
+          "source_value_vnd": 8220000000000,
+          "normalized_value_million_vnd": 8220000,
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2025.zip"
+        },
+        "broker_short_term_bonds": {
+          "status": "source_visually_verified",
+          "source_statement": "B01-CTCK",
+          "source_row": "316",
+          "source_pdf_page": 6,
+          "source_value_vnd": 1130000000000,
+          "normalized_value_million_vnd": 1130000,
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2025.zip"
+        },
+        "retained_earnings": {
+          "status": "source_visually_verified",
+          "source_statement": "B01-CTCK",
+          "source_row": "417",
+          "source_pdf_page": 6,
+          "source_value_vnd": 2462492507749,
+          "normalized_value_million_vnd": 2462493,
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2025.zip"
+        },
+        "broker_customer_deposits": {
+          "status": "source_visually_verified",
+          "source_statement": "B01-CTCK - chỉ tiêu ngoài báo cáo tình hình tài chính",
+          "source_row": "26",
+          "source_pdf_page": 7,
+          "source_value_vnd": 1486042954183,
+          "normalized_value_million_vnd": 1486043,
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2025.zip"
+        }
+      },
+      "broker_receivables": 181805,
+      "broker_short_term_borrowings": 8220000,
+      "broker_short_term_bonds": 1130000,
+      "retained_earnings": 2462493,
+      "broker_customer_deposits": 1486043
     },
     {
       "symbol": "SHS",
@@ -10429,11 +10649,12 @@
         "other_expense",
         "other_profit",
         "broker_fvtpl_gain",
-        "broker_afs_income"
+        "broker_afs_income",
+        "broker_fvtpl_assets"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/5fe69d1fa2a83054.zip",
-      "financial_line_items_updated_at": "2026-10-27T07:54:05+00:00",
+      "financial_line_items_updated_at": "2026-11-01",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã rà soát trực quan B02 gốc: khôi phục tổng doanh thu hoạt động dòng 20 = 564,698 triệu VND; thuế hiện hành 43,592, thuế hoãn lại 4,572 triệu VND. Không dùng dòng doanh thu thành phần thay tổng doanh thu. Sửa lại theo ảnh phóng lớn B02 PDF trang 11: thuế hoãn lại đúng 4.577.671.017 VND (4.578 triệu), không phải 4.571.671.017; tổng thuế đúng 48.170.035.356 VND (48.170 triệu), khớp LNTT 279.994.199.272 trừ LNST 231.824.163.916. Đã rà soát ảnh B01a gốc, khôi phục tài sản ngắn hạn/dài hạn và nợ ngắn hạn/dài hạn theo tổng phụ được công bố.",
       "operating_cash_flow": 531012,
       "operating_cash_flow_calculation": "Q1 equals YTD from source line 60",
@@ -10644,6 +10865,16 @@
           "old_value": null,
           "new_value": 0,
           "reason": "Đối chiếu trực tiếp cột “Quý hiện tại” B02-CTCK, mã dòng 04, trang PDF 9; chuẩn hóa VND sang triệu VND theo quy tắc làm tròn gần nhất."
+        },
+        "broker_fvtpl_assets": {
+          "old_value": null,
+          "new_value": 9541575,
+          "reason": "Đối chiếu trực tiếp B01-CTCK dòng 112, PDF trang 5; VND gốc 9541575145822, quy đổi triệu VND."
+        },
+        "broker_held_to_maturity_assets": {
+          "old_value": 0,
+          "new_value": 0,
+          "reason": "Đối chiếu trực tiếp B01-CTCK dòng 113, PDF trang 5; VND gốc 0, quy đổi triệu VND."
         }
       },
       "income_tax_current": 43592,
@@ -10927,7 +11158,9 @@
         "broker_brokerage_revenue",
         "broker_underwriting_revenue",
         "broker_advisory_revenue",
-        "broker_custody_revenue"
+        "broker_custody_revenue",
+        "broker_fvtpl_assets",
+        "broker_held_to_maturity_assets"
       ],
       "eps_source_reconciliation": {
         "status": "source_visually_verified",
@@ -11413,6 +11646,29 @@
           }
         },
         "note": "Các dòng chi tiết lấy từ cột Quý hiện tại, không lấy cột lũy kế. Dấu gạch ngang trên BCTC được ghi 0; số âm giữ nguyên dấu như báo cáo. Không tự suy diễn các dòng phụ không có trong biểu mẫu."
+      },
+      "broker_fvtpl_assets": 9541575,
+      "financial_line_items_source_row_audit": {
+        "broker_fvtpl_assets": {
+          "status": "source_visually_verified",
+          "source_statement": "B01-CTCK",
+          "source_row": "112",
+          "source_pdf_page": 5,
+          "source_value_vnd": 9541575145822,
+          "normalized_value_million_vnd": 9541575,
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2026.zip"
+        },
+        "broker_held_to_maturity_assets": {
+          "status": "source_visually_verified",
+          "source_statement": "B01-CTCK",
+          "source_row": "113",
+          "source_pdf_page": 5,
+          "source_value_vnd": 0,
+          "normalized_value_million_vnd": 0,
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2026.zip"
+        }
       }
     },
     {
@@ -11637,11 +11893,21 @@
         "broker_brokerage_revenue",
         "broker_underwriting_revenue",
         "broker_advisory_revenue",
-        "broker_custody_revenue"
+        "broker_custody_revenue",
+        "broker_fvtpl_assets",
+        "broker_held_to_maturity_assets",
+        "broker_lending_assets",
+        "broker_afs_assets",
+        "broker_receivables",
+        "fixed_assets",
+        "broker_short_term_borrowings",
+        "broker_short_term_bonds",
+        "retained_earnings",
+        "broker_customer_deposits"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/9246a0423b1cd4aa.zip",
-      "financial_line_items_updated_at": "2026-10-27T09:26:18+00:00",
+      "financial_line_items_updated_at": "2026-11-01",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã rà soát trực quan B02 gốc: khôi phục tổng doanh thu hoạt động dòng 20 = 450,340 triệu VND; thuế hiện hành 178,309, thuế hoãn lại -164,367 triệu VND. Không dùng dòng doanh thu thành phần thay tổng doanh thu. Đã rà soát ảnh B01a gốc, khôi phục tài sản ngắn hạn/dài hạn và nợ ngắn hạn/dài hạn theo tổng phụ được công bố.",
       "financial_line_items_prior_values": {
         "revenue": null,
@@ -11865,6 +12131,56 @@
           "old_value": null,
           "new_value": 3544,
           "reason": "Đối chiếu trực tiếp cột “Quý hiện tại” B02-CTCK, mã dòng 09, trang PDF 9; chuẩn hóa VND sang triệu VND theo quy tắc làm tròn gần nhất."
+        },
+        "broker_fvtpl_assets": {
+          "old_value": null,
+          "new_value": 11333671,
+          "reason": "Đối chiếu trực tiếp B01-CTCK dòng 112, PDF trang 5; VND gốc 11333670649169, quy đổi triệu VND."
+        },
+        "broker_held_to_maturity_assets": {
+          "old_value": null,
+          "new_value": 749809,
+          "reason": "Đối chiếu trực tiếp B01-CTCK dòng 113, PDF trang 5; VND gốc 749808987855, quy đổi triệu VND."
+        },
+        "broker_lending_assets": {
+          "old_value": null,
+          "new_value": 11722072,
+          "reason": "Đối chiếu trực tiếp B01-CTCK dòng 114, PDF trang 5; VND gốc 11722071623454, quy đổi triệu VND."
+        },
+        "broker_afs_assets": {
+          "old_value": null,
+          "new_value": 1418006,
+          "reason": "Đối chiếu trực tiếp B01-CTCK dòng 115, PDF trang 5; VND gốc 1418006484550, quy đổi triệu VND."
+        },
+        "broker_receivables": {
+          "old_value": null,
+          "new_value": 589147,
+          "reason": "Đối chiếu trực tiếp B01-CTCK dòng 117, PDF trang 5; VND gốc 589146808012, quy đổi triệu VND."
+        },
+        "fixed_assets": {
+          "old_value": null,
+          "new_value": 30252,
+          "reason": "Đối chiếu trực tiếp B01-CTCK dòng 221, PDF trang 5; VND gốc 30251990576, quy đổi triệu VND."
+        },
+        "broker_short_term_borrowings": {
+          "old_value": null,
+          "new_value": 13473670,
+          "reason": "Đối chiếu trực tiếp B01-CTCK dòng 311, PDF trang 6; VND gốc 13473670000000, quy đổi triệu VND."
+        },
+        "broker_short_term_bonds": {
+          "old_value": null,
+          "new_value": 1022000,
+          "reason": "Đối chiếu trực tiếp B01-CTCK dòng 316, PDF trang 6; VND gốc 1022000000000, quy đổi triệu VND."
+        },
+        "retained_earnings": {
+          "old_value": null,
+          "new_value": 2728489,
+          "reason": "Đối chiếu trực tiếp B01-CTCK dòng 417, PDF trang 6; VND gốc 2728489392346, quy đổi triệu VND."
+        },
+        "broker_customer_deposits": {
+          "old_value": null,
+          "new_value": 1591405,
+          "reason": "Đối chiếu trực tiếp B01-CTCK dòng 26, PDF trang 8; VND gốc 1591405016205, quy đổi triệu VND."
         }
       },
       "foreign_exchange_effect": 0,
@@ -12191,7 +12507,17 @@
         "broker_brokerage_revenue",
         "broker_underwriting_revenue",
         "broker_advisory_revenue",
-        "broker_custody_revenue"
+        "broker_custody_revenue",
+        "broker_fvtpl_assets",
+        "broker_held_to_maturity_assets",
+        "broker_lending_assets",
+        "broker_afs_assets",
+        "broker_receivables",
+        "fixed_assets",
+        "broker_short_term_borrowings",
+        "broker_short_term_bonds",
+        "retained_earnings",
+        "broker_customer_deposits"
       ],
       "eps_source_reconciliation": {
         "status": "source_visually_verified",
@@ -12700,7 +13026,119 @@
           }
         },
         "note": "Các dòng chi tiết lấy từ cột Quý hiện tại, không lấy cột lũy kế. Dấu gạch ngang trên BCTC được ghi 0; số âm giữ nguyên dấu như báo cáo. Không tự suy diễn các dòng phụ không có trong biểu mẫu."
-      }
+      },
+      "broker_fvtpl_assets": 11333671,
+      "financial_line_items_source_row_audit": {
+        "broker_fvtpl_assets": {
+          "status": "source_visually_verified",
+          "source_statement": "B01-CTCK",
+          "source_row": "112",
+          "source_pdf_page": 5,
+          "source_value_vnd": 11333670649169,
+          "normalized_value_million_vnd": 11333671,
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2026.zip"
+        },
+        "broker_held_to_maturity_assets": {
+          "status": "source_visually_verified",
+          "source_statement": "B01-CTCK",
+          "source_row": "113",
+          "source_pdf_page": 5,
+          "source_value_vnd": 749808987855,
+          "normalized_value_million_vnd": 749809,
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2026.zip"
+        },
+        "broker_lending_assets": {
+          "status": "source_visually_verified",
+          "source_statement": "B01-CTCK",
+          "source_row": "114",
+          "source_pdf_page": 5,
+          "source_value_vnd": 11722071623454,
+          "normalized_value_million_vnd": 11722072,
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2026.zip"
+        },
+        "broker_afs_assets": {
+          "status": "source_visually_verified",
+          "source_statement": "B01-CTCK",
+          "source_row": "115",
+          "source_pdf_page": 5,
+          "source_value_vnd": 1418006484550,
+          "normalized_value_million_vnd": 1418006,
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2026.zip"
+        },
+        "broker_receivables": {
+          "status": "source_visually_verified",
+          "source_statement": "B01-CTCK",
+          "source_row": "117",
+          "source_pdf_page": 5,
+          "source_value_vnd": 589146808012,
+          "normalized_value_million_vnd": 589147,
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2026.zip"
+        },
+        "fixed_assets": {
+          "status": "source_visually_verified",
+          "source_statement": "B01-CTCK",
+          "source_row": "221",
+          "source_pdf_page": 5,
+          "source_value_vnd": 30251990576,
+          "normalized_value_million_vnd": 30252,
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2026.zip"
+        },
+        "broker_short_term_borrowings": {
+          "status": "source_visually_verified",
+          "source_statement": "B01-CTCK",
+          "source_row": "311",
+          "source_pdf_page": 6,
+          "source_value_vnd": 13473670000000,
+          "normalized_value_million_vnd": 13473670,
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2026.zip"
+        },
+        "broker_short_term_bonds": {
+          "status": "source_visually_verified",
+          "source_statement": "B01-CTCK",
+          "source_row": "316",
+          "source_pdf_page": 6,
+          "source_value_vnd": 1022000000000,
+          "normalized_value_million_vnd": 1022000,
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2026.zip"
+        },
+        "retained_earnings": {
+          "status": "source_visually_verified",
+          "source_statement": "B01-CTCK",
+          "source_row": "417",
+          "source_pdf_page": 6,
+          "source_value_vnd": 2728489392346,
+          "normalized_value_million_vnd": 2728489,
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2026.zip"
+        },
+        "broker_customer_deposits": {
+          "status": "source_visually_verified",
+          "source_statement": "B01-CTCK - chỉ tiêu ngoài báo cáo tình hình tài chính",
+          "source_row": "26",
+          "source_pdf_page": 8,
+          "source_value_vnd": 1591405016205,
+          "normalized_value_million_vnd": 1591405,
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2026.zip"
+        }
+      },
+      "broker_held_to_maturity_assets": 749809,
+      "broker_lending_assets": 11722072,
+      "broker_afs_assets": 1418006,
+      "broker_receivables": 589147,
+      "fixed_assets": 30252,
+      "broker_short_term_borrowings": 13473670,
+      "broker_short_term_bonds": 1022000,
+      "retained_earnings": 2728489,
+      "broker_customer_deposits": 1591405
     },
     {
       "symbol": "SHS",
@@ -12976,7 +13414,8 @@
         "other_income",
         "other_expense",
         "other_profit",
-        "broker_advisory_revenue"
+        "broker_advisory_revenue",
+        "broker_customer_deposits"
       ],
       "financial_line_items_manually_verified_fields": [
         "current_assets",
@@ -13050,10 +13489,11 @@
         "other_income",
         "other_expense",
         "other_profit",
-        "broker_advisory_revenue"
+        "broker_advisory_revenue",
+        "broker_customer_deposits"
       ],
       "financial_line_items_source": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2026.zip?ver=df26ce44",
-      "financial_line_items_updated_at": "2026-11-01T04:30:00Z",
+      "financial_line_items_updated_at": "2026-11-01",
       "financial_line_items_note": "Các dòng B01a/B02a/B03b được đối chiếu trực quan tại PDF trang 6-14. Các trường ngoài danh sách xác minh giữ trống; không dùng số OCR sai đơn vị.",
       "reconciliation": {
         "assets_minus_liabilities_equity": 0,
@@ -13233,6 +13673,11 @@
           "old_value": null,
           "new_value": 0,
           "reason": "Đối chiếu trực tiếp cột “Quý hiện tại” B02-CTCK, mã dòng 08, trang PDF 10; chuẩn hóa VND sang triệu VND theo quy tắc làm tròn gần nhất."
+        },
+        "broker_customer_deposits": {
+          "old_value": null,
+          "new_value": 1211125,
+          "reason": "Đối chiếu trực tiếp B01-CTCK dòng 26, PDF trang 9; VND gốc 1211124622076, quy đổi triệu VND."
         }
       },
       "eps_source_reconciliation": {
@@ -13721,6 +14166,19 @@
           }
         },
         "note": "Các dòng chi tiết lấy từ cột Quý hiện tại, không lấy cột lũy kế. Dấu gạch ngang trên BCTC được ghi 0; số âm giữ nguyên dấu như báo cáo. Không tự suy diễn các dòng phụ không có trong biểu mẫu."
+      },
+      "broker_customer_deposits": 1211125,
+      "financial_line_items_source_row_audit": {
+        "broker_customer_deposits": {
+          "status": "source_visually_verified",
+          "source_statement": "B01-CTCK - chỉ tiêu ngoài báo cáo tình hình tài chính",
+          "source_row": "26",
+          "source_pdf_page": 9,
+          "source_value_vnd": 1211124622076,
+          "normalized_value_million_vnd": 1211125,
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2026.zip?ver=df26ce44"
+        }
       }
     }
   ],
