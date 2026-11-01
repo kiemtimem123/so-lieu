@@ -1,0 +1,117 @@
+name: Render Vietstock source PDF pages for visual audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/render-vietstock-source-pages.yml"
+  workflow_dispatch:
+    inputs:
+      symbol:
+        description: "Ticker symbol"
+        required: true
+        default: "VCI"
+      period:
+        description: "Report period label"
+        required: true
+        default: "2024-Q2"
+      pdf_path:
+        description: "Path to the PDF already archived in reports/raw"
+        required: true
+        default: "reports/raw/VCI/auto-vci-20261021/a8ace83efcd5049c.pdf"
+      pages:
+        description: "Comma-separated 1-based PDF pages, or all"
+        required: true
+        default: "all"
+      dpi:
+        description: "Render DPI"
+        required: true
+        default: "160"
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout archived source only
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PDF rendering dependencies
+        run: python -m pip install --disable-pip-version-check pymupdf pillow
+
+      - name: Render source pages and contact sheets
+        env:
+          TARGET_SYMBOL: ${{ github.event.inputs.symbol || 'VCI' }}
+          TARGET_PERIOD: ${{ github.event.inputs.period || '2024-Q2' }}
+          PDF_PATH: ${{ github.event.inputs.pdf_path || 'reports/raw/VCI/auto-vci-20261021/a8ace83efcd5049c.pdf' }}
+          PAGE_LIST: ${{ github.event.inputs.pages || 'all' }}
+          RENDER_DPI: ${{ github.event.inputs.dpi || '160' }}
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          import fitz
+          from PIL import Image, ImageOps, ImageDraw
+
+          symbol = os.environ["TARGET_SYMBOL"].strip().upper()
+          period = os.environ["TARGET_PERIOD"].strip().upper()
+          pdf_path = Path(os.environ["PDF_PATH"])
+          if not pdf_path.is_file():
+              raise SystemExit(f"Archived PDF not found: {pdf_path}")
+          dpi = max(96, min(300, int(os.environ.get("RENDER_DPI", "160"))))
+          doc = fitz.open(pdf_path)
+          raw_pages = os.environ.get("PAGE_LIST", "all").strip().lower()
+          if raw_pages == "all":
+              pages = list(range(1, len(doc) + 1))
+          else:
+              pages = sorted({int(x.strip()) for x in raw_pages.split(",") if x.strip()})
+          if not pages or any(p < 1 or p > len(doc) for p in pages):
+              raise SystemExit(f"Invalid page list for {len(doc)}-page PDF: {pages}")
+          out = Path("source-review") / f"{symbol}-{period}"
+          out.mkdir(parents=True, exist_ok=True)
+          scale = dpi / 72
+          rendered = []
+          for pno in pages:
+              page = doc[pno - 1]
+              pix = page.get_pixmap(matrix=fitz.Matrix(scale, scale), alpha=False)
+              image_path = out / f"{symbol}_{period}_page_{pno:02d}.png"
+              pix.save(image_path)
+              im = Image.open(image_path).convert("RGB")
+              thumb = im.copy()
+              thumb.thumbnail((1050, 1485))
+              framed = ImageOps.expand(thumb, border=2, fill="black")
+              rendered.append((pno, framed))
+          # Keep contact sheets small enough to inspect at full resolution.
+          for start in range(0, len(rendered), 2):
+              group = rendered[start:start+2]
+              max_w = max(im.width for _, im in group)
+              max_h = max(im.height for _, im in group)
+              sheet = Image.new("RGB", (max_w, max_h * len(group) + 70 * len(group)), "white")
+              draw = ImageDraw.Draw(sheet)
+              for i, (pno, im) in enumerate(group):
+                  y = i * (max_h + 70)
+                  draw.text((12, y + 8), f"{symbol} {period} — PDF page {pno}", fill="black")
+                  sheet.paste(im, (0, y + 38))
+              sheet.save(out / f"contact_{start+1:02d}_{group[-1][0]:02d}.jpg", quality=90)
+          (out / "render_manifest.txt").write_text(
+              f"symbol={symbol}\nperiod={period}\npdf_path={pdf_path}\npdf_pages={len(doc)}\n"
+              f"dpi={dpi}\nrendered_pages={','.join(map(str, pages))}\n",
+              encoding="utf-8"
+          )
+          print(f"Rendered {len(rendered)} of {len(doc)} pages at {dpi} DPI to {out}")
+          PY
+
+      - name: Upload rendered source pages
+        uses: actions/upload-artifact@v4
+        with:
+          name: vietstock-source-review-${{ github.event.inputs.symbol || 'VCI' }}-${{ github.event.inputs.period || '2024-Q2' }}
+          path: source-review/
+          if-no-files-found: error
+          retention-days: 14
