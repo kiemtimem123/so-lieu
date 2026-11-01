@@ -1149,6 +1149,30 @@ class SHSCashFlowNormalizationTests(unittest.TestCase):
                 self.assertIn("riêng", row["report_type"].lower())
                 self.assertNotIn("hợp nhất", row["report_type"].lower())
 
+    def test_shs_eps_matches_b02_row_501_current_quarter_for_all_eleven_periods(self):
+        expected = {
+            "2024-Q1": 438,
+            "2024-Q2": 436,
+            "2024-Q3": 85,
+            "2024-Q4": 286,
+            "2025-Q1": 323,
+            "2025-Q2": 471,
+            "2025-Q3": 534,
+            "2025-Q4": 246,
+            "2026-Q1": 258,
+            "2026-Q2": 84,
+            "2026-Q3": 226,
+        }
+        self.assertEqual(set(self.all_rows), set(expected))
+        for period, value in expected.items():
+            with self.subTest(period=period):
+                row = self.all_rows[period]
+                self.assertEqual(row["eps"], value)
+                self.assertIn("eps", row["financial_line_items_manually_verified_fields"])
+                self.assertEqual(row["eps_source_reconciliation"]["source_row"], "501 — Lãi cơ bản trên cổ phiếu (Đồng/1 cổ phiếu)")
+                self.assertEqual(row["eps_source_reconciliation"]["source_value"], value)
+                self.assertEqual(row["eps_source_reconciliation"]["selected_column"], "Quý hiện tại")
+
     def test_shs_revenue_row20_and_tax_components_match_original_b02_for_all_ten_periods(self):
         expected = {
             "2024-Q1": (564565, 46789, 40783, 87572),
