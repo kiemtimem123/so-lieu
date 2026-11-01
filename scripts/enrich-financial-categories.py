@@ -764,6 +764,15 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
    liabilities=value_by_row_prefix(
     balance,[r"^[\s,;:._\-|]*c\.?\s+no\s+phai\s+tra(?:\s|$)"],factor
    )
+  if balance and symbol in BROKERS:
+   # Use CTCK statement row codes as the authoritative totals; weak text-label
+   # matches can otherwise capture component rows or OCR-shifted columns.
+   row270=value_by_row_prefix(balance,[r"\b100\s+200\b"],factor)
+   row300=value_by_row_prefix(balance,[r"\bc\s+no\s+phai\s+tra\b"],factor)
+   row400=value_by_row_prefix(balance,[r"\b400\b"],factor)
+   if row270 is not None: assets=row270
+   if row300 is not None: liabilities=row300
+   if row400 is not None: equity=row400
 
  tolerance=max(5.0,abs(assets)*0.00001) if isinstance(assets,(int,float)) else 5.0
  source_matches_assets=(
@@ -838,16 +847,50 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
   )
  if symbol in BROKERS and profit_pages:
   cashflow_pages=select_statement_pages(pages,"cashflow")
-  cashflow_pbt=value_by_label(
-   cashflow_pages,["loi nhuan truoc thue thu nhap doanh nghiep","loi nhuan truoc thue"],factor
-  ) if cashflow_pages else None
+  cashflow_pbt=None
+  for page in cashflow_pages:
+   lines=str(page.get("text","")).splitlines()
+   for index,line in enumerate(lines):
+    if "loi nhuan truoc thue thu nhap doanh nghiep" not in norm(line):
+     continue
+    for candidate in lines[index:index+4]:
+     values=amounts(candidate,threshold=1000)
+     if values:
+      value=values[0]
+      if value<0 and re.search(r"—\\s*-",candidate):
+       value=abs(value)
+      cashflow_pbt=int(round(value*factor))
+      break
+    if cashflow_pbt is not None:
+     break
+   if cashflow_pbt is not None:
+    break
   if cashflow_pbt is not None:
    pbt=cashflow_pbt
-  tax_total=value_by_row_prefix(
-   profit_pages,[r"\b100\b"],factor
-  )
+  tax_total=value_by_row_prefix(profit_pages,[r"\\b100\\b"],factor)
   if pbt is not None and tax_total is not None:
    net=int(round(pbt-tax_total))
+  broker_revenue=None
+  for page in profit_pages:
+   lines=str(page.get("text","")).splitlines()
+   for index,line in enumerate(lines):
+    clean=norm(line)
+    if "cong doanh thu hoat dong" not in clean:
+     continue
+    if "tai chinh" in norm(" ".join(lines[index:index+2])):
+     continue
+    candidates=[]
+    for candidate in lines[index:index+5]:
+     candidates.extend(amounts(candidate,threshold=1000))
+    if candidates:
+     broker_revenue=int(round(candidates[0]*factor))
+     break
+   if broker_revenue is not None:
+    break
+  if broker_revenue is not None:
+   out["revenue"]=broker_revenue
+  else:
+   out.pop("revenue",None)
  if pbt is not None:
   out["pretax_profit"]=pbt
  if net is not None:
