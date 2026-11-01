@@ -351,6 +351,12 @@ def main() -> int:
         complete_for_automation = True
         manual_review_remaining = True
 
+    # VCI is the current one-at-a-time work item. Do not advance its queue
+    # cursor while any source or numeric manual review remains open.
+    if symbol == "VCI" and manual_review_remaining:
+        status = "in_progress_manual_review"
+        complete_for_automation = False
+
     now = utc_now()
     states = checkpoint.get("symbolStates")
     if not isinstance(states, dict):
