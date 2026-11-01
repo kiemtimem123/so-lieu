@@ -1056,22 +1056,73 @@ class SHSCashFlowNormalizationTests(unittest.TestCase):
         self.assertEqual(row["cash_ending_reported_ytd"], 680759)
         self.assertTrue(rec["selected_values_not_adjusted_for_tolerance"])
 
-    def test_shs_h1_2025_comparator_difference_above_threshold_is_reviewed_not_plugged(self):
+    def test_shs_h1_2025_original_report_selected_after_confirmed_comparator_reclassification(self):
         row = self.rows["2025-Q2"]
         rec = row["cashflow_source_reconciliation"]
-        self.assertEqual(rec["status"], "NEEDS_MANUAL_REVIEW_SOURCE_RECLASS_GT_0_01_PERCENT")
-        self.assertEqual(row["operating_cash_flow_ytd"], -2580587)
-        self.assertEqual(row["investing_cash_flow_ytd"], -5146)
+        self.assertEqual(
+            rec["status"],
+            "SOURCE_VISUALLY_VERIFIED_ORIGINAL_PERIOD_SELECTED_COMPARATOR_RECLASSIFICATION_EXPLAINED",
+        )
+        self.assertEqual(row["source_url"],
+                         "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2025.pdf")
+        self.assertEqual(row["operating_cash_flow_ytd"], -2580630)
+        self.assertEqual(row["investing_cash_flow_ytd"], -5102)
         self.assertEqual(row["financing_cash_flow_ytd"], 2695969)
         self.assertEqual(row["net_cash_change_ytd"], 110236)
-        self.assertGreater(
-            rec["source_reclassification_review"]["relative_differences_percent"]["investing_cash_flow"],
-            0.01,
-        )
-        self.assertLessEqual(
-            rec["ytd_flow_components_relative_difference_percent"], 0.01
-        )
+        self.assertEqual(row["operating_cash_flow"], -1671302)
+        self.assertEqual(row["investing_cash_flow"], -668)
+        self.assertEqual(row["financing_cash_flow"], 1802969)
+        self.assertEqual(row["net_cash_change"], 130998)
+        review = rec["source_reclassification_review"]
+        self.assertEqual(review["reclassified_amount_vnd"], 43270000)
+        self.assertGreater(review["relative_differences_percent"]["investing_cash_flow"], 0.01)
+        self.assertEqual(review["same_net_cash_and_balance_bridge"], True)
+        self.assertEqual(review["resolution_status"], "explained_comparative_reclassification")
+        self.assertEqual(rec["source_comparison_manual_review"], False)
+        self.assertLessEqual(rec["ytd_flow_components_relative_difference_percent"], 0.01)
+        self.assertLessEqual(rec["quarter_flow_components_relative_difference_percent"], 0.01)
+        self.assertLessEqual(rec["ytd_cash_bridge_relative_difference_percent"], 0.01)
+        self.assertLessEqual(rec["quarter_cash_bridge_relative_difference_percent"], 0.01)
         self.assertEqual(rec["selected_values_not_adjusted_for_tolerance"], True)
+
+    def test_shs_b01_missing_fields_filled_from_original_pdf_rows(self):
+        q1_2025 = self.all_rows["2025-Q1"]
+        self.assertEqual(q1_2025["broker_lending_assets"], 4643619)
+        self.assertEqual(q1_2025["broker_receivables"], 151525)
+        self.assertEqual(q1_2025["broker_held_to_maturity_assets"], 0)
+        self.assertEqual(q1_2025["broker_short_term_bonds"], 0)
+
+        q4_2025 = self.all_rows["2025-Q4"]
+        self.assertEqual(q4_2025["broker_lending_assets"], 9097723)
+        self.assertEqual(q4_2025["broker_receivables"], 181805)
+        self.assertEqual(q4_2025["broker_short_term_borrowings"], 8220000)
+        self.assertEqual(q4_2025["broker_short_term_bonds"], 1130000)
+        self.assertEqual(q4_2025["retained_earnings"], 2462493)
+        self.assertEqual(q4_2025["broker_customer_deposits"], 1486043)
+        self.assertEqual(q4_2025["financial_line_items_rejected_fields"], [])
+        self.assertEqual(q4_2025["financial_line_items_visual_review"]["status"], "source_visually_verified")
+
+        q2_2026 = self.all_rows["2026-Q2"]
+        self.assertEqual(q2_2026["broker_fvtpl_assets"], 11333671)
+        self.assertEqual(q2_2026["broker_held_to_maturity_assets"], 749809)
+        self.assertEqual(q2_2026["broker_lending_assets"], 11722072)
+        self.assertEqual(q2_2026["broker_afs_assets"], 1418006)
+        self.assertEqual(q2_2026["broker_receivables"], 589147)
+        self.assertEqual(q2_2026["broker_short_term_borrowings"], 13473670)
+        self.assertEqual(q2_2026["broker_short_term_bonds"], 1022000)
+        self.assertEqual(q2_2026["retained_earnings"], 2728489)
+        self.assertEqual(q2_2026["broker_customer_deposits"], 1591405)
+
+        q3_2026 = self.all_rows["2026-Q3"]
+        self.assertEqual(q3_2026["broker_customer_deposits"], 1211125)
+
+    def test_shs_b02_selling_expense_is_not_duplicated_from_administrative_expense(self):
+        for period in ("2025-Q3", "2026-Q1", "2025-Q4"):
+            with self.subTest(period=period):
+                row = self.all_rows[period]
+                self.assertEqual(row["selling_expense"], 0)
+                self.assertEqual(row["admin_expense"], row["broker_admin_expenses"])
+                self.assertEqual(row["broker_selling_expenses"], 0)
 
     def test_shs_q3_2026_source_values_are_visually_verified_and_normalized(self):
         row = self.all_rows["2026-Q3"]
