@@ -4191,6 +4191,9 @@ def enrich_snapshot(path):
   core_new_fields=[]
   for field,value in core_found.items():
    if field=="revenue":
+    if symbol in BROKERS and isinstance(value,(int,float)):
+     item[field]=value
+     core_new_fields.append(field)
     continue
    if item.get(field) is None:
     item[field]=value
