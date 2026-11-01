@@ -22,6 +22,7 @@ jobs:
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /data/financials-SHS.json
+            /reports/raw/SHS/vietstock-shs-2024-2026-20261019/59aae0c6c9c04782.zip
             /scripts/sync-vietstock-financials.py
 
       - name: Install native PDF and Vietnamese OCR
@@ -51,9 +52,10 @@ jobs:
           spec.loader.exec_module(mod)
 
           source_url = __import__("os").environ["SOURCE_URL"]
-          response = requests.get(source_url, headers=mod.HEADERS, timeout=(30, 180))
-          response.raise_for_status()
-          archive_bytes = response.content
+          archive_path = ROOT / "reports/raw/SHS/vietstock-shs-2024-2026-20261019/59aae0c6c9c04782.zip"
+          if not archive_path.is_file():
+              raise RuntimeError("Không tìm thấy ZIP VietstockFinance Q3/2026 đã lưu trong kho báo cáo SHS.")
+          archive_bytes = archive_path.read_bytes()
           with zipfile.ZipFile(io.BytesIO(archive_bytes)) as zf:
               pdf_names = [n for n in zf.namelist() if n.lower().endswith(".pdf")]
               vi_names = [n for n in pdf_names if re.search(r"(^|[_-])vi([_-]|\.)", n.lower()) or "_vi_" in n.lower()]
