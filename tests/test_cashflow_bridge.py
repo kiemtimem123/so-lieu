@@ -1128,11 +1128,17 @@ class SHSCashFlowNormalizationTests(unittest.TestCase):
         self.assertEqual(rec["selected_values_not_adjusted_for_tolerance"], True)
 
     def test_shs_b01_missing_fields_filled_from_original_pdf_rows(self):
+        q2_2024 = self.all_rows["2024-Q2"]
+        self.assertEqual(q2_2024["long_term_liabilities"], 124072)
+
         q1_2025 = self.all_rows["2025-Q1"]
         self.assertEqual(q1_2025["broker_lending_assets"], 4643619)
         self.assertEqual(q1_2025["broker_receivables"], 151525)
         self.assertEqual(q1_2025["broker_held_to_maturity_assets"], 0)
         self.assertEqual(q1_2025["broker_short_term_bonds"], 0)
+
+        q2_2025 = self.all_rows["2025-Q2"]
+        self.assertEqual(q2_2025["broker_short_term_bonds"], 0)
 
         q4_2025 = self.all_rows["2025-Q4"]
         self.assertEqual(q4_2025["broker_lending_assets"], 9097723)
@@ -1157,6 +1163,19 @@ class SHSCashFlowNormalizationTests(unittest.TestCase):
 
         q3_2026 = self.all_rows["2026-Q3"]
         self.assertEqual(q3_2026["broker_customer_deposits"], 1211125)
+
+    def test_shs_q1_2025_other_profit_uses_current_quarter_column_not_prior_year(self):
+        row = self.all_rows["2025-Q1"]
+        rec = row["source_validation"]["other_profit_column_check"]
+        self.assertEqual(row["operating_profit"], 325685)
+        self.assertEqual(row["other_income"], 1)
+        self.assertEqual(row["other_expense"], 0)
+        self.assertEqual(row["other_profit"], 1)
+        self.assertEqual(row["pretax_profit"], 325686)
+        self.assertEqual(row["operating_profit"] + row["other_profit"], row["pretax_profit"])
+        self.assertEqual(rec["row71_other_income_vnd"], 1149653)
+        self.assertEqual(rec["row80_other_profit_vnd"], 1149652)
+        self.assertEqual(rec["previous_year_column_value_not_selected"], 138421192)
 
     def test_shs_b02_selling_expense_is_not_duplicated_from_administrative_expense(self):
         for period in ("2025-Q3", "2026-Q1", "2025-Q4"):
