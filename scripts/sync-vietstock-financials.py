@@ -1038,7 +1038,10 @@ def make_extracted_item(
         "ratio_unit": "%/năm (tính từ LNST quý / bình quân số dư đầu-cuối quý × 4)",
         "source_url": source_url,
         "source_index_url": f"https://finance.vietstock.vn/{symbol}/tai-tai-lieu.htm?doctype=1",
-        "report_type": f"BCTC hợp nhất {symbol} {period} (tự trích xuất từ VietstockFinance; chờ rà soát trực quan)",
+        "report_type": (
+            f"BCTC {'riêng lẻ' if (values.get('source_scope_check') or {}).get('expected') == 'separate' else 'hợp nhất' if (values.get('source_scope_check') or {}).get('expected') == 'consolidated' else 'chưa xác định phạm vi'} {symbol} {period} "
+            "(tự trích xuất từ VietstockFinance; chờ rà soát trực quan)"
+        ),
         "source_pages": "Tự trích xuất văn bản PDF/ZIP; số trang có thể khác giữa mẫu báo cáo.",
         "quarter_profit_basis": (
             "Tự trích xuất số phát sinh riêng quý từ báo cáo lũy kế; cần kiểm tra trực quan."
