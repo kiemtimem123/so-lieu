@@ -23,6 +23,7 @@ from pathlib import Path
 from urllib.parse import unquote, urljoin, urlparse
 
 import requests
+from financial_units import scale_to_million
 from pypdf import PdfReader
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -497,42 +498,6 @@ def choose_balance_columns(
                         best_score = score
                         best = (assets, liabilities, equity)
     return best
-
-
-def scale_to_million(text: str, raw_assets: float, previous_assets_million: float | None) -> tuple[float, str]:
-    header = norm(text[:25000])
-    # Explicit statement-unit markers take precedence over mentions of billions/
-    # millions in cover letters, management explanations or market commentary.
-    # A PDF may say "revenue reached VND 1,002 billion" in its disclosure text
-    # while the actual B01/B02/B03b tables are explicitly denominated in VND.
-    explicit_vnd = re.search(
-        r"\b(?:dvt|bvt|don vi tinh|unit)\s*[:\-]?\s*vnd\b",
-        header,
-    )
-    if explicit_vnd:
-        return 1e-6, "VND → triệu VND (đơn vị báo cáo ghi rõ VND)"
-    if any(term in header for term in ("ngan dong","ngan vnd","nghin dong","nghin vnd","thousand dong","thousand vnd")) or re.search(r"\bngh?[a-z~._-]{0,4}n\s+(?:dong|vnd)\b",header):
-        return 1e-3, "ngàn/nghìn VND → triệu VND"
-    if "trieu dong" in header or "trieu vnd" in header or "million vnd" in header:
-        return 1.0, "triệu VND"
-    if "ty dong" in header or "ty vnd" in header or "billion vnd" in header:
-        return 1e3, "tỷ VND → triệu VND"
-    if re.search(r"don vi(?: tinh)?\s*[:\-]?\s*(?:vnd|dong)\b", header) or "đơn vị tính: đồng" in text[:25000].lower():
-        return 1e-6, "VND → triệu VND"
-
-    # Unknown unit: infer the scale from the previous quarter's assets, then
-    # refuse extraction if no plausible conversion can be supported.
-    if previous_assets_million and previous_assets_million > 0 and raw_assets > 0:
-        choices = [1.0, 1e-3, 1e3, 1e-6]
-        plausible = []
-        for factor in choices:
-            ratio = raw_assets * factor / previous_assets_million
-            if 0.2 <= ratio <= 5.0:
-                plausible.append((abs(math.log(ratio)), factor, ratio))
-        if plausible:
-            _, factor, ratio = min(plausible)
-            return factor, f"đơn vị suy ra từ số dư quý trước; tỷ lệ tài sản={ratio:.4g}"
-    raise ValueError("Không xác định chắc chắn đơn vị báo cáo.")
 
 
 def extract_pdf_bytes(url: str, session: requests.Session) -> tuple[bytes, str]:
