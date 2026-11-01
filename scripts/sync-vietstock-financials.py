@@ -123,6 +123,7 @@ PRETAX_LABELS = [
     "profit before tax",
 ]
 NET_PROFIT_LABELS = [
+    "lợi nhuận kế toán sau thuế tndn",
     "lợi nhuận sau thuế thu nhập doanh nghiệp",
     "lợi nhuận sau thuế",
     "profit after tax",
