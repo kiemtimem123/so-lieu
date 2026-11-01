@@ -19,6 +19,7 @@ UNIT_HELPERS = runpy.run_path(
     run_name="financial_units_test_module",
 )
 scale_to_million = UNIT_HELPERS["scale_to_million"]
+drop_leading_statement_row_code = UNIT_HELPERS["drop_leading_statement_row_code"]
 
 
 class VietstockUnitNormalizationTests(unittest.TestCase):
@@ -52,6 +53,13 @@ class VietstockUnitNormalizationTests(unittest.TestCase):
         )
         self.assertEqual(factor, 1e3)
         self.assertIn("tỷ VND", note)
+
+
+    def test_eps_extraction_discards_ctck_row_code_501_and_502(self):
+        self.assertEqual(drop_leading_statement_row_code([501, 258, 258, 323], 501), [258, 258, 323])
+        self.assertEqual(drop_leading_statement_row_code([502, 180, 180], 502), [180, 180])
+        self.assertEqual(drop_leading_statement_row_code([436, 874], 501), [436, 874])
+        self.assertEqual(drop_leading_statement_row_code([], 501), [])
 
 
 class CashFlowBridgeTests(unittest.TestCase):
