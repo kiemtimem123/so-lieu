@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-01T06:10:00Z",
+  "updatedAt": "2026-11-01T03:30:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -40,18 +40,18 @@
     "GAS"
   ],
   "lastCompletedSymbol": "VCB",
-  "activeSymbol": null,
+  "activeSymbol": "SHS",
   "resumeSymbolHint": "SHS",
-  "resumeRule": "Resume VCB only. Reuse validated snapshot/checkpoint; do not rerun OCR/enrich or reload periods. Finish remaining direct PDF visual review and confirm Q3/2026 from the VietstockFinance catalogue before advancing to SHS.",
+  "resumeRule": "Continue SHS only. Reuse the existing 10-period snapshot and saved VietstockFinance archives; do not rerun OCR/enrich or overwrite normalized values. Finish scope classification from each report's first-page disclosure, visually review the B01/B02/B03b pages, resolve/retain cash-flow comparative exceptions, verify whether Q3/2026 is present in the VietstockFinance doctype=1 catalogue, then validate and commit SHS before advancing to VCI.",
   "lastProgress": {
-    "symbol": "VCB",
-    "status": "automated_processing_complete",
+    "symbol": "SHS",
+    "status": "manual_source_review_in_progress",
     "completeForAutomation": true,
     "manualReviewRemaining": true,
-    "processedAt": "2026-11-01T06:10:00Z",
+    "processedAt": "2026-11-01T03:30:00Z",
     "changedPaths": [
-      "data/financials-VCB.json",
-      "scripts/validate-bank-reconciliation.py"
+      "reports/shs-quarterly-pdf-review.trigger.json",
+      "reports/processing-checkpoint.json"
     ],
     "periodCount": 10,
     "firstQuarter": "2024-Q1",
@@ -59,15 +59,9 @@
     "pendingCorePeriods": [],
     "pendingDetailPeriods": [],
     "staleDetailSchemaPeriods": [],
-    "statementPagesPending": false,
-    "workflowRuns": {
-      "quarterly": "https://github.com/kiemtimem123/so-lieu/actions/runs/41229141959",
-      "site": "https://github.com/kiemtimem123/so-lieu/actions/runs/41229142059",
-      "package": "https://github.com/kiemtimem123/so-lieu/actions/runs/41229142016",
-      "visualReview": "https://github.com/kiemtimem123/so-lieu/actions/runs/41228191736"
-    },
-    "nextSymbol": "SHS",
-    "nextTask": "visually_review_SHS_source_PDFs_and_resolve_manual_cashflow_exceptions"
+    "statementPagesPending": true,
+    "nextSymbol": "VCI",
+    "nextTask": "finish_SHS_scope_and_visual_review_before_advancing"
   },
   "symbolStates": {
     "MBB": {
@@ -1723,7 +1717,7 @@
       }
     },
     "SHS": {
-      "status": "terminal_needs_manual_review",
+      "status": "manual_review_in_progress",
       "completeForAutomation": true,
       "manualReviewRemaining": true,
       "periodCount": 10,
@@ -1737,7 +1731,7 @@
       "skipUnconfirmedAutomation": true,
       "skipUnconfirmedReason": "User-directed skip; unverified figures remain blank for manual review.",
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-10-27T10:59:36Z",
+      "updatedAt": "2026-11-01T03:30:00Z",
       "snapshotFetchedAt": "2026-10-19T22:04:00+07:00",
       "cashflowNormalization": {
         "status": "automated_processing_complete_manual_review_remaining",
@@ -1763,6 +1757,29 @@
         "standardVersion": "1.4",
         "updatedAt": "2026-10-29T00:47:00+07:00",
         "validationRunId": "40738493284"
+      },
+      "manualReviewStage": {
+        "sourcePolicy": "VietstockFinance doctype=1 catalogue and only its linked PDFs/ZIPs",
+        "savedPeriods": 10,
+        "periodRange": "2024-Q1 to 2026-Q2",
+        "existingArchivesReused": true,
+        "ocrRerun": false,
+        "numericSnapshotChanged": false,
+        "visualReviewTriggerCommit": "5275002b6a8c315b8cdd04577ce6eefde29c11b5",
+        "findings": [
+          "Q2/2024 B03b pages 9-10: H1 YTD company cashflow components reconcile to net cash change; closing company cash 1,637,337 million VND. Do not use separate customer brokerage-cash section.",
+          "Q3/2024 B03b pages 10-11: 9M YTD components and cash bridge reconcile; standalone Q3 opening cash follows Q2 company closing cash.",
+          "Q4/2024 original report B03b pages 13-14 differs from later FY2024 comparative: CFO 0.0271% and CFI 2.3899% (>0.01% tolerance); retain original period report and keep comparator exception for manual review.",
+          "Q2/2025 vs Q2/2026 comparative: CFI differs about 0.8409% (>0.01% tolerance); CFO difference about 0.00168% is within tolerance. Preserve both source histories and keep CFI reclassification hold.",
+          "Q4/2025 B03b pages 12-13 flow residual 1 million VND (<0.01%) and cash bridge residual 0; magnitude-suspect detail fields remain rejected/hidden pending visual validation.",
+          "First-page disclosure scope is not uniformly labeled in current sidecars; Q3/2024 explicitly indicates standalone. Do not expose scope-dependent financial fields until each period's scope is source-confirmed."
+        ],
+        "pending": [
+          "Review generated B01/B02/B03b image artifact for all 10 periods.",
+          "Resolve Q1/2024 and remaining periods' standalone/consolidated scope from source disclosure pages.",
+          "Confirm latest Q3/2026 report from VietstockFinance catalogue; current snapshot ends Q2/2026.",
+          "Review Q4/2025 rejected magnitude fields against rendered report pages."
+        ]
       }
     },
     "NLG": {
@@ -2433,6 +2450,14 @@
       "primaryStatementVisualPeriods": 10,
       "ci": "PASS",
       "nextSymbol": "SHS"
+    },
+    {
+      "symbol": "SHS",
+      "status": "manual_source_review_in_progress",
+      "processedAt": "2026-11-01T03:30:00Z",
+      "sourcePeriods": 10,
+      "numericSnapshotChanged": false,
+      "nextSymbol": "VCI"
     }
   ],
   "currentRun": {
