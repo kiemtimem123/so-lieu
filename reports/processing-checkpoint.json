@@ -48,7 +48,7 @@
   "completeForAutomation": false,
   "manualReviewRemaining": true,
   "processedAt": "2026-11-02T00:47:00+07:00",
-  "period": "2025-Q4",
+  "period": "2026-Q1",
   "periodStatus": "manually_verified_source_reconciled",
   "periodCount": 11,
   "reviewedPeriods": [
@@ -59,7 +59,8 @@
     "2025-Q1",
     "2025-Q2",
     "2025-Q3",
-    "2025-Q4"
+    "2025-Q4",
+    "2026-Q1"
   ],
   "visuallyReviewedPeriods": [
     "2024-Q1",
@@ -69,36 +70,39 @@
     "2025-Q1",
     "2025-Q2",
     "2025-Q3",
-    "2025-Q4"
+    "2025-Q4",
+    "2026-Q1"
   ],
   "pendingCorePeriods": [
-    "2026-Q1",
     "2026-Q2",
     "2026-Q3"
   ],
-  "sourceReportUrl": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/VCI_Baocaotaichinh_Q4_2025.zip",
+  "sourceReportUrl": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/VCI_Baocaotaichinh_Q1_2026.zip",
   "sourceIndexUrl": "https://finance.vietstock.vn/VCI/tai-tai-lieu.htm?doctype=1",
-  "sourceDocumentId": "528074",
-  "dataCommit": "f73f44edd6688826d33e7f39f754e20efce81004",
+  "sourceDocumentId": "542453",
+  "dataCommit": "9cea73b09b883173d29d45eb68ee76eb60477f2f",
   "normalizationStandardVersion": "3.4",
   "validation": {
     "sourceScope": "PASS separate/company parent; notes confirm no subsidiaries",
     "sourceUnit": "PASS: B01/B02/B03 and notes explicitly state VND; snapshot uses million VND only after raw checks",
     "balanceEquation": "PASS exact at raw VND",
     "assetAndLiabilitySubtotals": "PASS exact at raw VND",
+    "fixedAssetComponents": "PASS exact at raw VND",
     "revenueAndExpenseComponents": "PASS exact at raw VND",
-    "operatingAndOtherProfitBridges": "PASS exact at raw VND",
-    "taxComponentsAndPATBridge": "PASS exact at raw VND",
+    "financialIncomeAndExpenseComponents": "PASS exact at raw VND",
+    "operatingProfitBridge": "PASS exact at raw VND",
+    "taxComponentsAndPATBridge": "PASS exact at raw VND; deferred tax is positive as reported",
     "investingFlowComponents": "PASS exact at raw VND",
     "financingFlowComponents": "PASS exact at raw VND",
     "ytdCashflowComponents": "PASS exact at raw VND",
     "ytdCashBalanceBridge": "PASS exact at raw VND",
-    "quarterCashflowComponents": "PASS exact at raw VND",
+    "quarterCashflowComponents": "PASS Q1 equals YTD, exact at raw VND",
     "quarterCashBalanceBridge": "PASS exact at raw VND",
-    "adjacentQuarterCashContinuity": "PASS: Q3 ending cash equals Q4 standalone opening cash",
+    "adjacentQuarterCashContinuity": "PASS: Q4/2025 close equals Q1/2026 opening cash",
     "cashAndBalanceSheetTieOut": "PASS: B01 cash equals B03 ending cash",
-    "signConvention": "PASS: CFO/CFI/repayment/dividend/net YTD negative shown in parentheses; CFF positive as printed; Q4 standalone net positive",
+    "signConvention": "PASS: CFO/CFI and net cash are negative; CFF positive; parentheses preserved",
     "fxLine102": "BLANK; stored null, not zero",
+    "customerCashflowSeparation": "PASS off-balance customer deposits are excluded from company cash",
     "residualsVND": {},
     "visualPages": [
       3,
@@ -118,23 +122,19 @@
     ],
     "renderedPdfPages": 48,
     "renderArtifact": {
-      "workflowRunId": 41317119346,
-      "artifactId": 13087073443,
-      "sha256": "d5a0e8535ac38eb3fd9b61fec46bb2e635cbd069c52e7390886886614c5da0ad",
-      "artifactName": "vietstock-source-review-VCI-2025-Q4",
-      "selectedPdfMember": "VCI_Baocaotaichinh_Q4_2025_Congtyme.pdf",
+      "workflowRunId": 41334635477,
+      "artifactId": 13094875919,
+      "sha256": "be215988a33be5a4ff77e5b53e99c809171358dc80766e30b3276f39a5d8a840",
+      "artifactName": "vietstock-source-review-VCI-2026-Q1",
+      "selectedPdfMember": "VCI_Baocaotaichinh_Q1_2026_1.pdf",
       "dpi": 160
     },
     "ci": {
-      "quarterlyFinancialDataRun": 41334114602,
-      "siteAndDataRun": 41334114591,
-      "hostingerPackageRun": 41334114710,
-      "standardV3_4ValidationRun": 41334252819,
-      "checkpointValidationRun": 41334198979,
-      "all": "success"
+      "dataUpdateCommit": "9cea73b09b883173d29d45eb68ee76eb60477f2f",
+      "pending": "await CI and checkpoint validation"
     }
   },
-  "next": "Continue VCI Q1/2026 from its archived VietstockFinance source. Apply standard v3.4: verify source scope, report currency unit, B01/B02/B03 units and period columns; inspect parentheses/minus/dashes; convert raw VND to snapshot million VND only after reconciliation. Do not advance to VCK until VCI Q1-Q3/2026 are complete."
+  "next": "Continue VCI Q2/2026 from its archived VietstockFinance source. Apply standard v3.4: verify exact PDF member, separate/consolidated scope, unit printed on each B01/B02/B03 and notes, current-quarter/YTD columns, parentheses/minus/dashes, and FX blank versus dash; reconcile raw VND before million-VND snapshot. Q3/2026 remains the final VCI period. Do not advance to VCK until VCI is complete."
 },
   "symbolStates": {
     "MBB": {
@@ -1220,7 +1220,6 @@
   "firstQuarter": "2024-Q1",
   "lastQuarter": "2026-Q3",
   "pendingCorePeriods": [
-    "2026-Q1",
     "2026-Q2",
     "2026-Q3"
   ],
@@ -1244,7 +1243,8 @@
       "2025-Q1": "separate_confirmed_from_PDF_page_19_printed_page_17_no_subsidiaries",
       "2025-Q2": "separate_confirmed_from_PDF_page_19_printed_page_17_no_subsidiaries",
       "2025-Q3": "separate_confirmed_from_PDF_page_19_printed_page_17_no_subsidiaries",
-      "2025-Q4": "separate_confirmed_from_PDF_page_19_printed_page_17_no_subsidiaries"
+      "2025-Q4": "separate_confirmed_from_PDF_page_19_printed_page_17_no_subsidiaries",
+      "2026-Q1": "separate_confirmed_from_PDF_page_19_printed_page_17_no_subsidiaries"
     },
     "periodsVisuallyReviewed": [
       "2024-Q1",
@@ -1254,10 +1254,10 @@
       "2025-Q1",
       "2025-Q2",
       "2025-Q3",
-      "2025-Q4"
+      "2025-Q4",
+      "2026-Q1"
     ],
     "periodsPending": [
-      "2026-Q1",
       "2026-Q2",
       "2026-Q3"
     ],
@@ -1265,16 +1265,16 @@
       "2024-Q2"
     ],
     "lastVisualReviewEvidence": {
-      "period": "2025-Q4",
-      "dataCommit": "f73f44edd6688826d33e7f39f754e20efce81004",
-      "renderWorkflowRunId": 41317119346,
-      "renderArtifactId": 13087073443,
-      "renderArtifactSha256": "d5a0e8535ac38eb3fd9b61fec46bb2e635cbd069c52e7390886886614c5da0ad",
-      "selectedPdfMember": "VCI_Baocaotaichinh_Q4_2025_Congtyme.pdf",
+      "period": "2026-Q1",
+      "dataCommit": "9cea73b09b883173d29d45eb68ee76eb60477f2f",
+      "renderWorkflowRunId": 41334635477,
+      "renderArtifactId": 13094875919,
+      "renderArtifactSha256": "be215988a33be5a4ff77e5b53e99c809171358dc80766e30b3276f39a5d8a840",
+      "selectedPdfMember": "VCI_Baocaotaichinh_Q1_2026_1.pdf",
       "renderedPages": "all 1-48; visually checked 3-14 and 19-20",
       "resolutionDpi": 160,
       "sourceUnit": "VND; dashboard snapshot in million VND only after raw-VND reconciliation",
-      "signConvention": "source parentheses retained as negatives; CFF positive; Q4 net cash positive; line102 blank -> null"
+      "signConvention": "CFO/CFI negative, CFF positive, net cash negative; parentheses retained; line102 blank -> null; deferred tax is positive"
     }
   },
   "manuallyVerifiedPeriods": [
@@ -1285,7 +1285,8 @@
     "2025-Q1",
     "2025-Q2",
     "2025-Q3",
-    "2025-Q4"
+    "2025-Q4",
+    "2026-Q1"
   ],
   "visuallyReviewedPeriods": [
     "2024-Q1",
@@ -1295,7 +1296,8 @@
     "2025-Q1",
     "2025-Q2",
     "2025-Q3",
-    "2025-Q4"
+    "2025-Q4",
+    "2026-Q1"
   ],
   "sidecarTextReviewedPeriods": [
     "2024-Q2"
@@ -2969,7 +2971,7 @@
   "standardDocument": "reports/financial-data-normalization-standard.md",
   "activeDataDomain": "core_financial_statements",
   "activeSymbol": "VCI",
-  "status": "manual_core_reconciliation_vci_2026_q1_next",
+  "status": "manual_core_reconciliation_vci_2026_q2_next",
   "lastUpdatedAt": "2026-11-02T00:47:00+07:00",
   "completedChecks": [
     "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
@@ -3315,7 +3317,13 @@
     "VCI Q4/2025 data snapshot commit f73f44edd6688826d33e7f39f754e20efce81004; normalization standard v3.4 case added in document commit e04aabc3cd456c8f4d2bb6de9f4e3f918a9f314d.",
     "VCI Q4/2025 data commit f73f44edd6688826d33e7f39f754e20efce81004 passed: Validate Site and Data run 41334114591 SUCCESS; Validate quarterly financial data run 41334114602 SUCCESS; Package Hostinger Stock Dashboard run 41334114710 SUCCESS.",
     "Normalization standard v3.4 document commit e04aabc3cd456c8f4d2bb6de9f4e3f918a9f314d passed Validate Site and Data run 41334159981 SUCCESS; version date refresh commit 383f55be2f07723497e4b58f7d66e28346e70825 passed Validate Site and Data run 41334252819 SUCCESS.",
-    "VCI Q4/2025 checkpoint commit f9c602e2edcc3bd7681b28a33c0f3a4386d0e6f3 passed Validate Site and Data run 41334198979 SUCCESS."
+    "VCI Q4/2025 checkpoint commit f9c602e2edcc3bd7681b28a33c0f3a4386d0e6f3 passed Validate Site and Data run 41334198979 SUCCESS.",
+    "VCI Q1/2026 closed from VietstockFinance docID 542453; exact ZIP member VCI_Baocaotaichinh_Q1_2026_1.pdf visually reviewed, not the FY2026 PDF.",
+    "VCI Q1/2026 scope separate confirmed from notes PDF page19 (printed p17) stating no subsidiaries; VND explicitly printed on B01/B02/B03 and currency notes PDF page20.",
+    "VCI Q1/2026 raw-VND checks all residual zero: B01 balance/subtotals/fixed assets; B02 revenue and expense components, operating profit, PBT, current+positive deferred tax=total tax, PAT; B03 flow totals and cash balance bridge.",
+    "VCI Q1/2026 Q1 values equal YTD because this is first quarter; B03 CFO -2,900,034,543,773, CFI -19,436,706,493, CFF +1,754,026,860,500, net -1,165,444,389,766 VND; cash open 3,213,693,581,406 equals Q4/2025 cash close, ending 2,048,249,191,640.",
+    "VCI Q1/2026 B03 line102 FX effect blank -> null, not 0. Parentheses are negative; printed dashes on rows are 0; off-balance customer deposits excluded from company cash.",
+    "VCI Q1/2026 snapshot commit 9cea73b09b883173d29d45eb68ee76eb60477f2f; 48-page full PDF rendered at 160 DPI in workflow run 41334635477, artifact 13094875919."
   ],
   "unresolved": [
     "NLG NEEDS_MANUAL_REVIEW — H1/2024 selected later comparative in Q2/2025 reclassifies CFO/CFI versus the original Q2/2024 source by >0.01%; net cash movement and cash balances remain unchanged. Preserve both source bases and selected later comparative; do not plug.",
@@ -4025,8 +4033,8 @@
     "status": "active_blocking",
     "periodCount": 11,
     "periodRange": "2024-Q1..2026-Q3",
-    "reason": "Q1/2024–Q4/2025 eight periods visually verified from original VietstockFinance PDFs. Three periods remain (Q1/2026–Q3/2026).",
-    "nextStep": "Continue VCI Q1/2026 from archived VietstockFinance source; apply v3.4 unit/sign/period checks. Do not advance to VCK until VCI is complete.",
+    "reason": "Q1/2024–Q1/2026 nine periods visually verified from original VietstockFinance PDFs. Two periods remain (Q2/2026–Q3/2026).",
+    "nextStep": "Continue VCI Q2/2026 from archived VietstockFinance source. Apply v3.4 checks for exact source member, scope, VND/unit, quarter/YTD columns, parentheses and FX blank/dash; do not advance to VCK until VCI is complete.",
     "reviewedPeriods": [
       "2024-Q1",
       "2024-Q2",
@@ -4035,10 +4043,10 @@
       "2025-Q1",
       "2025-Q2",
       "2025-Q3",
-      "2025-Q4"
+      "2025-Q4",
+      "2026-Q1"
     ],
     "periodsRemaining": [
-      "2026-Q1",
       "2026-Q2",
       "2026-Q3"
     ],
@@ -4050,7 +4058,8 @@
       "2025-Q1",
       "2025-Q2",
       "2025-Q3",
-      "2025-Q4"
+      "2025-Q4",
+      "2026-Q1"
     ],
     "sidecarTextAuditedPeriods": [
       "2024-Q2"
