@@ -210,6 +210,97 @@ jobs:
                   "unresolved_cashflow_quarter": period in ("2024-Q2", "2024-Q3"),
               })
 
+          # Render the disclosure/cover letter pages separately. These pages carry the
+          # issuer's explicit "BCTC riêng / hợp nhất" selection, which must not be
+          # guessed from the CTCK statement template or a neutral Vietstock filename.
+          scope_manifest = []
+          for item in snapshot.get("items", []):
+              period = str(item.get("period") or "")
+              archive_path = root / item["source_archive_file"]
+              sidecar_path = Path(str(archive_path) + ".extracted.json")
+              sidecar = json.loads(sidecar_path.read_text(encoding="utf-8"))
+              archive_bytes = archive_path.read_bytes()
+              scope_pdf_bytes = None
+              scope_pdf_name = archive_path.name
+              scope_text = ""
+
+              if archive_path.suffix.lower() == ".zip":
+                  with zipfile.ZipFile(io.BytesIO(archive_bytes)) as zf:
+                      candidates = []
+                      for member in sidecar.get("members", []):
+                          if member.get("kind") != "pdf":
+                              continue
+                          name = member.get("name") or ""
+                          if name not in zf.namelist():
+                              continue
+                          pages = member.get("pages", [])
+                          first_text = norm(" ".join(
+                              p.get("text") or "" for p in pages[:3]
+                          ))
+                          if "cong bo thong tin" not in first_text:
+                              continue
+                          score = 100
+                          if "bctc" in norm(name) or "cv" in norm(name):
+                              score += 20
+                          if len(pages) <= 5:
+                              score += 10
+                          candidates.append((score, name, zf.read(name), first_text))
+                      if candidates:
+                          candidates.sort(key=lambda x: x[0], reverse=True)
+                          _, scope_pdf_name, scope_pdf_bytes, scope_text = candidates[0]
+                      else:
+                          # The selected BCTC PDF itself may start with its disclosure letter.
+                          entry = next(x for x in manifest if x["period"] == period)
+                          scope_pdf_name = entry["pdf_member"]
+                          with zipfile.ZipFile(io.BytesIO(archive_bytes)) as zf:
+                              scope_pdf_bytes = zf.read(scope_pdf_name)
+                          member = next((m for m in sidecar.get("members", []) if m.get("name") == scope_pdf_name), {})
+                          scope_text = norm(" ".join(p.get("text") or "" for p in member.get("pages", [])[:3]))
+              else:
+                  scope_pdf_bytes = archive_bytes
+                  scope_text = norm(" ".join(p.get("text") or "" for p in sidecar.get("pages", [])[:3]))
+
+              reader_scope = PdfReader(io.BytesIO(scope_pdf_bytes), strict=False)
+              scope_pages = list(range(1, min(3, len(reader_scope.pages)) + 1))
+              scope_images = []
+              for page_number in scope_pages:
+                  image_scope = convert_from_bytes(
+                      scope_pdf_bytes,
+                      dpi=120,
+                      first_page=page_number,
+                      last_page=page_number,
+                      fmt="png",
+                      thread_count=2,
+                  )[0]
+                  image_scope.save(out / f"{period}_SCOPE_pdfpage{page_number:02d}.png")
+                  preview = image_scope.convert("RGB")
+                  target_width = 1100
+                  target_height = int(preview.height * target_width / preview.width)
+                  scope_images.append(preview.resize((target_width, target_height), Image.Resampling.LANCZOS))
+
+              if scope_images:
+                  sheet = Image.new("RGB", (1100, sum(x.height for x in scope_images) + 38 * len(scope_images)), "white")
+                  draw = ImageDraw.Draw(sheet)
+                  y = 0
+                  for page_number, preview in zip(scope_pages, scope_images):
+                      draw.text((8, y + 8), f"{period} | DISCLOSURE/SCOPE | PDF page {page_number}", fill="black")
+                      y += 38
+                      sheet.paste(preview, (0, y))
+                      y += preview.height
+                  sheet.save(out / f"{period}_SCOPE_disclosure_contact.png", optimize=True)
+
+              scope_manifest.append({
+                  "period": period,
+                  "scope_pdf": scope_pdf_name,
+                  "scope_pages_rendered": scope_pages,
+                  "disclosure_text_found": "cong bo thong tin" in scope_text,
+              })
+
+          (out / "scope-disclosure-manifest.json").write_text(
+              json.dumps(scope_manifest, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
+
           (out / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
           print(json.dumps({
               "periods_rendered": len(manifest),
