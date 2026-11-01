@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-01T09:01:43.122Z",
+  "updatedAt": "2026-11-01T16:05:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -44,17 +44,30 @@
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "VCI",
-    "status": "in_progress_manual_core_reconciliation",
+    "status": "partial_source_review_period_completed",
     "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-11-01T09:01:43.122Z",
-    "sourceScopeReviewStatus": "manual_core_reconciliation_required",
-    "doNotAdvanceUntilManualReviewComplete": true,
+    "processedAt": "2026-11-01T16:05:00+07:00",
+    "period": "2024-Q1",
+    "periodStatus": "manually_verified_source_reconciled",
+    "verifiedFields": [
+      "total_assets",
+      "total_liabilities",
+      "equity",
+      "revenue",
+      "pretax_profit",
+      "net_profit",
+      "income_tax",
+      "operating_cash_flow",
+      "investing_cash_flow",
+      "financing_cash_flow",
+      "net_cash_change",
+      "cash_beginning",
+      "cash_ending"
+    ],
     "periodCount": 11,
-    "firstQuarter": "2024-Q1",
-    "lastQuarter": "2026-Q3",
+    "reviewedPeriods": 1,
     "pendingCorePeriods": [
-      "2024-Q1",
       "2024-Q2",
       "2024-Q3",
       "2024-Q4",
@@ -67,7 +80,6 @@
       "2026-Q3"
     ],
     "terminalManualReviewPeriods": [
-      "2024-Q1",
       "2024-Q2",
       "2024-Q4",
       "2025-Q1",
@@ -78,9 +90,34 @@
       "2026-Q2",
       "2026-Q3"
     ],
-    "pendingDetailPeriods": [],
-    "statementPagesPending": false,
-    "note": "Do not automatically retry the same archived PDFs. Manually reconcile VCI source scope and B01/B02/B03 core totals before advancing."
+    "sourceReportUrl": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%201/VCI_Baocaotaichinh_Q1_2024.pdf",
+    "sourceIndexUrl": "https://finance.vietstock.vn/VCI/tai-tai-lieu.htm?doctype=1",
+    "dataCommit": "804734b6457eeab0b77b48bef7fb0728a50e3f78",
+    "normalizationStandardVersion": "2.8",
+    "validation": {
+      "sourceScope": "PASS separate",
+      "balanceEquation": "PASS exact at raw VND",
+      "profitTaxBridge": "PASS exact at raw VND",
+      "cashflowComponents": "PASS exact at raw VND",
+      "cashBalanceBridge": "PASS exact at raw VND",
+      "visualPages": [
+        5,
+        6,
+        7,
+        10,
+        11,
+        12,
+        13,
+        14,
+        19
+      ],
+      "ci": {
+        "siteAndDataRun": "41291705911",
+        "quarterlyFinancialDataRun": "41291705944",
+        "quarterlyFinancialDataStatus": "in_progress_at_checkpoint_write"
+      }
+    },
+    "next": "Continue VCI Q2/2024 from the archived VietstockFinance PDF. Do not advance to VCK until all 11 VCI periods are source/scope reconciled or explicitly closed as terminal manual review."
   },
   "symbolStates": {
     "MBB": {
@@ -1166,7 +1203,6 @@
       "firstQuarter": "2024-Q1",
       "lastQuarter": "2026-Q3",
       "pendingCorePeriods": [
-        "2024-Q1",
         "2024-Q2",
         "2024-Q3",
         "2024-Q4",
@@ -1179,7 +1215,6 @@
         "2026-Q3"
       ],
       "terminalManualReviewPeriods": [
-        "2024-Q1",
         "2024-Q2",
         "2024-Q4",
         "2025-Q1",
@@ -1195,13 +1230,37 @@
       "statementPagesPending": false,
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
-      "sourceArchivesChecked": 1,
-      "updatedAt": "2026-11-01T08:55:00.505Z",
+      "sourceArchivesChecked": 11,
+      "updatedAt": "2026-11-01T16:05:00+07:00",
       "snapshotFetchedAt": "2026-11-01T08:29:01+00:00",
       "sourceScopeReview": {
-        "status": "manual_core_reconciliation_required",
-        "doNotAdvanceUntilManualReviewComplete": true
-      }
+        "status": "partial_period_scope_confirmed_manual_core_review_open",
+        "doNotAdvanceUntilManualReviewComplete": true,
+        "periodScope": {
+          "2024-Q1": "separate_confirmed_from_B01_B02_B03_and_note_page_17"
+        },
+        "periodsVisuallyReviewed": [
+          "2024-Q1"
+        ],
+        "periodsPending": [
+          "2024-Q2",
+          "2024-Q3",
+          "2024-Q4",
+          "2025-Q1",
+          "2025-Q2",
+          "2025-Q3",
+          "2025-Q4",
+          "2026-Q1",
+          "2026-Q2",
+          "2026-Q3"
+        ]
+      },
+      "manuallyVerifiedPeriods": [
+        "2024-Q1"
+      ],
+      "visuallyReviewedPeriods": [
+        "2024-Q1"
+      ]
     },
     "VCK": {
       "status": "terminal_needs_manual_review",
@@ -2527,6 +2586,16 @@
       "changedPaths": [
         "data/financials-SHB.json"
       ]
+    },
+    {
+      "symbol": "VCI",
+      "period": "2024-Q1",
+      "status": "manually_verified_source_reconciled",
+      "processedAt": "2026-11-01T16:05:00+07:00",
+      "dataCommit": "804734b6457eeab0b77b48bef7fb0728a50e3f78",
+      "sourceArchive": "reports/raw/VCI/auto-vci-20261021/bcc25fca52409b54.pdf",
+      "normalizationStandardVersion": "2.8",
+      "next": "VCI 2024-Q2"
     }
   ],
   "currentRun": {
@@ -2701,12 +2770,12 @@
     "standardDocument": "reports/financial-data-normalization-standard.md"
   },
   "normalizationProgress": {
-    "standardVersion": "2.7",
+    "standardVersion": "2.8",
     "standardDocument": "reports/financial-data-normalization-standard.md",
     "activeDataDomain": "core_financial_statements",
     "activeSymbol": "VCI",
-    "status": "manual_core_reconciliation_vci_queue_paused",
-    "lastUpdatedAt": "2026-11-01T09:01:43.122Z",
+    "status": "manual_core_reconciliation_vci_q1_2024_pass_q2_next",
+    "lastUpdatedAt": "2026-11-01T16:05:00+07:00",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -3006,7 +3075,10 @@
       "2026-11-01: queue selector now treats completeForAutomation=true as a durable lock even while manualReviewRemaining=true; reopen only for a strictly newer quarter or explicit requested correction.",
       "2026-11-01: sourceScopeReview.doNotAdvanceUntilManualReviewComplete now pauses the queue; manual core reconciliation cannot trigger repeated OCR attempts or advance to another ticker.",
       "2026-11-01: financial-data-normalization-standard.md updated to v2.7; queue locks, manual reconciliation, restoration and persistent standard-memory rules documented.",
-      "2026-11-01: unintended repeat enrichment rollback: restored MBB and SHB snapshots from validated commit 72530652053800a2f10d4bd3b47ac0f8e8173e15. ACB/FPT additions from existing sidecars remain pending visual review; no source PDFs were newly OCRed."
+      "2026-11-01: unintended repeat enrichment rollback: restored MBB and SHB snapshots from validated commit 72530652053800a2f10d4bd3b47ac0f8e8173e15. ACB/FPT additions from existing sidecars remain pending visual review; no source PDFs were newly OCRed.",
+      "2026-11-01: VCI Q1/2024 manually reviewed original VietstockFinance PDF: separate scope confirmed from B01/B02/B03 plus note that the company had no subsidiaries; B01 balance equation exact at raw VND; B02 revenue, PBT, tax and PAT visually verified; company B03 cashflow distinguished from customer brokerage/trust cashflow; quarter and cash bridges exact at raw VND.",
+      "2026-11-01: Corrected VCI Q1/2024 OCR PAT candidate from 148136 to 197756 million VND using B02 source row; source raw values, page numbers, old candidate and exact reconciliation saved in data/financials-VCI.json.",
+      "2026-11-01: normalization standard v2.8 records reusable brokerage-company statement mappings, source-scope evidence, cashflow separation and VCI Q1/2024 worked example."
     ],
     "unresolved": [
       "NLG NEEDS_MANUAL_REVIEW — H1/2024 selected later comparative in Q2/2025 reclassifies CFO/CFI versus the original Q2/2024 source by >0.01%; net cash movement and cash balances remain unchanged. Preserve both source bases and selected later comparative; do not plug.",
@@ -3505,10 +3577,10 @@
     "codeFix": "scripts/validate-financials.mjs now reports chronological first/last periods from sorted unique period keys instead of relying on insertion order."
   },
   "nextActions": [
-    "VCI: manual source/scope and core financial reconciliation for all 11 stored periods. Queue is deliberately paused until this closeout is completed.",
+    "VCI: Q1/2024 completed manual source review and saved; continue Q2/2024, then remaining 9 periods. Keep queue paused until all 11 periods are reviewed or formally closed as terminal manual review.",
     "VCK: after VCI, verify report scope against the VietstockFinance-linked PDF; keep unconfirmed consolidated values hidden.",
-    "VIX: verify standalone/consolidated scopes by period; preserve standalone-only basis and manual holds.",
-    "VDS: review saved PDFs visually, finish selected core/detail source checks and close documented cash-flow exception.",
+    "VIX: verify separate/consolidated scopes by period; preserve standalone-only basis and manual holds.",
+    "VDS: review saved PDFs visually, finish source checks and close documented cash-flow exception.",
     "GAS: visually inspect saved VietstockFinance statements; resolve readable rows only, leave OCR-uncertain core/cash-flow fields blank.",
     "PLX: review original PDFs and unresolved cash-basis discrepancies; no plug or cross-period forced adjustment.",
     "GEG: finish visual review of 2024 periods and Q2/2026 cash-flow basis; preserve reported values.",
@@ -3718,8 +3790,23 @@
       "status": "active_blocking",
       "periodCount": 11,
       "periodRange": "2024-Q1..2026-Q3",
-      "reason": "11 kỳ còn pending core reconciliation; user requires source/scope and B01/B02/B03 manual closeout before next ticker.",
-      "nextStep": "Review saved VietstockFinance PDFs individually; verify separate-report scope, current-quarter columns, asset/liability/equity and PBT/tax/PAT bridges. Do not rerun OCR on unchanged archives."
+      "reason": "Q1/2024 B01/B02/B03 and source scope verified on original PDF; 10 periods remain unresolved.",
+      "nextStep": "Continue Q2/2024 from the saved VietstockFinance PDF; verify page cover/scope, B01, B02, company B03 cash-flow and source arithmetic. Do not rerun OCR on unchanged archives.",
+      "reviewedPeriods": [
+        "2024-Q1"
+      ],
+      "periodsRemaining": [
+        "2024-Q2",
+        "2024-Q3",
+        "2024-Q4",
+        "2025-Q1",
+        "2025-Q2",
+        "2025-Q3",
+        "2025-Q4",
+        "2026-Q1",
+        "2026-Q2",
+        "2026-Q3"
+      ]
     },
     {
       "symbol": "VCK",
@@ -3780,5 +3867,6 @@
   ],
   "sourceReviewCompleteSymbols": [
     "SHS"
-  ]
+  ],
+  "manualReviewQueueUpdatedAt": "2026-11-01T16:05:00+07:00"
 }
