@@ -647,16 +647,15 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
  if symbol in BANKS:
   # Some bank B02/TCTD templates label equity as "Vốn và các quỹ"; prioritize
   # it before the generic "vốn chủ sở hữu" substring in the total-sources row.
-  if assets is None and balance and symbol in BROKERS:
-   # Vietstock B01-CTCK reports use row 270 = 100 + 200 for total assets.
-   # OCR may corrupt the label while preserving the unique formula and amounts.
-   assets=value_by_row_prefix(balance,[r"100\s*\+\s*200"],factor)
-
   equity_labels=["von va cac quy"]+equity_labels
+ if assets is None and balance and symbol in BROKERS:
+  assets=value_by_row_prefix(balance,[r"100\s+200"],factor)
  equity=value_by_label(
   balance,equity_labels,factor,
   exclude_terms=["no phai tra","liabilities and equity"]
  ) if balance else None
+ if equity is None and balance and symbol in BROKERS:
+  equity=value_by_row_prefix(balance,[r"\b400\s*\|"],factor)
  source_total=value_by_label(
   balance,[
    "tong cong nguon von","tong nguon von",
