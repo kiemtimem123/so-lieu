@@ -29,7 +29,7 @@ on:
         default: "160"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   render:
@@ -114,9 +114,39 @@ jobs:
           PY
 
       - name: Upload rendered source pages
+        id: upload
         uses: actions/upload-artifact@v4
         with:
           name: vietstock-source-review-${{ github.event.inputs.symbol || 'VCI' }}-${{ github.event.inputs.period || '2025-Q3' }}
           path: source-review/
           if-no-files-found: error
           retention-days: 14
+
+      - name: Record render artifact coordinates
+        uses: actions/github-script@v7
+        env:
+          ARTIFACT_ID: ${{ steps.upload.outputs.artifact-id }}
+          SOURCE_PDF: ${{ github.event.inputs.pdf_path || 'reports/raw/VCI/auto-vci-20261021/ceeef626c2647bcb.pdf' }}
+          TARGET_PERIOD: ${{ github.event.inputs.period || '2025-Q3' }}
+        with:
+          script: |
+            const path = `reports/raw/VCI/auto-vci-20261021/render-metadata-${process.env.TARGET_PERIOD}.json`;
+            const payload = {
+              symbol: process.env.TARGET_SYMBOL || 'VCI',
+              period: process.env.TARGET_PERIOD,
+              sourcePdf: process.env.SOURCE_PDF,
+              workflowRunId: context.runId,
+              artifactId: Number(process.env.ARTIFACT_ID),
+              artifactName: `vietstock-source-review-VCI-${process.env.TARGET_PERIOD}`,
+              sourceCommit: context.sha,
+              recordedAt: new Date().toISOString()
+            };
+            const content = Buffer.from(JSON.stringify(payload, null, 2)).toString('base64');
+            await github.rest.repos.createOrUpdateFileContents({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              path,
+              message: `Record VCI ${process.env.TARGET_PERIOD} source render artifact`,
+              content,
+              branch: context.ref.replace('refs/heads/', '')
+            });
