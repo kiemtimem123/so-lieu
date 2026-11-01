@@ -966,14 +966,22 @@ class SHSCashFlowNormalizationTests(unittest.TestCase):
                         # later Q2/2026 comparative. Q2/2025 itself deliberately
                         # retains the original contemporaneous report. Mixing the
                         # two bases creates the known 43.27m CFO/CFI mismatch.
-                        restated_h1 = {
-                            "operating_cash_flow_ytd": -2580587,
-                            "investing_cash_flow_ytd": -5146,
-                            "financing_cash_flow_ytd": 2695969,
-                            "net_cash_change_ytd": 110236,
+                        source_ytd = rec["source_ytd_values_vnd"]
+                        restated_h1 = rec["prior_h1_comparative_values_vnd"]
+                        raw_keys = {
+                            "operating_cash_flow": "cfo",
+                            "investing_cash_flow": "cfi",
+                            "financing_cash_flow": "cff",
+                            "net_cash_change": "net",
                         }
-                        for qfield, yfield in zip(self.flows, self.ytd):
-                            self.assertEqual(row[qfield], row[yfield] - restated_h1[yfield])
+                        for qfield in self.flows:
+                            # Compute at source VND precision first, then round to
+                            # million VND. Subtracting already-rounded cumulative
+                            # million values can differ by 1m VND.
+                            expected = round(
+                                (source_ytd[qfield] - restated_h1[raw_keys[qfield]]) / 1_000_000
+                            )
+                            self.assertEqual(row[qfield], expected)
                         self.assertEqual(row["cash_beginning"], previous["cash_ending"])
                     else:
                         previous = self.rows[f"{year}-Q{quarter - 1}"]
@@ -1058,7 +1066,7 @@ class SHSCashFlowNormalizationTests(unittest.TestCase):
         self.assertEqual(rec["source_reclassification_review"]["amount_vnd"], 43270000)
         self.assertEqual(
             [row[field] for field in self.flows],
-            [-1798914, -2108, 1674869, -126153],
+            [-1798915, -2108, 1674870, -126153],
         )
         self.assertEqual(row["cash_beginning"], 790996)
         self.assertEqual(row["cash_ending"], 664843)
