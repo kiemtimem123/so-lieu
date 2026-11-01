@@ -960,6 +960,20 @@ class SHSCashFlowNormalizationTests(unittest.TestCase):
                     if quarter == 1:
                         for qfield, yfield in zip(self.flows, self.ytd):
                             self.assertEqual(row[qfield], row[yfield])
+                    elif period == "2025-Q3":
+                        # Q3/2025 is on the restated H1 presentation from the
+                        # later Q2/2026 comparative. Q2/2025 itself deliberately
+                        # retains the original contemporaneous report. Mixing the
+                        # two bases creates the known 43.27m CFO/CFI mismatch.
+                        restated_h1 = {
+                            "operating_cash_flow_ytd": -2580587,
+                            "investing_cash_flow_ytd": -5146,
+                            "financing_cash_flow_ytd": 2695969,
+                            "net_cash_change_ytd": 110236,
+                        }
+                        for qfield, yfield in zip(self.flows, self.ytd):
+                            self.assertEqual(row[qfield], row[yfield] - restated_h1[yfield])
+                        self.assertEqual(row["cash_beginning"], previous["cash_ending"])
                     else:
                         previous = self.rows[f"{year}-Q{quarter - 1}"]
                         for qfield, yfield in zip(self.flows, self.ytd):
@@ -1031,6 +1045,25 @@ class SHSCashFlowNormalizationTests(unittest.TestCase):
         self.assertEqual(rec["source_pdf_pages"], [10, 11])
         self.assertEqual(rec["source_candidates_pending_manual_review"], [])
         self.assertEqual(rec["quarter_cash_bridge_residual_million_vnd"], 0)
+
+    def test_shs_q3_2025_uses_restated_h1_comparative_for_quarter_derivation(self):
+        row = self.rows["2025-Q3"]
+        rec = row["cashflow_source_reconciliation"]
+        self.assertEqual(
+            rec["status"],
+            "SOURCE_VISUALLY_VERIFIED_Q3_QUARTER_DERIVED_FROM_RESTATED_H1_COMPARATOR",
+        )
+        self.assertEqual(rec["source_pdf_pages"], [13, 14])
+        self.assertEqual(rec["source_reclassification_review"]["amount_vnd"], 43270000)
+        self.assertEqual(
+            [row[field] for field in self.flows],
+            [-1798914, -2108, 1674869, -126153],
+        )
+        self.assertEqual(row["cash_beginning"], 790996)
+        self.assertEqual(row["cash_ending"], 664843)
+        self.assertTrue(rec["source_candidates_pending_manual_review"] == [])
+        self.assertEqual(rec["quarter_flow_components_relative_difference_percent"], 0)
+        self.assertEqual(rec["quarter_cash_bridge_relative_difference_percent"], 0)
 
     def test_shs_q4_2024_uses_original_period_pdf_and_preserves_later_comparator_difference(self):
         row = self.rows["2024-Q4"]
