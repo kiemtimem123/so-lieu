@@ -1,6 +1,6 @@
 # Quy trình chuẩn hóa dữ liệu tài chính theo từng mảng
 
-Phiên bản: 3.3  
+Phiên bản: 3.4  
 Ngày thiết lập: 2026-10-28  
 Cập nhật gần nhất: 2026-11-01  
 Phạm vi: `kiemtimem123/so-lieu`, dữ liệu BCTC quý từ 2024-Q1 trở đi.
@@ -954,3 +954,35 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 
 ### Mốc kiểm thử Q2/2025
 - Data commit `df6ae1b3b5c60c3350c1877262834b41c9255ec6`: Validate quarterly financial data run `41313644124`, Validate Site and Data run `41313644102`, Package Hostinger Stock Dashboard run `41313644231` đều SUCCESS.
+
+
+## Bổ sung phiên bản 3.4 — xác định đơn vị nguồn, dấu tiền và hồ sơ VCI Q3/2025
+
+### Quy tắc đơn vị tiền tệ bắt buộc
+
+1. Đọc nguyên văn nhãn đơn vị trên từng biểu mẫu B01, B02, B03 (ví dụ “Đơn vị tính: VND”, “nghìn đồng”, “triệu đồng”) và đối chiếu thuyết minh về đồng tiền trình bày. Không suy đoán đơn vị theo số chữ số, kích thước số hoặc tên trường trong snapshot.
+2. Lưu số nguồn ở đơn vị gốc trước khi quy đổi. Chỉ khi đã xác minh đơn vị mới xác định hệ số: VND → triệu VND chia 1.000.000; nghìn VND → triệu VND chia 1.000; triệu VND giữ nguyên; tỷ VND → triệu VND nhân 1.000. Mọi hệ số khác phải căn cứ đúng nhãn nguồn, không tự chọn.
+3. Các phép cân đối tài sản, kết quả kinh doanh, tổng dòng tiền và cầu nối tiền đầu/cuối kỳ phải kiểm tra trên số nguyên ở đơn vị gốc trước khi làm tròn. Snapshot có thể dùng triệu VND làm đơn vị hiển thị thống nhất, nhưng phải giữ số nguồn VND gốc và residual trong reconciliation. Không bao giờ ghi một số VND nguyên như thể đó là triệu đồng/tỷ đồng.
+4. Nếu B01/B02/B03 có nhãn đơn vị khác nhau hoặc thuyết minh mâu thuẫn, dừng kỳ ở NEEDS_MANUAL_REVIEW; không chuẩn hóa đến khi xác minh được.
+
+### Quy tắc đọc dấu và dòng không phát sinh
+
+- Số có ngoặc đơn hoặc dấu trừ đứng trước là số âm; số không có ngoặc/dấu trừ là số dương.
+- Dấu gạch ngang in trên một dòng chỉ tiêu có mặt trong biểu mẫu được hiểu là 0. Dòng không được trình bày trong biểu mẫu là null, không tự gán 0.
+- Không suy luận dấu âm từ vị trí dòng hoặc từ việc dòng đó mang tên “chi”. Ví dụ khoản vay nhận thường dương, trả nợ gốc/cổ tức/chi đầu tư thường âm; phải đọc đúng ký hiệu ở PDF.
+- Với B03, phải kiểm tra độc lập CFO + CFI + CFF = biến động tiền thuần và tiền đầu kỳ + biến động tiền thuần + ảnh hưởng tỷ giá (nếu có) = tiền cuối kỳ. Nếu dấu in và tổng cấu phần/cầu nối mâu thuẫn, áp dụng quy trình v3.3: lưu nguyên văn số in, lưu riêng số chuẩn hóa chỉ khi được chứng minh duy nhất bằng cấu phần và tiền đầu/cuối; nếu không, để null và giữ manual review.
+- Quý riêng = lũy kế kỳ hiện tại trừ lũy kế kỳ liền trước trong cùng năm và trên cùng cơ sở báo cáo. Phải kiểm tra tiền đầu quý bằng tiền cuối quý trước; không lấy thẳng YTD làm số quý.
+- Dòng lưu chuyển tiền môi giới/ủy thác của khách hàng nếu nằm ở biểu mẫu/phần phụ riêng không phải CFO/CFI/CFF của công ty. Không cộng vào lưu chuyển tiền doanh nghiệp; tiền ký quỹ/tiền gửi khách hàng ở phần ngoài B01 cũng không phải tiền và tương đương tiền của công ty.
+
+### Hồ sơ đã đóng kỳ: VCI Q3/2025
+
+- Nguồn duy nhất: VietstockFinance document ID `521476`, catalogue `https://finance.vietstock.vn/VCI/tai-tai-lieu.htm?doctype=1`, PDF `reports/raw/VCI/auto-vci-20261021/ceeef626c2647bcb.pdf` / `https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%203/VCI_Baocaotaichinh_Q3_2025.pdf`.
+- Phạm vi riêng lẻ: PDF page 19 (printed p17), phần Cấu trúc Công ty, ghi “Công ty không có công ty con”.
+- Đơn vị nguồn là VND, không phải triệu đồng hay tỷ đồng: B01 page5, B02 page10 và B03 page13 đều ghi “Đơn vị tính: VND”; thuyết minh page20 (printed p18), mục 2.5 xác nhận đồng tiền sử dụng và trình bày là Đồng Việt Nam (VND). Snapshot dùng triệu VND bằng cách chia số VND gốc cho 1.000.000 và làm tròn gần nhất sau các phép kiểm tra.
+- Đã render toàn bộ PDF 48 trang ở 160 DPI; workflow run `41315526678`, artifact `13086992336`, artifact name `vietstock-source-review-VCI-2025-Q3`. Ảnh trực tiếp đã xem: pages 3–16, 19–20. Page15–16 là lưu chuyển tiền môi giới/ủy thác khách hàng, bị loại khỏi dòng tiền công ty.
+- B01 số gốc VND: tổng tài sản `29,717,532,042,853`; nợ `17,047,567,491,881`; vốn chủ `12,669,964,550,972`; tài sản ngắn hạn `29,592,820,549,473`; dài hạn `124,711,493,380`. Các tổng phụ và phương trình tài sản = nợ + vốn đều residual 0 VND.
+- B02 dùng cột phát sinh riêng QUÝ 3.2025, không dùng cột so sánh Q3/2024 hoặc cột YTD. Doanh thu hoạt động `1,443,289,075,867`; chi phí hoạt động `685,515,103,524`; doanh thu tài chính `5,716,520,412`; chi phí tài chính `202,913,069,847`; chi phí quản lý `41,634,730,844`; LNTT `518,942,692,064`; thuế hiện hành `99,156,830,741`; thuế hoãn lại `-474,944,499`; tổng thuế `98,681,886,242`; LNST `420,260,805,822`. Tổng cấu phần, cầu nối LNTT, thuế và LNST đều residual 0 VND. OCR cũ đã lấy nhầm doanh thu YTD cột so sánh 2024 là `2,696,529` triệu VND; giá trị này đã bị thay bằng đúng doanh thu Q3/2025.
+- B03 YTD VND gốc: CFO `-5,239,067,626,738`; CFI `-35,548,742,835`; CFF `+3,167,896,300,250`; biến động tiền thuần `-2,106,720,069,323`; tiền đầu năm `4,743,771,932,745`; tiền cuối kỳ `2,637,051,863,422`. CFF dương không có ngoặc; CFO/CFI/net âm được in trong ngoặc. Line102 ảnh hưởng tỷ giá in dấu gạch ngang nên bằng 0. Tổng ba luồng và cầu nối tiền YTD đều residual 0 VND. Không có mâu thuẫn dấu cần điều chỉnh ở Q3/2025.
+- Q3 riêng tính bằng YTD Q3 trừ YTD H1/2025 đã xác minh ở Q2/2025: CFO `-5,129,888,190,051`; CFI `-8,269,114,883`; CFF `+7,302,932,240,000`; biến động tiền thuần `+2,164,774,935,066`; tiền đầu quý `472,276,928,356`; tiền cuối quý `2,637,051,863,422`. Các luồng quý, cầu nối tiền đầu/cuối quý và đối chiếu tiền đầu Q3 với tiền cuối Q2 đều residual 0 VND.
+- Snapshot Q3/2025 sau quy đổi triệu VND: tổng tài sản `29,717,532`; nợ `17,047,567`; vốn chủ `12,669,965`; doanh thu `1,443,289`; LNTT `518,943`; thuế tổng `98,682`; LNST `420,261`; CFO quý `-5,129,888`; CFI quý `-8,269`; CFF quý `+7,302,932`; biến động tiền thuần quý `+2,164,775`. Chú ý: CFF dương, còn net cash change cũng dương trong riêng Q3; lũy kế YTD net cash change là âm. Không được đảo dấu do hiểu nhầm dấu gạch ngang hoặc nhầm YTD/quý.
+- ROA 6.51%, ROE 13.39% theo LNST Q3 nhân 4 chia bình quân số dư đầu/cuối quý. Snapshot, raw VND, kiểm tra và correction history được lưu tại `data/financials-VCI.json`; data commit `813f58cf6dd72e288baaef775553d0d1b417d7b1`.
