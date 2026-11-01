@@ -479,7 +479,10 @@ def core_extraction_pages_complete(item,symbol,pages,max_pages=14):
   int(page.get("page")) for page in pages
   if isinstance(page,dict) and str(page.get("page","")).isdigit()
  }
- if not all(number in existing for number in range(1,target_count+1)):
+ required_pages=set(range(1,target_count+1))
+ # VCI page 2 is a blank separator; statement pages are present without it.
+ if symbol=="VCI": required_pages.discard(2)
+ if not required_pages.issubset(existing):
   return False
  # GAS scanned filings may contain only the electronic-verification stamp on
  # statement pages. Page presence alone is not evidence that the financial
