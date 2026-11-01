@@ -27,6 +27,10 @@ on:
         description: "Render DPI"
         required: true
         default: "160"
+      pdf_member:
+        description: "Exact PDF filename inside ZIP; leave blank to auto-select the company-parent member"
+        required: false
+        default: "VCI_Baocaotaichinh_Q1_2026_1.pdf"
 
 permissions:
   contents: write
@@ -58,6 +62,7 @@ jobs:
           PDF_PATH: ${{ github.event.inputs.pdf_path || 'reports/raw/VCI/auto-vci-20261021/f9f79b469fb94e87.zip' }}
           PAGE_LIST: ${{ github.event.inputs.pages || 'all' }}
           RENDER_DPI: ${{ github.event.inputs.dpi || '160' }}
+          PDF_MEMBER: ${{ github.event.inputs.pdf_member || '' }}
         run: |
           python - <<'PY'
           import os, zipfile
@@ -75,10 +80,14 @@ jobs:
               with zipfile.ZipFile(pdf_path) as archive:
                   members = sorted(n for n in archive.namelist() if n.lower().endswith(".pdf"))
                   print("PDF members:", members)
-                  selected = [name for name in members if "Congtyme" in Path(name).name]
+                  requested_member = os.environ.get("PDF_MEMBER", "").strip()
+                  if requested_member:
+                      selected = [name for name in members if Path(name).name == requested_member]
+                  else:
+                      selected = [name for name in members if "Congtyme" in Path(name).name]
                   if len(selected) != 1:
-                      raise SystemExit("Expected one company-parent PDF; selected=" + repr(selected) + "; ZIP members=" + repr(members))
-                  print("Selected company-parent PDF:", selected[0])
+                      raise SystemExit("Expected exactly one requested PDF member; requested=" + repr(requested_member) + "; selected=" + repr(selected) + "; ZIP members=" + repr(members))
+                  print("Selected PDF member for visual review:", selected[0])
                   pdf_bytes = archive.read(selected[0])
               doc = fitz.open(stream=pdf_bytes, filetype="pdf")
           else:
@@ -139,6 +148,7 @@ jobs:
           ARTIFACT_ID: ${{ steps.upload.outputs.artifact-id }}
           SOURCE_PDF: ${{ github.event.inputs.pdf_path || 'reports/raw/VCI/auto-vci-20261021/f9f79b469fb94e87.zip' }}
           TARGET_PERIOD: ${{ github.event.inputs.period || '2026-Q1' }}
+          PDF_MEMBER: ${{ github.event.inputs.pdf_member || '' }}
         with:
           script: |
             const path = `reports/raw/VCI/auto-vci-20261021/render-metadata-${process.env.TARGET_PERIOD}.json`;
