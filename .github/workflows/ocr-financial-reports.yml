@@ -143,6 +143,12 @@ jobs:
                       return True
               return False
 
+          def requires_manual_closeout(saved_state):
+              if not isinstance(saved_state, dict):
+                  return False
+              source_review = saved_state.get("sourceScopeReview")
+              return isinstance(source_review, dict) and source_review.get("doNotAdvanceUntilManualReviewComplete") is True
+
           def payload_needs_pages(payload, symbol=None):
               if not isinstance(payload, dict):
                   return False
@@ -220,12 +226,11 @@ jobs:
               str(symbol).strip().upper()
               for symbol, state in checkpoint_states.items()
               if isinstance(state, dict) and state.get("completeForAutomation") is True
-              and state.get("manualReviewRemaining") is not True
           }
           # Also retain completion from the latest checkpoint record if older
           # checkpoints do not yet have the per-symbol state map.
           latest = checkpoint.get("lastProgress") or {}
-          if latest.get("completeForAutomation") is True and latest.get("manualReviewRemaining") is not True and latest.get("symbol"):
+          if latest.get("completeForAutomation") is True and latest.get("symbol"):
               completed_symbols.add(str(latest["symbol"]).strip().upper())
           requested = os.environ.get("REQUESTED_SYMBOL", "").strip().upper()
           bootstrap_symbol = ""
@@ -235,7 +240,12 @@ jobs:
               if active_hint and requested != active_hint:
                   raise SystemExit(f"Requested ticker {requested} does not match active checkpoint {active_hint}; refusing to advance the queue.")
               if requested in completed_symbols:
-                  raise SystemExit(f"Ticker {requested} is already source-reviewed and locked; refusing OCR reprocessing.")
+                  requested_saved_state = checkpoint_states.get(requested) or {}
+                  requested_saved_snapshot = load_json(Path("data") / f"financials-{requested}.json")
+                  requested_saved_latest = latest_quarter(requested_saved_snapshot)
+                  requested_saved_last = str(requested_saved_state.get("lastQuarter") or "").strip()
+                  if not (requested_saved_latest and requested_saved_last and requested_saved_latest > requested_saved_last):
+                      raise SystemExit(f"Ticker {requested} is already complete for automation through {requested_saved_last or 'its saved period'}; refusing reprocessing without a newer quarter.")
               requested_snapshot = load_json(Path("data") / f"financials-{requested}.json")
               requested_state = checkpoint_states.get(requested) or {}
               requested_latest = latest_quarter(requested_snapshot)
@@ -268,8 +278,11 @@ jobs:
               active_hint = str(checkpoint.get("activeSymbol") or checkpoint.get("resumeSymbolHint") or "").strip().upper()
               if active_hint in symbols and active_hint not in completed_symbols:
                   active_snapshot = load_json(Path("data") / f"financials-{active_hint}.json")
-                  if active_snapshot is not None and should_skip_unconfirmed(active_hint, active_snapshot, checkpoint_states.get(active_hint)):
-                      print(f"Skipping active ticker {active_hint}: unconfirmed items are held for manual review through {skip_through_by_symbol.get(active_hint) or (checkpoint_states.get(active_hint) or {}).get('lastQuarter')}.")
+                  active_state = checkpoint_states.get(active_hint)
+                  if requires_manual_closeout(active_state):
+                      print(f"Queue paused at {active_hint}: source/core manual reconciliation must be closed before advancing.")
+                  elif active_snapshot is not None and should_skip_unconfirmed(active_hint, active_snapshot, active_state):
+                      print(f"Skipping active ticker {active_hint}: unconfirmed items are held for manual review through {skip_through_by_symbol.get(active_hint) or (active_state or {}).get('lastQuarter')}.")
                   elif active_snapshot is not None:
                       selected = active_hint
                       print(f"Resuming active checkpoint ticker first: {active_hint}.")
@@ -284,10 +297,24 @@ jobs:
                   # Skip only through the explicitly closed period. A later quarter
                   # releases the ticker back into the normal queue automatically.
                   saved_state = checkpoint_states.get(symbol)
+                  if requires_manual_closeout(saved_state):
+                      print(f"Queue paused at {symbol}: manual source/core reconciliation is required before the next ticker.")
+                      break
                   if should_skip_unconfirmed(symbol, snapshot, saved_state):
                       limit = skip_through_by_symbol.get(symbol) or (saved_state or {}).get("skipUnconfirmedThroughPeriod") or (saved_state or {}).get("lastQuarter") or ""
                       print(f"Skipping {symbol}: unresolved values remain blank for manual review through {limit}.")
                       continue
+                  # A completed automation pass is a durable lock even when visual/manual
+                  # review remains. Re-open only when a strictly newer quarter is present.
+                  if isinstance(saved_state, dict) and saved_state.get("completeForAutomation") is True:
+                      saved_last = str(saved_state.get("lastQuarter") or "").strip()
+                      snapshot_last = latest_quarter(snapshot)
+                      if not (saved_last and snapshot_last and snapshot_last > saved_last):
+                          print(f"Skipping {symbol}: automation is complete through {saved_last or 'the saved checkpoint'}; manual review does not trigger OCR again.")
+                          continue
+                      selected = symbol
+                      print(f"Reopening {symbol}: newer report {snapshot_last} is beyond completed checkpoint {saved_last}.")
+                      break
                   # Use the durable ticker checkpoint as the queue cursor. Existing snapshots
                   # can be present before the ticker has completed its one-at-a-time OCR pass.
                   if symbol not in completed_symbols:
