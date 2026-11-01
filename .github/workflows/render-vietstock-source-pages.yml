@@ -75,9 +75,11 @@ jobs:
               with zipfile.ZipFile(pdf_path) as archive:
                   members = sorted(n for n in archive.namelist() if n.lower().endswith(".pdf"))
                   print("PDF members:", members)
-                  if len(members) != 1:
-                      raise SystemExit("Expected exactly one PDF in ZIP; found " + str(len(members)))
-                  pdf_bytes = archive.read(members[0])
+                  selected = [name for name in members if "Congtyme" in Path(name).name]
+                  if len(selected) != 1:
+                      raise SystemExit("Expected one company-parent PDF; selected=" + repr(selected) + "; ZIP members=" + repr(members))
+                  print("Selected company-parent PDF:", selected[0])
+                  pdf_bytes = archive.read(selected[0])
               doc = fitz.open(stream=pdf_bytes, filetype="pdf")
           else:
               doc = fitz.open(pdf_path)
