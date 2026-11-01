@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-01T08:59:12Z",
+  "updatedAt": "2026-11-01T09:01:43.122Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -36,35 +36,51 @@
     "VCK",
     "MBB",
     "VDS",
-    "GAS",
-    "VCI"
+    "GAS"
   ],
-  "lastCompletedSymbol": "SHB",
-  "activeSymbol": null,
-  "resumeSymbolHint": "TCX",
+  "lastCompletedSymbol": "SHS",
+  "activeSymbol": "VCI",
+  "resumeSymbolHint": "VCI",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
-    "symbol": "SHB",
-    "status": "automated_processing_complete",
-    "completeForAutomation": true,
+    "symbol": "VCI",
+    "status": "in_progress_manual_core_reconciliation",
+    "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-11-01T08:59:12Z",
-    "workflowRunId": "41291068377",
-    "workflowRunNumber": 3130,
-    "workflowRunUrl": "https://github.com/kiemtimem123/so-lieu/actions/runs/41291068377",
-    "changedPaths": [
-      "data/financials-SHB.json"
-    ],
-    "periodCount": 10,
+    "processedAt": "2026-11-01T09:01:43.122Z",
+    "sourceScopeReviewStatus": "manual_core_reconciliation_required",
+    "doNotAdvanceUntilManualReviewComplete": true,
+    "periodCount": 11,
     "firstQuarter": "2024-Q1",
-    "lastQuarter": "2026-Q2",
-    "pendingCorePeriods": [],
-    "terminalManualReviewPeriods": [],
+    "lastQuarter": "2026-Q3",
+    "pendingCorePeriods": [
+      "2024-Q1",
+      "2024-Q2",
+      "2024-Q3",
+      "2024-Q4",
+      "2025-Q1",
+      "2025-Q2",
+      "2025-Q3",
+      "2025-Q4",
+      "2026-Q1",
+      "2026-Q2",
+      "2026-Q3"
+    ],
+    "terminalManualReviewPeriods": [
+      "2024-Q1",
+      "2024-Q2",
+      "2024-Q4",
+      "2025-Q1",
+      "2025-Q2",
+      "2025-Q3",
+      "2025-Q4",
+      "2026-Q1",
+      "2026-Q2",
+      "2026-Q3"
+    ],
     "pendingDetailPeriods": [],
-    "staleDetailSchemaPeriods": [],
     "statementPagesPending": false,
-    "skipUnconfirmedAutomation": false,
-    "skipUnconfirmedReason": null
+    "note": "Do not automatically retry the same archived PDFs. Manually reconcile VCI source scope and B01/B02/B03 core totals before advancing."
   },
   "symbolStates": {
     "MBB": {
@@ -2687,10 +2703,10 @@
   "normalizationProgress": {
     "standardVersion": "2.7",
     "standardDocument": "reports/financial-data-normalization-standard.md",
-    "activeDataDomain": "cashflow",
-    "activeSymbol": null,
-    "status": "gas_source_ocr_attempted_manual_review_required",
-    "lastUpdatedAt": "2026-10-30T14:24:59.993Z",
+    "activeDataDomain": "core_financial_statements",
+    "activeSymbol": "VCI",
+    "status": "manual_core_reconciliation_vci_queue_paused",
+    "lastUpdatedAt": "2026-11-01T09:01:43.122Z",
     "completedChecks": [
       "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
       "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -2986,7 +3002,11 @@
       "GEG cash-flow snapshot normalized across 10 periods (2024-Q1–2026-Q2) from archived VietstockFinance OCR sidecars; no report reload/OCR rerun.",
       "GEG regression test and CI validator integrated; latest commit 9bc4a028f739a19b051dbaaf8c768b29742d9b5d workflow status: Validate quarterly financial data=success; Validate Site and Data=success; Package Hostinger Stock Dashboard=not_found.",
       "GEG Q4/2025 source image reviewed directly on 2026-10-30: official VietstockFinance consolidated PDF printed pages 4-5 confirm CFO 932,884,327,033; CFI 1,921,143,888; CFF -1,012,240,268,026; net change -77,434,797,105; opening cash 163,717,707,072; FX 81,753,281; ending cash 86,364,663,248 VND. The prior truncated-row-70 OCR flag is resolved without changing source values.",
-      "Added regression assertions in tests/test_cashflow_bridge.py and scripts/validate-bank-reconciliation.py for GEG Q4/2025 visually confirmed raw values and review status; validation of the visual-review commit is the next gate before marking GEG terminal."
+      "Added regression assertions in tests/test_cashflow_bridge.py and scripts/validate-bank-reconciliation.py for GEG Q4/2025 visually confirmed raw values and review status; validation of the visual-review commit is the next gate before marking GEG terminal.",
+      "2026-11-01: queue selector now treats completeForAutomation=true as a durable lock even while manualReviewRemaining=true; reopen only for a strictly newer quarter or explicit requested correction.",
+      "2026-11-01: sourceScopeReview.doNotAdvanceUntilManualReviewComplete now pauses the queue; manual core reconciliation cannot trigger repeated OCR attempts or advance to another ticker.",
+      "2026-11-01: financial-data-normalization-standard.md updated to v2.7; queue locks, manual reconciliation, restoration and persistent standard-memory rules documented.",
+      "2026-11-01: unintended repeat enrichment rollback: restored MBB and SHB snapshots from validated commit 72530652053800a2f10d4bd3b47ac0f8e8173e15. ACB/FPT additions from existing sidecars remain pending visual review; no source PDFs were newly OCRed."
     ],
     "unresolved": [
       "NLG NEEDS_MANUAL_REVIEW — H1/2024 selected later comparative in Q2/2025 reclassifies CFO/CFI versus the original Q2/2024 source by >0.01%; net cash movement and cash balances remain unchanged. Preserve both source bases and selected later comparative; do not plug.",
@@ -3359,7 +3379,7 @@
       }
     ]
   },
-  "nextSymbolHint": null,
+  "nextSymbolHint": "VCI",
   "lastSessionCheckpoint": {
     "savedAt": "2026-10-30T15:20:00Z",
     "branch": "main",
@@ -3485,25 +3505,15 @@
     "codeFix": "scripts/validate-financials.mjs now reports chronological first/last periods from sorted unique period keys instead of relying on insertion order."
   },
   "nextActions": [
-    "VCB: mã tiếp theo cho rà soát độ phủ bảng ngân hàng; chỉ đọc snapshot VCB hiện có, dùng bank-specific row keys, giữ nguyên manual-review/scope holds; không OCR/enrich.",
-    "STB: coverage sau khi áp dụng allow-list và rejected-field sanitizer: CĐKT 88/340, KQKD 70/220, LCTT 70/90, ROA/ROE 4/20. Đã sửa lỗi số OCR bị từ chối nhưng vẫn hiện ở một số kỳ trạng thái auto_extracted_pending_visual_review. Snapshot không thay đổi; CI + package đã pass.",
-    "VPB: coverage saved; CĐKT 158/374, KQKD 138/242, LCTT 63/99, ROA/ROE 0/22. Q1/Q2 2026 manual holds; bank interest expense/net interest income, capex, FX and dividends rows remain blank.",
-    "TPB: coverage saved; CĐKT 101/340, KQKD 74/220, LCTT 72/90, ROA/ROE 18/20. Keep 2025-Q3 core blanks, capex 2/10, dividends 0/10.",
-    "SSI: coverage saved; CĐKT 93/160, KQKD 129/310, LCTT 80/90, ratios 0/50. FX row absent, NCI not source-confirmed; Q4/2025 and Q1/2026 manual holds.",
-    "SHS: completed 11/11 quarters (2024-Q1–2026-Q3). All reporting scopes classified; source-present B01/B02/B03b rows checked; 11 component audits verified; revenue/tax audits verified; zero rejected fields; cashflow comparative differences documented/resolved; validations pass. Do not re-read unless new contradictory evidence.",
-    "VDS: coverage saved; CĐKT 147/160, KQKD 216/310, LCTT 80/90, ratios 0/50; NCI no independent source confirmation.",
-    "VIX: 2024-Q1–2025-Q3 are source-confirmed standalone reports and appear only in separate basis; 2025-Q4–2026-Q3 scope unconfirmed and hidden from consolidated.",
-    "VCK: 7/7 periods scope unconfirmed; 174 OCR candidates audit-only and all public financial fields blank.",
-    "VCI: Q1–Q4/2024 scope unconfirmed; Q1–Q3/2025 partial allow-listed values only; Q4/2025–Q3/2026 no extracted fields.",
-    "NVL: effective table coverage CĐKT 48/130, KQKD 55/220, LCTT 72/90, ROA/ROE 2/20; keep manual holds/cash basis discrepancies; NCI blank without source check/raw NCI.",
-    "KDH: coverage audit saved; NCI residual is not source-confirmed and remains blank.",
-    "PLX: coverage review saved; NCI residual not derived without independent source check/raw NCI; retain source cash-basis holds.",
-    "GAS: coverage review saved; use direct NCI alias when available; do not derive missing NCI residual without independent source confirmation.",
-    "GEG: coverage review saved; CĐKT/core KQKD present; missing selling-expense/dividend rows remain blank.",
-    "IDC: NCI displays only when same-period source check or raw nci_profit confirms; retain Q1/2024 tax-source mismatch, Q2/2025 0.024% bridge, Q2/2026 cashflow hold.",
-    "KBC: coverage audit saved; keep Q3/2026 long-term liabilities blank due 100bn OCR mismatch.",
-    "NLG, BSR, TCB, VHM: coverage audits saved; do not re-read/reprocess unless concrete new error.",
-    "Continue one ticker at a time, use industry row keys, preserve selected ticker/period/unit/scope and all manual-review blocks."
+    "VCI: manual source/scope and core financial reconciliation for all 11 stored periods. Queue is deliberately paused until this closeout is completed.",
+    "VCK: after VCI, verify report scope against the VietstockFinance-linked PDF; keep unconfirmed consolidated values hidden.",
+    "VIX: verify standalone/consolidated scopes by period; preserve standalone-only basis and manual holds.",
+    "VDS: review saved PDFs visually, finish selected core/detail source checks and close documented cash-flow exception.",
+    "GAS: visually inspect saved VietstockFinance statements; resolve readable rows only, leave OCR-uncertain core/cash-flow fields blank.",
+    "PLX: review original PDFs and unresolved cash-basis discrepancies; no plug or cross-period forced adjustment.",
+    "GEG: finish visual review of 2024 periods and Q2/2026 cash-flow basis; preserve reported values.",
+    "IDC: finish visual review and retain Q2/2025 tax and Q2/2026 cash-flow holds unless primary-source evidence closes them.",
+    "Do not rerun OCR/enrichment for any ticker with completeForAutomation=true unless a strictly newer quarter or explicit source correction is confirmed."
   ],
   "lastUiUpdate": {
     "updatedAt": "2026-10-30T18:35:00+07:00",
@@ -3675,5 +3685,100 @@
       ],
       "next": "Continue banking statement table coverage review with VCB. Read only VCB snapshot; do not run OCR/enrich."
     }
+  ],
+  "queueSafetyAudit": {
+    "updatedAt": "2026-11-01T09:01:43.122Z",
+    "queueFixCommit": "2eb375095b8adff01bf79b419e70b7a7745703ad",
+    "normalizationStandardCommit": "9097be4e58c698f91397774cd1b2d4786d3ff107",
+    "noSelectionVerificationRun": "41291120305",
+    "finding": "Older selector incorrectly treated completeForAutomation=true plus manualReviewRemaining=true as incomplete and repeated archived enrichment across MBB, ACB, FPT and SHB.",
+    "restoredSnapshots": {
+      "MBB": {
+        "restoredFromCommit": "72530652053800a2f10d4bd3b47ac0f8e8173e15",
+        "restorationCommit": "78b2055d6170a67ae966a7140cc464955fff3873",
+        "blobSha": "303841da809c0aa6f708e1597a4c27fba8f8f9ae"
+      },
+      "SHB": {
+        "restoredFromCommit": "72530652053800a2f10d4bd3b47ac0f8e8173e15",
+        "restorationCommit": "041508c394a2de7fc92d1524e0b30dbe301ffdac",
+        "blobSha": "b5e34abc7ef085f11c36406845a9193086dda2c8"
+      }
+    },
+    "retainedSidecarOnlyAdditions": {
+      "ACB": "Newly populated source-derived rows were null in the pre-run snapshot; retained as pending visual review. Existing numeric values were not replaced.",
+      "FPT": "Newly populated dividends/capex rows were null in the pre-run snapshot; retained as pending visual review. Existing numeric values were not replaced."
+    },
+    "runWithNoAutomaticTicker": "41291120305",
+    "conclusion": "No selected ticker; queue paused at VCI manual source/core reconciliation."
+  },
+  "manualReviewQueue": [
+    {
+      "symbol": "VCI",
+      "order": 1,
+      "status": "active_blocking",
+      "periodCount": 11,
+      "periodRange": "2024-Q1..2026-Q3",
+      "reason": "11 kỳ còn pending core reconciliation; user requires source/scope and B01/B02/B03 manual closeout before next ticker.",
+      "nextStep": "Review saved VietstockFinance PDFs individually; verify separate-report scope, current-quarter columns, asset/liability/equity and PBT/tax/PAT bridges. Do not rerun OCR on unchanged archives."
+    },
+    {
+      "symbol": "VCK",
+      "order": 2,
+      "status": "queued_scope_hold",
+      "periodCount": 7,
+      "periodRange": "2025-Q1..2026-Q3",
+      "reason": "VietstockFinance document titles do not explicitly confirm consolidated scope; values remain audit-only and hidden."
+    },
+    {
+      "symbol": "VIX",
+      "order": 3,
+      "status": "queued_scope_and_visual_hold",
+      "periodCount": 11,
+      "periodRange": "2024-Q1..2026-Q3",
+      "reason": "2024-Q1..2025-Q3 verified standalone only; 2025-Q4..2026-Q3 scope unconfirmed for consolidated presentation."
+    },
+    {
+      "symbol": "VDS",
+      "order": 4,
+      "status": "queued_visual_review",
+      "periodCount": 10,
+      "periodRange": "2024-Q1..2026-Q2",
+      "reason": "Core/detail text reconciliation exists for selected periods; PDF visual review and cash-flow exception closeout remain."
+    },
+    {
+      "symbol": "GAS",
+      "order": 5,
+      "status": "queued_visual_and_source_hold",
+      "periodCount": 10,
+      "periodRange": "2024-Q1..2026-Q2",
+      "reason": "Cash-flow OCR/row ambiguity and several core/detail items need PDF visual review; keep uncertain fields blank."
+    },
+    {
+      "symbol": "PLX",
+      "order": 6,
+      "status": "queued_visual_and_cashflow_hold",
+      "periodCount": 10,
+      "periodRange": "2024-Q1..2026-Q2",
+      "reason": "Opening-cash residuals above 0.01%, Q2/2026 cashflow unreadable and visual review pending."
+    },
+    {
+      "symbol": "GEG",
+      "order": 7,
+      "status": "queued_visual_and_cashflow_hold",
+      "periodCount": 10,
+      "periodRange": "2024-Q1..2026-Q2",
+      "reason": "2024 source visual checks and Q2/2026 quarter/YTD cash-basis exception remain."
+    },
+    {
+      "symbol": "IDC",
+      "order": 8,
+      "status": "queued_visual_and_exception_review",
+      "periodCount": 10,
+      "periodRange": "2024-Q1..2026-Q2",
+      "reason": "Visual PDF review and Q2/2025 tax bridge 0.024% / Q2/2026 cashflow exception remain."
+    }
+  ],
+  "sourceReviewCompleteSymbols": [
+    "SHS"
   ]
 }
