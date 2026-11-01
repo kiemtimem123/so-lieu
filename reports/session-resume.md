@@ -235,3 +235,15 @@ Ghi chú này là lối tắt tiếp nối, không thay thế checkpoint sống.
 - Latest CI on commit `998dd71b491c3f8fc35d6f155d81ec582ecb2e51` passed: quarterly financial data validation run `41229141959`, site/data validation run `41229142059`, Hostinger package run `41229142016`.
 - Direct VietstockFinance catalog audit shows no consolidated Q3/2026 document ID/PDF. Keep a future source-availability watch; do not insert third-party figures.
 - Resume with SHS per the user-given order. Existing SHS snapshot has 10 quarters through Q2/2026; cash-flow exceptions for 2024-Q2 and 2024-Q3 remain withheld pending visual source inspection. Existing report archive files are under `reports/raw/SHS/`; reuse them, no OCR/enrich rerun unless the visual source audit proves necessary.
+
+## 2026-11-01 SHS closeout saved; VCI resumed under SHS workflow
+
+- SHS is closed and must not be reloaded, re-OCR'd, re-extracted or reprocessed. Its 11 quarters (2024-Q1–2026-Q3) remain completed in `reports/processing-checkpoint.json`; next ticker is VCI.
+- User's processing order after SHS: VCI → VCK → VIX → VDS → GAS → PLX → GEG → IDC. Process exactly one ticker at a time; do not advance while the current ticker has unresolved review or validation.
+- Reopened VCI from its existing 11 VietstockFinance doctype=1 archive links (2024-Q1–2026-Q3). Reused saved archives and sidecars; no new numeric values have been written. VCI remains active with source-scope review pending.
+- Existing VCI terminal-skip flags were removed in response to the user's new instruction to apply the SHS workflow. All 11 VCI periods are queued for source-scope confirmation and extraction; the source-scope validation guard remains in place.
+- Seven VCI PDF text sidecars and four later ZIP/PDF member manifests were inspected. Four later periods (2025-Q4, 2026-Q1, 2026-Q2, 2026-Q3) still need page OCR before the source statements can be fully reviewed. Existing source files are retained.
+- VCI commits: snapshot reopened `92fb6c3`; checkpoint set active `7a44e4c`; skip configuration removed `38626ae`; OCR workflow trigger `e3e7b1b`; collector handoff `ff1e4b3`.
+- Current automation: OCR run `41284586711` is processing VCI (up to two report archives per run); a follow-up OCR run `41284630791` is queued. Collector run `41284586777` succeeded but reported one source job needing review and downloaded no new file. Site/data validation `41284594235` and quarterly data validation `41284594307` passed on the OCR-trigger commit.
+- Resume VCI only. Confirm source scope from the VietstockFinance-linked report forms/pages, then extract B01/B02/B03a, validate balance/income/tax/cash-flow bridges and detail rows, inspect all source pages, run validators, and checkpoint immediately after VCI passes. Do not move to VCK before VCI is complete. Do not reprocess SHS.
+
