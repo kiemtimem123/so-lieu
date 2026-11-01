@@ -768,11 +768,24 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
     balance,[r"^[\s,;:._\-|]*c\.?\s+no\s+phai\s+tra(?:\s|$)"],factor
    )
   if balance and symbol in BROKERS:
-   # Use CTCK statement row codes as the authoritative totals; weak text-label
-   # matches can otherwise capture component rows or OCR-shifted columns.
-   row270=value_by_row_prefix(balance,[r"\b100\s*\+\s*200\b"],factor)
-   row300=value_by_row_prefix(balance,[r"\bc\.?\s*no\s+phai\s+tra\b"],factor)
-   row400=value_by_row_prefix(balance,[r"\b400\b"],factor)
+   # CTCK OCR separates some row labels/formulas from their amount columns.
+   # Read the formula/row label and the next few lines without stopping at a
+   # following numeric row marker.
+   def vci_row_value(source_pages,patterns):
+    compiled=[re.compile(pattern) for pattern in patterns]
+    for source_page in source_pages:
+     source_lines=str(source_page.get("text","")).splitlines()
+     for source_index,source_line in enumerate(source_lines):
+      if not any(pattern.search(norm(source_line)) for pattern in compiled):
+       continue
+      for candidate in source_lines[source_index:min(source_index+5,len(source_lines))]:
+       values=amounts(candidate,threshold=1000)
+       if values:
+        return int(round(values[0]*factor))
+    return None
+   row270=vci_row_value(balance,[r"\b100\s*\+\s*200\b"])
+   row300=vci_row_value(balance,[r"\bc\.?\s*no\s+phai\s+tra\b"])
+   row400=vci_row_value(balance,[r"\b400\b"])
    if row270 is not None: assets=row270
    if row300 is not None: liabilities=row300
    if row400 is not None: equity=row400
