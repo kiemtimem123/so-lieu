@@ -14,6 +14,44 @@ VALIDATOR = runpy.run_path(
 cash_bridge_delta = VALIDATOR["cash_bridge_delta"]
 within_relative_tolerance = VALIDATOR["within_relative_tolerance"]
 relative_difference_percent = VALIDATOR["relative_difference_percent"]
+VIETSTOCK_PARSER = runpy.run_path(
+    str(ROOT / "scripts" / "sync-vietstock-financials.py"),
+    run_name="vietstock_sync_test_module",
+)
+scale_to_million = VIETSTOCK_PARSER["scale_to_million"]
+
+
+class VietstockUnitNormalizationTests(unittest.TestCase):
+    def test_explicit_vnd_marker_overrides_billion_mentions_in_cover_letter(self):
+        factor, note = scale_to_million(
+            "BVT: VND\n"
+            "Giải trình: tổng doanh thu hoạt động đạt 1.002 tỷ đồng; "
+            "lợi nhuận đạt 203,3 tỷ đồng.\n"
+            "BÁO CÁO TÌNH HÌNH TÀI CHÍNH\n"
+            "Tổng cộng tài sản 29.053.827.666.847 VND",
+            29053827666847,
+            27566961000000,
+        )
+        self.assertEqual(factor, 1e-6)
+        self.assertIn("đơn vị báo cáo ghi rõ VND", note)
+
+    def test_unit_marker_vnd_english_also_overrides_billion_mentions(self):
+        factor, note = scale_to_million(
+            "UNIT: VND\nRevenue reached VND 1,002 billion in the quarter.",
+            29053827666847,
+            27566961000000,
+        )
+        self.assertEqual(factor, 1e-6)
+        self.assertIn("VND", note)
+
+    def test_tydong_unit_without_explicit_vnd_marker_keeps_billion_conversion(self):
+        factor, note = scale_to_million(
+            "Đơn vị tính: tỷ đồng\nTổng tài sản 29.053,8",
+            29053.8,
+            27566.9,
+        )
+        self.assertEqual(factor, 1e3)
+        self.assertIn("tỷ VND", note)
 
 
 class CashFlowBridgeTests(unittest.TestCase):
