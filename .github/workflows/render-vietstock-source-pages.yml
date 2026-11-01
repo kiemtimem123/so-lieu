@@ -62,7 +62,7 @@ jobs:
           PDF_PATH: ${{ github.event.inputs.pdf_path || 'reports/raw/VCI/auto-vci-20261021/f9f79b469fb94e87.zip' }}
           PAGE_LIST: ${{ github.event.inputs.pages || 'all' }}
           RENDER_DPI: ${{ github.event.inputs.dpi || '160' }}
-          PDF_MEMBER: ${{ github.event.inputs.pdf_member || '' }}
+          PDF_MEMBER: ${{ github.event.inputs.pdf_member || 'VCI_Baocaotaichinh_Q1_2026_1.pdf' }}
         run: |
           python - <<'PY'
           import os, zipfile
@@ -148,7 +148,7 @@ jobs:
           ARTIFACT_ID: ${{ steps.upload.outputs.artifact-id }}
           SOURCE_PDF: ${{ github.event.inputs.pdf_path || 'reports/raw/VCI/auto-vci-20261021/f9f79b469fb94e87.zip' }}
           TARGET_PERIOD: ${{ github.event.inputs.period || '2026-Q1' }}
-          PDF_MEMBER: ${{ github.event.inputs.pdf_member || '' }}
+          PDF_MEMBER: ${{ github.event.inputs.pdf_member || 'VCI_Baocaotaichinh_Q1_2026_1.pdf' }}
         with:
           script: |
             const path = `reports/raw/VCI/auto-vci-20261021/render-metadata-${process.env.TARGET_PERIOD}.json`;
@@ -156,6 +156,7 @@ jobs:
               symbol: process.env.TARGET_SYMBOL || 'VCI',
               period: process.env.TARGET_PERIOD,
               sourcePdf: process.env.SOURCE_PDF,
+              sourceDocumentMember: process.env.PDF_MEMBER || null,
               workflowRunId: context.runId,
               artifactId: Number(process.env.ARTIFACT_ID),
               artifactName: `vietstock-source-review-VCI-${process.env.TARGET_PERIOD}`,
