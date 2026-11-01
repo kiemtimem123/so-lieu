@@ -892,7 +892,7 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
     break
   if broker_revenue is None:
    # CTCK B02 row 20 is total operating revenue; never use row 50 financial income.
-   broker_revenue=value_by_row_prefix(profit_pages,[r"\\b20\\b"],factor)
+   broker_revenue=value_by_row_prefix(profit_pages,[r"\b20\b"],factor)
   if broker_revenue is not None:
    out["revenue"]=broker_revenue
   else:
