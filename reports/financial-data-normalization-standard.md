@@ -1053,3 +1053,11 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 - Dấu nguồn giữ nguyên: CFO/CFI/net cash âm có ngoặc; CFF dương không ngoặc; các khoản chi trả nợ gốc/cổ tức/đầu tư có ngoặc âm. Không đảo dấu và không có source-sign exception tại Q3/2026.
 - Snapshot sau quy đổi triệu VND: tổng tài sản `40,401,403`; nợ `23,453,348`; vốn chủ `16,948,055`; doanh thu Q3 `1,304,684`; LNTT `426,808`; thuế tổng `59,401`; LNST `367,408`; CFO riêng quý `-1,645,364`; CFI `-50,411`; CFF `+1,056,375`; net cash riêng quý `-639,400`. ROA `3.67%`, ROE `8.62%` tính từ PAT Q3 nhân 4 chia bình quân số dư Q2/Q3.
 - Snapshot raw VND, kiểm tra, corrections và page evidence được lưu tại `data/financials-VCI.json`; data commit sau đồng bộ alias `b1daa9b933e4e02efe96769b02745dc176c734c6`.
+
+### Kiểm tra dấu tiền riêng Q3/2026 và liên kết với Q2 đã đóng
+
+- Q2 YTD đã đóng: CFO `-4,539,879,183,965`, CFI `-26,547,106,493`, CFF `+5,001,663,109,500`, biến động tiền thuần `+435,236,819,042`, tiền cuối kỳ `3,648,930,400,448` VND.
+- Q3 YTD nguồn: CFO `-6,185,243,120,130`, CFI `-76,957,830,177`, CFF `+6,058,038,109,500`, biến động tiền thuần `-204,162,840,807`, tiền đầu năm `3,213,693,581,406`, tiền cuối kỳ `3,009,530,740,599` VND.
+- Chênh YTD Q3 − YTD Q2 cho quý riêng: CFO `-1,645,363,936,165`; CFI `-50,410,723,684`; CFF `+1,056,375,000,000`; biến động tiền thuần `-639,399,659,849` VND. Tiền đầu quý `3,648,930,400,448` bằng tiền cuối Q2; cộng biến động quý bằng tiền cuối Q3. Tất cả residual = 0 VND.
+- B03 Q3/2026 line102 ảnh hưởng tỷ giá để trống; null là trạng thái đúng. Không tạo số 0 chỉ vì ô trống. Dấu ngoặc ở các khoản CFO/CFI/net là âm; dòng vay nhận và CFF tổng có dấu dương; trả gốc và cổ tức có ngoặc âm. Không đảo dấu theo tên khoản mục.
+- Bộ ví dụ này kiểm tra cả bốn lớp: tổng luồng YTD, cầu nối tiền YTD, tổng luồng quý riêng và cầu nối tiền quý riêng; tiếp tục kiểm tra liên tục số dư cuối Q2 với đầu Q3.
