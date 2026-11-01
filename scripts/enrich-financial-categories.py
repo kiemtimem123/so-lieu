@@ -870,7 +870,7 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
     break
   if cashflow_pbt is not None:
    pbt=cashflow_pbt
-  tax_total=value_by_row_prefix(profit_pages,[r"\b100\b"],factor)
+  tax_total=value_by_row_prefix(profit_pages,[r"^\s*100\s*$"],factor)
   if pbt is not None and tax_total is not None:
    net=int(round(pbt-tax_total))
   broker_revenue=None
