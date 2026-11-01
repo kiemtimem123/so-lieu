@@ -232,6 +232,8 @@ jobs:
           if requested:
               if requested not in symbols:
                   raise SystemExit(f"Ticker {requested} is not enabled in config/securities.json")
+              if active_hint and requested != active_hint:
+                  raise SystemExit(f"Requested ticker {requested} does not match active checkpoint {active_hint}; refusing to advance the queue.")
               if requested in completed_symbols:
                   raise SystemExit(f"Ticker {requested} is already source-reviewed and locked; refusing OCR reprocessing.")
               requested_snapshot = load_json(Path("data") / f"financials-{requested}.json")
