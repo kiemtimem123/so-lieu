@@ -23,7 +23,7 @@ from pathlib import Path
 from urllib.parse import unquote, urljoin, urlparse
 
 import requests
-from financial_units import scale_to_million
+from financial_units import drop_leading_statement_row_code, scale_to_million
 from pypdf import PdfReader
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -861,6 +861,11 @@ def extract_statement(
     # EPS is reported in VND per share, so it must not be converted to million VND.
     basic_eps = row_numbers(lines, ["lãi cơ bản trên cổ phiếu", "lãi cơ bản trên một cổ phiếu", "basic earnings per share"], min_abs=100)
     diluted_eps = row_numbers(lines, ["lãi suy giảm trên cổ phiếu", "lãi suy giảm trên một cổ phiếu", "diluted earnings per share"], min_abs=100)
+    # CTCK statement rows carry numeric codes 501 (basic EPS) and 502
+    # (diluted EPS). OCR can return the row code before the actual share value;
+    # drop that leading code so it is never published as EPS.
+    basic_eps = drop_leading_statement_row_code(basic_eps, 501)
+    diluted_eps = drop_leading_statement_row_code(diluted_eps, 502)
     if basic_eps:
         details["eps"] = int(round(basic_eps[0]))
     if diluted_eps:
