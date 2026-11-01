@@ -836,6 +836,18 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
   net=value_by_row_prefix(
    profit_pages,[r"^\s*(?:\|\s*)?60\s*(?:\||\s)"],factor
   )
+ if symbol in BROKERS and profit_pages:
+  cashflow_pages=select_statement_pages(pages,"cashflow")
+  cashflow_pbt=value_by_label(
+   cashflow_pages,["loi nhuan truoc thue thu nhap doanh nghiep","loi nhuan truoc thue"],factor
+  ) if cashflow_pages else None
+  if cashflow_pbt is not None:
+   pbt=cashflow_pbt
+  tax_total=value_by_row_prefix(
+   profit_pages,[r"^\s*(?:\|\s*)?100\s*(?:\||\s|$)"],factor
+  )
+  if pbt is not None and tax_total is not None:
+   net=int(round(pbt-tax_total))
  if pbt is not None:
   out["pretax_profit"]=pbt
  if net is not None:
