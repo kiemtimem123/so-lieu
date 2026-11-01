@@ -64,7 +64,7 @@
         "note": "Q1 LNTT/LNST lấy từ cột phát sinh riêng trong báo cáo VietstockFinance. Dòng tổng tài sản OCR lệch 560.000 VND so với nợ + vốn chủ; dữ liệu tổng tài sản lưu dùng nợ + vốn chủ để giữ phương trình cân đối ở VND gốc."
       },
       "source_extract_review": {
-        "checked_at": "2026-10-20",
+        "checked_at": "2026-11-01",
         "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
         "source_report_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2024.zip",
         "extracted_sidecar": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/6f6b826b3132547a.zip.extracted.json",
@@ -77,9 +77,19 @@
           "recalculated_roa_percent": 12.19,
           "recalculated_roe_percent": 13.62,
           "stored_roa_matches": true,
-          "stored_roe_matches": true
+          "stored_roe_matches": true,
+          "b01_source_total_assets_vnd": 11925270443177,
+          "b01_source_total_liabilities_vnd": 1264450199049,
+          "b01_source_equity_vnd": 10660820244128,
+          "balance_equation_source_vnd": 0
         },
-        "note": "Q1 LNTT/LNST lấy từ cột phát sinh riêng trong báo cáo VietstockFinance. Dòng tổng tài sản OCR lệch 560.000 VND so với nợ + vốn chủ; dữ liệu tổng tài sản lưu dùng nợ + vốn chủ để giữ phương trình cân đối ở VND gốc."
+        "note": "B01 PDF trang 2-4 được kiểm tra trực tiếp: tổng tài sản dòng 270 = 11.925.270.443.177 VND; tổng nợ dòng 300 = 1.264.450.199.049 VND; vốn chủ dòng 400 = 10.660.820.244.128 VND. Tổng nợ + vốn chủ khớp tổng tài sản ở VND gốc. Không dùng balancing plug; ghi nhận số liệu từ dòng tổng trên báo cáo.",
+        "manually_visual_reviewed": true,
+        "manually_verified_pages": [
+          2,
+          3,
+          4
+        ]
       },
       "source_validation": {
         "reviewed_at": "2026-10-20",
@@ -124,7 +134,7 @@
           "matches_after_rounding": true
         },
         "extraction_review": "OCR/text extraction and accounting arithmetic checks",
-        "manually_visual_reviewed": false,
+        "manually_visual_reviewed": true,
         "known_anomalies": [
           {
             "field": "total_assets",
@@ -148,6 +158,19 @@
           "source_catalog_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
           "original_financial_report_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2024.zip",
           "scope_source_archive": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/6f6b826b3132547a.zip"
+        },
+        "balance_sheet_visual_review": {
+          "status": "source_visually_verified",
+          "source_pages": [
+            2,
+            3,
+            4
+          ],
+          "total_assets_vnd": 11925270443177,
+          "total_liabilities_vnd": 1264450199049,
+          "equity_vnd": 10660820244128,
+          "balance_difference_vnd": 0,
+          "checked_at": "2026-11-01"
         }
       },
       "current_assets": 11856895,
@@ -1319,6 +1342,39 @@
           "source_value_vnd": 0,
           "normalized_value_million_vnd": 0,
           "selected_column": "Quý hiện tại",
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2024.zip"
+        },
+        "total_assets": {
+          "status": "source_visually_verified",
+          "source_statement": "B01-CTCK",
+          "source_row": "270",
+          "source_pdf_page": 3,
+          "source_value_vnd": 11925270443177,
+          "normalized_value_million_vnd": 11925270,
+          "selected_column": "Số cuối kỳ 31/03/2024",
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2024.zip"
+        },
+        "total_liabilities": {
+          "status": "source_visually_verified",
+          "source_statement": "B01-CTCK",
+          "source_row": "300",
+          "source_pdf_page": 3,
+          "source_value_vnd": 1264450199049,
+          "normalized_value_million_vnd": 1264450,
+          "selected_column": "Số cuối kỳ 31/03/2024",
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2024.zip"
+        },
+        "equity": {
+          "status": "source_visually_verified",
+          "source_statement": "B01-CTCK",
+          "source_row": "400",
+          "source_pdf_page": 4,
+          "source_value_vnd": 10660820244128,
+          "normalized_value_million_vnd": 10660820,
+          "selected_column": "Số cuối kỳ 31/03/2024",
           "checked_at": "2026-11-01",
           "source_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2024.zip"
         }
