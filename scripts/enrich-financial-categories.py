@@ -857,7 +857,7 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
      values=amounts(candidate,threshold=1000)
      if values:
       value=values[0]
-      if value<0 and re.search(r"—\\s*-",candidate):
+      if value<0 and re.search(r"—\s*-",candidate):
        value=abs(value)
       cashflow_pbt=int(round(value*factor))
       break
@@ -867,7 +867,7 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
     break
   if cashflow_pbt is not None:
    pbt=cashflow_pbt
-  tax_total=value_by_row_prefix(profit_pages,[r"\\b100\\b"],factor)
+  tax_total=value_by_row_prefix(profit_pages,[r"\b100\b"],factor)
   if pbt is not None and tax_total is not None:
    net=int(round(pbt-tax_total))
   broker_revenue=None
