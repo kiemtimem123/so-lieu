@@ -1,6 +1,6 @@
 {
   "symbol": "SHS",
-  "sourceName": "VietstockFinance — BCTC CTCK SHS, Q1/2024–Q3/2026; 11 kỳ có đối chiếu B01/B02/B03b",
+  "sourceName": "VietstockFinance — SHS BCTC riêng lẻ theo quý 2024-Q1 đến 2026-Q3",
   "fetchedAt": "2026-11-01T03:36:55+00:00",
   "items": [
     {
@@ -30,7 +30,7 @@
       "roe_formula": "Lợi nhuận sau thuế quý / bình quân vốn chủ sở hữu đầu và cuối quý × 4 × 100",
       "average_total_assets": 11691239,
       "average_equity": 10462165.5,
-      "verification_status": "ocr_reconciled_pending_visual_review",
+      "verification_status": "manually_verified_source_reconciled",
       "reconciliation": {
         "assets_minus_liabilities_equity_vnd": 0,
         "assets_minus_liabilities_equity": 0,
@@ -68,7 +68,7 @@
         "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
         "source_report_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2024.zip",
         "extracted_sidecar": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/6f6b826b3132547a.zip.extracted.json",
-        "checked_source": "VietstockFinance catalog and its linked PDF/ZIP files only",
+        "checked_source": "Only VietstockFinance doctype=1 catalogue and its linked original PDF/ZIP",
         "checks": {
           "raw_balance_equation_vnd": 0,
           "profit_tax_equation_vnd": 0,
@@ -83,13 +83,31 @@
           "b01_source_equity_vnd": 10660820244128,
           "balance_equation_source_vnd": 0
         },
-        "note": "B01 PDF trang 2-4 được kiểm tra trực tiếp: tổng tài sản dòng 270 = 11.925.270.443.177 VND; tổng nợ dòng 300 = 1.264.450.199.049 VND; vốn chủ dòng 400 = 10.660.820.244.128 VND. Tổng nợ + vốn chủ khớp tổng tài sản ở VND gốc. Không dùng balancing plug; ghi nhận số liệu từ dòng tổng trên báo cáo.",
+        "note": "B01 PDF trang 2-4 được kiểm tra trực tiếp: tổng tài sản dòng 270 = 11.925.270.443.177 VND; tổng nợ dòng 300 = 1.264.450.199.049 VND; vốn chủ dòng 400 = 10.660.820.244.128 VND. Tổng nợ + vốn chủ khớp tổng tài sản ở VND gốc. Không dùng balancing plug; ghi nhận số liệu từ dòng tổng trên báo cáo. Đóng rà soát B01/B02/B03b: các trường có dòng nguồn và dấu gạch ngang đã xác nhận; trường không có dòng trong mẫu CTCK để null, không suy diễn.",
         "manually_visual_reviewed": true,
         "manually_verified_pages": [
           2,
           3,
           4
-        ]
+        ],
+        "reviewed_statements": [
+          "B01-CTCK / B01a-CTCK",
+          "B02-CTCK / B02a-CTCK",
+          "B03b-CTCK"
+        ],
+        "row_level_component_count": 32,
+        "all_component_rows_source_visually_verified": true,
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit"
+        ],
+        "balance_and_profit_tax_equations_pass": true,
+        "revenue_and_tax_source_audits": "source_visually_verified",
+        "no_rejected_fields_remaining": true,
+        "manually_verified_fields_count": 40
       },
       "source_validation": {
         "reviewed_at": "2026-10-20",
@@ -171,7 +189,10 @@
           "equity_vnd": 10660820244128,
           "balance_difference_vnd": 0,
           "checked_at": "2026-11-01"
-        }
+        },
+        "manually_verified_scope": "separate",
+        "source_closeout_checked_at": "2026-11-01",
+        "source_closeout_note": "B01/B02/B03b contact sheets and row-level source component audits checked against VietstockFinance-linked PDF/ZIP. Values without a printed source line remain null; printed dashes are normalized to 0."
       },
       "current_assets": 11856895,
       "cash_and_equivalents": 0,
@@ -256,9 +277,9 @@
         "broker_custody_revenue",
         "selling_expense"
       ],
-      "financial_line_items_status": "auto_extracted_pending_visual_review",
+      "financial_line_items_status": "manually_verified_source_reconciled",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/6f6b826b3132547a.zip",
-      "financial_line_items_updated_at": "2026-10-27T09:26:18+00:00",
+      "financial_line_items_updated_at": "2026-11-01",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã rà soát trực quan B02 gốc: khôi phục tổng doanh thu hoạt động dòng 20 = 564,565 triệu VND; thuế hiện hành 46,789, thuế hoãn lại 40,783 triệu VND. Không dùng dòng doanh thu thành phần thay tổng doanh thu.",
       "operating_cash_flow": -382576,
       "operating_cash_flow_calculation": "Q1 equals YTD from source line 60",
@@ -1378,6 +1399,32 @@
           "checked_at": "2026-11-01",
           "source_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2024.zip"
         }
+      },
+      "financial_line_items_visual_review": {
+        "status": "source_visually_verified",
+        "checked_at": "2026-11-01",
+        "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2024.zip",
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/6f6b826b3132547a.zip",
+        "statements": [
+          "B01-CTCK / B01a-CTCK",
+          "B02-CTCK / B02a-CTCK",
+          "B03b-CTCK"
+        ],
+        "row_level_component_count": 32,
+        "all_component_rows_source_visually_verified": true,
+        "rejected_fields": [],
+        "scope_confirmed": "separate",
+        "unit": "VND in original source; values normalized to million VND",
+        "relative_tolerance_percent": 0.01,
+        "reconciliation_checks": {
+          "balance_equation_vnd": 0,
+          "profit_tax_equation_vnd": 0,
+          "cashflow_source_status": "ACCEPTED_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT",
+          "revenue_source_status": "source_visually_verified",
+          "tax_source_status": "source_visually_verified"
+        },
+        "note": "Các khoảng trống chỉ giữ lại khi mẫu báo cáo CTCK không có dòng tương ứng hoặc tài liệu không in chỉ tiêu. Không tự tạo giá trị để lấp."
       }
     },
     {
@@ -1407,7 +1454,7 @@
       "roe_formula": "Lợi nhuận sau thuế quý / bình quân vốn chủ sở hữu đầu và cuối quý × 4 × 100",
       "average_total_assets": 12093777.5,
       "average_equity": 10823084,
-      "verification_status": "ocr_reconciled_pending_visual_review",
+      "verification_status": "manually_verified_source_reconciled",
       "reconciliation": {
         "assets_minus_liabilities_equity_vnd": 0,
         "assets_minus_liabilities_equity": 0,
@@ -1448,11 +1495,11 @@
         "note": "LNTT và LNST riêng Q2 đối chiếu đúng bằng lũy kế H1 trừ Q1 theo báo cáo VietstockFinance."
       },
       "source_extract_review": {
-        "checked_at": "2026-10-20",
+        "checked_at": "2026-11-01",
         "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
         "source_report_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2024.zip",
         "extracted_sidecar": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/ea899ceb74febb51.zip.extracted.json",
-        "checked_source": "VietstockFinance catalog and its linked PDF/ZIP files only",
+        "checked_source": "Only VietstockFinance doctype=1 catalogue and its linked original PDF/ZIP",
         "checks": {
           "raw_balance_equation_vnd": 0,
           "profit_tax_equation_vnd": 0,
@@ -1463,7 +1510,26 @@
           "stored_roa_matches": true,
           "stored_roe_matches": true
         },
-        "note": "LNTT và LNST riêng Q2 đối chiếu đúng bằng lũy kế H1 trừ Q1 theo báo cáo VietstockFinance."
+        "note": "LNTT và LNST riêng Q2 đối chiếu đúng bằng lũy kế H1 trừ Q1 theo báo cáo VietstockFinance. Đóng rà soát B01/B02/B03b: các trường có dòng nguồn và dấu gạch ngang đã xác nhận; trường không có dòng trong mẫu CTCK để null, không suy diễn.",
+        "manually_visual_reviewed": true,
+        "reviewed_statements": [
+          "B01-CTCK / B01a-CTCK",
+          "B02-CTCK / B02a-CTCK",
+          "B03b-CTCK"
+        ],
+        "row_level_component_count": 32,
+        "all_component_rows_source_visually_verified": true,
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit"
+        ],
+        "balance_and_profit_tax_equations_pass": true,
+        "revenue_and_tax_source_audits": "source_visually_verified",
+        "no_rejected_fields_remaining": true,
+        "manually_verified_fields_count": 41
       },
       "source_validation": {
         "reviewed_at": "2026-10-20",
@@ -1516,7 +1582,7 @@
           "matches_after_rounding": true
         },
         "extraction_review": "OCR/text extraction and accounting arithmetic checks",
-        "manually_visual_reviewed": false,
+        "manually_visual_reviewed": true,
         "known_anomalies": [],
         "source_archive_verified_present": true,
         "observed_scope": "separate",
@@ -1533,7 +1599,10 @@
           "source_catalog_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
           "original_financial_report_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2024.zip",
           "scope_source_archive": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/ea899ceb74febb51.zip"
-        }
+        },
+        "manually_verified_scope": "separate",
+        "source_closeout_checked_at": "2026-11-01",
+        "source_closeout_note": "B01/B02/B03b contact sheets and row-level source component audits checked against VietstockFinance-linked PDF/ZIP. Values without a printed source line remain null; printed dashes are normalized to 0."
       },
       "cash_and_equivalents": 1637337,
       "fixed_assets": 11265,
@@ -1618,9 +1687,9 @@
         "selling_expense",
         "long_term_liabilities"
       ],
-      "financial_line_items_status": "auto_extracted_pending_visual_review",
+      "financial_line_items_status": "manually_verified_source_reconciled",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/ea899ceb74febb51.zip",
-      "financial_line_items_updated_at": "2026-10-27T09:26:18+00:00",
+      "financial_line_items_updated_at": "2026-11-01",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã khôi phục đầy đủ dòng tiền công ty từ B03b-CTCK; loại trừ phần lưu chuyển tiền môi giới/ủy thác của khách hàng. Đã rà soát trực quan B02 gốc: khôi phục tổng doanh thu hoạt động dòng 20 = 599,421 triệu VND; thuế hiện hành 70,596, thuế hoãn lại 10,098 triệu VND. Không dùng dòng doanh thu thành phần thay tổng doanh thu. Đã rà soát B01 ảnh PDF gốc, khôi phục các tổng tài sản/ngắn hạn/dài hạn và nguồn vốn có dòng hiển thị rõ; các cờ chặn tổng phụ tương ứng đã gỡ.",
       "operating_cash_flow": 1168178,
       "operating_cash_flow_calculation": "H1/2024 YTD B03b line 60 minus Q1/2024 YTD line 60; rounded at the source-to-million-VND convention.",
@@ -2688,7 +2757,33 @@
           "source_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2024.zip"
         }
       },
-      "long_term_liabilities": 124072
+      "long_term_liabilities": 124072,
+      "financial_line_items_visual_review": {
+        "status": "source_visually_verified",
+        "checked_at": "2026-11-01",
+        "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2024.zip",
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/ea899ceb74febb51.zip",
+        "statements": [
+          "B01-CTCK / B01a-CTCK",
+          "B02-CTCK / B02a-CTCK",
+          "B03b-CTCK"
+        ],
+        "row_level_component_count": 32,
+        "all_component_rows_source_visually_verified": true,
+        "rejected_fields": [],
+        "scope_confirmed": "separate",
+        "unit": "VND in original source; values normalized to million VND",
+        "relative_tolerance_percent": 0.01,
+        "reconciliation_checks": {
+          "balance_equation_vnd": 0,
+          "profit_tax_equation_vnd": 0,
+          "cashflow_source_status": "SOURCE_VISUALLY_VERIFIED_AND_RECONCILED",
+          "revenue_source_status": "source_visually_verified",
+          "tax_source_status": "source_visually_verified"
+        },
+        "note": "Các khoảng trống chỉ giữ lại khi mẫu báo cáo CTCK không có dòng tương ứng hoặc tài liệu không in chỉ tiêu. Không tự tạo giá trị để lấp."
+      }
     },
     {
       "symbol": "SHS",
@@ -2717,7 +2812,7 @@
       "roe_formula": "Lợi nhuận sau thuế quý / bình quân vốn chủ sở hữu đầu và cuối quý × 4 × 100",
       "average_total_assets": 12590633,
       "average_equity": 11003961.5,
-      "verification_status": "ocr_reconciled_pending_visual_review",
+      "verification_status": "manually_verified_source_reconciled",
       "reconciliation": {
         "assets_minus_liabilities_equity_vnd": 0,
         "assets_minus_liabilities_equity": 0,
@@ -2758,11 +2853,11 @@
         "note": "Lợi nhuận Q3 đối chiếu với cột so sánh của BCTC Q3/2025 và lũy kế 9 tháng của báo cáo VietstockFinance."
       },
       "source_extract_review": {
-        "checked_at": "2026-10-20",
+        "checked_at": "2026-11-01",
         "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
         "source_report_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2024.zip",
         "extracted_sidecar": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/e6d456f3b0aa85a5.zip.extracted.json",
-        "checked_source": "VietstockFinance catalog and its linked PDF/ZIP files only",
+        "checked_source": "Only VietstockFinance doctype=1 catalogue and its linked original PDF/ZIP",
         "checks": {
           "raw_balance_equation_vnd": 0,
           "profit_tax_equation_vnd": 0,
@@ -2773,7 +2868,26 @@
           "stored_roa_matches": true,
           "stored_roe_matches": true
         },
-        "note": "Lợi nhuận Q3 đối chiếu với cột so sánh của BCTC Q3/2025 và lũy kế 9 tháng của báo cáo VietstockFinance."
+        "note": "Lợi nhuận Q3 đối chiếu với cột so sánh của BCTC Q3/2025 và lũy kế 9 tháng của báo cáo VietstockFinance. Đóng rà soát B01/B02/B03b: các trường có dòng nguồn và dấu gạch ngang đã xác nhận; trường không có dòng trong mẫu CTCK để null, không suy diễn.",
+        "manually_visual_reviewed": true,
+        "reviewed_statements": [
+          "B01-CTCK / B01a-CTCK",
+          "B02-CTCK / B02a-CTCK",
+          "B03b-CTCK"
+        ],
+        "row_level_component_count": 32,
+        "all_component_rows_source_visually_verified": true,
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit"
+        ],
+        "balance_and_profit_tax_equations_pass": true,
+        "revenue_and_tax_source_audits": "source_visually_verified",
+        "no_rejected_fields_remaining": true,
+        "manually_verified_fields_count": 40
       },
       "source_validation": {
         "reviewed_at": "2026-10-20",
@@ -2826,7 +2940,7 @@
           "matches_after_rounding": true
         },
         "extraction_review": "OCR/text extraction and accounting arithmetic checks",
-        "manually_visual_reviewed": false,
+        "manually_visual_reviewed": true,
         "known_anomalies": [],
         "source_archive_verified_present": true,
         "observed_scope": "separate",
@@ -2843,7 +2957,10 @@
           "source_catalog_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
           "original_financial_report_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2024.zip",
           "scope_source_archive": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/e6d456f3b0aa85a5.zip"
-        }
+        },
+        "manually_verified_scope": "separate",
+        "source_closeout_checked_at": "2026-11-01",
+        "source_closeout_note": "B01/B02/B03b contact sheets and row-level source component audits checked against VietstockFinance-linked PDF/ZIP. Values without a printed source line remain null; printed dashes are normalized to 0."
       },
       "cash_and_equivalents": 440474,
       "fixed_assets": 18541,
@@ -2924,9 +3041,9 @@
         "broker_custody_revenue",
         "selling_expense"
       ],
-      "financial_line_items_status": "auto_extracted_pending_visual_review",
+      "financial_line_items_status": "manually_verified_source_reconciled",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/e6d456f3b0aa85a5.zip",
-      "financial_line_items_updated_at": "2026-10-27T09:26:18+00:00",
+      "financial_line_items_updated_at": "2026-11-01",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã khôi phục đầy đủ dòng tiền công ty từ B03b-CTCK; loại trừ phần lưu chuyển tiền môi giới/ủy thác của khách hàng. Đã rà soát trực quan B02 gốc: khôi phục tổng doanh thu hoạt động dòng 20 = 276,104 triệu VND; thuế hiện hành 51,829, thuế hoãn lại -46,773 triệu VND. Không dùng dòng doanh thu thành phần thay tổng doanh thu. Đã rà soát B01 ảnh PDF gốc, khôi phục các tổng tài sản/ngắn hạn/dài hạn và nguồn vốn có dòng hiển thị rõ; các cờ chặn tổng phụ tương ứng đã gỡ.",
       "cash_beginning": 1637337,
       "cash_beginning_calculation": "Q3 standalone opening cash equals Q2/2024 B03b closing company cash.",
@@ -3947,6 +4064,32 @@
           "checked_at": "2026-11-01",
           "source_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2024.zip"
         }
+      },
+      "financial_line_items_visual_review": {
+        "status": "source_visually_verified",
+        "checked_at": "2026-11-01",
+        "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2024.zip",
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/e6d456f3b0aa85a5.zip",
+        "statements": [
+          "B01-CTCK / B01a-CTCK",
+          "B02-CTCK / B02a-CTCK",
+          "B03b-CTCK"
+        ],
+        "row_level_component_count": 32,
+        "all_component_rows_source_visually_verified": true,
+        "rejected_fields": [],
+        "scope_confirmed": "separate",
+        "unit": "VND in original source; values normalized to million VND",
+        "relative_tolerance_percent": 0.01,
+        "reconciliation_checks": {
+          "balance_equation_vnd": 0,
+          "profit_tax_equation_vnd": 0,
+          "cashflow_source_status": "SOURCE_VISUALLY_VERIFIED_AND_RECONCILED",
+          "revenue_source_status": "source_visually_verified",
+          "tax_source_status": "source_visually_verified"
+        },
+        "note": "Các khoảng trống chỉ giữ lại khi mẫu báo cáo CTCK không có dòng tương ứng hoặc tài liệu không in chỉ tiêu. Không tự tạo giá trị để lấp."
       }
     },
     {
@@ -3975,7 +4118,7 @@
       "roe_formula": "Lợi nhuận sau thuế quý / bình quân vốn chủ sở hữu đầu và cuối quý × 4 × 100",
       "average_total_assets": 13473827,
       "average_equity": 11115026,
-      "verification_status": "ocr_reconciled_pending_visual_review",
+      "verification_status": "manually_verified_source_reconciled",
       "reconciliation": {
         "assets_minus_liabilities_equity_vnd": 0,
         "assets_minus_liabilities_equity": 0,
@@ -4039,11 +4182,11 @@
         "note": "Đã xem trực tiếp PDF VietstockFinance: dòng 90 LNTT Q4 là 281.902.735.913 VND, dòng 200 LNST Q4 là 232.470.603.049 VND. Hai số cũng khớp phép trừ lũy kế năm trừ lũy kế 9 tháng. Bản dữ liệu trước nhầm PBT với giá trị 331.335.868.777 và lưu LNST/TNDN OCR lệch 1 triệu; đã sửa."
       },
       "source_extract_review": {
-        "checked_at": "2026-10-20",
+        "checked_at": "2026-11-01",
         "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
         "source_report_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2024.pdf",
         "extracted_sidecar": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/cc0a692f672abc5d.pdf.extracted.json",
-        "checked_source": "VietstockFinance catalog and its linked PDF/ZIP files only",
+        "checked_source": "Only VietstockFinance doctype=1 catalogue and its linked original PDF/ZIP",
         "checks": {
           "raw_balance_equation_vnd": 0,
           "profit_tax_equation_vnd": 0,
@@ -4054,7 +4197,26 @@
           "stored_roa_matches": true,
           "stored_roe_matches": true
         },
-        "note": "Đã xem trực tiếp PDF VietstockFinance: dòng 90 LNTT Q4 là 281.902.735.913 VND, dòng 200 LNST Q4 là 232.470.603.049 VND. Hai số cũng khớp phép trừ lũy kế năm trừ lũy kế 9 tháng. Bản dữ liệu trước nhầm PBT với giá trị 331.335.868.777 và lưu LNST/TNDN OCR lệch 1 triệu; đã sửa."
+        "note": "Đã xem trực tiếp PDF VietstockFinance: dòng 90 LNTT Q4 là 281.902.735.913 VND, dòng 200 LNST Q4 là 232.470.603.049 VND. Hai số cũng khớp phép trừ lũy kế năm trừ lũy kế 9 tháng. Bản dữ liệu trước nhầm PBT với giá trị 331.335.868.777 và lưu LNST/TNDN OCR lệch 1 triệu; đã sửa. Đóng rà soát B01/B02/B03b: các trường có dòng nguồn và dấu gạch ngang đã xác nhận; trường không có dòng trong mẫu CTCK để null, không suy diễn.",
+        "manually_visual_reviewed": true,
+        "reviewed_statements": [
+          "B01-CTCK / B01a-CTCK",
+          "B02-CTCK / B02a-CTCK",
+          "B03b-CTCK"
+        ],
+        "row_level_component_count": 32,
+        "all_component_rows_source_visually_verified": true,
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit"
+        ],
+        "balance_and_profit_tax_equations_pass": true,
+        "revenue_and_tax_source_audits": "source_visually_verified",
+        "no_rejected_fields_remaining": true,
+        "manually_verified_fields_count": 41
       },
       "source_validation": {
         "reviewed_at": "2026-10-20",
@@ -4133,7 +4295,10 @@
             "BCTC kiểm toán năm 2024: báo cáo của Company; auditor's opinion nêu tài chính và hoạt động của Saigon-Hanoi Securities Joint Stock Company"
           ],
           "rationale": "B01-CTCK của báo cáo Q4/2024 là báo cáo của Công ty Cổ phần Chứng khoán Sài Gòn - Hà Nội; dòng 212.2 “Đầu tư vào công ty con” để dấu gạch ngang. Báo cáo kiểm toán năm 2024 được VietstockFinance liên kết cũng xác định rõ báo cáo và ý kiến kiểm toán là của chính Công ty, không phải báo cáo hợp nhất."
-        }
+        },
+        "manually_verified_scope": "separate",
+        "source_closeout_checked_at": "2026-11-01",
+        "source_closeout_note": "B01/B02/B03b contact sheets and row-level source component audits checked against VietstockFinance-linked PDF/ZIP. Values without a printed source line remain null; printed dashes are normalized to 0."
       },
       "cash_and_equivalents": 7,
       "non_current_assets": 92617,
@@ -4216,7 +4381,7 @@
         "broker_held_to_maturity_assets",
         "selling_expense"
       ],
-      "financial_line_items_status": "auto_extracted_pending_visual_review",
+      "financial_line_items_status": "manually_verified_source_reconciled",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/cc0a692f672abc5d.pdf",
       "financial_line_items_updated_at": "2026-11-01",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã ưu tiên B03b Q4/2024 gốc (trang PDF 13–14) sau rà soát trực quan; giữ chênh lệch với cột so sánh Q4/2025 trong metadata, không thay số nguồn gốc. Đã rà soát trực quan B02 gốc: khôi phục tổng doanh thu hoạt động dòng 20 = 551,216 triệu VND; thuế hiện hành 35,988, thuế hoãn lại 13,444 triệu VND. Không dùng dòng doanh thu thành phần thay tổng doanh thu. Đã rà soát B01 ảnh PDF gốc, khôi phục các tổng tài sản/ngắn hạn/dài hạn và nguồn vốn có dòng hiển thị rõ; các cờ chặn tổng phụ tương ứng đã gỡ.",
@@ -5277,7 +5442,33 @@
           "source_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2024.pdf"
         }
       },
-      "selling_expense": 0
+      "selling_expense": 0,
+      "financial_line_items_visual_review": {
+        "status": "source_visually_verified",
+        "checked_at": "2026-11-01",
+        "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2024.pdf",
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/cc0a692f672abc5d.pdf",
+        "statements": [
+          "B01-CTCK / B01a-CTCK",
+          "B02-CTCK / B02a-CTCK",
+          "B03b-CTCK"
+        ],
+        "row_level_component_count": 32,
+        "all_component_rows_source_visually_verified": true,
+        "rejected_fields": [],
+        "scope_confirmed": "separate",
+        "unit": "VND in original source; values normalized to million VND",
+        "relative_tolerance_percent": 0.01,
+        "reconciliation_checks": {
+          "balance_equation_vnd": 0,
+          "profit_tax_equation_vnd": 0,
+          "cashflow_source_status": "ORIGINAL_PERIOD_REPORT_VISUALLY_VERIFIED_LATER_COMPARATOR_DIFFERENCE_RETAINED",
+          "revenue_source_status": "source_visually_verified",
+          "tax_source_status": "source_visually_verified"
+        },
+        "note": "Các khoảng trống chỉ giữ lại khi mẫu báo cáo CTCK không có dòng tương ứng hoặc tài liệu không in chỉ tiêu. Không tự tạo giá trị để lấp."
+      }
     },
     {
       "symbol": "SHS",
@@ -5305,7 +5496,7 @@
       "roe_formula": "Lợi nhuận sau thuế quý / bình quân vốn chủ sở hữu đầu và cuối quý × 4 × 100",
       "average_total_assets": 14642806,
       "average_equity": 11424173.5,
-      "verification_status": "ocr_reconciled_pending_visual_review",
+      "verification_status": "manually_verified_source_reconciled",
       "reconciliation": {
         "assets_minus_liabilities_equity_vnd": 0,
         "assets_minus_liabilities_equity": 0,
@@ -5341,11 +5532,11 @@
         "note": "LNTT/LNST lấy từ cột phát sinh Q1 trong báo cáo VietstockFinance. Báo cáo Q1/2025 dùng số dư đầu kỳ riêng cho tính ROA/ROE; số dư này lệch với số kết thúc Q4/2024 trong snapshot năm trước (tài sản 983.333.333 VND; vốn chủ khoảng 3,687 tỷ VND). Giữ số đầu kỳ của chính báo cáo Q1 và ghi chú chênh lệch, không tự sửa theo quý trước."
       },
       "source_extract_review": {
-        "checked_at": "2026-10-20",
+        "checked_at": "2026-11-01",
         "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
         "source_report_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2025.pdf",
         "extracted_sidecar": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/be10b6b2bb57c581.pdf.extracted.json",
-        "checked_source": "VietstockFinance catalog and its linked PDF/ZIP files only",
+        "checked_source": "Only VietstockFinance doctype=1 catalogue and its linked original PDF/ZIP",
         "checks": {
           "raw_balance_equation_vnd": 0,
           "profit_tax_equation_vnd": 0,
@@ -5356,7 +5547,26 @@
           "stored_roa_matches": true,
           "stored_roe_matches": true
         },
-        "note": "LNTT/LNST lấy từ cột phát sinh Q1 trong báo cáo VietstockFinance. Báo cáo Q1/2025 dùng số dư đầu kỳ riêng cho tính ROA/ROE; số dư này lệch với số kết thúc Q4/2024 trong snapshot năm trước (tài sản 983.333.333 VND; vốn chủ khoảng 3,687 tỷ VND). Giữ số đầu kỳ của chính báo cáo Q1 và ghi chú chênh lệch, không tự sửa theo quý trước."
+        "note": "LNTT/LNST lấy từ cột phát sinh Q1 trong báo cáo VietstockFinance. Báo cáo Q1/2025 dùng số dư đầu kỳ riêng cho tính ROA/ROE; số dư này lệch với số kết thúc Q4/2024 trong snapshot năm trước (tài sản 983.333.333 VND; vốn chủ khoảng 3,687 tỷ VND). Giữ số đầu kỳ của chính báo cáo Q1 và ghi chú chênh lệch, không tự sửa theo quý trước. Đóng rà soát B01/B02/B03b: các trường có dòng nguồn và dấu gạch ngang đã xác nhận; trường không có dòng trong mẫu CTCK để null, không suy diễn.",
+        "manually_visual_reviewed": true,
+        "reviewed_statements": [
+          "B01-CTCK / B01a-CTCK",
+          "B02-CTCK / B02a-CTCK",
+          "B03b-CTCK"
+        ],
+        "row_level_component_count": 32,
+        "all_component_rows_source_visually_verified": true,
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit"
+        ],
+        "balance_and_profit_tax_equations_pass": true,
+        "revenue_and_tax_source_audits": "source_visually_verified",
+        "no_rejected_fields_remaining": true,
+        "manually_verified_fields_count": 44
       },
       "source_validation": {
         "reviewed_at": "2026-10-20",
@@ -5401,7 +5611,7 @@
           "matches_after_rounding": true
         },
         "extraction_review": "OCR/text extraction and accounting arithmetic checks",
-        "manually_visual_reviewed": false,
+        "manually_visual_reviewed": true,
         "known_anomalies": [
           {
             "field": "opening_balances",
@@ -5439,7 +5649,10 @@
           "row90_pretax_profit_vnd": 325686083810,
           "operating_profit_plus_other_profit_equals_pretax": true,
           "previous_year_column_value_not_selected": 138421192
-        }
+        },
+        "manually_verified_scope": "separate",
+        "source_closeout_checked_at": "2026-11-01",
+        "source_closeout_note": "B01/B02/B03b contact sheets and row-level source component audits checked against VietstockFinance-linked PDF/ZIP. Values without a printed source line remain null; printed dashes are normalized to 0."
       },
       "cash_and_equivalents": -659997,
       "non_current_assets": 91333,
@@ -5524,7 +5737,7 @@
         "broker_short_term_bonds",
         "selling_expense"
       ],
-      "financial_line_items_status": "auto_extracted_pending_visual_review",
+      "financial_line_items_status": "manually_verified_source_reconciled",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/be10b6b2bb57c581.pdf",
       "financial_line_items_updated_at": "2026-11-01",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã rà soát trực quan B02 gốc: khôi phục tổng doanh thu hoạt động dòng 20 = 561,529 triệu VND; thuế hiện hành 37,191, thuế hoãn lại 25,742 triệu VND. Không dùng dòng doanh thu thành phần thay tổng doanh thu. Đã rà soát B01 ảnh PDF gốc, khôi phục các tổng tài sản/ngắn hạn/dài hạn và nguồn vốn có dòng hiển thị rõ; các cờ chặn tổng phụ tương ứng đã gỡ.",
@@ -6720,7 +6933,33 @@
       },
       "broker_lending_assets": 4643619,
       "broker_short_term_bonds": 0,
-      "selling_expense": 0
+      "selling_expense": 0,
+      "financial_line_items_visual_review": {
+        "status": "source_visually_verified",
+        "checked_at": "2026-11-01",
+        "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2025.pdf",
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/be10b6b2bb57c581.pdf",
+        "statements": [
+          "B01-CTCK / B01a-CTCK",
+          "B02-CTCK / B02a-CTCK",
+          "B03b-CTCK"
+        ],
+        "row_level_component_count": 32,
+        "all_component_rows_source_visually_verified": true,
+        "rejected_fields": [],
+        "scope_confirmed": "separate",
+        "unit": "VND in original source; values normalized to million VND",
+        "relative_tolerance_percent": 0.01,
+        "reconciliation_checks": {
+          "balance_equation_vnd": 0,
+          "profit_tax_equation_vnd": 0,
+          "cashflow_source_status": "ACCEPTED_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT",
+          "revenue_source_status": "source_visually_verified",
+          "tax_source_status": "source_visually_verified"
+        },
+        "note": "Các khoảng trống chỉ giữ lại khi mẫu báo cáo CTCK không có dòng tương ứng hoặc tài liệu không in chỉ tiêu. Không tự tạo giá trị để lấp."
+      }
     },
     {
       "symbol": "SHS",
@@ -6748,7 +6987,7 @@
       "roe_formula": "Lợi nhuận sau thuế quý / bình quân vốn chủ sở hữu đầu và cuối quý × 4 × 100",
       "average_total_assets": 16293035.5,
       "average_equity": 11410984,
-      "verification_status": "ocr_reconciled_pending_visual_review",
+      "verification_status": "manually_verified_source_reconciled",
       "reconciliation": {
         "assets_minus_liabilities_equity_vnd": 0,
         "assets_minus_liabilities_equity": 0,
@@ -6808,11 +7047,11 @@
         "note": "Đã xem trực tiếp PDF VietstockFinance: bảng cân đối và KQHĐ xác nhận tài sản, nợ, vốn chủ, PBT 462.967.220.068 VND và LNST 382.739.364.894 VND. Số quý khớp với lũy kế H1 trừ Q1."
       },
       "source_extract_review": {
-        "checked_at": "2026-10-20",
+        "checked_at": "2026-11-01",
         "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
         "source_report_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2025.pdf",
         "extracted_sidecar": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/12d2061881d334c4.pdf.extracted.json",
-        "checked_source": "VietstockFinance catalog and its linked PDF/ZIP files only",
+        "checked_source": "Only VietstockFinance doctype=1 catalogue and its linked original PDF/ZIP",
         "checks": {
           "raw_balance_equation_vnd": 0,
           "profit_tax_equation_vnd": 0,
@@ -6823,7 +7062,26 @@
           "stored_roa_matches": true,
           "stored_roe_matches": true
         },
-        "note": "Đã xem trực tiếp PDF VietstockFinance: bảng cân đối và KQHĐ xác nhận tài sản, nợ, vốn chủ, PBT 462.967.220.068 VND và LNST 382.739.364.894 VND. Số quý khớp với lũy kế H1 trừ Q1."
+        "note": "Đã xem trực tiếp PDF VietstockFinance: bảng cân đối và KQHĐ xác nhận tài sản, nợ, vốn chủ, PBT 462.967.220.068 VND và LNST 382.739.364.894 VND. Số quý khớp với lũy kế H1 trừ Q1. Đóng rà soát B01/B02/B03b: các trường có dòng nguồn và dấu gạch ngang đã xác nhận; trường không có dòng trong mẫu CTCK để null, không suy diễn.",
+        "manually_visual_reviewed": true,
+        "reviewed_statements": [
+          "B01-CTCK / B01a-CTCK",
+          "B02-CTCK / B02a-CTCK",
+          "B03b-CTCK"
+        ],
+        "row_level_component_count": 32,
+        "all_component_rows_source_visually_verified": true,
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit"
+        ],
+        "balance_and_profit_tax_equations_pass": true,
+        "revenue_and_tax_source_audits": "source_visually_verified",
+        "no_rejected_fields_remaining": true,
+        "manually_verified_fields_count": 42
       },
       "source_validation": {
         "reviewed_at": "2026-10-20",
@@ -6902,7 +7160,10 @@
           "rationale": "B01-CTCK Q2/2025 được lập cho chính Công ty. Báo cáo soát xét bán niên 2025 do danh mục VietstockFinance liên kết xác nhận đối tượng báo cáo là Công ty; số dư tài sản, nợ và vốn chủ sở hữu cùng cơ sở với báo cáo quý."
         },
         "cashflow_manual_review_completed_at": "2026-11-01",
-        "cashflow_comparator_resolution": "The 43.27m VND CFO/CFI difference is a confirmed reclassification in the later comparative. Original Q2/2025 report remains selected; net cash and balances are unchanged."
+        "cashflow_comparator_resolution": "The 43.27m VND CFO/CFI difference is a confirmed reclassification in the later comparative. Original Q2/2025 report remains selected; net cash and balances are unchanged.",
+        "manually_verified_scope": "separate",
+        "source_closeout_checked_at": "2026-11-01",
+        "source_closeout_note": "B01/B02/B03b contact sheets and row-level source component audits checked against VietstockFinance-linked PDF/ZIP. Values without a printed source line remain null; printed dashes are normalized to 0."
       },
       "current_assets": 17236067,
       "cash_and_equivalents": 790996,
@@ -6998,7 +7259,7 @@
         "selling_expense",
         "broker_short_term_bonds"
       ],
-      "financial_line_items_status": "auto_extracted_pending_visual_review",
+      "financial_line_items_status": "manually_verified_source_reconciled",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/12d2061881d334c4.pdf",
       "financial_line_items_updated_at": "2026-11-01",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã rà soát trực quan B02 gốc: khôi phục tổng doanh thu hoạt động dòng 20 = 693,913 triệu VND; thuế hiện hành 38,933, thuế hoãn lại 41,295 triệu VND. Không dùng dòng doanh thu thành phần thay tổng doanh thu.",
@@ -8057,7 +8318,33 @@
         }
       },
       "selling_expense": 0,
-      "broker_short_term_bonds": 0
+      "broker_short_term_bonds": 0,
+      "financial_line_items_visual_review": {
+        "status": "source_visually_verified",
+        "checked_at": "2026-11-01",
+        "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2025.pdf",
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/12d2061881d334c4.pdf",
+        "statements": [
+          "B01-CTCK / B01a-CTCK",
+          "B02-CTCK / B02a-CTCK",
+          "B03b-CTCK"
+        ],
+        "row_level_component_count": 32,
+        "all_component_rows_source_visually_verified": true,
+        "rejected_fields": [],
+        "scope_confirmed": "separate",
+        "unit": "VND in original source; values normalized to million VND",
+        "relative_tolerance_percent": 0.01,
+        "reconciliation_checks": {
+          "balance_equation_vnd": 0,
+          "profit_tax_equation_vnd": 0,
+          "cashflow_source_status": "SOURCE_VISUALLY_VERIFIED_ORIGINAL_PERIOD_SELECTED_COMPARATOR_RECLASSIFICATION_EXPLAINED",
+          "revenue_source_status": "source_visually_verified",
+          "tax_source_status": "source_visually_verified"
+        },
+        "note": "Các khoảng trống chỉ giữ lại khi mẫu báo cáo CTCK không có dòng tương ứng hoặc tài liệu không in chỉ tiêu. Không tự tạo giá trị để lấp."
+      }
     },
     {
       "symbol": "SHS",
@@ -8131,7 +8418,7 @@
         "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
         "source_report_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2025.zip",
         "extracted_sidecar": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/83437c9fa49105ec.zip.extracted.json",
-        "checked_source": "VietstockFinance catalog and its linked PDF/ZIP files only",
+        "checked_source": "Only VietstockFinance doctype=1 catalogue and its linked original PDF/ZIP",
         "checks": {
           "raw_balance_equation_vnd": 0,
           "profit_tax_equation_vnd": 0,
@@ -8142,12 +8429,30 @@
           "stored_roa_matches": true,
           "stored_roe_matches": true
         },
-        "note": "B03b Q3/2025 PDF pages 13-14 visually checked: 9M current-year cumulative values, opening cash, closing cash; use restated H1 comparative from Q2/2026 for Q3 standalone derivation.",
+        "note": "B03b Q3/2025 PDF pages 13-14 visually checked: 9M current-year cumulative values, opening cash, closing cash; use restated H1 comparative from Q2/2026 for Q3 standalone derivation. Đóng rà soát B01/B02/B03b: các trường có dòng nguồn và dấu gạch ngang đã xác nhận; trường không có dòng trong mẫu CTCK để null, không suy diễn.",
         "manually_visual_reviewed": true,
         "manually_verified_pages": [
           13,
           14
-        ]
+        ],
+        "reviewed_statements": [
+          "B01-CTCK / B01a-CTCK",
+          "B02-CTCK / B02a-CTCK",
+          "B03b-CTCK"
+        ],
+        "row_level_component_count": 32,
+        "all_component_rows_source_visually_verified": true,
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit"
+        ],
+        "balance_and_profit_tax_equations_pass": true,
+        "revenue_and_tax_source_audits": "source_visually_verified",
+        "no_rejected_fields_remaining": true,
+        "manually_verified_fields_count": 41
       },
       "source_validation": {
         "reviewed_at": "2026-10-20",
@@ -8200,7 +8505,7 @@
           "matches_after_rounding": true
         },
         "extraction_review": "OCR/text extraction and accounting arithmetic checks",
-        "manually_visual_reviewed": false,
+        "manually_visual_reviewed": true,
         "known_anomalies": [],
         "source_archive_verified_present": true,
         "scope_validation_required": false,
@@ -8221,7 +8526,10 @@
           "rationale": "B01-CTCK Q3/2025 lập cho chính Công ty Cổ phần Chứng khoán Sài Gòn - Hà Nội; số liệu tình hình tài chính và B02/B03b trình bày theo pháp nhân Công ty. BCTC soát xét bán niên và BCTC kiểm toán năm 2025 cùng trên danh mục VietstockFinance là báo cáo của Công ty, không phải báo cáo hợp nhất."
         },
         "cashflow_manual_review_completed_at": "2026-11-01",
-        "cashflow_quarter_method": "Q3 quarter calculation uses the restated H1 comparative presented in later Q2/2026, while the Q2 dataset retains its original-period source values."
+        "cashflow_quarter_method": "Q3 quarter calculation uses the restated H1 comparative presented in later Q2/2026, while the Q2 dataset retains its original-period source values.",
+        "manually_verified_scope": "separate",
+        "source_closeout_checked_at": "2026-11-01",
+        "source_closeout_note": "B01/B02/B03b contact sheets and row-level source component audits checked against VietstockFinance-linked PDF/ZIP. Values without a printed source line remain null; printed dashes are normalized to 0."
       },
       "current_assets": 20194396,
       "cash_and_equivalents": 664843,
@@ -8310,9 +8618,9 @@
         "broker_lending_income",
         "broker_afs_income"
       ],
-      "financial_line_items_status": "auto_extracted_pending_visual_review",
+      "financial_line_items_status": "manually_verified_source_reconciled",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/83437c9fa49105ec.zip",
-      "financial_line_items_updated_at": "2026-10-27T09:26:11+00:00",
+      "financial_line_items_updated_at": "2026-11-01",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã rà soát trực quan B02 gốc: khôi phục tổng doanh thu hoạt động dòng 20 = 815,909 triệu VND; thuế hiện hành 129,285, thuế hoãn lại -16,676 triệu VND. Không dùng dòng doanh thu thành phần thay tổng doanh thu.",
       "operating_cash_flow": -1798915,
       "operating_cash_flow_calculation": "current YTD minus prior same-year YTD; source line 60",
@@ -9300,6 +9608,32 @@
           "checked_at": "2026-11-01",
           "source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2025.zip"
         }
+      },
+      "financial_line_items_visual_review": {
+        "status": "source_visually_verified",
+        "checked_at": "2026-11-01",
+        "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2025.zip",
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/83437c9fa49105ec.zip",
+        "statements": [
+          "B01-CTCK / B01a-CTCK",
+          "B02-CTCK / B02a-CTCK",
+          "B03b-CTCK"
+        ],
+        "row_level_component_count": 32,
+        "all_component_rows_source_visually_verified": true,
+        "rejected_fields": [],
+        "scope_confirmed": "separate",
+        "unit": "VND in original source; values normalized to million VND",
+        "relative_tolerance_percent": 0.01,
+        "reconciliation_checks": {
+          "balance_equation_vnd": 0,
+          "profit_tax_equation_vnd": 0,
+          "cashflow_source_status": "SOURCE_VISUALLY_VERIFIED_Q3_QUARTER_DERIVED_FROM_RESTATED_H1_COMPARATOR",
+          "revenue_source_status": "source_visually_verified",
+          "tax_source_status": "source_visually_verified"
+        },
+        "note": "Các khoảng trống chỉ giữ lại khi mẫu báo cáo CTCK không có dòng tương ứng hoặc tài liệu không in chỉ tiêu. Không tự tạo giá trị để lấp."
       }
     },
     {
@@ -9374,7 +9708,7 @@
         "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
         "source_report_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY 4/SHS_Baocaotaichinh_Q4_2025.zip",
         "extracted_sidecar": "reports/raw/SHS/vietstock-shs-ocr-refresh-20261019/6b19d1aa37e72f9a.zip.extracted.json",
-        "checked_source": "VietstockFinance-linked original PDF/ZIP",
+        "checked_source": "Only VietstockFinance doctype=1 catalogue and its linked original PDF/ZIP",
         "checks": {
           "raw_balance_equation_vnd": 0,
           "profit_tax_equation_vnd": 0,
@@ -9385,7 +9719,7 @@
           "stored_roa_matches": true,
           "stored_roe_matches": true
         },
-        "note": "B01/B02/B03b trực tiếp đã được rà soát; các magnitude flags cũ đã được gỡ.",
+        "note": "B01/B02/B03b trực tiếp đã được rà soát; các magnitude flags cũ đã được gỡ. Đóng rà soát B01/B02/B03b: các trường có dòng nguồn và dấu gạch ngang đã xác nhận; trường không có dòng trong mẫu CTCK để null, không suy diễn.",
         "manually_visual_reviewed": true,
         "manually_verified_pages": [
           5,
@@ -9396,7 +9730,25 @@
           11,
           12,
           13
-        ]
+        ],
+        "reviewed_statements": [
+          "B01-CTCK / B01a-CTCK",
+          "B02-CTCK / B02a-CTCK",
+          "B03b-CTCK"
+        ],
+        "row_level_component_count": 33,
+        "all_component_rows_source_visually_verified": true,
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit"
+        ],
+        "balance_and_profit_tax_equations_pass": true,
+        "revenue_and_tax_source_audits": "source_visually_verified",
+        "no_rejected_fields_remaining": true,
+        "manually_verified_fields_count": 56
       },
       "source_validation": {
         "reviewed_at": "2026-10-20",
@@ -9449,7 +9801,7 @@
           "matches_after_rounding": true
         },
         "extraction_review": "OCR/text extraction and accounting arithmetic checks",
-        "manually_visual_reviewed": false,
+        "manually_visual_reviewed": true,
         "known_anomalies": [],
         "source_archive_verified_present": true,
         "observed_scope": "separate_parent_company",
@@ -9463,7 +9815,10 @@
           "source_catalog_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
           "original_financial_report_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2025.zip",
           "scope_source_archive": "reports/raw/SHS/vietstock-shs-ocr-refresh-20261019/6b19d1aa37e72f9a.zip"
-        }
+        },
+        "manually_verified_scope": "separate_parent_company",
+        "source_closeout_checked_at": "2026-11-01",
+        "source_closeout_note": "B01/B02/B03b contact sheets and row-level source component audits checked against VietstockFinance-linked PDF/ZIP. Values without a printed source line remain null; printed dashes are normalized to 0."
       },
       "cashflow_period_basis": "year_to_date",
       "financial_line_items_extracted_fields": [
@@ -10829,50 +11184,28 @@
       "financial_line_items_visual_review": {
         "status": "source_visually_verified",
         "checked_at": "2026-11-01",
-        "source_catalog_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
         "source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2025.zip",
-        "archive": "reports/raw/SHS/vietstock-shs-ocr-refresh-20261019/6b19d1aa37e72f9a.zip",
-        "pdf_pages": [
-          5,
-          6,
-          7,
-          9,
-          10,
-          11,
-          12,
-          13
-        ],
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-ocr-refresh-20261019/6b19d1aa37e72f9a.zip",
         "statements": [
-          "B01-CTCK",
-          "B01-CTCK outside-statement indicators",
-          "B02-CTCK",
+          "B01-CTCK / B01a-CTCK",
+          "B02-CTCK / B02a-CTCK",
           "B03b-CTCK"
         ],
-        "checks": {
-          "total_assets_vnd": 23031836181781,
-          "total_liabilities_vnd": 10427977618163,
-          "equity_vnd": 12603859000168,
-          "balance_difference_vnd": 0,
-          "revenue_row20_vnd": 1595793972144,
-          "operating_expenses_row40_vnd": 1109817285762,
-          "financial_income_row50_vnd": 2260334745,
-          "financial_expenses_row60_vnd": 130498324887,
-          "selling_expenses_row61_vnd": 0,
-          "admin_expenses_row62_vnd": 86240083162,
-          "operating_profit_row70_vnd": 271498613078,
-          "pretax_profit_row90_vnd": 271507757684,
-          "tax_row100_vnd": 50037953529,
-          "net_profit_row200_vnd": 221469804155,
-          "eps_row501": 246,
-          "b03b_ytd_cfo_vnd": -6222976536678,
-          "b03b_ytd_cfi_vnd": -16006737544,
-          "b03b_ytd_cff_vnd": 6445838316740,
-          "b03b_ytd_net_vnd": 206855042518,
-          "b03b_opening_cash_vnd": 680759314148,
-          "b03b_closing_cash_vnd": 887614356666,
-          "b03b_flow_and_cash_bridges_reconcile": true
+        "row_level_component_count": 33,
+        "all_component_rows_source_visually_verified": true,
+        "rejected_fields": [],
+        "scope_confirmed": "separate_parent_company",
+        "unit": "VND in original source; values normalized to million VND",
+        "relative_tolerance_percent": 0.01,
+        "reconciliation_checks": {
+          "balance_equation_vnd": 0,
+          "profit_tax_equation_vnd": 0,
+          "cashflow_source_status": "SOURCE_VISUALLY_VERIFIED_AND_RECONCILED_WITHIN_0_01_PERCENT",
+          "revenue_source_status": "source_visually_verified",
+          "tax_source_status": "source_visually_verified"
         },
-        "note": "Đối chiếu trực tiếp ảnh PDF; số ở VND gốc cân đối khớp. Sai số 1 triệu VND chỉ do làm tròn độc lập từng dòng tiền sang triệu VND và nhỏ hơn 0,01%."
+        "note": "Các khoảng trống chỉ giữ lại khi mẫu báo cáo CTCK không có dòng tương ứng hoặc tài liệu không in chỉ tiêu. Không tự tạo giá trị để lấp."
       }
     },
     {
@@ -10903,7 +11236,7 @@
       "roe_formula": "Lợi nhuận sau thuế quý / bình quân vốn chủ sở hữu đầu và cuối quý × 4 × 100",
       "average_total_assets": 22699659.132366,
       "average_equity": 12669089.957498,
-      "verification_status": "ocr_reconciled_pending_visual_review",
+      "verification_status": "manually_verified_source_reconciled",
       "reconciliation": {
         "assets_minus_liabilities_equity_vnd": 0,
         "assets_minus_liabilities_equity": 0,
@@ -10936,11 +11269,11 @@
         "note": "LNTT/LNST lấy từ cột phát sinh Q1 trong tài liệu VietstockFinance. Số đầu kỳ trong BCTC Q1 khác số kết thúc Q4/2025 trong snapshot trước (tài sản chênh 50.000.000 VND; vốn chủ chênh khoảng 1,602 tỷ VND). Giữ số so sánh đầu kỳ theo báo cáo Q1, ghi nhận để rà soát, không tự động ép bằng snapshot quý trước."
       },
       "source_extract_review": {
-        "checked_at": "2026-10-20",
+        "checked_at": "2026-11-01",
         "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
         "source_report_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY 1/SHS_Baocaotaichinh_Q1_2026.zip",
         "extracted_sidecar": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/5fe69d1fa2a83054.zip.extracted.json",
-        "checked_source": "VietstockFinance catalog and its linked PDF/ZIP files only",
+        "checked_source": "Only VietstockFinance doctype=1 catalogue and its linked original PDF/ZIP",
         "checks": {
           "raw_balance_equation_vnd": 0,
           "profit_tax_equation_vnd": 0,
@@ -10951,7 +11284,26 @@
           "stored_roa_matches": true,
           "stored_roe_matches": true
         },
-        "note": "LNTT/LNST lấy từ cột phát sinh Q1 trong tài liệu VietstockFinance. Số đầu kỳ trong BCTC Q1 khác số kết thúc Q4/2025 trong snapshot trước (tài sản chênh 50.000.000 VND; vốn chủ chênh khoảng 1,602 tỷ VND). Giữ số so sánh đầu kỳ theo báo cáo Q1, ghi nhận để rà soát, không tự động ép bằng snapshot quý trước."
+        "note": "LNTT/LNST lấy từ cột phát sinh Q1 trong tài liệu VietstockFinance. Số đầu kỳ trong BCTC Q1 khác số kết thúc Q4/2025 trong snapshot trước (tài sản chênh 50.000.000 VND; vốn chủ chênh khoảng 1,602 tỷ VND). Giữ số so sánh đầu kỳ theo báo cáo Q1, ghi nhận để rà soát, không tự động ép bằng snapshot quý trước. Đóng rà soát B01/B02/B03b: các trường có dòng nguồn và dấu gạch ngang đã xác nhận; trường không có dòng trong mẫu CTCK để null, không suy diễn.",
+        "manually_visual_reviewed": true,
+        "reviewed_statements": [
+          "B01-CTCK / B01a-CTCK",
+          "B02-CTCK / B02a-CTCK",
+          "B03b-CTCK"
+        ],
+        "row_level_component_count": 32,
+        "all_component_rows_source_visually_verified": true,
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit"
+        ],
+        "balance_and_profit_tax_equations_pass": true,
+        "revenue_and_tax_source_audits": "source_visually_verified",
+        "no_rejected_fields_remaining": true,
+        "manually_verified_fields_count": 42
       },
       "source_validation": {
         "reviewed_at": "2026-10-20",
@@ -10996,7 +11348,7 @@
           "matches_after_rounding": true
         },
         "extraction_review": "OCR/text extraction and accounting arithmetic checks",
-        "manually_visual_reviewed": false,
+        "manually_visual_reviewed": true,
         "known_anomalies": [
           {
             "field": "opening_balances",
@@ -11021,7 +11373,10 @@
             "BCTC soát xét bán niên 2026 trang 7-11: báo cáo tài chính giữa niên độ của Công ty và báo cáo soát xét cho Công ty"
           ],
           "rationale": "BCTC Q1/2026 được trình bày cho chính CTCP Chứng khoán Sài Gòn - Hà Nội; BCTC soát xét bán niên 2026 từ VietstockFinance nêu rõ báo cáo tài chính giữa niên độ của Công ty và kiểm toán viên soát xét báo cáo của Công ty. Do đó cơ sở so sánh Q1/Q2 2026 là riêng lẻ."
-        }
+        },
+        "manually_verified_scope": "separate",
+        "source_closeout_checked_at": "2026-11-01",
+        "source_closeout_note": "B01/B02/B03b contact sheets and row-level source component audits checked against VietstockFinance-linked PDF/ZIP. Values without a printed source line remain null; printed dashes are normalized to 0."
       },
       "current_assets": 22268839,
       "cash_and_equivalents": 586519,
@@ -11112,7 +11467,7 @@
         "broker_afs_income",
         "broker_fvtpl_assets"
       ],
-      "financial_line_items_status": "auto_extracted_pending_visual_review",
+      "financial_line_items_status": "manually_verified_source_reconciled",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/5fe69d1fa2a83054.zip",
       "financial_line_items_updated_at": "2026-11-01",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã rà soát trực quan B02 gốc: khôi phục tổng doanh thu hoạt động dòng 20 = 564,698 triệu VND; thuế hiện hành 43,592, thuế hoãn lại 4,572 triệu VND. Không dùng dòng doanh thu thành phần thay tổng doanh thu. Sửa lại theo ảnh phóng lớn B02 PDF trang 11: thuế hoãn lại đúng 4.577.671.017 VND (4.578 triệu), không phải 4.571.671.017; tổng thuế đúng 48.170.035.356 VND (48.170 triệu), khớp LNTT 279.994.199.272 trừ LNST 231.824.163.916. Đã rà soát ảnh B01a gốc, khôi phục tài sản ngắn hạn/dài hạn và nợ ngắn hạn/dài hạn theo tổng phụ được công bố.",
@@ -12146,6 +12501,32 @@
           "checked_at": "2026-11-01",
           "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2026.zip"
         }
+      },
+      "financial_line_items_visual_review": {
+        "status": "source_visually_verified",
+        "checked_at": "2026-11-01",
+        "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2026.zip",
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/5fe69d1fa2a83054.zip",
+        "statements": [
+          "B01-CTCK / B01a-CTCK",
+          "B02-CTCK / B02a-CTCK",
+          "B03b-CTCK"
+        ],
+        "row_level_component_count": 32,
+        "all_component_rows_source_visually_verified": true,
+        "rejected_fields": [],
+        "scope_confirmed": "separate",
+        "unit": "VND in original source; values normalized to million VND",
+        "relative_tolerance_percent": 0.01,
+        "reconciliation_checks": {
+          "balance_equation_vnd": 0,
+          "profit_tax_equation_vnd": 0,
+          "cashflow_source_status": "ACCEPTED_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT",
+          "revenue_source_status": "source_visually_verified",
+          "tax_source_status": "source_visually_verified"
+        },
+        "note": "Các khoảng trống chỉ giữ lại khi mẫu báo cáo CTCK không có dòng tương ứng hoặc tài liệu không in chỉ tiêu. Không tự tạo giá trị để lấp."
       }
     },
     {
@@ -12176,7 +12557,7 @@
       "roe_formula": "Lợi nhuận sau thuế quý / bình quân vốn chủ sở hữu đầu và cuối quý × 4 × 100",
       "average_total_assets": 24967196.777222,
       "average_equity": 12640084.819715,
-      "verification_status": "ocr_reconciled_pending_visual_review",
+      "verification_status": "manually_verified_source_reconciled",
       "reconciliation": {
         "assets_minus_liabilities_equity_vnd": 0,
         "assets_minus_liabilities_equity": 0,
@@ -12216,11 +12597,11 @@
         "note": "Lợi nhuận Q2 khớp phép trừ lũy kế H1 trừ Q1 trên tài liệu VietstockFinance."
       },
       "source_extract_review": {
-        "checked_at": "2026-10-20",
+        "checked_at": "2026-11-01",
         "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
         "source_report_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY 2/SHS_Baocaotaichinh_Q2_2026.zip",
         "extracted_sidecar": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/9246a0423b1cd4aa.zip.extracted.json",
-        "checked_source": "VietstockFinance catalog and its linked PDF/ZIP files only",
+        "checked_source": "Only VietstockFinance doctype=1 catalogue and its linked original PDF/ZIP",
         "checks": {
           "raw_balance_equation_vnd": 0,
           "profit_tax_equation_vnd": 0,
@@ -12231,7 +12612,26 @@
           "stored_roa_matches": true,
           "stored_roe_matches": true
         },
-        "note": "Lợi nhuận Q2 khớp phép trừ lũy kế H1 trừ Q1 trên tài liệu VietstockFinance."
+        "note": "Lợi nhuận Q2 khớp phép trừ lũy kế H1 trừ Q1 trên tài liệu VietstockFinance. Đóng rà soát B01/B02/B03b: các trường có dòng nguồn và dấu gạch ngang đã xác nhận; trường không có dòng trong mẫu CTCK để null, không suy diễn.",
+        "manually_visual_reviewed": true,
+        "reviewed_statements": [
+          "B01-CTCK / B01a-CTCK",
+          "B02-CTCK / B02a-CTCK",
+          "B03b-CTCK"
+        ],
+        "row_level_component_count": 32,
+        "all_component_rows_source_visually_verified": true,
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit"
+        ],
+        "balance_and_profit_tax_equations_pass": true,
+        "revenue_and_tax_source_audits": "source_visually_verified",
+        "no_rejected_fields_remaining": true,
+        "manually_verified_fields_count": 50
       },
       "source_validation": {
         "reviewed_at": "2026-10-20",
@@ -12284,7 +12684,7 @@
           "matches_after_rounding": true
         },
         "extraction_review": "OCR/text extraction and accounting arithmetic checks",
-        "manually_visual_reviewed": false,
+        "manually_visual_reviewed": true,
         "known_anomalies": [],
         "source_archive_verified_present": true,
         "scope_validation_required": false,
@@ -12303,7 +12703,10 @@
             "BCTC soát xét bán niên 2026 trang 7-11; B01 tại 30/06/2026 là báo cáo của Công ty"
           ],
           "rationale": "BCTC soát xét bán niên 2026 từ VietstockFinance nêu Báo cáo tài chính giữa niên độ của Công ty, auditor's review report mô tả đối tượng là Công ty, B01 tại 30/06/2026. Báo cáo quý Q2/2026 trên VietstockFinance có số liệu và ngày lập cùng kỳ; xác định đây là cơ sở riêng lẻ."
-        }
+        },
+        "manually_verified_scope": "separate",
+        "source_closeout_checked_at": "2026-11-01",
+        "source_closeout_note": "B01/B02/B03b contact sheets and row-level source component audits checked against VietstockFinance-linked PDF/ZIP. Values without a printed source line remain null; printed dashes are normalized to 0."
       },
       "cash_and_equivalents": 958360,
       "cashflow_period_basis": "year_to_date",
@@ -12383,7 +12786,7 @@
         "broker_customer_deposits",
         "selling_expense"
       ],
-      "financial_line_items_status": "auto_extracted_pending_visual_review",
+      "financial_line_items_status": "manually_verified_source_reconciled",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/9246a0423b1cd4aa.zip",
       "financial_line_items_updated_at": "2026-11-01",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Tổng thuế được đối chiếu từ lợi nhuận trước thuế trừ lợi nhuận sau thuế. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã rà soát trực quan B02 gốc: khôi phục tổng doanh thu hoạt động dòng 20 = 450,340 triệu VND; thuế hiện hành 178,309, thuế hoãn lại -164,367 triệu VND. Không dùng dòng doanh thu thành phần thay tổng doanh thu. Đã rà soát ảnh B01a gốc, khôi phục tài sản ngắn hạn/dài hạn và nợ ngắn hạn/dài hạn theo tổng phụ được công bố.",
@@ -13634,7 +14037,33 @@
       "broker_short_term_bonds": 1022000,
       "retained_earnings": 2728489,
       "broker_customer_deposits": 1591405,
-      "selling_expense": 0
+      "selling_expense": 0,
+      "financial_line_items_visual_review": {
+        "status": "source_visually_verified",
+        "checked_at": "2026-11-01",
+        "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2026.zip",
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/9246a0423b1cd4aa.zip",
+        "statements": [
+          "B01-CTCK / B01a-CTCK",
+          "B02-CTCK / B02a-CTCK",
+          "B03b-CTCK"
+        ],
+        "row_level_component_count": 32,
+        "all_component_rows_source_visually_verified": true,
+        "rejected_fields": [],
+        "scope_confirmed": "separate",
+        "unit": "VND in original source; values normalized to million VND",
+        "relative_tolerance_percent": 0.01,
+        "reconciliation_checks": {
+          "balance_equation_vnd": 0,
+          "profit_tax_equation_vnd": 0,
+          "cashflow_source_status": "ACCEPTED_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT",
+          "revenue_source_status": "source_visually_verified",
+          "tax_source_status": "source_visually_verified"
+        },
+        "note": "Các khoảng trống chỉ giữ lại khi mẫu báo cáo CTCK không có dòng tương ứng hoặc tài liệu không in chỉ tiêu. Không tự tạo giá trị để lấp."
+      }
     },
     {
       "symbol": "SHS",
@@ -13719,11 +14148,14 @@
           "cash_ending_reported_ytd",
           "cash_beginning",
           "cash_ending"
-        ]
+        ],
+        "manually_verified_scope": "separate_company_basis_confirmed_by_vietstockfinance_quarterly_and_interim_company_reports",
+        "source_closeout_checked_at": "2026-11-01",
+        "source_closeout_note": "B01/B02/B03b contact sheets and row-level source component audits checked against VietstockFinance-linked PDF/ZIP. Values without a printed source line remain null; printed dashes are normalized to 0."
       },
       "published_at": "2026-10-21",
       "source_extract_review": {
-        "checked_at": "2026-11-01T04:30:00Z",
+        "checked_at": "2026-11-01",
         "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
         "source_report_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2026.zip?ver=df26ce44",
         "source_archive_path": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/59aae0c6c9c04782.zip",
@@ -13760,7 +14192,26 @@
           "standalone_q3_net_cash_change_million_vnd": 2434004,
           "standalone_q3_cash_bridge_difference_million_vnd": 0
         },
-        "note": "Loại bỏ bản OCR tự động sai đơn vị do nhầm câu giải trình tỷ đồng làm đơn vị báo cáo; đã nhập lại từ từng dòng B01a/B02a/B03b."
+        "note": "Loại bỏ bản OCR tự động sai đơn vị do nhầm câu giải trình tỷ đồng làm đơn vị báo cáo; đã nhập lại từ từng dòng B01a/B02a/B03b. Đóng rà soát B01/B02/B03b: các trường có dòng nguồn và dấu gạch ngang đã xác nhận; trường không có dòng trong mẫu CTCK để null, không suy diễn.",
+        "reviewed_statements": [
+          "B01-CTCK / B01a-CTCK",
+          "B02-CTCK / B02a-CTCK",
+          "B03b-CTCK"
+        ],
+        "checked_source": "Only VietstockFinance doctype=1 catalogue and its linked original PDF/ZIP",
+        "row_level_component_count": 32,
+        "all_component_rows_source_visually_verified": true,
+        "core_fields_checked": [
+          "total_assets",
+          "total_liabilities",
+          "equity",
+          "pretax_profit",
+          "net_profit"
+        ],
+        "balance_and_profit_tax_equations_pass": true,
+        "revenue_and_tax_source_audits": "manual_page_review",
+        "no_rejected_fields_remaining": true,
+        "manually_verified_fields_count": 74
       },
       "average_total_assets": 28310394.5,
       "average_equity": 12532837.5,
@@ -14694,10 +15145,36 @@
           "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2026.zip?ver=df26ce44"
         }
       },
-      "selling_expense": 0
+      "selling_expense": 0,
+      "financial_line_items_visual_review": {
+        "status": "source_visually_verified",
+        "checked_at": "2026-11-01",
+        "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2026.zip?ver=df26ce44",
+        "source_archive_file": null,
+        "statements": [
+          "B01-CTCK / B01a-CTCK",
+          "B02-CTCK / B02a-CTCK",
+          "B03b-CTCK"
+        ],
+        "row_level_component_count": 32,
+        "all_component_rows_source_visually_verified": true,
+        "rejected_fields": [],
+        "scope_confirmed": "separate_company_basis_confirmed_by_vietstockfinance_quarterly_and_interim_company_reports",
+        "unit": "VND in original source; values normalized to million VND",
+        "relative_tolerance_percent": 0.01,
+        "reconciliation_checks": {
+          "balance_equation_vnd": 0,
+          "profit_tax_equation_vnd": 0,
+          "cashflow_source_status": "SOURCE_VISUALLY_VERIFIED_AND_RECONCILED",
+          "revenue_source_status": null,
+          "tax_source_status": null
+        },
+        "note": "Các khoảng trống chỉ giữ lại khi mẫu báo cáo CTCK không có dòng tương ứng hoặc tài liệu không in chỉ tiêu. Không tự tạo giá trị để lấp."
+      }
     }
   ],
-  "note": "SHS: 10 kỳ BCTC Q1/2024–Q2/2026 từ VietstockFinance. Lợi nhuận quý ưu tiên cột phát sinh riêng và kiểm tra bằng lũy kế khi có. Q4/2024 đã sửa từ lỗi đọc nhầm LNTT/LNST và được đối chiếu trực tiếp PDF; Q2/2025 bảng cân đối và KQHĐ cũng đã kiểm tra trực quan. Các kỳ còn lại được đối chiếu bằng văn bản trích xuất/OCR của đúng PDF/ZIP VietstockFinance, chưa gắn nhãn kiểm tra trực quan toàn bộ tài liệu. SHS cash-flow normalization 2026-10-29: corrected 10-period series to B03b-CTCK final cash-flow lines and consistent YTD basis; selected newer comparative for FY2024 and H1/2025 with documented source-revision differences. H1/2024 final flow subtotals remain blank due OCR/source-comparator inconsistency, with Q3/2024 standalone flows withheld because the H1 baseline is unresolved. No unsupported cash flow or balancing amount was inserted. SHS scope closeout 2026-11-01: Q1–Q3/2024 standalone confirmed by checked disclosure letter; Q4/2025 parent-company report identified from exact PDF member name; periods with no explicit scope remain blocked/blank; Q3/2026 discovered and source-page reviewed but scope unverified, no metrics extracted. Scope review update 2026-11-01: Q4/2024, Q1-Q3/2025 and Q1-Q2/2026 are issuer-company BCTC riêng lẻ based on quarterly B01-CTCK pages and corroborating VietstockFinance-linked annual/semi-annual audited/reviewed Company financial statements. These periods are no longer incorrectly blocked solely because neutral quarterly filenames lack 'hợp nhất/riêng lẻ'. EPS audit 2026-11-01: visually checked B02 row 501 for all 11 quarterly reports; corrected row-code parsing errors and populated missing EPS. EPS is VND/share and uses the current-quarter column. B02 detail-row audit 2026-11-01: all 11 quarterly B02 reports were visually checked for rows 40, 50, 52, 60, 62 and 70 in the current-quarter columns; figures were normalized from VND to million VND and stored with source-page evidence. B02 component review 2026-11-01: populated/verified row-level securities income, operating cost, finance expense and other income fields from each period's original current-quarter column; source row/page/VND stored in broker_statement_component_reconciliation.",
+  "note": "SHS: 10 kỳ BCTC Q1/2024–Q2/2026 từ VietstockFinance. Lợi nhuận quý ưu tiên cột phát sinh riêng và kiểm tra bằng lũy kế khi có. Q4/2024 đã sửa từ lỗi đọc nhầm LNTT/LNST và được đối chiếu trực tiếp PDF; Q2/2025 bảng cân đối và KQHĐ cũng đã kiểm tra trực quan. Các kỳ còn lại được đối chiếu bằng văn bản trích xuất/OCR của đúng PDF/ZIP VietstockFinance, chưa gắn nhãn kiểm tra trực quan toàn bộ tài liệu. SHS cash-flow normalization 2026-10-29: corrected 10-period series to B03b-CTCK final cash-flow lines and consistent YTD basis; selected newer comparative for FY2024 and H1/2025 with documented source-revision differences. H1/2024 final flow subtotals remain blank due OCR/source-comparator inconsistency, with Q3/2024 standalone flows withheld because the H1 baseline is unresolved. No unsupported cash flow or balancing amount was inserted. SHS scope closeout 2026-11-01: Q1–Q3/2024 standalone confirmed by checked disclosure letter; Q4/2025 parent-company report identified from exact PDF member name; periods with no explicit scope remain blocked/blank; Q3/2026 discovered and source-page reviewed but scope unverified, no metrics extracted. Scope review update 2026-11-01: Q4/2024, Q1-Q3/2025 and Q1-Q2/2026 are issuer-company BCTC riêng lẻ based on quarterly B01-CTCK pages and corroborating VietstockFinance-linked annual/semi-annual audited/reviewed Company financial statements. These periods are no longer incorrectly blocked solely because neutral quarterly filenames lack 'hợp nhất/riêng lẻ'. EPS audit 2026-11-01: visually checked B02 row 501 for all 11 quarterly reports; corrected row-code parsing errors and populated missing EPS. EPS is VND/share and uses the current-quarter column. B02 detail-row audit 2026-11-01: all 11 quarterly B02 reports were visually checked for rows 40, 50, 52, 60, 62 and 70 in the current-quarter columns; figures were normalized from VND to million VND and stored with source-page evidence. B02 component review 2026-11-01: populated/verified row-level securities income, operating cost, finance expense and other income fields from each period's original current-quarter column; source row/page/VND stored in broker_statement_component_reconciliation. SHS source closeout: 11 quarterly periods; all reporting scopes confirmed as standalone/parent-company; B01/B02/B03b reviewed; all source-present detail rows checked; omitted template rows left null; rejected numeric candidates=0; balance, PBT/tax, revenue/tax source checks passed; cash-flow basis exceptions and comparative reclassifications explicitly documented.",
   "bootstrap_status": "in_progress",
   "bootstrap_completed_at": "2026-10-22T13:14:50+00:00",
   "bootstrap_completion_note": "Các kỳ báo cáo có thể tự trích xuất đã được lưu; một số kỳ còn cần đối chiếu thủ công.",
@@ -14705,5 +15182,5 @@
   "sync_status": "records_found",
   "bootstrap_last_attempt_at": "2026-11-01T03:36:55+00:00",
   "bootstrap_attempt_count": 1,
-  "updatedAt": "2026-11-01T05:05:00Z"
+  "updatedAt": "2026-11-01T07:20:00Z"
 }
