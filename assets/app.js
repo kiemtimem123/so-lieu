@@ -2042,6 +2042,7 @@
           { label: 'Thu nhập hoạt động khác', key: 'broker_other_operating_income', level: 1 },
           { label: 'Tổng chi phí hoạt động theo BCTC CTCK', key: 'broker_total_operating_expenses', level: 1, negativeExpense: true },
           { label: 'Lỗ từ tài sản tài chính FVTPL', key: 'broker_fvtpl_loss', level: 1, negativeExpense: true },
+          { label: 'Lỗ đánh giá lại tài sản tài chính AFS khi phân loại lại', key: 'broker_afs_revaluation_loss', level: 1, negativeExpense: true },
           { label: 'Chi phí dự phòng/tổn thất tài sản tài chính, khoản phải thu và chi phí đi vay', key: 'broker_lending_cost', level: 1, negativeExpense: true },
           { label: 'Chi phí hoạt động tự doanh', key: 'broker_trading_expense', level: 1, negativeExpense: true },
           { label: 'Chi phí môi giới chứng khoán', key: 'broker_brokerage_expense', level: 1, negativeExpense: true },
