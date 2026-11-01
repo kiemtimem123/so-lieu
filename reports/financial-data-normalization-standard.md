@@ -1,6 +1,6 @@
 # Quy trình chuẩn hóa dữ liệu tài chính theo từng mảng
 
-Phiên bản: 3.1  
+Phiên bản: 3.2  
 Ngày thiết lập: 2026-10-28  
 Cập nhật gần nhất: 2026-11-01  
 Phạm vi: `kiemtimem123/so-lieu`, dữ liệu BCTC quý từ 2024-Q1 trở đi.
@@ -909,3 +909,25 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 - Q3/2024: Validate quarterly financial data run `41294219526`, Validate Site and Data run `41294219537`, Package Hostinger Stock Dashboard run `41294219518` đều SUCCESS.
 - Q4/2024 data commit `25971b5895c40e6da41aba7e77acaa29a84e06db`: Validate quarterly financial data run `41304144990`, Validate Site and Data run `41304144935`, Package Hostinger Stock Dashboard run `41304144950` đều SUCCESS.
 - Mỗi kỳ sau khi xác minh phải được cập nhật snapshot, quy trình và checkpoint ngay trước khi chuyển sang kỳ tiếp theo. Không đánh dấu hoàn tất toàn mã VCI khi còn các kỳ 2025-Q1 đến 2026-Q3 chưa rà soát.
+
+## Bổ sung phiên bản 3.2 — chuẩn hóa VCI Q1/2025 và thuế CTCK (2026-11-01)
+
+### Quy tắc thuế thu nhập doanh nghiệp trên B02-CTCK
+- Dòng thuế TNDN tổng (line 100) phải bằng thuế hiện hành (line 100.1) + thuế hoãn lại (line 100.2). Thuế hoãn lại có thể âm. Trường `income_tax` trên bộ dữ liệu lõi là tổng thuế line 100, không phải chỉ thuế hiện hành.
+- Khi có đủ hai thành phần, lưu riêng `current_income_tax` và `deferred_income_tax`, sau đó kiểm tra `current_income_tax + deferred_income_tax = income_tax`; tiếp tục kiểm tra `pretax_profit - income_tax = net_profit`. Không lấy current tax làm total tax và không bỏ dấu âm của deferred tax.
+- Không suy ngược total tax từ PBT−PAT rồi bỏ mất thành phần gốc nếu B02 trình bày line 100/100.1/100.2. Chỉ dùng phép tính để kiểm tra, giữ nguyên số đọc ở nguồn.
+
+### Hồ sơ đã đóng kỳ: VCI Q1/2025
+- Nguồn: VietstockFinance document ID `501520`, PDF `reports/raw/VCI/auto-vci-20261021/7be015c6a66aee03.pdf`; URL `https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%201/VCI_Baocaotaichinh_Q1_2025.pdf`; catalog `https://finance.vietstock.vn/VCI/tai-tai-lieu.htm?doctype=1`.
+- Phạm vi riêng lẻ xác nhận trực tiếp tại PDF page 19 (trang in 17), mục Cấu trúc Công ty ghi “Công ty không có công ty con”. PDF có 34 trang, render toàn bộ 34 trang ở 160 DPI bằng workflow run `41304377636`, artifact `13082396564`, SHA-256 `c2d1d7934b89d2dd2b19b725c3aa2ed5d4e84f9bd3c3c2cb4802d3dc584764fc`; đã xem B01 pages 5–7, B01 phụ lục 8–9, B02 pages 10–12, B03 pages 13–14, cashflow khách hàng page15 và thuyết minh page19.
+- B01 VND gốc: tài sản `23,727,625,262,449`; nợ `11,147,502,674,864`; vốn chủ `12,580,122,587,585`; tài sản ngắn hạn `23,620,977,742,780`; tài sản dài hạn `106,647,519,669`; nợ ngắn hạn `10,670,679,932,887`; nợ dài hạn `476,822,741,977`. Tất cả tổng phụ và phương trình tài sản = nợ + vốn bằng 0 VND.
+- B01 sai OCR được sửa: AFS assets (line 115) là `7,523,915,401,233` VND, sidecar OCR cũ chỉ cho giá trị 8 triệu VND. Giữ các chi tiết broker FVTPL, HTM, cho vay, phải thu và tiền gửi khách hàng theo đúng dòng B01; số dư tiền doanh nghiệp không được thay bằng customer deposits.
+- B02 Q1 current-quarter column (Q1=YTD): doanh thu hoạt động `850,928,963,332`; chi phí hoạt động `313,821,357,598`; doanh thu tài chính `9,085,822,204`; chi phí tài chính `183,447,795,117`; chi phí quản lý `22,680,765,194`; lợi nhuận hoạt động `340,064,867,627`; thu nhập khác `15,107,153,051`; chi phí khác `65,000,000`; kết quả khác `15,042,153,051`; LNTT `355,107,020,678`; thuế hiện hành `72,883,103,138`; thuế hoãn lại `-12,643,864,866`; tổng thuế `60,239,238,272`; LNST `294,867,782,406`. Cấu phần doanh thu/chi phí, các subtotal và cầu nối LNTT/thuế/LNST bằng 0 VND.
+- OCR LNST cũ `275,703` triệu VND bị bác bỏ; B02 line 200 ảnh gốc xác nhận `294,867,782,406` VND. PBT candidate `355,107` triệu VND là đúng sau khi so với B02 current-quarter column. Trạng thái các số candidate trước đó được giữ trong correction history.
+- B03 Q1/YTD: CFO `10,325,858,831`; CFI `-9,337,876,940`; CFF `-2,442,495,939,750`; net cash change `-2,441,507,957,859`; cash beginning `4,743,771,932,745`; cash ending `2,302,263,974,886`. CFI line 70 được cấu thành từ mua sắm TSCĐ `-9,339,066,940` và tiền thanh lý TSCĐ `+1,190,000`; ba luồng tiền, thay đổi tiền thuần và cầu nối tiền đầu/cuối kỳ đều chính xác bằng 0 VND.
+- PDF page 15 là phần lưu chuyển tiền môi giới/ủy thác khách hàng. Các khoản thu/chi bán chứng khoán cho khách, tiền ký quỹ, tiền gửi khách hàng và số dư tiền khách hàng không được đưa vào CFO/CFI/CFF của công ty.
+- ROA `4.69%`, ROE `9.24%` tính theo PAT Q1 chia bình quân số dư đóng Q4/2024 và Q1/2025, nhân 4. Snapshot `manually_verified_source_reconciled`; lưu raw VND, page evidence, công thức ratio, corrections và bridges.
+
+### Mốc kiểm thử Q1/2025
+- Data commit `9f8d6d7354f624b19a30b5fadb65adb30102fc82`: Validate quarterly financial data run `41304827328`, Validate Site and Data run `41304827298`, Package Hostinger Stock Dashboard run `41304827282` đều SUCCESS.
+- Quy trình kế thừa: sau khi đọc bản chuẩn mới nhất, xử lý một kỳ; xác minh scope; xem trực quan B01/B02/B03/notes; lưu snapshot + correction history; chạy các bridge ở raw VND; cập nhật checkpoint và tiêu chuẩn trước khi mở kỳ kế tiếp.
