@@ -1149,6 +1149,44 @@ class SHSCashFlowNormalizationTests(unittest.TestCase):
                 self.assertIn("riêng", row["report_type"].lower())
                 self.assertNotIn("hợp nhất", row["report_type"].lower())
 
+    def test_shs_b02_financial_detail_rows_match_each_current_quarter(self):
+        expected = {
+            "2024-Q1": (74121, 594, 11478, 11478, 35823, 443737, 8),
+            "2024-Q2": (128185, 672, 13457, 13457, 26719, 431731, 7),
+            "2024-Q3": (163223, 620, 14620, 14620, 23424, 75456, 8),
+            "2024-Q4": (202588, 1714, 23633, 23633, 45695, 281015, 11),
+            "2025-Q1": (179674, 548, 26572, 26572, 30146, 325685, 14),
+            "2025-Q2": (156008, 877, 52507, 52507, 23316, 462960, 11),
+            "2025-Q3": (120123, 1419, 72324, 71723, 34454, 590426, 11),
+            "2025-Q4": (1109817, 2260, 130498, 129516, 86240, 271499, 10),
+            "2026-Q1": (91874, 1133, 165608, 165122, 28354, 279996, 10),
+            "2026-Q2": (147304, 1040, 196108, 196108, 18248, 89720, 10),
+            "2026-Q3": (370116, 982, 352362, 348776, 29685, 250810, 11),
+        }
+        for period, values in expected.items():
+            with self.subTest(period=period):
+                row = self.all_rows[period]
+                operating_expense, financial_income, financial_expense, interest_expense, admin_expense, operating_profit, page = values
+                self.assertEqual(row["broker_operating_expenses"], operating_expense)
+                self.assertEqual(row["financial_income"], financial_income)
+                self.assertEqual(row["financial_expense"], financial_expense)
+                self.assertEqual(row["interest_expense"], interest_expense)
+                self.assertEqual(row["admin_expense"], admin_expense)
+                self.assertEqual(row["broker_admin_expenses"], admin_expense)
+                self.assertEqual(row["operating_profit"], operating_profit)
+                self.assertEqual(row["b02_detail_source_reconciliation"]["source_pdf_page"], page)
+                self.assertEqual(row["b02_detail_source_reconciliation"]["status"], "source_visually_verified")
+                self.assertTrue(row["b02_detail_source_reconciliation"]["manually_visual_reviewed"])
+                self.assertTrue({
+                    "broker_operating_expenses", "financial_income", "financial_expense",
+                    "interest_expense", "admin_expense", "broker_admin_expenses", "operating_profit"
+                }.issubset(set(row["financial_line_items_manually_verified_fields"])))
+                calculated = (
+                    row["revenue"] + financial_income - operating_expense -
+                    financial_expense - admin_expense
+                )
+                self.assertLessEqual(abs(calculated - operating_profit), 2)
+
     def test_shs_eps_matches_b02_row_501_current_quarter_for_all_eleven_periods(self):
         expected = {
             "2024-Q1": 438,
