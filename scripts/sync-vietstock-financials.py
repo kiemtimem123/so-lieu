@@ -501,6 +501,16 @@ def choose_balance_columns(
 
 def scale_to_million(text: str, raw_assets: float, previous_assets_million: float | None) -> tuple[float, str]:
     header = norm(text[:25000])
+    # Explicit statement-unit markers take precedence over mentions of billions/
+    # millions in cover letters, management explanations or market commentary.
+    # A PDF may say "revenue reached VND 1,002 billion" in its disclosure text
+    # while the actual B01/B02/B03b tables are explicitly denominated in VND.
+    explicit_vnd = re.search(
+        r"\b(?:dvt|bvt|don vi tinh|unit)\s*[:\-]?\s*vnd\b",
+        header,
+    )
+    if explicit_vnd:
+        return 1e-6, "VND → triệu VND (đơn vị báo cáo ghi rõ VND)"
     if any(term in header for term in ("ngan dong","ngan vnd","nghin dong","nghin vnd","thousand dong","thousand vnd")) or re.search(r"\bngh?[a-z~._-]{0,4}n\s+(?:dong|vnd)\b",header):
         return 1e-3, "ngàn/nghìn VND → triệu VND"
     if "trieu dong" in header or "trieu vnd" in header or "million vnd" in header:
