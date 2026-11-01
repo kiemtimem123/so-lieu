@@ -55,3 +55,9 @@ def scale_to_million(
             _, factor, ratio = min(plausible)
             return factor, f"đơn vị suy ra từ số dư quý trước; tỷ lệ tài sản={ratio:.4g}"
     raise ValueError("Không xác định chắc chắn đơn vị báo cáo.")
+
+def drop_leading_statement_row_code(values: list[float], code: int) -> list[float]:
+    """Remove a statement row code mistakenly parsed as the first value."""
+    if values and int(round(values[0])) == int(code):
+        return values[1:]
+    return values
