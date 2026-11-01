@@ -868,10 +868,14 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
  if eps is not None and abs(eps)<1000000:
   out["eps"]=eps
  if symbol in BROKERS and profit_pages:
-  broker_revenue=value_by_label(
-   profit_pages,["cong doanh thu hoat dong","tong doanh thu hoat dong","total operating revenue"],
-   factor,exclude_terms=["tai chinh"]
+  broker_revenue=value_by_row_prefix(
+   profit_pages,[r"^\s*(?:\|\s*)?20\s*(?:\||\s|$)"],factor
   )
+  if broker_revenue is None:
+   broker_revenue=value_by_label(
+    profit_pages,["cong doanh thu hoat dong","tong doanh thu hoat dong","total operating revenue"],
+    factor,exclude_terms=["tai chinh"]
+   )
   if broker_revenue is not None:
    out["revenue"]=broker_revenue
   else:
