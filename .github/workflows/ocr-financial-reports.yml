@@ -220,17 +220,20 @@ jobs:
               str(symbol).strip().upper()
               for symbol, state in checkpoint_states.items()
               if isinstance(state, dict) and state.get("completeForAutomation") is True
+              and state.get("manualReviewRemaining") is not True
           }
           # Also retain completion from the latest checkpoint record if older
           # checkpoints do not yet have the per-symbol state map.
           latest = checkpoint.get("lastProgress") or {}
-          if latest.get("completeForAutomation") is True and latest.get("symbol"):
+          if latest.get("completeForAutomation") is True and latest.get("manualReviewRemaining") is not True and latest.get("symbol"):
               completed_symbols.add(str(latest["symbol"]).strip().upper())
           requested = os.environ.get("REQUESTED_SYMBOL", "").strip().upper()
           bootstrap_symbol = ""
           if requested:
               if requested not in symbols:
                   raise SystemExit(f"Ticker {requested} is not enabled in config/securities.json")
+              if requested in completed_symbols:
+                  raise SystemExit(f"Ticker {requested} is already source-reviewed and locked; refusing OCR reprocessing.")
               requested_snapshot = load_json(Path("data") / f"financials-{requested}.json")
               requested_state = checkpoint_states.get(requested) or {}
               requested_latest = latest_quarter(requested_snapshot)
