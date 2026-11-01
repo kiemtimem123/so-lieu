@@ -277,3 +277,11 @@ Ghi chú này là lối tắt tiếp nối, không thay thế checkpoint sống.
 - Added VCI/CTCK-specific parsing in `scripts/enrich-financial-categories.py`: B01 total-assets fallback anchored on row 270 formula `100+200`; fallback for `C. Nợ phải trả` when OCR adds punctuation; B02 net-profit label `Lợi nhuận kế toán sau thuế TNDN`; revenue extraction prioritizes `Cộng doanh thu hoạt động` and excludes financial-income rows. Verification note no longer hardcodes “hợp nhất”. Commit `14fe6702b136874bdfc888fd544fd20135cc5267`.
 - The parser changes passed quarterly-data and site-data checks. OCR run `41288816583` is now running with this updated parser; inspect VCI Q1/Q2 2024 before reopening additional terminal periods.
 - Targeted sync run `41288487308` remains in progress; do not treat it as complete until GitHub reports a conclusion. Its active ticker is VCI, not VCB. The workflow reads `activeSymbol` from the saved checkpoint and includes `financial_units.py` in sparse checkout.
+
+
+## 2026-11-01 queue lock and VCI resume correction
+
+- Checkpoint is now explicitly `activeSymbol=VCI`, `resumeSymbolHint=VCI`; VCI `completeForAutomation=false`, `manualReviewRemaining=true`, with all 11 periods pending manual core reconciliation. Do not advance to VCK until VCI is fully source-reviewed and validated.
+- A stale queued `workflow_dispatch` run `41290089703` selected SHS and failed its validation. It uploaded an OCR summary artifact but did not create a repository commit; SHS snapshot/checkpoint remains at its prior completed state. No further SHS work is allowed.
+- Hardened `.github/workflows/ocr-financial-reports.yml`: completed symbols are now only those with `completeForAutomation=true` AND `manualReviewRemaining` not true; explicit requests for already-completed symbols are refused. This prevents stale workflow dispatches from OCRing SHS again and keeps VCI active while its manual review is open. Commit `cc3bc8c208f90dca76cb18227a7f4f56f030fe09`.
+- Verified run `41290356727` selected `VCI` from the active checkpoint (no requested symbol) and is currently processing up to two VCI source reports. Continue from this run and its resulting sidecars.
