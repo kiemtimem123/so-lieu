@@ -14,15 +14,15 @@ on:
       period:
         description: "Report period label"
         required: true
-        default: "2024-Q3"
+        default: "2024-Q4"
       pdf_path:
         description: "Path to the PDF already archived in reports/raw"
         required: true
-        default: "reports/raw/VCI/auto-vci-20261021/8357dc73d66e476d.pdf"
+        default: "reports/raw/VCI/auto-vci-20261021/3a56dc2a26b140c3.pdf"
       pages:
         description: "Comma-separated 1-based PDF pages, or all"
         required: true
-        default: "4,5,6,9,10,11,12,13,18"
+        default: "all"
       dpi:
         description: "Render DPI"
         required: true
@@ -39,7 +39,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           sparse-checkout: |
-            ${{ github.event.inputs.pdf_path || 'reports/raw/VCI/auto-vci-20261021/8357dc73d66e476d.pdf' }}
+            ${{ github.event.inputs.pdf_path || 'reports/raw/VCI/auto-vci-20261021/3a56dc2a26b140c3.pdf' }}
           sparse-checkout-cone-mode: false
           lfs: false
 
@@ -54,9 +54,9 @@ jobs:
       - name: Render source pages and contact sheets
         env:
           TARGET_SYMBOL: ${{ github.event.inputs.symbol || 'VCI' }}
-          TARGET_PERIOD: ${{ github.event.inputs.period || '2024-Q3' }}
+          TARGET_PERIOD: ${{ github.event.inputs.period || '2024-Q4' }}
           PDF_PATH: ${{ github.event.inputs.pdf_path || 'reports/raw/VCI/auto-vci-20261021/8357dc73d66e476d.pdf' }}
-          PAGE_LIST: ${{ github.event.inputs.pages || '4,5,6,9,10,11,12,13,18' }}
+          PAGE_LIST: ${{ github.event.inputs.pages || 'all' }}
           RENDER_DPI: ${{ github.event.inputs.dpi || '160' }}
         run: |
           python - <<'PY'
