@@ -1,6 +1,6 @@
 # Quy trình chuẩn hóa dữ liệu tài chính theo từng mảng
 
-Phiên bản: 3.2  
+Phiên bản: 3.3  
 Ngày thiết lập: 2026-10-28  
 Cập nhật gần nhất: 2026-11-01  
 Phạm vi: `kiemtimem123/so-lieu`, dữ liệu BCTC quý từ 2024-Q1 trở đi.
@@ -931,3 +931,26 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 ### Mốc kiểm thử Q1/2025
 - Data commit `9f8d6d7354f624b19a30b5fadb65adb30102fc82`: Validate quarterly financial data run `41304827328`, Validate Site and Data run `41304827298`, Package Hostinger Stock Dashboard run `41304827282` đều SUCCESS.
 - Quy trình kế thừa: sau khi đọc bản chuẩn mới nhất, xử lý một kỳ; xác minh scope; xem trực quan B01/B02/B03/notes; lưu snapshot + correction history; chạy các bridge ở raw VND; cập nhật checkpoint và tiêu chuẩn trước khi mở kỳ kế tiếp.
+
+## Bổ sung phiên bản 3.3 — dấu âm tổng lưu chuyển tiền CTCK và hồ sơ VCI Q2/2025 (2026-11-01)
+
+### Quy tắc kiểm tra bổ sung cho B03 khi tổng dòng tiền mâu thuẫn
+- Không mặc định lấy nguyên dấu của dòng tổng B03 nếu dòng tổng không khớp các cấu phần chi tiết và số dư tiền đầu/cuối kỳ. Kiểm tra độc lập: (1) dòng tiền tài chính = tiền vay nhận − tiền trả gốc − cổ tức đã trả; (2) CFO + CFI + CFF = biến động tiền thuần; (3) tiền đầu kỳ + biến động tiền thuần = tiền cuối kỳ (điều chỉnh FX chỉ khi nguồn trình bày số).
+- Nếu PDF gốc in tổng dòng 80/90 dương nhưng (1)–(3) đều xác nhận dấu âm, không được âm thầm ghi đè nguồn. Lưu hai lớp: số tuyệt đối/dấu đúng như PDF trong `reported_b03_totals_as_printed_vnd`; số chuẩn hóa có dấu được chứng minh trong `normalized_b03_totals_vnd` và `source_sign_exception`. Chỉ đưa số chuẩn hóa vào các trường cashflow dùng trong biểu đồ/công thức, kèm lý do và residual bằng 0.
+- Trường hợp không có đủ cấu phần hoặc số dư tiền để chứng minh duy nhất dấu đúng, không tự sửa; giữ cashflow ở null/terminal manual review và mô tả phần chưa xác định.
+- Không tạo FX effect nếu line 102 để trống hoặc không có giá trị; giữ null. Dòng tiền hoạt động môi giới/ủy thác và tài sản/tiền gửi khách hàng là bảng riêng, tuyệt đối không cộng vào CFO/CFI/CFF của công ty.
+
+### Hồ sơ đã đóng kỳ: VCI Q2/2025
+- Nguồn: VietstockFinance document ID `511619`, PDF `reports/raw/VCI/auto-vci-20261021/70c08fb3733de0e5.pdf`; URL `https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%202/VCI_Baocaotaichinh_Q2_2025.pdf`; catalogue `https://finance.vietstock.vn/VCI/tai-tai-lieu.htm?doctype=1`.
+- Phạm vi riêng lẻ xác nhận tại PDF page 19 (trang in 17), mục Cấu trúc Công ty: “Công ty không có công ty con”. PDF có 47 trang; render toàn bộ 47 trang ở 160 DPI, workflow run `41305072567`, artifact `13082917590`, SHA-256 `cbc31385fd9f259da48ab752a7c21d0ec5cfb8602616b38624580694d2988950`. Artifact metadata name bị gắn nhầm `...2025-Q1`, nhưng embedded manifest và tên ảnh cho thấy đúng `period=2025-Q2`, PDF path đúng `70c08fb3733de0e5.pdf`; ghi rõ mismatch để tránh dùng nhầm bằng chứng.
+- Đã xem ảnh PDF pages 5–9 (B01 và bảng ngoài B01), 10–12 (B02), 13–14 (B03), 15 (lưu chuyển tiền khách hàng riêng), 19 (thuyết minh scope).
+- B01 VND gốc: tổng tài sản `21,897,761,800,316`; tài sản ngắn hạn `21,777,317,137,834`; dài hạn `120,444,662,482`; nợ `9,458,706,053,920`; nợ ngắn hạn `9,067,050,859,260`; nợ dài hạn `391,655,194,660`; vốn chủ `12,439,055,746,396`; tiền cuối kỳ `472,276,928,356`. Phương trình tài sản = nợ + vốn và mọi subtotal đều bằng 0 residual.
+- B02 cột phát sinh Q2/2025: doanh thu hoạt động `1,159,674,866,340`; chi phí hoạt động `772,258,024,779`; doanh thu tài chính `4,044,274,215`; chi phí tài chính `153,432,931,861`; chi phí quản lý `26,757,378,309`; lợi nhuận hoạt động `211,270,805,606`; thu nhập khác `219,745,454`; LNTT `211,490,551,060`; thuế hiện hành `31,514,091,968`; thuế hoãn lại `-3,925,377,798`; tổng thuế `27,588,714,170`; LNST `183,901,836,890`. Thành phần doanh thu/chi phí, financial income/expense, operating profit, PBT, tax và PAT bridges đều bằng 0 VND.
+- B03 YTD theo cấu phần VND gốc: CFO `-109,179,436,687`; CFI `-27,279,627,952`; CFF cấu thành từ vay nhận `12,455,000,000,000`, trả gốc `-16,410,564,000,000`, cổ tức `-179,471,939,750`, nên CFF đúng dấu `-4,135,035,939,750`; biến động tiền thuần đúng dấu `-4,271,495,004,389`; tiền đầu năm `4,743,771,932,745`; tiền cuối kỳ `472,276,928,356`.
+- PDF page14 in line80 `4,135,035,939,750` và line90 `4,271,495,004,389` không có ngoặc âm; dấu in này mâu thuẫn trực tiếp với tổng cấu phần: `73 + 74 + 76 = -4,135,035,939,750`, `60 + 70 + corrected 80 = -4,271,495,004,389`, và `cash end − cash beginning = -4,271,495,004,389`. Ba kiểm tra độc lập trùng nhau. Bởi vậy số chuẩn hóa dùng trong dữ liệu là âm; số dương gốc PDF được lưu riêng, không xóa dấu vết nguồn.
+- Q2 riêng (YTD Q2 trừ YTD Q1): CFO `-119,505,295,518`; CFI `-17,941,751,012`; CFF `-1,692,540,000,000`; net cash `-1,829,987,046,530`; tiền đầu Q2 `2,302,263,974,886` (bằng Q1 close); tiền cuối Q2 `472,276,928,356`. Tổng 3 luồng khớp biến động tiền và cầu nối cash opening/closing đều 0 VND.
+- PDF page15 là bảng lưu chuyển tiền hoạt động môi giới/ủy thác của khách hàng; không được đưa vào CFO/CFI/CFF của Vietcap. Bảng ngoài B01 page8–9 có customer deposits `3,001,604,933,090`; đây không phải cash/cash equivalents của công ty. B03 không có FX effect line 102; lưu null.
+- ROA `3.22%`, ROE `5.88%` tính từ PAT Q2 chia bình quân số dư cuối Q1/cuối Q2, nhân 4. Snapshot `manually_verified_source_reconciled_with_source_sign_correction` và lưu đầy đủ số gốc, số chuẩn hóa, kiểm tra, page evidence và artifact.
+
+### Mốc kiểm thử Q2/2025
+- Data commit `df6ae1b3b5c60c3350c1877262834b41c9255ec6`: Validate quarterly financial data run `41313644124`, Validate Site and Data run `41313644102`, Package Hostinger Stock Dashboard run `41313644231` đều SUCCESS.
