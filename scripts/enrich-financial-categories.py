@@ -4162,6 +4162,15 @@ def enrich_snapshot(path):
   mode=cumulative_income_mode(item,pages)
   found,withheld_fields=apply_quarter_scope(item,items,found,symbol,mode)
   core_found=extract_core_fields(item,symbol,pages,found,mode)
+  if symbol=="VCI":
+   debug_values={key:value for key,value in core_found.items() if not key.startswith("__")}
+   print(
+    f"VCI core parse {item.get('period')}: pages={len(pages)} "
+    f"balance_pages={len(select_statement_pages(pages,'balance'))} "
+    f"income_pages={len(select_statement_pages(pages,'income'))} "
+    f"summary_pages={len([page for page in pages if is_quarter_comparison_page(page)])} "
+    f"mode={mode} values={debug_values}"
+   )
   core_calculations=core_found.pop("__core_calculations",{})
   core_pages=core_found.pop("__core_pages",[])
   core_new_fields=[]
