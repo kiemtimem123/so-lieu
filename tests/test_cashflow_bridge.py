@@ -809,7 +809,14 @@ class SHSCashFlowNormalizationTests(unittest.TestCase):
         cls.snapshot = json.loads(
             (ROOT / "data" / "financials-SHS.json").read_text(encoding="utf-8")
         )
-        cls.rows = {row["period"]: row for row in cls.snapshot["items"]}
+        cls.all_rows = {row["period"]: row for row in cls.snapshot["items"]}
+        # Cash-flow regression fixtures cover the ten periods with an extracted
+        # B03b reconciliation. Newly discovered scope-blocked placeholders are
+        # asserted separately and must not be mistaken for normalized quarters.
+        cls.rows = {
+            period: row for period, row in cls.all_rows.items()
+            if isinstance(row.get("cashflow_source_reconciliation"), dict)
+        }
         cls.flows = (
             "operating_cash_flow", "investing_cash_flow",
             "financing_cash_flow", "net_cash_change",
@@ -1015,6 +1022,42 @@ class SHSCashFlowNormalizationTests(unittest.TestCase):
             rec["ytd_flow_components_relative_difference_percent"], 0.01
         )
         self.assertEqual(rec["selected_values_not_adjusted_for_tolerance"], True)
+
+    def test_shs_q3_2026_new_catalog_period_remains_blank_until_scope_is_verified(self):
+        row = self.all_rows["2026-Q3"]
+        self.assertEqual(row["source_validation"]["document_id"], "563751")
+        self.assertEqual(row["published_at"], "2026-10-21")
+        self.assertEqual(
+            row["source_index_url"],
+            "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        )
+        self.assertIn("static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%203/", row["source_url"])
+        self.assertEqual(row["verification_status"], "manual_review_required_pending_extraction")
+        self.assertTrue(row["source_validation"]["scope_validation_required"])
+        self.assertTrue(row["source_validation"]["manual_review_blocking_automatic_extraction"])
+        self.assertEqual(row["source_validation"]["observed_scope"], "not_explicit_in_source")
+        for field in (
+            "total_assets", "total_liabilities", "equity", "pretax_profit",
+            "net_profit", "net_profit_attributable", "revenue", "roa", "roe",
+            *self.flows, *self.ytd, *self.numeric_cash,
+        ):
+            self.assertIsNone(row.get(field))
+        self.assertNotIn("cashflow_source_reconciliation", row)
+
+    def test_shs_confirmed_separate_periods_are_not_labeled_consolidated(self):
+        expected = {
+            "2024-Q1": "separate",
+            "2024-Q2": "separate",
+            "2024-Q3": "separate",
+            "2025-Q4": "separate_parent_company",
+        }
+        for period, scope in expected.items():
+            with self.subTest(period=period):
+                row = self.all_rows[period]
+                self.assertEqual(row["source_validation"]["observed_scope"], scope)
+                self.assertFalse(row["source_validation"]["scope_validation_required"])
+                self.assertIn("riêng", row["report_type"].lower())
+                self.assertNotIn("hợp nhất", row["report_type"].lower())
 
     def test_shs_revenue_row20_and_tax_components_match_original_b02_for_all_ten_periods(self):
         expected = {
