@@ -1,6 +1,6 @@
 # Quy trình chuẩn hóa dữ liệu tài chính theo từng mảng
 
-Phiên bản: 2.8  
+Phiên bản: 2.9  
 Ngày thiết lập: 2026-10-28  
 Cập nhật gần nhất: 2026-11-01  
 Phạm vi: `kiemtimem123/so-lieu`, dữ liệu BCTC quý từ 2024-Q1 trở đi.
@@ -829,3 +829,18 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 ### Kiểm thử/đóng kỳ
 - Với VCI Q1/2024, kiểm tra source scope, B01 balance equation, B02 profit-tax bridge, B03 company cashflow component sum và cash opening-to-closing bridge đều PASS ở VND gốc.
 - Khi cập nhật kỳ đã đối chiếu, lưu source_extract_review, source_validation.manually_visual_reviewed, manually_verified_pages, reconciliation.raw_values_vnd, reconciliation.checks, profit_reconciliation và correction history. Một kỳ chỉ được đưa khỏi pendingCorePeriods sau khi tất cả chỉ tiêu lõi cần thiết đã có nguồn.
+
+## Bổ sung phiên bản 2.9 — xử lý mâu thuẫn OCR và xác minh riêng từng kỳ (2026-11-01)
+
+- Sidecar OCR là bản trích xuất phục vụ kiểm tra, không thay thế ảnh PDF gốc. Ghi rõ từng trang, engine và quality score nếu có. Không gắn manually_visual_reviewed=true hoặc manually_verified_source_reconciled chỉ vì các phép tính OCR khớp.
+- Với mỗi kỳ, đối chiếu độc lập ít nhất ba lớp: (1) B01 tổng tài sản/nợ/vốn; (2) B02 tổng doanh thu, LNTT, thuế, LNST và các cấu phần; (3) B03/B03b/B04 dòng tiền doanh nghiệp. Riêng CTCK phải bỏ qua phần dòng tiền môi giới/ủy thác khách hàng.
+- Dòng biến động tiền thuần phải khớp đồng thời CFO + CFI + CFF (+ FX nếu nguồn có dòng FX) và tiền cuối kỳ − tiền đầu kỳ. Nếu OCR của dòng tổng khác phép cộng cấu phần hoặc cầu nối tiền trên 0.01%, coi là xung đột OCR: không tự chọn số theo phép tính, không tạo plug và không đưa số thay thế lên bảng công khai; giữ cả candidate OCR và residual trong audit metadata để chờ ảnh PDF.
+- Nếu B01 tổng tài sản = tổng nợ + vốn chủ và B02 LNTT − thuế = LNST khớp, nhưng B03 OCR chưa khớp, chỉ các nhóm B01/B02 có thể được lưu ở candidate audit; không nâng toàn kỳ thành verified. Cần xác minh ảnh các trang còn thiếu trước khi đóng kỳ.
+- Khi không thể mở/render bản PDF gốc trong lượt kiểm tra, vẫn có thể ghi nhận đã rà sidecar text nhưng phải giữ trạng thái visual review pending; không dùng trang công ty phát hành, sàn, báo chí hoặc aggregator làm nguồn thay thế cho yêu cầu nguồn VietstockFinance duy nhất.
+- Trường lõi chưa xác minh phải để null trong khu vực dữ liệu hiển thị; giữ candidate riêng tại core_financial_extraction_unverified_values và nêu rõ nguồn, trang, phép kiểm, độ tin cậy OCR và trạng thái mâu thuẫn. Trước khi công bố phải chuyển candidate sang field chính bằng một commit có evidence từ PDF.
+
+### Ví dụ VCI Q2/2024 — hold do OCR mâu thuẫn
+- Sidecar OCR B01 candidate: tài sản 23,105,371,788,635 VND; nợ 14,246,851,580,952 VND; vốn chủ 8,858,520,207,683 VND, phép cân đối OCR = 0.
+- Sidecar OCR B02 candidate: doanh thu 915,851,554,761; LNTT 343,766,121,537; thuế 64,559,441,640; LNST 279,206,679,897 VND, cầu nối OCR = 0.
+- Sidecar OCR B03: CFO -331,190,039,458; CFI -18,070,289,425; CFF 3,464,520,269,300 VND. Tổng cấu phần và cầu nối giữa tiền đầu/cuối kỳ cho biến động 3,115,259,940,417 VND; OCR dòng 90 đọc thành 3,415,259,940,417 VND, lệch 300,000,000,000 VND. B01/B02 candidate không đủ để xác nhận toàn kỳ; core fields giữ null cho tới khi xem được ảnh PDF gốc.
+- Các trang B01/B03 trong sidecar có OCR quality score khoảng 0.37–0.43; không được coi là xác minh trực quan. Q2/2024 giữ trạng thái manual review required, không chạy OCR lại cùng archive.
