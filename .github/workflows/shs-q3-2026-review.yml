@@ -1,0 +1,97 @@
+name: Review SHS Q3 2026 VietstockFinance source
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "reports/shs-q3-2026-review.trigger.json"
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Install PDF tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+          python -m pip install --upgrade requests pypdf pdf2image pillow
+
+      - name: Download only the SHS Q3 2026 VietstockFinance-linked archive and render source pages
+        env:
+          SOURCE_URL: https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2026.zip?ver=df26ce44
+        run: |
+          python - <<'PY'
+          import io, json, os, re, hashlib, zipfile
+          from pathlib import Path
+          import requests
+          from pypdf import PdfReader
+          from pdf2image import convert_from_bytes
+          from PIL import Image, ImageDraw
+
+          out = Path("shs-q3-2026-review")
+          out.mkdir()
+          url = os.environ["SOURCE_URL"]
+          response = requests.get(url, timeout=(30, 180))
+          response.raise_for_status()
+          archive = response.content
+          (out / "source-metadata.json").write_text(json.dumps({
+              "symbol":"SHS","period":"2026-Q3","source_url":url,
+              "http_status":response.status_code,"bytes":len(archive),
+              "sha256":hashlib.sha256(archive).hexdigest()
+          }, indent=2), encoding="utf-8")
+          manifest = []
+          with zipfile.ZipFile(io.BytesIO(archive)) as zf:
+              for name in zf.namelist():
+                  if not name.lower().endswith(".pdf"):
+                      continue
+                  data = zf.read(name)
+                  reader = PdfReader(io.BytesIO(data), strict=False)
+                  texts=[]
+                  for i,page in enumerate(reader.pages):
+                      try: texts.append(page.extract_text() or "")
+                      except Exception: texts.append("")
+                  joined = "\n".join(texts)
+                  norm = lambda s: re.sub(r"[^a-z0-9]+"," ",s.lower().replace("đ","d"))
+                  first = norm("\n".join(texts[:4]))
+                  pages={}
+                  for i,t in enumerate(texts, start=1):
+                      n=norm(t)
+                      if i<=4: pages[str(i)] = " ".join(t.split())[:2400]
+                      if ("mau so b01" in n or "mau so b01a" in n) and ("bao cao tinh hinh tai chinh" in n or "financial position" in n):
+                          pages.setdefault("B01_candidates",[]).append(i)
+                      if ("mau so b02" in n or "mau so b02a" in n) and ("bao cao ket qua" in n or "income statement" in n or "hoat dong" in n):
+                          pages.setdefault("B02_candidates",[]).append(i)
+                      if "mau so b03b" in n and ("bao cao luu chuyen tien te" in n or "cash flows" in n):
+                          pages.setdefault("B03b_candidates",[]).append(i)
+                  manifest.append({
+                      "member":name,"bytes":len(data),"pages":len(reader.pages),
+                      "first_pages_text":pages,
+                      "first_page_scope_markers":{
+                          "consolidated":("bao cao tai chinh hop nhat" in first or "bctc hop nhat" in first or "consolidated financial statements" in first),
+                          "separate":("bao cao tai chinh rieng" in first or "bao cao tai chinh cua cong ty me" in first or "separate financial statements" in first or "financial statements of the parent company" in first),
+                          "disclosure":("cong bo thong tin" in first)
+                      }
+                  })
+                  base=Path(name).stem.replace("/","_")
+                  render_pages=set(range(1,min(4,len(reader.pages))+1))
+                  for key in ("B01_candidates","B02_candidates","B03b_candidates"):
+                      cand=pages.get(key,[])
+                      if cand: render_pages.update(cand[:2])
+                  for p in sorted(render_pages):
+                      img=convert_from_bytes(data,dpi=115,first_page=p,last_page=p,fmt="png",thread_count=2)[0]
+                      img.save(out/f"{base}_page{p:02d}.png")
+          (out/"manifest.json").write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+          print(json.dumps(manifest,ensure_ascii=False,indent=2))
+          PY
+
+      - name: Upload SHS Q3 2026 source-page review
+        uses: actions/upload-artifact@v6
+        with:
+          name: shs-q3-2026-vietstock-review
+          path: shs-q3-2026-review/
+          if-no-files-found: error
+          retention-days: 7
