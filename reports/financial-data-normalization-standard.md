@@ -1,6 +1,6 @@
 # Quy trình chuẩn hóa dữ liệu tài chính theo từng mảng
 
-Phiên bản: 3.0  
+Phiên bản: 3.1  
 Ngày thiết lập: 2026-10-28  
 Cập nhật gần nhất: 2026-11-01  
 Phạm vi: `kiemtimem123/so-lieu`, dữ liệu BCTC quý từ 2024-Q1 trở đi.
@@ -876,3 +876,36 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 ### Quy tắc ghi nhớ và kế thừa
 - Sau mỗi kỳ đã xem, cập nhật cả `data/financials-<TICKER>.json` và `reports/processing-checkpoint.json` cùng commit hoặc hai commit tuần tự; checkpoint phải chỉ ra kỳ nào đã verified visually, kỳ nào chỉ sidecar audited và các kỳ còn pending.
 - Khi mở phiên/mã mới, đọc phiên bản mới nhất của tài liệu này và `normalizationProgress.standardVersion`; quy tắc trong tài liệu có hiệu lực cho mã kế tiếp, không chỉ riêng mã ví dụ.
+
+## Bổ sung phiên bản 3.1 — chuẩn hóa Q3/Q4 cho CTCK và bảo toàn bằng chứng PDF (2026-11-01)
+
+### Quy tắc kế thừa thêm từ VCI Q3/Q4
+- Ở mẫu CTCK, B02 tổng doanh thu hoạt động là dòng 20. Doanh thu này phải được tái cộng từ FVTPL, HTM, cho vay/phải thu, AFS, môi giới, bảo lãnh, tư vấn, lưu ký, tư vấn tài chính và thu nhập hoạt động khác. Không nhầm dòng 20 với doanh thu tài chính dòng 50 hoặc một cấu phần đơn lẻ.
+- B02 phải đối chiếu riêng: tổng chi phí hoạt động dòng 40; tổng doanh thu tài chính dòng 50; tổng chi phí tài chính dòng 60; lợi nhuận hoạt động dòng 70; kết quả khác dòng 80; LNTT dòng 90; thuế dòng 100 (thuế hiện hành + hoãn lại); LNST dòng 200. Tất cả phải dùng cùng cột phát sinh riêng quý và cùng đơn vị VND.
+- Một trường hợp OCR có thể nhận sai giá trị thành số có vẻ hợp lệ: VCI Q4/2024 sidecar đọc sai doanh thu AFS dòng 04 và thu nhập hoạt động khác dòng 11. Ảnh PDF gốc xác nhận đúng AFS income `88,924,760,112` VND và other operating income `351,179,091` VND; sau sửa, tổng các cấu phần bằng dòng 20 `998,995,850,627` VND. Khi cấu phần không cộng về tổng nguồn, bắt buộc xem ảnh gốc, không lấy số OCR chỉ vì nó có định dạng số hợp lệ.
+- B03 CTCK: số lũy kế Q3/Q4/Y cuối năm chỉ dùng làm cơ sở; số phát sinh riêng quý sau Q1 = YTD hiện tại trừ YTD quý liền trước trong cùng năm. Đồng thời kiểm tra Q4 cash opening = Q3 cash closing. Không dùng số tiền đầu năm YTD làm số tiền đầu Q4.
+- Một báo cáo CTCK có thể có trang phụ sau B03 về lưu chuyển tiền môi giới/ủy thác của khách hàng. Chỉ dòng lưu chuyển tiền doanh nghiệp ở B03 được đưa vào CFO/CFI/CFF/net cash/cash beginning/cash ending của công ty. Dòng tiền khách hàng phải được loại hoàn toàn, không cộng và không dùng thay cho số dư tiền doanh nghiệp.
+- Không tự thêm `foreign_exchange_effect` khi B03 không trình bày dòng ảnh hưởng tỷ giá hoặc in dấu gạch ngang. Ghi theo đúng cấu trúc nguồn; dấu gạch ngang là 0 nếu trường có mặt trong bảng, mục không được trình bày là null.
+- Để kiểm tra phạm vi báo cáo riêng lẻ/hợp nhất, không dừng ở trang bìa. Đọc phần Cấu trúc Công ty trong thuyết minh. Với Q3 và Q4/2024 VCI, PDF page 18/19 (trang in 17) ghi công ty không có công ty con; B01/B02/B03 là báo cáo của chính CTCP Chứng khoán Vietcap. Đây là căn cứ để ghi scope separate cho từng kỳ, không suy diễn cho toàn bộ các năm sau.
+- Khi sidecar OCR thiếu trang do PDF có nhiều trang hơn, dùng workflow `.github/workflows/render-vietstock-source-pages.yml` để render từ đúng PDF lưu trữ. VCI Q4 PDF có 48 trang trong khi sidecar text chỉ có 18 trang; vì vậy đã render toàn bộ PDF để không bỏ sót thuyết minh trang 19. Ghi run/artifact/SHA-256 và số trang thực sự đã xem vào metadata.
+
+### Hồ sơ đã đóng kỳ: VCI Q3/2024
+- Nguồn: VietstockFinance document ID `481873`, PDF `reports/raw/VCI/auto-vci-20261021/8357dc73d66e476d.pdf`; catalog `https://finance.vietstock.vn/VCI/tai-tai-lieu.htm?doctype=1`.
+- Phạm vi separate xác nhận từ PDF page 18 (trang in 17): công ty không có công ty con. Bằng chứng ảnh workflow run `41293598061`, artifact `13078006783`, SHA-256 `6ab29d43ba017a5f30e04b7657cf2da2b231e92b69198839cfc7cc65a33c58c9`, DPI 160; các trang PDF 4–6, 9–13, 18 được xem.
+- B01 VND gốc: tổng tài sản `20,415,163,097,637`; nợ `11,773,110,802,191`; vốn chủ `8,642,052,295,446`. B02 cột Q3: doanh thu hoạt động `974,360,554,621`; LNTT `264,695,399,242`; thuế `49,343,174,067`; LNST `215,352,225,175`. Các cầu nối B01/B02 bằng 0 VND.
+- B03 YTD: CFO `167,000,050,873`; CFI `-19,756,742,053`; CFF `1,608,375,419,700`; net cash `1,755,618,728,520`; tiền đầu năm `787,897,819,240`; tiền cuối kỳ `2,543,516,547,760`. Dòng riêng Q3 (YTD Q3 trừ YTD Q2): CFO `498,190,090,331`; CFI `-1,686,452,628`; CFF `-1,856,144,849,600`; net cash `-1,359,641,211,897`; tiền đầu quý `3,903,157,759,657`; tiền cuối quý `2,543,516,547,760`. Mọi cầu nối raw VND bằng 0.
+- ROA `3.96%`, ROE `9.84%` tính từ PAT Q3 chia bình quân số dư Q2/Q3, nhân 4. Snapshot: `manually_verified_source_reconciled`.
+
+### Hồ sơ đã đóng kỳ: VCI Q4/2024
+- Nguồn: VietstockFinance document ID `488746`, PDF `reports/raw/VCI/auto-vci-20261021/3a56dc2a26b140c3.pdf`; URL `https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%204/VCI_Baocaotaichinh_Q4_2024.pdf`; catalog `https://finance.vietstock.vn/VCI/tai-tai-lieu.htm?doctype=1`.
+- Phạm vi separate xác nhận bằng PDF page 19 (trang in 17), phần Cấu trúc Công ty: công ty không có công ty con. PDF có 48 trang, sidecar OCR chỉ có 18 trang; workflow run `41303808157` artifact `13083050098`, SHA-256 `7f16c824b5683557fc31236de9d3602159b22529a21fe6da937a53d37665059e`, DPI 160 đã render toàn bộ 48 trang. Đã xem PDF pages 5–15 và 19.
+- B01 VND gốc: tài sản `26,592,124,479,240`; nợ `13,647,819,031,379`; vốn chủ `12,944,305,447,861`; tài sản ngắn hạn `26,491,835,561,026`; dài hạn `100,288,918,214`; nợ ngắn hạn `13,038,470,981,365`; nợ dài hạn `609,348,050,014`. Các tổng phụ và phương trình tài sản = nợ + vốn bằng 0 VND.
+- B02 cột phát sinh riêng Q4: doanh thu hoạt động `998,995,850,627`; chi phí hoạt động `519,893,652,425`; doanh thu tài chính `24,410,969,107`; chi phí tài chính `217,734,357,891`; chi phí quản lý `32,464,887,891`; lợi nhuận hoạt động `253,313,921,527`; lợi nhuận khác `21,194,452`; LNTT `253,335,115,979`; thuế hiện hành `35,884,665,831`; thuế hoãn lại `-926,295,680`; tổng thuế `34,958,370,151`; LNST `218,376,745,828`. Cấu phần doanh thu/chi phí và mọi cầu nối raw VND đều bằng 0 residual.
+- B03 FY2024 YTD: CFO `-3,384,049,093,628`; CFI `-31,302,212,567`; CFF `7,371,225,419,700`; net cash `3,955,874,113,505`; tiền đầu năm `787,897,819,240`; tiền cuối năm `4,743,771,932,745`. Dòng riêng Q4 (FY2024 YTD trừ Q3 YTD): CFO `-3,551,049,144,501`; CFI `-11,545,470,514`; CFF `5,762,850,000,000`; net cash `2,200,255,384,985`; tiền đầu Q4 `2,543,516,547,760` (Q3 close); tiền cuối Q4 `4,743,771,932,745`. Tổng ba luồng, YTD bridge, quarter bridge đều chênh 0 VND.
+- Trang PDF 15–16 là phần lưu chuyển tiền môi giới/ủy thác khách hàng, không được nhập vào CFO/CFI/CFF của doanh nghiệp. B03 không trình bày FX cash-flow riêng; không tạo trường FX.
+- ROA `3.72%`, ROE `8.09%` tính từ PAT Q4 chia bình quân số dư Q3/Q4, nhân 4. Snapshot: `manually_verified_source_reconciled`; raw VND, các kiểm tra, correction history, render artifact được lưu trong `data/financials-VCI.json`.
+
+### Mốc kiểm thử
+- Q3/2024: Validate quarterly financial data run `41294219526`, Validate Site and Data run `41294219537`, Package Hostinger Stock Dashboard run `41294219518` đều SUCCESS.
+- Q4/2024 data commit `25971b5895c40e6da41aba7e77acaa29a84e06db`: Validate quarterly financial data run `41304144990`, Validate Site and Data run `41304144935`, Package Hostinger Stock Dashboard run `41304144950` đều SUCCESS.
+- Mỗi kỳ sau khi xác minh phải được cập nhật snapshot, quy trình và checkpoint ngay trước khi chuyển sang kỳ tiếp theo. Không đánh dấu hoàn tất toàn mã VCI khi còn các kỳ 2025-Q1 đến 2026-Q3 chưa rà soát.
