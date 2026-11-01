@@ -1,0 +1,86 @@
+name: Refresh SHS quarterly BCTC from VietstockFinance
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "reports/shs-catalog-refresh.trigger.json"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: so-lieu-shs-catalog-refresh
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout SHS snapshot and Vietstock sync code
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /config/securities.json
+            /data/financials-SHS.json
+            /scripts/sync-vietstock-financials.py
+            /scripts/validate-financials.mjs
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install document extraction dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils tesseract-ocr tesseract-ocr-vie
+          python -m pip install --upgrade requests pypdf pdf2image pytesseract Pillow
+
+      - name: Query only the SHS VietstockFinance document catalog and append the next available quarter
+        env:
+          PYTHONUTF8: "1"
+          FINANCIAL_SYNC_SYMBOL: SHS
+          FINANCIAL_SYNC_BOOTSTRAP_ONLY: "1"
+          FINANCIAL_SYNC_FORCE_RETRY: "1"
+        run: python scripts/sync-vietstock-financials.py
+
+      - name: Validate the SHS snapshot
+        run: |
+          node scripts/validate-financials.mjs
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path("data/financials-SHS.json").read_text(encoding="utf-8"))
+          items = sorted(data.get("items") or [], key=lambda x: x.get("period", ""))
+          print(json.dumps({
+              "symbol": "SHS",
+              "period_count": len(items),
+              "first_period": items[0].get("period") if items else None,
+              "last_period": items[-1].get("period") if items else None,
+              "periods": [x.get("period") for x in items],
+              "latest_source_url": items[-1].get("source_url") if items else None,
+              "latest_verification_status": items[-1].get("verification_status") if items else None,
+              "latest_scope": (items[-1].get("source_validation") or {}).get("observed_scope") if items else None,
+          }, ensure_ascii=False, indent=2))
+          PY
+
+      - name: Commit only the SHS snapshot when changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/financials-SHS.json
+          if git diff --cached --quiet; then
+            echo "No new eligible SHS report or no safe extraction; stored SHS data remains unchanged."
+            exit 0
+          fi
+          git commit -m "Sync latest SHS quarterly BCTC from VietstockFinance"
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
