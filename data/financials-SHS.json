@@ -7874,7 +7874,7 @@
       "roe_formula": "Lợi nhuận sau thuế quý / bình quân vốn chủ sở hữu đầu và cuối quý × 4 × 100",
       "average_total_assets": 18801002,
       "average_equity": 11611133.5,
-      "verification_status": "verified_ocr_reconciled",
+      "verification_status": "manually_verified_source_reconciled",
       "reconciliation": {
         "assets_minus_liabilities_equity_vnd": 0,
         "assets_minus_liabilities_equity": 0,
@@ -7915,7 +7915,7 @@
         "note": "LNTT/LNST riêng Q3 và lũy kế 9 tháng đối chiếu theo PDF/ZIP VietstockFinance; Q3 = lũy kế 9 tháng trừ lũy kế H1."
       },
       "source_extract_review": {
-        "checked_at": "2026-10-20",
+        "checked_at": "2026-11-01",
         "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
         "source_report_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2025.zip",
         "extracted_sidecar": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/83437c9fa49105ec.zip.extracted.json",
@@ -7930,7 +7930,12 @@
           "stored_roa_matches": true,
           "stored_roe_matches": true
         },
-        "note": "LNTT/LNST riêng Q3 và lũy kế 9 tháng đối chiếu theo PDF/ZIP VietstockFinance; Q3 = lũy kế 9 tháng trừ lũy kế H1."
+        "note": "B03b Q3/2025 PDF pages 13-14 visually checked: 9M current-year cumulative values, opening cash, closing cash; use restated H1 comparative from Q2/2026 for Q3 standalone derivation.",
+        "manually_visual_reviewed": true,
+        "manually_verified_pages": [
+          13,
+          14
+        ]
       },
       "source_validation": {
         "reviewed_at": "2026-10-20",
@@ -8002,7 +8007,9 @@
             "BCTC soát xét bán niên 2025 và BCTC kiểm toán 2025 đều nêu báo cáo của Công ty"
           ],
           "rationale": "B01-CTCK Q3/2025 lập cho chính Công ty Cổ phần Chứng khoán Sài Gòn - Hà Nội; số liệu tình hình tài chính và B02/B03b trình bày theo pháp nhân Công ty. BCTC soát xét bán niên và BCTC kiểm toán năm 2025 cùng trên danh mục VietstockFinance là báo cáo của Công ty, không phải báo cáo hợp nhất."
-        }
+        },
+        "cashflow_manual_review_completed_at": "2026-11-01",
+        "cashflow_quarter_method": "Q3 quarter calculation uses the restated H1 comparative presented in later Q2/2026, while the Q2 dataset retains its original-period source values."
       },
       "current_assets": 20194396,
       "cash_and_equivalents": 664843,
@@ -8095,7 +8102,7 @@
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/83437c9fa49105ec.zip",
       "financial_line_items_updated_at": "2026-10-27T09:26:11+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã rà soát trực quan B02 gốc: khôi phục tổng doanh thu hoạt động dòng 20 = 815,909 triệu VND; thuế hiện hành 129,285, thuế hoãn lại -16,676 triệu VND. Không dùng dòng doanh thu thành phần thay tổng doanh thu.",
-      "operating_cash_flow": -1798914,
+      "operating_cash_flow": -1798915,
       "operating_cash_flow_calculation": "current YTD minus prior same-year YTD; source line 60",
       "financial_line_items_prior_values": {
         "operating_cash_flow_ytd": 1379080,
@@ -8163,7 +8170,7 @@
       "foreign_exchange_effect_ytd": 0,
       "investing_cash_flow": -2108,
       "investing_cash_flow_calculation": "current YTD minus prior same-year YTD; source line 70",
-      "financing_cash_flow": 1674869,
+      "financing_cash_flow": 1674870,
       "financing_cash_flow_calculation": "current YTD minus prior same-year YTD; source line 80",
       "foreign_exchange_effect": 0,
       "foreign_exchange_effect_calculation": "reported as standalone quarter",
@@ -8416,7 +8423,7 @@
         "explicit_fx_line": "Source statement contains the exchange-rate effect line and prints a dash; normalized as zero, not inferred from the bridge."
       },
       "cashflow_source_reconciliation": {
-        "status": "ACCEPTED_WITHIN_RELATIVE_TOLERANCE_0_01_PERCENT",
+        "status": "SOURCE_VISUALLY_VERIFIED_Q3_QUARTER_DERIVED_FROM_RESTATED_H1_COMPARATOR",
         "units": "triệu VND",
         "source_unit": "VND",
         "report_period": "2025-Q3",
@@ -8429,7 +8436,7 @@
           14
         ],
         "selected_basis": "current 9M/2025 B03b-CTCK report",
-        "source_visual_review": "ocr_text_reconciled_visual_review_pending",
+        "source_visual_review": "direct_original_q3_2025_pdf_pages_13_14_verified",
         "statement_mapping": {
           "operating_cash_flow": "line 60",
           "investing_cash_flow": "line 70",
@@ -8444,8 +8451,8 @@
         "ytd_flow_components_sum_to_net_cash_change": true,
         "ytd_flow_components_residual_million_vnd": 0,
         "ytd_flow_components_relative_difference_percent": 0,
-        "ytd_cash_bridge_residual_million_vnd": 1,
-        "ytd_cash_bridge_relative_difference_percent": 0.00015041145052290542,
+        "ytd_cash_bridge_residual_million_vnd": 0,
+        "ytd_cash_bridge_relative_difference_percent": 0,
         "quarter_flow_components_sum_to_net_cash_change": true,
         "quarter_flow_components_residual_million_vnd": 0,
         "quarter_flow_components_relative_difference_percent": 0,
@@ -8454,8 +8461,47 @@
         "relative_tolerance_percent": 0.01,
         "selected_values_not_adjusted_for_tolerance": true,
         "source_candidates_pending_manual_review": [],
-        "source_reclassification_review": null,
-        "note": null
+        "source_reclassification_review": {
+          "status": "explained_comparative_reclassification",
+          "amount_vnd": 43270000,
+          "from": "operating cash flow",
+          "to": "investing cash flow",
+          "source_q2_2026_comparative_pdf_pages": [
+            12,
+            13
+          ],
+          "source_q3_2025_pdf_pages": [
+            13,
+            14
+          ],
+          "note": "The 9M Q3/2025 report and the later Q2/2026 H1/2025 comparative use the revised H1 presentation. The stored Q2/2025 record remains sourced to its original contemporaneous report; for the Q3 2025 quarter calculation, use the restated H1 comparative to avoid a 43.27m basis mismatch."
+        },
+        "note": "Đã kiểm tra trực tiếp PDF Q3/2025 trang 13-14. Q3 riêng được tính theo 9 tháng hiện hành trừ cột H1/2025 so sánh đã được phân loại lại trong BCTC Q2/2026. Không trộn H1 gốc Q2/2025 với 9M trình bày lại; cầu nối Q3 và số dư cuối kỳ khớp chính xác.",
+        "quarter_source_method": "Standalone Q3 2025 = 9M/2025 current-year B03b cumulative minus the restated H1/2025 comparative in the later Q2/2026 B03b report. The later comparative incorporates the confirmed CFO/CFI 43.27m VND reclassification; subtracting the original Q2/2025 snapshot would mix two different presentation bases.",
+        "source_ytd_values_vnd": {
+          "operating_cash_flow": -4379501085470,
+          "investing_cash_flow": -7253907009,
+          "financing_cash_flow": 4370838316740,
+          "net_cash_change": -15916675739,
+          "opening_cash": 680759314148,
+          "ending_cash": 664842638409
+        },
+        "prior_h1_comparative_values_vnd": {
+          "cfo": -2580586562649,
+          "cfi": -5145669270,
+          "cff": 2695968712690,
+          "net": 110236480771,
+          "opening": 680759314148,
+          "closing": 790995794919
+        },
+        "standalone_quarter_values_vnd": {
+          "cfo": -1798914522821,
+          "cfi": -2108237739,
+          "cff": 1674869604050,
+          "net": -126153156510,
+          "opening": 790995794919,
+          "closing": 664842638409
+        }
       },
       "revenue_source_reconciliation_20261101": {
         "status": "source_visually_verified",
@@ -8541,7 +8587,8 @@
         "broker_underwriting_revenue",
         "broker_advisory_revenue",
         "broker_custody_revenue",
-        "selling_expense"
+        "selling_expense",
+        "cashflow_source_reconciliation"
       ],
       "eps_source_reconciliation": {
         "status": "source_visually_verified",
