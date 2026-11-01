@@ -1255,6 +1255,79 @@ class SHSCashFlowNormalizationTests(unittest.TestCase):
         self.assertEqual(self.all_rows["2026-Q1"]["broker_financial_expense"], 165608)
         self.assertEqual(self.all_rows["2026-Q1"]["broker_interest_expense"], 165122)
 
+    def test_shs_all_b02_ctck_component_rows_are_source_verified_for_eleven_periods(self):
+        snapshot = json.loads(
+            (ROOT / "data" / "financials-SHS.json").read_text(encoding="utf-8")
+        )
+        expected = {
+            "broker_fvtpl_gain": "01",
+            "broker_held_to_maturity_income": "02",
+            "broker_lending_income": "03",
+            "broker_afs_income": "04",
+            "broker_brokerage_revenue": "06",
+            "broker_underwriting_revenue": "07",
+            "broker_advisory_revenue": "08",
+            "broker_custody_revenue": "09",
+            "broker_financial_advisory_revenue": "10",
+            "broker_other_operating_income": "11",
+            "broker_total_operating_revenue": "20",
+            "broker_fvtpl_loss": "21",
+            "broker_lending_cost": "24",
+            "broker_trading_expense": "26",
+            "broker_brokerage_expense": "27",
+            "broker_underwriting_expense": "28",
+            "broker_securities_advisory_expense": "29",
+            "broker_custody_expense": "30",
+            "broker_advisory_expense": "31",
+            "broker_other_operating_expense": "32",
+            "broker_total_operating_expenses": "40",
+            "broker_deposit_interest_income": "42",
+            "broker_financial_income": "50",
+            "broker_interest_expense": "52",
+            "broker_other_financial_expense": "55",
+            "broker_financial_expense": "60",
+            "broker_selling_expenses": "61",
+            "broker_admin_expenses": "62",
+            "broker_net_operating_profit": "70",
+            "other_income": "71",
+            "other_expense": "72",
+            "other_profit": "80",
+        }
+        self.assertEqual(len(snapshot["items"]), 11)
+        for item in snapshot["items"]:
+            with self.subTest(period=item["period"]):
+                evidence = item["broker_statement_component_reconciliation"]
+                self.assertEqual(evidence["status"], "source_visually_verified")
+                self.assertEqual(evidence["source_index_url"],
+                                 "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1")
+                self.assertEqual(evidence["source_url"],
+                                 item["b02_detail_source_reconciliation"]["source_url"])
+                for field, source_row in expected.items():
+                    self.assertIsInstance(item.get(field), (int, float))
+                    detail = evidence["components"][field]
+                    self.assertEqual(detail["source_row"], source_row)
+                    self.assertEqual(detail["verification"], "source_visually_verified")
+                    self.assertEqual(detail["selected_column"], "Quý hiện tại")
+                    self.assertEqual(detail["normalized_value_million_vnd"], item[field])
+                    self.assertGreater(detail["source_value_vnd"], -10**15)
+                    self.assertLess(detail["source_pdf_page"], 19)
+                    self.assertIn(field, item["financial_line_items_extracted_fields"])
+                    self.assertIn(field, item["financial_line_items_manually_verified_fields"])
+                    self.assertNotIn(field, item.get("financial_line_items_rejected_fields", []))
+
+        # Regressions found while reviewing original B02 CTCK PDFs.
+        self.assertEqual(self.all_rows["2024-Q2"]["broker_brokerage_revenue"], 67272)
+        self.assertEqual(self.all_rows["2025-Q4"]["broker_lending_income"], 242085)
+        self.assertEqual(self.all_rows["2025-Q3"]["broker_financial_expense"], 72324)
+        self.assertEqual(self.all_rows["2025-Q3"]["broker_interest_expense"], 71723)
+        self.assertEqual(self.all_rows["2026-Q1"]["broker_financial_expense"], 165608)
+        self.assertEqual(self.all_rows["2026-Q1"]["broker_interest_expense"], 165122)
+        self.assertEqual(self.all_rows["2026-Q3"]["broker_fvtpl_loss"], 247326)
+        self.assertEqual(self.all_rows["2026-Q3"]["broker_other_operating_income"], 7014)
+        self.assertEqual(self.all_rows["2026-Q2"]["broker_fvtpl_gain"], -32337)
+        self.assertEqual(self.all_rows["2025-Q3"]["broker_other_operating_expense"], -928)
+        self.assertEqual(self.all_rows["2026-Q2"]["broker_other_operating_expense"], -39676)
+
     def test_shs_revenue_row20_and_tax_components_match_original_b02_for_all_ten_periods(self):
         expected = {
             "2024-Q1": (564565, 46789, 40783, 87572),
