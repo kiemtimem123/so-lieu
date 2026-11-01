@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-01T07:20:00Z",
+  "updatedAt": "2026-11-01T07:23:09.509Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -40,69 +40,61 @@
     "GAS"
   ],
   "lastCompletedSymbol": "SHS",
-  "activeSymbol": null,
+  "activeSymbol": "VCI",
   "resumeSymbolHint": "VCI",
   "resumeRule": "SHS has completed source-level review for all 11 periods from 2024-Q1 to 2026-Q3. Reuse its saved snapshot and audit; do not re-read or reprocess SHS unless a new contradictory source or explicit user request appears. Continue the user-confirmed queue at VCI, then VCK, VIX, VDS, GAS, PLX, GEG, IDC. Process one ticker at a time and commit each completion immediately.",
   "lastProgress": {
-    "symbol": "SHS",
-    "status": "completed_source_review_and_validation",
-    "completeForAutomation": true,
-    "manualReviewRemaining": false,
-    "processedAt": "2026-11-01T07:20:00Z",
+    "symbol": "VCI",
+    "status": "in_progress_source_scope_review",
+    "completeForAutomation": false,
+    "manualReviewRemaining": true,
+    "processedAt": "2026-11-01T07:23:09.509Z",
     "changedPaths": [
-      "data/financials-SHS.json",
-      "tests/test_cashflow_bridge.py",
-      "reports/processing-checkpoint.json"
+      "data/financials-VCI.json",
+      "reports/processing-checkpoint.json",
+      "config/securities.json",
+      ".github/workflows/ocr-financial-reports.yml"
     ],
-    "dataCommit": "8e2c5e3e519768957fdfc688c671a602c470bee6",
-    "testCommit": "ada1354780feb94fa09c67d0b7f4424a597a5e89",
     "periodCount": 11,
     "firstQuarter": "2024-Q1",
     "lastQuarter": "2026-Q3",
-    "pendingCorePeriods": [],
-    "pendingDetailPeriods": [],
-    "staleDetailSchemaPeriods": [],
-    "terminalManualReviewPeriods": [],
-    "statementPagesPending": false,
-    "sourceArchivesChecked": 11,
-    "allSourcePresentB01B02B03bFieldsReviewed": true,
-    "sourceRejectedFieldsRemaining": 0,
-    "sourceComponentAuditsVerified": 11,
-    "revenueAndTaxAuditsVerified": 11,
-    "confirmedScopes": {
-      "separate": [
-        "2024-Q1",
-        "2024-Q2",
-        "2024-Q3",
-        "2024-Q4",
-        "2025-Q1",
-        "2025-Q2",
-        "2025-Q3",
-        "2026-Q1",
-        "2026-Q2"
-      ],
-      "parentCompany": [
-        "2025-Q4"
-      ],
-      "separateCompanyBasisConfirmed": [
-        "2026-Q3"
-      ]
-    },
-    "cashflowResolvedExceptions": [
-      "2024-Q4: original-period B03b remains primary; later FY2024 comparator CFO/CFI/CFF reclassification is documented, net cash and cash balances unchanged.",
-      "2025-Q2/Q3: 43.27m VND CFO/CFI reclassification in later H1 comparator explained; Q2 uses contemporaneous H1 source; Q3 standalone is calculated from 9M current values less the restated H1 comparative. Raw VND differences are computed before rounding."
+    "pendingCorePeriods": [
+      "2024-Q1",
+      "2024-Q2",
+      "2024-Q3",
+      "2024-Q4",
+      "2025-Q1",
+      "2025-Q2",
+      "2025-Q3",
+      "2025-Q4",
+      "2026-Q1",
+      "2026-Q2",
+      "2026-Q3"
     ],
-    "toleranceRule": "Accept relative discrepancies <=0.01%; never add balancing plugs.",
-    "omittedTemplateRows": "Rows absent from the CTCK B01/B02 templates (e.g. inventory where not reported) remain null; only explicit dash values are normalized to zero.",
-    "validationRuns": {
-      "quarterlyFinancialData": "https://github.com/kiemtimem123/so-lieu/actions/runs/41280237559",
-      "siteAndData": "https://github.com/kiemtimem123/so-lieu/actions/runs/41280237653",
-      "hostingerPackage": "https://github.com/kiemtimem123/so-lieu/actions/runs/41280237567",
-      "fullSourceReview": "https://github.com/kiemtimem123/so-lieu/commit/756327d389c3d76e1015691298b4020d8896bf3e",
-      "finalDataCommit": "https://github.com/kiemtimem123/so-lieu/commit/8e2c5e3e519768957fdfc688c671a602c470bee6"
-    },
+    "pendingDetailPeriods": [
+      "2024-Q1",
+      "2024-Q2",
+      "2024-Q3",
+      "2024-Q4",
+      "2025-Q1",
+      "2025-Q2",
+      "2025-Q3",
+      "2025-Q4",
+      "2026-Q1",
+      "2026-Q2",
+      "2026-Q3"
+    ],
+    "terminalManualReviewPeriods": [],
+    "statementPagesPending": true,
+    "sourceArchivesAvailable": 11,
+    "sourceArchivesChecked": 11,
+    "sourceTextSidecarsInspected": 7,
+    "laterArchiveMemberListsInspected": 4,
+    "sourceScopeReviewComplete": false,
+    "numericFieldsWritten": 0,
+    "note": "VCI reopened from its saved VietstockFinance archives. SHS remains completed and is not to be reloaded, OCR'd, or reprocessed.",
     "nextSymbol": "VCI",
-    "nextTask": "start_VCI_only"
+    "nextTask": "complete_VCI_only"
   },
   "symbolStates": {
     "MBB": {
@@ -1181,14 +1173,13 @@
       "snapshotFetchedAt": "2026-10-23T04:27:50+00:00"
     },
     "VCI": {
-      "status": "terminal_needs_manual_review",
-      "completeForAutomation": true,
+      "status": "in_progress_source_scope_review",
+      "completeForAutomation": false,
       "manualReviewRemaining": true,
       "periodCount": 11,
       "firstQuarter": "2024-Q1",
       "lastQuarter": "2026-Q3",
-      "pendingCorePeriods": [],
-      "terminalManualReviewPeriods": [
+      "pendingCorePeriods": [
         "2024-Q1",
         "2024-Q2",
         "2024-Q3",
@@ -1201,15 +1192,57 @@
         "2026-Q2",
         "2026-Q3"
       ],
-      "pendingDetailPeriods": [],
+      "terminalManualReviewPeriods": [],
+      "pendingDetailPeriods": [
+        "2024-Q1",
+        "2024-Q2",
+        "2024-Q3",
+        "2024-Q4",
+        "2025-Q1",
+        "2025-Q2",
+        "2025-Q3",
+        "2025-Q4",
+        "2026-Q1",
+        "2026-Q2",
+        "2026-Q3"
+      ],
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": true,
-      "skipUnconfirmedAutomation": true,
-      "skipUnconfirmedReason": "User-directed skip of unconfirmed historical values. Q2/2024 has an explicit VietstockFinance consolidation-scope blocker; values stay blank. Resume automatic processing when a quarter later than 2026-Q3 is present.",
-      "sourceArchivesChecked": 1,
-      "updatedAt": "2026-10-25T21:09:06Z",
-      "snapshotFetchedAt": "2026-10-23T07:18:58+00:00",
-      "skipUnconfirmedThroughPeriod": "2026-Q3"
+      "skipUnconfirmedAutomation": false,
+      "sourceArchivesChecked": 11,
+      "updatedAt": "2026-11-01T07:23:09.509Z",
+      "snapshotFetchedAt": "2026-11-01",
+      "sourceArchivesAvailable": 11,
+      "sourceScopeReview": {
+        "status": "in_progress",
+        "sourcePolicy": "VietstockFinance doctype=1 catalogue and only its linked PDFs/ZIPs",
+        "existingArchivesReused": true,
+        "periodCount": 11,
+        "sourceTextSidecarsInspected": 7,
+        "laterArchiveMemberListsInspected": 4,
+        "pendingPageOCR": [
+          "2025-Q4",
+          "2026-Q1",
+          "2026-Q2",
+          "2026-Q3"
+        ],
+        "pendingScopePeriods": [
+          "2024-Q1",
+          "2024-Q2",
+          "2024-Q3",
+          "2024-Q4",
+          "2025-Q1",
+          "2025-Q2",
+          "2025-Q3",
+          "2025-Q4",
+          "2026-Q1",
+          "2026-Q2",
+          "2026-Q3"
+        ],
+        "numericFieldsWritten": 0,
+        "shsReprocessed": false,
+        "note": "Prior terminal skip is reopened by explicit user instruction. Keep all source values blank until report scope is confirmed."
+      }
     },
     "VCK": {
       "status": "terminal_needs_manual_review",
