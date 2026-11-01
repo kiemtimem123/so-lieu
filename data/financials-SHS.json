@@ -199,7 +199,13 @@
         "interest_expense",
         "admin_expense",
         "operating_profit",
-        "broker_admin_expenses"
+        "broker_admin_expenses",
+        "broker_total_operating_revenue",
+        "broker_total_operating_expenses",
+        "broker_financial_income",
+        "broker_financial_expense",
+        "broker_interest_expense",
+        "broker_net_operating_profit"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/6f6b826b3132547a.zip",
@@ -308,6 +314,36 @@
           "old_value": null,
           "new_value": 443737,
           "reason": "Đối chiếu trực quan B02-CTCK dòng 70, PDF trang 8, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "broker_total_operating_revenue": {
+          "old_value": null,
+          "new_value": 564565,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Cộng doanh thu hoạt động (mã dòng 20) trên B02-CTCK, trang PDF 8. Giá trị lấy đúng trường nguồn revenue; đơn vị triệu VND."
+        },
+        "broker_total_operating_expenses": {
+          "old_value": null,
+          "new_value": 74121,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Cộng chi phí hoạt động (mã dòng 40) trên B02-CTCK, trang PDF 8. Giá trị lấy đúng trường nguồn broker_operating_expenses; đơn vị triệu VND."
+        },
+        "broker_financial_income": {
+          "old_value": null,
+          "new_value": 594,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Cộng doanh thu hoạt động tài chính (mã dòng 50) trên B02-CTCK, trang PDF 8. Giá trị lấy đúng trường nguồn financial_income; đơn vị triệu VND."
+        },
+        "broker_financial_expense": {
+          "old_value": null,
+          "new_value": 11478,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Cộng chi phí tài chính (mã dòng 60) trên B02-CTCK, trang PDF 8. Giá trị lấy đúng trường nguồn financial_expense; đơn vị triệu VND."
+        },
+        "broker_interest_expense": {
+          "old_value": null,
+          "new_value": 11478,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Chi phí lãi vay (mã dòng 52) trên B02-CTCK, trang PDF 8. Giá trị lấy đúng trường nguồn interest_expense; đơn vị triệu VND."
+        },
+        "broker_net_operating_profit": {
+          "old_value": null,
+          "new_value": 443737,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Kết quả hoạt động (mã dòng 70) trên B02-CTCK, trang PDF 8. Giá trị lấy đúng trường nguồn operating_profit; đơn vị triệu VND."
         }
       },
       "broker_long_term_bonds": 0,
@@ -575,7 +611,13 @@
         "interest_expense",
         "admin_expense",
         "operating_profit",
-        "broker_admin_expenses"
+        "broker_admin_expenses",
+        "broker_total_operating_revenue",
+        "broker_total_operating_expenses",
+        "broker_financial_income",
+        "broker_financial_expense",
+        "broker_interest_expense",
+        "broker_net_operating_profit"
       ],
       "eps_source_reconciliation": {
         "status": "source_visually_verified",
@@ -636,6 +678,93 @@
         "source_formula": "Operating profit (row 70) = operating revenue (row 20) + financial income (row 50) − operating expenses (row 40) − financial expenses (row 60) − selling expenses (row 61) − broker administration expenses (row 62).",
         "manually_visual_reviewed": true,
         "checked_at": "2026-11-01"
+      },
+      "broker_total_operating_revenue": 564565,
+      "broker_total_operating_expenses": 74121,
+      "broker_financial_income": 594,
+      "broker_financial_expense": 11478,
+      "broker_interest_expense": 11478,
+      "broker_net_operating_profit": 443737,
+      "securities_table_alias_reconciliation": {
+        "status": "source_visually_verified",
+        "source_catalog_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2024.zip",
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/6f6b826b3132547a.zip",
+        "checked_at": "2026-11-01",
+        "amount_unit": "million VND",
+        "mapping": {
+          "broker_total_operating_revenue": {
+            "base_field": "revenue",
+            "source_row": 20,
+            "source_label": "Cộng doanh thu hoạt động",
+            "source_value_vnd": null,
+            "normalized_value_million_vnd": 564565,
+            "source_pdf_page": 8,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_total_operating_expenses": {
+            "base_field": "broker_operating_expenses",
+            "source_row": 40,
+            "source_label": "Cộng chi phí hoạt động",
+            "source_value_vnd": 74120967510,
+            "normalized_value_million_vnd": 74121,
+            "source_pdf_page": 8,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_financial_income": {
+            "base_field": "financial_income",
+            "source_row": 50,
+            "source_label": "Cộng doanh thu hoạt động tài chính",
+            "source_value_vnd": 594336639,
+            "normalized_value_million_vnd": 594,
+            "source_pdf_page": 8,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_financial_expense": {
+            "base_field": "financial_expense",
+            "source_row": 60,
+            "source_label": "Cộng chi phí tài chính",
+            "source_value_vnd": 11477808575,
+            "normalized_value_million_vnd": 11478,
+            "source_pdf_page": 8,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_interest_expense": {
+            "base_field": "interest_expense",
+            "source_row": 52,
+            "source_label": "Chi phí lãi vay",
+            "source_value_vnd": 11477808575,
+            "normalized_value_million_vnd": 11478,
+            "source_pdf_page": 8,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_admin_expenses": {
+            "base_field": "admin_expense",
+            "source_row": 62,
+            "source_label": "Chi phí quản lý công ty chứng khoán",
+            "source_value_vnd": 35823013122,
+            "normalized_value_million_vnd": 35823,
+            "source_pdf_page": 8,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_net_operating_profit": {
+            "base_field": "operating_profit",
+            "source_row": 70,
+            "source_label": "Kết quả hoạt động",
+            "source_value_vnd": 443737348696,
+            "normalized_value_million_vnd": 443737,
+            "source_pdf_page": 8,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          }
+        },
+        "note": "Ánh xạ tên trường dành riêng cho bảng KQHĐ CTCK từ mã dòng B02-CTCK; không tự tính hoặc thay số nguồn. Chi phí lãi vay dòng 52 được phân biệt với tổng chi phí tài chính dòng 60."
       }
     },
     {
@@ -851,7 +980,8 @@
         "income_tax_deferred",
         "current_assets",
         "eps",
-        "operating_profit"
+        "operating_profit",
+        "broker_net_operating_profit"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/ea899ceb74febb51.zip",
@@ -929,7 +1059,7 @@
       "broker_custody_expense": 2820,
       "broker_financial_income": 672,
       "broker_financial_expense": 13457,
-      "broker_interest_expense": 0,
+      "broker_interest_expense": 13457,
       "income_tax_current": 70596,
       "income_tax_deferred": 10098,
       "verification_status_note": "Doanh thu tổng hợp được đối chiếu với dòng “Cộng doanh thu hoạt động” trên B02-CTCK; vẫn cần kiểm tra trực quan PDF.",
@@ -961,8 +1091,9 @@
         },
         "broker_interest_expense": {
           "previous_value": 13457,
-          "new_value": 0,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "new_value": 13457,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Chi phí lãi vay (mã dòng 52) trên B02-CTCK, trang PDF 7. Giá trị lấy đúng trường nguồn interest_expense; đơn vị triệu VND.",
+          "old_value": 0
         },
         "foreign_exchange_effect_ytd": {
           "previous_value": 971739,
@@ -983,6 +1114,11 @@
           "old_value": null,
           "new_value": 431731,
           "reason": "Đối chiếu trực quan B02-CTCK dòng 70, PDF trang 7, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "broker_net_operating_profit": {
+          "old_value": null,
+          "new_value": 431731,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Kết quả hoạt động (mã dòng 70) trên B02-CTCK, trang PDF 7. Giá trị lấy đúng trường nguồn operating_profit; đơn vị triệu VND."
         }
       },
       "broker_long_term_bonds": 0,
@@ -1251,7 +1387,13 @@
         "interest_expense",
         "admin_expense",
         "operating_profit",
-        "broker_admin_expenses"
+        "broker_admin_expenses",
+        "broker_total_operating_revenue",
+        "broker_total_operating_expenses",
+        "broker_financial_income",
+        "broker_financial_expense",
+        "broker_interest_expense",
+        "broker_net_operating_profit"
       ],
       "eps_source_reconciliation": {
         "status": "source_visually_verified",
@@ -1306,6 +1448,88 @@
         "source_formula": "Operating profit (row 70) = operating revenue (row 20) + financial income (row 50) − operating expenses (row 40) − financial expenses (row 60) − selling expenses (row 61) − broker administration expenses (row 62).",
         "manually_visual_reviewed": true,
         "checked_at": "2026-11-01"
+      },
+      "broker_net_operating_profit": 431731,
+      "securities_table_alias_reconciliation": {
+        "status": "source_visually_verified",
+        "source_catalog_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2024.zip",
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/ea899ceb74febb51.zip",
+        "checked_at": "2026-11-01",
+        "amount_unit": "million VND",
+        "mapping": {
+          "broker_total_operating_revenue": {
+            "base_field": "revenue",
+            "source_row": 20,
+            "source_label": "Cộng doanh thu hoạt động",
+            "source_value_vnd": null,
+            "normalized_value_million_vnd": 599421,
+            "source_pdf_page": 7,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_total_operating_expenses": {
+            "base_field": "broker_operating_expenses",
+            "source_row": 40,
+            "source_label": "Cộng chi phí hoạt động",
+            "source_value_vnd": 128185074023,
+            "normalized_value_million_vnd": 128185,
+            "source_pdf_page": 7,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_financial_income": {
+            "base_field": "financial_income",
+            "source_row": 50,
+            "source_label": "Cộng doanh thu hoạt động tài chính",
+            "source_value_vnd": 672488005,
+            "normalized_value_million_vnd": 672,
+            "source_pdf_page": 7,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_financial_expense": {
+            "base_field": "financial_expense",
+            "source_row": 60,
+            "source_label": "Cộng chi phí tài chính",
+            "source_value_vnd": 13457348548,
+            "normalized_value_million_vnd": 13457,
+            "source_pdf_page": 7,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_interest_expense": {
+            "base_field": "interest_expense",
+            "source_row": 52,
+            "source_label": "Chi phí lãi vay",
+            "source_value_vnd": 13457348548,
+            "normalized_value_million_vnd": 13457,
+            "source_pdf_page": 7,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_admin_expenses": {
+            "base_field": "admin_expense",
+            "source_row": 62,
+            "source_label": "Chi phí quản lý công ty chứng khoán",
+            "source_value_vnd": 26719362638,
+            "normalized_value_million_vnd": 26719,
+            "source_pdf_page": 7,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_net_operating_profit": {
+            "base_field": "operating_profit",
+            "source_row": 70,
+            "source_label": "Kết quả hoạt động",
+            "source_value_vnd": 431731458945,
+            "normalized_value_million_vnd": 431731,
+            "source_pdf_page": 7,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          }
+        },
+        "note": "Ánh xạ tên trường dành riêng cho bảng KQHĐ CTCK từ mã dòng B02-CTCK; không tự tính hoặc thay số nguồn. Chi phí lãi vay dòng 52 được phân biệt với tổng chi phí tài chính dòng 60."
       }
     },
     {
@@ -1508,7 +1732,13 @@
         "interest_expense",
         "admin_expense",
         "operating_profit",
-        "broker_admin_expenses"
+        "broker_admin_expenses",
+        "broker_total_operating_revenue",
+        "broker_total_operating_expenses",
+        "broker_financial_income",
+        "broker_financial_expense",
+        "broker_interest_expense",
+        "broker_net_operating_profit"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/e6d456f3b0aa85a5.zip",
@@ -1615,6 +1845,36 @@
           "old_value": null,
           "new_value": 75456,
           "reason": "Đối chiếu trực quan B02-CTCK dòng 70, PDF trang 8, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "broker_total_operating_revenue": {
+          "old_value": null,
+          "new_value": 276104,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Cộng doanh thu hoạt động (mã dòng 20) trên B02-CTCK, trang PDF 8. Giá trị lấy đúng trường nguồn revenue; đơn vị triệu VND."
+        },
+        "broker_total_operating_expenses": {
+          "old_value": null,
+          "new_value": 163223,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Cộng chi phí hoạt động (mã dòng 40) trên B02-CTCK, trang PDF 8. Giá trị lấy đúng trường nguồn broker_operating_expenses; đơn vị triệu VND."
+        },
+        "broker_financial_income": {
+          "old_value": null,
+          "new_value": 620,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Cộng doanh thu hoạt động tài chính (mã dòng 50) trên B02-CTCK, trang PDF 8. Giá trị lấy đúng trường nguồn financial_income; đơn vị triệu VND."
+        },
+        "broker_financial_expense": {
+          "old_value": null,
+          "new_value": 14620,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Cộng chi phí tài chính (mã dòng 60) trên B02-CTCK, trang PDF 8. Giá trị lấy đúng trường nguồn financial_expense; đơn vị triệu VND."
+        },
+        "broker_interest_expense": {
+          "old_value": null,
+          "new_value": 14620,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Chi phí lãi vay (mã dòng 52) trên B02-CTCK, trang PDF 8. Giá trị lấy đúng trường nguồn interest_expense; đơn vị triệu VND."
+        },
+        "broker_net_operating_profit": {
+          "old_value": null,
+          "new_value": 75456,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Kết quả hoạt động (mã dòng 70) trên B02-CTCK, trang PDF 8. Giá trị lấy đúng trường nguồn operating_profit; đơn vị triệu VND."
         }
       },
       "financing_cash_flow_ytd": 692982,
@@ -1818,7 +2078,13 @@
         "interest_expense",
         "admin_expense",
         "operating_profit",
-        "broker_admin_expenses"
+        "broker_admin_expenses",
+        "broker_total_operating_revenue",
+        "broker_total_operating_expenses",
+        "broker_financial_income",
+        "broker_financial_expense",
+        "broker_interest_expense",
+        "broker_net_operating_profit"
       ],
       "eps_source_reconciliation": {
         "status": "source_visually_verified",
@@ -1879,6 +2145,93 @@
         "source_formula": "Operating profit (row 70) = operating revenue (row 20) + financial income (row 50) − operating expenses (row 40) − financial expenses (row 60) − selling expenses (row 61) − broker administration expenses (row 62).",
         "manually_visual_reviewed": true,
         "checked_at": "2026-11-01"
+      },
+      "broker_total_operating_revenue": 276104,
+      "broker_total_operating_expenses": 163223,
+      "broker_financial_income": 620,
+      "broker_financial_expense": 14620,
+      "broker_interest_expense": 14620,
+      "broker_net_operating_profit": 75456,
+      "securities_table_alias_reconciliation": {
+        "status": "source_visually_verified",
+        "source_catalog_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2024.zip",
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/e6d456f3b0aa85a5.zip",
+        "checked_at": "2026-11-01",
+        "amount_unit": "million VND",
+        "mapping": {
+          "broker_total_operating_revenue": {
+            "base_field": "revenue",
+            "source_row": 20,
+            "source_label": "Cộng doanh thu hoạt động",
+            "source_value_vnd": null,
+            "normalized_value_million_vnd": 276104,
+            "source_pdf_page": 8,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_total_operating_expenses": {
+            "base_field": "broker_operating_expenses",
+            "source_row": 40,
+            "source_label": "Cộng chi phí hoạt động",
+            "source_value_vnd": 163223416214,
+            "normalized_value_million_vnd": 163223,
+            "source_pdf_page": 8,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_financial_income": {
+            "base_field": "financial_income",
+            "source_row": 50,
+            "source_label": "Cộng doanh thu hoạt động tài chính",
+            "source_value_vnd": 619975300,
+            "normalized_value_million_vnd": 620,
+            "source_pdf_page": 8,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_financial_expense": {
+            "base_field": "financial_expense",
+            "source_row": 60,
+            "source_label": "Cộng chi phí tài chính",
+            "source_value_vnd": 14620428696,
+            "normalized_value_million_vnd": 14620,
+            "source_pdf_page": 8,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_interest_expense": {
+            "base_field": "interest_expense",
+            "source_row": 52,
+            "source_label": "Chi phí lãi vay",
+            "source_value_vnd": 14620428696,
+            "normalized_value_million_vnd": 14620,
+            "source_pdf_page": 8,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_admin_expenses": {
+            "base_field": "admin_expense",
+            "source_row": 62,
+            "source_label": "Chi phí quản lý công ty chứng khoán",
+            "source_value_vnd": 23424150014,
+            "normalized_value_million_vnd": 23424,
+            "source_pdf_page": 8,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_net_operating_profit": {
+            "base_field": "operating_profit",
+            "source_row": 70,
+            "source_label": "Kết quả hoạt động",
+            "source_value_vnd": 75455671051,
+            "normalized_value_million_vnd": 75456,
+            "source_pdf_page": 8,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          }
+        },
+        "note": "Ánh xạ tên trường dành riêng cho bảng KQHĐ CTCK từ mã dòng B02-CTCK; không tự tính hoặc thay số nguồn. Chi phí lãi vay dòng 52 được phân biệt với tổng chi phí tài chính dòng 60."
       }
     },
     {
@@ -2130,7 +2483,8 @@
         "income_tax_deferred",
         "current_assets",
         "eps",
-        "operating_profit"
+        "operating_profit",
+        "broker_net_operating_profit"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/cc0a692f672abc5d.pdf",
@@ -2200,12 +2554,12 @@
       "financial_expense": 23633,
       "admin_expense": 45695,
       "broker_admin_expenses": 45695,
-      "broker_total_operating_expenses": 203588,
+      "broker_total_operating_expenses": 202588,
       "broker_advisory_expense": 0,
       "broker_custody_expense": 2879,
       "broker_financial_income": 1714,
       "broker_financial_expense": 23633,
-      "broker_interest_expense": 0,
+      "broker_interest_expense": 23633,
       "operating_cash_flow_ytd": -1404020,
       "investing_cash_flow_ytd": -16092,
       "financing_cash_flow_ytd": 1248982,
@@ -2248,8 +2602,9 @@
         },
         "broker_interest_expense": {
           "previous_value": 23633,
-          "new_value": 0,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "new_value": 23633,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Chi phí lãi vay (mã dòng 52) trên B02-CTCK, trang PDF 11. Giá trị lấy đúng trường nguồn interest_expense; đơn vị triệu VND.",
+          "old_value": 0
         },
         "broker_operating_expenses": {
           "old_value": 24903,
@@ -2260,6 +2615,16 @@
           "old_value": null,
           "new_value": 281015,
           "reason": "Đối chiếu trực quan B02-CTCK dòng 70, PDF trang 11, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "broker_total_operating_expenses": {
+          "old_value": 203588,
+          "new_value": 202588,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Cộng chi phí hoạt động (mã dòng 40) trên B02-CTCK, trang PDF 11. Giá trị lấy đúng trường nguồn broker_operating_expenses; đơn vị triệu VND."
+        },
+        "broker_net_operating_profit": {
+          "old_value": null,
+          "new_value": 281015,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Kết quả hoạt động (mã dòng 70) trên B02-CTCK, trang PDF 11. Giá trị lấy đúng trường nguồn operating_profit; đơn vị triệu VND."
         }
       },
       "cash_beginning_reported_ytd": 851889,
@@ -2551,7 +2916,13 @@
         "interest_expense",
         "admin_expense",
         "operating_profit",
-        "broker_admin_expenses"
+        "broker_admin_expenses",
+        "broker_total_operating_revenue",
+        "broker_total_operating_expenses",
+        "broker_financial_income",
+        "broker_financial_expense",
+        "broker_interest_expense",
+        "broker_net_operating_profit"
       ],
       "eps_source_reconciliation": {
         "status": "source_visually_verified",
@@ -2606,6 +2977,88 @@
         "source_formula": "Operating profit (row 70) = operating revenue (row 20) + financial income (row 50) − operating expenses (row 40) − financial expenses (row 60) − selling expenses (row 61) − broker administration expenses (row 62).",
         "manually_visual_reviewed": true,
         "checked_at": "2026-11-01"
+      },
+      "broker_net_operating_profit": 281015,
+      "securities_table_alias_reconciliation": {
+        "status": "source_visually_verified",
+        "source_catalog_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2024.pdf",
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/cc0a692f672abc5d.pdf",
+        "checked_at": "2026-11-01",
+        "amount_unit": "million VND",
+        "mapping": {
+          "broker_total_operating_revenue": {
+            "base_field": "revenue",
+            "source_row": 20,
+            "source_label": "Cộng doanh thu hoạt động",
+            "source_value_vnd": null,
+            "normalized_value_million_vnd": 551216,
+            "source_pdf_page": 11,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_total_operating_expenses": {
+            "base_field": "broker_operating_expenses",
+            "source_row": 40,
+            "source_label": "Cộng chi phí hoạt động",
+            "source_value_vnd": 202587918044,
+            "normalized_value_million_vnd": 202588,
+            "source_pdf_page": 11,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_financial_income": {
+            "base_field": "financial_income",
+            "source_row": 50,
+            "source_label": "Cộng doanh thu hoạt động tài chính",
+            "source_value_vnd": 1714055988,
+            "normalized_value_million_vnd": 1714,
+            "source_pdf_page": 11,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_financial_expense": {
+            "base_field": "financial_expense",
+            "source_row": 60,
+            "source_label": "Cộng chi phí tài chính",
+            "source_value_vnd": 23632715813,
+            "normalized_value_million_vnd": 23633,
+            "source_pdf_page": 11,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_interest_expense": {
+            "base_field": "interest_expense",
+            "source_row": 52,
+            "source_label": "Chi phí lãi vay",
+            "source_value_vnd": 23632715813,
+            "normalized_value_million_vnd": 23633,
+            "source_pdf_page": 11,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_admin_expenses": {
+            "base_field": "admin_expense",
+            "source_row": 62,
+            "source_label": "Chi phí quản lý công ty chứng khoán",
+            "source_value_vnd": 45694608552,
+            "normalized_value_million_vnd": 45695,
+            "source_pdf_page": 11,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_net_operating_profit": {
+            "base_field": "operating_profit",
+            "source_row": 70,
+            "source_label": "Kết quả hoạt động",
+            "source_value_vnd": 281015114879,
+            "normalized_value_million_vnd": 281015,
+            "source_pdf_page": 11,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          }
+        },
+        "note": "Ánh xạ tên trường dành riêng cho bảng KQHĐ CTCK từ mã dòng B02-CTCK; không tự tính hoặc thay số nguồn. Chi phí lãi vay dòng 52 được phân biệt với tổng chi phí tài chính dòng 60."
       }
     },
     {
@@ -2804,7 +3257,13 @@
         "interest_expense",
         "admin_expense",
         "operating_profit",
-        "broker_admin_expenses"
+        "broker_admin_expenses",
+        "broker_total_operating_revenue",
+        "broker_total_operating_expenses",
+        "broker_financial_income",
+        "broker_financial_expense",
+        "broker_interest_expense",
+        "broker_net_operating_profit"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/be10b6b2bb57c581.pdf",
@@ -2909,6 +3368,36 @@
           "old_value": null,
           "new_value": 325685,
           "reason": "Đối chiếu trực quan B02-CTCK dòng 70, PDF trang 14, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "broker_total_operating_revenue": {
+          "old_value": null,
+          "new_value": 561529,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Cộng doanh thu hoạt động (mã dòng 20) trên B02-CTCK, trang PDF 14. Giá trị lấy đúng trường nguồn revenue; đơn vị triệu VND."
+        },
+        "broker_total_operating_expenses": {
+          "old_value": null,
+          "new_value": 179674,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Cộng chi phí hoạt động (mã dòng 40) trên B02-CTCK, trang PDF 14. Giá trị lấy đúng trường nguồn broker_operating_expenses; đơn vị triệu VND."
+        },
+        "broker_financial_income": {
+          "old_value": null,
+          "new_value": 548,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Cộng doanh thu hoạt động tài chính (mã dòng 50) trên B02-CTCK, trang PDF 14. Giá trị lấy đúng trường nguồn financial_income; đơn vị triệu VND."
+        },
+        "broker_financial_expense": {
+          "old_value": null,
+          "new_value": 26572,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Cộng chi phí tài chính (mã dòng 60) trên B02-CTCK, trang PDF 14. Giá trị lấy đúng trường nguồn financial_expense; đơn vị triệu VND."
+        },
+        "broker_interest_expense": {
+          "old_value": null,
+          "new_value": 26572,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Chi phí lãi vay (mã dòng 52) trên B02-CTCK, trang PDF 14. Giá trị lấy đúng trường nguồn interest_expense; đơn vị triệu VND."
+        },
+        "broker_net_operating_profit": {
+          "old_value": null,
+          "new_value": 325685,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Kết quả hoạt động (mã dòng 70) trên B02-CTCK, trang PDF 14. Giá trị lấy đúng trường nguồn operating_profit; đơn vị triệu VND."
         }
       },
       "operating_cash_flow_ytd": -909328,
@@ -3185,7 +3674,13 @@
         "interest_expense",
         "admin_expense",
         "operating_profit",
-        "broker_admin_expenses"
+        "broker_admin_expenses",
+        "broker_total_operating_revenue",
+        "broker_total_operating_expenses",
+        "broker_financial_income",
+        "broker_financial_expense",
+        "broker_interest_expense",
+        "broker_net_operating_profit"
       ],
       "eps_source_reconciliation": {
         "status": "source_visually_verified",
@@ -3246,6 +3741,93 @@
         "source_formula": "Operating profit (row 70) = operating revenue (row 20) + financial income (row 50) − operating expenses (row 40) − financial expenses (row 60) − selling expenses (row 61) − broker administration expenses (row 62).",
         "manually_visual_reviewed": true,
         "checked_at": "2026-11-01"
+      },
+      "broker_total_operating_revenue": 561529,
+      "broker_total_operating_expenses": 179674,
+      "broker_financial_income": 548,
+      "broker_financial_expense": 26572,
+      "broker_interest_expense": 26572,
+      "broker_net_operating_profit": 325685,
+      "securities_table_alias_reconciliation": {
+        "status": "source_visually_verified",
+        "source_catalog_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2025.pdf",
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/be10b6b2bb57c581.pdf",
+        "checked_at": "2026-11-01",
+        "amount_unit": "million VND",
+        "mapping": {
+          "broker_total_operating_revenue": {
+            "base_field": "revenue",
+            "source_row": 20,
+            "source_label": "Cộng doanh thu hoạt động",
+            "source_value_vnd": null,
+            "normalized_value_million_vnd": 561529,
+            "source_pdf_page": 14,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_total_operating_expenses": {
+            "base_field": "broker_operating_expenses",
+            "source_row": 40,
+            "source_label": "Cộng chi phí hoạt động",
+            "source_value_vnd": 179674233421,
+            "normalized_value_million_vnd": 179674,
+            "source_pdf_page": 14,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_financial_income": {
+            "base_field": "financial_income",
+            "source_row": 50,
+            "source_label": "Cộng doanh thu hoạt động tài chính",
+            "source_value_vnd": 548232367,
+            "normalized_value_million_vnd": 548,
+            "source_pdf_page": 14,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_financial_expense": {
+            "base_field": "financial_expense",
+            "source_row": 60,
+            "source_label": "Cộng chi phí tài chính",
+            "source_value_vnd": 26571795542,
+            "normalized_value_million_vnd": 26572,
+            "source_pdf_page": 14,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_interest_expense": {
+            "base_field": "interest_expense",
+            "source_row": 52,
+            "source_label": "Chi phí lãi vay",
+            "source_value_vnd": 26571795542,
+            "normalized_value_million_vnd": 26572,
+            "source_pdf_page": 14,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_admin_expenses": {
+            "base_field": "admin_expense",
+            "source_row": 62,
+            "source_label": "Chi phí quản lý công ty chứng khoán",
+            "source_value_vnd": 30146076886,
+            "normalized_value_million_vnd": 30146,
+            "source_pdf_page": 14,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_net_operating_profit": {
+            "base_field": "operating_profit",
+            "source_row": 70,
+            "source_label": "Kết quả hoạt động",
+            "source_value_vnd": 325684934158,
+            "normalized_value_million_vnd": 325685,
+            "source_pdf_page": 14,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          }
+        },
+        "note": "Ánh xạ tên trường dành riêng cho bảng KQHĐ CTCK từ mã dòng B02-CTCK; không tự tính hoặc thay số nguồn. Chi phí lãi vay dòng 52 được phân biệt với tổng chi phí tài chính dòng 60."
       }
     },
     {
@@ -3503,7 +4085,8 @@
         "retained_earnings",
         "revenue",
         "eps",
-        "operating_profit"
+        "operating_profit",
+        "broker_net_operating_profit"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/12d2061881d334c4.pdf",
@@ -3601,6 +4184,11 @@
           "old_value": null,
           "new_value": 462960,
           "reason": "Đối chiếu trực quan B02-CTCK dòng 70, PDF trang 11, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "broker_net_operating_profit": {
+          "old_value": null,
+          "new_value": 462960,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Kết quả hoạt động (mã dòng 70) trên B02-CTCK, trang PDF 11. Giá trị lấy đúng trường nguồn operating_profit; đơn vị triệu VND."
         }
       },
       "income_tax_current": 38933,
@@ -3879,7 +4467,13 @@
         "interest_expense",
         "admin_expense",
         "operating_profit",
-        "broker_admin_expenses"
+        "broker_admin_expenses",
+        "broker_total_operating_revenue",
+        "broker_total_operating_expenses",
+        "broker_financial_income",
+        "broker_financial_expense",
+        "broker_interest_expense",
+        "broker_net_operating_profit"
       ],
       "eps_source_reconciliation": {
         "status": "source_visually_verified",
@@ -3934,6 +4528,88 @@
         "source_formula": "Operating profit (row 70) = operating revenue (row 20) + financial income (row 50) − operating expenses (row 40) − financial expenses (row 60) − selling expenses (row 61) − broker administration expenses (row 62).",
         "manually_visual_reviewed": true,
         "checked_at": "2026-11-01"
+      },
+      "broker_net_operating_profit": 462960,
+      "securities_table_alias_reconciliation": {
+        "status": "source_visually_verified",
+        "source_catalog_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2025.pdf",
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/12d2061881d334c4.pdf",
+        "checked_at": "2026-11-01",
+        "amount_unit": "million VND",
+        "mapping": {
+          "broker_total_operating_revenue": {
+            "base_field": "revenue",
+            "source_row": 20,
+            "source_label": "Cộng doanh thu hoạt động",
+            "source_value_vnd": null,
+            "normalized_value_million_vnd": 693913,
+            "source_pdf_page": 11,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_total_operating_expenses": {
+            "base_field": "broker_operating_expenses",
+            "source_row": 40,
+            "source_label": "Cộng chi phí hoạt động",
+            "source_value_vnd": 156008269766,
+            "normalized_value_million_vnd": 156008,
+            "source_pdf_page": 11,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_financial_income": {
+            "base_field": "financial_income",
+            "source_row": 50,
+            "source_label": "Cộng doanh thu hoạt động tài chính",
+            "source_value_vnd": 876758573,
+            "normalized_value_million_vnd": 877,
+            "source_pdf_page": 11,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_financial_expense": {
+            "base_field": "financial_expense",
+            "source_row": 60,
+            "source_label": "Cộng chi phí tài chính",
+            "source_value_vnd": 52506591716,
+            "normalized_value_million_vnd": 52507,
+            "source_pdf_page": 11,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_interest_expense": {
+            "base_field": "interest_expense",
+            "source_row": 52,
+            "source_label": "Chi phí lãi vay",
+            "source_value_vnd": 52506591716,
+            "normalized_value_million_vnd": 52507,
+            "source_pdf_page": 11,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_admin_expenses": {
+            "base_field": "admin_expense",
+            "source_row": 62,
+            "source_label": "Chi phí quản lý công ty chứng khoán",
+            "source_value_vnd": 23315703850,
+            "normalized_value_million_vnd": 23316,
+            "source_pdf_page": 11,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_net_operating_profit": {
+            "base_field": "operating_profit",
+            "source_row": 70,
+            "source_label": "Kết quả hoạt động",
+            "source_value_vnd": 462959681907,
+            "normalized_value_million_vnd": 462960,
+            "source_pdf_page": 11,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          }
+        },
+        "note": "Ánh xạ tên trường dành riêng cho bảng KQHĐ CTCK từ mã dòng B02-CTCK; không tự tính hoặc thay số nguồn. Chi phí lãi vay dòng 52 được phân biệt với tổng chi phí tài chính dòng 60."
       }
     },
     {
@@ -4163,7 +4839,8 @@
         "revenue",
         "selling_expense",
         "eps",
-        "operating_profit"
+        "operating_profit",
+        "broker_net_operating_profit"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/83437c9fa49105ec.zip",
@@ -4203,7 +4880,7 @@
       "broker_brokerage_expense": 109784,
       "broker_custody_expense": 3328,
       "broker_financial_income": 1419,
-      "broker_financial_expense": 71723,
+      "broker_financial_expense": 72324,
       "broker_interest_expense": 71723,
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "23a759bbc66b61070680f18b4337ffd174ab548006a37116a10c4782d63e21a7",
@@ -4275,6 +4952,16 @@
           "old_value": null,
           "new_value": 590426,
           "reason": "Đối chiếu trực quan B02-CTCK dòng 70, PDF trang 11, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "broker_financial_expense": {
+          "old_value": 71723,
+          "new_value": 72324,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Cộng chi phí tài chính (mã dòng 60) trên B02-CTCK, trang PDF 11. Giá trị lấy đúng trường nguồn financial_expense; đơn vị triệu VND."
+        },
+        "broker_net_operating_profit": {
+          "old_value": null,
+          "new_value": 590426,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Kết quả hoạt động (mã dòng 70) trên B02-CTCK, trang PDF 11. Giá trị lấy đúng trường nguồn operating_profit; đơn vị triệu VND."
         }
       },
       "net_cash_change_ytd": -15917,
@@ -4493,7 +5180,13 @@
         "interest_expense",
         "admin_expense",
         "operating_profit",
-        "broker_admin_expenses"
+        "broker_admin_expenses",
+        "broker_total_operating_revenue",
+        "broker_total_operating_expenses",
+        "broker_financial_income",
+        "broker_financial_expense",
+        "broker_interest_expense",
+        "broker_net_operating_profit"
       ],
       "eps_source_reconciliation": {
         "status": "source_visually_verified",
@@ -4548,6 +5241,88 @@
         "source_formula": "Operating profit (row 70) = operating revenue (row 20) + financial income (row 50) − operating expenses (row 40) − financial expenses (row 60) − selling expenses (row 61) − broker administration expenses (row 62).",
         "manually_visual_reviewed": true,
         "checked_at": "2026-11-01"
+      },
+      "broker_net_operating_profit": 590426,
+      "securities_table_alias_reconciliation": {
+        "status": "source_visually_verified",
+        "source_catalog_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2025.zip",
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/83437c9fa49105ec.zip",
+        "checked_at": "2026-11-01",
+        "amount_unit": "million VND",
+        "mapping": {
+          "broker_total_operating_revenue": {
+            "base_field": "revenue",
+            "source_row": 20,
+            "source_label": "Cộng doanh thu hoạt động",
+            "source_value_vnd": null,
+            "normalized_value_million_vnd": 815909,
+            "source_pdf_page": 11,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_total_operating_expenses": {
+            "base_field": "broker_operating_expenses",
+            "source_row": 40,
+            "source_label": "Cộng chi phí hoạt động",
+            "source_value_vnd": 120123005577,
+            "normalized_value_million_vnd": 120123,
+            "source_pdf_page": 11,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_financial_income": {
+            "base_field": "financial_income",
+            "source_row": 50,
+            "source_label": "Cộng doanh thu hoạt động tài chính",
+            "source_value_vnd": 1418676693,
+            "normalized_value_million_vnd": 1419,
+            "source_pdf_page": 11,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_financial_expense": {
+            "base_field": "financial_expense",
+            "source_row": 60,
+            "source_label": "Cộng chi phí tài chính",
+            "source_value_vnd": 72323989001,
+            "normalized_value_million_vnd": 72324,
+            "source_pdf_page": 11,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_interest_expense": {
+            "base_field": "interest_expense",
+            "source_row": 52,
+            "source_label": "Chi phí lãi vay",
+            "source_value_vnd": 71723441055,
+            "normalized_value_million_vnd": 71723,
+            "source_pdf_page": 11,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_admin_expenses": {
+            "base_field": "admin_expense",
+            "source_row": 62,
+            "source_label": "Chi phí quản lý công ty chứng khoán",
+            "source_value_vnd": 34454349145,
+            "normalized_value_million_vnd": 34454,
+            "source_pdf_page": 11,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_net_operating_profit": {
+            "base_field": "operating_profit",
+            "source_row": 70,
+            "source_label": "Kết quả hoạt động",
+            "source_value_vnd": 590426328560,
+            "normalized_value_million_vnd": 590426,
+            "source_pdf_page": 11,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          }
+        },
+        "note": "Ánh xạ tên trường dành riêng cho bảng KQHĐ CTCK từ mã dòng B02-CTCK; không tự tính hoặc thay số nguồn. Chi phí lãi vay dòng 52 được phân biệt với tổng chi phí tài chính dòng 60."
       }
     },
     {
@@ -4739,7 +5514,13 @@
         "interest_expense",
         "admin_expense",
         "operating_profit",
-        "broker_admin_expenses"
+        "broker_admin_expenses",
+        "broker_total_operating_revenue",
+        "broker_total_operating_expenses",
+        "broker_financial_income",
+        "broker_financial_expense",
+        "broker_interest_expense",
+        "broker_net_operating_profit"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-ocr-refresh-20261019/6b19d1aa37e72f9a.zip",
@@ -4872,6 +5653,36 @@
           "old_value": null,
           "new_value": 271499,
           "reason": "Đối chiếu trực quan B02-CTCK dòng 70, PDF trang 10, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "broker_total_operating_revenue": {
+          "old_value": null,
+          "new_value": 1595794,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Cộng doanh thu hoạt động (mã dòng 20) trên B02-CTCK, trang PDF 10. Giá trị lấy đúng trường nguồn revenue; đơn vị triệu VND."
+        },
+        "broker_total_operating_expenses": {
+          "old_value": null,
+          "new_value": 1109817,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Cộng chi phí hoạt động (mã dòng 40) trên B02-CTCK, trang PDF 10. Giá trị lấy đúng trường nguồn broker_operating_expenses; đơn vị triệu VND."
+        },
+        "broker_financial_income": {
+          "old_value": null,
+          "new_value": 2260,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Cộng doanh thu hoạt động tài chính (mã dòng 50) trên B02-CTCK, trang PDF 10. Giá trị lấy đúng trường nguồn financial_income; đơn vị triệu VND."
+        },
+        "broker_financial_expense": {
+          "old_value": null,
+          "new_value": 130498,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Cộng chi phí tài chính (mã dòng 60) trên B02-CTCK, trang PDF 10. Giá trị lấy đúng trường nguồn financial_expense; đơn vị triệu VND."
+        },
+        "broker_interest_expense": {
+          "old_value": null,
+          "new_value": 129516,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Chi phí lãi vay (mã dòng 52) trên B02-CTCK, trang PDF 10. Giá trị lấy đúng trường nguồn interest_expense; đơn vị triệu VND."
+        },
+        "broker_net_operating_profit": {
+          "old_value": null,
+          "new_value": 271499,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Kết quả hoạt động (mã dòng 70) trên B02-CTCK, trang PDF 10. Giá trị lấy đúng trường nguồn operating_profit; đơn vị triệu VND."
         }
       },
       "operating_cash_flow_ytd": -6222977,
@@ -5167,7 +5978,13 @@
         "interest_expense",
         "admin_expense",
         "operating_profit",
-        "broker_admin_expenses"
+        "broker_admin_expenses",
+        "broker_total_operating_revenue",
+        "broker_total_operating_expenses",
+        "broker_financial_income",
+        "broker_financial_expense",
+        "broker_interest_expense",
+        "broker_net_operating_profit"
       ],
       "eps_source_reconciliation": {
         "status": "source_visually_verified",
@@ -5228,6 +6045,93 @@
         "source_formula": "Operating profit (row 70) = operating revenue (row 20) + financial income (row 50) − operating expenses (row 40) − financial expenses (row 60) − selling expenses (row 61) − broker administration expenses (row 62).",
         "manually_visual_reviewed": true,
         "checked_at": "2026-11-01"
+      },
+      "broker_total_operating_revenue": 1595794,
+      "broker_total_operating_expenses": 1109817,
+      "broker_financial_income": 2260,
+      "broker_financial_expense": 130498,
+      "broker_interest_expense": 129516,
+      "broker_net_operating_profit": 271499,
+      "securities_table_alias_reconciliation": {
+        "status": "source_visually_verified",
+        "source_catalog_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2025.zip",
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-ocr-refresh-20261019/6b19d1aa37e72f9a.zip",
+        "checked_at": "2026-11-01",
+        "amount_unit": "million VND",
+        "mapping": {
+          "broker_total_operating_revenue": {
+            "base_field": "revenue",
+            "source_row": 20,
+            "source_label": "Cộng doanh thu hoạt động",
+            "source_value_vnd": null,
+            "normalized_value_million_vnd": 1595794,
+            "source_pdf_page": 10,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_total_operating_expenses": {
+            "base_field": "broker_operating_expenses",
+            "source_row": 40,
+            "source_label": "Cộng chi phí hoạt động",
+            "source_value_vnd": 1109817285762,
+            "normalized_value_million_vnd": 1109817,
+            "source_pdf_page": 10,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_financial_income": {
+            "base_field": "financial_income",
+            "source_row": 50,
+            "source_label": "Cộng doanh thu hoạt động tài chính",
+            "source_value_vnd": 2260334745,
+            "normalized_value_million_vnd": 2260,
+            "source_pdf_page": 10,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_financial_expense": {
+            "base_field": "financial_expense",
+            "source_row": 60,
+            "source_label": "Cộng chi phí tài chính",
+            "source_value_vnd": 130498324887,
+            "normalized_value_million_vnd": 130498,
+            "source_pdf_page": 10,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_interest_expense": {
+            "base_field": "interest_expense",
+            "source_row": 52,
+            "source_label": "Chi phí lãi vay",
+            "source_value_vnd": 129515579681,
+            "normalized_value_million_vnd": 129516,
+            "source_pdf_page": 10,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_admin_expenses": {
+            "base_field": "admin_expense",
+            "source_row": 62,
+            "source_label": "Chi phí quản lý công ty chứng khoán",
+            "source_value_vnd": 86240083162,
+            "normalized_value_million_vnd": 86240,
+            "source_pdf_page": 10,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_net_operating_profit": {
+            "base_field": "operating_profit",
+            "source_row": 70,
+            "source_label": "Kết quả hoạt động",
+            "source_value_vnd": 271498613078,
+            "normalized_value_million_vnd": 271499,
+            "source_pdf_page": 10,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          }
+        },
+        "note": "Ánh xạ tên trường dành riêng cho bảng KQHĐ CTCK từ mã dòng B02-CTCK; không tự tính hoặc thay số nguồn. Chi phí lãi vay dòng 52 được phân biệt với tổng chi phí tài chính dòng 60."
       }
     },
     {
@@ -5450,7 +6354,8 @@
         "revenue",
         "selling_expense",
         "eps",
-        "operating_profit"
+        "operating_profit",
+        "broker_net_operating_profit"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/5fe69d1fa2a83054.zip",
@@ -5492,8 +6397,8 @@
       "broker_brokerage_expense": 69697,
       "broker_custody_expense": 3368,
       "broker_financial_income": 1133,
-      "broker_financial_expense": 165122,
-      "broker_interest_expense": 0,
+      "broker_financial_expense": 165608,
+      "broker_interest_expense": 165122,
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "62d339709cc3d4270a44d8bfc7ecbcad1bd7e6d1c20afe4cce650634514afb7a",
       "core_financial_extraction_evidence_attempt_count": 0,
@@ -5575,6 +6480,21 @@
           "old_value": null,
           "new_value": 279996,
           "reason": "Đối chiếu trực quan B02-CTCK dòng 70, PDF trang 10, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "broker_financial_expense": {
+          "old_value": 165122,
+          "new_value": 165608,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Cộng chi phí tài chính (mã dòng 60) trên B02-CTCK, trang PDF 10. Giá trị lấy đúng trường nguồn financial_expense; đơn vị triệu VND."
+        },
+        "broker_interest_expense": {
+          "old_value": 0,
+          "new_value": 165122,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Chi phí lãi vay (mã dòng 52) trên B02-CTCK, trang PDF 10. Giá trị lấy đúng trường nguồn interest_expense; đơn vị triệu VND."
+        },
+        "broker_net_operating_profit": {
+          "old_value": null,
+          "new_value": 279996,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Kết quả hoạt động (mã dòng 70) trên B02-CTCK, trang PDF 10. Giá trị lấy đúng trường nguồn operating_profit; đơn vị triệu VND."
         }
       },
       "income_tax_current": 43592,
@@ -5827,7 +6747,13 @@
         "interest_expense",
         "admin_expense",
         "operating_profit",
-        "broker_admin_expenses"
+        "broker_admin_expenses",
+        "broker_total_operating_revenue",
+        "broker_total_operating_expenses",
+        "broker_financial_income",
+        "broker_financial_expense",
+        "broker_interest_expense",
+        "broker_net_operating_profit"
       ],
       "eps_source_reconciliation": {
         "status": "source_visually_verified",
@@ -5882,6 +6808,88 @@
         "source_formula": "Operating profit (row 70) = operating revenue (row 20) + financial income (row 50) − operating expenses (row 40) − financial expenses (row 60) − selling expenses (row 61) − broker administration expenses (row 62).",
         "manually_visual_reviewed": true,
         "checked_at": "2026-11-01"
+      },
+      "broker_net_operating_profit": 279996,
+      "securities_table_alias_reconciliation": {
+        "status": "source_visually_verified",
+        "source_catalog_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2026.zip",
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/5fe69d1fa2a83054.zip",
+        "checked_at": "2026-11-01",
+        "amount_unit": "million VND",
+        "mapping": {
+          "broker_total_operating_revenue": {
+            "base_field": "revenue",
+            "source_row": 20,
+            "source_label": "Cộng doanh thu hoạt động",
+            "source_value_vnd": null,
+            "normalized_value_million_vnd": 564698,
+            "source_pdf_page": 10,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_total_operating_expenses": {
+            "base_field": "broker_operating_expenses",
+            "source_row": 40,
+            "source_label": "Cộng chi phí hoạt động",
+            "source_value_vnd": 91873953735,
+            "normalized_value_million_vnd": 91874,
+            "source_pdf_page": 10,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_financial_income": {
+            "base_field": "financial_income",
+            "source_row": 50,
+            "source_label": "Cộng doanh thu hoạt động tài chính",
+            "source_value_vnd": 1133322363,
+            "normalized_value_million_vnd": 1133,
+            "source_pdf_page": 10,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_financial_expense": {
+            "base_field": "financial_expense",
+            "source_row": 60,
+            "source_label": "Cộng chi phí tài chính",
+            "source_value_vnd": 165607777574,
+            "normalized_value_million_vnd": 165608,
+            "source_pdf_page": 10,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_interest_expense": {
+            "base_field": "interest_expense",
+            "source_row": 52,
+            "source_label": "Chi phí lãi vay",
+            "source_value_vnd": 165121750176,
+            "normalized_value_million_vnd": 165122,
+            "source_pdf_page": 10,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_admin_expenses": {
+            "base_field": "admin_expense",
+            "source_row": 62,
+            "source_label": "Chi phí quản lý công ty chứng khoán",
+            "source_value_vnd": 28354117719,
+            "normalized_value_million_vnd": 28354,
+            "source_pdf_page": 10,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_net_operating_profit": {
+            "base_field": "operating_profit",
+            "source_row": 70,
+            "source_label": "Kết quả hoạt động",
+            "source_value_vnd": 279995790271,
+            "normalized_value_million_vnd": 279996,
+            "source_pdf_page": 10,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          }
+        },
+        "note": "Ánh xạ tên trường dành riêng cho bảng KQHĐ CTCK từ mã dòng B02-CTCK; không tự tính hoặc thay số nguồn. Chi phí lãi vay dòng 52 được phân biệt với tổng chi phí tài chính dòng 60."
       }
     },
     {
@@ -6075,7 +7083,13 @@
         "interest_expense",
         "admin_expense",
         "operating_profit",
-        "broker_admin_expenses"
+        "broker_admin_expenses",
+        "broker_total_operating_revenue",
+        "broker_total_operating_expenses",
+        "broker_financial_income",
+        "broker_financial_expense",
+        "broker_interest_expense",
+        "broker_net_operating_profit"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/9246a0423b1cd4aa.zip",
@@ -6148,6 +7162,36 @@
           "old_value": null,
           "new_value": 89720,
           "reason": "Đối chiếu trực quan B02-CTCK dòng 70, PDF trang 10, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "broker_total_operating_revenue": {
+          "old_value": null,
+          "new_value": 450340,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Cộng doanh thu hoạt động (mã dòng 20) trên B02-CTCK, trang PDF 10. Giá trị lấy đúng trường nguồn revenue; đơn vị triệu VND."
+        },
+        "broker_total_operating_expenses": {
+          "old_value": null,
+          "new_value": 147304,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Cộng chi phí hoạt động (mã dòng 40) trên B02-CTCK, trang PDF 10. Giá trị lấy đúng trường nguồn broker_operating_expenses; đơn vị triệu VND."
+        },
+        "broker_financial_income": {
+          "old_value": null,
+          "new_value": 1040,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Cộng doanh thu hoạt động tài chính (mã dòng 50) trên B02-CTCK, trang PDF 10. Giá trị lấy đúng trường nguồn financial_income; đơn vị triệu VND."
+        },
+        "broker_financial_expense": {
+          "old_value": null,
+          "new_value": 196108,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Cộng chi phí tài chính (mã dòng 60) trên B02-CTCK, trang PDF 10. Giá trị lấy đúng trường nguồn financial_expense; đơn vị triệu VND."
+        },
+        "broker_interest_expense": {
+          "old_value": null,
+          "new_value": 196108,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Chi phí lãi vay (mã dòng 52) trên B02-CTCK, trang PDF 10. Giá trị lấy đúng trường nguồn interest_expense; đơn vị triệu VND."
+        },
+        "broker_net_operating_profit": {
+          "old_value": null,
+          "new_value": 89720,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Kết quả hoạt động (mã dòng 70) trên B02-CTCK, trang PDF 10. Giá trị lấy đúng trường nguồn operating_profit; đơn vị triệu VND."
         }
       },
       "foreign_exchange_effect": 0,
@@ -6443,7 +7487,13 @@
         "interest_expense",
         "admin_expense",
         "operating_profit",
-        "broker_admin_expenses"
+        "broker_admin_expenses",
+        "broker_total_operating_revenue",
+        "broker_total_operating_expenses",
+        "broker_financial_income",
+        "broker_financial_expense",
+        "broker_interest_expense",
+        "broker_net_operating_profit"
       ],
       "eps_source_reconciliation": {
         "status": "source_visually_verified",
@@ -6504,6 +7554,93 @@
         "source_formula": "Operating profit (row 70) = operating revenue (row 20) + financial income (row 50) − operating expenses (row 40) − financial expenses (row 60) − selling expenses (row 61) − broker administration expenses (row 62).",
         "manually_visual_reviewed": true,
         "checked_at": "2026-11-01"
+      },
+      "broker_total_operating_revenue": 450340,
+      "broker_total_operating_expenses": 147304,
+      "broker_financial_income": 1040,
+      "broker_financial_expense": 196108,
+      "broker_interest_expense": 196108,
+      "broker_net_operating_profit": 89720,
+      "securities_table_alias_reconciliation": {
+        "status": "source_visually_verified",
+        "source_catalog_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2026.zip",
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/9246a0423b1cd4aa.zip",
+        "checked_at": "2026-11-01",
+        "amount_unit": "million VND",
+        "mapping": {
+          "broker_total_operating_revenue": {
+            "base_field": "revenue",
+            "source_row": 20,
+            "source_label": "Cộng doanh thu hoạt động",
+            "source_value_vnd": null,
+            "normalized_value_million_vnd": 450340,
+            "source_pdf_page": 10,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_total_operating_expenses": {
+            "base_field": "broker_operating_expenses",
+            "source_row": 40,
+            "source_label": "Cộng chi phí hoạt động",
+            "source_value_vnd": 147303922594,
+            "normalized_value_million_vnd": 147304,
+            "source_pdf_page": 10,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_financial_income": {
+            "base_field": "financial_income",
+            "source_row": 50,
+            "source_label": "Cộng doanh thu hoạt động tài chính",
+            "source_value_vnd": 1040238290,
+            "normalized_value_million_vnd": 1040,
+            "source_pdf_page": 10,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_financial_expense": {
+            "base_field": "financial_expense",
+            "source_row": 60,
+            "source_label": "Cộng chi phí tài chính",
+            "source_value_vnd": 196107650467,
+            "normalized_value_million_vnd": 196108,
+            "source_pdf_page": 10,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_interest_expense": {
+            "base_field": "interest_expense",
+            "source_row": 52,
+            "source_label": "Chi phí lãi vay",
+            "source_value_vnd": 196107650467,
+            "normalized_value_million_vnd": 196108,
+            "source_pdf_page": 10,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_admin_expenses": {
+            "base_field": "admin_expense",
+            "source_row": 62,
+            "source_label": "Chi phí quản lý công ty chứng khoán",
+            "source_value_vnd": 18247912189,
+            "normalized_value_million_vnd": 18248,
+            "source_pdf_page": 10,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_net_operating_profit": {
+            "base_field": "operating_profit",
+            "source_row": 70,
+            "source_label": "Kết quả hoạt động",
+            "source_value_vnd": 89720342626,
+            "normalized_value_million_vnd": 89720,
+            "source_pdf_page": 10,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          }
+        },
+        "note": "Ánh xạ tên trường dành riêng cho bảng KQHĐ CTCK từ mã dòng B02-CTCK; không tự tính hoặc thay số nguồn. Chi phí lãi vay dòng 52 được phân biệt với tổng chi phí tài chính dòng 60."
       }
     },
     {
@@ -6759,7 +7896,13 @@
         "foreign_exchange_effect",
         "foreign_exchange_effect_ytd",
         "cashflow_period_basis",
-        "revenue"
+        "revenue",
+        "broker_total_operating_revenue",
+        "broker_total_operating_expenses",
+        "broker_financial_income",
+        "broker_financial_expense",
+        "broker_interest_expense",
+        "broker_net_operating_profit"
       ],
       "financial_line_items_manually_verified_fields": [
         "current_assets",
@@ -6812,7 +7955,13 @@
         "foreign_exchange_effect",
         "foreign_exchange_effect_ytd",
         "cashflow_period_basis",
-        "revenue"
+        "revenue",
+        "broker_total_operating_revenue",
+        "broker_total_operating_expenses",
+        "broker_financial_income",
+        "broker_financial_expense",
+        "broker_interest_expense",
+        "broker_net_operating_profit"
       ],
       "financial_line_items_source": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2026.zip?ver=df26ce44",
       "financial_line_items_updated_at": "2026-11-01T04:30:00Z",
@@ -6890,6 +8039,36 @@
           "old_value": null,
           "new_value": 29053828,
           "reason": "B01a trang PDF 6-7; 29,053,827,666,847 VND chia 1,000,000."
+        },
+        "broker_total_operating_revenue": {
+          "old_value": null,
+          "new_value": 1001990,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Cộng doanh thu hoạt động (mã dòng 20) trên B02-CTCK, trang PDF 11. Giá trị lấy đúng trường nguồn revenue; đơn vị triệu VND."
+        },
+        "broker_total_operating_expenses": {
+          "old_value": null,
+          "new_value": 370116,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Cộng chi phí hoạt động (mã dòng 40) trên B02-CTCK, trang PDF 11. Giá trị lấy đúng trường nguồn broker_operating_expenses; đơn vị triệu VND."
+        },
+        "broker_financial_income": {
+          "old_value": null,
+          "new_value": 982,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Cộng doanh thu hoạt động tài chính (mã dòng 50) trên B02-CTCK, trang PDF 11. Giá trị lấy đúng trường nguồn financial_income; đơn vị triệu VND."
+        },
+        "broker_financial_expense": {
+          "old_value": null,
+          "new_value": 352362,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Cộng chi phí tài chính (mã dòng 60) trên B02-CTCK, trang PDF 11. Giá trị lấy đúng trường nguồn financial_expense; đơn vị triệu VND."
+        },
+        "broker_interest_expense": {
+          "old_value": null,
+          "new_value": 348776,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Chi phí lãi vay (mã dòng 52) trên B02-CTCK, trang PDF 11. Giá trị lấy đúng trường nguồn interest_expense; đơn vị triệu VND."
+        },
+        "broker_net_operating_profit": {
+          "old_value": null,
+          "new_value": 250810,
+          "reason": "Ánh xạ lại trường hiển thị công ty chứng khoán theo Kết quả hoạt động (mã dòng 70) trên B02-CTCK, trang PDF 11. Giá trị lấy đúng trường nguồn operating_profit; đơn vị triệu VND."
         }
       },
       "eps_source_reconciliation": {
@@ -6942,6 +8121,92 @@
         "source_formula": "Operating profit (row 70) = operating revenue (row 20) + financial income (row 50) − operating expenses (row 40) − financial expenses (row 60) − selling expenses (row 61) − broker administration expenses (row 62).",
         "manually_visual_reviewed": true,
         "checked_at": "2026-11-01"
+      },
+      "broker_total_operating_revenue": 1001990,
+      "broker_total_operating_expenses": 370116,
+      "broker_financial_income": 982,
+      "broker_financial_expense": 352362,
+      "broker_interest_expense": 348776,
+      "broker_net_operating_profit": 250810,
+      "securities_table_alias_reconciliation": {
+        "status": "source_visually_verified",
+        "source_catalog_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2026.zip?ver=df26ce44",
+        "checked_at": "2026-11-01",
+        "amount_unit": "million VND",
+        "mapping": {
+          "broker_total_operating_revenue": {
+            "base_field": "revenue",
+            "source_row": 20,
+            "source_label": "Cộng doanh thu hoạt động",
+            "source_value_vnd": null,
+            "normalized_value_million_vnd": 1001990,
+            "source_pdf_page": 11,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_total_operating_expenses": {
+            "base_field": "broker_operating_expenses",
+            "source_row": 40,
+            "source_label": "Cộng chi phí hoạt động",
+            "source_value_vnd": 370115926821,
+            "normalized_value_million_vnd": 370116,
+            "source_pdf_page": 11,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_financial_income": {
+            "base_field": "financial_income",
+            "source_row": 50,
+            "source_label": "Cộng doanh thu hoạt động tài chính",
+            "source_value_vnd": 981981572,
+            "normalized_value_million_vnd": 982,
+            "source_pdf_page": 11,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_financial_expense": {
+            "base_field": "financial_expense",
+            "source_row": 60,
+            "source_label": "Cộng chi phí tài chính",
+            "source_value_vnd": 352361500605,
+            "normalized_value_million_vnd": 352362,
+            "source_pdf_page": 11,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_interest_expense": {
+            "base_field": "interest_expense",
+            "source_row": 52,
+            "source_label": "Chi phí lãi vay",
+            "source_value_vnd": 348776342385,
+            "normalized_value_million_vnd": 348776,
+            "source_pdf_page": 11,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_admin_expenses": {
+            "base_field": "admin_expense",
+            "source_row": 62,
+            "source_label": "Chi phí quản lý công ty chứng khoán",
+            "source_value_vnd": 29685108052,
+            "normalized_value_million_vnd": 29685,
+            "source_pdf_page": 11,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          },
+          "broker_net_operating_profit": {
+            "base_field": "operating_profit",
+            "source_row": 70,
+            "source_label": "Kết quả hoạt động",
+            "source_value_vnd": 250809842282,
+            "normalized_value_million_vnd": 250810,
+            "source_pdf_page": 11,
+            "source_statement": "B02-CTCK",
+            "verification": "source_visually_verified"
+          }
+        },
+        "note": "Ánh xạ tên trường dành riêng cho bảng KQHĐ CTCK từ mã dòng B02-CTCK; không tự tính hoặc thay số nguồn. Chi phí lãi vay dòng 52 được phân biệt với tổng chi phí tài chính dòng 60."
       }
     }
   ],
