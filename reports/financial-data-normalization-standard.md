@@ -1,6 +1,6 @@
 # Quy trình chuẩn hóa dữ liệu tài chính theo từng mảng
 
-Phiên bản: 2.7  
+Phiên bản: 2.8  
 Ngày thiết lập: 2026-10-28  
 Cập nhật gần nhất: 2026-11-01  
 Phạm vi: `kiemtimem123/so-lieu`, dữ liệu BCTC quý từ 2024-Q1 trở đi.
@@ -802,3 +802,30 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 - Quy trình chuẩn hóa đã cập nhật phải được ghi vào tài liệu này, đồng thời đồng bộ `normalizationProgress.standardVersion` trong checkpoint. Không chỉ để quy tắc trong nội dung hội thoại.
 - Khi bắt đầu mã mới, đọc lại đúng phần quy trình theo nhóm ngành và tái sử dụng. Chỉ thêm quy tắc khi có bằng chứng mới; ghi ngày, phiên bản, ví dụ và test hồi quy.
 - Thứ tự xử lý phiên hiện tại: VCI → VCK → VIX → VDS → GAS → PLX → GEG → IDC. SHS là mã đã hoàn tất, không mở lại nếu không có lỗi/nguồn mới cụ thể.
+
+## Bổ sung phiên bản 2.8 — chuẩn hóa BCTC công ty chứng khoán và đóng kỳ VCI Q1/2024 (2026-11-01)
+
+### Quy tắc dùng lại cho mã CTCK
+- Nhận diện đúng biểu mẫu BCTC CTCK: B01-CTCK/B01a-CTCK (bảng cân đối), B02-CTCK/B02a-CTCK (kết quả hoạt động), B03b-CTCK hoặc B03-CTCK (lưu chuyển tiền). Không tự ánh xạ theo nhãn chung ngân hàng hoặc doanh nghiệp sản xuất.
+- Xác nhận phạm vi từ trang công bố/phụ lục chọn báo cáo, tiêu đề các biểu mẫu và thuyết minh cấu trúc công ty. Ghi rõ separate/consolidated theo từng kỳ, không suy ra scope từ tên mã hay tiêu đề file một mình.
+- Với CTCK, nếu báo cáo có hai phần dòng tiền (dòng tiền của công ty và dòng tiền môi giới/ủy thác khách hàng), chỉ phần dòng tiền của công ty được đưa vào các trường operating_cash_flow, investing_cash_flow, financing_cash_flow, net_cash_change, cash_beginning, cash_ending. Không cộng hoặc lấy nhầm số dư tiền khách hàng.
+- Doanh thu hoạt động dùng dòng tổng cộng doanh thu hoạt động của B02-CTCK (dòng 20), không thay bằng một cấu phần FVTPL/môi giới/cho vay riêng lẻ. LNTT, thuế và LNST dùng đúng dòng tổng B02-CTCK và cột phát sinh riêng của quý. Dòng không được trình bày trong mẫu thì để null; dấu gạch ngang in rõ là 0.
+- Trường CTCK như FVTPL, HTM, cho vay, AFS, phải thu và tiền gửi khách hàng chỉ ánh xạ vào alias broker tương ứng nếu đã tìm thấy đúng dòng trên B01-CTCK; không map giá trị từ B03 tiền môi giới/ủy thác sang bảng cân đối.
+- Không dùng tổng tài sản/nợ/vốn làm phương trình để tự tạo số nguồn. Đọc các dòng tổng nguồn ở VND gốc, kiểm tra Tổng tài sản = Tổng nợ phải trả + Vốn chủ sở hữu; chỉ làm tròn sang triệu VND sau khi giữ lại số gốc trong reconciliation.
+- Tính ROA/ROE khi đã có lợi nhuận quý, số dư đầu và cuối kỳ cùng phạm vi: lợi nhuận sau thuế quý / số dư bình quân × 4 × 100. Lưu công thức và số bình quân; nếu thiếu đầu/cuối kỳ hoặc scope không đồng nhất thì để null.
+
+### Hồ sơ nguồn VCI Q1/2024 — đã xác minh trực quan
+- Nguồn duy nhất: danh mục VietstockFinance VCI (https://finance.vietstock.vn/VCI/tai-tai-lieu.htm?doctype=1), tài liệu ID 456778, PDF gốc (https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%201/VCI_Baocaotaichinh_Q1_2024.pdf). Dùng PDF lưu tại reports/raw/VCI/auto-vci-20261021/bcc25fca52409b54.pdf.
+- Đã xem trực tiếp B01-CTCK trang in 3–5 (PDF trang 5–7), B02-CTCK trang in 8–10 (PDF trang 10–12), B03-CTCK trang in 11–12 (PDF trang 13–14), thuyết minh trang in 17 (PDF trang 19). Thuyết minh ghi công ty không có công ty con; phạm vi kỳ này được xác nhận là báo cáo riêng lẻ.
+- Các dòng gốc VND tại cột cuối kỳ/cột quý hiện tại:
+  - Tổng tài sản 19,544,604,126,402; nợ phải trả 11,367,295,476,918; vốn chủ 8,177,308,649,484. Chênh lệch phương trình cân đối = 0 VND.
+  - Tổng doanh thu hoạt động (B02-CTCK dòng 20) 806,317,375,461.
+  - Lợi nhuận trước thuế 227,540,468,148; thuế TNDN 29,784,005,755; lợi nhuận sau thuế 197,756,462,393. Chênh lệch LNTT − thuế − LNST = 0 VND.
+  - Lưu chuyển tiền của công ty: CFO -1,002,219,075,396; CFI -5,366,344,152; CFF 1,260,282,000,000; biến động tiền thuần 252,696,580,452; tiền đầu kỳ 787,897,819,240; tiền cuối kỳ 1,040,594,399,692. Tổng ba luồng = biến động thuần và cầu nối tiền đầu/cuối kỳ đều chênh 0 VND. Phần lưu chuyển tiền môi giới/ủy thác của khách hàng nằm riêng, không được nhập vào cashflow doanh nghiệp.
+- Snapshot lưu triệu VND làm tròn gần nhất; số gốc VND và phương trình chính xác nằm trong reconciliation.raw_values_vnd và reconciliation.checks. ROA/ROE được tính theo lợi nhuận sau thuế quý và bình quân số dư đầu/cuối kỳ, lần lượt 4.30% và 10.17%.
+- OCR candidate PAT cũ 148,136 triệu VND bị bác bỏ sau khi đối chiếu B02-CTCK; giá trị nguồn đúng là 197,756 triệu VND. Giá trị cũ phải lưu trong correction history, không được khôi phục qua alias hoặc enrichment.
+- Trạng thái kỳ Q1/2024: manually_verified_source_reconciled; không đồng nghĩa toàn mã VCI đã hoàn thành. Q2/2024 đến Q3/2026 còn phải rà soát từng kỳ theo cùng quy trình. Không chạy OCR lại cùng PDF đã lưu khi đã có đủ sidecar và ảnh nguồn.
+
+### Kiểm thử/đóng kỳ
+- Với VCI Q1/2024, kiểm tra source scope, B01 balance equation, B02 profit-tax bridge, B03 company cashflow component sum và cash opening-to-closing bridge đều PASS ở VND gốc.
+- Khi cập nhật kỳ đã đối chiếu, lưu source_extract_review, source_validation.manually_visual_reviewed, manually_verified_pages, reconciliation.raw_values_vnd, reconciliation.checks, profit_reconciliation và correction history. Một kỳ chỉ được đưa khỏi pendingCorePeriods sau khi tất cả chỉ tiêu lõi cần thiết đã có nguồn.
