@@ -270,3 +270,10 @@ Ghi chú này là lối tắt tiếp nối, không thay thế checkpoint sống.
 - Reset VCI 2024-Q1 to pending (`afdf52b`); 2024-Q2 was already pending. The sync run `41288487308` is currently processing the active VCI catalog and has the VCI-specific OCR tools installed. Check its completion before further changes.
 - Earlier sync attempt `41288347049` failed because the workflow output contained literal `\\n` and passed `VCI\\n` as the ticker; this is fixed in `1042507`. Earlier attempt `41288163921` failed because `financial_units.py` was absent from sparse checkout; this is also fixed.
 - VCI core figures remain unverified. The earlier 2024-Q3 revenue candidate `21,594` is a false match to financial income, not accepted revenue. Do not mark VCI complete or move to VCK until all 11 quarters pass source-scope and B01/B02/B03 numeric reconciliation. Preserve the 0.01% tolerance.
+
+
+## VCI CTCK core parser update (2026-11-01)
+
+- Added VCI/CTCK-specific parsing in `scripts/enrich-financial-categories.py`: B01 total-assets fallback anchored on row 270 formula `100+200`; fallback for `C. Nợ phải trả` when OCR adds punctuation; B02 net-profit label `Lợi nhuận kế toán sau thuế TNDN`; revenue extraction prioritizes `Cộng doanh thu hoạt động` and excludes financial-income rows. Verification note no longer hardcodes “hợp nhất”. Commit `14fe6702b136874bdfc888fd544fd20135cc5267`.
+- The parser changes passed quarterly-data and site-data checks. OCR run `41288816583` is now running with this updated parser; inspect VCI Q1/Q2 2024 before reopening additional terminal periods.
+- Targeted sync run `41288487308` remains in progress; do not treat it as complete until GitHub reports a conclusion. Its active ticker is VCI, not VCB. The workflow reads `activeSymbol` from the saved checkpoint and includes `financial_units.py` in sparse checkout.
