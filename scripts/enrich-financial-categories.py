@@ -878,21 +878,21 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
    lines=str(page.get("text","")).splitlines()
    for index,line in enumerate(lines):
     clean=norm(line)
-    if "cong doanh thu hoat dong" not in clean:
+    if "cong doanh thu hoat dong" not in clean or "tai chinh" in clean:
      continue
-    if "tai chinh" in norm(" ".join(lines[index:index+2])):
+    if "tai chinh" in norm(" ".join(lines[max(0,index-1):index+1])):
      continue
-    candidates=[]
-    for candidate in lines[index:index+5]:
-     candidates.extend(amounts(candidate,threshold=1000))
-    if candidates:
-     broker_revenue=int(round(candidates[0]*factor))
+    # In Vietstock CTCK B02, the total row-20 amounts are printed immediately
+    # before the "Cộng doanh thu hoạt động" label/code in the OCR text flow.
+    for candidate in reversed(lines[max(0,index-5):index]):
+     candidates=amounts(candidate,threshold=1000)
+     if candidates:
+      broker_revenue=int(round(candidates[0]*factor))
+      break
+    if broker_revenue is not None:
      break
    if broker_revenue is not None:
     break
-  if broker_revenue is None:
-   # CTCK B02 row 20 is total operating revenue; never use row 50 financial income.
-   broker_revenue=value_by_row_prefix(profit_pages,[r"^\s*20\s*$"],factor)
   if broker_revenue is not None:
    out["revenue"]=broker_revenue
   else:
