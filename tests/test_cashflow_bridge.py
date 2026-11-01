@@ -14,11 +14,11 @@ VALIDATOR = runpy.run_path(
 cash_bridge_delta = VALIDATOR["cash_bridge_delta"]
 within_relative_tolerance = VALIDATOR["within_relative_tolerance"]
 relative_difference_percent = VALIDATOR["relative_difference_percent"]
-VIETSTOCK_PARSER = runpy.run_path(
-    str(ROOT / "scripts" / "sync-vietstock-financials.py"),
-    run_name="vietstock_sync_test_module",
+UNIT_HELPERS = runpy.run_path(
+    str(ROOT / "scripts" / "financial_units.py"),
+    run_name="financial_units_test_module",
 )
-scale_to_million = VIETSTOCK_PARSER["scale_to_million"]
+scale_to_million = UNIT_HELPERS["scale_to_million"]
 
 
 class VietstockUnitNormalizationTests(unittest.TestCase):
