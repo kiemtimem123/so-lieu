@@ -726,7 +726,7 @@ def extract_statement(
     if symbol in BANKS:
         revenue_labels = ["tổng thu nhập hoạt động", "total operating income", "doanh thu hoạt động", "thu nhập lãi thuần"]
     elif symbol in BROKERS:
-        revenue_labels = ["doanh thu hoạt động", "doanh thu thuần", "operating revenue"]
+        revenue_labels = ["cộng doanh thu hoạt động", "total operating revenue", "doanh thu hoạt động", "doanh thu thuần", "operating revenue"]
     else:
         revenue_labels = REVENUE_LABELS
     revenue_series = row_numbers(lines, revenue_labels)
