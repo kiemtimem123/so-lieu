@@ -90,6 +90,7 @@ jobs:
           FINANCIAL_SYNC_SYMBOL: ${{ steps.select.outputs.symbol }}
           FINANCIAL_SYNC_BOOTSTRAP_ONLY: "1"
           # Script pushes and scheduled runs resume the durable active ticker; choose a specific ticker via workflow_dispatch.
+# VCI remains active until all 11 quarterly periods pass source and numeric reconciliation.
           FINANCIAL_SYNC_FORCE_RETRY: ${{ github.event_name == 'push' && '1' || '0' }}
         run: python scripts/sync-vietstock-financials.py
 
