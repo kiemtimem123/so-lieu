@@ -770,7 +770,7 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
   if balance and symbol in BROKERS:
    # Use CTCK statement row codes as the authoritative totals; weak text-label
    # matches can otherwise capture component rows or OCR-shifted columns.
-   row270=value_by_row_prefix(balance,[r"\b100\s+200\b"],factor)
+   row270=value_by_row_prefix(balance,[r"\b100\s*\+\s*200\b"],factor)
    row300=value_by_row_prefix(balance,[r"\bc\s+no\s+phai\s+tra\b"],factor)
    row400=value_by_row_prefix(balance,[r"\b400\b"],factor)
    if row270 is not None: assets=row270
