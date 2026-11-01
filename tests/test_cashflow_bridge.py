@@ -961,6 +961,7 @@ class SHSCashFlowNormalizationTests(unittest.TestCase):
                         for qfield, yfield in zip(self.flows, self.ytd):
                             self.assertEqual(row[qfield], row[yfield])
                     elif period == "2025-Q3":
+                        previous = self.rows[f"{year}-Q{quarter - 1}"]
                         # Q3/2025 is on the restated H1 presentation from the
                         # later Q2/2026 comparative. Q2/2025 itself deliberately
                         # retains the original contemporaneous report. Mixing the
