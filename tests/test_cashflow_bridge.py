@@ -852,8 +852,12 @@ class SHSCashFlowNormalizationTests(unittest.TestCase):
         # B03b reconciliation. Newly discovered scope-blocked placeholders are
         # asserted separately and must not be mistaken for normalized quarters.
         cls.rows = {
-            period: row for period, row in cls.all_rows.items()
-            if isinstance(row.get("cashflow_source_reconciliation"), dict)
+            period: cls.all_rows[period]
+            for period in (
+                "2024-Q1", "2024-Q2", "2024-Q3", "2024-Q4",
+                "2025-Q1", "2025-Q2", "2025-Q3", "2025-Q4",
+                "2026-Q1", "2026-Q2",
+            )
         }
         cls.flows = (
             "operating_cash_flow", "investing_cash_flow",
@@ -1061,7 +1065,7 @@ class SHSCashFlowNormalizationTests(unittest.TestCase):
         )
         self.assertEqual(rec["selected_values_not_adjusted_for_tolerance"], True)
 
-    def test_shs_q3_2026_new_catalog_period_remains_blank_until_scope_is_verified(self):
+    def test_shs_q3_2026_source_values_are_visually_verified_and_normalized(self):
         row = self.all_rows["2026-Q3"]
         self.assertEqual(row["source_validation"]["document_id"], "563751")
         self.assertEqual(row["published_at"], "2026-10-21")
@@ -1070,24 +1074,64 @@ class SHSCashFlowNormalizationTests(unittest.TestCase):
             "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
         )
         self.assertIn("static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%203/", row["source_url"])
-        self.assertEqual(row["verification_status"], "manual_review_required_pending_extraction")
-        self.assertTrue(row["source_validation"]["scope_validation_required"])
-        self.assertTrue(row["source_validation"]["manual_review_blocking_automatic_extraction"])
-        self.assertEqual(row["source_validation"]["observed_scope"], "not_explicit_in_source")
-        for field in (
-            "total_assets", "total_liabilities", "equity", "pretax_profit",
-            "net_profit", "net_profit_attributable", "revenue", "roa", "roe",
-            *self.flows, *self.ytd, *self.numeric_cash,
-        ):
-            self.assertIsNone(row.get(field))
-        self.assertNotIn("cashflow_source_reconciliation", row)
+        self.assertEqual(row["verification_status"], "manually_verified_source_reconciled")
+        self.assertTrue(row["source_validation"]["manually_visual_reviewed"])
+        self.assertFalse(row["source_validation"]["scope_validation_required"])
+        self.assertFalse(row["source_validation"]["manual_review_blocking_automatic_extraction"])
+        self.assertEqual(row["scope_basis"], "separate")
+        self.assertEqual(row["total_assets"], 29053828)
+        self.assertEqual(row["total_liabilities"], 16532399)
+        self.assertEqual(row["equity"], 12521429)
+        self.assertEqual(row["total_assets"] - row["total_liabilities"] - row["equity"], 0)
+        self.assertEqual(row["revenue"], 1001990)
+        self.assertEqual(row["pretax_profit"], 250810)
+        self.assertEqual(row["net_profit"], 203254)
+        self.assertEqual(row["income_tax_current"], 137719)
+        self.assertEqual(row["income_tax_deferred"], -90163)
+        self.assertEqual(row["income_tax"], 47556)
+        self.assertEqual(row["roa"], 2.87)
+        self.assertEqual(row["roe"], 6.49)
+        self.assertEqual(
+            [row[field] for field in self.ytd],
+            [-4051047, -29454, 6585251, 2504750],
+        )
+        self.assertEqual(
+            [row[field] for field in self.flows],
+            [1010086, -15663, 1439581, 2434004],
+        )
+        self.assertEqual(
+            [row["cash_beginning"], row["cash_ending"]],
+            [958360, 3392364],
+        )
+        self.assertEqual(
+            [row["cash_beginning_reported_ytd"], row["cash_ending_reported_ytd"]],
+            [887614, 3392364],
+        )
+        self.assertEqual(row["cashflow_source_reconciliation"]["source_pdf_pages"], [13, 14])
+        self.assertEqual(
+            row["cashflow_source_reconciliation"]["status"],
+            "SOURCE_VISUALLY_VERIFIED_AND_RECONCILED",
+        )
+        self.assertEqual(row["cashflow_source_reconciliation"]["ytd_flow_components_residual_million_vnd"], 0)
+        self.assertEqual(row["cashflow_source_reconciliation"]["ytd_cash_bridge_residual_million_vnd"], 0)
+        self.assertEqual(row["cashflow_source_reconciliation"]["quarter_cash_bridge_residual_million_vnd"], 0)
+        self.assertEqual(row["source_extract_review"]["checks"]["balance_equation_difference_vnd"], 0)
+        self.assertEqual(row["source_validation"]["scale_factor_to_million"], 0.000001)
+
 
     def test_shs_confirmed_separate_periods_are_not_labeled_consolidated(self):
         expected = {
             "2024-Q1": "separate",
             "2024-Q2": "separate",
             "2024-Q3": "separate",
+            "2024-Q4": "separate",
+            "2025-Q1": "separate",
+            "2025-Q2": "separate",
+            "2025-Q3": "separate",
             "2025-Q4": "separate_parent_company",
+            "2026-Q1": "separate",
+            "2026-Q2": "separate",
+            "2026-Q3": "separate_company_basis_confirmed_by_vietstockfinance_quarterly_and_interim_company_reports",
         }
         for period, scope in expected.items():
             with self.subTest(period=period):
