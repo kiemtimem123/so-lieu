@@ -5943,7 +5943,7 @@
       "core_financial_extraction_evidence_attempt_count": 0,
       "financial_line_items_rejected_fields": [],
       "financial_line_items_rejected_updated_at": "2026-11-01T07:44:24+00:00",
-      "financial_line_items_note": "PDF gốc Q3/2026 ghi đơn vị VND trên B01/B02/B03; thuyết minh mục 2.5 xác nhận đồng Việt Nam. Snapshot đổi sang triệu VND bằng cách chia raw VND cho 1.000.000 và làm tròn gần nhất sau khi kiểm tra raw. Dấu ngoặc là số âm; dấu gạch ngang trên dòng có mặt là 0; ô trống B03 line102 là null. Cột QUÝ 3.2026 dùng cho B02 riêng quý; B03 là YTD, số quý III được tính bằng YTD Q3 trừ YTD Q2 đã xác minh. Tiền gửi khách hàng trong chỉ tiêu ngoài bảng không phải tiền của công ty.",
+      "financial_line_items_note": "PDF gốc Q3/2026 ghi đơn vị VND trên B01/B02/B03; thuyết minh mục 2.5 xác nhận đồng Việt Nam. Snapshot đổi sang triệu VND bằng cách chia raw VND cho 1.000.000 và làm tròn gần nhất sau khi kiểm tra raw. Dấu ngoặc là số âm; dấu gạch ngang trên dòng có mặt là 0; ô trống B03 line102 là null. Cột QUÝ 3.2026 dùng cho B02 riêng quý; B03 là YTD, số quý III được tính bằng YTD Q3 trừ YTD Q2 đã xác minh. Tiền gửi khách hàng trong chỉ tiêu ngoài bảng không phải tiền của công ty. Alias fields income_tax_current and broker_financial_expense were also synchronized to the source-verified B02 line100.1 and line60 values; old OCR alias values are retained in financial_line_items_prior_values/corrections.",
       "current_assets": 39676685,
       "non_current_assets": 724717,
       "broker_held_to_maturity_assets": 821963,
@@ -5954,8 +5954,8 @@
       "financial_expense": 451845,
       "broker_operating_expenses": 402849,
       "broker_total_operating_revenue": 1304684,
-      "broker_financial_expense": 1847,
-      "income_tax_current": 203554,
+      "broker_financial_expense": 451845,
+      "income_tax_current": 60715,
       "income_tax": 59401,
       "operating_cash_flow_ytd": -6185243,
       "financing_cash_flow_ytd": 6058038,
@@ -6155,12 +6155,12 @@
         "broker_financial_expense": {
           "previous_value": 1847,
           "new_value": 451845,
-          "reason": "B02 PDF page11 current quarter column line60 total financial expense is 451,844,797,951 VND."
+          "reason": "Alias OCR field corrected to B02 line60 total financial expenses 451,844,797,951 VND; source current quarter not the earlier OCR candidate."
         },
         "income_tax_current": {
           "previous_value": 203554,
           "new_value": 60715,
-          "reason": "B02 PDF page12 current quarter line100.1 is 60,714,679,922 VND."
+          "reason": "Alias OCR field updated to match B02 line100.1 current-quarter value 60,714,679,922 VND; total income_tax remains line100 59,400,973,739 VND."
         },
         "income_tax": {
           "previous_value": 203554,
