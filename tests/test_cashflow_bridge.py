@@ -1328,6 +1328,50 @@ class SHSCashFlowNormalizationTests(unittest.TestCase):
         self.assertEqual(self.all_rows["2025-Q3"]["broker_other_operating_expense"], -928)
         self.assertEqual(self.all_rows["2026-Q2"]["broker_other_operating_expense"], -39676)
 
+        # The Q4/2025 AFS revaluation loss (B02 row 23) is a real expense,
+        # not a blank or a balancing plug.
+        q4_2025 = self.all_rows["2025-Q4"]
+        afs = q4_2025["broker_statement_component_reconciliation"]["components"]["broker_afs_revaluation_loss"]
+        self.assertEqual(afs["source_row"], "23")
+        self.assertEqual(afs["source_value_vnd"], 175408400000)
+        self.assertEqual(q4_2025["broker_afs_revaluation_loss"], 175408)
+
+        # Reconcile original B02 source totals in VND. Missing source rows are
+        # dash/zero in the published form; row 23 is populated only for Q4/2025.
+        for item in snapshot["items"]:
+            with self.subTest(b02_equations=item["period"]):
+                components = item["broker_statement_component_reconciliation"]["components"]
+                by_row = {
+                    detail["source_row"]: detail["source_value_vnd"]
+                    for detail in components.values()
+                }
+                v = lambda code: by_row.get(code, 0)
+                total_income = sum(v(code) for code in (
+                    "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11"
+                ))
+                total_expense = sum(v(code) for code in (
+                    "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32"
+                ))
+                total_finance_expense = sum(v(code) for code in ("51", "52", "53", "54", "55"))
+                checks = [
+                    (total_income, v("20")),
+                    (total_expense, v("40")),
+                    (total_finance_expense, v("60")),
+                    (v("70"), v("20") + v("50") - v("40") - v("60") - v("61") - v("62")),
+                    (v("80"), v("71") - v("72")),
+                ]
+                for actual, expected in checks:
+                    relative = abs(actual - expected) / max(abs(actual), abs(expected), 1) * 100
+                    self.assertLessEqual(relative, 0.01)
+
+        # Known OCR errors corrected from visual source checks.
+        self.assertEqual(self.all_rows["2024-Q1"]["broker_underwriting_expense"], 2538)
+        self.assertEqual(self.all_rows["2024-Q3"]["broker_advisory_revenue"], 3550)
+        self.assertEqual(self.all_rows["2024-Q3"]["broker_custody_revenue"], 3004)
+        self.assertEqual(self.all_rows["2024-Q3"]["broker_securities_advisory_expense"], 2013)
+        self.assertEqual(self.all_rows["2025-Q2"]["broker_underwriting_expense"], 448)
+        self.assertEqual(self.all_rows["2026-Q2"]["broker_other_operating_income"], 5677)
+
     def test_shs_revenue_row20_and_tax_components_match_original_b02_for_all_ten_periods(self):
         expected = {
             "2024-Q1": (564565, 46789, 40783, 87572),
