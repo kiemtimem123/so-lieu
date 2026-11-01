@@ -7963,7 +7963,7 @@
       "financial_income": 1419,
       "financial_expense": 72324,
       "interest_expense": 71723,
-      "selling_expense": 34454,
+      "selling_expense": 0,
       "admin_expense": 34454,
       "operating_cash_flow_ytd": -4379501,
       "cashflow_period_basis": "year_to_date",
@@ -8237,6 +8237,11 @@
           "old_value": null,
           "new_value": 0,
           "reason": "Đối chiếu trực tiếp cột “Quý hiện tại” B02-CTCK, mã dòng 04, trang PDF 10; chuẩn hóa VND sang triệu VND theo quy tắc làm tròn gần nhất."
+        },
+        "selling_expense": {
+          "old_value": 34454,
+          "new_value": 0,
+          "reason": "B02-CTCK dòng 61 Chi phí bán hàng là dấu gạch ngang (0). Dòng 62 mới là Chi phí quản lý; trường selling_expense trước đây bị sao chép nhầm admin_expense."
         }
       },
       "net_cash_change_ytd": -15917,
@@ -8486,7 +8491,8 @@
         "broker_brokerage_revenue",
         "broker_underwriting_revenue",
         "broker_advisory_revenue",
-        "broker_custody_revenue"
+        "broker_custody_revenue",
+        "selling_expense"
       ],
       "eps_source_reconciliation": {
         "status": "source_visually_verified",
@@ -8973,6 +8979,19 @@
           }
         },
         "note": "Các dòng chi tiết lấy từ cột Quý hiện tại, không lấy cột lũy kế. Dấu gạch ngang trên BCTC được ghi 0; số âm giữ nguyên dấu như báo cáo. Không tự suy diễn các dòng phụ không có trong biểu mẫu."
+      },
+      "financial_line_items_source_row_audit": {
+        "selling_expense": {
+          "status": "source_visually_verified",
+          "source_statement": "B02-CTCK",
+          "source_row": "61",
+          "source_pdf_page": 11,
+          "source_value_vnd": 0,
+          "normalized_value_million_vnd": 0,
+          "selected_column": "Quý hiện tại",
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2025.zip"
+        }
       }
     },
     {
@@ -10602,7 +10621,7 @@
       "financial_income": 1133,
       "financial_expense": 165608,
       "interest_expense": 165122,
-      "selling_expense": 28354,
+      "selling_expense": 0,
       "admin_expense": 28354,
       "operating_cash_flow_ytd": 531012,
       "cash_ending": 586519,
@@ -10906,6 +10925,11 @@
           "old_value": 0,
           "new_value": 0,
           "reason": "Đối chiếu trực tiếp B01-CTCK dòng 113, PDF trang 5; VND gốc 0, quy đổi triệu VND."
+        },
+        "selling_expense": {
+          "old_value": 28354,
+          "new_value": 0,
+          "reason": "B02-CTCK dòng 61 Chi phí bán hàng là dấu gạch ngang (0). Dòng 62 mới là Chi phí quản lý; trường selling_expense trước đây bị sao chép nhầm admin_expense."
         }
       },
       "income_tax_current": 43592,
@@ -11191,7 +11215,8 @@
         "broker_advisory_revenue",
         "broker_custody_revenue",
         "broker_fvtpl_assets",
-        "broker_held_to_maturity_assets"
+        "broker_held_to_maturity_assets",
+        "selling_expense"
       ],
       "eps_source_reconciliation": {
         "status": "source_visually_verified",
@@ -11697,6 +11722,17 @@
           "source_pdf_page": 5,
           "source_value_vnd": 0,
           "normalized_value_million_vnd": 0,
+          "checked_at": "2026-11-01",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2026.zip"
+        },
+        "selling_expense": {
+          "status": "source_visually_verified",
+          "source_statement": "B02-CTCK",
+          "source_row": "61",
+          "source_pdf_page": 10,
+          "source_value_vnd": 0,
+          "normalized_value_million_vnd": 0,
+          "selected_column": "Quý hiện tại",
           "checked_at": "2026-11-01",
           "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2026.zip"
         }
