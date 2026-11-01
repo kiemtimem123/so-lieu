@@ -222,6 +222,7 @@ jobs:
 
           checkpoint = load_json(Path("reports/processing-checkpoint.json")) or {}
           checkpoint_states = checkpoint.get("symbolStates") or {}
+          active_hint = str(checkpoint.get("activeSymbol") or checkpoint.get("resumeSymbolHint") or "").strip().upper()
           completed_symbols = {
               str(symbol).strip().upper()
               for symbol, state in checkpoint_states.items()
@@ -248,6 +249,8 @@ jobs:
                       raise SystemExit(f"Ticker {requested} is already complete for automation through {requested_saved_last or 'its saved period'}; refusing reprocessing without a newer quarter.")
               requested_snapshot = load_json(Path("data") / f"financials-{requested}.json")
               requested_state = checkpoint_states.get(requested) or {}
+              if requires_manual_closeout(requested_state):
+                  raise SystemExit(f"Ticker {requested} is paused for manual source/core reconciliation; do not run OCR until the manual closeout is recorded.")
               requested_latest = latest_quarter(requested_snapshot)
               requested_last_completed = str(requested_state.get("lastQuarter") or "").strip()
               held_for_manual_review = requested_snapshot is not None and should_skip_unconfirmed(
@@ -275,7 +278,6 @@ jobs:
               # Resume the explicitly persisted active ticker before scanning the registry.
               # This prevents an old completion flag elsewhere in the queue from causing
               # an in-progress ticker to be skipped after a manual checkpoint correction.
-              active_hint = str(checkpoint.get("activeSymbol") or checkpoint.get("resumeSymbolHint") or "").strip().upper()
               if active_hint in symbols and active_hint not in completed_symbols:
                   active_snapshot = load_json(Path("data") / f"financials-{active_hint}.json")
                   active_state = checkpoint_states.get(active_hint)
