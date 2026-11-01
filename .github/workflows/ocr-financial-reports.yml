@@ -243,6 +243,7 @@ jobs:
               )
               already_completed_without_new_quarter = (
                   requested_state.get("completeForAutomation") is True
+                  and requested_state.get("manualReviewRemaining") is not True
                   and requested_latest
                   and requested_last_completed
                   and requested_latest <= requested_last_completed
