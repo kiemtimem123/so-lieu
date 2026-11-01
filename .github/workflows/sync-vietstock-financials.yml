@@ -81,6 +81,12 @@ jobs:
             echo "::notice::Do not download system OCR packages in each sync batch. Searchable PDFs will be parsed natively; scanned PDFs remain pending for the separate stored-report OCR workflow."
           fi
 
+      - name: Install Vietnamese OCR tools for active VCI source PDFs
+        if: steps.select.outputs.symbol == 'VCI'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils tesseract-ocr tesseract-ocr-vie
+
       - name: Install document processing dependencies
         run: python -m pip install --upgrade requests pypdf pdf2image pytesseract Pillow
 
