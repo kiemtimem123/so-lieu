@@ -647,6 +647,11 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
  if symbol in BANKS:
   # Some bank B02/TCTD templates label equity as "Vốn và các quỹ"; prioritize
   # it before the generic "vốn chủ sở hữu" substring in the total-sources row.
+  if assets is None and balance and symbol in BROKERS:
+   # Vietstock B01-CTCK reports use row 270 = 100 + 200 for total assets.
+   # OCR may corrupt the label while preserving the unique formula and amounts.
+   assets=value_by_row_prefix(balance,[r"100\s*\+\s*200"],factor)
+
   equity_labels=["von va cac quy"]+equity_labels
  equity=value_by_label(
   balance,equity_labels,factor,
@@ -755,6 +760,12 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
   if isinstance(coded_liabilities,(int,float)):
    liabilities=coded_liabilities
 
+  if balance and symbol in BROKERS and not isinstance(liabilities,(int,float)):
+   # OCR can prefix the CTCK aggregate-liability row with punctuation/underscore.
+   liabilities=value_by_row_prefix(
+    balance,[r"^[\s,;:._\-|]*c\.?\s+no\s+phai\s+tra(?:\s|$)"],factor
+   )
+
  tolerance=max(5.0,abs(assets)*0.00001) if isinstance(assets,(int,float)) else 5.0
  source_matches_assets=(
   isinstance(assets,(int,float)) and isinstance(source_total,(int,float))
@@ -800,6 +811,7 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
   "loi nhuan ke toan truoc thue","loi nhuan truoc thue","profit before tax"
  ]
  net_labels=[
+  "loi nhuan ke toan sau thue tndn",
   "loi nhuan sau thue thu nhap doanh nghiep","loi nhuan sau thue","profit after tax"
  ]
  if summary_pages:
@@ -844,7 +856,16 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
  ) if profit_pages else None
  if eps is not None and abs(eps)<1000000:
   out["eps"]=eps
- if isinstance(detail_found.get("revenue"),(int,float)):
+ if symbol in BROKERS and profit_pages:
+  broker_revenue=value_by_label(
+   profit_pages,["cong doanh thu hoat dong","tong doanh thu hoat dong","total operating revenue"],
+   factor,exclude_terms=["tai chinh"]
+  )
+  if broker_revenue is not None:
+   out["revenue"]=broker_revenue
+  else:
+   out.pop("revenue",None)
+ elif isinstance(detail_found.get("revenue"),(int,float)):
   out["revenue"]=detail_found["revenue"]
  elif symbol in BANKS and profit_pages:
   bank_revenue=value_by_label(
@@ -4180,7 +4201,7 @@ def enrich_snapshot(path):
     "total_assets","total_liabilities","equity","pretax_profit","net_profit"
    })
    item["core_financial_extraction_updated_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
-   item["verification_status_note"]="Các chỉ tiêu lõi đã được trích xuất tự động từ BCTC hợp nhất VietstockFinance; cần đối chiếu trực quan trước khi coi là xác minh."
+   item["verification_status_note"]="Các chỉ tiêu lõi đã được trích xuất tự động từ BCTC VietstockFinance theo phạm vi nguồn được gắn cho mã; cần đối chiếu trực quan trước khi coi là xác minh."
    changed=True
    quarter_count+=1
    field_count+=1
