@@ -192,7 +192,14 @@
         "revenue",
         "income_tax_current",
         "income_tax_deferred",
-        "eps"
+        "eps",
+        "broker_operating_expenses",
+        "financial_income",
+        "financial_expense",
+        "interest_expense",
+        "admin_expense",
+        "operating_profit",
+        "broker_admin_expenses"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/6f6b826b3132547a.zip",
@@ -271,6 +278,36 @@
           "old_value": null,
           "new_value": 438,
           "reason": "Đối chiếu trực quan B02-CTCK dòng 501 (Lãi cơ bản trên cổ phiếu), PDF trang 9, trang in 3. Parser cũ có lúc nhận nhầm mã dòng 501 thành giá trị EPS hoặc không trích được; giá trị đã sửa theo cột Quý hiện tại."
+        },
+        "broker_operating_expenses": {
+          "old_value": null,
+          "new_value": 74121,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 40, PDF trang 8, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "financial_income": {
+          "old_value": null,
+          "new_value": 594,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 50, PDF trang 8, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "financial_expense": {
+          "old_value": null,
+          "new_value": 11478,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 60, PDF trang 8, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "interest_expense": {
+          "old_value": null,
+          "new_value": 11478,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 52, PDF trang 8, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "admin_expense": {
+          "old_value": null,
+          "new_value": 35823,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 62, PDF trang 8, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "operating_profit": {
+          "old_value": null,
+          "new_value": 443737,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 70, PDF trang 8, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
         }
       },
       "broker_long_term_bonds": 0,
@@ -531,7 +568,14 @@
       "scope_basis": "separate",
       "eps": 438,
       "financial_line_items_manually_verified_fields": [
-        "eps"
+        "eps",
+        "broker_operating_expenses",
+        "financial_income",
+        "financial_expense",
+        "interest_expense",
+        "admin_expense",
+        "operating_profit",
+        "broker_admin_expenses"
       ],
       "eps_source_reconciliation": {
         "status": "source_visually_verified",
@@ -548,6 +592,50 @@
         "previous_value": null,
         "checked_at": "2026-11-01",
         "parser_regression": "Loại mã dòng 501 đứng trước các cột giá trị; không quy đổi EPS sang triệu VND."
+      },
+      "broker_operating_expenses": 74121,
+      "financial_income": 594,
+      "financial_expense": 11478,
+      "interest_expense": 11478,
+      "admin_expense": 35823,
+      "operating_profit": 443737,
+      "broker_admin_expenses": 35823,
+      "b02_detail_source_reconciliation": {
+        "status": "source_visually_verified",
+        "source_statement": "B02-CTCK",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2024.zip",
+        "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/6f6b826b3132547a.zip",
+        "source_pdf_page": 8,
+        "selected_column": "Quý hiện tại",
+        "unit": "VND → triệu VND",
+        "source_rows": {
+          "broker_operating_expenses": 40,
+          "financial_income": 50,
+          "financial_expense": 60,
+          "interest_expense": 52,
+          "admin_expense": 62,
+          "operating_profit": 70
+        },
+        "source_values_vnd": {
+          "broker_operating_expenses": 74120967510,
+          "financial_income": 594336639,
+          "financial_expense": 11477808575,
+          "interest_expense": 11477808575,
+          "admin_expense": 35823013122,
+          "operating_profit": 443737348696
+        },
+        "normalized_values_million_vnd": {
+          "broker_operating_expenses": 74121,
+          "financial_income": 594,
+          "financial_expense": 11478,
+          "interest_expense": 11478,
+          "admin_expense": 35823,
+          "operating_profit": 443737
+        },
+        "source_formula": "Operating profit (row 70) = operating revenue (row 20) + financial income (row 50) − operating expenses (row 40) − financial expenses (row 60) − selling expenses (row 61) − broker administration expenses (row 62).",
+        "manually_visual_reviewed": true,
+        "checked_at": "2026-11-01"
       }
     },
     {
@@ -762,7 +850,8 @@
         "income_tax_current",
         "income_tax_deferred",
         "current_assets",
-        "eps"
+        "eps",
+        "operating_profit"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/ea899ceb74febb51.zip",
@@ -831,9 +920,9 @@
       "broker_customer_deposits": 971739,
       "financial_income": 672,
       "financial_expense": 13457,
-      "interest_expense": 0,
+      "interest_expense": 13457,
       "admin_expense": 26719,
-      "broker_operating_expenses": 2914,
+      "broker_operating_expenses": 128185,
       "broker_admin_expenses": 26719,
       "broker_total_operating_expenses": 128185,
       "broker_brokerage_expense": 52963,
@@ -866,9 +955,9 @@
           "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
         },
         "interest_expense": {
-          "previous_value": 13457,
-          "new_value": 0,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "old_value": 0,
+          "new_value": 13457,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 52, PDF trang 7, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
         },
         "broker_interest_expense": {
           "previous_value": 13457,
@@ -884,6 +973,16 @@
           "old_value": 301,
           "new_value": 436,
           "reason": "Đối chiếu trực quan B02-CTCK dòng 501 (Lãi cơ bản trên cổ phiếu), PDF trang 8, trang in 3. Parser cũ có lúc nhận nhầm mã dòng 501 thành giá trị EPS hoặc không trích được; giá trị đã sửa theo cột Quý hiện tại."
+        },
+        "broker_operating_expenses": {
+          "old_value": 2914,
+          "new_value": 128185,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 40, PDF trang 7, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "operating_profit": {
+          "old_value": null,
+          "new_value": 431731,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 70, PDF trang 7, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
         }
       },
       "broker_long_term_bonds": 0,
@@ -1145,7 +1244,14 @@
       },
       "scope_basis": "separate",
       "financial_line_items_manually_verified_fields": [
-        "eps"
+        "eps",
+        "broker_operating_expenses",
+        "financial_income",
+        "financial_expense",
+        "interest_expense",
+        "admin_expense",
+        "operating_profit",
+        "broker_admin_expenses"
       ],
       "eps_source_reconciliation": {
         "status": "source_visually_verified",
@@ -1162,6 +1268,44 @@
         "previous_value": 301,
         "checked_at": "2026-11-01",
         "parser_regression": "Loại mã dòng 501 đứng trước các cột giá trị; không quy đổi EPS sang triệu VND."
+      },
+      "operating_profit": 431731,
+      "b02_detail_source_reconciliation": {
+        "status": "source_visually_verified",
+        "source_statement": "B02-CTCK",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2024.zip",
+        "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/ea899ceb74febb51.zip",
+        "source_pdf_page": 7,
+        "selected_column": "Quý hiện tại",
+        "unit": "VND → triệu VND",
+        "source_rows": {
+          "broker_operating_expenses": 40,
+          "financial_income": 50,
+          "financial_expense": 60,
+          "interest_expense": 52,
+          "admin_expense": 62,
+          "operating_profit": 70
+        },
+        "source_values_vnd": {
+          "broker_operating_expenses": 128185074023,
+          "financial_income": 672488005,
+          "financial_expense": 13457348548,
+          "interest_expense": 13457348548,
+          "admin_expense": 26719362638,
+          "operating_profit": 431731458945
+        },
+        "normalized_values_million_vnd": {
+          "broker_operating_expenses": 128185,
+          "financial_income": 672,
+          "financial_expense": 13457,
+          "interest_expense": 13457,
+          "admin_expense": 26719,
+          "operating_profit": 431731
+        },
+        "source_formula": "Operating profit (row 70) = operating revenue (row 20) + financial income (row 50) − operating expenses (row 40) − financial expenses (row 60) − selling expenses (row 61) − broker administration expenses (row 62).",
+        "manually_visual_reviewed": true,
+        "checked_at": "2026-11-01"
       }
     },
     {
@@ -1357,7 +1501,14 @@
         "income_tax_current",
         "income_tax_deferred",
         "current_assets",
-        "eps"
+        "eps",
+        "broker_operating_expenses",
+        "financial_income",
+        "financial_expense",
+        "interest_expense",
+        "admin_expense",
+        "operating_profit",
+        "broker_admin_expenses"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/e6d456f3b0aa85a5.zip",
@@ -1434,6 +1585,36 @@
           "old_value": null,
           "new_value": 85,
           "reason": "Đối chiếu trực quan B02-CTCK dòng 501 (Lãi cơ bản trên cổ phiếu), PDF trang 9, trang in 3. Parser cũ có lúc nhận nhầm mã dòng 501 thành giá trị EPS hoặc không trích được; giá trị đã sửa theo cột Quý hiện tại."
+        },
+        "broker_operating_expenses": {
+          "old_value": null,
+          "new_value": 163223,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 40, PDF trang 8, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "financial_income": {
+          "old_value": null,
+          "new_value": 620,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 50, PDF trang 8, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "financial_expense": {
+          "old_value": null,
+          "new_value": 14620,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 60, PDF trang 8, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "interest_expense": {
+          "old_value": null,
+          "new_value": 14620,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 52, PDF trang 8, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "admin_expense": {
+          "old_value": null,
+          "new_value": 23424,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 62, PDF trang 8, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "operating_profit": {
+          "old_value": null,
+          "new_value": 75456,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 70, PDF trang 8, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
         }
       },
       "financing_cash_flow_ytd": 692982,
@@ -1630,7 +1811,14 @@
       "scope_basis": "separate",
       "eps": 85,
       "financial_line_items_manually_verified_fields": [
-        "eps"
+        "eps",
+        "broker_operating_expenses",
+        "financial_income",
+        "financial_expense",
+        "interest_expense",
+        "admin_expense",
+        "operating_profit",
+        "broker_admin_expenses"
       ],
       "eps_source_reconciliation": {
         "status": "source_visually_verified",
@@ -1647,6 +1835,50 @@
         "previous_value": null,
         "checked_at": "2026-11-01",
         "parser_regression": "Loại mã dòng 501 đứng trước các cột giá trị; không quy đổi EPS sang triệu VND."
+      },
+      "broker_operating_expenses": 163223,
+      "financial_income": 620,
+      "financial_expense": 14620,
+      "interest_expense": 14620,
+      "admin_expense": 23424,
+      "operating_profit": 75456,
+      "broker_admin_expenses": 23424,
+      "b02_detail_source_reconciliation": {
+        "status": "source_visually_verified",
+        "source_statement": "B02-CTCK",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2024.zip",
+        "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/e6d456f3b0aa85a5.zip",
+        "source_pdf_page": 8,
+        "selected_column": "Quý hiện tại",
+        "unit": "VND → triệu VND",
+        "source_rows": {
+          "broker_operating_expenses": 40,
+          "financial_income": 50,
+          "financial_expense": 60,
+          "interest_expense": 52,
+          "admin_expense": 62,
+          "operating_profit": 70
+        },
+        "source_values_vnd": {
+          "broker_operating_expenses": 163223416214,
+          "financial_income": 619975300,
+          "financial_expense": 14620428696,
+          "interest_expense": 14620428696,
+          "admin_expense": 23424150014,
+          "operating_profit": 75455671051
+        },
+        "normalized_values_million_vnd": {
+          "broker_operating_expenses": 163223,
+          "financial_income": 620,
+          "financial_expense": 14620,
+          "interest_expense": 14620,
+          "admin_expense": 23424,
+          "operating_profit": 75456
+        },
+        "source_formula": "Operating profit (row 70) = operating revenue (row 20) + financial income (row 50) − operating expenses (row 40) − financial expenses (row 60) − selling expenses (row 61) − broker administration expenses (row 62).",
+        "manually_visual_reviewed": true,
+        "checked_at": "2026-11-01"
       }
     },
     {
@@ -1897,13 +2129,14 @@
         "income_tax_current",
         "income_tax_deferred",
         "current_assets",
-        "eps"
+        "eps",
+        "operating_profit"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/cc0a692f672abc5d.pdf",
       "financial_line_items_updated_at": "2026-10-27T07:53:54+00:00",
       "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. SHS CASHFLOW NORMALIZATION 2026-10-29: source B03b-CTCK company cash-flow lines 60/70/80/90 and cash balance lines 101/102/103/104; exclude the separate brokerage/trust cash-flow section. YTD and standalone quarter are kept distinct. Dashes on the stated FX-effect row are normalized as zero. Source-page visual review status is tracked separately; no balancing plugs. Đã ưu tiên B03b Q4/2024 gốc (trang PDF 13–14) sau rà soát trực quan; giữ chênh lệch với cột so sánh Q4/2025 trong metadata, không thay số nguồn gốc. Đã rà soát trực quan B02 gốc: khôi phục tổng doanh thu hoạt động dòng 20 = 551,216 triệu VND; thuế hiện hành 35,988, thuế hoãn lại 13,444 triệu VND. Không dùng dòng doanh thu thành phần thay tổng doanh thu. Đã rà soát B01 ảnh PDF gốc, khôi phục các tổng tài sản/ngắn hạn/dài hạn và nguồn vốn có dòng hiển thị rõ; các cờ chặn tổng phụ tương ứng đã gỡ.",
-      "interest_expense": 0,
+      "interest_expense": 23633,
       "financial_line_items_prior_values": {
         "revenue": 35,
         "fixed_assets": 1500,
@@ -1924,7 +2157,7 @@
       "broker_advisory_revenue": 0,
       "broker_custody_revenue": 3369,
       "broker_financial_advisory_revenue": 0,
-      "broker_operating_expenses": 24903,
+      "broker_operating_expenses": 202588,
       "financial_line_items_schema_version": "2026-10-27-bank-split-column-and-cashflow-statement-v9",
       "financial_line_items_schema_updated_at": "2026-10-27T09:26:03+00:00",
       "financial_line_items_rejected_fields": [],
@@ -1999,9 +2232,9 @@
           "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
         },
         "interest_expense": {
-          "previous_value": 24903,
-          "new_value": 0,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "old_value": 0,
+          "new_value": 23633,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 52, PDF trang 11, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
         },
         "broker_financial_advisory_revenue": {
           "previous_value": 848,
@@ -2017,6 +2250,16 @@
           "previous_value": 23633,
           "new_value": 0,
           "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "broker_operating_expenses": {
+          "old_value": 24903,
+          "new_value": 202588,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 40, PDF trang 11, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "operating_profit": {
+          "old_value": null,
+          "new_value": 281015,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 70, PDF trang 11, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
         }
       },
       "cash_beginning_reported_ytd": 851889,
@@ -2301,7 +2544,14 @@
       },
       "scope_basis": "separate",
       "financial_line_items_manually_verified_fields": [
-        "eps"
+        "eps",
+        "broker_operating_expenses",
+        "financial_income",
+        "financial_expense",
+        "interest_expense",
+        "admin_expense",
+        "operating_profit",
+        "broker_admin_expenses"
       ],
       "eps_source_reconciliation": {
         "status": "source_visually_verified",
@@ -2318,6 +2568,44 @@
         "previous_value": 286,
         "checked_at": "2026-11-01",
         "parser_regression": "Loại mã dòng 501 đứng trước các cột giá trị; không quy đổi EPS sang triệu VND."
+      },
+      "operating_profit": 281015,
+      "b02_detail_source_reconciliation": {
+        "status": "source_visually_verified",
+        "source_statement": "B02-CTCK",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2024.pdf",
+        "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/cc0a692f672abc5d.pdf",
+        "source_pdf_page": 11,
+        "selected_column": "Quý hiện tại",
+        "unit": "VND → triệu VND",
+        "source_rows": {
+          "broker_operating_expenses": 40,
+          "financial_income": 50,
+          "financial_expense": 60,
+          "interest_expense": 52,
+          "admin_expense": 62,
+          "operating_profit": 70
+        },
+        "source_values_vnd": {
+          "broker_operating_expenses": 202587918044,
+          "financial_income": 1714055988,
+          "financial_expense": 23632715813,
+          "interest_expense": 23632715813,
+          "admin_expense": 45694608552,
+          "operating_profit": 281015114879
+        },
+        "normalized_values_million_vnd": {
+          "broker_operating_expenses": 202588,
+          "financial_income": 1714,
+          "financial_expense": 23633,
+          "interest_expense": 23633,
+          "admin_expense": 45695,
+          "operating_profit": 281015
+        },
+        "source_formula": "Operating profit (row 70) = operating revenue (row 20) + financial income (row 50) − operating expenses (row 40) − financial expenses (row 60) − selling expenses (row 61) − broker administration expenses (row 62).",
+        "manually_visual_reviewed": true,
+        "checked_at": "2026-11-01"
       }
     },
     {
@@ -2509,7 +2797,14 @@
         "total_liabilities",
         "current_liabilities",
         "long_term_liabilities",
-        "eps"
+        "eps",
+        "broker_operating_expenses",
+        "financial_income",
+        "financial_expense",
+        "interest_expense",
+        "admin_expense",
+        "operating_profit",
+        "broker_admin_expenses"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/be10b6b2bb57c581.pdf",
@@ -2584,6 +2879,36 @@
           "old_value": null,
           "new_value": 323,
           "reason": "Đối chiếu trực quan B02-CTCK dòng 501 (Lãi cơ bản trên cổ phiếu), PDF trang 15, trang in 7. Parser cũ có lúc nhận nhầm mã dòng 501 thành giá trị EPS hoặc không trích được; giá trị đã sửa theo cột Quý hiện tại."
+        },
+        "broker_operating_expenses": {
+          "old_value": null,
+          "new_value": 179674,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 40, PDF trang 14, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "financial_income": {
+          "old_value": null,
+          "new_value": 548,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 50, PDF trang 14, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "financial_expense": {
+          "old_value": null,
+          "new_value": 26572,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 60, PDF trang 14, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "interest_expense": {
+          "old_value": null,
+          "new_value": 26572,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 52, PDF trang 14, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "admin_expense": {
+          "old_value": null,
+          "new_value": 30146,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 62, PDF trang 14, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "operating_profit": {
+          "old_value": null,
+          "new_value": 325685,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 70, PDF trang 14, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
         }
       },
       "operating_cash_flow_ytd": -909328,
@@ -2853,7 +3178,14 @@
       "scope_basis": "separate",
       "eps": 323,
       "financial_line_items_manually_verified_fields": [
-        "eps"
+        "eps",
+        "broker_operating_expenses",
+        "financial_income",
+        "financial_expense",
+        "interest_expense",
+        "admin_expense",
+        "operating_profit",
+        "broker_admin_expenses"
       ],
       "eps_source_reconciliation": {
         "status": "source_visually_verified",
@@ -2870,6 +3202,50 @@
         "previous_value": null,
         "checked_at": "2026-11-01",
         "parser_regression": "Loại mã dòng 501 đứng trước các cột giá trị; không quy đổi EPS sang triệu VND."
+      },
+      "broker_operating_expenses": 179674,
+      "financial_income": 548,
+      "financial_expense": 26572,
+      "interest_expense": 26572,
+      "admin_expense": 30146,
+      "operating_profit": 325685,
+      "broker_admin_expenses": 30146,
+      "b02_detail_source_reconciliation": {
+        "status": "source_visually_verified",
+        "source_statement": "B02-CTCK",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2025.pdf",
+        "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/be10b6b2bb57c581.pdf",
+        "source_pdf_page": 14,
+        "selected_column": "Quý hiện tại",
+        "unit": "VND → triệu VND",
+        "source_rows": {
+          "broker_operating_expenses": 40,
+          "financial_income": 50,
+          "financial_expense": 60,
+          "interest_expense": 52,
+          "admin_expense": 62,
+          "operating_profit": 70
+        },
+        "source_values_vnd": {
+          "broker_operating_expenses": 179674233421,
+          "financial_income": 548232367,
+          "financial_expense": 26571795542,
+          "interest_expense": 26571795542,
+          "admin_expense": 30146076886,
+          "operating_profit": 325684934158
+        },
+        "normalized_values_million_vnd": {
+          "broker_operating_expenses": 179674,
+          "financial_income": 548,
+          "financial_expense": 26572,
+          "interest_expense": 26572,
+          "admin_expense": 30146,
+          "operating_profit": 325685
+        },
+        "source_formula": "Operating profit (row 70) = operating revenue (row 20) + financial income (row 50) − operating expenses (row 40) − financial expenses (row 60) − selling expenses (row 61) − broker administration expenses (row 62).",
+        "manually_visual_reviewed": true,
+        "checked_at": "2026-11-01"
       }
     },
     {
@@ -3126,7 +3502,8 @@
         "operating_cash_flow_ytd",
         "retained_earnings",
         "revenue",
-        "eps"
+        "eps",
+        "operating_profit"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/12d2061881d334c4.pdf",
@@ -3154,7 +3531,7 @@
       "broker_advisory_revenue": 5305,
       "broker_custody_revenue": 3680,
       "broker_financial_advisory_revenue": 13115,
-      "broker_operating_expenses": 3802,
+      "broker_operating_expenses": 156008,
       "broker_admin_expenses": 23316,
       "financial_line_items_schema_version": "2026-10-27-bank-split-column-and-cashflow-statement-v9",
       "financial_line_items_schema_updated_at": "2026-10-27T09:26:09+00:00",
@@ -3214,6 +3591,16 @@
           "old_value": 501,
           "new_value": 471,
           "reason": "Đối chiếu trực quan B02-CTCK dòng 501 (Lãi cơ bản trên cổ phiếu), PDF trang 11, trang in 2. Parser cũ có lúc nhận nhầm mã dòng 501 thành giá trị EPS hoặc không trích được; giá trị đã sửa theo cột Quý hiện tại."
+        },
+        "broker_operating_expenses": {
+          "old_value": 3802,
+          "new_value": 156008,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 40, PDF trang 11, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "operating_profit": {
+          "old_value": null,
+          "new_value": 462960,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 70, PDF trang 11, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
         }
       },
       "income_tax_current": 38933,
@@ -3485,7 +3872,14 @@
       },
       "scope_basis": "separate",
       "financial_line_items_manually_verified_fields": [
-        "eps"
+        "eps",
+        "broker_operating_expenses",
+        "financial_income",
+        "financial_expense",
+        "interest_expense",
+        "admin_expense",
+        "operating_profit",
+        "broker_admin_expenses"
       ],
       "eps_source_reconciliation": {
         "status": "source_visually_verified",
@@ -3502,6 +3896,44 @@
         "previous_value": 501,
         "checked_at": "2026-11-01",
         "parser_regression": "Loại mã dòng 501 đứng trước các cột giá trị; không quy đổi EPS sang triệu VND."
+      },
+      "operating_profit": 462960,
+      "b02_detail_source_reconciliation": {
+        "status": "source_visually_verified",
+        "source_statement": "B02-CTCK",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2025.pdf",
+        "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/12d2061881d334c4.pdf",
+        "source_pdf_page": 11,
+        "selected_column": "Quý hiện tại",
+        "unit": "VND → triệu VND",
+        "source_rows": {
+          "broker_operating_expenses": 40,
+          "financial_income": 50,
+          "financial_expense": 60,
+          "interest_expense": 52,
+          "admin_expense": 62,
+          "operating_profit": 70
+        },
+        "source_values_vnd": {
+          "broker_operating_expenses": 156008269766,
+          "financial_income": 876758573,
+          "financial_expense": 52506591716,
+          "interest_expense": 52506591716,
+          "admin_expense": 23315703850,
+          "operating_profit": 462959681907
+        },
+        "normalized_values_million_vnd": {
+          "broker_operating_expenses": 156008,
+          "financial_income": 877,
+          "financial_expense": 52507,
+          "interest_expense": 52507,
+          "admin_expense": 23316,
+          "operating_profit": 462960
+        },
+        "source_formula": "Operating profit (row 70) = operating revenue (row 20) + financial income (row 50) − operating expenses (row 40) − financial expenses (row 60) − selling expenses (row 61) − broker administration expenses (row 62).",
+        "manually_visual_reviewed": true,
+        "checked_at": "2026-11-01"
       }
     },
     {
@@ -3667,7 +4099,7 @@
       "fixed_assets": 31896,
       "revenue": 815909,
       "financial_income": 1419,
-      "financial_expense": 71723,
+      "financial_expense": 72324,
       "interest_expense": 71723,
       "selling_expense": 34454,
       "admin_expense": 34454,
@@ -3730,7 +4162,8 @@
         "retained_earnings",
         "revenue",
         "selling_expense",
-        "eps"
+        "eps",
+        "operating_profit"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/83437c9fa49105ec.zip",
@@ -3756,7 +4189,7 @@
       "broker_advisory_revenue": 6944,
       "broker_custody_revenue": 5327,
       "broker_financial_advisory_revenue": 12669,
-      "broker_operating_expenses": -4004,
+      "broker_operating_expenses": 120123,
       "broker_admin_expenses": 34454,
       "financial_line_items_schema_version": "2026-10-27-bank-split-column-and-cashflow-statement-v9",
       "financial_line_items_schema_updated_at": "2026-10-27T09:26:11+00:00",
@@ -3827,6 +4260,21 @@
           "old_value": 501,
           "new_value": 534,
           "reason": "Đối chiếu trực quan B02-CTCK dòng 501 (Lãi cơ bản trên cổ phiếu), PDF trang 12, trang in 7. Parser cũ có lúc nhận nhầm mã dòng 501 thành giá trị EPS hoặc không trích được; giá trị đã sửa theo cột Quý hiện tại."
+        },
+        "broker_operating_expenses": {
+          "old_value": -4004,
+          "new_value": 120123,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 40, PDF trang 11, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "financial_expense": {
+          "old_value": 71723,
+          "new_value": 72324,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 60, PDF trang 11, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "operating_profit": {
+          "old_value": null,
+          "new_value": 590426,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 70, PDF trang 11, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
         }
       },
       "net_cash_change_ytd": -15917,
@@ -4038,7 +4486,14 @@
       },
       "scope_basis": "separate",
       "financial_line_items_manually_verified_fields": [
-        "eps"
+        "eps",
+        "broker_operating_expenses",
+        "financial_income",
+        "financial_expense",
+        "interest_expense",
+        "admin_expense",
+        "operating_profit",
+        "broker_admin_expenses"
       ],
       "eps_source_reconciliation": {
         "status": "source_visually_verified",
@@ -4055,6 +4510,44 @@
         "previous_value": 501,
         "checked_at": "2026-11-01",
         "parser_regression": "Loại mã dòng 501 đứng trước các cột giá trị; không quy đổi EPS sang triệu VND."
+      },
+      "operating_profit": 590426,
+      "b02_detail_source_reconciliation": {
+        "status": "source_visually_verified",
+        "source_statement": "B02-CTCK",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2025.zip",
+        "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-2024-2026-20261019/83437c9fa49105ec.zip",
+        "source_pdf_page": 11,
+        "selected_column": "Quý hiện tại",
+        "unit": "VND → triệu VND",
+        "source_rows": {
+          "broker_operating_expenses": 40,
+          "financial_income": 50,
+          "financial_expense": 60,
+          "interest_expense": 52,
+          "admin_expense": 62,
+          "operating_profit": 70
+        },
+        "source_values_vnd": {
+          "broker_operating_expenses": 120123005577,
+          "financial_income": 1418676693,
+          "financial_expense": 72323989001,
+          "interest_expense": 71723441055,
+          "admin_expense": 34454349145,
+          "operating_profit": 590426328560
+        },
+        "normalized_values_million_vnd": {
+          "broker_operating_expenses": 120123,
+          "financial_income": 1419,
+          "financial_expense": 72324,
+          "interest_expense": 71723,
+          "admin_expense": 34454,
+          "operating_profit": 590426
+        },
+        "source_formula": "Operating profit (row 70) = operating revenue (row 20) + financial income (row 50) − operating expenses (row 40) − financial expenses (row 60) − selling expenses (row 61) − broker administration expenses (row 62).",
+        "manually_visual_reviewed": true,
+        "checked_at": "2026-11-01"
       }
     },
     {
@@ -4239,7 +4732,14 @@
         "long_term_liabilities",
         "fixed_assets",
         "cash_and_equivalents",
-        "eps"
+        "eps",
+        "broker_operating_expenses",
+        "financial_income",
+        "financial_expense",
+        "interest_expense",
+        "admin_expense",
+        "operating_profit",
+        "broker_admin_expenses"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-ocr-refresh-20261019/6b19d1aa37e72f9a.zip",
@@ -4342,6 +4842,36 @@
           "old_value": 501,
           "new_value": 246,
           "reason": "Đối chiếu trực quan B02-CTCK dòng 501 (Lãi cơ bản trên cổ phiếu), PDF trang 11, trang in 7. Parser cũ có lúc nhận nhầm mã dòng 501 thành giá trị EPS hoặc không trích được; giá trị đã sửa theo cột Quý hiện tại."
+        },
+        "broker_operating_expenses": {
+          "old_value": null,
+          "new_value": 1109817,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 40, PDF trang 10, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "financial_income": {
+          "old_value": null,
+          "new_value": 2260,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 50, PDF trang 10, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "financial_expense": {
+          "old_value": null,
+          "new_value": 130498,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 60, PDF trang 10, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "interest_expense": {
+          "old_value": null,
+          "new_value": 129516,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 52, PDF trang 10, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "admin_expense": {
+          "old_value": null,
+          "new_value": 86240,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 62, PDF trang 10, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "operating_profit": {
+          "old_value": null,
+          "new_value": 271499,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 70, PDF trang 10, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
         }
       },
       "operating_cash_flow_ytd": -6222977,
@@ -4630,7 +5160,14 @@
       },
       "scope_basis": "separate",
       "financial_line_items_manually_verified_fields": [
-        "eps"
+        "eps",
+        "broker_operating_expenses",
+        "financial_income",
+        "financial_expense",
+        "interest_expense",
+        "admin_expense",
+        "operating_profit",
+        "broker_admin_expenses"
       ],
       "eps_source_reconciliation": {
         "status": "source_visually_verified",
@@ -4647,6 +5184,50 @@
         "previous_value": 501,
         "checked_at": "2026-11-01",
         "parser_regression": "Loại mã dòng 501 đứng trước các cột giá trị; không quy đổi EPS sang triệu VND."
+      },
+      "broker_operating_expenses": 1109817,
+      "financial_income": 2260,
+      "financial_expense": 130498,
+      "interest_expense": 129516,
+      "admin_expense": 86240,
+      "operating_profit": 271499,
+      "broker_admin_expenses": 86240,
+      "b02_detail_source_reconciliation": {
+        "status": "source_visually_verified",
+        "source_statement": "B02-CTCK",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%204/SHS_Baocaotaichinh_Q4_2025.zip",
+        "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-ocr-refresh-20261019/6b19d1aa37e72f9a.zip",
+        "source_pdf_page": 10,
+        "selected_column": "Quý hiện tại",
+        "unit": "VND → triệu VND",
+        "source_rows": {
+          "broker_operating_expenses": 40,
+          "financial_income": 50,
+          "financial_expense": 60,
+          "interest_expense": 52,
+          "admin_expense": 62,
+          "operating_profit": 70
+        },
+        "source_values_vnd": {
+          "broker_operating_expenses": 1109817285762,
+          "financial_income": 2260334745,
+          "financial_expense": 130498324887,
+          "interest_expense": 129515579681,
+          "admin_expense": 86240083162,
+          "operating_profit": 271498613078
+        },
+        "normalized_values_million_vnd": {
+          "broker_operating_expenses": 1109817,
+          "financial_income": 2260,
+          "financial_expense": 130498,
+          "interest_expense": 129516,
+          "admin_expense": 86240,
+          "operating_profit": 271499
+        },
+        "source_formula": "Operating profit (row 70) = operating revenue (row 20) + financial income (row 50) − operating expenses (row 40) − financial expenses (row 60) − selling expenses (row 61) − broker administration expenses (row 62).",
+        "manually_visual_reviewed": true,
+        "checked_at": "2026-11-01"
       }
     },
     {
@@ -4803,8 +5384,8 @@
       "fixed_assets": 32437,
       "revenue": 564698,
       "financial_income": 1133,
-      "financial_expense": 165122,
-      "interest_expense": 0,
+      "financial_expense": 165608,
+      "interest_expense": 165122,
       "selling_expense": 28354,
       "admin_expense": 28354,
       "operating_cash_flow_ytd": 531012,
@@ -4868,7 +5449,8 @@
         "retained_earnings",
         "revenue",
         "selling_expense",
-        "eps"
+        "eps",
+        "operating_profit"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/5fe69d1fa2a83054.zip",
@@ -4896,7 +5478,7 @@
       "broker_advisory_revenue": 1995,
       "broker_custody_revenue": 3483,
       "broker_financial_advisory_revenue": 3800,
-      "broker_operating_expenses": 4222,
+      "broker_operating_expenses": 91874,
       "broker_admin_expenses": 28354,
       "financial_line_items_schema_version": "2026-10-27-bank-split-column-and-cashflow-statement-v9",
       "financial_line_items_schema_updated_at": "2026-10-27T09:26:14+00:00",
@@ -4973,6 +5555,26 @@
           "old_value": 501,
           "new_value": 258,
           "reason": "Đối chiếu trực quan B02-CTCK dòng 501 (Lãi cơ bản trên cổ phiếu), PDF trang 11, trang in 7. Parser cũ có lúc nhận nhầm mã dòng 501 thành giá trị EPS hoặc không trích được; giá trị đã sửa theo cột Quý hiện tại."
+        },
+        "broker_operating_expenses": {
+          "old_value": 4222,
+          "new_value": 91874,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 40, PDF trang 10, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "financial_expense": {
+          "old_value": 165122,
+          "new_value": 165608,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 60, PDF trang 10, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "interest_expense": {
+          "old_value": 0,
+          "new_value": 165122,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 52, PDF trang 10, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "operating_profit": {
+          "old_value": null,
+          "new_value": 279996,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 70, PDF trang 10, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
         }
       },
       "income_tax_current": 43592,
@@ -5218,7 +5820,14 @@
       },
       "scope_basis": "separate",
       "financial_line_items_manually_verified_fields": [
-        "eps"
+        "eps",
+        "broker_operating_expenses",
+        "financial_income",
+        "financial_expense",
+        "interest_expense",
+        "admin_expense",
+        "operating_profit",
+        "broker_admin_expenses"
       ],
       "eps_source_reconciliation": {
         "status": "source_visually_verified",
@@ -5235,6 +5844,44 @@
         "previous_value": 501,
         "checked_at": "2026-11-01",
         "parser_regression": "Loại mã dòng 501 đứng trước các cột giá trị; không quy đổi EPS sang triệu VND."
+      },
+      "operating_profit": 279996,
+      "b02_detail_source_reconciliation": {
+        "status": "source_visually_verified",
+        "source_statement": "B02-CTCK",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%201/SHS_Baocaotaichinh_Q1_2026.zip",
+        "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/5fe69d1fa2a83054.zip",
+        "source_pdf_page": 10,
+        "selected_column": "Quý hiện tại",
+        "unit": "VND → triệu VND",
+        "source_rows": {
+          "broker_operating_expenses": 40,
+          "financial_income": 50,
+          "financial_expense": 60,
+          "interest_expense": 52,
+          "admin_expense": 62,
+          "operating_profit": 70
+        },
+        "source_values_vnd": {
+          "broker_operating_expenses": 91873953735,
+          "financial_income": 1133322363,
+          "financial_expense": 165607777574,
+          "interest_expense": 165121750176,
+          "admin_expense": 28354117719,
+          "operating_profit": 279995790271
+        },
+        "normalized_values_million_vnd": {
+          "broker_operating_expenses": 91874,
+          "financial_income": 1133,
+          "financial_expense": 165608,
+          "interest_expense": 165122,
+          "admin_expense": 28354,
+          "operating_profit": 279996
+        },
+        "source_formula": "Operating profit (row 70) = operating revenue (row 20) + financial income (row 50) − operating expenses (row 40) − financial expenses (row 60) − selling expenses (row 61) − broker administration expenses (row 62).",
+        "manually_visual_reviewed": true,
+        "checked_at": "2026-11-01"
       }
     },
     {
@@ -5421,7 +6068,14 @@
         "non_current_assets",
         "current_liabilities",
         "long_term_liabilities",
-        "eps"
+        "eps",
+        "broker_operating_expenses",
+        "financial_income",
+        "financial_expense",
+        "interest_expense",
+        "admin_expense",
+        "operating_profit",
+        "broker_admin_expenses"
       ],
       "financial_line_items_status": "auto_extracted_pending_visual_review",
       "financial_line_items_source": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/9246a0423b1cd4aa.zip",
@@ -5464,6 +6118,36 @@
           "old_value": null,
           "new_value": 84,
           "reason": "Đối chiếu trực quan B02-CTCK dòng 501 (Lãi cơ bản trên cổ phiếu), PDF trang 11, trang in 7. Parser cũ có lúc nhận nhầm mã dòng 501 thành giá trị EPS hoặc không trích được; giá trị đã sửa theo cột Quý hiện tại."
+        },
+        "broker_operating_expenses": {
+          "old_value": null,
+          "new_value": 147304,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 40, PDF trang 10, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "financial_income": {
+          "old_value": null,
+          "new_value": 1040,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 50, PDF trang 10, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "financial_expense": {
+          "old_value": null,
+          "new_value": 196108,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 60, PDF trang 10, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "interest_expense": {
+          "old_value": null,
+          "new_value": 196108,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 52, PDF trang 10, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "admin_expense": {
+          "old_value": null,
+          "new_value": 18248,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 62, PDF trang 10, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
+        },
+        "operating_profit": {
+          "old_value": null,
+          "new_value": 89720,
+          "reason": "Đối chiếu trực quan B02-CTCK dòng 70, PDF trang 10, cột Quý hiện tại. Số gốc VND quy đổi sang triệu VND."
         }
       },
       "foreign_exchange_effect": 0,
@@ -5752,7 +6436,14 @@
       "scope_basis": "separate",
       "eps": 84,
       "financial_line_items_manually_verified_fields": [
-        "eps"
+        "eps",
+        "broker_operating_expenses",
+        "financial_income",
+        "financial_expense",
+        "interest_expense",
+        "admin_expense",
+        "operating_profit",
+        "broker_admin_expenses"
       ],
       "eps_source_reconciliation": {
         "status": "source_visually_verified",
@@ -5769,6 +6460,50 @@
         "previous_value": null,
         "checked_at": "2026-11-01",
         "parser_regression": "Loại mã dòng 501 đứng trước các cột giá trị; không quy đổi EPS sang triệu VND."
+      },
+      "broker_operating_expenses": 147304,
+      "financial_income": 1040,
+      "financial_expense": 196108,
+      "interest_expense": 196108,
+      "admin_expense": 18248,
+      "operating_profit": 89720,
+      "broker_admin_expenses": 18248,
+      "b02_detail_source_reconciliation": {
+        "status": "source_visually_verified",
+        "source_statement": "B02-CTCK",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%202/SHS_Baocaotaichinh_Q2_2026.zip",
+        "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_archive_file": "reports/raw/SHS/vietstock-shs-large-docs-retry-20261019/9246a0423b1cd4aa.zip",
+        "source_pdf_page": 10,
+        "selected_column": "Quý hiện tại",
+        "unit": "VND → triệu VND",
+        "source_rows": {
+          "broker_operating_expenses": 40,
+          "financial_income": 50,
+          "financial_expense": 60,
+          "interest_expense": 52,
+          "admin_expense": 62,
+          "operating_profit": 70
+        },
+        "source_values_vnd": {
+          "broker_operating_expenses": 147303922594,
+          "financial_income": 1040238290,
+          "financial_expense": 196107650467,
+          "interest_expense": 196107650467,
+          "admin_expense": 18247912189,
+          "operating_profit": 89720342626
+        },
+        "normalized_values_million_vnd": {
+          "broker_operating_expenses": 147304,
+          "financial_income": 1040,
+          "financial_expense": 196108,
+          "interest_expense": 196108,
+          "admin_expense": 18248,
+          "operating_profit": 89720
+        },
+        "source_formula": "Operating profit (row 70) = operating revenue (row 20) + financial income (row 50) − operating expenses (row 40) − financial expenses (row 60) − selling expenses (row 61) − broker administration expenses (row 62).",
+        "manually_visual_reviewed": true,
+        "checked_at": "2026-11-01"
       }
     },
     {
@@ -6171,10 +6906,46 @@
         "previous_value": 226,
         "checked_at": "2026-11-01",
         "parser_regression": "Loại mã dòng 501 đứng trước các cột giá trị; không quy đổi EPS sang triệu VND."
+      },
+      "b02_detail_source_reconciliation": {
+        "status": "source_visually_verified",
+        "source_statement": "B02-CTCK",
+        "source_url": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2026.zip?ver=df26ce44",
+        "source_index_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+        "source_pdf_page": 11,
+        "selected_column": "Quý hiện tại",
+        "unit": "VND → triệu VND",
+        "source_rows": {
+          "broker_operating_expenses": 40,
+          "financial_income": 50,
+          "financial_expense": 60,
+          "interest_expense": 52,
+          "admin_expense": 62,
+          "operating_profit": 70
+        },
+        "source_values_vnd": {
+          "broker_operating_expenses": 370115926821,
+          "financial_income": 981981572,
+          "financial_expense": 352361500605,
+          "interest_expense": 348776342385,
+          "admin_expense": 29685108052,
+          "operating_profit": 250809842282
+        },
+        "normalized_values_million_vnd": {
+          "broker_operating_expenses": 370116,
+          "financial_income": 982,
+          "financial_expense": 352362,
+          "interest_expense": 348776,
+          "admin_expense": 29685,
+          "operating_profit": 250810
+        },
+        "source_formula": "Operating profit (row 70) = operating revenue (row 20) + financial income (row 50) − operating expenses (row 40) − financial expenses (row 60) − selling expenses (row 61) − broker administration expenses (row 62).",
+        "manually_visual_reviewed": true,
+        "checked_at": "2026-11-01"
       }
     }
   ],
-  "note": "SHS: 10 kỳ BCTC Q1/2024–Q2/2026 từ VietstockFinance. Lợi nhuận quý ưu tiên cột phát sinh riêng và kiểm tra bằng lũy kế khi có. Q4/2024 đã sửa từ lỗi đọc nhầm LNTT/LNST và được đối chiếu trực tiếp PDF; Q2/2025 bảng cân đối và KQHĐ cũng đã kiểm tra trực quan. Các kỳ còn lại được đối chiếu bằng văn bản trích xuất/OCR của đúng PDF/ZIP VietstockFinance, chưa gắn nhãn kiểm tra trực quan toàn bộ tài liệu. SHS cash-flow normalization 2026-10-29: corrected 10-period series to B03b-CTCK final cash-flow lines and consistent YTD basis; selected newer comparative for FY2024 and H1/2025 with documented source-revision differences. H1/2024 final flow subtotals remain blank due OCR/source-comparator inconsistency, with Q3/2024 standalone flows withheld because the H1 baseline is unresolved. No unsupported cash flow or balancing amount was inserted. SHS scope closeout 2026-11-01: Q1–Q3/2024 standalone confirmed by checked disclosure letter; Q4/2025 parent-company report identified from exact PDF member name; periods with no explicit scope remain blocked/blank; Q3/2026 discovered and source-page reviewed but scope unverified, no metrics extracted. Scope review update 2026-11-01: Q4/2024, Q1-Q3/2025 and Q1-Q2/2026 are issuer-company BCTC riêng lẻ based on quarterly B01-CTCK pages and corroborating VietstockFinance-linked annual/semi-annual audited/reviewed Company financial statements. These periods are no longer incorrectly blocked solely because neutral quarterly filenames lack 'hợp nhất/riêng lẻ'. EPS audit 2026-11-01: visually checked B02 row 501 for all 11 quarterly reports; corrected row-code parsing errors and populated missing EPS. EPS is VND/share and uses the current-quarter column.",
+  "note": "SHS: 10 kỳ BCTC Q1/2024–Q2/2026 từ VietstockFinance. Lợi nhuận quý ưu tiên cột phát sinh riêng và kiểm tra bằng lũy kế khi có. Q4/2024 đã sửa từ lỗi đọc nhầm LNTT/LNST và được đối chiếu trực tiếp PDF; Q2/2025 bảng cân đối và KQHĐ cũng đã kiểm tra trực quan. Các kỳ còn lại được đối chiếu bằng văn bản trích xuất/OCR của đúng PDF/ZIP VietstockFinance, chưa gắn nhãn kiểm tra trực quan toàn bộ tài liệu. SHS cash-flow normalization 2026-10-29: corrected 10-period series to B03b-CTCK final cash-flow lines and consistent YTD basis; selected newer comparative for FY2024 and H1/2025 with documented source-revision differences. H1/2024 final flow subtotals remain blank due OCR/source-comparator inconsistency, with Q3/2024 standalone flows withheld because the H1 baseline is unresolved. No unsupported cash flow or balancing amount was inserted. SHS scope closeout 2026-11-01: Q1–Q3/2024 standalone confirmed by checked disclosure letter; Q4/2025 parent-company report identified from exact PDF member name; periods with no explicit scope remain blocked/blank; Q3/2026 discovered and source-page reviewed but scope unverified, no metrics extracted. Scope review update 2026-11-01: Q4/2024, Q1-Q3/2025 and Q1-Q2/2026 are issuer-company BCTC riêng lẻ based on quarterly B01-CTCK pages and corroborating VietstockFinance-linked annual/semi-annual audited/reviewed Company financial statements. These periods are no longer incorrectly blocked solely because neutral quarterly filenames lack 'hợp nhất/riêng lẻ'. EPS audit 2026-11-01: visually checked B02 row 501 for all 11 quarterly reports; corrected row-code parsing errors and populated missing EPS. EPS is VND/share and uses the current-quarter column. B02 detail-row audit 2026-11-01: all 11 quarterly B02 reports were visually checked for rows 40, 50, 52, 60, 62 and 70 in the current-quarter columns; figures were normalized from VND to million VND and stored with source-page evidence.",
   "bootstrap_status": "in_progress",
   "bootstrap_completed_at": "2026-10-22T13:14:50+00:00",
   "bootstrap_completion_note": "Các kỳ báo cáo có thể tự trích xuất đã được lưu; một số kỳ còn cần đối chiếu thủ công.",
@@ -6182,5 +6953,5 @@
   "sync_status": "records_found",
   "bootstrap_last_attempt_at": "2026-11-01T03:36:55+00:00",
   "bootstrap_attempt_count": 1,
-  "updatedAt": "2026-11-01T04:45:00Z"
+  "updatedAt": "2026-11-01T05:05:00Z"
 }
