@@ -448,6 +448,9 @@ def row_numbers(lines: list[str], labels: list[str], limit: int = 5, min_abs: in
                 continue
             if term == "nợ phải trả" and any(word in suffix for word in ("ngan han", "dai han")):
                 continue
+            # Avoid mistaking the later financial-income subtotal for broker operating revenue.
+            if term == "doanh thu hoạt động" and "tai chinh" in suffix:
+                continue
             if "von chu so huu" in suffix and ("no phai tra" in term or "liabilities" in term):
                 # "Total liabilities and equity" is a source-of-funds total, not liabilities.
                 continue
