@@ -1,0 +1,141 @@
+name: Extract SHS Q3 2026 from VietstockFinance source
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "reports/shs-q3-2026-extract.trigger.json"
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout SHS snapshot and official Vietstock parser
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /data/financials-SHS.json
+            /scripts/sync-vietstock-financials.py
+
+      - name: Install native PDF and Vietnamese OCR
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils tesseract-ocr tesseract-ocr-vie tesseract-ocr-eng
+          python -m pip install --upgrade requests pypdf pdf2image pytesseract Pillow
+
+      - name: OCR and extract only SHS Q3 2026 from the VietstockFinance-linked PDF
+        env:
+          PYTHONUTF8: "1"
+          SOURCE_URL: https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%203/SHS_Baocaotaichinh_Q3_2026.zip?ver=df26ce44
+        run: |
+          python - <<'PY'
+          import hashlib, importlib.util, io, json, re, sys, zipfile
+          from pathlib import Path
+          import requests
+          from pypdf import PdfReader
+          from pdf2image import convert_from_bytes
+
+          ROOT = Path.cwd()
+          out = Path("shs-q3-2026-extraction")
+          out.mkdir(exist_ok=True)
+          spec = importlib.util.spec_from_file_location("vietstock_sync", ROOT / "scripts" / "sync-vietstock-financials.py")
+          mod = importlib.util.module_from_spec(spec)
+          sys.modules[spec.name] = mod
+          spec.loader.exec_module(mod)
+
+          source_url = __import__("os").environ["SOURCE_URL"]
+          response = requests.get(source_url, headers=mod.HEADERS, timeout=(30, 180))
+          response.raise_for_status()
+          archive_bytes = response.content
+          with zipfile.ZipFile(io.BytesIO(archive_bytes)) as zf:
+              pdf_names = [n for n in zf.namelist() if n.lower().endswith(".pdf")]
+              vi_names = [n for n in pdf_names if re.search(r"(^|[_-])vi([_-]|\.)", n.lower()) or "_vi_" in n.lower()]
+              selected_name = (vi_names or pdf_names)[0]
+              pdf_bytes = zf.read(selected_name)
+
+          pdf_sha = hashlib.sha256(pdf_bytes).hexdigest()
+          reader = PdfReader(io.BytesIO(pdf_bytes), strict=False)
+          page_count = len(reader.pages)
+          snapshot = json.loads((ROOT / "data" / "financials-SHS.json").read_text(encoding="utf-8"))
+          previous = next((x for x in snapshot.get("items", []) if x.get("period") == "2026-Q2"), None)
+
+          # Use the already established SHS issuer-level/separate basis.
+          # If the report explicitly says consolidated, the parser rejects it.
+          ocr_text = mod.ocr_pdf_text(pdf_bytes)
+          (out / "ocr-first-20-pages.txt").write_text(ocr_text, encoding="utf-8")
+          values = mod.extract_statement(
+              pdf_bytes,
+              previous,
+              symbol="SHS",
+              cumulative=False,
+              force_ocr=True,
+              expected_consolidated=False,
+          )
+
+          record = {
+              "Title": "Báo cáo tài chính quý 3 năm 2026",
+              "FullName": "Báo cáo tài chính quý 3 năm 2026 | BCTC quý 3 năm 2026",
+              "FileInfoID": "563751",
+              "Url": source_url,
+              "LastUpdate": "2026-10-21",
+          }
+          item = mod.make_extracted_item(
+              "SHS", "2026-Q3", record, source_url, values, snapshot.get("items", []), False
+          )
+          # Ensure the emitted preview reports the expected scope from the parser,
+          # rather than the historical hard-coded default wording.
+          item["report_type"] = (
+              "BCTC riêng lẻ SHS Q3/2026 (trích xuất từ tài liệu VietstockFinance; chờ đối chiếu trực quan)"
+          )
+          item["source_validation"] = {
+              "source_catalog_url": "https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+              "document_id": "563751",
+              "published_at": "2026-10-21",
+              "expected_scope": "separate",
+              "observed_scope": values.get("source_scope_check", {}).get("observed_pdf_header"),
+              "manually_visual_reviewed": False,
+              "single_source_policy": "Chỉ dùng tài liệu được liên kết từ danh mục VietstockFinance doctype=1.",
+          }
+          (out / "extracted-values.json").write_text(
+              json.dumps({"source_member":selected_name,"pdf_sha256":pdf_sha,"page_count":page_count,
+                          "values":values,"item_preview":item}, ensure_ascii=False, indent=2)+"\n",
+              encoding="utf-8"
+          )
+
+          # Render the pages used for manual confirmation in the next step.
+          # In SHS CTCK reports the main B01/B02/B03b statements are usually near
+          # the beginning; render the first 20 pages so page mapping can be checked.
+          selected_pages = list(range(1, min(20, page_count) + 1))
+          for page_number in selected_pages:
+              img = convert_from_bytes(
+                  pdf_bytes, dpi=145, first_page=page_number, last_page=page_number,
+                  fmt="png", thread_count=2
+              )[0]
+              img.save(out / f"pdf-page-{page_number:02d}.png", optimize=True)
+          manifest = {
+              "symbol":"SHS","period":"2026-Q3","source_catalog_url":"https://finance.vietstock.vn/SHS/tai-tai-lieu.htm?doctype=1",
+              "document_id":"563751","source_url":source_url,"source_member":selected_name,
+              "archive_sha256":hashlib.sha256(archive_bytes).hexdigest(),"pdf_sha256":pdf_sha,
+              "page_count":page_count,"rendered_pages":selected_pages,
+              "ocr_page_limit":mod.MAX_OCR_PAGES,"ocr_dpi":mod.OCR_DPI,
+              "balance_equation_difference_million_vnd":values["total_assets"]-values["total_liabilities"]-values["equity"],
+              "scope_check":values.get("source_scope_check")
+          }
+          (out / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
+          print(json.dumps({"manifest":manifest,"values":values}, ensure_ascii=False, indent=2))
+          PY
+
+      - name: Upload SHS Q3 2026 extracted values, OCR and statement pages
+        uses: actions/upload-artifact@v6
+        with:
+          name: shs-q3-2026-vietstock-ocr-extraction
+          path: shs-q3-2026-extraction/
+          if-no-files-found: error
+          retention-days: 7
