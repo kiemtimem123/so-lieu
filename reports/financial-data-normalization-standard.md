@@ -1,6 +1,6 @@
 # Quy trình chuẩn hóa dữ liệu tài chính theo từng mảng
 
-Phiên bản: 2.9  
+Phiên bản: 3.0  
 Ngày thiết lập: 2026-10-28  
 Cập nhật gần nhất: 2026-11-01  
 Phạm vi: `kiemtimem123/so-lieu`, dữ liệu BCTC quý từ 2024-Q1 trở đi.
@@ -844,3 +844,35 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 - Sidecar OCR B02 candidate: doanh thu 915,851,554,761; LNTT 343,766,121,537; thuế 64,559,441,640; LNST 279,206,679,897 VND, cầu nối OCR = 0.
 - Sidecar OCR B03: CFO -331,190,039,458; CFI -18,070,289,425; CFF 3,464,520,269,300 VND. Tổng cấu phần và cầu nối giữa tiền đầu/cuối kỳ cho biến động 3,115,259,940,417 VND; OCR dòng 90 đọc thành 3,415,259,940,417 VND, lệch 300,000,000,000 VND. B01/B02 candidate không đủ để xác nhận toàn kỳ; core fields giữ null cho tới khi xem được ảnh PDF gốc.
 - Các trang B01/B03 trong sidecar có OCR quality score khoảng 0.37–0.43; không được coi là xác minh trực quan. Q2/2024 giữ trạng thái manual review required, không chạy OCR lại cùng archive.
+
+## Bổ sung phiên bản 3.0 — kết xuất PDF gốc và xử lý kỳ VCI Q2/2024 (2026-11-01)
+
+### Workflow kết xuất ảnh PDF gốc đã lưu
+- Workflow dùng lại: `.github/workflows/render-vietstock-source-pages.yml`. Workflow chỉ lấy đúng PDF đã lưu bằng sparse checkout, không clone cả kho báo cáo và không chạy OCR/enrichment.
+- Đầu vào gồm mã, kỳ, đường dẫn PDF lưu trong `reports/raw`, danh sách trang PDF (đánh số từ 1) và DPI. Mặc định 160 DPI; có thể tăng đến 300 DPI khi chữ/số không đọc rõ.
+- Kết xuất các trang B01, B02, B03/B03b và thuyết minh xác định phạm vi. Tạo từng PNG trang gốc và contact sheets; upload artifact GitHub Actions để kiểm tra trực quan. Ghi run ID, artifact ID, SHA-256, DPI, danh sách trang và PDF path vào audit metadata của kỳ.
+- Nếu PDF screenshot của web reader bị giới hạn kích thước, dùng workflow trên để render từ đúng PDF trong kho. Ghi chú rõ nguồn ảnh là trang PDF gốc đã lưu, không gọi sidecar OCR là ảnh trực quan.
+- Chỉ cập nhật một kỳ dữ liệu sau khi xem các trang nguồn. Mọi trường chưa đọc được phải giữ null; ảnh render không tự động biến candidate thành số đã xác minh.
+
+### Chuẩn hóa dòng tiền quý từ số lũy kế
+- Trên B03/B03b, xác định rõ cột lũy kế từ đầu năm đến cuối quý (`YTD`) và không coi đó là số phát sinh riêng của quý Q2/Q3/Q4.
+- Số riêng của quý Q2/Q3/Q4 = YTD quý hiện tại − YTD quý liền trước trong cùng năm và cùng phạm vi báo cáo. Q1 riêng quý = YTD Q1.
+- Kiểm tra độc lập 4 lớp: (1) CFO + CFI + CFF (+ FX nếu nguồn in dòng FX) = thay đổi tiền thuần YTD; (2) tiền đầu năm + thay đổi tiền thuần YTD = tiền cuối kỳ; (3) tổng dòng tiền quý = YTD quý hiện tại − YTD quý trước; (4) tiền đầu quý = tiền cuối quý trước và tiền đầu quý + thay đổi tiền thuần quý = tiền cuối quý.
+- Không tạo dòng FX nếu báo cáo không có dòng FX; dấu gạch ngang in trên báo cáo là 0, dòng không xuất hiện là null. Lưu cả YTD gốc và số quý tính theo chênh lệch, cùng công thức/nguồn.
+- Đối với CTCK, chỉ lấy phần dòng tiền của chính công ty trong B03; phần dòng tiền hoạt động môi giới/ủy thác của khách hàng thường nằm ở trang tiếp theo và phải loại khỏi CFO/CFI/CFF doanh nghiệp.
+
+### Ví dụ đã đóng kỳ: VCI Q2/2024
+- Nguồn chính: VietstockFinance document ID `468965`, PDF lưu `reports/raw/VCI/auto-vci-20261021/a8ace83efcd5049c.pdf`.
+- Phạm vi riêng lẻ xác nhận trực tiếp tại PDF page 18 (printed page 17), phần Cấu trúc Công ty ghi “Công ty không có công ty con”. B01/B02/B03 là báo cáo của CTCP Chứng khoán Vietcap; trang B03 tiếp sau có phần lưu chuyển tiền môi giới/ủy thác khách hàng được tách biệt.
+- Bằng chứng ảnh: workflow run `41292836632`, artifact `13078125948`, SHA-256 `31087dbd5281fd678acd8163a2a8b0c90c99716e30ad7115e45cff034c0f57de`, DPI 160; trang PDF 4–6, 9–13 và 18 đã xem trực quan.
+- B01 VND gốc: tổng tài sản `23,105,371,788,635`; nợ `14,246,851,580,952`; vốn chủ `8,858,520,207,683`; phương trình cân đối bằng 0. Current assets `23,009,916,452,730`; non-current assets `95,455,335,905`; current liabilities `13,597,525,115,321`; long-term liabilities `649,326,465,631`.
+- B02 VND gốc cột phát sinh riêng Q2: doanh thu hoạt động `915,851,554,761`; chi phí hoạt động `359,336,052,126`; doanh thu tài chính `15,645,475,012`; chi phí tài chính `197,033,483,615`; chi phí quản lý `34,187,957,908`; kết quả hoạt động `340,939,536,124`; kết quả khác `2,826,585,413`; LNTT `343,766,121,537`; thuế `64,559,441,640`; LNST `279,206,679,897`. Tổng cấu phần và các cầu nối bằng 0 VND.
+- B03 VND gốc YTD: CFO `-331,190,039,458`; CFI `-18,070,289,425`; CFF `3,464,520,269,300`; thay đổi tiền thuần `3,115,259,940,417`; tiền đầu năm `787,897,819,240`; tiền cuối kỳ `3,903,157,759,657`. Cả tổng ba luồng và cầu nối tiền đều chênh 0 VND.
+- OCR cũ đọc nhầm dòng 90 thành `3,415,259,940,417`, cao hơn nguồn 300 tỷ VND. Ảnh PDF page 13 (printed page 12) xác nhận số đúng `3,115,259,940,417`; đây là lỗi OCR, không phải chênh lệch nguồn. Không dùng số OCR cũ hoặc tự chọn số theo phép tính khi chưa xem ảnh.
+- Số quý riêng tính bằng H1 YTD trừ Q1 YTD: CFO `671,029,035,938`; CFI `-12,703,945,273`; CFF `2,204,238,269,300`; thay đổi tiền thuần `2,862,563,359,965`; tiền đầu quý `1,040,594,399,692` (tiền cuối Q1); tiền cuối quý `3,903,157,759,657`. Các cầu nối quý và YTD đều bằng 0 VND.
+- ROA `5.24%` và ROE `13.11%` được tính riêng cho quý Q2 từ LNST Q2 chia bình quân số dư cuối Q1/cuối Q2, nhân 4. Không lấy LNST lũy kế H1 làm lợi nhuận quý.
+- Snapshot kỳ Q2/2024: `manually_verified_source_reconciled`. Ghi source pages, raw VND, số quý/YTD, công thức ratio, ảnh artifact và OCR correction history; không có số thiếu được bù.
+
+### Quy tắc ghi nhớ và kế thừa
+- Sau mỗi kỳ đã xem, cập nhật cả `data/financials-<TICKER>.json` và `reports/processing-checkpoint.json` cùng commit hoặc hai commit tuần tự; checkpoint phải chỉ ra kỳ nào đã verified visually, kỳ nào chỉ sidecar audited và các kỳ còn pending.
+- Khi mở phiên/mã mới, đọc phiên bản mới nhất của tài liệu này và `normalizationProgress.standardVersion`; quy tắc trong tài liệu có hiệu lực cho mã kế tiếp, không chỉ riêng mã ví dụ.
