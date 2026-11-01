@@ -1,8 +1,8 @@
 # Quy trình chuẩn hóa dữ liệu tài chính theo từng mảng
 
-Phiên bản: 2.6  
+Phiên bản: 2.7  
 Ngày thiết lập: 2026-10-28  
-Cập nhật gần nhất: 2026-10-29  
+Cập nhật gần nhất: 2026-11-01  
 Phạm vi: `kiemtimem123/so-lieu`, dữ liệu BCTC quý từ 2024-Q1 trở đi.
 
 ## Nguyên tắc bắt buộc
@@ -770,3 +770,35 @@ Quy tắc này **thay thế ngưỡng tuyệt đối 10 triệu VND** đã ghi �
 - Q2/2025 cash trên Bảng cân đối kế toán (473.549 triệu VND) và tiền cuối kỳ BCTT (473.549.350.030 VND) chênh khoảng 350.030 VND, thấp hơn 0,01%; giữ hai giá trị nguồn.
 - Đã xem trực tiếp ảnh trang in 4-5 của Q1/2026, Q2/2025, Q3/2025 và Q4/2025. Q2/2026 vẫn cần xác nhận ảnh dòng tiền đầu kỳ; snapshot đã lưu hiện chỉ có đến Q2/2026.
 
+
+
+## Bổ sung phiên bản 2.7 — khóa checkpoint, xử lý manual review và ghi nhớ quy trình (2026-11-01)
+
+### 1. Trạng thái hoàn tất và chống chạy lặp
+- `completeForAutomation=true` là mốc đóng lượt tự động của một mã. Cờ `manualReviewRemaining=true` chỉ ghi nhận phần cần người rà soát; **không** được dùng làm lý do chạy lại OCR/enrichment trên cùng snapshot và cùng kỳ.
+- Chỉ mở lại mã đã hoàn tất khi có ít nhất một điều kiện: (a) xuất hiện kỳ báo cáo mới hơn `lastQuarter`; (b) người dùng chỉ rõ một lỗi/sửa đổi cần mở lại; (c) nguồn tài liệu mới từ danh mục VietstockFinance; hoặc (d) test hồi quy chứng minh dữ liệu đã xác minh bị lỗi.
+- Nếu mã đang ở trạng thái `sourceScopeReview.doNotAdvanceUntilManualReviewComplete=true`, hàng đợi phải dừng tại mã đó; không OCR lại và không tự nhảy sang mã tiếp theo. Chỉ mở khóa khi biên bản rà soát nguồn/phạm vi được đóng và checkpoint được cập nhật.
+- Việc một workflow có trạng thái SUCCESS không tự động chứng minh số liệu đã đúng nguồn. Phải phân biệt: hoàn tất tác vụ tự động, đối chiếu số học, xác minh PDF trực quan và đóng manual review.
+- `completedSymbols`/`symbolStates` phải được đối chiếu với `completeForAutomation` và kỳ cuối. Không coi một mã là đã xác minh đầy đủ chỉ vì mã đó đã được bỏ qua trong hàng đợi.
+
+### 2. Quy trình thủ công cho mã có chỉ tiêu lõi chưa đối chiếu
+- Tái sử dụng PDF/ZIP và sidecar đã lưu. Không tải lại hoặc OCR lại cùng tài liệu khi lượt trích xuất đã đạt giới hạn và không có bằng chứng mới.
+- Đối chiếu riêng từng báo cáo: trang bìa/loại báo cáo; phạm vi riêng lẻ hay hợp nhất; mã doanh nghiệp; đơn vị; B01/CĐKT; B02/KQKD; B03/B03b hoặc B04/LCTT.
+- Đối với mã công ty chứng khoán, dùng đúng dòng của mẫu BCTC CTCK: doanh thu hoạt động môi giới, cho vay, tự doanh, tài sản FVTPL/HTM/AFS, phải thu, tiền gửi khách hàng, chi phí môi giới/lưu ký và các tổng phụ tương ứng. Không ánh xạ alias ngân hàng/doanh nghiệp thông thường sang mã CTCK.
+- Chỉ công bố `total_assets`, `total_liabilities`, `equity`, `revenue`, `pretax_profit`, `net_profit` và `net_profit_attributable` khi ảnh/PDF cho thấy đúng cột phát sinh quý và phép đối chiếu cùng kỳ khớp. Không lấy cột lũy kế, cột so sánh hoặc nhầm dòng.
+- Cân đối kế toán phải thỏa mãn Tổng tài sản = Tổng nợ + Vốn chủ sở hữu theo cùng phạm vi và đơn vị. KQKD phải đối chiếu doanh thu/tổng cấu phần, lợi nhuận trước thuế, thuế và lợi nhuận sau thuế. LCTT phải phân biệt YTD/quý riêng và kiểm tra cầu nối tiền có FX khi nguồn trình bày.
+- Khi OCR candidate không cân đối, giữ candidate trong audit metadata, để trống trường công khai và gắn `NEEDS_MANUAL_REVIEW`. Không tự thay bằng số dư/công thức hoặc thêm balancing plug.
+- Dấu gạch ngang in trên báo cáo là 0; dòng không được trình bày trong mẫu báo cáo là null, không tự chuyển thành 0.
+- Mọi số đã sửa phải lưu giá trị trước/sau, kỳ, trường, trang PDF, URL nguồn, cột được chọn, lý do sửa và test xác nhận.
+
+### 3. Bảo toàn dữ liệu đã kiểm định
+- Trước mỗi lần enrichment phải đọc checkpoint và kiểm tra mã/kỳ có `completeForAutomation=true` hay không. Mã đã đạt không được chạy lại chỉ để cập nhật timestamp, schema phụ hoặc lặp OCR.
+- Nếu phát hiện parser migration hoặc workflow đã ghi đè trường nguồn đã kiểm định, phục hồi đúng các trường và metadata từ commit/snapshot đã xác thực gần nhất; không phục hồi cả snapshot nếu điều đó sẽ làm mất các bổ sung nguồn mới có bằng chứng.
+- Với từng trường cần phục hồi, kiểm tra `financial_line_items_extracted_fields`, `financial_line_items_rejected_fields`, `financial_line_items_rejected_values`, `financial_line_items_value_corrections` và audit nguồn trước khi cho phép hiển thị. Giá trị bị rejected phải tiếp tục bị ẩn cho đến khi đối chiếu nguồn giải quyết.
+- Dữ liệu candidate mới nhưng chưa xác minh phải tiếp tục gắn trạng thái pending visual/manual review; không gọi là PASS.
+
+### 4. Checkpoint và lưu nhớ lâu dài
+- Sau khi hoàn tất một mã, cập nhật `reports/processing-checkpoint.json` ngay trong cùng lượt commit: trạng thái mã, kỳ đầu/cuối, số kỳ, phạm vi báo cáo, source archive được tái sử dụng, các trường đã đối chiếu, ngoại lệ còn lại, test/CI runs, commit dữ liệu và mã tiếp theo.
+- Quy trình chuẩn hóa đã cập nhật phải được ghi vào tài liệu này, đồng thời đồng bộ `normalizationProgress.standardVersion` trong checkpoint. Không chỉ để quy tắc trong nội dung hội thoại.
+- Khi bắt đầu mã mới, đọc lại đúng phần quy trình theo nhóm ngành và tái sử dụng. Chỉ thêm quy tắc khi có bằng chứng mới; ghi ngày, phiên bản, ví dụ và test hồi quy.
+- Thứ tự xử lý phiên hiện tại: VCI → VCK → VIX → VDS → GAS → PLX → GEG → IDC. SHS là mã đã hoàn tất, không mở lại nếu không có lỗi/nguồn mới cụ thể.
