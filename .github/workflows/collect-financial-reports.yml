@@ -158,23 +158,28 @@ jobs:
               )
               return missing_source_archive or balance_sheet_pending or snapshot.get("bootstrap_status") not in {"complete", "complete_needs_manual_review"}
 
+          checkpoint = load("reports/processing-checkpoint.json") or {}
+          active = str(checkpoint.get("activeSymbol") or checkpoint.get("resumeSymbolHint") or "").strip().upper()
           if requested:
               if requested not in symbols:
                   raise SystemExit(f"Requested ticker is not enabled: {requested}")
+              if active and requested != active:
+                  raise SystemExit(f"Requested ticker {requested} does not match active checkpoint {active}; refusing to advance the queue.")
               selected = requested
-              reason = "explicit workflow input"
-          else:
-              checkpoint = load("reports/processing-checkpoint.json") or {}
-              active = str(checkpoint.get("activeSymbol") or checkpoint.get("resumeSymbolHint") or "").strip().upper()
-              if active in symbols and needs_collection(active, snapshot_for(active)):
+              reason = "explicit workflow input matching active checkpoint"
+          elif active in symbols:
+              if needs_collection(active, snapshot_for(active)):
                   selected = active
                   reason = "resume from saved checkpoint"
               else:
-                  for symbol in symbols:
-                      if needs_collection(symbol, snapshot_for(symbol)):
-                          selected = symbol
-                          reason = "first incomplete ticker in registry order"
-                          break
+                  selected = ""
+                  reason = f"{active} is active but has no collection gap; waiting for its manual review"
+          else:
+              for symbol in symbols:
+                  if needs_collection(symbol, snapshot_for(symbol)):
+                      selected = symbol
+                      reason = "first incomplete ticker in registry order"
+                      break
 
           print(json.dumps({
               "symbol": selected or None,
