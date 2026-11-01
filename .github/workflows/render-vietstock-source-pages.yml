@@ -35,8 +35,13 @@ jobs:
   render:
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout archived source only
+      - name: Checkout only the selected PDF from the archive
         uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            ${{ github.event.inputs.pdf_path || 'reports/raw/VCI/auto-vci-20261021/a8ace83efcd5049c.pdf' }}
+          sparse-checkout-cone-mode: false
+          lfs: false
 
       - name: Setup Python
         uses: actions/setup-python@v5
