@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-01T21:30:00+07:00",
+  "updatedAt": "2026-11-01T21:34:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -124,16 +124,13 @@
       "dpi": 160
     },
     "ci": {
-      "dataUpdateCommit": "813f58cf6dd72e288baaef775553d0d1b417d7b1",
-      "pending": "await checkpoint commit"
+      "quarterlyFinancialDataRun": 41316477635,
+      "siteAndDataRun": 41316477619,
+      "hostingerPackageRun": 41316477646,
+      "standardV3_4ValidationRun": 41316635645,
+      "checkpointValidationRun": 41316692662,
+      "all": "success"
     }
-  },
-  "sourceSignCorrection": {
-    "b03_line80_reportedPositiveVnd": 4135035939750,
-    "b03_line80_normalizedVnd": -4135035939750,
-    "b03_line90_reportedPositiveVnd": 4271495004389,
-    "b03_line90_normalizedVnd": -4271495004389,
-    "evidence": "Line73 + line74 + line76 = negative line80; CFO+CFI+corrected CFF = negative line90; ending cash minus opening cash = same negative line90."
   },
   "next": "Continue VCI Q4/2025 from its archived VietstockFinance PDF. Apply standard v3.4; check each B01/B02/B03 unit heading and notes before converting values; visually inspect parentheses, minus signs and printed dashes; reconcile raw VND before million-VND snapshot. Do not advance to VCK until all four remaining VCI periods are closed."
 },
@@ -2968,7 +2965,7 @@
   "activeDataDomain": "core_financial_statements",
   "activeSymbol": "VCI",
   "status": "manual_core_reconciliation_vci_2025_q4_next",
-  "lastUpdatedAt": "2026-11-01T21:30:00+07:00",
+  "lastUpdatedAt": "2026-11-01T21:34:00+07:00",
   "completedChecks": [
     "TCB cash-flow normalization completed and CI PASS; TCB was previously saved as complete for arithmetic/data checks.",
     "MBB targeted OCR workflow 40666978535 processed 10/10 archived consolidated source PDFs pages 7-8 at 300dpi, with no extraction errors.",
@@ -3301,7 +3298,10 @@
     "VCI Q3/2025 visually reviewed all relevant original pages: B01/B02/B03, separate customer cashflow pages, no-subsidiary note and currency note; render run 41315526678/artifact 13086992336, 48 pages at 160 DPI.",
     "VCI Q3/2025 raw-VND checks all residual zero: B01 balance/subtotals; B02 revenue/expense/PBT/tax/PAT; B03 CFO+CFI+CFF, cash balance bridge, quarter=YTD delta and Q2-to-Q3 continuity.",
     "VCI Q3/2025 sign review: CFF is positive +3,167,896,300,250 VND and YTD net cash movement is negative -2,106,720,069,323 VND; parentheses encode negative, dash on FX line102 means zero; no sign correction needed. Customer brokerage/trust flows on PDF pages 15-16 excluded.",
-    "VCI Q3/2025 old OCR revenue 2,696,529 million VND was a 2024 YTD comparison column, corrected to Q3/2025 revenue 1,443,289,075,867 VND from the current-quarter column."
+    "VCI Q3/2025 old OCR revenue 2,696,529 million VND was a 2024 YTD comparison column, corrected to Q3/2025 revenue 1,443,289,075,867 VND from the current-quarter column.",
+    "VCI Q3/2025 data commit 813f58cf6dd72e288baaef775553d0d1b417d7b1 validated: Validate Site and Data run 41316477619 SUCCESS; Validate quarterly financial data run 41316477635 SUCCESS; Package Hostinger Stock Dashboard run 41316477646 SUCCESS.",
+    "Normalization standard v3.4 commit 48e041274f1ce82a0acc31bbfbc121818ff97e74: Validate Site and Data run 41316635645 SUCCESS.",
+    "VCI Q3/2025 checkpoint commit e0ab7952041732b8aeb91d53f4313a03283e2023: Validate Site and Data run 41316692662 SUCCESS."
   ],
   "unresolved": [
     "NLG NEEDS_MANUAL_REVIEW — H1/2024 selected later comparative in Q2/2025 reclassifies CFO/CFI versus the original Q2/2024 source by >0.01%; net cash movement and cash balances remain unchanged. Preserve both source bases and selected later comparative; do not plug.",
