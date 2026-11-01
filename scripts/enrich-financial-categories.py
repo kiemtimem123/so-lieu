@@ -655,7 +655,7 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
   exclude_terms=["no phai tra","liabilities and equity"]
  ) if balance else None
  if equity is None and balance and symbol in BROKERS:
-  equity=value_by_row_prefix(balance,[r"\b400\s*\|"],factor)
+  equity=value_by_row_prefix(balance,[r"\b400\b"],factor)
  source_total=value_by_label(
   balance,[
    "tong cong nguon von","tong nguon von",
@@ -844,7 +844,7 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
   if cashflow_pbt is not None:
    pbt=cashflow_pbt
   tax_total=value_by_row_prefix(
-   profit_pages,[r"^\s*(?:\|\s*)?100\s*(?:\||\s|$)"],factor
+   profit_pages,[r"\b100\b"],factor
   )
   if pbt is not None and tax_total is not None:
    net=int(round(pbt-tax_total))
@@ -869,7 +869,7 @@ def extract_core_fields(item,symbol,pages,detail_found,mode):
   out["eps"]=eps
  if symbol in BROKERS and profit_pages:
   broker_revenue=value_by_row_prefix(
-   profit_pages,[r"^\s*(?:\|\s*)?20\s*(?:\||\s|$)"],factor
+   profit_pages,[r"\b20\b"],factor
   )
   if broker_revenue is None:
    broker_revenue=value_by_label(
