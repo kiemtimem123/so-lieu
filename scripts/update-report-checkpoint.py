@@ -135,6 +135,12 @@ def main() -> int:
     if not isinstance(checkpoint, dict):
         checkpoint = {}
 
+    active_symbol = str(checkpoint.get("activeSymbol") or "").strip().upper()
+    if active_symbol and active_symbol != symbol:
+        raise SystemExit(
+            f"Refusing to update {symbol} checkpoint while {active_symbol} is the active one-ticker work item."
+        )
+
     max_pages_raw = os.environ.get("REPORT_OCR_MAX_PAGES", "14")
     try:
         max_pages = min(40, max(1, int(max_pages_raw)))
