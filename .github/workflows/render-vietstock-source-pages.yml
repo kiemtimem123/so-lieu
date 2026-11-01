@@ -147,8 +147,9 @@ jobs:
         env:
           ARTIFACT_ID: ${{ steps.upload.outputs.artifact-id }}
           SOURCE_PDF: ${{ github.event.inputs.pdf_path || 'reports/raw/VCK/auto-vck-20261021/216190297d90a38c.pdf' }}
+          TARGET_SYMBOL: ${{ github.event.inputs.symbol || 'VCK' }}
           TARGET_PERIOD: ${{ github.event.inputs.period || '2025-Q1' }}
-          PDF_MEMBER: ${{ github.event.inputs.pdf_member || 'VCK_Baocaotaichinh_Q3_2026.pdf' }}
+          PDF_MEMBER: ${{ github.event.inputs.pdf_member || '' }}
         with:
           script: |
             const path = `reports/raw/${process.env.TARGET_SYMBOL}/auto-vck-20261021/render-metadata-${process.env.TARGET_PERIOD}.json`;
