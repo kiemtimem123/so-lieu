@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-03T00:32:00+07:00",
+  "updatedAt": "2026-11-03T00:48:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -45,11 +45,11 @@
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "VIX",
-    "status": "Q4_2024_COMPLETED_VERIFIED_SEPARATE_NEXT_Q1_2025",
+    "status": "Q1_2025_COMPLETED_VERIFIED_SEPARATE_NEXT_Q2_2025",
     "completeForAutomation": false,
     "manualReviewRemaining": false,
-    "processedAt": "2026-11-03T00:32:00+07:00",
-    "period": "2024-Q4",
+    "processedAt": "2026-11-03T00:48:00+07:00",
+    "period": "2025-Q1",
     "periodStatus": "completed_verified_separate; excluded_from_consolidated_series; source_and_detail_reconciliation_pass",
     "periodCount": 11,
     "reviewedPeriods": [
@@ -61,7 +61,8 @@
       "2026-Q3",
       "2024-Q2",
       "2024-Q3",
-      "2024-Q4"
+      "2024-Q4",
+      "2025-Q1"
     ],
     "visuallyReviewedPeriods": [
       "2024-Q1",
@@ -72,28 +73,28 @@
       "2026-Q3",
       "2024-Q2",
       "2024-Q3",
-      "2024-Q4"
+      "2024-Q4",
+      "2025-Q1"
     ],
     "pendingCorePeriods": [
-      "2025-Q1",
       "2025-Q2"
     ],
-    "sourceReportUrl": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%204/VIX_Baocaotaichinh_Q4_2024.pdf",
+    "sourceReportUrl": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%201/VIX_Baocaotaichinh_Q1_2025.pdf",
     "sourceIndexUrl": "https://finance.vietstock.vn/VIX/tai-tai-lieu.htm?doctype=1",
-    "sourceDocumentId": "488748",
-    "dataCommit": "62edafb5008e3c08ea6fc484e6aa030e59af033c",
+    "sourceDocumentId": "501274",
+    "dataCommit": "cf748d511099da6ac173ed281341dfd39a59774f",
     "normalizationStandardVersion": "3.4",
     "validation": {
-      "sourceScope": "PASS standalone VIX; never mix into consolidated series",
-      "sourceUnit": "PASS VND explicit on statements; stored values in million VND",
-      "balanceEquation": "PASS exact VND: assets 19,606,325,397,605 = liabilities 3,561,584,498,167 + equity 16,044,740,899,438",
-      "revenue": "PASS 544,617,506,222 VND; quarterly column; revenue components reconcile",
-      "expenses": "PASS operating expenses 376,453,766,488 VND; expense components reconcile",
-      "pretaxProfit": "PASS 133,666,677,665 VND",
-      "tax": "PASS 21,466,313,903 VND",
-      "netProfit": "PASS 112,200,363,762 VND",
-      "eps": "PASS Q4 EPS blank; 677 is annual cumulative EPS only",
-      "cashflow": "PASS exact annual cumulative cash bridge; audit-only because standalone"
+      "sourceScope": "PASS standalone VIX; do not mix into consolidated series",
+      "sourceUnit": "PASS VND explicit on statements; values stored in million VND",
+      "balanceEquation": "PASS exact VND: 20,610,738,530,166 = 4,193,720,690,957 + 16,417,017,839,209",
+      "revenue": "PASS Q1 979,684,153,559 VND; quarterly = YTD Q1",
+      "expenses": "PASS operating expenses 467,829,446,160 VND",
+      "pretaxProfit": "PASS 465,204,861,310 VND",
+      "tax": "PASS 92,927,921,539 VND",
+      "netProfit": "PASS 372,276,939,771 VND",
+      "eps": "PASS 255; Q1 and YTD coincide",
+      "cashflow": "PASS exact Q1 cash bridge; audit-only because standalone"
     },
     "reviewedStatements": [
       "B01-CTCK",
@@ -116,7 +117,7 @@
     ],
     "cashflowAuditOnly": true,
     "doNotRepeatCoreExtraction": true,
-    "nextPeriod": "2025-Q1",
+    "nextPeriod": "2025-Q2",
     "artifactNote": "Artifact 13148335964 was inspected and found to contain VIX-2024-Q3 images, not Q4; it is stale/mismatched and must not be used as Q4 evidence."
   },
   "symbolStates": {
@@ -4563,6 +4564,36 @@
       "consolidatedSeriesEligible": false,
       "validation": "PASS all B01/B02 totals and cashflow bridge; EPS quarterly blank; cashflow audit-only",
       "nextPeriod": "2025-Q1"
+    },
+    "2025-Q1": {
+      "status": "completed_verified_separate",
+      "commit": "cf748d511099da6ac173ed281341dfd39a59774f",
+      "documentId": "501274",
+      "sourceScope": "standalone",
+      "unit": "VND",
+      "reviewedStatements": [
+        "B01-CTCK",
+        "B02-CTCK",
+        "B03b-CTCK",
+        "B04-CTCK"
+      ],
+      "reviewedPrintedPages": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        14
+      ],
+      "doNotRepeatCoreExtraction": true,
+      "consolidatedSeriesEligible": false,
+      "validation": "PASS balance, P&L totals, tax, EPS and exact cash bridge; cashflow audit-only",
+      "nextPeriod": "2025-Q2"
     }
   }
 }
