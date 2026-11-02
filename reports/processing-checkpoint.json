@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-02T10:50:00+07:00",
+  "updatedAt": "2026-11-02T10:55:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -48,53 +48,54 @@
     "status": "partial_period_completed_manual_scope_and_core_review",
     "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-11-02T10:50:00+07:00",
-    "period": "2025-Q4",
+    "processedAt": "2026-11-02T10:55:00+07:00",
+    "period": "2026-Q1",
     "periodStatus": "manually_verified_source_reconciled_separate",
     "periodCount": 7,
     "reviewedPeriods": [
       "2025-Q1",
       "2025-Q2",
       "2025-Q3",
-      "2025-Q4"
+      "2025-Q4",
+      "2026-Q1"
     ],
     "visuallyReviewedPeriods": [
       "2025-Q1",
       "2025-Q2",
       "2025-Q3",
-      "2025-Q4"
+      "2025-Q4",
+      "2026-Q1"
     ],
     "pendingCorePeriods": [
-      "2026-Q1",
       "2026-Q2",
       "2026-Q3"
     ],
-    "sourceReportUrl": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/VCK_Baocaotaichinh_Q4_2025.zip",
+    "sourceReportUrl": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/VCK_Baocaotaichinh_Q1_2026.zip",
     "sourceIndexUrl": "https://finance.vietstock.vn/VCK/tai-tai-lieu.htm?doctype=1",
-    "sourceDocumentId": "528118",
-    "dataCommit": "4149303e7da74e1e3a6be304fefbafba536af5ad",
+    "sourceDocumentId": "540694",
+    "dataCommit": "93c0dd71ed4c0b9aba0b4a2df327845c8bf492cc",
     "normalizationStandardVersion": "3.4",
     "validation": {
-      "sourceScope": "PASS separate-company; cover page1 and B01/B02/B03 identify VPS Company; note 2.3 page18 says statements comprise Company and dependent accounting units, not a consolidated group",
-      "sourceUnit": "PASS VND explicitly on B01/B02/B03 and note 2.1 page17",
+      "sourceScope": "PASS separate-company; cover and B01/B02/B03 identify VPS Company; report uses CTCK statement headings and does not label consolidated; notes pages20-22 describe statements of the Company",
+      "sourceUnit": "PASS VND explicitly on B01/B02/B03 and Note 2.5 page22",
       "balanceEquation": "PASS exact at raw VND",
       "assetAndLiabilitySubtotals": "PASS exact at raw VND",
-      "revenueAndExpenseComponents": "PASS exact at raw VND: Q4 operating revenue 2,366,904,499,271; operating expenses 889,576,769,117; financial income 278,988,180,714; financial expenses 261,550,267,459",
-      "operatingAndFinancialProfitBridges": "PASS operating profit 1,273,744,879,846; other profit 5,666,147,575; PBT 1,279,411,027,421 VND",
-      "taxComponentsAndPATBridge": "PASS PBT 1,279,411,027,421 - current tax 265,153,923,272 = PAT 1,014,257,104,149 VND",
-      "investingAndFinancingComponents": "PASS FY YTD CFI and CFF verified from B03; Q4 standalone flow derived as FY YTD less verified Q3 YTD",
-      "cashflowComponents": "PASS FY YTD CFO (6,386,814,845,213) + CFI (188,923,073,932) + CFF 13,524,586,405,812 = net cash 6,948,848,486,667 VND",
-      "cashBalanceBridge": "PASS Q4 opening cash 8,678,251,634,326 + Q4 net change 2,738,678,690 = closing 8,680,990,313,016 VND",
-      "cashAndBalanceSheetCashTieout": "PASS B01 cash and equivalents = B03 closing cash",
-      "signConvention": "PASS parentheses negative; printed dash on a presented line zero; absent FX cashflow line null",
-      "customerCashflowSeparation": "PASS page15 customer brokerage/trust cashflow and 16,814,186,845,803 VND customer deposits are separate; excluded from company cash and company cash flow",
+      "revenueAndExpenseComponents": "PASS exact at raw VND: total operating revenue 2,519,183,762,365; operating expenses 920,091,662,805; financial income 327,074,486,765; financial expenses 265,984,531,673",
+      "operatingAndFinancialProfitBridges": "PASS operating profit 1,546,870,162,583 + other profit 46,386,987 = PBT 1,546,916,549,570 VND",
+      "taxComponentsAndPATBridge": "PASS PBT 1,546,916,549,570 - current tax 311,675,345,556 = PAT 1,235,241,204,014 VND",
+      "investingAndFinancingComponents": "PASS CFI (6,733,321,692) and CFF 3,883,748,999,998 from B03",
+      "cashflowComponents": "PASS CFO (6,395,830,382,439) + CFI (6,733,321,692) + CFF 3,883,748,999,998 = net cash decrease 2,518,814,704,133 VND",
+      "cashBalanceBridge": "PASS opening cash 8,680,990,313,016 - net cash decrease 2,518,814,704,133 = closing cash 6,162,175,608,883 VND",
+      "cashAndBalanceSheetCashTieout": "PASS B01 cash and equivalents equals B03 closing cash, exact at raw VND",
+      "signConvention": "PASS parentheses negative; printed dash on a presented line zero; FX cashflow effect row absent = null",
+      "customerCashflowSeparation": "PASS customer brokerage/trust cashflows on PDF pages16-17 are separate and customer cash 23,299,257,486,855 VND is off-balance; excluded from company cash and company cashflow",
       "residualsVND": {
         "balance": 0,
         "assetSubtotal": 0,
         "liabilitySubtotal": 0,
         "revenueComponents": 0,
-        "operatingExpenseComponents": 0,
         "FVTPLRevenueComponents": 0,
+        "operatingExpenseComponents": 0,
         "FVTPLLossComponents": 0,
         "financialIncomeComponents": 0,
         "financialExpenseComponents": 0,
@@ -103,10 +104,8 @@
         "PBTBridge": 0,
         "PATBridge": 0,
         "realizedUnrealizedProfitBridge": 0,
-        "cashflowYTD": 0,
-        "cashBridgeYTD": 0,
-        "cashflowQ4": 0,
-        "cashBridgeQ4": 0,
+        "cashflow": 0,
+        "cashBridge": 0,
         "balanceSheetCashTieout": 0
       },
       "checksComplete": true,
@@ -131,7 +130,6 @@
         5,
         6,
         7,
-        8,
         9,
         10,
         11,
@@ -139,19 +137,22 @@
         13,
         14,
         15,
+        16,
         17,
-        18
+        20,
+        21,
+        22
       ],
       "renderArtifact": {
-        "workflowRunId": 41384552579,
-        "artifactId": 13114309259,
-        "artifactDigest": "sha256:5df2bbe1576efbc7607f96dfe12260c98337d9cc7973249ddf8b1d861e200b90",
-        "artifactName": "vietstock-source-review-VCK-2025-Q4",
+        "workflowRunId": 41385230276,
+        "artifactId": 13115485116,
+        "artifactDigest": "sha256:054e09ab491d446ca8b7ad1646d7d12e9d9104fee8d4cd614b0a1a73da280302",
+        "artifactName": "vietstock-source-review-VCK-2026-Q1",
         "dpi": 160,
-        "totalPdfPages": 43
+        "totalPdfPages": 61
       }
     },
-    "next": "Continue VCK Q1/2026 from its archived VietstockFinance PDF. Verify report scope independently before importing; this quarter is also currently withheld. Do not revisit VCI or VCK Q1–Q4/2025."
+    "next": "Continue VCK Q2/2026 from its archived VietstockFinance PDF. Verify report scope, VND unit and B01/B02/B03 raw-VND reconciliations before extraction. Do not revisit VCI or VCK Q1/2025–Q1/2026."
   },
   "symbolStates": {
     "MBB": {
@@ -1329,12 +1330,10 @@
       "firstQuarter": "2025-Q1",
       "lastQuarter": "2026-Q3",
       "pendingCorePeriods": [
-        "2026-Q1",
         "2026-Q2",
         "2026-Q3"
       ],
       "terminalManualReviewPeriods": [
-        "2026-Q1",
         "2026-Q2",
         "2026-Q3"
       ],
@@ -1342,9 +1341,9 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": true,
       "skipUnconfirmedAutomation": true,
-      "skipUnconfirmedReason": "VCK Q1–Q4/2025 independently verified as separate-company statements and reconciled. Q1–Q3/2026 remain withheld until each linked VietstockFinance PDF is visually reviewed for scope and raw-VND reconciliation.",
-      "sourceArchivesChecked": 4,
-      "updatedAt": "2026-11-02T03:50:00Z",
+      "skipUnconfirmedReason": "VCK Q1/2025–Q1/2026 independently verified as separate-company statements and reconciled. Q2/2026 and Q3/2026 remain withheld until each linked VietstockFinance report is visually reviewed for scope and raw-VND reconciliation.",
+      "sourceArchivesChecked": 5,
+      "updatedAt": "2026-11-02T03:55:00Z",
       "snapshotFetchedAt": "2026-11-02T02:10:00+07:00",
       "skipUnconfirmedThroughPeriod": "2026-Q3",
       "sourceScopeReview": {
@@ -1354,30 +1353,31 @@
           "2025-Q1": "separate_confirmed_from_B01_line212.2_subsidiary_investment_opening_and_B03_line64_disposal",
           "2025-Q2": "separate_confirmed_from_company_only_B01_B02_B03_and_note_2.3; B01 line212.2 opening 535881668 and B03 line64 proceeds 535881668",
           "2025-Q3": "separate_confirmed_from_cover_page1_company_only_B01_B02_B03_and_note_2.3; B01 line212.2 opening 535881668 and B03 line64 proceeds 535881668",
-          "2025-Q4": "separate_confirmed_from_cover_page1_company_only_B01_B02_B03_and_note_2.3_page18"
+          "2025-Q4": "separate_confirmed_from_cover_page1_company_only_B01_B02_B03_and_note_2.3_page18",
+          "2026-Q1": "separate_confirmed_from_CTKC_B01_B02_B03_headers_and_Company_only_notes_pages20_22"
         },
         "periodsVisuallyReviewed": [
           "2025-Q1",
           "2025-Q2",
           "2025-Q3",
-          "2025-Q4"
+          "2025-Q4",
+          "2026-Q1"
         ],
         "periodsPending": [
-          "2026-Q1",
           "2026-Q2",
           "2026-Q3"
         ],
         "lastVisualReviewEvidence": {
-          "period": "2025-Q4",
-          "dataCommit": "4149303e7da74e1e3a6be304fefbafba536af5ad",
-          "renderWorkflowRunId": 41384552579,
-          "renderArtifactId": 13114309259,
-          "renderArtifactDigest": "sha256:5df2bbe1576efbc7607f96dfe12260c98337d9cc7973249ddf8b1d861e200b90",
-          "renderedPages": "all 1-43; reviewed cover, B01/B02/B03, customer cashflow statement, note 2.1 accounting currency and note 2.3 reporting basis",
+          "period": "2026-Q1",
+          "dataCommit": "93c0dd71ed4c0b9aba0b4a2df327845c8bf492cc",
+          "renderWorkflowRunId": 41385230276,
+          "renderArtifactId": 13115485116,
+          "renderArtifactDigest": "sha256:054e09ab491d446ca8b7ad1646d7d12e9d9104fee8d4cd614b0a1a73da280302",
+          "renderedPages": "all 1-61; reviewed cover, B01/B02/B03, customer cashflow statements, note 2.1 standards and Note 2.5 VND currency",
           "resolutionDpi": 160,
           "sourceUnit": "VND; snapshot million VND after raw-VND reconciliation",
           "scope": "separate parent-company statements",
-          "scopeEvidence": "Cover and pages3-4 identify VPS Company financial statements; note2.3 page18 states report is prepared from the Company and its dependent accounting units. It is not presented as a consolidated group."
+          "scopeEvidence": "Cover page1 and B01/B02/B03 headings identify VPS Company with CTCK report codes; no consolidated title/entity. Notes pages20-22 describe statements of the Company and use VND."
         }
       },
       "manuallyVerifiedPeriods": [
@@ -2958,6 +2958,18 @@
         "data/financials-VCK.json",
         "reports/processing-checkpoint.json"
       ]
+    },
+    {
+      "symbol": "VCK",
+      "period": "2026-Q1",
+      "status": "manually_verified_source_reconciled_separate",
+      "processedAt": "2026-11-02T10:55:00+07:00",
+      "commit": "93c0dd71ed4c0b9aba0b4a2df327845c8bf492cc",
+      "workflowRunId": 41385230276,
+      "changedPaths": [
+        "data/financials-VCK.json",
+        "reports/processing-checkpoint.json"
+      ]
     }
   ],
   "currentRun": {
@@ -4280,16 +4292,16 @@
       "status": "active_blocking",
       "periodCount": 7,
       "periodRange": "2025-Q1..2026-Q3",
-      "reason": "VCK Q1/2025–Q4/2025 verified as separate-company statements; three later periods Q1/2026–Q3/2026 remain unverified for separate/consolidated scope and are withheld.",
-      "nextStep": "Continue VCK Q1/2026 from archived VietstockFinance PDF/ZIP; verify original cover, B01/B02/B03 and notes independently before extracting figures.",
+      "reason": "VCK Q1/2025–Q1/2026 verified as separate-company statements; Q2/2026 and Q3/2026 remain unverified for separate/consolidated scope and are withheld.",
+      "nextStep": "Continue VCK Q2/2026 from archived VietstockFinance PDF; independently verify report cover, B01/B02/B03 and notes before extracting figures.",
       "reviewedPeriods": [
         "2025-Q1",
         "2025-Q2",
         "2025-Q3",
-        "2025-Q4"
+        "2025-Q4",
+        "2026-Q1"
       ],
       "periodsRemaining": [
-        "2026-Q1",
         "2026-Q2",
         "2026-Q3"
       ],
@@ -4297,13 +4309,15 @@
         "2025-Q1",
         "2025-Q2",
         "2025-Q3",
-        "2025-Q4"
+        "2025-Q4",
+        "2026-Q1"
       ],
       "sourceScopeConfirmedPeriods": [
         "2025-Q1",
         "2025-Q2",
         "2025-Q3",
-        "2025-Q4"
+        "2025-Q4",
+        "2026-Q1"
       ]
     },
     {
@@ -4359,5 +4373,5 @@
     "SHS",
     "VCI"
   ],
-  "manualReviewQueueUpdatedAt": "2026-11-02T10:50:00+07:00"
+  "manualReviewQueueUpdatedAt": "2026-11-02T10:55:00+07:00"
 }
