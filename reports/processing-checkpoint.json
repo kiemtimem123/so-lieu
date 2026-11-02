@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "updatedAt": "2026-11-03T02:18:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
-  "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
+  "sourcePolicy": "Primary source: VietstockFinance document catalog and linked report PDFs. Secondary source: WiData ticker documents tab, used only when the primary source lacks the period or its document link is inaccessible. No third source without user approval.",
   "periodStart": "2024-Q1",
   "quarterRetentionTarget": 12,
   "completedSymbols": [
@@ -4701,5 +4701,19 @@
       ],
       "nextPeriod": "2024-Q3"
     }
-  }
+  },
+  "sourceHierarchy": [
+    {
+      "priority": 1,
+      "name": "VietstockFinance",
+      "urlPattern": "https://finance.vietstock.vn/{ticker}/tai-tai-lieu.htm?doctype=1",
+      "rule": "Primary report source."
+    },
+    {
+      "priority": 2,
+      "name": "WiData",
+      "urlPattern": "https://widata.vn/{ticker}?tab=documents",
+      "rule": "Fallback only when primary source lacks or cannot provide the report."
+    }
+  ]
 }
