@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-03T00:00:00+07:00",
+  "updatedAt": "2026-11-03T01:35:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "Primary source: VietstockFinance document catalog and linked report PDFs. Secondary source: WiData ticker documents tab, used only when the primary source lacks the period or its document link is inaccessible. No third source without user approval.",
   "periodStart": "2024-Q1",
@@ -45,12 +45,12 @@
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "VDS",
-    "status": "VDS_Q4_2024_SOURCE_TEXT_RECONCILED_VISUAL_PENDING",
+    "status": "VDS_Q4_2024_B01_PAGE1_PARTIAL_VISUAL_REVIEW",
     "completeForAutomation": false,
     "manualReviewRemaining": true,
     "processedAt": "2026-11-03T03:05:00+07:00",
     "period": "2024-Q4",
-    "periodStatus": "Q4/2024 source text and later VietstockFinance FY2024 comparative reconciled. B01 balances and B03 cashflows pass; B02 row29 25m column assignment and original PDF visual review remain pending. Stay on Q4.",
+    "periodStatus": "User-supplied original B01 page 1 crop verified; corrected loans row 114 to 2,746,146,081,901 VND. Continue Q4 only; other B01 pages, B02 row29 column and B03 visual review remain pending.",
     "periodCount": 10,
     "reviewedPeriods": [
       "2024-Q1",
@@ -74,7 +74,7 @@
     "sourceReportUrl": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%204/VDS_Baocaotaichinh_Q4_2024_Hopnhat.pdf",
     "sourceIndexUrl": "https://finance.vietstock.vn/VDS/tai-tai-lieu.htm?doctype=1",
     "sourceDocumentId": "489660",
-    "dataCommit": "2f86340caef00e3454175059782c85f17e011e62",
+    "dataCommit": "afdcb6caee126cbd248615d22d8ecadbb22e8eba",
     "normalizationStandardVersion": "3.4",
     "validation": {
       "sourceScope": "PASS consolidated VDS; B01/B02/B03 statement headers visually reviewed.",
@@ -97,7 +97,11 @@
       "q4_2024_expense_detail": "PENDING row29 25m candidate column assignment; do not force into current-quarter column.",
       "q4_2024_cashflow": "PASS: YTD and standalone Q4 flow sum/cash bridge exact using original Q3/Q4 2024 source basis; later Q4/2025 VietstockFinance comparative supports FY2024 amounts.",
       "q4_2024_visual": "PENDING original Q4/2024 PDF image review.",
-      "q4_2024_widata": "Secondary WiData documents page unavailable during retrieval; no copied values."
+      "q4_2024_widata": "Secondary WiData documents page unavailable during retrieval; no copied values.",
+      "q4_2024_b01_page1": "PARTIAL PASS: user screenshot confirms current assets 6,096,485,409,864 VND; cash and cash equivalents 1,207,137,419,234 VND; loans 2,746,146,081,901 VND. Broker lending asset corrected from previous value 2,146,146.081901 million VND.",
+      "q4_2024_b01_remaining": "PENDING direct visual review of the remaining balance sheet pages.",
+      "q4_2024_b02_row29": "PENDING quarter/comparative column assignment for 25,000,000 VND.",
+      "q4_2024_b03": "Raw YTD source text and arithmetic reconcile, but direct visual review of the original B03 remains pending."
     },
     "reviewedStatements": [
       "B01-CTCK/HN",
@@ -136,7 +140,10 @@
     "sourceTextReconciledPeriods": [
       "2024-Q4"
     ],
-    "crossCheckSourceReportUrl": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/VDS_Baocaotaichinh_Q4_2025_Hopnhat.pdf"
+    "crossCheckSourceReportUrl": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/VDS_Baocaotaichinh_Q4_2025_Hopnhat.pdf",
+    "partiallyVisuallyReviewedPeriods": [
+      "2024-Q4 B01 printed page 1"
+    ]
   },
   "symbolStates": {
     "MBB": {
@@ -4776,7 +4783,7 @@
       "nextTicker": "VDS"
     },
     "2024-Q4": {
-      "status": "source_text_reconciled_visual_review_pending",
+      "status": "source_text_reconciled_b01_page1_partially_visual_verified",
       "documentId": "489660",
       "sourcePriority": 1,
       "sourceIndexUrl": "https://finance.vietstock.vn/VDS/tai-tai-lieu.htm?doctype=1",
@@ -4796,9 +4803,9 @@
         "B03-CTCK/HN"
       ],
       "issues": [
-        "Direct image-level review of the original Q4/2024 PDF is pending.",
-        "B02 row 29 candidate 25,000,000 VND has ambiguous quarter/comparative column assignment. Assigning it to Q4 would cause an expense detail residual above the 0.01% tolerance; keep unassigned.",
-        "WiData VDS documents page was attempted but unavailable/disabled in this retrieval session; no WiData values were copied. Only source 1 data and its later comparative were used."
+        "Only a cropped portion of original B01 printed page 1 has been visually reviewed; remaining B01 pages and B02/B03 need direct visual evidence.",
+        "B02 row 29 candidate 25,000,000 VND still has ambiguous quarter/comparative column assignment. Do not assign until a clear source-page image is available.",
+        "WiData documents page was attempted but unavailable in the current retrieval environment; no WiData values were copied."
       ],
       "validations": {
         "balance_sheet": "PASS source text plus Q4/2025 comparative: total assets 6,394,987,747,825 = liabilities 3,587,377,224,142 + equity 2,807,610,523,683; residual 0. The original Q4/2024 extracted row 440 OCR was misread by 900,000,000 VND; later VietstockFinance comparative and balance equation confirm the correct value.",
@@ -4810,10 +4817,34 @@
         "cashflow_standalone": "PASS arithmetic on original Q3/Q4 year-to-date reports: Q4 CFO 400,595,692,345; CFI -3,785,704,678; CFF 346,200,000,000; net change 743,009,987,667; beginning cash 464,127,431,567; ending cash 1,207,137,419,234. Flow sum and cash bridge exact.",
         "ratios": "Calculated from standalone Q4 PAT and average opening/closing balances: ROA -1.97%; ROE -4.42%.",
         "source_hierarchy": "VietstockFinance used as primary. WiData was attempted as the approved secondary source but unavailable in this retrieval session; no third source used.",
-        "visual": "PENDING direct image-level review of original Q4/2024 PDF. No visual-verification claim."
+        "visual": "PENDING direct image-level review of original Q4/2024 PDF. No visual-verification claim.",
+        "b01_page1_visual": "PARTIAL PASS: user-supplied original PDF screenshot visually confirms rows 100–119 and row 122, including total current assets 6,096,485,409,864 VND; cash/cash equivalents 1,207,137,419,234 VND; loans 2,746,146,081,901 VND.",
+        "broker_lending_asset": "CORRECTED: row 114 is 2,746,146,081,901 VND (2,746,146.081901 million VND), not the previously stored 2,146,146.081901 million VND. Confirmed by original B01 screenshot and same-source Q4/2025 comparative.",
+        "b01_remaining_pages": "PENDING direct visual review of printed B01 pages 2–5.",
+        "b02_detail": "PENDING direct visual review of B02 printed pages 6–8; row 29 25m column assignment unresolved.",
+        "b03_cashflow": "Source text / FY2024 comparative reconcile and raw flow arithmetic is exact; direct visual review of Q4/2024 B03 is still pending."
       },
       "nextPeriod": "2024-Q4",
-      "nextTicker": "VDS"
+      "nextTicker": "VDS",
+      "visualReviewedStatements": [
+        "B01-CTCK/HN printed page 1 (partial crop only)"
+      ],
+      "visualReviewedPrintedPages": [
+        1
+      ],
+      "visualReviewedRows": {
+        "100": "6,096,485,409,864 VND — total current assets",
+        "110": "6,081,319,786,359 VND — total financial assets",
+        "111": "1,207,137,419,234 VND — cash and cash equivalents",
+        "112": "1,161,947,454,027 VND — FVTPL",
+        "113": "400,000,000,000 VND — HTM",
+        "114": "2,746,146,081,901 VND — loans",
+        "115": "529,910,250,000 VND — AFS",
+        "116": "-44,222,315,258 VND — financial asset impairment provision",
+        "117": "65,402,452,012 VND — financial asset receivables",
+        "111.1": "632,137,419,234 VND — cash",
+        "111.2": "575,000,000,000 VND — cash equivalents"
+      }
     }
   },
   "sourceHierarchy": [
