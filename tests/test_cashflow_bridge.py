@@ -2766,7 +2766,7 @@ class VIXCashFlowScopeGuardTests(unittest.TestCase):
 
     def test_vix_previous_candidates_are_preserved_for_scope_review(self):
         explicitly_standalone = ("2024-Q1", "2024-Q2", "2024-Q3", "2024-Q4",
-                                 "2025-Q1", "2025-Q2", "2025-Q3", "2025-Q4", "2026-Q1")
+                                 "2025-Q1", "2025-Q2", "2025-Q3", "2025-Q4", "2026-Q1", "2026-Q2")
         for period in explicitly_standalone:
             with self.subTest(period=period):
                 row = self.rows[period]
@@ -2778,7 +2778,7 @@ class VIXCashFlowScopeGuardTests(unittest.TestCase):
                     row["cashflow_source_reconciliation"]["source_scope_status"],
                     "confirmed_standalone",
                 )
-        for period in ("2026-Q2", "2026-Q3"):
+        for period in ("2026-Q3",):
             with self.subTest(period=period):
                 row = self.rows[period]
                 self.assertEqual(
