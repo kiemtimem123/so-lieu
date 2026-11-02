@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-03T01:08:00+07:00",
+  "updatedAt": "2026-11-03T02:00:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -44,80 +44,67 @@
   "resumeSymbolHint": "VIX",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
-    "symbol": "VIX",
-    "status": "VIX_Q4_2024_Q1_2025_Q2_2025_COMPLETED",
-    "completeForAutomation": true,
-    "manualReviewRemaining": false,
-    "processedAt": "2026-11-03T01:08:00+07:00",
-    "period": "2025-Q2",
-    "periodStatus": "all_three_remaining_periods_completed_verified_separate; excluded_from_consolidated_series; detail_reconciliation_pass",
-    "periodCount": 11,
+    "symbol": "VDS",
+    "status": "VDS_Q1_2024_CORE_VISUAL_VERIFIED_DETAIL_REVIEW_PENDING",
+    "completeForAutomation": false,
+    "manualReviewRemaining": true,
+    "processedAt": "2026-11-03T02:00:00+07:00",
+    "period": "2024-Q1",
+    "periodStatus": "core_B01_B02_B03_visual_review_pass; detailed_broker_line_items_pending; cashflow_bridge_pass_with_rounding_tolerance",
+    "periodCount": 10,
     "reviewedPeriods": [
-      "2024-Q1",
-      "2025-Q3",
-      "2025-Q4",
-      "2026-Q1",
-      "2026-Q2",
-      "2026-Q3",
-      "2024-Q2",
-      "2024-Q3",
-      "2024-Q4",
-      "2025-Q1",
-      "2025-Q2"
+      "2024-Q1"
     ],
     "visuallyReviewedPeriods": [
-      "2024-Q1",
-      "2025-Q3",
-      "2025-Q4",
-      "2026-Q1",
-      "2026-Q2",
-      "2026-Q3",
+      "2024-Q1"
+    ],
+    "pendingCorePeriods": [
       "2024-Q2",
       "2024-Q3",
       "2024-Q4",
       "2025-Q1",
-      "2025-Q2"
+      "2025-Q2",
+      "2025-Q3",
+      "2025-Q4",
+      "2026-Q1",
+      "2026-Q2"
     ],
-    "pendingCorePeriods": [],
-    "sourceReportUrl": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%202/VIX_Baocaotaichinh_Q2_2025.pdf",
-    "sourceIndexUrl": "https://finance.vietstock.vn/VIX/tai-tai-lieu.htm?doctype=1",
-    "sourceDocumentId": "511515",
-    "dataCommit": "1347e9a104041594050ffb31325730c235dbf2a1",
+    "sourceReportUrl": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%201/VDS_Baocaotaichinh_Q1_2024_Hopnhat.pdf",
+    "sourceIndexUrl": "https://finance.vietstock.vn/VDS/tai-tai-lieu.htm?doctype=1",
+    "sourceDocumentId": "459995",
+    "dataCommit": "6dc2339bf3f5036416127c7c8c828020dc6548cc",
     "normalizationStandardVersion": "3.4",
     "validation": {
-      "sourceScope": "PASS standalone VIX; all three periods kept separate and excluded from consolidated series",
-      "sourceUnit": "PASS VND explicit on B01/B02/B03b; values stored in million VND",
-      "balanceEquation": "PASS exact VND: 24,385,197,959,515 = 6,666,569,152,664 + 17,718,628,806,851",
-      "revenue": "PASS Q2 1,976,150,333,018 VND; quarter column, not six-month YTD",
-      "operatingExpenses": "PASS report total 288,624,680,113 VND; detailed components residual 270 VND, below 0.01% tolerance",
-      "operatingResult": "PASS 1,602,475,526,579 VND",
-      "pretaxProfit": "PASS 1,602,507,328,938 VND",
-      "tax": "PASS 300,896,361,296 VND",
-      "netProfit": "PASS 1,301,610,967,642 VND",
-      "eps": "PASS quarterly EPS blank; 1,093 is six-month YTD EPS only",
-      "cashflow": "PASS exact six-month YTD cash bridge; audit-only because standalone"
+      "sourceScope": "PASS consolidated VDS Q1/2024, confirmed B01/B02/B03 headers",
+      "sourceUnit": "PASS VND explicitly printed on all reviewed statements; snapshot in million VND",
+      "balanceEquation": "PASS exact VND: 5,633,503,160,621 = 3,073,662,612,510 + 2,559,840,548,111",
+      "revenue": "PASS Q1 288,407,328,407 VND; quarter column and YTD Q1 are equal",
+      "pretaxProfit": "PASS 151,120,029,023 VND",
+      "tax": "PASS 27,864,285,158 VND",
+      "netProfit": "PASS 123,255,743,865 VND; parent 120,729,899,054; NCI 2,525,844,811",
+      "eps": "PASS Q1 EPS 575 VND/share",
+      "cashflow": "PASS YTD CFO -59,916,766,797; CFI 12,709,391,677; CFF 200,500,000,000; net +153,292,624,880; exact raw-VND cash bridge. Rounded million fields differ by 1 million (<0.01%).",
+      "detailRows": "PENDING: broker detail rows remain pending separate visual review; no new detail values inferred."
     },
     "reviewedStatements": [
-      "B01-CTCK",
-      "B02-CTCK",
-      "B03b-CTCK"
+      "B01-CTCK/HN",
+      "B02-CTCK/HN",
+      "B03-CTCK/HN"
     ],
     "reviewedPrintedPages": [
+      1,
+      2,
       3,
-      4,
-      5,
       6,
       7,
       8,
-      9,
       10,
       11,
       12
     ],
-    "cashflowAuditOnly": true,
+    "cashflowAuditOnly": false,
     "doNotRepeatCoreExtraction": true,
-    "nextPeriod": null,
-    "artifactNote": "Artifact 13148335964 was inspected and found to contain VIX-2024-Q3 images, not Q4; it is stale/mismatched and must not be used as Q4 evidence.",
+    "nextPeriod": "2024-Q2",
     "nextTicker": "VDS"
   },
   "symbolStates": {
@@ -1450,7 +1437,7 @@
       "manualReviewReason": "OCR/enrich run 3010 changed 10-period normalized YTD cash-flow values, cash balances and FX; the earlier preservation guard did not yet recognize SSI's `*_within_tolerance` audit metadata. Restored all cash-flow fields and audit metadata from validated normalization commit a921930815dd64b490748ba850c96f494571a710, recovery commit 1bd47b45ff12e40571eda4cc7e5f935689c18322. The new helper now recognizes SSI's audit format; hold this existing snapshot until revalidated."
     },
     "VDS": {
-      "status": "terminal_needs_manual_review",
+      "status": "in_progress_visual_review",
       "completeForAutomation": true,
       "manualReviewRemaining": true,
       "periodCount": 10,
@@ -1464,9 +1451,10 @@
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 6,
-      "updatedAt": "2026-10-30T17:22:00+07:00",
+      "updatedAt": "2026-11-03T02:00:00+07:00",
       "snapshotFetchedAt": "2026-10-23T11:20:31+00:00",
       "sourceReconciledPeriods": [
+        "2024-Q1",
         "2024-Q2",
         "2024-Q3",
         "2024-Q4",
@@ -4491,10 +4479,28 @@
     {
       "symbol": "VDS",
       "order": 4,
-      "status": "queued_visual_review",
+      "status": "in_progress_visual_review",
       "periodCount": 10,
       "periodRange": "2024-Q1..2026-Q2",
-      "reason": "Core/detail text reconciliation exists for selected periods; PDF visual review and cash-flow exception closeout remain."
+      "reason": "Q1/2024 B01/B02/B03 visually reviewed and core/raw-VND reconciliations pass; broker detail rows pending, then continue Q2/2024 through Q2/2026 and close Q2/2024 cash-flow source reclassification exception.",
+      "reviewedPeriods": [
+        "2024-Q1"
+      ],
+      "visuallyReviewedPeriods": [
+        "2024-Q1"
+      ],
+      "periodsRemaining": [
+        "2024-Q2",
+        "2024-Q3",
+        "2024-Q4",
+        "2025-Q1",
+        "2025-Q2",
+        "2025-Q3",
+        "2025-Q4",
+        "2026-Q1",
+        "2026-Q2"
+      ],
+      "nextStep": "Continue Q2/2024 using the already archived VietstockFinance PDF; review visual statements and explicitly resolve the 2024 H1 CFI/CFF comparative reclassification before marking the cash-flow series accepted."
     },
     {
       "symbol": "GAS",
@@ -4622,6 +4628,35 @@
       "consolidatedSeriesEligible": false,
       "validation": "PASS balance, P&L, tax and cashflow bridge; 270 VND component residual <0.01%; quarterly EPS blank; YTD EPS 1,093",
       "nextTicker": "VDS"
+    }
+  },
+  "vdsPeriodProgress": {
+    "2024-Q1": {
+      "status": "core_visual_verified_detail_review_pending",
+      "commit": "6dc2339bf3f5036416127c7c8c828020dc6548cc",
+      "documentId": "459995",
+      "sourceScope": "consolidated",
+      "unit": "VND",
+      "reviewedStatements": [
+        "B01-CTCK/HN",
+        "B02-CTCK/HN",
+        "B03-CTCK/HN"
+      ],
+      "reviewedPrintedPages": [
+        1,
+        2,
+        3,
+        6,
+        7,
+        8,
+        10,
+        11,
+        12
+      ],
+      "doNotRepeatCoreExtraction": true,
+      "consolidatedSeriesEligible": true,
+      "validation": "PASS exact balance, P&L/tax/PAT/parent PAT/NCI/EPS and raw cashflow bridge; broker detail rows pending separate visual review",
+      "nextPeriod": "2024-Q2"
     }
   }
 }
