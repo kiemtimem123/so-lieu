@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-02T12:45:00+07:00",
+  "updatedAt": "2026-11-02T12:55:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -48,46 +48,49 @@
     "status": "partial_period_completed_manual_scope_and_core_review",
     "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-11-02T12:45:00+07:00",
-    "period": "2025-Q3",
+    "processedAt": "2026-11-02T12:55:00+07:00",
+    "period": "2026-Q1",
     "periodStatus": "manually_verified_source_reconciled_separate_cashflow_held_from_consolidated",
     "periodCount": 11,
     "reviewedPeriods": [
       "2025-Q3",
-      "2025-Q4"
+      "2025-Q4",
+      "2026-Q1"
     ],
     "visuallyReviewedPeriods": [
       "2025-Q3",
-      "2025-Q4"
+      "2025-Q4",
+      "2026-Q1"
     ],
     "pendingCorePeriods": [
-      "2026-Q1",
       "2026-Q2",
       "2026-Q3"
     ],
-    "sourceReportUrl": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%203/VIX_Baocaotaichinh_Q3_2025.pdf",
+    "sourceReportUrl": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/VIX_Baocaotaichinh_Q1_2026.zip",
     "sourceIndexUrl": "https://finance.vietstock.vn/VIX/tai-tai-lieu.htm?doctype=1",
-    "sourceDocumentId": "521114",
-    "dataCommit": "e368e421e10f158969a8bbdaa960ee1fef5ddb3f",
+    "sourceDocumentId": "541681",
+    "dataCommit": "fae6335c5a6ccfcb83959d5504f110a010dd4f4b",
+    "testCommit": "257902a329e6432dc1d77d527d89d79e9cd82626",
     "normalizationStandardVersion": "3.4",
     "validation": {
-      "sourceScope": "PASS standalone Company-only VIX report; B01-CTCK/B02-CTCK/B03b-CTCK; page11 explicitly RIÊNG",
-      "sourceUnit": "PASS VND explicitly on statements and Note 2.4 page23",
-      "balanceEquation": "PASS exact at raw VND: assets31,534,673,037,863 = liabilities11,366,620,883,443 + equity20,168,052,154,420",
-      "assetAndLiabilitySubtotals": "PASS current assets31,490,793,258,294 + non-current43,879,779,569; current liabilities10,735,210,958,329 + long-term631,409,925,114",
-      "revenueAndExpenseComponents": "PASS exact at raw VND: Q3 operating revenue3,221,825,111,028; net operating expenses50,461,306,513; FVTPL loss/valuation lines reconcile with net negative expense",
-      "operatingAndFinancialProfitBridges": "PASS operating profit3,048,322,232,830 - other net expense390,136,986 = PBT3,047,932,095,844",
-      "taxComponentsAndPATBridge": "PASS current tax291,351,383,674 + deferred tax307,157,364,601 = total598,508,748,275; PAT2,449,423,347,569",
-      "cashflowRawVND": "PASS 9M CFO(7,221,911,471,398) + CFI286,250,000 + CFF7,438,000,000,000 = net increase216,374,778,602; company opening cash693,527,828,012 + net = closing909,902,606,614. Cashflow values withheld from consolidated fields because report is standalone.",
-      "customerCashflowSeparation": "PASS 572,207,011,668 VND is customer funds at start, not Company cash; the customer cashflow statement is separate.",
-      "signConvention": "PASS parentheses negative; dash zero; absent FX line null",
+      "sourceScope": "PASS standalone; B01-CTCK/B02-CTCK/B03b-CTCK and page11 off-balance section explicitly RIÊNG; note page21 identifies VIX Company",
+      "sourceUnit": "PASS VND on B01/B02/B03b and Note 2.4 page23",
+      "balanceEquation": "PASS exact at raw VND: assets29,598,210,995,041 = liabilities8,005,077,648,346 + equity21,593,133,346,695",
+      "assetAndLiabilitySubtotals": "PASS current assets29,395,196,224,922 + noncurrent assets203,014,770,119; current liabilities7,194,337,898,750 + long liabilities810,739,749,596",
+      "revenueAndExpenseComponents": "PASS exact: Q1 operating revenue1,653,403,555,824; operating expenses1,339,702,995,095; FVTPL revenue and loss subcomponents reconcile",
+      "operatingAndFinancialProfitBridges": "PASS operating profit156,803,423,319 - other net expense449,536,461 = PBT156,353,886,858",
+      "taxComponentsAndPATBridge": "PASS current tax44,096,616,869 + deferred tax benefit(26,112,999,066) = total tax17,983,617,803; PAT138,370,269,055",
+      "customerCashflowSeparation": "PASS customer cash deposits3,020,481,537,835 opening / 992,703,552,815 closing and customer brokerage/trust movements on pages11/18 are not Company cash; Company B03b cash is separate",
+      "cashflowRawVND": "PASS CFO3,243,431,300,446 + CFI(529,478,618) + CFF(4,321,000,000,000) = net cash decrease1,078,098,178,172; company opening2,049,092,199,336 - net decrease = closing970,994,021,164. Cashflow kept in audit only, not consolidated chart.",
+      "cashflowConsolidatedDisplay": "HOLD: source is standalone; all consolidated cashflow fields remain null",
+      "signConvention": "PASS parentheses negative; dash on presented line zero; absent FX row null",
       "residualsVND": {
-        "balance": 0,
         "totalAssets": 0,
+        "balance": 0,
+        "currentAssets": 0,
         "financialAssets": 0,
         "receivables": 0,
         "otherCurrent": 0,
-        "currentAssets": 0,
         "nonCurrent": 0,
         "otherLong": 0,
         "liabilities": 0,
@@ -103,28 +106,13 @@
         "operatingProfit": 0,
         "otherProfit": 0,
         "pretax": 0,
-        "totalTax": 0,
+        "tax": 0,
         "PAT": 0,
-        "realizedUnrealized": 0,
         "cashflow": 0,
         "cashBridge": 0,
         "cashTie": 0
       },
       "checksComplete": true,
-      "completedChecks": [
-        "sourceScope",
-        "sourceUnit",
-        "balanceEquation",
-        "assetAndLiabilitySubtotals",
-        "revenueAndExpenseComponents",
-        "operatingAndFinancialProfitBridges",
-        "taxComponentsAndPATBridge",
-        "cashflowComponents",
-        "cashBalanceBridge",
-        "cashAndBalanceSheetCashTieout",
-        "signConvention",
-        "customerCashflowSeparation"
-      ],
       "visualPages": [
         8,
         9,
@@ -140,15 +128,15 @@
         23
       ],
       "renderArtifact": {
-        "workflowRunId": 41389453782,
-        "artifactId": 13116747744,
-        "artifactDigest": "sha256:cce19ea686e34ef001f9f645bb6ffcd3254a2482cfe14485f4e934ce0e2339cc",
-        "artifactName": "vietstock-source-review-VIX-2025-Q3",
+        "workflowRunId": 41390188182,
+        "artifactId": 13116996880,
+        "artifactDigest": "sha256:6b6e0d8769fe431390029a03f4296ae083357876ad8253ffbf794c83d89bfabd",
+        "artifactName": "vietstock-source-review-VIX-2026-Q1",
         "dpi": 160,
-        "totalPdfPages": 44
+        "totalPdfPages": 43
       }
     },
-    "next": "Continue VIX Q1/2026 from archived VietstockFinance source. Confirm scope independently before extraction. Preserve separate-company Q3/Q4 2025 and keep their cashflows out of consolidated charts. Do not revisit VCI/VCK."
+    "next": "Continue VIX Q2/2026 from original VietstockFinance ZIP. Confirm source scope on original cover, B01/B02/B03b and notes before importing. Q1/2026 and Q3/Q4 2025 are standalone; keep their cashflows out of consolidated charts. Do not revisit VCI/VCK."
   },
   "symbolStates": {
     "MBB": {
@@ -1398,12 +1386,10 @@
       "firstQuarter": "2024-Q1",
       "lastQuarter": "2026-Q3",
       "pendingCorePeriods": [
-        "2026-Q1",
         "2026-Q2",
         "2026-Q3"
       ],
       "terminalManualReviewPeriods": [
-        "2026-Q1",
         "2026-Q2",
         "2026-Q3"
       ],
@@ -1411,36 +1397,37 @@
       "staleDetailSchemaPeriods": [],
       "statementPagesPending": true,
       "skipUnconfirmedAutomation": true,
-      "skipUnconfirmedReason": "VIX Q3/2025 and Q4/2025 now visually verified as standalone and raw-VND reconciled. Keep both standalone cashflow series out of consolidated charts. Q1–Q3/2026 reports still require scope review.",
-      "updatedAt": "2026-11-02T12:45:00+07:00",
-      "sourceArchivesChecked": 2,
+      "skipUnconfirmedReason": "VIX Q3/Q4 2025 and Q1 2026 have been visually verified as standalone and reconciled; their cashflows remain excluded from consolidated charts. Q2/Q3 2026 still require source-scope review.",
+      "updatedAt": "2026-11-02T12:55:00+07:00",
+      "sourceArchivesChecked": 3,
       "sourceScopeReview": {
         "status": "manual_scope_review_in_progress",
         "doNotAdvanceUntilManualReviewComplete": true,
         "periodScope": {
           "2025-Q4": "separate_confirmed_from_B01-CTCK_B02-CTCK_B03b-CTCK_and_off_balance_RIENG; source doc 527676",
-          "2025-Q3": "separate_confirmed_from_B01-CTCK_B02-CTCK_B03b-CTCK_and_off_balance_RIENG; source doc 521114"
+          "2025-Q3": "separate_confirmed_from_B01-CTCK_B02-CTCK_B03b-CTCK_and_off_balance_RIENG; source doc 521114",
+          "2026-Q1": "separate_confirmed_from_B01-CTCK_B02-CTCK_B03b-CTCK_and_off_balance_RIENG; source doc 541681"
         },
         "periodsVisuallyReviewed": [
           "2025-Q4",
-          "2025-Q3"
+          "2025-Q3",
+          "2026-Q1"
         ],
         "periodsPending": [
-          "2026-Q1",
           "2026-Q2",
           "2026-Q3"
         ],
         "lastVisualReviewEvidence": {
-          "period": "2025-Q3",
-          "dataCommit": "e368e421e10f158969a8bbdaa960ee1fef5ddb3f",
-          "renderWorkflowRunId": 41389453782,
-          "renderArtifactId": 13116747744,
-          "renderArtifactDigest": "sha256:cce19ea686e34ef001f9f645bb6ffcd3254a2482cfe14485f4e934ce0e2339cc",
-          "renderedPages": "all 1-44; reviewed B01/B02/B03b, RIÊNG off-balance statement, customer flow and notes for company/VND basis",
+          "period": "2026-Q1",
+          "dataCommit": "fae6335c5a6ccfcb83959d5504f110a010dd4f4b",
+          "renderWorkflowRunId": 41390188182,
+          "renderArtifactId": 13116996880,
+          "renderArtifactDigest": "sha256:6b6e0d8769fe431390029a03f4296ae083357876ad8253ffbf794c83d89bfabd",
+          "renderedPages": "all 1-43; reviewed B01/B02/B03b, off-balance RIÊNG section, customer flow and notes company/VND basis",
           "resolutionDpi": 160,
           "sourceUnit": "VND; snapshot million VND after raw-VND reconciliation",
           "scope": "separate Company statements",
-          "scopeEvidence": "B01-CTCK/B02-CTCK/B03b-CTCK; page11 explicitly RIÊNG; note page21 identifies Company and page23 confirms VND."
+          "scopeEvidence": "B01-CTCK/B02-CTCK/B03b-CTCK; page11 explicitly RIÊNG; note page21 identifies VIX Company and note2.4 page23 confirms VND."
         }
       }
     },
@@ -3047,6 +3034,20 @@
         "data/financials-VIX.json",
         "reports/processing-checkpoint.json"
       ]
+    },
+    {
+      "symbol": "VIX",
+      "period": "2026-Q1",
+      "status": "manually_verified_source_reconciled_separate_cashflow_held_from_consolidated",
+      "processedAt": "2026-11-02T12:55:00+07:00",
+      "commit": "fae6335c5a6ccfcb83959d5504f110a010dd4f4b",
+      "renderWorkflowRunId": 41390188182,
+      "renderArtifactId": 13116996880,
+      "changedPaths": [
+        "data/financials-VIX.json",
+        "tests/test_cashflow_bridge.py",
+        "reports/processing-checkpoint.json"
+      ]
     }
   ],
   "currentRun": {
@@ -4406,24 +4407,26 @@
       "status": "active_blocking",
       "periodCount": 11,
       "periodRange": "2024-Q1..2026-Q3",
-      "reason": "VIX Q3/2025 and Q4/2025 are now visually verified as separate-company and reconciled; their cashflows remain excluded from consolidated charts. Q1/2026–Q3/2026 still require scope review.",
-      "nextStep": "Continue VIX Q1/2026 from archived VietstockFinance PDF; confirm standalone vs consolidated on the original cover, B01/B02/B03 and notes before extracting values.",
+      "reason": "VIX Q3/Q4 2025 and Q1 2026 visually verified as separate-company and reconciled; their cashflows stay excluded from consolidated charts. Q2/2026–Q3/2026 remain pending source-scope review.",
+      "nextStep": "Continue VIX Q2/2026 from archived VietstockFinance ZIP; inspect original cover, B01/B02/B03b and accounting notes to confirm scope before extraction.",
       "reviewedPeriods": [
         "2025-Q4",
-        "2025-Q3"
+        "2025-Q3",
+        "2026-Q1"
       ],
       "periodsRemaining": [
-        "2026-Q1",
         "2026-Q2",
         "2026-Q3"
       ],
       "visuallyReviewedPeriods": [
         "2025-Q4",
-        "2025-Q3"
+        "2025-Q3",
+        "2026-Q1"
       ],
       "sourceScopeConfirmedPeriods": [
         "2025-Q4",
-        "2025-Q3"
+        "2025-Q3",
+        "2026-Q1"
       ]
     },
     {
@@ -4471,5 +4474,5 @@
     "SHS",
     "VCI"
   ],
-  "manualReviewQueueUpdatedAt": "2026-11-02T12:45:00+07:00"
+  "manualReviewQueueUpdatedAt": "2026-11-02T12:55:00+07:00"
 }
