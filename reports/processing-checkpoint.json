@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-02T14:17:29.544Z",
+  "updatedAt": "2026-11-02T14:45:00Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -45,12 +45,12 @@
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "VIX",
-    "status": "partial_period_completed_manual_scope_core_detail_review",
+    "status": "Q4_2024_core_visually_verified_detail_reconciliation_pending",
     "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-11-02T14:17:29.544Z",
-    "period": "2024-Q3",
-    "periodStatus": "manually_verified_source_reconciled_separate_cashflow_held_from_consolidated",
+    "processedAt": "2026-11-02T14:45:00Z",
+    "period": "2024-Q4",
+    "periodStatus": "core_statements_visually_verified_separate_scope; detail_and_cashflow_audit_pending",
     "periodCount": 11,
     "reviewedPeriods": [
       "2024-Q1",
@@ -77,26 +77,21 @@
       "2025-Q1",
       "2025-Q2"
     ],
-    "sourceReportUrl": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%203/VIX_Baocaotaichinh_Q3_2024.pdf",
+    "sourceReportUrl": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%204/VIX_Baocaotaichinh_Q4_2024.pdf",
     "sourceIndexUrl": "https://finance.vietstock.vn/VIX/tai-tai-lieu.htm?doctype=1",
-    "sourceDocumentId": "481505",
-    "dataCommit": "0831440958aa1b8b320d4107f878704a314e519b",
+    "sourceDocumentId": "488748",
+    "dataCommit": "c1c1767067e534209e272489c07594d55e1755f2",
     "normalizationStandardVersion": "3.4",
     "validation": {
-      "sourceScope": "PASS standalone Company only; B01/B02/B03b; pages5–6 explicitly RIÊNG",
-      "sourceUnit": "PASS VND explicitly in reports and Note2.4",
-      "balanceEquation": "PASS exact raw VND: assets18,217,831,729,322 = liabilities2,285,291,193,646 + equity15,932,540,535,676",
-      "assetLiabilitySubtotals": "PASS exact raw VND across current/non-current assets and current/long-term liabilities",
-      "equitySubtotals": "PASS exact raw VND including share capital, reserves and retained earnings",
-      "revenueAndExpenseComponents": "PASS exact raw VND; total revenue553,757,747,081; operating costs197,382,244,369",
-      "profitTaxBridge": "PASS exact raw VND; PBT324,736,864,051; tax59,351,717,499; PAT265,385,146,552",
-      "cashflowQ3": "PASS YTD less 6M: CFO(3,476,296,675,325), CFI(695,818,727), CFF7,058,723,780,000; net increase3,581,731,285,948",
-      "cashBridge": "PASS opening571,174,286,048 plus net = closing4,152,905,571,996; ties to B01 cash",
-      "customerCashSeparation": "PASS customer brokerage/trust funds separate from Company cash",
-      "consolidatedCashflow": "HOLD: standalone company cashflows audit-only; all consolidated display fields null",
-      "eps": "Q3 EPS cell blank; 674 is nine-month cumulative EPS and is not used as Q3",
-      "ratios": "ROA7.37%; ROE8.48%, quarterly PAT annualized against average end-Q2/end-Q3 balances",
-      "residualsVND": "All balance, subtotals, operating/PAT bridges, cashflow and customer cash bridges exact zero."
+      "sourceScope": "PASS standalone VIX; not consolidated",
+      "sourceUnit": "PASS VND explicit on B01/B02/B03b",
+      "balanceEquation": "PASS exact raw VND: 19,606,325,397,605 = 3,561,584,498,167 + 16,044,740,899,438",
+      "revenue": "PASS 544,617,506,222 VND",
+      "pretaxProfit": "PASS 133,666,677,665 VND",
+      "netProfit": "PASS 112,200,363,762 VND",
+      "eps": "Q4 EPS blank; 677 annual cumulative only",
+      "cashflow": "HOLD audit-only; B03b cumulative YTD and standalone",
+      "remaining": "Detailed B01/B02 components, B03b cashflow audit and note/ratio checks pending."
     },
     "renderArtifact": {
       "workflowRunId": 41458156562,
@@ -4519,5 +4514,46 @@
     "SHS",
     "VCI"
   ],
-  "manualReviewQueueUpdatedAt": "2026-11-02T14:17:29.544Z"
+  "manualReviewQueueUpdatedAt": "2026-11-02T14:17:29.544Z",
+  "vixPeriodProgress": {
+    "2024-Q4": {
+      "status": "core_verified_detail_pending",
+      "commit": "c1c1767067e534209e272489c07594d55e1755f2",
+      "documentId": "488748",
+      "reviewedStatements": [
+        "B01-CTCK",
+        "B02-CTCK",
+        "B03b-CTCK"
+      ],
+      "reviewedPrintedPages": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "sourceScope": "standalone",
+      "unit": "VND",
+      "core": {
+        "total_assets": 19606325.397605,
+        "total_liabilities": 3561584.498167,
+        "equity": 16044740.899438,
+        "revenue": 544617.506222,
+        "pretax_profit": 133666.677665,
+        "net_profit": 112200.363762
+      },
+      "pending": [
+        "reconcile detailed B01 rows and subtotals",
+        "reconcile B02 revenue/expense components and profit-tax bridge",
+        "audit B03b YTD cashflow and cash bridge; standalone flows remain out of consolidated series",
+        "review note-derived ratios and EPS"
+      ],
+      "doNotRepeatCoreExtraction": true
+    }
+  }
 }
