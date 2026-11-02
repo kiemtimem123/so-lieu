@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-03T02:00:00+07:00",
+  "updatedAt": "2026-11-03T02:18:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -45,21 +45,22 @@
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "VDS",
-    "status": "VDS_Q1_2024_CORE_VISUAL_VERIFIED_DETAIL_REVIEW_PENDING",
+    "status": "VDS_Q1_Q2_2024_CORE_AND_CASHFLOW_VISUAL_VERIFIED",
     "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-11-03T02:00:00+07:00",
-    "period": "2024-Q1",
-    "periodStatus": "core_B01_B02_B03_visual_review_pass; detailed_broker_line_items_pending; cashflow_bridge_pass_with_rounding_tolerance",
+    "processedAt": "2026-11-03T02:18:00+07:00",
+    "period": "2024-Q2",
+    "periodStatus": "Q1_Q2_2024_core_statements_visual_pass; Q2_2024_cashflow_reclassification_confirmed_and_later_comparative_selected; detail_rows_pending",
     "periodCount": 10,
     "reviewedPeriods": [
-      "2024-Q1"
+      "2024-Q1",
+      "2024-Q2"
     ],
     "visuallyReviewedPeriods": [
-      "2024-Q1"
+      "2024-Q1",
+      "2024-Q2"
     ],
     "pendingCorePeriods": [
-      "2024-Q2",
       "2024-Q3",
       "2024-Q4",
       "2025-Q1",
@@ -69,22 +70,20 @@
       "2026-Q1",
       "2026-Q2"
     ],
-    "sourceReportUrl": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%201/VDS_Baocaotaichinh_Q1_2024_Hopnhat.pdf",
+    "sourceReportUrl": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%202/VDS_Baocaotaichinh_Q2_2024_Hopnhat.pdf",
     "sourceIndexUrl": "https://finance.vietstock.vn/VDS/tai-tai-lieu.htm?doctype=1",
-    "sourceDocumentId": "459995",
-    "dataCommit": "6dc2339bf3f5036416127c7c8c828020dc6548cc",
+    "sourceDocumentId": "472869",
+    "dataCommit": "84d5f18d3fc4598deaa6423bf2515932a79280aa",
     "normalizationStandardVersion": "3.4",
     "validation": {
-      "sourceScope": "PASS consolidated VDS Q1/2024, confirmed B01/B02/B03 headers",
-      "sourceUnit": "PASS VND explicitly printed on all reviewed statements; snapshot in million VND",
-      "balanceEquation": "PASS exact VND: 5,633,503,160,621 = 3,073,662,612,510 + 2,559,840,548,111",
-      "revenue": "PASS Q1 288,407,328,407 VND; quarter column and YTD Q1 are equal",
-      "pretaxProfit": "PASS 151,120,029,023 VND",
-      "tax": "PASS 27,864,285,158 VND",
-      "netProfit": "PASS 123,255,743,865 VND; parent 120,729,899,054; NCI 2,525,844,811",
-      "eps": "PASS Q1 EPS 575 VND/share",
-      "cashflow": "PASS YTD CFO -59,916,766,797; CFI 12,709,391,677; CFF 200,500,000,000; net +153,292,624,880; exact raw-VND cash bridge. Rounded million fields differ by 1 million (<0.01%).",
-      "detailRows": "PENDING: broker detail rows remain pending separate visual review; no new detail values inferred."
+      "sourceScope": "PASS consolidated VDS; B01/B02/B03 visual headers reviewed",
+      "sourceUnit": "PASS VND explicitly printed; snapshot in million VND",
+      "q1_2024": "PASS exact balance, P&L/tax/PAT/parent PAT/NCI/EPS and raw cashflow bridge; core extraction checkpointed",
+      "q2_2024Balance": "PASS exact VND: 6,048,629,391,321 = 3,395,196,153,215 + 2,653,433,238,106",
+      "q2_2024Profit": "PASS revenue 318,102,784,879; PBT 145,833,816,837; tax 26,405,346,253; PAT 119,428,470,584; parent PAT 119,920,689,480; NCI -492,218,896; EPS 571",
+      "q2_2024Cashflow": "PASS later Q2/2025 VietstockFinance comparative visually confirms H1/2024 CFO -551,719,076,777; CFI -9,707,469,615; CFF 359,500,000,000; net -201,926,546,392; opening 870,234,562,511; closing 668,308,016,119. Original Q2/2024 B03 values CFI -22,707,469,615 and CFF 372,500,000,000 preserved as superseded classification.",
+      "reclassification": "PASS resolved, not ignored: CFI/CFF reclassified by opposite 13,000,000,000 VND movements; net cash unchanged; later comparative selected. No balancing plug.",
+      "detailRows": "PENDING separate visual review of detailed broker income/expense line items."
     },
     "reviewedStatements": [
       "B01-CTCK/HN",
@@ -104,7 +103,7 @@
     ],
     "cashflowAuditOnly": false,
     "doNotRepeatCoreExtraction": true,
-    "nextPeriod": "2024-Q2",
+    "nextPeriod": "2024-Q3",
     "nextTicker": "VDS"
   },
   "symbolStates": {
@@ -1451,7 +1450,7 @@
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 6,
-      "updatedAt": "2026-11-03T02:00:00+07:00",
+      "updatedAt": "2026-11-03T02:18:00+07:00",
       "snapshotFetchedAt": "2026-10-23T11:20:31+00:00",
       "sourceReconciledPeriods": [
         "2024-Q1",
@@ -4482,15 +4481,16 @@
       "status": "in_progress_visual_review",
       "periodCount": 10,
       "periodRange": "2024-Q1..2026-Q2",
-      "reason": "Q1/2024 B01/B02/B03 visually reviewed and core/raw-VND reconciliations pass; broker detail rows pending, then continue Q2/2024 through Q2/2026 and close Q2/2024 cash-flow source reclassification exception.",
+      "reason": "Q1/Q2 2024 B01/B02/B03 visually reviewed; core reconciliations pass. Q2/2024 cashflow CFI/CFF restatement against Q2/2025 comparative visually confirmed and resolved; detailed broker rows and later periods remain.",
       "reviewedPeriods": [
-        "2024-Q1"
+        "2024-Q1",
+        "2024-Q2"
       ],
       "visuallyReviewedPeriods": [
-        "2024-Q1"
+        "2024-Q1",
+        "2024-Q2"
       ],
       "periodsRemaining": [
-        "2024-Q2",
         "2024-Q3",
         "2024-Q4",
         "2025-Q1",
@@ -4500,7 +4500,7 @@
         "2026-Q1",
         "2026-Q2"
       ],
-      "nextStep": "Continue Q2/2024 using the already archived VietstockFinance PDF; review visual statements and explicitly resolve the 2024 H1 CFI/CFF comparative reclassification before marking the cash-flow series accepted."
+      "nextStep": "Continue Q3/2024 from archived VietstockFinance PDF; do not re-extract Q1/Q2/2024 core data. Continue period-by-period through Q2/2026."
     },
     {
       "symbol": "GAS",
@@ -4657,6 +4657,33 @@
       "consolidatedSeriesEligible": true,
       "validation": "PASS exact balance, P&L/tax/PAT/parent PAT/NCI/EPS and raw cashflow bridge; broker detail rows pending separate visual review",
       "nextPeriod": "2024-Q2"
+    },
+    "2024-Q2": {
+      "status": "core_and_cashflow_visual_verified_detail_review_pending",
+      "commit": "84d5f18d3fc4598deaa6423bf2515932a79280aa",
+      "documentId": "472869",
+      "sourceScope": "consolidated",
+      "unit": "VND",
+      "reviewedStatements": [
+        "B01-CTCK/HN",
+        "B02-CTCK/HN",
+        "B03-CTCK/HN"
+      ],
+      "reviewedPrintedPages": [
+        1,
+        2,
+        3,
+        6,
+        7,
+        8,
+        10,
+        11,
+        12
+      ],
+      "doNotRepeatCoreExtraction": true,
+      "consolidatedSeriesEligible": true,
+      "validation": "PASS balance, P&L/tax/PAT/parent PAT/NCI/EPS, cashflow; H1/2024 CFI/CFF classification restatement visually confirmed against later Q2/2025 comparative; original figures retained in provenance.",
+      "nextPeriod": "2024-Q3"
     }
   }
 }
