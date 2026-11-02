@@ -4618,7 +4618,7 @@
       "quarter_profit_basis": "B02-CTCK current-quarter column QUÝ 1.2026; Q1 is also FY2026 YTD because it is the first quarter.",
       "verification_status": "manually_verified_source_reconciled",
       "source_validation": {
-        "reviewed_at": "2026-11-02T00:47:00+07:00",
+        "reviewed_at": "2026-11-02T10:02:00+07:00",
         "single_source_policy": "Only VietstockFinance doctype=1 catalogue and its linked original ZIP/PDF member.",
         "source_catalog_url": "https://finance.vietstock.vn/VCI/tai-tai-lieu.htm?doctype=1",
         "source_document_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/VCI_Baocaotaichinh_Q1_2026.zip",
@@ -4703,8 +4703,6 @@
           "totalPdfPages": 48,
           "renderedPages": "all 1-48",
           "pagesVisuallyReviewed": [
-            3,
-            4,
             5,
             6,
             7,
@@ -4718,13 +4716,13 @@
             19,
             20
           ],
-          "note": "ZIP had 2 PDF members; exact Q1 PDF member was selected for review. B01/B02/B03, currency headings, report scope and no-subsidiary/currency notes visually inspected."
+          "note": "Full original Q1/2026 PDF rendered at 160 DPI; direct re-review of PDF pages 5-14 completed in this pass, including B01/B02/B03, customer-custody statement separation, unit headings, signs and FX blank/dash distinction."
         }
       },
       "published_at": "2026-04-20",
       "source_archive_file": "reports/raw/VCI/auto-vci-20261021/f9f79b469fb94e87.zip",
       "source_archive_match": "matched_report_queue_url",
-      "verification_status_note": "Cần đối chiếu trực quan với PDF VietstockFinance trước khi công bố các chỉ tiêu lõi.",
+      "verification_status_note": "Q1/2026 đã được đối chiếu trực quan B01/B02/B03 trên PDF pages5–14; unit VND, scope separate, raw-VND reconciliations exact. Không còn trường lõi chờ xác minh.",
       "core_financial_extraction_status": "manually_verified_source_reconciled",
       "core_financial_extraction_unverified_values": {},
       "core_financial_extracted_fields": [
@@ -4736,13 +4734,13 @@
         "net_profit",
         "income_tax"
       ],
-      "core_financial_extraction_note": "Đã có đủ trang nguồn mục tiêu nhưng hai lượt phân tích trên cùng văn bản vẫn không tạo được bộ chỉ tiêu lõi cân đối. Các số OCR chưa cân đối được lưu riêng để đối chiếu; chỉ tiêu chính chưa xác minh được để trống.",
+      "core_financial_extraction_note": "Đã đối chiếu trực quan PDF gốc Q1/2026 trên các trang 5–14. B01/B02/B03 ghi đơn vị VND; snapshot chuyển sang triệu VND sau khi kiểm tra số gốc. Phạm vi riêng lẻ xác nhận tại thuyết minh PDF page19 (printed p17), không có công ty con. B02 dùng cột QUÝ 1.2026; Q1 cũng là YTD. B03 giữ nguyên dấu ngoặc âm, CFF dương như in; line102 trống nên FX null. Các cầu nối B01/B02/B03 residual 0 VND; customer deposits và bảng tài sản/tiền gửi khách hàng pages8–9 không đưa vào tài sản/tiền công ty.",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "f8230f852016c166020f3cab13c6baf65fc90d2a61c7035d5a11ac5348705eaa",
       "core_financial_extraction_evidence_attempt_count": 0,
       "financial_line_items_rejected_fields": [],
       "financial_line_items_rejected_updated_at": "2026-11-01T07:36:07+00:00",
-      "financial_line_items_note": "PDF gốc Q1/2026 ghi đơn vị VND trên B01/B02/B03; thuyết minh page20 (printed p18) xác nhận Đồng Việt Nam (VND). Snapshot hiển thị triệu VND, raw chia 1.000.000 và làm tròn sau đối chiếu. Q1 là quý đầu năm nên cột quý và YTD trùng nhau; không lấy chênh với Q4. Dấu ngoặc là âm, dấu gạch ngang trên dòng được trình bày là 0; B03 line102 trống nên FX giữ null. Tiền gửi khách hàng ở chỉ tiêu ngoài B01 không phải tiền của công ty.",
+      "financial_line_items_note": "Q1/2026 PDF pages5–14 visually rechecked. Source B01/B02/B03 unit is VND, snapshot display unit is million VND after raw-VND reconciliation. B02 current column QUÝ 1.2026 is used; as Q1, quarterly equals YTD. B03 parentheses are negative, CFF is positive, line102 FX blank => null. Customer custody tables pages8–9 are not company assets/cash.",
       "current_assets": 35816716,
       "non_current_assets": 1280668,
       "broker_fvtpl_assets": 2551160,
@@ -5027,7 +5025,11 @@
           "net_cash_change_ytd": -1165444389766,
           "cash_beginning_ytd": 3213693581406,
           "cash_ending_ytd": 2048249191640,
-          "foreign_exchange_effect_ytd": null
+          "foreign_exchange_effect_ytd": null,
+          "current_financial_assets": 35643091234808,
+          "other_current_assets": 173624393232,
+          "construction_in_progress": 18202977008,
+          "other_non_current_assets": 1173635433020
         },
         "reported_b03_totals_as_printed_vnd": {
           "cfo_ytd": -2900034543773,
@@ -5092,11 +5094,68 @@
           "balance_sheet_vs_cashflow_cash_vnd": 0,
           "adjacent_q4_q1_cash_continuity_vnd": 0,
           "q1_quarter_cashflow_components_vnd": 0,
-          "q1_cash_balance_bridge_vnd": 0
+          "q1_cash_balance_bridge_vnd": 0,
+          "current_financial_asset_components_vnd": 0,
+          "current_asset_subtotal_vnd": 0,
+          "non_current_asset_components_vnd": 0
         },
         "source_unit": "VND",
         "snapshot_unit": "triệu VND",
-        "rounding_rule": "Validate raw VND first, convert to million VND and round nearest million only afterward."
+        "rounding_rule": "Validate raw VND first, convert to million VND and round nearest million only afterward.",
+        "current_financial_asset_components_vnd": {
+          "cash": 2048249191640,
+          "fvtpl": 2551159649558,
+          "htm": 412000000000,
+          "lending": 16613354910744,
+          "afs": 13088784637265,
+          "financial_asset_impairment": -2169825587,
+          "receivables": 374487711695,
+          "prepaid_to_suppliers": 540018398965,
+          "brokerage_service_receivables": 41719010528,
+          "receivable_allowance": -24512450000
+        },
+        "other_current_assets_vnd": 173624393232,
+        "construction_in_progress_vnd": 18202977008,
+        "other_non_current_assets_vnd": 1173635433020,
+        "direct_page_review": {
+          "review_date": "2026-11-02",
+          "pdf": "VCI_Baocaotaichinh_Q1_2026_1.pdf",
+          "source_pages_reviewed": [
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14
+          ],
+          "review_map": {
+            "5": "B01 tài sản ngắn hạn/tài sản tài chính; unit heading VND",
+            "6": "B01 tổng tài sản, nợ ngắn hạn và nợ dài hạn",
+            "7": "B01 vốn chủ sở hữu và tổng nợ phải trả + vốn chủ sở hữu",
+            "8": "Bảng ngoài B01 về tài sản CTCK/tiền gửi và tài sản quản lý của khách hàng; customer deposits treated as memorandum/custody, not company cash",
+            "9": "Bảng đối ứng tài sản/tiền gửi khách hàng và nghĩa vụ CTCK; excluded from company balance sheet totals",
+            "10": "B02 operating revenue components and total revenue, current quarter Q1/2026 column",
+            "11": "B02 operating expenses, financial income and financial expenses, Q1/2026 column",
+            "12": "B02 administration expense, operating profit, PBT, current/deferred/total tax, PAT and OCI",
+            "13": "B03 CFO indirect-method bridge, source unit VND",
+            "14": "B03 CFO/CFI/CFF/net cash change/opening and closing cash; FX line 102 is blank"
+          },
+          "unit_confirmed": "VND on B01 page5, B02 page10, B03 page13; notes page20 confirms Vietnamese đồng.",
+          "sign_confirmed": "Parentheses mean negative. Printed dash on a presented row means zero. B03 CFF line80 is positive without parentheses; line90 net cash movement is negative in parentheses. Line102 FX effect is blank and remains null.",
+          "period_column": "B02 uses QUÝ 1.2026. Because this is Q1, quarterly and YTD values coincide; B03 Q1 equals the 2026 YTD amount. 2025 comparator column not used as current-period data.",
+          "customer_statement_exclusion": "Pages8-9 are outside-statement customer assets/deposits and matching liabilities under custody/management; do not add to company assets, cash, or cash flows.",
+          "oci_note": "B02 line300/line301 OCI loss -818,674,618,772 VND relates to AFS fair-value remeasurement; not PAT and not operating result.",
+          "checks": {
+            "current_financial_asset_components_vnd": 0,
+            "current_asset_subtotal_vnd": 0,
+            "non_current_asset_components_vnd": 0,
+            "total_asset_equation_vnd": 0
+          }
+        }
       },
       "profit_reconciliation": {
         "source": "B02-CTCK current-quarter column QUÝ 1.2026; FY2026 YTD equals Q1 because it is first quarter.",
@@ -5142,8 +5201,6 @@
         "checked_source": "VietstockFinance doctype=1 listing docID 542453 and the directly linked original ZIP/PDF member.",
         "manually_visual_reviewed": true,
         "manually_verified_pages": [
-          3,
-          4,
           5,
           6,
           7,
@@ -5173,7 +5230,46 @@
           "ytd_cash_open_close_bridge_vnd": 0,
           "prior_q4_close_to_q1_opening_vnd": 0
         },
-        "note": "Q1 is the first quarter, so B02 quarter and YTD values and B03 quarter and YTD cashflows are the same; no subtraction from Q4. Parentheses indicate negative values; printed dashes are zero; line102 FX blank is null."
+        "note": "Q1 is the first quarter, so B02 quarter and YTD values and B03 quarter and YTD cashflows are the same; no subtraction from Q4. Parentheses indicate negative values; printed dashes are zero; line102 FX blank is null.",
+        "direct_page_review": {
+          "review_date": "2026-11-02",
+          "pdf": "VCI_Baocaotaichinh_Q1_2026_1.pdf",
+          "source_pages_reviewed": [
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14
+          ],
+          "review_map": {
+            "5": "B01 tài sản ngắn hạn/tài sản tài chính; unit heading VND",
+            "6": "B01 tổng tài sản, nợ ngắn hạn và nợ dài hạn",
+            "7": "B01 vốn chủ sở hữu và tổng nợ phải trả + vốn chủ sở hữu",
+            "8": "Bảng ngoài B01 về tài sản CTCK/tiền gửi và tài sản quản lý của khách hàng; customer deposits treated as memorandum/custody, not company cash",
+            "9": "Bảng đối ứng tài sản/tiền gửi khách hàng và nghĩa vụ CTCK; excluded from company balance sheet totals",
+            "10": "B02 operating revenue components and total revenue, current quarter Q1/2026 column",
+            "11": "B02 operating expenses, financial income and financial expenses, Q1/2026 column",
+            "12": "B02 administration expense, operating profit, PBT, current/deferred/total tax, PAT and OCI",
+            "13": "B03 CFO indirect-method bridge, source unit VND",
+            "14": "B03 CFO/CFI/CFF/net cash change/opening and closing cash; FX line 102 is blank"
+          },
+          "unit_confirmed": "VND on B01 page5, B02 page10, B03 page13; notes page20 confirms Vietnamese đồng.",
+          "sign_confirmed": "Parentheses mean negative. Printed dash on a presented row means zero. B03 CFF line80 is positive without parentheses; line90 net cash movement is negative in parentheses. Line102 FX effect is blank and remains null.",
+          "period_column": "B02 uses QUÝ 1.2026. Because this is Q1, quarterly and YTD values coincide; B03 Q1 equals the 2026 YTD amount. 2025 comparator column not used as current-period data.",
+          "customer_statement_exclusion": "Pages8-9 are outside-statement customer assets/deposits and matching liabilities under custody/management; do not add to company assets, cash, or cash flows.",
+          "oci_note": "B02 line300/line301 OCI loss -818,674,618,772 VND relates to AFS fair-value remeasurement; not PAT and not operating result.",
+          "checks": {
+            "current_financial_asset_components_vnd": 0,
+            "current_asset_subtotal_vnd": 0,
+            "non_current_asset_components_vnd": 0,
+            "total_asset_equation_vnd": 0
+          }
+        }
       }
     },
     {
