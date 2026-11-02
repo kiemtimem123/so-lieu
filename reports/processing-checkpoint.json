@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-02T10:20:00+07:00",
+  "updatedAt": "2026-11-02T10:24:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "VietstockFinance document catalog (doctype=1) and linked PDF/ZIP only",
   "periodStart": "2024-Q1",
@@ -48,7 +48,7 @@
     "status": "partial_period_completed_manual_scope_and_core_review",
     "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-11-02T10:20:00+07:00",
+    "processedAt": "2026-11-02T10:24:00+07:00",
     "period": "2025-Q2",
     "periodStatus": "manually_verified_source_reconciled_separate",
     "periodCount": 7,
@@ -70,14 +70,14 @@
     "sourceReportUrl": "https://static2.vietstock.vn/data/OTC/2025/BCTC/VN/QUY%202/VPSS_Baocaotaichinh_Q2_2025.pdf",
     "sourceIndexUrl": "https://finance.vietstock.vn/VCK/tai-tai-lieu.htm?doctype=1",
     "sourceDocumentId": "511699",
-    "dataCommit": "843182af9eab17e4ccd21d33250023986a095001",
+    "dataCommit": "9e2de878d58aa12b2281639a99b141a35cbc20c7",
     "normalizationStandardVersion": "3.4",
     "validation": {
       "sourceScope": "PASS separate; cover and B01/B02/B03 are company-only; note 2.3 describes company reporting basis; B01 line212.2 opening 535,881,668 VND and B03 line64 proceeds 535,881,668 VND",
       "sourceUnit": "PASS VND explicitly on B01/B02/B03 and note 2.1",
       "balanceEquation": "PASS exact at raw VND",
       "assetAndLiabilitySubtotals": "PASS exact at raw VND",
-      "revenueAndExpenseComponents": "PASS core revenue and operating-profit bridge reviewed; remaining detailed revenue-component audit not expanded in this checkpoint",
+      "revenueAndExpenseComponents": "PASS exact at raw VND: revenue components 1,723,539,495,261; operating expense components 669,424,144,480; financial income 212,224,465,308; financial expense 264,902,032,201; operating profit bridge 878,014,670,956.",
       "operatingAndFinancialProfitBridges": "PASS operating profit 878,014,670,956 + other profit (23,806,457) = PBT 877,990,864,499 VND",
       "taxComponentsAndPATBridge": "PASS PBT 877,990,864,499 - current tax 175,776,595,393 = PAT 702,214,269,106 VND; no deferred-tax line presented",
       "investingAndFinancingComponents": "PASS cashflow statement YTD values and Q2 differencing reconciled",
@@ -86,7 +86,21 @@
       "cashAndBalanceSheetCashTieout": "PASS B01 cash and equivalents = B03 closing cash, exact",
       "signConvention": "PASS parentheses negative; printed dash on present line zero; absent FX line null",
       "customerCashflowSeparation": "PASS separate brokerage/trust customer cash-flow statement on PDF page14 excluded from company cash flow",
-      "residualsVND": {},
+      "residualsVND": {
+        "balance": 0,
+        "assetSubtotal": 0,
+        "liabilitySubtotal": 0,
+        "revenueComponents": 0,
+        "operatingExpenseComponents": 0,
+        "financialIncomeComponents": 0,
+        "financialExpenseComponents": 0,
+        "operatingProfitBridge": 0,
+        "taxPATBridge": 0,
+        "cashflowYTD": 0,
+        "cashBridgeYTD": 0,
+        "cashflowQuarter": 0,
+        "cashBridgeQuarter": 0
+      },
       "visualPages": [
         1,
         3,
@@ -109,9 +123,25 @@
         "artifactName": "vietstock-source-review-VCK-2025-Q2",
         "dpi": 160,
         "totalPdfPages": 39
-      }
+      },
+      "checksComplete": true,
+      "completedChecks": [
+        "sourceScope",
+        "sourceUnit",
+        "balanceEquation",
+        "assetAndLiabilitySubtotals",
+        "revenueAndExpenseComponents",
+        "operatingAndFinancialProfitBridges",
+        "taxComponentsAndPATBridge",
+        "investingAndFinancingComponents",
+        "cashflowComponents",
+        "cashBalanceBridge",
+        "cashAndBalanceSheetCashTieout",
+        "signConvention",
+        "customerCashflowSeparation"
+      ]
     },
-    "next": "Continue VCK Q3/2025 from its archived VietstockFinance PDF. Independently verify report scope, VND unit, signs and raw-VND statement reconciliations before extracting. Do not revisit VCI or VCK Q1/2025."
+    "next": "VCK Q2/2025 core and detailed B01/B02/B03 reconciliation is complete and checkpointed. Continue VCK Q3/2025 from its archived VietstockFinance PDF; independently verify scope before extraction. Do not revisit VCI or VCK Q1/2025."
   },
   "symbolStates": {
     "MBB": {
