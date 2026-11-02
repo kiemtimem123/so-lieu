@@ -778,8 +778,8 @@
       "source_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%204/VIX_Baocaotaichinh_Q4_2024.pdf",
       "source_index_url": "https://finance.vietstock.vn/VIX/tai-tai-lieu.htm?doctype=1",
       "report_type": "BCTC riêng VIX 2024-Q4 — B01-CTCK/B02-CTCK/B03b-CTCK; không phải BCTC hợp nhất",
-      "source_pages": "B01-CTCK trang in 3–5; chỉ tiêu ngoài BCTC tình hình tài chính RIÊNG trang 6–7; B02-CTCK trang in 8–10; B03b-CTCK trang in 11–12. Đơn vị VND ghi trực tiếp trên từng báo cáo.",
-      "quarter_profit_basis": "B02-CTCK cột Quý 4/Năm nay là số phát sinh quý; cột lũy kế không dùng làm số quý. B03b-CTCK là lũy kế năm, dòng tiền giữ audit-only do báo cáo riêng, không đưa vào chuỗi hợp nhất.",
+      "source_pages": "B01-CTCK trang in 3–5; chỉ tiêu ngoài BCTC riêng trang in 6–7; B02-CTCK trang in 8–10; B03b-CTCK trang in 11–12; B04-CTCK trang in 14. Đơn vị VND.",
+      "quarter_profit_basis": "B02-CTCK: cột Quý 4/Năm nay; không lấy cột lũy kế. EPS quý IV để trống; 677 là EPS lũy kế năm. B03b dòng tiền là số lũy kế cả năm, giữ audit-only.",
       "verification_status": "manually_verified_source_reconciled_separate",
       "source_validation": {
         "reviewed_at": "2026-11-02T21:42:00+07:00",
@@ -824,20 +824,32 @@
           9,
           10,
           11,
-          12
+          12,
+          14
         ],
         "reviewed_statements": [
           "B01-CTCK",
           "B02-CTCK",
-          "B03b-CTCK"
+          "B03b-CTCK",
+          "B04-CTCK"
         ],
         "checks": {
           "balanceEquation": "PASS exact raw VND: 19,606,325,397,605 = 3,561,584,498,167 + 16,044,740,899,438",
           "revenue": "PASS B02 Quý 4/Năm nay 544,617,506,222 VND",
-          "pretaxProfit": "PASS B02 code 90: 133,666,677,665 VND",
-          "netProfit": "PASS B02 code 200: 112,200,363,762 VND",
+          "pretaxProfit": "PASS 133,666,677,665 VND",
+          "netProfit": "PASS 112,200,363,762 VND",
           "cashflowScope": "HOLD audit-only; B03b standalone and cumulative YTD; not eligible for consolidated cashflow",
-          "eps": "Q4 EPS blank; 677 is full-year cumulative EPS, not Q4"
+          "eps": "PASS Q4 field blank; 677 is annual cumulative EPS, not quarterly",
+          "currentAssets": "PASS 19,558,155,308,985 VND; non-current assets 48,170,088,620 VND; total 19,606,325,397,605 VND",
+          "currentLiabilities": "PASS 3,472,527,045,297 VND",
+          "longTermLiabilities": "PASS 89,057,452,870 VND",
+          "totalLiabilities": "PASS 3,561,584,498,167 VND",
+          "equity": "PASS 16,044,740,899,438 VND",
+          "operatingRevenue": "PASS 544,617,506,222 VND; components sum to total",
+          "operatingExpenses": "PASS 376,453,766,488 VND; components sum to total",
+          "operatingResult": "PASS 133,666,484,785 VND",
+          "taxExpense": "PASS 21,466,313,903 VND = current tax 44,383,792,607 less deferred tax income 22,917,478,704",
+          "cashflow": "PASS B03b YTD bridge: CFO -8,833,788,734,383 + CFI -9,146,784,727 + CFF 9,396,923,780,000 = net increase 553,988,260,890 VND; beginning 139,539,567,122 + increase = ending 693,527,828,012. Standalone; audit-only."
         }
       },
       "published_at": "2025-01-21",
@@ -845,7 +857,7 @@
       "source_archive_source": "VietstockFinance document index",
       "source_archive_title": "Báo cáo tài chính quý 4 năm 2024 Báo cáo tài chính quý 4 năm 2024  ",
       "source_archive_linked_at": "2026-10-23T09:39:41.053299+00:00",
-      "eps": 1203,
+      "eps": null,
       "core_financial_extracted_fields": [
         "eps",
         "revenue",
@@ -868,27 +880,27 @@
       "core_financial_extraction_status": "manually_verified_source_reconciled",
       "core_financial_extraction_updated_at": "2026-11-02",
       "core_financial_extraction_note": "Đã xác minh trực quan PDF VietstockFinance: B01 trang 3–5, B02 trang 8–10, B03b trang 11–12. Báo cáo riêng VIX, đơn vị VND; số quý lấy cột Quý 4/Năm nay; EPS 677 là lũy kế năm, không phải EPS quý IV. Cashflow B03b giữ audit-only.",
-      "cash_and_equivalents": 693528,
-      "non_current_assets": 0,
-      "fixed_assets": 24644,
-      "retained_earnings": 1165123,
-      "broker_lending_assets": 5773917,
-      "broker_receivables": 142868,
-      "broker_short_term_borrowings": 3,
+      "cash_and_equivalents": 693527.828012,
+      "non_current_assets": 48170.08862,
+      "fixed_assets": 24643.693104,
+      "retained_earnings": 1165122.863976,
+      "broker_lending_assets": 5773916.799092,
+      "broker_receivables": 142868.417577,
+      "broker_short_term_borrowings": 2845000,
       "broker_customer_deposits": 0,
-      "financial_expense": 80834,
-      "selling_expense": 15085,
-      "admin_expense": 15085,
-      "broker_lending_income": 144075,
-      "broker_brokerage_revenue": 32189,
-      "broker_custody_revenue": 1171,
-      "broker_operating_expenses": 349472,
-      "broker_total_operating_revenue": 544618,
-      "broker_total_operating_expenses": 376454,
-      "broker_trading_expense": 7995,
-      "broker_brokerage_expense": 14694,
-      "broker_custody_expense": 2428,
-      "broker_financial_expense": 80834,
+      "financial_expense": 22009.816437,
+      "selling_expense": 0,
+      "admin_expense": 15085.023065,
+      "broker_lending_income": 144075.082294,
+      "broker_brokerage_revenue": 32189.413642,
+      "broker_custody_revenue": 1171.48731,
+      "broker_operating_expenses": 349472.450384,
+      "broker_total_operating_revenue": 544617.506222,
+      "broker_total_operating_expenses": 376453.766488,
+      "broker_trading_expense": 7995.424462,
+      "broker_brokerage_expense": 14693.657475,
+      "broker_custody_expense": 2428.470449,
+      "broker_financial_expense": 22009.816437,
       "income_tax_current": 0,
       "income_tax_deferred": 0,
       "income_tax": 0,
@@ -919,12 +931,12 @@
         "revenue",
         "selling_expense"
       ],
-      "financial_line_items_status": "auto_extracted_pending_visual_review",
+      "financial_line_items_status": "manually_verified_source_reconciled_separate",
       "financial_line_items_schema_version": "2026-10-26-bank-reconciliation-cashflow-v5",
       "financial_line_items_schema_updated_at": "2026-10-25T21:20:01+00:00",
       "financial_line_items_source": "reports/raw/VIX/auto-vix-20261021/af449a42efd129e7.pdf",
-      "financial_line_items_updated_at": "2026-10-25T15:57:43+00:00",
-      "financial_line_items_note": "Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Nợ ngắn hạn/dài hạn bị ẩn do tổng không khớp nợ phải trả. VIX CASHFLOW SCOPE GUARD 2026-10-29: cash-flow fields withheld from consolidated view pending consolidated scope confirmation; prior extracted candidates are retained in cashflow_audit_revision.",
+      "financial_line_items_updated_at": "2026-11-03T00:30:00+07:00",
+      "financial_line_items_note": "Đã đối chiếu trực quan B01-CTCK trang in 3–5, B02-CTCK trang in 8–10, B03b-CTCK trang in 11–12 từ PDF VietstockFinance. Tất cả đơn vị gốc VND; giá trị lưu triệu VND. Doanh thu/chi phí theo cột Quý 4, không lấy số lũy kế. B03b là dòng tiền lũy kế năm của báo cáo riêng, lưu audit-only và không đưa vào chuỗi hợp nhất.",
       "financial_line_items_prior_values": {
         "revenue": 360779
       },
@@ -932,14 +944,6 @@
         "revenue": {
           "value": 360779,
           "reason": "Giá trị cũ không khớp dòng tổng doanh thu hoạt động và/hoặc sai đơn vị; Doanh thu hoạt động lấy từ dòng Cộng doanh thu hoạt động; LNST đối chiếu thông báo giải trình Q4/2024."
-        },
-        "current_liabilities": {
-          "value": 0,
-          "reason": "liability subtotals do not reconcile"
-        },
-        "long_term_liabilities": {
-          "value": 89057,
-          "reason": "liability subtotals do not reconcile"
         },
         "operating_cash_flow_ytd": {
           "value": 8833789,
@@ -965,7 +969,6 @@
         "cash_beginning_reported_ytd",
         "cash_ending",
         "cash_ending_reported_ytd",
-        "current_liabilities",
         "current_liabilities_liability_total_check",
         "dividends_paid",
         "dividends_paid_ytd",
@@ -975,7 +978,6 @@
         "foreign_exchange_effect_ytd",
         "investing_cash_flow",
         "investing_cash_flow_ytd",
-        "long_term_liabilities",
         "long_term_liabilities_liability_total_check",
         "net_cash_change",
         "net_cash_change_ytd",
@@ -1025,20 +1027,23 @@
         "source_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%204/VIX_Baocaotaichinh_Q4_2024.pdf",
         "source_index_url": "https://finance.vietstock.vn/VIX/tai-tai-lieu.htm?doctype=1",
         "original_cashflow_candidates": {
-          "operating_cash_flow_ytd": 8833789,
-          "cash_beginning": 0,
-          "cash_beginning_reported_ytd": 0,
+          "operating_cash_flow_ytd": -8833788.734383,
+          "investing_cash_flow_ytd": -9146.784727,
+          "financing_cash_flow_ytd": 9396923.78,
+          "net_cash_change_ytd": 553988.26089,
+          "cash_beginning_reported_ytd": 139539.567122,
+          "cash_ending_reported_ytd": 693527.828012,
           "cashflow_period_basis": "year_to_date"
         },
-        "policy": "Do not mix separate and consolidated statements. Restore only after a matching consolidated statement is confirmed from VietstockFinance.",
-        "selected_for_consolidated_series": false
+        "policy": "Do not mix separate and consolidated statements. These are standalone annual cumulative values and remain audit-only.",
+        "selected_for_consolidated_series": false,
+        "audit_validation": "PASS exact VND cash bridge; negative amounts represented with minus sign."
       },
       "cashflow_source_reconciliation": {
-        "status": "TERMINAL_MANUAL_REVIEW_SCOPE_NOT_CONSOLIDATED",
+        "status": "VERIFIED_AUDIT_ONLY_STANDALONE",
         "source_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%204/VIX_Baocaotaichinh_Q4_2024.pdf",
         "source_index_url": "https://finance.vietstock.vn/VIX/tai-tai-lieu.htm?doctype=1",
         "source_scope_status": "confirmed_standalone",
-        "source_report_type": "BCTC riêng VIX 2024-Q4 — phạm vi xác nhận từ PDF VietstockFinance",
         "selected_for_consolidated_series": false,
         "withheld_fields": [
           "operating_cash_flow",
@@ -1061,8 +1066,16 @@
           "dividends_paid_ytd",
           "cashflow_period_basis"
         ],
-        "note": "Source identifies standalone statements (e.g. B01-CTCK and RIÊNG); not eligible for consolidated series."
-      }
+        "note": "B03b-CTCK trang in 11–12 đã đối chiếu trực quan. Dòng tiền lũy kế năm của báo cáo riêng; không đưa vào chuỗi hợp nhất."
+      },
+      "current_assets": 19558155.308985,
+      "current_liabilities": 3472527.045297,
+      "long_term_liabilities": 89057.45287,
+      "financial_income": 2597.584553,
+      "broker_advisory_expense": 1085.498384,
+      "broker_other_service_expense": 778.265334,
+      "broker_fvtpl_revenue": 360778.542158,
+      "broker_held_to_maturity_income": 6402.980818
     },
     {
       "symbol": "VIX",
