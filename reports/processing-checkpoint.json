@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-03T02:18:00+07:00",
+  "updatedAt": "2026-11-03T00:00:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "Primary source: VietstockFinance document catalog and linked report PDFs. Secondary source: WiData ticker documents tab, used only when the primary source lacks the period or its document link is inaccessible. No third source without user approval.",
   "periodStart": "2024-Q1",
@@ -45,12 +45,12 @@
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "VDS",
-    "status": "VDS_Q3_2024_VISUALLY_VERIFIED_CHECKPOINT_SAVED",
+    "status": "VDS_Q4_2024_SOURCE_TEXT_RECONCILED_VISUAL_PENDING",
     "completeForAutomation": false,
     "manualReviewRemaining": true,
     "processedAt": "2026-11-03T03:05:00+07:00",
-    "period": "2024-Q3",
-    "periodStatus": "Q3/2024 B01/B02/B03 visually reviewed and reconciled; Q2/Q3 cashflow aligned to the original-period B03 basis. Continue with VDS Q4/2024.",
+    "period": "2024-Q4",
+    "periodStatus": "Q4/2024 source text and later VietstockFinance FY2024 comparative reconciled. B01 balances and B03 cashflows pass; B02 row29 25m column assignment and original PDF visual review remain pending. Stay on Q4.",
     "periodCount": 10,
     "reviewedPeriods": [
       "2024-Q1",
@@ -71,10 +71,10 @@
       "2026-Q1",
       "2026-Q2"
     ],
-    "sourceReportUrl": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%203/VDS_Baocaotaichinh_Q3_2024_Hopnhat.pdf",
+    "sourceReportUrl": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%204/VDS_Baocaotaichinh_Q4_2024_Hopnhat.pdf",
     "sourceIndexUrl": "https://finance.vietstock.vn/VDS/tai-tai-lieu.htm?doctype=1",
-    "sourceDocumentId": "484281",
-    "dataCommit": "0598fd1931207c2370aab375c7a6726b9d5c63cd",
+    "sourceDocumentId": "489660",
+    "dataCommit": "2f86340caef00e3454175059782c85f17e011e62",
     "normalizationStandardVersion": "3.4",
     "validation": {
       "sourceScope": "PASS consolidated VDS; B01/B02/B03 statement headers visually reviewed.",
@@ -89,7 +89,15 @@
       "q3_2024_profit": "PASS raw VND: PBT 92,320,186,042 - tax 14,935,683,952 = PAT 77,384,502,090; parent PAT 77,407,933,851; NCI -23,431,761; EPS 326.",
       "q3_2024_expense_detail": "PASS raw VND: row 24 provision expense 68,458,611,125 and row 29 securities investment advisory expense 5,000,000 restored; expense detail sum equals 109,449,524,137.",
       "q3_2024_cashflow": "PASS raw VND: Q3 YTD flow sum and cash bridge exact; standalone Q3 derived from original Q3 YTD less original Q2 H1 YTD: CFO -363,253,062,739; CFI 67,186,478,187; CFF 91,886,000,000; net -204,180,584,552.",
-      "q3_2024_visual": "PASS visually reviewed uploaded PDF; SHA-256 da47667e028b3e9238ee9040352699647bfb11ddedfa5d67d26ac9940621b87d. Digital signature remains Signature Not Verified."
+      "q3_2024_visual": "PASS visually reviewed uploaded PDF; SHA-256 da47667e028b3e9238ee9040352699647bfb11ddedfa5d67d26ac9940621b87d. Digital signature remains Signature Not Verified.",
+      "q4_2024_balance": "PASS: raw total assets equals liabilities + equity; original row 440 OCR misread corrected by same-source Q4/2025 FY2024 comparative.",
+      "q4_2024_asset_composition": "PASS current + noncurrent assets equals total assets.",
+      "q4_2024_profit": "PASS within one VND rounding; parent PAT + NCI equals consolidated PAT exactly.",
+      "q4_2024_revenue_detail": "PASS within 0.01%; 900 VND residual.",
+      "q4_2024_expense_detail": "PENDING row29 25m candidate column assignment; do not force into current-quarter column.",
+      "q4_2024_cashflow": "PASS: YTD and standalone Q4 flow sum/cash bridge exact using original Q3/Q4 2024 source basis; later Q4/2025 VietstockFinance comparative supports FY2024 amounts.",
+      "q4_2024_visual": "PENDING original Q4/2024 PDF image review.",
+      "q4_2024_widata": "Secondary WiData documents page unavailable during retrieval; no copied values."
     },
     "reviewedStatements": [
       "B01-CTCK/HN",
@@ -112,7 +120,7 @@
     "doNotRepeatCoreExtraction": true,
     "nextPeriod": "2024-Q4",
     "nextTicker": "VDS",
-    "periodComplete": true,
+    "periodComplete": false,
     "reviewedPdfPages": [
       5,
       6,
@@ -124,7 +132,11 @@
       14,
       15,
       16
-    ]
+    ],
+    "sourceTextReconciledPeriods": [
+      "2024-Q4"
+    ],
+    "crossCheckSourceReportUrl": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/VDS_Baocaotaichinh_Q4_2025_Hopnhat.pdf"
   },
   "symbolStates": {
     "MBB": {
@@ -4761,6 +4773,46 @@
         "period_basis": "PASS: original Q2/2024 and Q3/2024 B03 use the same H1/9M CFI/CFF basis. Q2/2025 comparative's alternate ±13bn CFI/CFF presentation is preserved, not mixed into the canonical 2024 series.",
         "visual": "PASS B01/B02/B03 visually reviewed. PDF reader says Signature Not Verified; cryptographic signature validation not claimed."
       },
+      "nextTicker": "VDS"
+    },
+    "2024-Q4": {
+      "status": "source_text_reconciled_visual_review_pending",
+      "documentId": "489660",
+      "sourcePriority": 1,
+      "sourceIndexUrl": "https://finance.vietstock.vn/VDS/tai-tai-lieu.htm?doctype=1",
+      "sourceDocumentUrl": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%204/VDS_Baocaotaichinh_Q4_2024_Hopnhat.pdf",
+      "sourceArchiveFile": "reports/raw/VDS/auto-vds-20261021/f68ba9e7684eb1ce.pdf",
+      "extractionSidecar": "reports/raw/VDS/auto-vds-20261021/f68ba9e7684eb1ce.pdf.extracted.json",
+      "crossCheckSourcePriority": 1,
+      "crossCheckSourceUrl": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/VDS_Baocaotaichinh_Q4_2025_Hopnhat.pdf",
+      "crossCheckSourceArchiveFile": "reports/raw/VDS/auto-vds-20261021/d2252c9c1aaafbaf.pdf",
+      "crossCheckScope": "FY2024 comparative column in the Q4/2025 consolidated report; confirms B01 totals and the FY2024 B03 cashflow values.",
+      "doNotRepeatCoreExtraction": true,
+      "doNotRepeatVisualReview": false,
+      "consolidatedSeriesEligible": false,
+      "verifiedStatementsByText": [
+        "B01-CTCK/HN",
+        "B02-CTCK/HN",
+        "B03-CTCK/HN"
+      ],
+      "issues": [
+        "Direct image-level review of the original Q4/2024 PDF is pending.",
+        "B02 row 29 candidate 25,000,000 VND has ambiguous quarter/comparative column assignment. Assigning it to Q4 would cause an expense detail residual above the 0.01% tolerance; keep unassigned.",
+        "WiData VDS documents page was attempted but unavailable/disabled in this retrieval session; no WiData values were copied. Only source 1 data and its later comparative were used."
+      ],
+      "validations": {
+        "balance_sheet": "PASS source text plus Q4/2025 comparative: total assets 6,394,987,747,825 = liabilities 3,587,377,224,142 + equity 2,807,610,523,683; residual 0. The original Q4/2024 extracted row 440 OCR was misread by 900,000,000 VND; later VietstockFinance comparative and balance equation confirm the correct value.",
+        "asset_composition": "PASS: current assets 6,096,485,409,864 + non-current assets 298,502,337,961 = total assets 6,394,987,747,825.",
+        "profit": "PASS within tolerance: PBT -33,634,174,171 - tax expense (-4,774,576,510) = PAT -28,859,597,660; residual -1 VND. Parent PAT -27,752,963,282 + NCI -1,106,634,378 = consolidated PAT.",
+        "revenue_detail": "PASS within 0.01%: row 20 source revenue 153,297,292,080 VND; known revenue components have a 900 VND OCR residual (0.0000005871%).",
+        "expense_detail": "PENDING: row 40 total operating expenses 149,978,726,211 VND; identified rows including row 24 provision expense 69,545,077,341 VND reconcile to total. Row 29 candidate 25,000,000 VND remains unassigned because OCR cannot establish its quarter column; assigning it would exceed 0.01%.",
+        "cashflow_ytd": "PASS source text and later VietstockFinance FY2024 comparative: CFO -514,376,447,171; CFI 40,693,303,894; CFF 810,586,000,000; net cash change 336,902,856,723; beginning cash 870,234,562,511; ending cash 1,207,137,419,234. Raw flow sum and cash bridge exact.",
+        "cashflow_standalone": "PASS arithmetic on original Q3/Q4 year-to-date reports: Q4 CFO 400,595,692,345; CFI -3,785,704,678; CFF 346,200,000,000; net change 743,009,987,667; beginning cash 464,127,431,567; ending cash 1,207,137,419,234. Flow sum and cash bridge exact.",
+        "ratios": "Calculated from standalone Q4 PAT and average opening/closing balances: ROA -1.97%; ROE -4.42%.",
+        "source_hierarchy": "VietstockFinance used as primary. WiData was attempted as the approved secondary source but unavailable in this retrieval session; no third source used.",
+        "visual": "PENDING direct image-level review of original Q4/2024 PDF. No visual-verification claim."
+      },
+      "nextPeriod": "2024-Q4",
       "nextTicker": "VDS"
     }
   },
