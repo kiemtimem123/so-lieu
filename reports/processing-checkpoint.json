@@ -45,12 +45,12 @@
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "VDS",
-    "status": "VDS_Q1_Q2_2024_CORE_AND_CASHFLOW_VISUAL_VERIFIED",
+    "status": "VDS_Q3_2024_AUDIT_PENDING_VISUAL_SOURCE_REVIEW",
     "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-11-03T02:18:00+07:00",
-    "period": "2024-Q2",
-    "periodStatus": "Q1_Q2_2024_core_statements_visual_pass; Q2_2024_cashflow_reclassification_confirmed_and_later_comparative_selected; detail_rows_pending",
+    "processedAt": "2026-11-03T03:05:00+07:00",
+    "period": "2024-Q3",
+    "periodStatus": "Stored extraction arithmetic audit found incomplete expense detail and inconsistent H1/9M CFI/CFF classification basis; exact PDF visual verification blocked.",
     "periodCount": 10,
     "reviewedPeriods": [
       "2024-Q1",
@@ -83,7 +83,12 @@
       "q2_2024Profit": "PASS revenue 318,102,784,879; PBT 145,833,816,837; tax 26,405,346,253; PAT 119,428,470,584; parent PAT 119,920,689,480; NCI -492,218,896; EPS 571",
       "q2_2024Cashflow": "PASS later Q2/2025 VietstockFinance comparative visually confirms H1/2024 CFO -551,719,076,777; CFI -9,707,469,615; CFF 359,500,000,000; net -201,926,546,392; opening 870,234,562,511; closing 668,308,016,119. Original Q2/2024 B03 values CFI -22,707,469,615 and CFF 372,500,000,000 preserved as superseded classification.",
       "reclassification": "PASS resolved, not ignored: CFI/CFF reclassified by opposite 13,000,000,000 VND movements; net cash unchanged; later comparative selected. No balancing plug.",
-      "detailRows": "PENDING separate visual review of detailed broker income/expense line items."
+      "detailRows": "PENDING separate visual review of detailed broker income/expense line items.",
+      "q3_2024_balance": "PASS raw VND: assets 6,093,870,425,777 = liabilities 3,250,194,898,367 + equity 2,843,675,527,410.",
+      "q3_2024_profit": "PASS raw VND: pretax 92,320,186,042 - tax 14,935,683,952 = net profit 77,384,502,090.",
+      "q3_2024_expense_detail": "PENDING: stored components 40,985,913,012 vs total operating expenses 109,449,524,137; gap 68,463,611,125.",
+      "q3_2024_cashflow": "PENDING: Q3 YTD uses pre-reclassification basis while selected H1 uses post-reclassification basis; standalone CFI/CFF are not accepted. Net movement remains -204,180 million VND.",
+      "q3_2024_visual": "NOT VERIFIED: exact VietstockFinance PDF could not be opened; no alternate source used."
     },
     "reviewedStatements": [
       "B01-CTCK/HN",
@@ -4683,6 +4688,17 @@
       "doNotRepeatCoreExtraction": true,
       "consolidatedSeriesEligible": true,
       "validation": "PASS balance, P&L/tax/PAT/parent PAT/NCI/EPS, cashflow; H1/2024 CFI/CFF classification restatement visually confirmed against later Q2/2025 comparative; original figures retained in provenance.",
+      "nextPeriod": "2024-Q3"
+    },
+    "2024-Q3": {
+      "status": "audit_pending_visual_source_review",
+      "documentId": "484281",
+      "doNotRepeatCoreExtraction": true,
+      "consolidatedSeriesEligible": false,
+      "issues": [
+        "Expense detail gap 68,463,611,125 VND",
+        "Mixed H1/9M CFI/CFF classification basis"
+      ],
       "nextPeriod": "2024-Q3"
     }
   }
