@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.27
+- Phiên bản: 1.28
 - Ngày ban hành: 04/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -747,12 +747,15 @@ Nguồn chỉ dùng VietstockFinance và các tệp liên kết tại danh mục
 ## 12. Kết xuất và kiểm tra ảnh PDF từ kho báo cáo
 
 - Mục đích: thay việc phụ thuộc vào PDF viewer/screenshot endpoint có giới hạn dung lượng. Workflow `.github/workflows/render-vietstock-source-pages.yml` đọc trực tiếp PDF hoặc PDF member trong ZIP đã lưu ở repository, dùng PyMuPDF render từng trang thành PNG, tạo contact sheet và upload artifact tạm thời. Không thay snapshot, không chạy OCR và không đụng tới pipeline cập nhật dữ liệu tài chính.
-- Dùng `workflow_dispatch` để chọn mã/kỳ/tệp/trang/DPI. Đối với PDF trong ZIP, phải truyền `pdf_member` đúng tên file PDF cần xem, nhằm phân biệt hợp nhất và riêng lẻ. `pages` là số trang PDF 1-based; trang in trên báo cáo có thể khác số trang PDF. Mặc định workflow hiện trỏ IDC Q3/2025 để tiếp tục tác vụ đang mở; khi xem mã khác phải thay đủ các input.
+- Dùng `workflow_dispatch` để chọn mã/kỳ/tệp/trang/DPI. Đối với PDF trong ZIP, phải truyền `pdf_member` đúng tên file PDF cần xem, nhằm phân biệt hợp nhất và riêng lẻ. `pages` là số trang PDF 1-based; trang in trên báo cáo có thể khác số trang PDF. Khi cần kích hoạt từ commit, sửa đúng cấu hình mặc định của workflow rồi commit vì workflow có trigger push theo chính file workflow; sau khi chạy xong phải trả default về mã/kỳ cần tiếp theo, không để workflow chạy nhầm kỳ. Không được sửa hoặc kích hoạt workflow đồng bộ dữ liệu tài chính để kết xuất ảnh.
 - Sau khi chạy: xác nhận job **Render source pages and contact sheets** và **Upload rendered source pages** thành công; tải artifact bằng tọa độ run/artifact đã ghi trong `render-metadata-*.json`; kiểm tra ảnh PNG từng trang, không chỉ xem OCR/contact sheet. Lưu run ID, artifact ID, PDF member, trang, DPI và SHA-256 ảnh vào kiểm toán kỳ.
 - Artifact mặc định giữ **14 ngày**; đây là bằng chứng tạm thời. Các kết luận số liệu và hash/trạng thái kiểm tra phải được ghi vào snapshot/checkpoint hoặc ghi chú phân tích lâu dài trước khi artifact hết hạn.
 - Chỉ đổi trạng thái sang visual-reviewed sau khi ảnh của đúng PDF member, đúng kỳ, đúng phạm vi và đúng cột số liệu đã được mở xem. Nếu con dấu/chữ ký che số, đánh dấu trường đó unreadable/partially obscured; không suy diễn hoặc dùng phép cân đối để gán giá trị vào trường nguồn.
 - Với file quá lớn làm viewer không mở được, dùng workflow này thay vì lặp lại yêu cầu người dùng tải PDF. Ưu tiên archive đã lưu từ VietstockFinance; nếu chỉ có URL trực tiếp thì lưu nguồn trước theo quy trình thu thập hiện hành, sau đó mới kết xuất trang.
- 
+- **Quy trình áp dụng từng kỳ**: (1) lấy kỳ đầu tiên chưa đóng theo checkpoint; (2) kiểm tra snapshot, sidecar và nguồn hiện có, không OCR lại dữ liệu đã có; (3) chọn đúng PDF hợp nhất và xác định số trang B01/B02/B03 từ sidecar; (4) kết xuất đúng các trang ở 180 DPI; (5) xem trực tiếp từng ảnh, zoom các dòng tổng/thuế/EPS/dòng tiền/dấu âm; (6) chỉ sửa trường có bằng chứng ảnh rõ; (7) kiểm tra phương trình từng bảng và chuẩn hóa quý riêng bằng cùng một cơ sở YTD; (8) lưu manifest/hash/ảnh bằng chứng dưới artifact, ghi báo cáo phân tích và checkpoint; (9) commit dữ liệu + SOP/checkpoint; (10) đọc lại file sau commit để xác nhận rồi mới chuyển kỳ. Mỗi lần một mã/kỳ; không chuyển khi kỳ đang xử lý còn ngoại lệ cốt lõi chưa được xử lý hoặc đánh dấu rõ.
+- **Lịch sử áp dụng đầu tiên**: IDC Q3/2025 được render 180 DPI, PDF pages 8–14, workflow run 41690820936, artifact 13257427801. B01/B02/B03 visual PASS; dòng 440 bị con dấu che một phần, không chép OCR. Data commit `e91771b408d175231b3eb57efcb146d475cc52ce`; checkpoint commit `6cc189cbb11d983763ecad5041d52994b1deecf1`; visual report `reports/analysis/IDC-Q3-2025-visual-review.md`.
+
+
 ## 11. Giới hạn thao tác
 
 - Không sửa code, schema, pipeline, dashboard hoặc logic tự động trong công việc nhập liệu BCTC nếu chưa có yêu cầu riêng. Công cụ kết xuất ảnh PDF tại mục 12 chỉ được duy trì/sử dụng cho kiểm toán trực quan; không tự thay đổi snapshot hoặc luồng đồng bộ dữ liệu.
