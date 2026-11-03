@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.20
+- Phiên bản: 1.21
 - Ngày ban hành: 03/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -644,6 +644,29 @@ Continue to **GEG Q2/2024**. Its existing Q2 record has B03 selected from the la
 - Không chạy lại Q1/2026 đã hoàn tất.
 - Người dùng yêu cầu tiếp tục không dừng vì PENDING; do GEG đã tới Q2/2026 (kỳ mới nhất trong bộ 10 kỳ), chuyển sang mã tiếp theo **IDC**, bắt đầu **Q1/2024** theo quy trình tuần tự. Giữ các ngoại lệ GEG tách riêng, không gắn verified cho các trường đang PENDING.
 
+### 10.10 IDC Q1–Q2/2024 — lưu trạng thái trung gian, tiếp tục Q3
+
+Nguồn chỉ dùng VietstockFinance và các tệp liên kết tại danh mục IDC; phạm vi báo cáo hợp nhất. Các số tiền bên dưới giữ nguyên gốc VND; dữ liệu hiển thị lưu theo triệu VND.
+
+#### Q1/2024 — số lõi khớp, một chi tiết KQKD PENDING
+- Document ID **462783**, PDF `https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%201/IDC_Baocaotaichinh_Q1_2024_Hopnhat.pdf`, archive `reports/raw/IDC/auto-idc-20261021/44694a289f32bd8c.pdf`, sidecar `.pdf.extracted.json`.
+- B01: tài sản **17.386.392.291.350 VND**, nợ **10.894.297.173.971 VND**, vốn **6.492.095.117.379 VND**; phương trình tài sản = nợ + vốn, tài sản ngắn + dài hạn và nợ ngắn + dài hạn đều residual 0.
+- B02: revenue **2.467.056.536.161 VND**, COGS **1.368.769.156.854**, gross profit **1.098.287.379.307**, PBT **213.710.166.262**, current tax **38.489.929.690**, deferred tax **12.728.892**, total tax **38.502.658.582**, PAT **175.207.507.680**, parent PAT **147.786.155.639**, NCI **27.421.352.041**, EPS **2.106**. PBT-tax=PAT and parent+NCI=PAT, residual 0.
+- B02 row25 selling-expense OCR candidate **41.894.251.738 VND** does not reconcile the printed operating profit **209.126.465.495 VND** with other identified components; residual **776.003.705.179 VND**. The later Q1/2025 comparative column for Q1/2024 internally reconciles but materially changes several P&L values. Keep original Q1/2024 numbers; selling-expense detail remains null and comparative basis stored separately. Do not back-solve row25.
+- B03 Q1/2024 original current-period/YTD: CFO **951.312.310.814 VND**, CFI **-154.748.226.063**, CFF **-1.022.256.653.200**, net cash change **-225.692.568.449**, beginning cash **1.333.592.588.129**, FX **147.356.077**, closing cash **1.108.047.375.757**. Flow/cash bridge residuals exact.
+- PDF image visual review pending. Q1 status remains `pending_visual_review_and_operating_profit_detail_reconciliation`; no re-extraction of B01/B03.
+
+#### Q2/2024 — B01/B02 and both cashflow source bases reconcile
+- Document ID **471540**, archive `reports/raw/IDC/auto-idc-20261021/ecbef46d7d1d9ff3.zip`; consolidated statement is ZIP member `2_idc_2024_7_30_f164297_741tctbtc_2972024_bctc_hop_nhat_q2_2024_signed.pdf`, sidecar `.zip.extracted.json`. It has 80 pages; financial statements at sidecar p9–15 (B01 p9–12, B02 p13, B03 p14–15).
+- B01 at 30/6/2024: current assets **6.040.235.098.201 VND**, non-current assets **11.504.262.353.656**, total assets **17.544.497.451.857**; current liabilities **4.309.098.655.756**, long-term liabilities **7.097.346.081.582**, total liabilities **11.406.444.737.338**, equity **6.138.052.714.519**. Asset and liability composition equations and assets=liabilities+equity residual 0.
+- B02 standalone Q2: revenue **2.148.489.327.956 VND**, COGS **1.338.623.411.936**, gross profit **809.865.916.020**, financial income **39.414.434.810**, financial expense **35.135.290.358**, associate profit **1.163.120.573**, selling expense **27.114.533.189**, admin expense **63.864.415.600**, operating profit **724.329.232.256**, other income **13.484.566.343**, other expense **394.869.489**, other profit **13.089.696.854**, PBT **737.418.929.110**, current tax **174.725.083.274**, deferred tax **-21.177.039.468**, total tax **153.548.043.806**, PAT **583.870.885.304**, parent PAT **432.484.844.388**, NCI **151.386.040.916**, EPS **1.311**. Each row bridge and PAT allocation residual 0.
+- Original Q2/2024 B03 H1 YTD raw VND: CFO **2.296.007.290.628**, CFI **-724.113.031.201**, CFF **-1.895.302.679.995**, net cash change **-323.408.420.568**, opening cash **1.333.592.588.129**, FX **233.255.231**, closing cash **1.010.417.422.792**. Subtract original Q1 YTD to derive standalone Q2: CFO **1.344.694.979.814**, CFI **-569.364.805.138**, CFF **-873.046.026.795**, net cash change **-97.715.852.119**, opening cash **1.108.047.375.757**, FX **85.899.154**, closing cash **1.010.417.422.792**. H1 and Q2 standalone flow/cash bridge residuals are 0.
+- IMPORTANT preserve the existing top-level cashflow basis: the dataset already selects the Q2/2025 VietstockFinance comparative H1/2024 column because the later report reclassified CFO/CFI by almost equal/opposite **27.887.768.541 / -27.887.762.007 VND**, with CFF unchanged and net/FX residual only **6.534 VND**. The original Q2/2024 source basis is now stored as a fully reconciled alternate under `source_validation.original_q2_2024_cashflow_ytd_raw_vnd` and `cashflow_source_reconciliation.original_q2_2024_report_comparison`. Do not overwrite top-level selected fields or re-run the reclassification decision.
+- Q2 status: B01/B02 and both source cashflow bases text-reconciled; original PDF visual review pending. Data commit `f98ea1e052eb79e06fadd8398bec784459f86aa6`.
+
+#### Resume point
+- The user's requested save point is **IDC Q2/2024 complete source-text reconciliation**. Q1/2024's selling-expense exception remains open, but does not block continuing.
+- Next: **IDC Q3/2024**, archive `reports/raw/IDC/auto-idc-20261021/ba6b182fb273799c.zip`. Do not repeat Q1/Q2 core extraction; continue source-text validation and specifically inspect cashflow reclassification and outstanding detail fields.
 ## 11. Giới hạn thao tác
 
 - Không sửa code, schema, pipeline, dashboard hoặc logic tự động trong công việc nhập liệu BCTC nếu chưa có yêu cầu riêng.
