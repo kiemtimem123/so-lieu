@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.0
+- Phiên bản: 1.1
 - Ngày ban hành: 03/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -121,22 +121,26 @@ Mỗi mã/kỳ cần lưu:
 
 ## 10. Áp dụng cho trạng thái VDS hiện tại
 
-Mã đang hoạt động: **VDS**. Kỳ tiếp tục: **2024-Q4**. Không chuyển sang 2025-Q1 trước khi Q4 COMPLETE.
+Mã đang hoạt động: **VDS**. Các kỳ **2024-Q1 đến 2024-Q4 và 2025-Q1 đã COMPLETE**, gồm đối chiếu trực quan B01/B02/B03. Kỳ tiếp tục theo thứ tự: **2025-Q2**. Không tải lại hoặc trích xuất lại các kỳ đã đóng nếu không có mâu thuẫn mới.
 
-Đã biết từ checkpoint:
-- Q1–Q3/2024 được ghi nhận hoàn tất.
-- Q4/2024: B01 trang in 1 có ảnh crop do người dùng cung cấp; dòng 114 “Các khoản cho vay” xác nhận là **2.746.146.081.901 VND** và đã sửa trong `data/financials-VDS.json`.
-- Các trang B01 còn lại chưa được xác minh trực quan trong checkpoint hiện hành.
-- B02 dòng 29 có candidate OCR **25.000.000 VND**, chưa xác định chắc chắn cột quý hiện tại hay cột so sánh; không gán số này.
-- B03 đã có đối chiếu text/cột so sánh và phép tính dòng tiền, nhưng vẫn cần ảnh trực tiếp của báo cáo Q4/2024 theo checkpoint.
-- WiData là nguồn 2 đã được phép, nhưng lần thử truy cập trước không lấy được tài liệu; chưa có số liệu WiData nào được nhập.
+### 10.1 Các kỳ đã đóng
+- Q1–Q3/2024: đã có checkpoint trước; không chạy lại trích xuất lõi hoặc visual review.
+- Q4/2024: B01/B02/B03 đã xem trực tiếp PDF gốc VietstockFinance, document ID 489660; dữ liệu/checkpoint đã lưu. Dòng 29 B02: 25.000.000 VND thuộc cột FY2024 YTD, không thuộc quý 4 riêng lẻ.
+- Q1/2025: đã xem trực tiếp PDF gốc VietstockFinance, document ID 504544, 48 trang; B01 PDF trang 6–8 (trang in 1–3), B02 PDF trang 11–13 (trang in 6–8), B03 PDF trang 14–16 (trang in 9–11). Phạm vi hợp nhất, đơn vị VND. PDF gốc được lưu tại `reports/raw/VDS/auto-vds-20261021/a2d499f8fc79f469.pdf`; sidecar `.pdf.extracted.json`.
 
-Bước tiếp theo:
-1. Lấy ảnh rõ các trang B01 còn thiếu của Q4/2024.
-2. Lấy ảnh B02 trang chứa dòng 29, thấy đầy đủ tiêu đề cột và dòng lân cận.
-3. Lấy ảnh B03 của Q4/2024 để xác nhận các cột YTD và số cuối kỳ.
-4. Nếu tài liệu VietstockFinance không lấy được, thử đúng báo cáo Q4/2024 VDS trên WiData; ghi rõ giá trị nào được bổ sung/đối chiếu từ nguồn 2.
-5. Chỉ sau khi các điểm trên PASS mới đóng Q4/2024 và chuyển Q1/2025.
+### 10.2 Kết quả xác minh Q1/2025
+- B01: tổng tài sản **6.348.196.110.824 VND** = nợ phải trả **3.502.234.864.743 VND** + vốn chủ sở hữu **2.845.961.246.081 VND**; tài sản ngắn hạn + dài hạn cũng khớp chính xác.
+- B02: doanh thu hoạt động **168.952.311.087 VND**; tổng chi phí hoạt động **112.661.705.215 VND**. Cấu phần doanh thu và chi phí đều cộng đúng tổng; PBT **22.643.851.018 VND** − thuế **3.631.508.762 VND** = PAT **19.012.342.256 VND**. LNST thuộc cổ đông công ty mẹ **19.089.097.924 VND** + NCI **-76.755.668 VND** = PAT hợp nhất. EPS **79 VND/cổ phiếu**.
+- Dòng 29 (chi phí nghiệp vụ tư vấn đầu tư chứng khoán): cột quý 1/2025 hiện tại để trống; **20.000.000 VND** nằm ở cột so sánh quý 1 năm trước. Không nhập số này vào Q1/2025; trường tương ứng giữ `null`.
+- B03: CFO **-553.201.398.548 VND**; CFI **78.014.969.203 VND**; CFF **-68.200.000.000 VND**; biến động tiền thuần **-543.386.429.345 VND**. Tiền đầu kỳ **1.207.137.419.234 VND**, tiền cuối kỳ **663.750.989.889 VND**. Tổng dòng tiền và cầu nối tiền đều khớp chính xác.
+- Dòng cổ tức tiền mặt B03 row 76 để trống; giữ `null`, không tự chuyển thành 0. Nguồn B03 gốc Q1/2025 là basis chuẩn; cột so sánh trong Q1/2026 chỉ còn là kiểm tra phụ, không thay thế provenance của báo cáo gốc.
+- ROA **1,19%**, ROE **2,69%** theo công thức lợi nhuận sau thuế quý / bình quân số đầu kỳ-cuối kỳ × 4 × 100; số bình quân và công thức được lưu cùng record.
+
+### 10.3 Checkpoint và bước tiếp theo
+- Data commit Q1/2025: `1ed4ef951122aa1b2060d0b795462c2be9521345`.
+- Trạng thái: `complete_source_and_visual_verified`; không lặp lại trích xuất lõi hoặc xem lại các trang Q1/2025.
+- Tiếp tục VDS **2025-Q2**, sau đó Q3/2025, Q4/2025, Q1/2026, Q2/2026 theo thứ tự.
+- Chỉ chuyển sang GAS sau khi hoàn tất các kỳ còn lại của VDS hoặc khi người dùng chỉ định đổi thứ tự.
 
 ## 11. Giới hạn thao tác
 
