@@ -1,7 +1,7 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.26
-- Ngày ban hành: 03/11/2026
+- Phiên bản: 1.27
+- Ngày ban hành: 04/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
 
@@ -733,9 +733,29 @@ Nguồn chỉ dùng VietstockFinance và các tệp liên kết tại danh mục
 - Selected top-level B03 basis remains the later VietstockFinance Q2/2026 comparative `As restated – Note 41` for H1/2025: YTD CFO **876.372.147.509**, CFI **-1.912.379.567.700**, CFF **-288.817.920.091**, net **-1.324.825.340.282**, FX **41.467.072**, opening **2.188.037.806.317**, closing **863.253.933.107**. Standalone Q2 on that selected basis: CFO **283.177.816.790**, CFI **-1.167.240.872.686**, CFF **-545.521.959.637**, net **-1.429.585.015.533**, FX **38.713.120**, opening **2.292.800.235.520**, close **863.253.933.107**. Both original and restated flow/cash bridges are exact. Reclassification moves **525.837.250.014 VND** from CFO to CFI, net cash unchanged; preserve both bases separately and do not overwrite selected top-level restated values.
 - Data commit **`8c423863c36ea66480a3633ba0beb3919cff3d33`**. Status: core source-text complete; visual PENDING. The user directed continue; next period is **IDC Q3/2025** from archive `reports/raw/IDC/auto-idc-20261021/04ff7104fec1b3fd.zip`. Do not repeat Q1/Q2 extraction.
 
+### 10.15 IDC Q3/2025 — B01/B02/B03 đã kiểm tra trực quan bằng ảnh PDF
+
+- Nguồn: VietstockFinance document ID **523494**, BCTC hợp nhất IDC Q3/2025; ZIP lưu tại `reports/raw/IDC/auto-idc-20261021/04ff7104fec1b3fd.zip`. PDF tiếng Anh được chọn đúng member `4_idc_2025_10_30_de24c2b_en_financialstatementshn_q3_2025hn_s.pdf`; URL trực tiếp: `https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%203/IDC_Baocaotaichinh_Q3_2025_Hopnhat/4_idc_2025_10_30_de24c2b_en_financialstatementshn_q3_2025hn_s.pdf`.
+- Công cụ xem PDF dùng chung: `.github/workflows/render-vietstock-source-pages.yml`. Workflow nhận `symbol`, `period`, `pdf_path` (PDF hoặc ZIP đã lưu trong `reports/raw`), `pdf_member` (tên PDF chính xác trong ZIP), `pages` (số trang PDF, bắt đầu từ 1) và `dpi`. Dùng PyMuPDF kết xuất PNG và ảnh ghép; upload artifact 14 ngày; lưu tọa độ artifact vào thư mục nguồn. Chọn đúng PDF member khi ZIP có nhiều PDF; không chọn tự động theo tên nếu chưa xác định được member hợp nhất/riêng lẻ.
+- Cấu hình chạy cho IDC Q3/2025: PDF member tiếng Anh nêu trên; trang PDF **8–14**; **180 DPI**. GitHub Actions run **41690820936**, artifact **13257427801**, tên `vietstock-source-review-IDC-2025-Q3`; metadata `reports/raw/IDC/auto-idc-20261021/render-metadata-2025-Q3.json`. Ảnh PNG trang 08–14 được lưu trong artifact, không đưa ảnh nặng vào Git history.
+- Đã xem trực tiếp ảnh: B01 PDF trang 8–11 (trang in 3–6), B02 trang 12 (trang in 7), B03 trang 13–14 (trang in 8–9). B01 tổng tài sản **21.293.030.253.931 VND**, tổng nợ **12.926.247.964.300 VND**, vốn chủ **8.366.782.289.631 VND**; nợ + vốn = tài sản, residual **0 VND**. Cộng tài sản ngắn hạn + dài hạn residual 0. Dòng 440 bị con dấu công ty che một phần; không chép số OCR lỗi, không ghi nhận sai lệch 71.700 VND trước đây, không dùng số suy ra làm giá trị nguồn.
+- B02 cột riêng Q3/2025: doanh thu thuần **2.871.329.472.687 VND**; giá vốn **1.614.206.888.266**; lợi nhuận gộp **1.257.122.584.421**; thu nhập tài chính **84.797.217.769**; chi phí tài chính **34.133.582.233**; lãi vay **33.912.013.940**; lỗ công ty liên kết **139.003.519**; chi phí bán hàng **26.561.121.573**; chi phí quản lý **70.669.003.009**; lợi nhuận hoạt động **1.210.417.091.856**; lợi nhuận khác **8.075.636.171**; LNTT **1.218.492.728.027**; chi phí thuế hiện hành **265.623.067.711**; thu nhập thuế hoãn lại **28.267.841.672**; LNST **981.137.501.988**; LNST mẹ **841.835.881.584**; NCI **139.301.620.404**; EPS cơ bản và pha loãng **2.218**. Các cầu nối B02 đều residual 0.
+- B03: đã sửa cách chuẩn hóa quý riêng bằng cách lấy 9M/2025 từ báo cáo Q3 trừ H1/2025 từ báo cáo Q2/2025 **trên cùng cơ sở báo cáo gốc**. Không trộn số 9M chưa phân loại lại với comparative H1 “As restated” từ Q2/2026. Q3 riêng raw VND: CFO **1.541.531.404.357**; CFI **-2.242.302.344.954**; CFF **629.179.666.426**; biến động tiền **-71.591.274.171**; FX **23.900.983**; tiền đầu quý **863.253.933.107**; cuối quý **791.686.559.919**; capex **-893.695.067.506**; cổ tức đã trả **-57.513.573.250**. Flow và cash bridge residual **0 VND**. Comparative H1 As-restated được lưu thành basis riêng.
+- Lỗi OCR cũ `cost_of_goods_sold_gross_profit_equation_check` được gỡ sau khi đối chiếu ảnh: doanh thu thuần − giá vốn = lợi nhuận gộp chính xác. Placeholder EPS 70 vẫn chỉ được giữ trong lịch sử rejected values; EPS đang dùng là 2.218 theo ảnh gốc.
+- Data commit **`e91771b408d175231b3eb57efcb146d475cc52ce`**. Trạng thái kỳ: **B01/B02/B03 source + visual review PASS**, ngoại lệ nhỏ duy nhất là dòng 440 bị con dấu che một phần nhưng phương trình tổng độc lập đạt chính xác. Không trích xuất lõi lại. Tiếp theo: **IDC Q4/2025**.
+ 
+## 12. Kết xuất và kiểm tra ảnh PDF từ kho báo cáo
+
+- Mục đích: thay việc phụ thuộc vào PDF viewer/screenshot endpoint có giới hạn dung lượng. Workflow `.github/workflows/render-vietstock-source-pages.yml` đọc trực tiếp PDF hoặc PDF member trong ZIP đã lưu ở repository, dùng PyMuPDF render từng trang thành PNG, tạo contact sheet và upload artifact tạm thời. Không thay snapshot, không chạy OCR và không đụng tới pipeline cập nhật dữ liệu tài chính.
+- Dùng `workflow_dispatch` để chọn mã/kỳ/tệp/trang/DPI. Đối với PDF trong ZIP, phải truyền `pdf_member` đúng tên file PDF cần xem, nhằm phân biệt hợp nhất và riêng lẻ. `pages` là số trang PDF 1-based; trang in trên báo cáo có thể khác số trang PDF. Mặc định workflow hiện trỏ IDC Q3/2025 để tiếp tục tác vụ đang mở; khi xem mã khác phải thay đủ các input.
+- Sau khi chạy: xác nhận job **Render source pages and contact sheets** và **Upload rendered source pages** thành công; tải artifact bằng tọa độ run/artifact đã ghi trong `render-metadata-*.json`; kiểm tra ảnh PNG từng trang, không chỉ xem OCR/contact sheet. Lưu run ID, artifact ID, PDF member, trang, DPI và SHA-256 ảnh vào kiểm toán kỳ.
+- Artifact mặc định giữ **14 ngày**; đây là bằng chứng tạm thời. Các kết luận số liệu và hash/trạng thái kiểm tra phải được ghi vào snapshot/checkpoint hoặc ghi chú phân tích lâu dài trước khi artifact hết hạn.
+- Chỉ đổi trạng thái sang visual-reviewed sau khi ảnh của đúng PDF member, đúng kỳ, đúng phạm vi và đúng cột số liệu đã được mở xem. Nếu con dấu/chữ ký che số, đánh dấu trường đó unreadable/partially obscured; không suy diễn hoặc dùng phép cân đối để gán giá trị vào trường nguồn.
+- Với file quá lớn làm viewer không mở được, dùng workflow này thay vì lặp lại yêu cầu người dùng tải PDF. Ưu tiên archive đã lưu từ VietstockFinance; nếu chỉ có URL trực tiếp thì lưu nguồn trước theo quy trình thu thập hiện hành, sau đó mới kết xuất trang.
+ 
 ## 11. Giới hạn thao tác
 
-- Không sửa code, schema, pipeline, dashboard hoặc logic tự động trong công việc nhập liệu BCTC nếu chưa có yêu cầu riêng.
+- Không sửa code, schema, pipeline, dashboard hoặc logic tự động trong công việc nhập liệu BCTC nếu chưa có yêu cầu riêng. Công cụ kết xuất ảnh PDF tại mục 12 chỉ được duy trì/sử dụng cho kiểm toán trực quan; không tự thay đổi snapshot hoặc luồng đồng bộ dữ liệu.
 - Không thêm nguồn thứ ba, không dùng tìm kiếm web ngoài hai nguồn đã được người dùng duyệt.
 - Không tự tạo dữ liệu, không suy diễn số thiếu, không thay đổi quy trình chỉ để làm cho một kỳ được PASS.
 - Mọi cập nhật data/checkpoint phải có commit và lưu SHA commit; xác minh lại nội dung sau khi ghi.
