@@ -1967,7 +1967,7 @@
       "report_type": "BCTC hợp nhất GAS 2026-Q1 (phát hiện tự động qua VietstockFinance; chờ trích xuất)",
       "source_pages": "BCTC hợp nhất: 1, 2, 3, 4 (trang in); PDF pages 4, 5, 6, 7.",
       "quarter_profit_basis": "Chỉ lưu số liệu khi cột phát sinh riêng của quý được trích xuất và cân đối hợp lệ.",
-      "verification_status": "manual_review_required_pending_extraction",
+      "verification_status": "pending_b01_totals_and_cashflow_rows_source_text_partial",
       "source_validation": {
         "reviewed_at": "2026-10-30T18:20:00+07:00",
         "single_source_policy": "Chỉ danh mục VietstockFinance và tệp do danh mục đó liên kết.",
@@ -2078,15 +2078,16 @@
         "net_profit",
         "revenue",
         "pretax_profit",
-        "net_profit_attributable"
+        "net_profit_attributable",
+        "non_controlling_interest_profit"
       ],
-      "core_financial_extraction_status": "manual_review_required_pending_extraction",
-      "core_financial_extraction_note": "Q1/2026: khôi phục đầy đủ kết quả kinh doanh từ BCTC; bảng cân đối OCR không khớp giữa tổng tài sản và tổng nguồn vốn, LCTT không đọc đủ dòng nên giữ các phần đó ở trạng thái rà soát thủ công.",
-      "verification_status_note": "Đã khôi phục các dòng nguồn có thể xác nhận; còn thiếu/không khớp một phần bảng cân đối hoặc lưu chuyển tiền tệ, giữ trạng thái rà soát thủ công.",
+      "core_financial_extraction_status": "pnl_source_text_pass_b01_b03_pending",
+      "core_financial_extraction_note": "Q1/2026 B02 raw VND revenue/COGS/gross profit, operating profit, other result, PBT, tax, PAT and parent/NCI bridges reconcile exactly. B01 row310 current liabilities retained from sidecar text only; total asset/liabilities/equity held null. B03 has CFI, opening cash and FX only; no missing cashflow components inferred.",
+      "verification_status_note": "Q1/2026 B02 is fully source-text reconciled; B01 total assets/liabilities/equity remain null because OCR totals are misaligned and do not balance. One labeled B01 row 310 current liabilities is readable as 16,867,209,085,764 VND; visual review pending. B03 current CFI, beginning cash and FX effect are readable; CFO/CFF/net cash movement/closing cash remain null.",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "5a332f4f9a16bee785c40230b04583603dad4a429271a3d397b05add2cfabc8a",
       "core_financial_extraction_evidence_attempt_count": 1,
-      "financial_line_items_status": "auto_extracted_pending_visual_review",
+      "financial_line_items_status": "source_text_partial_b01_b03_pending",
       "financial_line_items_extracted_fields": [
         "admin_expense",
         "cashflow_period_basis",
@@ -2111,11 +2112,12 @@
         "investing_cash_flow",
         "investing_cash_flow_ytd",
         "cash_beginning",
-        "cash_beginning_reported_ytd"
+        "cash_beginning_reported_ytd",
+        "current_liabilities"
       ],
       "financial_line_items_source": "reports/raw/GAS/auto-gas-20261021/853ad22dfe045d24.pdf.extracted.json",
-      "financial_line_items_updated_at": "2026-10-31T10:20:00+07:00",
-      "financial_line_items_note": "Bổ sung các dòng đọc được từ LCTT hợp nhất Q1/2026: CFI 509.484.606.752 VND; tiền đầu năm 5.567.998.965.715 VND; ảnh hưởng tỷ giá 367.185.405 VND. CFO, CFF và biến động tiền thuần OCR không đủ rõ nên vẫn để trống, không suy ra bằng phép cân đối.",
+      "financial_line_items_updated_at": "2026-11-03T15:58:00+07:00",
+      "financial_line_items_note": "Bổ sung các dòng đọc được từ LCTT hợp nhất Q1/2026: CFI 509.484.606.752 VND; tiền đầu năm 5.567.998.965.715 VND; ảnh hưởng tỷ giá 367.185.405 VND. CFO, CFF và biến động tiền thuần OCR không đủ rõ nên vẫn để trống, không suy ra bằng phép cân đối. Q1/2026 partial source review: row310 current liabilities, CFI 509,484,606,752 VND, opening cash 5,567,998,965,715 VND and FX effect 367,185,405 VND retained. B01 total balance totals and B03 CFO/CFF/net/closing remain null; no plug. B02 bridges exact.",
       "financial_line_items_prior_values": {
         "revenue": null,
         "cost_of_goods_sold": null,
@@ -2145,7 +2147,7 @@
       },
       "financial_line_items_rejected_values": {},
       "core_financial_extraction_manual_terminal": true,
-      "core_financial_extraction_updated_at": "2026-10-30T17:45:00+07:00",
+      "core_financial_extraction_updated_at": "2026-11-03T15:58:00+07:00",
       "financial_line_items_schema_version": "2026-10-27-other-statements-source-fields-v12",
       "financial_line_items_schema_updated_at": "2026-10-30T16:16:15+00:00",
       "core_financial_extraction_stable_evidence_count": 9,
@@ -2197,7 +2199,126 @@
       "investing_cash_flow": 509484.606752,
       "investing_cash_flow_ytd": 509484.606752,
       "cash_beginning": 5567998.965715,
-      "cash_beginning_reported_ytd": 5567998.965715
+      "cash_beginning_reported_ytd": 5567998.965715,
+      "current_liabilities": 16867209.085764,
+      "financial_statement_raw_vnd": {
+        "revenue": 38019609031268,
+        "cost_of_goods_sold": 33511417706493,
+        "gross_profit": 4508191324775,
+        "financial_income": 384755468683,
+        "financial_expense": 118408271484,
+        "interest_expense": 53307964713,
+        "selling_expense": 623721077879,
+        "admin_expense": 396928650943,
+        "operating_profit": 3754223754396,
+        "other_income": 862001024,
+        "other_expense": 402099569,
+        "pretax_profit": 3754683655851,
+        "income_tax_current": 764142169569,
+        "income_tax_deferred": -3573786295,
+        "income_tax": 760568383274,
+        "net_profit": 2994115272577,
+        "net_profit_attributable": 2944603136328,
+        "non_controlling_interest_profit": 49512136249,
+        "cashflow_cfi": 509484606752,
+        "cash_beginning": 5567998965715,
+        "foreign_exchange_effect": 367185405,
+        "current_liabilities": 16867209085764,
+        "opening_2025_total_assets_comparative": 93568198109790,
+        "opening_2025_total_equity_comparative": 67653389117997,
+        "opening_2025_current_liabilities_comparative": 20573719383413
+      },
+      "financial_statement_checks": {
+        "gross_profit_residual_vnd": 0,
+        "operating_profit_bridge_residual_vnd": 4774538521974,
+        "operating_profit_residual_vnd": 18703475426,
+        "pretax_residual_vnd": 0,
+        "tax_pat_residual_vnd": 0,
+        "parent_nci_residual_vnd": 0
+      },
+      "q1_2026_source_partial_review": {
+        "sourceDocumentId": "543696",
+        "sourceUrl": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/GAS_Baocaotaichinh_Q1_2026_Hopnhat.pdf",
+        "archiveFile": "reports/raw/GAS/auto-gas-20261021/853ad22dfe045d24.pdf",
+        "sidecar": "reports/raw/GAS/auto-gas-20261021/853ad22dfe045d24.pdf.extracted.json",
+        "sourceScope": "Consolidated",
+        "sourceUnit": "VND",
+        "sourceTextPages": {
+          "b01_pdfPages": [
+            4,
+            5
+          ],
+          "b01_printedPages": [
+            1,
+            2
+          ],
+          "b02_pdfPages": [
+            6
+          ],
+          "b02_printedPages": [
+            3
+          ],
+          "b03_pdfPages": [
+            7
+          ],
+          "b03_printedPages": [
+            4
+          ]
+        },
+        "b01": {
+          "currentLiabilitiesVnd": 16867209085764,
+          "totalAssetsCurrent": null,
+          "totalLiabilitiesCurrent": null,
+          "equityCurrent": null,
+          "openingComparative": {
+            "totalAssetsVnd": 93568198109790,
+            "equityVnd": 67653389117997,
+            "currentLiabilitiesVnd": 20573719383413
+          },
+          "note": "B01 page 5 has OCR total-source rows misaligned and does not reconcile; only row 310 'Nợ ngắn hạn' is sufficiently clear. Total assets line page 4 OCR current period is clipped; opening comparatives recorded as separate basis. No balance fill."
+        },
+        "b02": {
+          "status": "SOURCE_TEXT_RECONCILED",
+          "reportedRawVnd": {
+            "revenue": 38019609031268,
+            "cost_of_goods_sold": 33511417706493,
+            "gross_profit": 4508191324775,
+            "financial_income": 384755468683,
+            "financial_expense": 118408271484,
+            "interest_expense": 53307964713,
+            "selling_expense": 623721077879,
+            "admin_expense": 396928650943,
+            "operating_profit": 3754223754396,
+            "other_income": 862001024,
+            "other_expense": 402099569,
+            "pretax_profit": 3754683655851,
+            "income_tax_current": 764142169569,
+            "income_tax_deferred": -3573786295,
+            "income_tax": 760568383274,
+            "net_profit": 2994115272577,
+            "net_profit_attributable": 2944603136328,
+            "non_controlling_interest_profit": 49512136249
+          },
+          "residuals": {
+            "grossProfit": 0,
+            "operatingProfit": 18703475426,
+            "pretax": 0,
+            "taxPat": 0,
+            "parentNci": 0
+          }
+        },
+        "b03": {
+          "cfiVnd": 509484606752,
+          "openingCashVnd": 5567998965715,
+          "fxEffectVnd": 367185405,
+          "cfoVnd": null,
+          "cffVnd": null,
+          "netCashChangeVnd": null,
+          "closingCashVnd": null,
+          "note": "Source text row 30 CFI, row 60 opening cash, row 61 FX are legible. CFO, CFF, net movement and closing cash are incomplete/misaligned; remain null."
+        },
+        "visualReviewStatus": "PENDING: PDF pages did not render; only archived sidecar text used."
+      }
     },
     {
       "symbol": "GAS",
