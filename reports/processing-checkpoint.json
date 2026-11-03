@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-04T19:52:00+07:00",
+  "updatedAt": "2026-11-03T17:14:39.522Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "Priority 1: VietstockFinance public document catalog and directly linked report PDFs. Priority 2: WiData document tab for the same ticker, only to compare/supplement when source 1 lacks the report or extraction is unclear/unavailable. No third source without explicit user approval.",
   "periodStart": "2024-Q1",
@@ -45,40 +45,39 @@
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "IDC",
-    "status": "IDC_Q2_2025_SOURCE_TEXT_RECONCILED_TAX_NCI_RESOLVED_CONTINUE_Q3",
-    "completeForAutomation": false,
+    "status": "IDC_Q3_2025_SOURCE_PDF_TEXT_AUDITED_VISUAL_PENDING",
+    "completeForAutomation": true,
     "manualReviewRemaining": true,
-    "processedAt": "2026-11-04T00:06:00+07:00",
-    "period": "2025-Q2",
-    "periodStatus": "B01/B02 source text verified. English member in same VietstockFinance ZIP resolves deferred tax/NCI OCR misreads; PBT-tax=PAT and parent+NCI=PAT exact. Original and As-restated B03 cashflow bases both reconcile; keep selected As-restated basis top-level and original basis separate. Visual review pending.",
+    "processedAt": "2026-11-03T17:14:39.522Z",
+    "period": "2025-Q3",
+    "periodStatus": "Đã đối chiếu trực tiếp text layer của PDF tiếng Anh thuộc VietstockFinance document 523494. B01/B02/B03 arithmetic PASS; B01 row 440 reported total differs from row 270 by 71,700 VND (0.0000003367%, within 0.01%). Q3 B02 uses quarter-only column. B03 standalone Q3 is Q3 YTD less H1/2025 As-restated comparative already sourced from VietstockFinance Q2/2026; cash and flow bridges exact. Screenshot renderer could not render PDF (15,499,375 bytes exceeds tool limit); visual review remains PENDING; no image-verification claim.",
     "periodCount": 10,
     "sourceIndexUrl": "https://finance.vietstock.vn/IDC/tai-tai-lieu.htm?doctype=1",
-    "sourceReportUrl": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%202/IDC_Baocaotaichinh_Q2_2025_Hopnhat.zip",
-    "sourceDocumentId": "514037",
-    "sourceArchiveFile": "reports/raw/IDC/auto-idc-20261021/48616c2bb9d17c99.zip",
-    "dataCommit": "8c423863c36ea66480a3633ba0beb3919cff3d33",
+    "sourceReportUrl": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%203/IDC_Baocaotaichinh_Q3_2025_Hopnhat.zip",
+    "sourcePdfUrl": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%203/IDC_Baocaotaichinh_Q3_2025_Hopnhat/4_idc_2025_10_30_de24c2b_en_financialstatementshn_q3_2025hn_s.pdf",
+    "sourceDocumentId": "523494",
+    "sourceArchiveFile": "reports/raw/IDC/auto-idc-20261021/04ff7104fec1b3fd.zip",
+    "dataCommit": "9f553f432d9d67243841700591540602e5ff1fe4",
     "normalizationStandardVersion": "3.4",
     "validation": {
-      "balanceSheet": "PASS",
+      "balanceSheet": "PASS_WITHIN_0.01_PERCENT_ROW440_DELTA_71700_VND",
       "incomeStatement": "PASS",
-      "taxNci": "PASS corrected via English member",
-      "originalCashflow": "PASS",
-      "selectedRestatedCashflow": "PASS",
-      "visual": "PENDING"
+      "cashFlow": "PASS_YTD_AND_SELECTED_RESTATED_STANDALONE_Q3",
+      "visual": "PENDING_PDF_IMAGE_RENDER_LIMIT"
     },
     "doNotRepeatCoreTextExtraction": true,
     "nextTicker": "IDC",
     "nextPeriod": "2025-Q3",
-    "periodComplete": true,
+    "periodComplete": false,
     "processingSopVersion": "1.25",
     "processingSopPath": "reports/financial-report-processing-sop.md",
-    "processingSopCommit": "f65aad76feb174505f38e622e1c1af829a279ff8",
-    "sourceDocumentPageCount": 63,
+    "sourceDocumentPageCount": 64,
     "sourceDocumentScope": "Consolidated",
     "pendingExceptions": [
-      "Direct PDF visual review pending across IDC periods.",
+      "Direct page-image review of IDC Q3/2025 B01-B03 remains pending because the PDF image renderer rejected the 15,499,375-byte file.",
       "IDC Q1/2024 selling-expense detail unresolved.",
-      "IDC Q4/2024 original B03 source OCR inconsistency remains pending."
+      "IDC Q4/2024 original B03 source OCR inconsistency remains pending.",
+      "IDC Q2/2025 direct page-image review remains pending."
     ]
   },
   "symbolStates": {
@@ -1721,7 +1720,7 @@
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-11-04T00:06:00+07:00",
+      "updatedAt": "2026-11-03T17:14:39.522Z",
       "snapshotFetchedAt": "2026-10-25T23:45:00Z",
       "sourceReconciledPeriods": [
         "2024-Q1",
@@ -1783,7 +1782,17 @@
           "Q2/2025: original B03 H1 YTD and Q2 standalone cashflow bridges all exact. The chosen Q2/2026 As-restated comparative basis also reconciles, preserving 525.837bn VND CFO-to-CFI classification reallocation with net cash unchanged.",
           "Q2/2025: top-level cashflow basis remains selected As-restated Note 41; original Q2 B03 source stored separately."
         ],
-        "remaining": "Continue IDC Q3/2025. Do not repeat Q1/Q2 2025 B01/B02/B03 core extraction. Only visual reviews and prior Q1/2024 selling expense/Q4/2024 B03 pending."
+        "remaining": "IDC Q3/2025 English PDF member text audit complete; do not repeat B01/B02/B03 text extraction. Only direct page-image review remains pending for Q3. Preserve older IDC Q1/2024 selling-expense and Q4/2024 B03 exceptions; Q2/2025 visual review also remains pending.",
+        "q3_2025DirectPdfAudit": {
+          "documentId": "523494",
+          "sourcePdfUrl": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%203/IDC_Baocaotaichinh_Q3_2025_Hopnhat/4_idc_2025_10_30_de24c2b_en_financialstatementshn_q3_2025hn_s.pdf",
+          "dataCommit": "9f553f432d9d67243841700591540602e5ff1fe4",
+          "status": "B01_B02_B03_TEXT_AUDIT_PASS_VISUAL_PENDING",
+          "row440ReportedDifferenceVnd": 71700,
+          "row440DifferencePercent": 3.367299024372689e-7,
+          "tolerancePercent": 0.01,
+          "note": "Keep source-reported row 440 as discrepancy metadata; do not alter row 270, liabilities, equity or force-balancing values."
+        }
       },
       "lastDetailSourceReconciliation": {
         "periodRange": "2024-Q1 through 2026-Q2",
@@ -1810,7 +1819,9 @@
       ],
       "pendingCashflowPeriods": [
         "2024-Q4"
-      ]
+      ],
+      "lastManualReviewPeriod": "2025-Q3",
+      "lastManualReviewStatus": "source_text_audited_visual_pending"
     },
     "KBC": {
       "status": "automated_processing_complete",
@@ -2258,511 +2269,6 @@
     }
   },
   "progressHistory": [
-    {
-      "symbol": "SHS",
-      "status": "automated_processing_complete_manual_scope_holds_preserved",
-      "processedAt": "2026-11-01T03:49:00Z",
-      "periodCount": 11,
-      "firstQuarter": "2024-Q1",
-      "lastQuarter": "2026-Q3",
-      "changedPaths": [
-        "data/financials-SHS.json",
-        "tests/test_cashflow_bridge.py"
-      ],
-      "confirmedSeparatePeriods": [
-        "2024-Q1",
-        "2024-Q2",
-        "2024-Q3",
-        "2025-Q4"
-      ],
-      "scopeBlockedPeriods": [
-        "2024-Q4",
-        "2025-Q1",
-        "2025-Q2",
-        "2025-Q3",
-        "2026-Q1",
-        "2026-Q2",
-        "2026-Q3"
-      ],
-      "nextSymbol": "VCI",
-      "validation": "quarterly_financials_pass; site_and_data_pass; hostinger_package_pass"
-    },
-    {
-      "symbol": "SHS",
-      "status": "completed_source_review_and_validation",
-      "processedAt": "2026-11-01T07:32:00Z",
-      "periodCount": 11,
-      "firstQuarter": "2024-Q1",
-      "lastQuarter": "2026-Q3",
-      "sourceScopeReviewComplete": true,
-      "statementReviewComplete": true,
-      "rejectedFieldsRemaining": 0,
-      "manualReviewRemaining": false,
-      "dataCommit": "756327d389c3d76e1015691298b4020d8896bf3e",
-      "testCommit": "ada1354780feb94fa09c67d0b7f4424a597a5e89",
-      "validationRuns": {
-        "quarterlyFinancialData": "https://github.com/kiemtimem123/so-lieu/actions/runs/41280237559",
-        "siteAndData": "https://github.com/kiemtimem123/so-lieu/actions/runs/41280237653",
-        "hostingerPackage": "https://github.com/kiemtimem123/so-lieu/actions/runs/41280237567",
-        "fullSourceReview": "https://github.com/kiemtimem123/so-lieu/commit/756327d389c3d76e1015691298b4020d8896bf3e",
-        "finalDataCommit": "https://github.com/kiemtimem123/so-lieu/commit/756327d389c3d76e1015691298b4020d8896bf3e"
-      },
-      "nextSymbol": "VCI"
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T07:28:15Z",
-      "workflowRunId": "41284586711",
-      "changedPaths": [
-        "data/financials-VCI.json",
-        "reports/raw/VCI/auto-vci-20261021/50ea490edbd4fd71.zip.extracted.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T07:36:08Z",
-      "workflowRunId": "41284630791",
-      "changedPaths": [
-        "data/financials-VCI.json",
-        "reports/raw/VCI/auto-vci-20261021/f9f79b469fb94e87.zip.extracted.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T07:39:40Z",
-      "workflowRunId": "41285467041",
-      "changedPaths": [
-        "data/financials-VCI.json",
-        "reports/raw/VCI/auto-vci-20261021/a8fec422bac195c1.pdf.extracted.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T07:44:24Z",
-      "workflowRunId": "41285688212",
-      "changedPaths": [
-        "data/financials-VCI.json",
-        "reports/raw/VCI/auto-vci-20261021/6f334985f6fb89bb.pdf.extracted.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T07:46:09Z",
-      "workflowRunId": "41285996529",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T07:47:51Z",
-      "workflowRunId": "41286113596",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T07:49:42Z",
-      "workflowRunId": "41286224177",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T07:51:34Z",
-      "workflowRunId": "41286344921",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T07:52:54Z",
-      "workflowRunId": "41286466199",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T07:54:22Z",
-      "workflowRunId": "41286547002",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T07:56:04Z",
-      "workflowRunId": "41286642256",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T07:57:51Z",
-      "workflowRunId": "41286759322",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T07:59:43Z",
-      "workflowRunId": "41286864877",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T08:01:06Z",
-      "workflowRunId": "41286981202",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T08:02:25Z",
-      "workflowRunId": "41287083729",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T08:03:45Z",
-      "workflowRunId": "41287171218",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T08:05:12Z",
-      "workflowRunId": "41287262818",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T08:06:55Z",
-      "workflowRunId": "41287366418",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T08:08:14Z",
-      "workflowRunId": "41287490106",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T08:09:53Z",
-      "workflowRunId": "41287581305",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T08:12:52Z",
-      "workflowRunId": "41287704432",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T08:14:11Z",
-      "workflowRunId": "41287912155",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T08:15:55Z",
-      "workflowRunId": "41288010444",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T08:17:40Z",
-      "workflowRunId": "41288146028",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T08:19:21Z",
-      "workflowRunId": "41288270763",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T08:21:54Z",
-      "workflowRunId": "41288388356",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T08:23:29Z",
-      "workflowRunId": "41288564329",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T08:25:16Z",
-      "workflowRunId": "41288684297",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T08:27:07Z",
-      "workflowRunId": "41288816583",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T08:28:49Z",
-      "workflowRunId": "41288939929",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T08:30:32Z",
-      "workflowRunId": "41289050305",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T08:31:53Z",
-      "workflowRunId": "41289174239",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T08:33:14Z",
-      "workflowRunId": "41289269078",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T08:34:46Z",
-      "workflowRunId": "41289364138",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T08:36:39Z",
-      "workflowRunId": "41289473896",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T08:38:34Z",
-      "workflowRunId": "41289611944",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T08:40:22Z",
-      "workflowRunId": "41289742377",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "in_progress",
-      "completeForAutomation": false,
-      "processedAt": "2026-11-01T08:42:09Z",
-      "workflowRunId": "41289859915",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "automated_processing_complete",
-      "completeForAutomation": true,
-      "processedAt": "2026-11-01T08:43:49Z",
-      "workflowRunId": "41289981499",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "VCI",
-      "status": "automated_processing_complete",
-      "completeForAutomation": true,
-      "processedAt": "2026-11-01T08:49:19Z",
-      "workflowRunId": "41290356727",
-      "changedPaths": [
-        "data/financials-VCI.json"
-      ]
-    },
-    {
-      "symbol": "MBB",
-      "status": "automated_processing_complete",
-      "completeForAutomation": true,
-      "processedAt": "2026-11-01T08:50:30Z",
-      "workflowRunId": "41290470290",
-      "changedPaths": [
-        "data/financials-MBB.json"
-      ]
-    },
-    {
-      "symbol": "ACB",
-      "status": "automated_processing_complete",
-      "completeForAutomation": true,
-      "processedAt": "2026-11-01T08:51:24Z",
-      "workflowRunId": "41290548235",
-      "changedPaths": [
-        "data/financials-ACB.json"
-      ]
-    },
-    {
-      "symbol": "FPT",
-      "status": "automated_processing_complete",
-      "completeForAutomation": true,
-      "processedAt": "2026-11-01T08:52:15Z",
-      "workflowRunId": "41290582946",
-      "changedPaths": [
-        "data/financials-FPT.json"
-      ]
-    },
-    {
-      "symbol": "SHB",
-      "status": "automated_processing_complete",
-      "completeForAutomation": true,
-      "processedAt": "2026-11-01T08:55:38Z",
-      "workflowRunId": "41290805703",
-      "changedPaths": [
-        "data/financials-SHB.json"
-      ]
-    },
-    {
-      "symbol": "MBB",
-      "status": "automated_processing_complete",
-      "completeForAutomation": true,
-      "processedAt": "2026-11-01T08:56:35Z",
-      "workflowRunId": "41290886612",
-      "changedPaths": [
-        "data/financials-MBB.json"
-      ]
-    },
     {
       "symbol": "ACB",
       "status": "automated_processing_complete",
@@ -3521,6 +3027,17 @@
         "reports/financial-report-processing-sop.md"
       ],
       "note": "B01 row300, B02 net revenue/EPS and B03 YTD/standalone Q4 reconciled from VietstockFinance original PDF text. All structural and cashflow flow checks exact; Q4 FX separate null, visual review pending."
+    },
+    {
+      "symbol": "IDC",
+      "status": "IDC_Q3_2025_SOURCE_PDF_TEXT_AUDITED_VISUAL_PENDING",
+      "completeForAutomation": true,
+      "processedAt": "2026-11-03T17:14:39.522Z",
+      "dataCommit": "9f553f432d9d67243841700591540602e5ff1fe4",
+      "changedPaths": [
+        "data/financials-IDC.json",
+        "reports/processing-checkpoint.json"
+      ]
     }
   ],
   "currentRun": {
@@ -7337,5 +6854,8 @@
     "sopCommit": "44a61df10649bce7e2949354cc439139e078ae29",
     "periodComplete": false,
     "nextAction": "No further B01/B02/B03 text extraction for Q4/2024. Image review only if an accessible page image/source becomes available; standalone FX remains null. Preserve active global ticker IDC Q3/2025."
-  }
+  },
+  "pendingVisualPeriods": [
+    "2025-Q3"
+  ]
 }
