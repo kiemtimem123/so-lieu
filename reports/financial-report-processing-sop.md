@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.28
+- Phiên bản: 1.29
 - Ngày ban hành: 04/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -756,6 +756,19 @@ Nguồn chỉ dùng VietstockFinance và các tệp liên kết tại danh mục
 - **Lịch sử áp dụng đầu tiên**: IDC Q3/2025 được render 180 DPI, PDF pages 8–14, workflow run 41690820936, artifact 13257427801. B01/B02/B03 visual PASS; dòng 440 bị con dấu che một phần, không chép OCR. Data commit `e91771b408d175231b3eb57efcb146d475cc52ce`; checkpoint commit `6cc189cbb11d983763ecad5041d52994b1deecf1`; visual report `reports/analysis/IDC-Q3-2025-visual-review.md`.
 
 
+### 10.16 IDC Q4/2025 — B01/B02/B03 visual PASS; FX corrected; source subline exception retained
+
+- Nguồn: VietstockFinance document ID **529902**, BCTC hợp nhất IDC Q4/2025; ZIP `reports/raw/IDC/auto-idc-20261021/5ff8f3ce069a369e.zip`; member PDF tiếng Anh `1_idc_2026_1_29_0d3041b_en_financialstatementshn_q4_2025hn_s.pdf`, 67 trang.
+- Kết xuất ảnh: PDF pages **8–14**, 180 DPI; B01 8–11, B02 12, B03 13–14. GitHub Actions run **41693037890**, artifact **13257699370**, artifact name `vietstock-source-review-IDC-2025-Q4`, ZIP digest `sha256:231a4774ff398d0509dbc6630474f13a5ce9ab301c129ea877cb822d2b6915b8`. Metadata `reports/raw/IDC/auto-idc-20261021/render-metadata-2025-Q4.json`.
+- B01: tổng tài sản **23.201.490.679.523 VND**; tài sản ngắn hạn **9.856.822.003.191**; tài sản dài hạn **13.344.668.676.332**; nợ phải trả **14.938.459.787.767**; nợ ngắn hạn **5.620.500.395.796**; nợ dài hạn **9.317.959.391.971**; vốn chủ **8.263.030.891.756**. Dòng 440 đọc được rõ **23.201.490.679.523 VND**. Các tổng phụ và phương trình tổng tài sản = nợ + vốn đều residual **0 VND**.
+- B01 row 120 đầu tư ngắn hạn được ảnh trang 8 xác nhận là **6.807.014.517.859 VND**. Thay OCR/parser candidate sai **909.607 triệu** bằng **6.807.015 triệu VND**; tổng tài sản ngắn hạn cộng các cấu phần vẫn khớp.
+- B02 dùng đúng cột **Quý IV/2025 riêng**, không dùng số cả năm: doanh thu thuần **2.160.138.111.718 VND**; giá vốn **1.453.163.128.638**; lợi nhuận gộp **706.974.983.080**; doanh thu tài chính **108.952.409.062**; chi phí tài chính **42.472.227.098**; lãi công ty liên kết **180.518.355**; chi phí bán hàng **18.592.495.992**; quản lý **92.138.853.752**; lợi nhuận hoạt động **662.904.333.655**; lợi nhuận khác **-3.684.745.622**; LNTT **659.219.588.033**; thuế hiện hành **142.577.559.905**; thu nhập thuế hoãn lại **23.353.093.110**; LNST **539.995.121.238**; LNST mẹ **449.103.567.116**; NCI **90.891.554.122**; EPS cơ bản/pha loãng **1.183/1.183**. Các cầu nối tổng lợi nhuận, thuế, PAT và phân bổ mẹ/NCI đều residual 0.
+- **Ngoại lệ báo cáo nguồn B02**: dòng 23 “In which: interest expense” in rõ **(43.891.490.863 VND)**, trong khi dòng 22 tổng chi phí tài chính là **(42.472.227.098 VND)**. Chi phí lãi vay con in cao hơn tổng chi phí tài chính **1.419.263.765 VND**. Giữ số con đã nhìn thấy trên PDF với cờ ngoại lệ nguồn; không tự sửa số đó, không ép tổng chi phí tài chính/lợi nhuận thay đổi và không dùng dòng con này để tính lợi nhuận hoạt động. Đây là mâu thuẫn của báo cáo được phát hành, không còn là lỗi OCR.
+- B03 ảnh trang 14 xác nhận FX **FY2025 = 62.830.651 VND**; **91.523.594 VND** thuộc cột FY2024 so sánh. OCR trước đã lấy nhầm FX comparative làm giá trị hiện tại, khiến cash bridge sai **28.692.943 VND**. Đã sửa FX YTD về **62.830.651 VND** và Q4 riêng = **62.830.651 − 65.368.055 = -2.537.404 VND**.
+- B03 FY2025 raw VND: CFO **3.913.940.809.873**, CFI **-7.009.893.958.684**, CFF **1.460.905.190.082**, net cash change **-1.635.047.958.729**, opening cash **2.188.037.806.317**, FX **62.830.651**, closing cash **553.052.678.239**. Flow bridge và cash bridge residual **0 VND**.
+- Q4 standalone = FY2025 YTD − 9M/2025 YTD từ IDC Q3/2025 cùng cơ sở báo cáo gốc: CFO **970.200.007.993**, CFI **-2.329.374.796.016**, CFF **1.120.543.443.747**, net change **-238.631.344.276**, FX **-2.537.404**, opening **791.686.559.919**, ending **553.052.678.239**; capex **-1.300.428.928.495**; dividends paid **-654.131.953.577**. Flow and cash bridges residual **0 VND**, opening cash equals Q3 closing cash.
+- Dữ liệu commit **`c9a45a3606f209e12df00856f97e8c12eaed27dc`**. Visual review: PASS; B02 has one reported source exception explicitly recorded. Next quarter is **IDC Q1/2026**. Do not re-extract Q4/2025.
+ 
 ## 11. Giới hạn thao tác
 
 - Không sửa code, schema, pipeline, dashboard hoặc logic tự động trong công việc nhập liệu BCTC nếu chưa có yêu cầu riêng. Công cụ kết xuất ảnh PDF tại mục 12 chỉ được duy trì/sử dụng cho kiểm toán trực quan; không tự thay đổi snapshot hoặc luồng đồng bộ dữ liệu.
