@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.29
+- Phiên bản: 1.30
 - Ngày ban hành: 04/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -769,6 +769,16 @@ Nguồn chỉ dùng VietstockFinance và các tệp liên kết tại danh mục
 - Q4 standalone = FY2025 YTD − 9M/2025 YTD từ IDC Q3/2025 cùng cơ sở báo cáo gốc: CFO **970.200.007.993**, CFI **-2.329.374.796.016**, CFF **1.120.543.443.747**, net change **-238.631.344.276**, FX **-2.537.404**, opening **791.686.559.919**, ending **553.052.678.239**; capex **-1.300.428.928.495**; dividends paid **-654.131.953.577**. Flow and cash bridges residual **0 VND**, opening cash equals Q3 closing cash.
 - Dữ liệu commit **`c9a45a3606f209e12df00856f97e8c12eaed27dc`**. Visual review: PASS; B02 has one reported source exception explicitly recorded. Next quarter is **IDC Q1/2026**. Do not re-extract Q4/2025.
  
+### 10.17 IDC Q1/2026 — B01/B02/B03 visual PASS; EPS comparative-column correction
+
+- Nguồn VietstockFinance: BCTC hợp nhất IDC Q1/2026; PDF lưu tại `reports/raw/IDC/auto-idc-20261021/229a1ff9af9d3e1b.pdf`; URL `https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%201/IDC_Baocaotaichinh_Q1_2026_Hopnhat.pdf`.
+- Kết xuất: PDF pages **8–14** ở 180 DPI; workflow run **41694161229**, artifact **13258496176**, digest `16f7b72e32ada60f564b478a7119f96cbc79b3eb64cf324c3aa5a2893901516d`.
+- B01 raw VND: current assets **10.087.525.251.101**, cash **800.729.495.703**, short-term investments **6.841.660.868.866**, short-term receivables **1.039.082.103.804**, inventory **1.336.544.952.533**, other current assets **69.507.830.195**, non-current assets **13.451.977.379.319**, fixed assets **2.875.737.262.368**, total assets **23.539.502.630.420**, current liabilities **5.593.032.195.552**, long-term liabilities **9.096.732.263.053**, total liabilities **14.689.764.458.605**, equity **8.849.738.171.815**. Row 440 equals total assets. All balance/component bridges residual 0.
+- B02 Q1-only raw VND: revenue net **1.485.524.640.421**, COGS **-1.096.785.999.513**, gross profit **388.738.640.908**, finance income **131.515.653.570**, finance expenses **-58.967.381.247**, interest expense **-58.741.206.811**, share profit associates **407.741.448**, selling expenses **-18.525.479.401**, administrative expenses **-53.853.448.503**, operating profit **389.315.726.775**, other income **32.552.495.178**, other expenses **-1.571.094.975**, other profit **30.981.400.203**, PBT **420.297.126.978**, current tax **-83.687.912.608**, deferred tax income **1.297.966.689** (normalize tax expense convention as **-1.297.966.689**), PAT **337.907.181.059**, parent PAT **270.595.917.639**, NCI **67.311.263.420**. EPS basic/diluted **713/713**.
+- **EPS column correction:** B02 first numeric column is Q1/2026 and contains EPS **713**. EPS **902** belongs to the comparative Q1/2025 column; do not retain 902 in Q1/2026. Correct and remove false parser candidates for selling expense **217** and operating profit **981**, which are not the source values.
+- B03 Q1 is also YTD: CFO **197.524.137.001**, CFI **-68.608.251.477**, CFF **118.757.627.185**, net cash increase **247.673.512.709**, opening cash **553.052.678.239**, FX **3.304.755**, closing cash **800.729.495.703**, capex **-271.870.359.512**, dividends paid **-36.631.499.200**. Flow/cash bridges residual 0; opening cash equals Q4/2025 close.
+- Snapshot commit **`cb98a0bfc9127c3e78eafa23466ec08fcd57f1fe`**; visual audit note `reports/analysis/IDC-Q1-2026-visual-review.md`, commit **`0e72dafe1d5ecc5b4e56442b24911d109fb9ef70`**. Status: B01/B02/B03 visual PASS. Next: **IDC Q2/2026**. Do not re-extract Q1/2026.
+
 ## 11. Giới hạn thao tác
 
 - Không sửa code, schema, pipeline, dashboard hoặc logic tự động trong công việc nhập liệu BCTC nếu chưa có yêu cầu riêng. Công cụ kết xuất ảnh PDF tại mục 12 chỉ được duy trì/sử dụng cho kiểm toán trực quan; không tự thay đổi snapshot hoặc luồng đồng bộ dữ liệu.
