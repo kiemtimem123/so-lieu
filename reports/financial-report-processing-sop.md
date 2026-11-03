@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.8
+- Phiên bản: 1.9
 - Ngày ban hành: 03/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -250,6 +250,36 @@ GAS has been reviewed through Q1/2026. Remaining manual exceptions are retained:
 - Q4/2025: original B01 total liabilities/equity and visual review pending; B03 CFI/net cash/opening/closing pending. CFO and CFF Q4 standalone have now been derived and saved.
 - Q1/2026: B01 totals and B03 bridge pending; B02 detail residual **334.961.244 VND (0,00892%)** remains unattributed; do not plug.
 The active next item is **PLX Q1/2025**, specifically the cross-year opening-cash bridge. Do not restart GAS or repeat the already reconciled GAS P&L extraction.
+
+### 10.11 PLX Q1/2025 — đã đối chiếu B01/B03 trong kỳ, ngoại lệ số dư chuyển năm vẫn PENDING
+
+Nguồn ưu tiên 1: VietstockFinance document ID **504658**, BCTC hợp nhất Q1/2025:
+`https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%201/PLX_Baocaotaichinh_Q1_2025_Hopnhat.pdf`
+Archive: `reports/raw/PLX/auto-plx-20261021/8ebe33f1a2757507.pdf`; sidecar `.pdf.extracted.json`.
+
+Nguồn Q4/2024 cùng mã và cùng phạm vi:
+`https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%204/PLX_Baocaotaichinh_Q4_2024_Hopnhat.pdf`
+Archive: `reports/raw/PLX/auto-plx-20261021/b80662485ac3e19f.pdf`; sidecar `.pdf.extracted.json`.
+
+#### Số gốc Q4/2024
+- B01 printed page 1, dòng tiền và tương đương tiền (row110): **15.062.135.832.746 VND**; tiền (row111) **5.329.069.053.043 VND**; tương đương tiền (row112) **9.733.066.779.703 VND**. Ba số cộng khớp row110.
+- B03 closing cash row70: **15.062.135.832.746 VND**. B01 row110 và B03 row70 trùng chính xác.
+- B03 screenshot của PDF Q4 không mở được trong phiên (endpoint trả lỗi Content-Length too large); kết luận hiện dựa trên text/sidecar đã lưu, visual review Q4 vẫn PENDING.
+
+#### Số gốc Q1/2025
+- B01 printed page 1, cột số đầu năm: total cash **14.933.068.792.315 VND**; tiền **5.329.158.367.088 VND**; tương đương tiền **9.603.910.425.227 VND**.
+- Note 1 cash table của Q1/2025 (PDF page index 22, printed note page 13) xác nhận tiền đầu năm gồm: tiền mặt **48.317.246.431 VND** + tiền gửi ngân hàng không kỳ hạn **5.046.965.955.718 VND** + tiền đang chuyển **233.875.164.939 VND** = tiền **5.329.158.367.088 VND**. Cộng tương đương tiền **9.603.910.425.227 VND** = tổng **14.933.068.792.315 VND**.
+- B03 row60 opening cash: **14.933.068.792.315 VND**. B01 opening and B03 opening trùng chính xác. Q1 B03 quarter/YTD flows and cash bridge have within-period residuals 1 VND (0,0000223%) for flow sum and 0 VND for cash bridge; both within tolerance. Q1 B01/B03 pages were directly inspected via web screenshots (B01 Q1, B03 page images).
+
+#### Chênh lệch liên kỳ và kết luận
+- Q1 opening minus Q4 closing = **-129.067.040.431 VND** = **-129.067,040431 triệu VND** (relative difference **-0,856897%**, exceeds 0,01% tolerance).
+- Composition change: cash row111 increased **89.314.045 VND**, while cash equivalents row112 decreased **129.156.354.476 VND**; net difference **-129.067.040.431 VND**.
+- Q4 B01/B03 agree internally and Q1 B01/B03 agree internally. Q1 Note 1 confirms the Q1 opening components but does not explain why they differ from Q4 closing. Text/sidecar reviewed so far contains no explicit correction/restatement or reclassification explanation. The Q4 source's relevant note text is partially OCR-truncated, so absence of an explanation is not proof that none exists.
+- Status remains `PENDING_UNEXPLAINED_CROSS_YEAR_CASH_BASIS`. Preserve Q4 closing and Q1 opening source values, no balancing plug, no overwrite. Revisit only if direct Q4 note image or clearer source evidence explains it.
+- Data commit with full cross-period breakdown: `d2f36ef258165355167686a26ff057884bdeedbf`.
+
+#### Resume
+PLX Q1/2025 core extraction is already complete; do not repeat it. Since user has directed continuing through pending exceptions, keep this discrepancy PENDING and move to **PLX Q1/2026** next. Q1/2026 already has source-text core values but its cross-year cash mismatch (Q4/2025 closing **10.803.153.849.383 VND** vs Q1/2026 opening **7.588.239.730.231 VND**) is **-3.214.914.119.152 VND** (**-29,75903%**) and must be audited separately without changing either reported value. After that, review Q2/2026 unreadable cashflow/visual hold.
 
 ## 11. Giới hạn thao tác
 
