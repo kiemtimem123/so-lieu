@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.6
+- Phiên bản: 1.7
 - Ngày ban hành: 03/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -189,6 +189,17 @@ Người dùng đã chỉ đạo **tiếp tục, không dừng toàn bộ tiến
 - B01 sidecar pages 4–5 have unreadable/misaligned current and comparative totals; previous parser explicitly held total assets/liabilities/equity as null because total asset and total source did not reconcile. Do not infer/force them.
 - B03 source text page 4 gives CFI **509.484.606.752 VND**, opening cash **5.567.998.965.715 VND**, FX effect **367.185.405 VND**. CFO/CFF/net cash movement remain null because OCR does not give a trustworthy bridge. Do not infer other flow lines from cash balance.
 - Current status: P&L source text PASS; B01/remaining B03 PENDING; visual review PENDING. Continue source-only text analysis and store only clear rows; no forced balance.
+### 10.9 GAS Q1/2026 — B02 PASS, B01/B03 PENDING, tiếp tục sang PLX
+
+- Nguồn: VietstockFinance document ID **543696**, PDF hợp nhất `https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/GAS_Baocaotaichinh_Q1_2026_Hopnhat.pdf`; archive `reports/raw/GAS/auto-gas-20261021/853ad22dfe045d24.pdf`; sidecar `.pdf.extracted.json`.
+- PDF page images chưa render được; chỉ kiểm tra text/OCR sidecar, không gắn cờ visual verified.
+- B02 page PDF 6 (trang in 3): revenue **38.019.609.031.268 VND**; COGS **33.511.417.706.493**; gross profit **4.508.191.324.775**; financial income **384.755.468.683**; financial expenses **118.408.271.484**; interest expense **53.307.964.713**; selling expense **623.721.077.879**; admin expense **396.928.650.943**; operating profit **3.754.223.754.396**; other income **862.001.024**; other expense **402.099.569**; PBT **3.754.683.655.851**; current tax **764.142.169.569**; deferred tax **-3.573.786.295**; total tax **760.568.383.274**; PAT **2.994.115.272.577**; parent PAT **2.944.603.136.328**; NCI **49.512.136.249**; EPS **1.177**.
+- B02 checks: revenue−COGS−gross profit = 0; operating profit + other income − other expense = PBT; PBT−tax=PAT; parent+NCI=PAT. The identified gross/financial income/financial expense/selling/admin components leave **334.961.244 VND** (0,00892%) between their sum and reported operating profit; source OCR does not identify a reliable additional line. Keep missing detail null and residual metadata; do not force a value or call the detail bridge fully verified.
+- B01 page in 1–2: OCR total assets current-year row270 is clipped/misaligned; total liabilities and total equity current-year row400 are not readable. Keep all three totals null. Row310 “Nợ ngắn hạn” appears as **16.867.209.085.764 VND** and is stored as a partial source-text field (visual confirmation pending). Q1/2026 opening comparative separately shows total assets **93.568.198.109.790 VND**, total equity **67.653.389.117.997 VND** and current liabilities **20.573.719.383.413 VND**; do not substitute those prior-year comparative values into Q1/2026 current-year totals or use total assets/equity to back-calculate total liabilities.
+- B03 page PDF 7 (trang in 4): CFI **509.484.606.752 VND**; opening cash **5.567.998.965.715 VND**; FX effect **367.185.405 VND**. OCR row40 appears to contain a candidate CFF **314.542.385.295 VND**, but the cashflow bridge is incomplete; keep only in candidate metadata, not the top-level verified cashflow field. CFO, net cash movement and closing cash remain null.
+- Trạng thái Q1/2026: B02 core values source-text PASS; B01 totals PENDING; B03 partial, with only CFI/opening cash/FX promoted and CFF candidate held; direct visual review PENDING. Data commit `b7588eaf2143156577e604153289411605eb6606`.
+- Q4/2024 total liabilities and Q4/2025 liabilities/equity/cashflow details also remain PENDING. Per user direction to continue, mark GAS exception work as processed to this checkpoint and advance the active ticker to **PLX**, preserving all GAS pending fields and not re-running finished text extraction.
+
 ## 11. Giới hạn thao tác
 
 - Không sửa code, schema, pipeline, dashboard hoặc logic tự động trong công việc nhập liệu BCTC nếu chưa có yêu cầu riêng.
