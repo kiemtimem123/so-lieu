@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.9
+- Phiên bản: 1.10
 - Ngày ban hành: 03/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -280,6 +280,50 @@ Archive: `reports/raw/PLX/auto-plx-20261021/b80662485ac3e19f.pdf`; sidecar `.pdf
 
 #### Resume
 PLX Q1/2025 core extraction is already complete; do not repeat it. Since user has directed continuing through pending exceptions, keep this discrepancy PENDING and move to **PLX Q1/2026** next. Q1/2026 already has source-text core values but its cross-year cash mismatch (Q4/2025 closing **10.803.153.849.383 VND** vs Q1/2026 opening **7.588.239.730.231 VND**) is **-3.214.914.119.152 VND** (**-29,75903%**) and must be audited separately without changing either reported value. After that, review Q2/2026 unreadable cashflow/visual hold.
+
+### 10.12 PLX Q1/2026 — chênh lệch số dư đầu kỳ được giải thích là số comparative phân loại lại
+
+Nguồn: VietstockFinance document ID **545469**, BCTC hợp nhất Q1/2026:
+`https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/PLX_Baocaotaichinh_Q1_2026_Hopnhat.pdf`
+Archive: `reports/raw/PLX/auto-plx-20261021/158547073d7cd10f.pdf`; sidecar `.pdf.extracted.json`.
+
+#### Dấu hiệu về cơ sở số dư đầu kỳ
+- B01 printed page 1, PDF page index 1: tiêu đề cột đầu kỳ ghi rõ **“Số đầu năm (phân loại lại)”**.
+- B01 row110 và B03 row60 đều ghi tiền và tương đương tiền đầu kỳ **7.588.239.730.231 VND**.
+- So với số cuối Q4/2025 gốc **10.803.153.849.383 VND**, chênh lệch là **-3.214.914.119.152 VND** (**-29,759033%**). Do cột so sánh của Q1/2026 ghi rõ “phân loại lại”, đây là khác biệt của comparative opening basis; không coi là lỗi cầu nối nội kỳ và không điều chỉnh số Q4 hoặc Q1. Các trang đã xem không công bố bút toán/chi tiết từng dòng phân loại lại, nên chỉ kết luận được là số comparative đã phân loại lại, không suy đoán bút toán cụ thể.
+
+#### Note 1 — đối chiếu cơ cấu tiền đầu kỳ và cuối kỳ
+Opening cash:
+- Tiền mặt **62.364.956.985 VND** + tiền gửi ngân hàng không kỳ hạn **4.323.618.323.442 VND** + tiền đang chuyển **227.182.532.474 VND** = tiền **4.613.165.812.901 VND**.
+- Tiền tương đương **2.975.073.917.330 VND**.
+- Tổng tiền và tương đương tiền đầu kỳ **7.588.239.730.231 VND**.
+
+Closing cash:
+- Tiền mặt **64.263.633.540 VND** + tiền gửi ngân hàng không kỳ hạn **7.214.983.868.036 VND** + tiền đang chuyển **346.315.152.556 VND** = tiền **7.625.562.654.132 VND**.
+- Tiền tương đương **2.408.843.681.628 VND**.
+- Tổng tiền và tương đương tiền cuối kỳ **10.034.406.335.760 VND**.
+- Các tổng thành phần Note 1 khớp chính xác, residual 0 VND.
+
+#### B03 — cầu nối Q1/2026 PASS
+Raw VND:
+- CFO **9.375.725.757.265**.
+- CFI **764.690.442.359**.
+- CFF **-7.689.092.776.722**.
+- Net cash change **2.451.323.422.902**. Tổng CFO+CFI+CFF khớp chính xác, residual 0 VND.
+- Opening cash **7.588.239.730.231** + net cash change **2.451.323.422.902** + FX effect **-5.156.817.373** = closing cash **10.034.406.335.760**, residual 0 VND.
+- B01/B03/Note 1 opening và closing balances khớp chính xác trên cùng Q1/2026 reclassified comparative basis. Không plug và không thay đổi số Q4/2025 gốc.
+
+Visual evidence đã xem qua screenshot: B01 `turn381601view0`; B03 trang đầu `turn381601view1`; B03 trang cuối/cash bridge `turn381601view2`; Note 1 `turn919705view0`; policy định nghĩa tiền `turn734794view2`.
+Data commit: `2820b036e70ca84e15ca6cd6d03b66a4aba448d5`.
+
+### 10.13 PLX Q2/2026 — B03 LCTT còn PENDING, không suy diễn
+- Nguồn: VietstockFinance document ID **556113**, BCTC hợp nhất Q2/2026:
+  `https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/PLX_Baocaotaichinh_Q2_2026_Hopnhat.pdf`
+  Archive `reports/raw/PLX/auto-plx-20261021/925339daf7038fe2.pdf`; sidecar `.pdf.extracted.json`; 36 trang.
+- B01 và B02 đã được OCR/source-text kiểm tra trước đây. Doanh thu thuần, giá vốn, lợi nhuận gộp, LNTT, LNST và LNST cổ đông mẹ đã được lưu theo basis hiện có. Không chạy lại B02 nếu không phát hiện mâu thuẫn.
+- B03 source sidecar PDF page indices 5–6 (trang in 6–7) mất hầu hết bảng dòng tiền, không có cấu phần đáng tin cậy để nhập. Tiền đầu kỳ **10.034.406.335.760 VND** khớp số cuối Q1/2026; tiền cuối kỳ **6.323.957 triệu VND** chỉ đọc từ B01. Giữ CFO/CFI/CFF/net cash/FX ở null; tuyệt đối không dùng tiền đầu-cuối để suy ra các dòng lưu chuyển.
+- Endpoint PDF gốc dung lượng khoảng 15,9 MB chưa mở được bằng bộ đọc hiện có; vì thế visual review B03 PENDING. WiData không được dùng để bổ sung nếu chưa cần thiết theo quy tắc nguồn đã xác lập.
+- Trạng thái: B03 `NEEDS_MANUAL_REVIEW_CASHFLOW_OCR_INCOMPLETE`; no balancing plug. Người dùng đã chỉ đạo tiếp tục nên giữ Q2/2026 pending và chuyển tới mã kế tiếp theo checkpoint.
 
 ## 11. Giới hạn thao tác
 
