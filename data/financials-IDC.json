@@ -3476,7 +3476,7 @@
           13,
           14
         ],
-        "review_note": "Đã đối chiếu văn bản của bản PDF tiếng Anh nằm trong ZIP VietstockFinance ID 523494: B01 PDF trang 8–11 (trang in 3–6), B02 trang 12 (trang in 7), B03 trang 13–14 (trang in 8–9). Xác nhận rõ cột 30/09/2025 và cột riêng Quý III. B01/B02/B03 text arithmetic đạt; dòng 440 tổng nợ và vốn chủ hiển thị lệch tổng tài sản 71.700 VND (~0,00000034%), trong dung sai 0,01%, không điều chỉnh số. PDF 15.499.375 bytes không render được ảnh qua công cụ trong phiên này; không đánh dấu visual verified.",
+        "review_note": "Đã kiểm tra text layer của bản tiếng Anh trong ZIP VietstockFinance ID 523494: B01 PDF trang 8–11 (trang in 3–6), B02 trang 12 (trang in 7), B03 trang 13–14 (trang in 8–9). Xác nhận cột 30/09/2025 và cột riêng Quý III. B01 tổng tài sản, tổng nợ và vốn chủ sở hữu cộng khớp chính xác; riêng token OCR dòng 440 trên trang 11 bị lỗi, không suy ra số hoặc độ lệch từ token này. B02/B03 text arithmetic đạt. Ảnh trang PDF chưa kết xuất được, do đó visual review còn PENDING.",
         "core_source_text_reconciled": true,
         "core_manually_visual_reviewed": false,
         "core_source_pages": {
@@ -3597,12 +3597,16 @@
             "totalAssets": 21293030253931,
             "totalLiabilities": 12926247964300,
             "equity": 8366782289631,
-            "reportedTotalLiabilitiesAndEquityRow440": 21293030325631,
-            "row440MinusTotalAssetsVnd": 71700,
-            "row440RelativeDifferencePercent": 3.367299024372689e-7,
-            "allowedTolerancePercent": 0.01,
-            "componentBalanceResidualVnd": 0,
-            "status": "PASS_WITHIN_TOLERANCE_ROW440_MINOR_DIFFERENCE"
+            "calculatedLiabilitiesPlusEquity": 21293030253931,
+            "balanceEquationResidualVnd": 0,
+            "totalAssetsCompositionResidualVnd": 0,
+            "currentLiabilitiesPlusLongTermResidualVnd": 0,
+            "row440RawText": "21,293iÿfBÿ 800,160,505,704",
+            "row440ExtractionStatus": "UNREADABLE_IN_PDF_TEXT_LAYER",
+            "row440ReportedNumber": null,
+            "row440DifferenceVnd": null,
+            "status": "BALANCE_COMPONENTS_PASS_ROW_440_IMAGE_REVIEW_PENDING",
+            "note": "The page 11 text layer mangles the printed row 440 amount; do not infer a 71,700 VND discrepancy from the corrupted OCR token. Independently extracted total liabilities and equity sum exactly to the independently extracted total assets (residual 0 VND). Need page image to read row 440 itself."
           },
           "incomeStatement": {
             "revenueGross": 2871423273613,
@@ -3720,7 +3724,7 @@
       ],
       "core_financial_extraction_status": "auto_extracted_pending_visual_review",
       "core_financial_extraction_note": "Khôi phục số liệu lõi và chi tiết từ BCTC hợp nhất VietstockFinance, đúng kỳ phát sinh quý. Các trường raw VND, trang PDF và phép kiểm tra được lưu kèm; không thay đổi dòng tiền đã được đối chiếu trước đây.",
-      "verification_status_note": "B01/B02/B03 text source audited against the English PDF member in VietstockFinance document 523494. All core statement arithmetic reconciles; reported B01 row 440 differs from row 270 by 71,700 VND (<0.01% tolerance), recorded without a balancing plug or source-value rewrite. Direct page-image review remains pending. B03 quarter basis corrected after direct PDF review: same-original-basis Q3 9M minus original Q2/2025 H1; later As-restated H1 stays separate. Exact quarter/YTD flow and cash bridge residuals are 0 VND.",
+      "verification_status_note": "B01/B02/B03 text source audited against the English PDF member in VietstockFinance document 523494. All core statement arithmetic reconciles; B01 row 440 text token is corrupted/unreadable; do not assert any row-440 difference. Independently extracted total liabilities + equity = total assets exactly (0 VND residual). Direct page-image review remains pending. B03 quarter basis corrected after direct PDF review: same-original-basis Q3 9M minus original Q2/2025 H1; later As-restated H1 stays separate. Exact quarter/YTD flow and cash bridge residuals are 0 VND. Page-image review remains pending; row 440 itself must be read from rendered page before closing.",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "c59e1a62089f3056c83ed014069c7be0307188c84f7905f16213c771b46ff037",
       "core_financial_extraction_evidence_attempt_count": 0,
