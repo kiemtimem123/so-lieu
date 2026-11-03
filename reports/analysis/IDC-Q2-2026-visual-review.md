@@ -106,3 +106,22 @@ The Q2 standalone flow-component bridge is exact (0 VND). The cash bridge residu
 ## Status
 
 **B01/B02 visual review PASS. B03 H1/2026 YTD PASS. Q2 standalone cashflow: manual review exception above 0.01%.** Data commit: `1f1449355dd200ccba8b77fa5e91024980078362`. The report is visually reviewed; the cash-basis exception remains open and must be resolved or explicitly carried as a source-basis exception before final IDC closeout.
+
+
+## Note 41 — direct visual check of the opening-cash restatement
+
+A second rendering pass inspected PDF pages 60–67 at 180 DPI. PDF page **66** (printed page **61**) contains Note 41, “Reclassification of corresponding data in accordance with Circular 99”.
+
+The note explicitly shows for 31 December 2025:
+- Cash equivalents previously stated: **474,491,428,405 VND**
+- Note 41 adjustment: **+890,796,892 VND**
+- Cash equivalents as restated: **475,382,225,297 VND**
+- Cash (unchanged): **78,561,249,834 VND**
+- Total cash and cash equivalents therefore changes from **553,052,678,239 VND** to **553,943,475,131 VND**.
+
+This is the exact amount and basis behind the H1/2026 B03 opening-cash difference. It explains the origin of the exception. It does **not** make the Q2 standalone B03 cash bridge pass: after deriving Q2 by H1/2026 YTD minus Q1/2026 as-published values, the Q2-only cash bridge still has a **-890,796,892 VND** residual (**0.1463%**), above 0.01%. Do not force this into CFO/CFI/CFF, do not change Q1 values, and do not use a balancing plug. Keep this as a documented opening-balance restatement exception until a same-basis Q1/2026 statement is available or the reporting basis is formally reconciled.
+
+Note 41 visual evidence:
+- Workflow run: https://github.com/kiemtimem123/so-lieu/actions/runs/41697391168
+- Artifact ID: `13262111894`, name `vietstock-source-review-IDC-2026-Q2`, pages 60–67 at 180 DPI.
+- Page 66 image SHA-256: `72a16c5383e506eafd84a10e41c2e9f604fac5b261869f5832371e80b8276d4e`.
