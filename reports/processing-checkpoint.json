@@ -44,48 +44,55 @@
   "resumeSymbolHint": "GEG",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
-    "symbol": "PLX",
-    "status": "PLX_Q2_2026_CASHFLOW_PENDING_CONTINUE_GEG",
+    "symbol": "GEG",
+    "status": "GEG_Q1_2024_COMPLETE_VISUAL_VERIFIED_CONTINUE_Q2",
     "completeForAutomation": false,
     "manualReviewRemaining": true,
     "processedAt": "2026-11-03",
-    "period": "2026-Q2",
-    "periodStatus": "B03 cashflow OCR unreadable; endpoint retrieval fails due 15.9MB content length. Opening cash 10,034,406,335,760 VND matches Q1 close; closing cash 6,323,957m supported by B01. Do not infer CFO/CFI/CFF/net/FX from cash bridge. Q1/2026 prior cross-year opening now explained by B01 reclassified heading; Q1/2025 residual remains separate PENDING.",
+    "period": "2024-Q1",
+    "periodStatus": "Original VietstockFinance report 460145 B01/B02/B03 visually reviewed. Balance sheet, P&L, tax/NCI and cashflow bridges exact; OCR cash row70 correction and dividends row36 corrected from screenshot. Q1 closed, no need repeat.",
     "periodCount": 10,
-    "sourceIndexUrl": "https://finance.vietstock.vn/PLX/tai-tai-lieu.htm?doctype=1",
-    "sourceReportUrl": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/PLX_Baocaotaichinh_Q2_2026_Hopnhat.pdf",
-    "sourceDocumentId": "556113",
-    "sourceArchiveFile": "reports/raw/PLX/auto-plx-20261021/925339daf7038fe2.pdf",
-    "dataCommit": "existing Q2 PLX values unchanged",
+    "sourceIndexUrl": "https://finance.vietstock.vn/GEG/tai-tai-lieu.htm?doctype=1",
+    "sourceReportUrl": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%201/GEG_Baocaotaichinh_Q1_2024_Hopnhat.pdf",
+    "sourceDocumentId": "460145",
+    "sourceArchiveFile": "reports/raw/GEG/auto-geg-20261021/51f06da4fc1935f2.pdf",
+    "dataCommit": "4e05d9bf8d280f827d0d40e7b24573110f974e78",
+    "normalizationStandardVersion": "3.4",
     "validation": {
-      "b01": "PASS previously stored source text; assets/liabilities/equity and closing cash available.",
-      "b02": "PASS/partially reconstructed stored values; do not re-extract.",
-      "b03": "PENDING OCR table unreadable; cashflow fields remain null.",
-      "openingCash": "PASS equals Q1/2026 closing balance.",
-      "visual": "PENDING original Q2/2026 PDF not rendered."
+      "balanceSheet": "PASS residual 0 VND",
+      "profit": "PASS all bridges residual 0 VND",
+      "cashflow": "PASS flows and cash bridge residual 0 VND",
+      "visual": "PASS original pages B01 1-2, B02 3, B03 4-5 directly screenshot reviewed",
+      "correction": "B03 row70 current 2024 is 214,930,981,659; 321,665,888,215 belongs to comparative 2023; dividends -4,706,100 VND."
     },
     "reviewedStatements": [
-      "B01-CTCK/HN",
-      "B02-CTCK/HN"
+      "B01-DN/HN",
+      "B02-DN/HN",
+      "B03-DN/HN"
+    ],
+    "reviewedPrintedPages": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "reviewedPdfPages": [
+      2,
+      3,
+      4,
+      5,
+      6
     ],
     "doNotRepeatCoreExtraction": true,
-    "pendingCorePeriods": [],
-    "pendingDetailPeriods": [
-      "2026-Q2"
-    ],
-    "pendingVisualPeriods": [
-      "2026-Q2"
-    ],
-    "nextPeriod": "2024-Q1",
+    "doNotRepeatVisualReview": true,
+    "nextPeriod": "2024-Q2",
     "nextTicker": "GEG",
-    "periodComplete": false,
-    "processingSopVersion": "1.10",
+    "periodComplete": true,
+    "processingSopVersion": "1.11",
     "processingSopPath": "reports/financial-report-processing-sop.md",
-    "processingSopCommit": "35bb7206d22f8dedb39e12776bb9a9126cef984f",
-    "pendingExceptions": [
-      "PLX Q1/2025 cross-year cash-basis difference -129,067,040,431 VND (0.856897%) remains unexplained; preserve both source values.",
-      "PLX Q2/2026 B03 OCR unreadable; retain flow fields null, no plug."
-    ]
+    "processingSopCommit": "84a265f30e781173769ea51712e25a5de1ed8a28",
+    "pendingExceptions": []
   },
   "symbolStates": {
     "MBB": {
@@ -1862,7 +1869,6 @@
       "lastQuarter": "2026-Q2",
       "pendingCorePeriods": [],
       "terminalManualReviewPeriods": [
-        "2024-Q1",
         "2024-Q2",
         "2024-Q3",
         "2024-Q4",
@@ -1874,7 +1880,7 @@
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-10-31T13:45:00+07:00",
+      "updatedAt": "2026-11-03",
       "snapshotFetchedAt": "2026-10-23T20:45:50+00:00",
       "note": "GEG review 2026-10-30: 10 quarters Q1/2024–Q2/2026; no confirmed core statement correction found in the archived VietstockFinance OCR source review. Core P&L/tax arithmetic and balance sheet totals appear internally consistent; negative NCI explains parent net profit exceeding consolidated net profit in several periods (e.g. Q2/2025: 165,820.759m parent + (-8,105.900m) NCI = 157,714.859m consolidated). Q2/2026 cash flow internally reconciles on reported YTD basis (begin 74,942.444m + net change 25,371.517m + FX 13.217m = end 100,327.179m); however quarter opening basis differs from Q1 closing (105,857m), yielding 10.22% quarter bridge exception. Preserve report's own YTD opening cash and manual review; no balancing plug. Visual/source review remains pending on 2024 periods and Q2/2026.",
       "sourceReconciledPeriods": [
@@ -1886,8 +1892,8 @@
       ],
       "lastSourceReconciliation": {
         "periodRange": "2024-Q1 through 2024-Q4, plus 2026-Q2",
-        "status": "source_text_reconciled_pending_visual_review",
-        "correctionCommit": "5db4a6d612b7e6add9805694cb9c68ca1efb7be5",
+        "status": "q1_2024_complete_visual_verified_next_q2_2024",
+        "correctionCommit": "4e05d9bf8d280f827d0d40e7b24573110f974e78",
         "findings": [
           "2024-Q1 revenue field was incorrectly populated with operating profit 137,395 million VND; corrected revenue to 739,215 million VND from B02a line 10, while operating_profit remains 137,395 million.",
           "2024-Q2, Q3 and Q4 consolidated profit attribution differences are explained by negative NCI; parent profit values can exceed consolidated net profit without being an error.",
@@ -1895,9 +1901,11 @@
           "2024-Q2 to Q4 cash-flow comparisons use later VietstockFinance comparative statements; source revisions and bridge checks are preserved.",
           "2026-Q2 YTD cash-flow sum and YTD cash bridge reconcile exactly; standalone-quarter cash bridge residual is 10.2213% and cross-period opening cash basis differs from Q1 close by 29.2039%. Preserve manual review and do not plug.",
           "Q3/2024: corrected source mapping where total liabilities and equity had been offset/misassigned; liabilities 10,203,205.241355m and equity 5,822,243.986759m; raw balance now exact.",
-          "Q2/2024: corrected current assets subtotal to 1,806,189.691416m from B01-DN/HN; current + noncurrent assets now reconcile to total assets."
+          "Q2/2024: corrected current assets subtotal to 1,806,189.691416m from B01-DN/HN; current + noncurrent assets now reconcile to total assets.",
+          "GEG Q1/2024: original VietstockFinance report 460145 B01/B02/B03 visually verified. All balance sheet, P&L/tax/NCI and cashflow bridges exact.",
+          "GEG Q1/2024: original B03 current-period row70 is 214,930,981,659 VND; OCR 321,665,888,215 VND was copied from 2023 comparative column. Dividends row36 is -4,706,100 VND; prior OCR -1,024 million candidate rejected."
         ],
-        "remaining": "Core source text is reconciled. Keep visual PDF review pending for terminal periods and Q2/2026 cash-flow bridge exception; do not plug.",
+        "remaining": "Continue GEG Q2/2024. Q1/2024 core and B01/B02/B03 are closed; do not reload/reprocess unless a contradiction arises. Preserve other GEG manual holds.",
         "correctionCommits": [
           "128e05b295d6ed9ffb5fe9cc0e6734462596cdfc",
           "e3b42df914f8284a46067bacf671e9278f8331ce"
@@ -1917,7 +1925,7 @@
       ],
       "lastDetailSourceReconciliation": {
         "periodRange": "GEG Q1/2024 through Q2/2026 (10 periods)",
-        "status": "source_text_reconciled_pending_visual_review",
+        "status": "q1_2024_visual_verified_original_source_selected",
         "correctionCommit": "9e6df1ed1df371674dfaa36de03c1e136f302430",
         "findings": [
           "Q1/2024: bổ sung lợi nhuận gộp, lãi/lỗ công ty liên kết, thu nhập/chi phí khác, thuế hiện hành/hoãn lại, NCI và capex; các cầu nối lợi nhuận, thuế, NCI, dòng tiền khớp.",
@@ -1926,9 +1934,10 @@
           "Q1/2025: bổ sung các dòng còn thiếu; thuế hoãn lại dùng comparative Q1/2026 của VietstockFinance (-37.686.301.526 VND), residual 200.000 VND dưới 0,01%.",
           "Q2/Q3/2025: bổ sung lãi/lỗ công ty liên kết, thu nhập/chi phí khác, NCI và capex; capex quý tách từ lũy kế.",
           "Q4/2025: bổ sung lãi/lỗ công ty liên kết, thu nhập/chi phí khác, NCI và capex năm.",
-          "Q1/Q2/2026: bổ sung lãi/lỗ công ty liên kết, thu nhập/chi phí khác, thuế, NCI và capex; hai báo cáo theo mẫu 2026 không trình bày riêng chi phí bán hàng nên giữ ô trống, không gán 0."
+          "Q1/Q2/2026: bổ sung lãi/lỗ công ty liên kết, thu nhập/chi phí khác, thuế, NCI và capex; hai báo cáo theo mẫu 2026 không trình bày riêng chi phí bán hàng nên giữ ô trống, không gán 0.",
+          "GEG Q1/2024: original PDF B03 visually checked; source cashflows and bridge exact; corrected current-period cash ending and dividends from original B03."
         ],
-        "remaining": "Không còn trường bảng lõi/chi tiết thiếu do chưa trích xuất. Giữ cờ rà soát ảnh PDF cho Q1-Q4/2024 và Q2/2026 cashflow basis exception; không plug."
+        "remaining": "Continue GEG Q2/2024 original source; preserve existing cashflow comparative basis only if original source cannot be read. Other GEG 2024 visual holds and Q2/2026 cash-basis issue remain."
       }
     },
     "SHS": {
@@ -3229,6 +3238,20 @@
         "reports/processing-checkpoint.json"
       ],
       "note": "Q2/2026 B03 sidecar unreadable; original PDF retrieval failed at 15.9MB; keep CFO/CFI/CFF/net/FX null and advance to GEG Q1/2024."
+    },
+    {
+      "symbol": "GEG",
+      "period": "2024-Q1",
+      "status": "complete_source_and_visual_verified",
+      "processedAt": "2026-11-03",
+      "commit": "4e05d9bf8d280f827d0d40e7b24573110f974e78",
+      "sopCommit": "84a265f30e781173769ea51712e25a5de1ed8a28",
+      "changedPaths": [
+        "data/financials-GEG.json",
+        "reports/financial-report-processing-sop.md",
+        "reports/processing-checkpoint.json"
+      ],
+      "note": "B01/B02/B03 original images reviewed; all checks exact. Corrected current-year cash ending and dividends after resolving OCR adjacent comparative column. Next GEG Q2/2024."
     }
   ],
   "currentRun": {
@@ -4163,7 +4186,7 @@
   },
   "nextSymbolHint": "GEG",
   "lastSessionCheckpoint": {
-    "savedAt": "2026-11-03T18:45:00Z",
+    "savedAt": "2026-11-03T19:10:00Z",
     "branch": "main",
     "latestWorkflowFixCommit": "b1daa9b933e4e02efe96769b02745dc176c734c6",
     "lastCompletedWork": [
@@ -4282,7 +4305,7 @@
     "latestIdcCorrectionCommit": "51918bc138a5e737434dfded5c418dbd7f22e97f",
     "latestKbcCorrectionCommit": "7c2e3bbfb9c2dbafe43378f1db5850bb2cf4ca0b",
     "activeSymbol": "VIX",
-    "period": "2024-Q1",
+    "period": "2024-Q2",
     "completedWork": [
       "VIX Q2/2024 visually verified from VietstockFinance doc 468963; raw-VND B01/B02/B03b reconciliations passed; standalone cashflows audit-only; data commit 2a830d3389a92e0ca942a4de2ea26057fa9c2eba; render artifact 13146176706",
       "VIX Q3/2024 visually verified from VietstockFinance doc481505; raw-VND B01/B02/B03b and 9M cumulative reconciliations passed; standalone cashflows audit-only; data commit 0831440958aa1b8b320d4107f878704a314e519b; render artifact 13148335964.",
@@ -4294,18 +4317,19 @@
       "GAS Q1/2026: B02 source text core bridge PASS; row310 current liabilities partial, B01 totals pending; B03 CFI/opening/FX present, CFF candidate held, CFO/net/closing null. B02 component residual 334.961m VND (0.00892%), no plug. Data commit b7588eaf2143156577e604153289411605eb6606; SOP v1.7 644bd532cd9179cbf3d50f5c3d7f84777c64b864.",
       "GAS Q4/2025: B02 bridges exact; CFO/CFF standalone values saved (+829,207.541688m and -2,447,363.676194m) from YTD difference; Q2/2026 comparative B01 image direct reviewed and saved separately due 36,686,243,114 VND asset difference. Data 7d24584481eb2b6a962c323b862a3389df7bfb55; SOP 2b241f6184773adf953f0c4b07d7f8d987588893.",
       "PLX Q1/2026: explicitly reclassified B01 opening balance confirmed; Note1 components and B03 flow/cash bridge exact; data commit 2820b036e70ca84e15ca6cd6d03b66a4aba448d5. SOP v1.10 35bb7206d22f8dedb39e12776bb9a9126cef984f.",
-      "PLX Q2/2026: B03 OCR unreadable and PDF open fails due 15.9MB; flow fields remain null; advanced to GEG Q1/2024."
+      "PLX Q2/2026: B03 OCR unreadable and PDF open fails due 15.9MB; flow fields remain null; advanced to GEG Q1/2024.",
+      "GEG Q1/2024 visually verified original B01/B02/B03. Corrected OCR B03 row70 current cash 214,930,981,659 VND; 321,665,888,215 belongs to 2023 comparative. Dividends row36 corrected to -4,706,100 VND. Data commit 4e05d9bf8d280f827d0d40e7b24573110f974e78; SOP 84a265f30e781173769ea51712e25a5de1ed8a28."
     ],
-    "resumePoint": "GEG Q1/2024; PLX Q1/2025 cross-year cash basis and Q2/2026 unreadable B03 remain PENDING; Q1/2026 reclassified opening explained.",
+    "resumePoint": "GEG Q2/2024 B03 source basis. GEG Q1/2024 completed visual verified and checkpointed.",
     "symbol": "GEG",
     "status": "active_manual_exception_review",
-    "sopVersion": "1.10",
+    "sopVersion": "1.11",
     "sopPath": "reports/financial-report-processing-sop.md",
-    "sopCommit": "35bb7206d22f8dedb39e12776bb9a9126cef984f",
-    "nextAction": "Resume at GEG Q1/2024 using archived VietstockFinance source; preserve PLX pending issues, do not reprocess completed PLX core.",
+    "sopCommit": "84a265f30e781173769ea51712e25a5de1ed8a28",
+    "nextAction": "Continue GEG Q2/2024 from original VietstockFinance report 471941; inspect B03 original cashflow rows versus later comparative values.",
     "periodComplete": false,
-    "dataCommit": "2820b036e70ca84e15ca6cd6d03b66a4aba448d5",
-    "checkpointNextAction": "Continue GEG Q1/2024, process one original consolidated period at a time."
+    "dataCommit": "4e05d9bf8d280f827d0d40e7b24573110f974e78",
+    "checkpointNextAction": "Start GEG Q2/2024 original source reconciliation; do not repeat GEG Q1/2024."
   },
   "lastCrossTickerAudit": {
     "checkedAt": "2026-10-30T15:17:40.419Z",
@@ -4323,9 +4347,9 @@
     "codeFix": "scripts/validate-financials.mjs now reports chronological first/last periods from sorted unique period keys instead of relying on insertion order."
   },
   "nextActions": [
-    "PLX Q2/2026: carry B03 cashflow OCR as PENDING; no inference from B01 opening/closing. Keep Q1/2025 cross-year cash issue separate and Q1/2026 reclassified basis marked explained.",
-    "Continue with GEG Q1/2024 using the archived VietstockFinance source, one period at a time, without reprocessing completed PLX/GAS periods.",
-    "After GEG, continue IDC per the established order; preserve all PLX/GAS PENDING exceptions."
+    "GEG Q2/2024: inspect archived original VietstockFinance report 471941, especially B03 original cashflow rows. Existing record currently uses later Q2/2025 comparative for cashflow due an earlier source reconciliation; compare original Q2/2024 values and record each basis separately.",
+    "After GEG Q2/2024, continue GEG Q3/2024 and Q4/2024 visual checks, then GEG Q2/2026 cash basis exception, one period per pass.",
+    "Do not reprocess GEG Q1/2024 or the previously completed PLX/GAS data except for new explicit contradictions."
   ],
   "lastUiUpdate": {
     "updatedAt": "2026-10-30T18:35:00+07:00",
@@ -4700,8 +4724,8 @@
       "status": "active_manual_exception_review",
       "periodCount": 10,
       "periodRange": "2024-Q1..2026-Q2",
-      "reason": "2024 source visual checks and Q2/2026 quarter/YTD cash-basis exception remain.",
-      "nextStep": "Continue GEG Q1/2024 from the archived VietstockFinance consolidated report; inspect existing extracted source/sidecar before editing, process one period at a time."
+      "reason": "GEG Q1/2024 is now visually verified and closed; next original-source issue is Q2/2024 B03, where stored cashflow is based on later Q2/2025 comparative. Need compare original Q2/2024 PDF before deciding basis.",
+      "nextStep": "Continue GEG Q2/2024. Inspect original document 471941 B03 rows and compare with existing Q2/2025 comparative-derived YTD/cash values; keep source revisions separate."
     },
     {
       "symbol": "IDC",
@@ -5396,9 +5420,9 @@
     }
   ],
   "processingSop": {
-    "version": "1.10",
+    "version": "1.11",
     "path": "reports/financial-report-processing-sop.md",
-    "commit": "35bb7206d22f8dedb39e12776bb9a9126cef984f",
+    "commit": "84a265f30e781173769ea51712e25a5de1ed8a28",
     "status": "published",
     "effectiveDate": "2026-11-03"
   },
@@ -5783,6 +5807,79 @@
       "nextTicker": "GEG",
       "nextPeriod": "2024-Q1",
       "periodComplete": false
+    }
+  },
+  "gegPeriodProgress": {
+    "2024-Q1": {
+      "status": "complete_source_and_visual_verified",
+      "documentId": "460145",
+      "sourceIndexUrl": "https://finance.vietstock.vn/GEG/tai-tai-lieu.htm?doctype=1",
+      "sourceDocumentUrl": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%201/GEG_Baocaotaichinh_Q1_2024_Hopnhat.pdf",
+      "sourceArchiveFile": "reports/raw/GEG/auto-geg-20261021/51f06da4fc1935f2.pdf",
+      "extractionSidecar": "reports/raw/GEG/auto-geg-20261021/51f06da4fc1935f2.pdf.extracted.json",
+      "sourceScope": "Consolidated",
+      "sourceUnit": "VND",
+      "doNotRepeatCoreExtraction": true,
+      "doNotRepeatVisualReview": true,
+      "visuallyReviewedStatements": [
+        "B01-DN/HN",
+        "B02-DN/HN",
+        "B03-DN/HN"
+      ],
+      "visualReviewedPdfPageIndices": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "visualReviewedPrintedPages": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "visualEvidenceRefs": [
+        "turn265283view0",
+        "turn346148view1",
+        "turn346148view2",
+        "turn346148view0",
+        "turn347739view0"
+      ],
+      "sourceRawVnd": {
+        "totalAssets": 16152857699551,
+        "totalLiabilities": 10259620128232,
+        "equity": 5893237571319,
+        "revenue": 739214916619,
+        "pretaxProfit": 136642952967,
+        "netProfit": 126276539401,
+        "parentProfit": 89662202743,
+        "nciProfit": 36614336658,
+        "cfo": 134488003107,
+        "cfi": 11861771247,
+        "cff": -160548389615,
+        "netCashChange": -14198615261,
+        "openingCash": 229105088949,
+        "fx": 24507971,
+        "closingCash": 214930981659,
+        "capex": -4743605709,
+        "dividendsPaid": -4706100
+      },
+      "validations": {
+        "balanceSheet": "PASS: total assets = liabilities + equity, residual 0 VND; current/noncurrent and current/long-term liabilities subtotal residuals 0.",
+        "profit": "PASS: revenue−COGS=gross profit; operating and other-profit bridges; PBT−tax=PAT; parent+NCI=PAT; all residuals 0.",
+        "cashflow": "PASS: CFO+CFI+CFF=net change; opening + net change + FX = closing; all residuals 0.",
+        "cashBalances": "PASS B01 and B03 closing cash both 214,930,981,659 VND.",
+        "dividends": "B03 row36 is -4,706,100 VND (-4.7061 million); earlier OCR candidate -1,024 million rejected.",
+        "ocrCorrection": "B03 printed page 5 current 2024 closing cash is 214,930,981,659 VND; 321,665,888,215 VND belongs to comparative 2023 column. Corrected.",
+        "visual": "PASS original PDF screenshots reviewed."
+      },
+      "issues": [],
+      "dataCommit": "4e05d9bf8d280f827d0d40e7b24573110f974e78",
+      "processedAt": "2026-11-03",
+      "nextPeriod": "2024-Q2",
+      "periodComplete": true
     }
   }
 }
