@@ -1969,7 +1969,7 @@
       "quarter_profit_basis": "Chỉ lưu số liệu khi cột phát sinh riêng của quý được trích xuất và cân đối hợp lệ.",
       "verification_status": "pending_b01_totals_and_cashflow_rows_source_text_partial",
       "source_validation": {
-        "reviewed_at": "2026-10-30T18:20:00+07:00",
+        "reviewed_at": "2026-11-03",
         "single_source_policy": "Chỉ danh mục VietstockFinance và tệp do danh mục đó liên kết.",
         "source_catalog_url": "https://finance.vietstock.vn/GAS/tai-tai-lieu.htm?doctype=1",
         "source_document_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/GAS_Baocaotaichinh_Q1_2026_Hopnhat.pdf",
@@ -1998,16 +1998,24 @@
           ]
         },
         "financial_statement_source_pages": {
-          "pdf_pages": [
+          "b01_pdf_pages": [
             4,
-            5,
-            6,
+            5
+          ],
+          "b01_printed_pages": [
+            1,
+            2
+          ],
+          "b02_pdf_pages": [
+            6
+          ],
+          "b02_printed_pages": [
+            3
+          ],
+          "b03_pdf_pages": [
             7
           ],
-          "printed_pages": [
-            1,
-            2,
-            3,
+          "b03_printed_pages": [
             4
           ]
         },
@@ -2029,7 +2037,16 @@
           "income_tax": 760568383274,
           "net_profit": 2994115272577,
           "net_profit_attributable": 2944603136328,
-          "bank_non_controlling_profit": 49512136249
+          "cashflow_cfi": 509484606752,
+          "cash_beginning": 5567998965715,
+          "foreign_exchange_effect": 367185405,
+          "current_liabilities": 16867209085764,
+          "opening_2025_total_assets_comparative": 93568198109790,
+          "opening_2025_total_equity_comparative": 67653389117997,
+          "opening_2025_current_liabilities_comparative": 20573719383413,
+          "eps": 1177,
+          "share_of_profit_associates": null,
+          "source_candidate_financing_cash_flow_ytd": 314542385295
         },
         "financial_statement_unit": "VND / 1,000,000 = triệu VND",
         "financial_statement_manual_review": "Q1/2026: khôi phục đầy đủ kết quả kinh doanh từ BCTC; bảng cân đối OCR không khớp giữa tổng tài sản và tổng nguồn vốn, LCTT không đọc đủ dòng nên giữ các phần đó ở trạng thái rà soát thủ công. Cần kiểm tra ảnh PDF để xác nhận các dòng còn thiếu; không ép cân đối.",
@@ -2061,7 +2078,13 @@
           "cash_beginning": 5567998965715,
           "foreign_exchange_effect": 367185405
         },
-        "cashflow_source_note": "Đã trích các dòng CFI, tiền đầu năm và tỷ giá đọc được; dòng CFO/CFF/net change bị OCR thiếu hoặc méo. Chờ kiểm tra trực quan PDF."
+        "cashflow_source_note": "Đã trích các dòng CFI, tiền đầu năm và tỷ giá đọc được; dòng CFO/CFF/net change bị OCR thiếu hoặc méo. Chờ kiểm tra trực quan PDF.",
+        "source_archive_file": "reports/raw/GAS/auto-gas-20261021/853ad22dfe045d24.pdf",
+        "extraction_sidecar": "reports/raw/GAS/auto-gas-20261021/853ad22dfe045d24.pdf.extracted.json",
+        "report_scope": "Consolidated",
+        "source_unit": "VND",
+        "source_text_reconciled": true,
+        "visual_review_status": "PENDING: PDF page images could not be rendered; only archived VietstockFinance text sidecar checked."
       },
       "published_at": "2026-04-24",
       "source_archive_file": "reports/raw/GAS/auto-gas-20261021/853ad22dfe045d24.pdf",
@@ -2079,7 +2102,8 @@
         "revenue",
         "pretax_profit",
         "net_profit_attributable",
-        "non_controlling_interest_profit"
+        "non_controlling_interest_profit",
+        "eps"
       ],
       "core_financial_extraction_status": "pnl_source_text_pass_b01_b03_pending",
       "core_financial_extraction_note": "Q1/2026 B02 raw VND revenue/COGS/gross profit, operating profit, other result, PBT, tax, PAT and parent/NCI bridges reconcile exactly. B01 row310 current liabilities retained from sidecar text only; total asset/liabilities/equity held null. B03 has CFI, opening cash and FX only; no missing cashflow components inferred.",
@@ -2087,7 +2111,7 @@
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "5a332f4f9a16bee785c40230b04583603dad4a429271a3d397b05add2cfabc8a",
       "core_financial_extraction_evidence_attempt_count": 1,
-      "financial_line_items_status": "source_text_partial_b01_b03_pending",
+      "financial_line_items_status": "source_text_partial_b01_b03_and_operating_detail_pending",
       "financial_line_items_extracted_fields": [
         "admin_expense",
         "cashflow_period_basis",
@@ -2113,11 +2137,13 @@
         "investing_cash_flow_ytd",
         "cash_beginning",
         "cash_beginning_reported_ytd",
-        "current_liabilities"
+        "current_liabilities",
+        "non_controlling_interest_profit",
+        "eps"
       ],
       "financial_line_items_source": "reports/raw/GAS/auto-gas-20261021/853ad22dfe045d24.pdf.extracted.json",
-      "financial_line_items_updated_at": "2026-11-03T15:58:00+07:00",
-      "financial_line_items_note": "Bổ sung các dòng đọc được từ LCTT hợp nhất Q1/2026: CFI 509.484.606.752 VND; tiền đầu năm 5.567.998.965.715 VND; ảnh hưởng tỷ giá 367.185.405 VND. CFO, CFF và biến động tiền thuần OCR không đủ rõ nên vẫn để trống, không suy ra bằng phép cân đối. Q1/2026 partial source review: row310 current liabilities, CFI 509,484,606,752 VND, opening cash 5,567,998,965,715 VND and FX effect 367,185,405 VND retained. B01 total balance totals and B03 CFO/CFF/net/closing remain null; no plug. B02 bridges exact.",
+      "financial_line_items_updated_at": "2026-11-03T16:05:00+07:00",
+      "financial_line_items_note": "Bổ sung các dòng đọc được từ LCTT hợp nhất Q1/2026: CFI 509.484.606.752 VND; tiền đầu năm 5.567.998.965.715 VND; ảnh hưởng tỷ giá 367.185.405 VND. CFO, CFF và biến động tiền thuần OCR không đủ rõ nên vẫn để trống, không suy ra bằng phép cân đối. Q1/2026 partial source review: row310 current liabilities, CFI 509,484,606,752 VND, opening cash 5,567,998,965,715 VND and FX effect 367,185,405 VND retained. B01 total balance totals and B03 CFO/CFF/net/closing remain null; no plug. B02 bridges exact. Additional Q1/2026 audit: B02 main profit/tax/parent-NCI bridges are exact; EPS=1,177. Known operating-profit components leave 334,961,244 VND (0.00892%) unassigned, likely an omitted B02 row; keep null, no plug. B03 row40 candidate CFF 314,542,385,295 VND retained only in candidate metadata pending cash bridge; no top-level CFF.",
       "financial_line_items_prior_values": {
         "revenue": null,
         "cost_of_goods_sold": null,
@@ -2147,7 +2173,7 @@
       },
       "financial_line_items_rejected_values": {},
       "core_financial_extraction_manual_terminal": true,
-      "core_financial_extraction_updated_at": "2026-11-03T15:58:00+07:00",
+      "core_financial_extraction_updated_at": "2026-11-03T16:05:00+07:00",
       "financial_line_items_schema_version": "2026-10-27-other-statements-source-fields-v12",
       "financial_line_items_schema_updated_at": "2026-10-30T16:16:15+00:00",
       "core_financial_extraction_stable_evidence_count": 9,
@@ -2195,7 +2221,7 @@
       "other_income": 862.001024,
       "other_expense": 402.099569,
       "income_tax_deferred": -3573.786295,
-      "bank_non_controlling_profit": 49512.136249,
+      "bank_non_controlling_profit": 49.512136249,
       "investing_cash_flow": 509484.606752,
       "investing_cash_flow_ytd": 509484.606752,
       "cash_beginning": 5567998.965715,
@@ -2219,14 +2245,16 @@
         "income_tax": 760568383274,
         "net_profit": 2994115272577,
         "net_profit_attributable": 2944603136328,
-        "non_controlling_interest_profit": 49512136249,
         "cashflow_cfi": 509484606752,
         "cash_beginning": 5567998965715,
         "foreign_exchange_effect": 367185405,
         "current_liabilities": 16867209085764,
         "opening_2025_total_assets_comparative": 93568198109790,
         "opening_2025_total_equity_comparative": 67653389117997,
-        "opening_2025_current_liabilities_comparative": 20573719383413
+        "opening_2025_current_liabilities_comparative": 20573719383413,
+        "eps": 1177,
+        "share_of_profit_associates": null,
+        "source_candidate_financing_cash_flow_ytd": 314542385295
       },
       "financial_statement_checks": {
         "gross_profit_residual_vnd": 0,
@@ -2234,7 +2262,14 @@
         "operating_profit_residual_vnd": 18703475426,
         "pretax_residual_vnd": 0,
         "tax_pat_residual_vnd": 0,
-        "parent_nci_residual_vnd": 0
+        "parent_nci_residual_vnd": null,
+        "operating_profit_known_components_residual_vnd": 334961244,
+        "operating_profit_known_components_relative_difference_percent": 0.008922250401505181,
+        "operating_profit_detail_status": "PENDING: source OCR omits/does not identify one small component between financial expense and row11 operating profit; known components residual 334,961,244 VND (0.00892%). Keep missing component null; do not plug.",
+        "b01_total_assets_status": "PENDING OCR current-year row270 total is clipped/misaligned; comparator total assets opening 93,568,198,109,790 VND is retained separately.",
+        "b01_total_liabilities_status": "PENDING total row300 not read.",
+        "b01_equity_status": "PENDING row400 current-year not read; comparator equity 67,653,389,117,997 VND is retained separately.",
+        "cashflow_status": "PENDING: only CFI row30, opening cash row60, FX row61 confidently legible; CFO row20, CFF row40 candidate not yet cash-bridge verified, net change row50 and closing cash row70 unclear."
       },
       "q1_2026_source_partial_review": {
         "sourceDocumentId": "543696",
@@ -2318,6 +2353,35 @@
           "note": "Source text row 30 CFI, row 60 opening cash, row 61 FX are legible. CFO, CFF, net movement and closing cash are incomplete/misaligned; remain null."
         },
         "visualReviewStatus": "PENDING: PDF pages did not render; only archived sidecar text used."
+      },
+      "non_controlling_interest_profit": 49.512136249,
+      "eps": 1177,
+      "cashflow_source_partial_reconciliation": {
+        "status": "SOURCE_TEXT_PARTIAL_BRIDGE_PENDING",
+        "source_url": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/GAS_Baocaotaichinh_Q1_2026_Hopnhat.pdf",
+        "source_archive_file": "reports/raw/GAS/auto-gas-20261021/853ad22dfe045d24.pdf",
+        "source_document_id": "543696",
+        "source_pages": {
+          "pdf_page": 7,
+          "printed_page": 4
+        },
+        "source_unit": "VND",
+        "verified_readable_values_vnd": {
+          "investing_cash_flow_ytd": 509484606752,
+          "cash_beginning": 5567998965715,
+          "foreign_exchange_effect_ytd": 367185405
+        },
+        "candidate_not_promoted_values_vnd": {
+          "financing_cash_flow_ytd": 314542385295
+        },
+        "unreadable_or_unreconciled_values": {
+          "operating_cash_flow_ytd": null,
+          "financing_cash_flow_ytd": null,
+          "net_cash_change_ytd": null,
+          "cash_ending": null
+        },
+        "note": "B03 row30 CFI, row60 opening cash and row61 FX are source-text readable. Row40 appears 314,542,385,295 VND inside the financing section but the flow bridge is not available; keep as a candidate only and do not promote to top-level. CFO, net change and closing cash remain null.",
+        "no_balancing_plug": true
       }
     },
     {
