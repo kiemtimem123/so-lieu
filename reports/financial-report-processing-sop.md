@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.7
+- Phiên bản: 1.8
 - Ngày ban hành: 03/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -199,6 +199,57 @@ Người dùng đã chỉ đạo **tiếp tục, không dừng toàn bộ tiến
 - B03 page PDF 7 (trang in 4): CFI **509.484.606.752 VND**; opening cash **5.567.998.965.715 VND**; FX effect **367.185.405 VND**. OCR row40 appears to contain a candidate CFF **314.542.385.295 VND**, but the cashflow bridge is incomplete; keep only in candidate metadata, not the top-level verified cashflow field. CFO, net cash movement and closing cash remain null.
 - Trạng thái Q1/2026: B02 core values source-text PASS; B01 totals PENDING; B03 partial, with only CFI/opening cash/FX promoted and CFF candidate held; direct visual review PENDING. Data commit `b7588eaf2143156577e604153289411605eb6606`.
 - Q4/2024 total liabilities and Q4/2025 liabilities/equity/cashflow details also remain PENDING. Per user direction to continue, mark GAS exception work as processed to this checkpoint and advance the active ticker to **PLX**, preserving all GAS pending fields and not re-running finished text extraction.
+
+### 10.10 Cập nhật bổ sung GAS Q4/2025 — 03/11/2026
+
+Mục này bổ sung kết quả kiểm tra sau khi đã ghi nhận GAS Q1/2026 và xác định PLX là mã tiếp theo. Không mở lại trích xuất B02 của GAS Q4/2025; chỉ cập nhật phép đối chiếu và provenance mới.
+
+#### B02 — toàn bộ cầu nối tổng số PASS
+
+Nguồn gốc: VietstockFinance document ID **531505**, BCTC hợp nhất Q4/2025, PDF `https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/GAS_Baocaotaichinh_Q4_2025_Hopnhat.pdf`, archive `reports/raw/GAS/auto-gas-20261021/d93ac1474c125a66.pdf`, sidecar `.pdf.extracted.json`. PDF gốc 17.488.205 byte không mở được qua trình đọc web (lỗi giới hạn Content-Length); không tuyên bố đã xem trực quan PDF gốc Q4.
+
+Raw VND từ B02:
+- Revenue **43.683.070.609.001**; COGS **39.890.266.518.331**; gross profit **3.792.804.090.670**.
+- Financial income **428.311.439.319**; financial expense **82.785.588.700**; share of profit associates **19.038.436.670**; selling expense **630.754.891.701**; admin expense **1.763.015.602.591**.
+- Operating profit **1.763.597.883.667**; other income **16.961.158.939**; other expense **37.586.153.493**; PBT **1.742.972.889.113**.
+- Current tax **360.741.782.309**; deferred tax **-5.198.868.677**; total tax **355.542.913.632**; PAT **1.387.429.975.481**; parent PAT **1.361.084.899.485**; NCI **26.345.075.996**; EPS **435**.
+
+Bridge results are exact, all residuals **0 VND**:
+- Revenue − COGS = gross profit.
+- Gross profit + financial income − financial expense + share of profit associates − selling expense − admin expense = operating profit **1.763.597.883.667 VND**.
+- Operating profit + other income − other expense = PBT.
+- Current tax + deferred tax = total tax; PBT − total tax = PAT.
+- Parent PAT + NCI = consolidated PAT.
+
+#### B03 — đã bổ sung dòng tiền quý IV được hỗ trợ bởi hai nguồn YTD cùng phạm vi
+
+Q4 report FY2025 YTD raw VND: CFO **13.378.374.377.362**; CFF **-3.352.162.410.986**; capex YTD **-2.330.869.042.369**. Q3/2025 report VietstockFinance document ID **523927**, archive `reports/raw/GAS/auto-gas-20261021/e43210f30cce593e.pdf`, same consolidated scope, 9M YTD raw VND: CFO **12.549.166.835.674**; CFF **-904.798.734.792**.
+
+Standalone Q4, calculated using same-year/same-scope YTD subtraction:
+- CFO = 13.378.374.377.362 − 12.549.166.835.674 = **829.207.541.688 VND** = **829.207,541688 triệu VND**.
+- CFF = -3.352.162.410.986 − (-904.798.734.792) = **-2.447.363.676.194 VND** = **-2.447.363,676194 triệu VND**.
+- These quarter values are promoted to the corresponding standalone `operating_cash_flow` and `financing_cash_flow` fields, with raw YTD values retained in `*_ytd` and the derivation metadata. No balancing plug.
+- CFI YTD/quarter, net cash change, opening cash, closing cash remain PENDING because the Q4 source text does not provide sufficiently reliable values. Capex remains YTD only until a valid 9M baseline is available.
+
+#### B01 — later comparative is now directly visually verified but must remain separate from original Q4/2025
+
+VietstockFinance Q2/2026 consolidated report document ID **555857**, URL `https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/GAS_Baocaotaichinh_Q2_2026_Hopnhat.pdf`; B01 page image directly reviewed (zero-based PDF page index 3, printed page 1; screenshot evidence in conversation `turn168010view0`). Its comparative column for opening 2026 / 31-12-2025 shows:
+- Total liabilities **25.914.808.991.853 VND**, comprising current liabilities **20.573.719.389.418** + long-term liabilities **5.341.089.602.435**.
+- Equity **67.653.389.117.937 VND**.
+- Total assets **93.568.198.109.790 VND**.
+- Comparative balance equation is exact: liabilities + equity = assets, residual **0 VND**.
+
+This later comparative total assets is **36.686.243.114 VND greater** than total assets in the original Q4/2025 report (**93.531.511.866.676 VND**). The Q2/2026 comparative equity is also **60 VND below** the prior Q1/2026 opening comparative equity (**67.653.389.117.997 VND**). Therefore, preserve the Q2/2026 comparative as a separate later-presentation basis under `source_validation.subsequent_comparative_q2_2026`; do not populate original Q4/2025 `total_liabilities` or `equity` from this comparison, and do not overwrite its original reported `total_assets`. Q4/2025 canonical B01 still has total liabilities/equity PENDING; visual review of original Q4 PDF remains pending.
+
+Data commit for this update: `7d24584481eb2b6a962c323b862a3389df7bfb55`.
+
+#### Resume position after GAS
+
+GAS has been reviewed through Q1/2026. Remaining manual exceptions are retained:
+- Q4/2024: original B01 row300 total liabilities OCR truncated; B03 unreadable.
+- Q4/2025: original B01 total liabilities/equity and visual review pending; B03 CFI/net cash/opening/closing pending. CFO and CFF Q4 standalone have now been derived and saved.
+- Q1/2026: B01 totals and B03 bridge pending; B02 detail residual **334.961.244 VND (0,00892%)** remains unattributed; do not plug.
+The active next item is **PLX Q1/2025**, specifically the cross-year opening-cash bridge. Do not restart GAS or repeat the already reconciled GAS P&L extraction.
 
 ## 11. Giới hạn thao tác
 
