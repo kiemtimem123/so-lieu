@@ -4443,9 +4443,9 @@
       "source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%204/IDC_Baocaotaichinh_Q4_2025_Hopnhat.zip",
       "source_index_url": "https://finance.vietstock.vn/IDC/tai-tai-lieu.htm?doctype=1",
       "report_type": "BCTC hợp nhất IDC 2025-Q4 (phát hiện tự động qua VietstockFinance; chờ trích xuất)",
-      "source_pages": "BCTC hợp nhất IDC Q4/2025: bảng cân đối kế toán sidecar OCR trang 8–11, KQKD trang 12. Tổng tài sản 23.201.490.679.523 VND; nợ phải trả 14.938.459.787.767 VND; vốn chủ sở hữu 8.263.030.891.756 VND, cân đối khớp. KQKD riêng quý IV: doanh thu thuần 2.160.138.111.718 VND; giá vốn 1.453.163.128.638 VND; lợi nhuận gộp 706.974.983.080 VND; lợi nhuận thuần từ HĐKD 662.904.333.655 VND; LNTT 659.219.588.033 VND; thuế hiện hành 142.577.559.905 VND; thu nhập thuế hoãn lại 23.353.093.110 VND; LNST 539.995.121.238 VND; LNST cổ đông mẹ 449.103.567.116 VND; EPS 1.183 đồng. Đơn vị lưu triệu VND, làm tròn đến triệu. Chi phí lãi vay OCR mâu thuẫn với tổng chi phí tài chính nên để null; chưa xác minh trực quan ảnh PDF.",
+      "source_pages": "IDC Q4/2025 consolidated report: PDF pages 8–11 B01 (printed 3–6), page 12 B02 (printed 7), pages 13–14 B03 (printed 8–9); visual review 180 DPI from VietstockFinance English member.",
       "quarter_profit_basis": "Dùng cột phát sinh riêng Quý IV năm 2025, không dùng cột cả năm 2025.",
-      "verification_status": "auto_extracted_pending_visual_review",
+      "verification_status": "source_text_reconciled_visual_reviewed",
       "source_validation": {
         "reviewed_at": "2026-10-25",
         "single_source_policy": "Chỉ danh mục VietstockFinance và tệp do danh mục đó liên kết.",
@@ -4453,19 +4453,21 @@
         "source_document_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%204/IDC_Baocaotaichinh_Q4_2025_Hopnhat.zip",
         "listing_title": "Báo cáo tài chính Hợp nhất quý 4 năm 2025  | BCTC Hợp nhất quý 4 năm 2025  | https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY 4/IDC_Baocaotaichinh_Q4_2025_Hopnhat.zip",
         "document_id": "529902",
-        "manually_visual_reviewed": false,
-        "extraction_deferred_for_short_batch": true,
+        "manually_visual_reviewed": true,
+        "extraction_deferred_for_short_batch": false,
         "archived_source_text_reviewed": true,
         "reviewed_pages": [
           8,
           9,
           10,
           11,
-          12
+          12,
+          13,
+          14
         ],
         "review_note": "Sidecar OCR của ZIP BCTC hợp nhất IDC Q4/2025 từ VietstockFinance. Các phương trình bảng cân đối, doanh thu−giá vốn=lợi nhuận gộp và LNTT−thuế net=LNST được kiểm tra. Không coi là xác minh trực quan.",
         "core_source_text_reconciled": true,
-        "core_manually_visual_reviewed": false,
+        "core_manually_visual_reviewed": true,
         "core_source_pages": {
           "balance_pdf_pages": [
             8,
@@ -4519,7 +4521,8 @@
           "net_profit_attributable": 449103567116,
           "nci_profit": 90891554122,
           "eps": 1183,
-          "income_tax_deferred_source_raw_vnd": 23353093110
+          "income_tax_deferred_source_raw_vnd": 23353093110,
+          "interest_expense": -43891490863
         },
         "core_source_checks": {
           "balance_sheet_residual_vnd": 0,
@@ -4530,9 +4533,54 @@
           "other_profit_residual_vnd": 0,
           "pretax_profit_residual_vnd": 0,
           "net_profit_residual_vnd": 0,
-          "parent_nci_residual_vnd": 0
+          "parent_nci_residual_vnd": 0,
+          "interest_expense_exception_vnd": 1419263765
         },
-        "source_scope": "VietstockFinance consolidated report"
+        "source_scope": "VietstockFinance consolidated report",
+        "direct_pdf_visual_audit": {
+          "incomeStatement": {
+            "interestExpenseReportedVnd": -43891490863,
+            "financialExpenseReportedVnd": -42472227098,
+            "interestExpenseExceedsFinanceExpenseByVnd": 1419263765,
+            "exception": "The printed B02 row 23 'In which: interest expense' is visibly (43,891,490,863) VND while row 22 total finance expenses is (42,472,227,098) VND. The subline exceeds its parent by 1,419,263,765 VND. Preserve the visually reported source value and flag the issuer-statement inconsistency; do not adjust finance expense or profit calculations."
+          }
+        },
+        "visual_reviewed_at": "2026-11-04T01:20:00+07:00",
+        "visual_review_artifact_id": 13257699370,
+        "visual_review_workflow_run_id": 41693037890,
+        "visual_review_note": "Đã render và kiểm tra trực quan 7 trang PDF 8–14 từ đúng PDF tiếng Anh trong ZIP VietstockFinance document 529902, 180 DPI. B01 row 270 = row 300 + row 400; dòng 440 đọc rõ 23,201,490,679,523 VND. B02 Q4-only cột đầu tiên được xác nhận; ngoại lệ dòng lãi vay 43,891,490,863 VND cao hơn tổng chi phí tài chính 42,472,227,098 VND by 1,419,263,765 VND, giữ đúng số nguồn và ghi chú. B03 xác nhận FX FY2025 62,830,651 VND (91,523,594 VND là cột so sánh FY2024); FY và Q4 cash bridges đều 0 VND.",
+        "visual_audit": {
+          "status": "PASS_WITH_REPORTED_INTEREST_EXPENSE_SUBLINE_EXCEPTION",
+          "workflowRunId": 41693037890,
+          "artifactId": 13257699370,
+          "artifactName": "vietstock-source-review-IDC-2025-Q4",
+          "artifactSha256": "231a4774ff398d0509dbc6630474f13a5ce9ab301c129ea877cb822d2b6915b8",
+          "sourceWorkflowCommit": "fd26323d14c0b2a5d835e029f584a31f4585ebee",
+          "renderDpi": 180,
+          "renderedPdfPages": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14
+          ],
+          "pageImageSha256": {
+            "IDC_2025-Q4_page_08.png": "ca40a768fb33341170ecc39127e836154442cb41e5177c8fbe15fdfa7294cb1e",
+            "IDC_2025-Q4_page_09.png": "98204f3fdb6b1f06180c94cf2bb33633cc73be83e2c6339774cd3afee9c67424",
+            "IDC_2025-Q4_page_10.png": "9610383a4e6f6bd55342487a77702610c52ad1189644b190ba428bfb5f3c9755",
+            "IDC_2025-Q4_page_11.png": "d45834db01dd61614cf43bb405debc0f1268e985f047e4bbb1f55125e4870d7b",
+            "IDC_2025-Q4_page_12.png": "dbaf42ae859426c6ddbf2783da5215a99e48658f66bd4fcf126a8b076c8bba44",
+            "IDC_2025-Q4_page_13.png": "6d288ae683f32d6179b1fc8c481fd59709716a92d74a23c86c4a06d1ec67c079",
+            "IDC_2025-Q4_page_14.png": "39e55f43a3a9636fee070d0c271748508644dcc1b32ec6717376d752283e5211"
+          },
+          "findings": {
+            "B01": "Assets 23,201,490,679,523; liabilities 14,938,459,787,767; equity 8,263,030,891,756; row 440 exactly 23,201,490,679,523.",
+            "B02": "Q4-only column visibly confirmed; all aggregate bridges exact; interest-expense subline is greater than finance expense total by 1,419,263,765 VND.",
+            "B03": "FY 2025 CFO 3,913,940,809,873; CFI -7,009,893,958,684; CFF 1,460,905,190,082; net -1,635,047,958,729; FX 62,830,651; ending cash 553,052,678,239. Q4 standalone is same-basis subtraction from 9M/2025; all bridges residual 0."
+          }
+        }
       },
       "published_at": "2026-01-29",
       "source_archive_file": "reports/raw/IDC/auto-idc-20261021/5ff8f3ce069a369e.zip",
@@ -4542,7 +4590,7 @@
       "core_financial_extraction_unverified_values": {
         "current_assets": null,
         "cash_and_equivalents": null,
-        "short_term_investments": 909607,
+        "short_term_investments": null,
         "short_term_receivables": null,
         "inventory": null,
         "non_current_assets": null,
@@ -4587,9 +4635,9 @@
         "total_assets",
         "total_liabilities"
       ],
-      "core_financial_extraction_status": "auto_extracted_pending_visual_review",
-      "core_financial_extraction_note": "Khôi phục số liệu lõi và chi tiết từ BCTC hợp nhất VietstockFinance, đúng kỳ phát sinh quý. Các trường raw VND, trang PDF và phép kiểm tra được lưu kèm; không thay đổi dòng tiền đã được đối chiếu trước đây.",
-      "verification_status_note": "Khôi phục từ BCTC hợp nhất VietstockFinance; phép cân đối và cầu nối lợi nhuận đã kiểm tra bằng VND gốc. Chờ đối chiếu ảnh PDF trực quan.",
+      "core_financial_extraction_status": "source_text_reconciled_visual_reviewed",
+      "core_financial_extraction_note": "B01 and B02 core totals visually reviewed; B01 totals reconcile exactly. B02 profit/tax/PAT/parent-NCI all bridge to zero. Reported interest-expense subline exception is separately flagged. B03 same-original-basis Q4 normalization and cash bridges are exact.",
+      "verification_status_note": "B01/B02/B03 visually reviewed. B01 row 440 reads 23,201,490,679,523 VND; B/S and all asset/liability components reconcile exactly. B02 Q4-only column bridges reconcile except source-reported interest-expense subline > total finance expense by 1,419,263,765 VND; retain disclosed figure with warning, do not alter profit aggregates. B03 FX corrected from prior-period OCR carryover 91,523,594 to current FY2025 source 62,830,651 VND, causing FY and Q4 cash bridges to reconcile exactly.",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "eae258cc2a64534bd0806a63ba551ac87b45c22ca12bb5d42ee18b52c8fc1e04",
       "core_financial_extraction_evidence_attempt_count": 0,
@@ -4600,20 +4648,18 @@
         "financing_cash_flow_ytd_magnitude",
         "gross_profit_gross_profit_equation_check",
         "gross_profit_magnitude",
-        "interest_expense_magnitude",
         "operating_cash_flow_ytd_magnitude",
         "revenue_gross_profit_equation_check",
-        "revenue_magnitude",
-        "interest_expense"
+        "revenue_magnitude"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-30T16:17:20+00:00",
-      "financial_line_items_note": "Các dòng bảng cân đối và KQKD đã khôi phục từ trang nguồn; chỉ tiêu chi phí lãi vay Q4/2025 bị loại do OCR không khớp tổng chi phí tài chính. Chờ kiểm tra ảnh PDF.",
+      "financial_line_items_note": "B01/B02/B03 PDF pages 8–14 visually reviewed. Q4-only B02 values confirmed. Interest-expense subline 43,891,490,863 VND is visually clear but exceeds total finance expenses 42,472,227,098 VND by 1,419,263,765 VND; retain as reported with explicit source exception, do not use as a bridge input. Cashflow FX corrected to 62,830,651 VND FY and -2,537,404 VND Q4 standalone. Interest expense subline is visually confirmed at 43,891,490,863 VND, but exceeds total finance expenses 42,472,227,098 VND by 1,419,263,765 VND; display as source-reported exception, never use to alter aggregates.",
       "short_term_investments": 6807015,
-      "interest_expense": null,
+      "interest_expense": 43891,
       "admin_expense": 92139,
       "operating_cash_flow_ytd": 3913941,
       "financing_cash_flow_ytd": 1460905,
-      "cashflow_period_basis": "quarterly_normalized_from_ytd",
+      "cashflow_period_basis": "quarterly_normalized_from_ytd_same_original_basis",
       "financial_line_items_extracted_fields": [
         "cash_beginning",
         "cash_beginning_reported_ytd",
@@ -4661,17 +4707,18 @@
         "income_tax",
         "net_profit",
         "net_profit_attributable",
-        "eps"
+        "eps",
+        "interest_expense"
       ],
-      "financial_line_items_status": "auto_extracted_pending_visual_review",
+      "financial_line_items_status": "source_text_reconciled_visual_reviewed",
       "financial_line_items_schema_version": "2026-10-27-other-statements-source-fields-v12",
       "financial_line_items_schema_updated_at": "2026-10-30T16:17:20+00:00",
       "financial_line_items_source": "reports/raw/IDC/auto-idc-20261021/5ff8f3ce069a369e.zip",
-      "financial_line_items_updated_at": "2026-10-31T10:40:00+07:00",
+      "financial_line_items_updated_at": "2026-11-04T01:20:00+07:00",
       "operating_cash_flow": 970200,
-      "operating_cash_flow_calculation": "Quý riêng = YTD quý hiện tại trừ YTD quý liền trước cùng năm.",
+      "operating_cash_flow_calculation": "Q4 standalone = FY2025 CFO from VietstockFinance IDC Q4/2025 report minus 9M/2025 CFO from VietstockFinance IDC Q3/2025 report, same original reported basis.",
       "financing_cash_flow": 1120543,
-      "financing_cash_flow_calculation": "Quý riêng = YTD quý hiện tại trừ YTD quý liền trước cùng năm.",
+      "financing_cash_flow_calculation": "Q4 standalone = FY2025 CFF from VietstockFinance IDC Q4/2025 report minus 9M/2025 CFF from VietstockFinance IDC Q3/2025 report.",
       "financial_line_items_prior_values": {
         "admin_expense": null,
         "cash_and_equivalents": null,
@@ -4720,12 +4767,7 @@
         "other_expense": null,
         "other_profit": null
       },
-      "financial_line_items_rejected_values": {
-        "interest_expense": {
-          "value": 43891,
-          "reason": "OCR line hierarchy places interest expense above total finance expense; cannot be correct as a component. Leave null pending better source alignment."
-        }
-      },
+      "financial_line_items_rejected_values": {},
       "core_financial_extraction_stable_evidence_updated_at": "2026-10-23T20:02:37+00:00",
       "current_assets": 9856822,
       "non_current_assets": 13344669,
@@ -4746,7 +4788,7 @@
       "income_tax_deferred": -23353,
       "income_tax": 119224,
       "eps": 1183,
-      "core_financial_extraction_updated_at": "2026-10-31T10:40:00+07:00",
+      "core_financial_extraction_updated_at": "2026-11-04T01:20:00+07:00",
       "core_financial_extraction_source": "reports/raw/IDC/auto-idc-20261021/5ff8f3ce069a369e.zip.extracted.json",
       "core_financial_extraction_pages": [
         8,
@@ -4757,64 +4799,69 @@
       ],
       "investing_cash_flow": -2329375,
       "net_cash_change": -238631,
-      "foreign_exchange_effect": 26,
+      "foreign_exchange_effect": -3,
       "cash_beginning": 791687,
       "cash_ending": 553053,
       "investing_cash_flow_ytd": -7009894,
       "net_cash_change_ytd": -1635048,
-      "foreign_exchange_effect_ytd": 92,
+      "foreign_exchange_effect_ytd": 63,
       "cash_beginning_reported_ytd": 2188038,
       "cash_ending_reported_ytd": 553053,
-      "investing_cash_flow_calculation": "Quý riêng = YTD quý hiện tại trừ YTD quý liền trước cùng năm.",
-      "net_cash_change_calculation": "Quý riêng = dòng 50 YTD hiện tại trừ dòng 50 YTD kỳ trước cùng năm.",
-      "foreign_exchange_effect_calculation": "Ảnh hưởng tỷ giá quý riêng = FX YTD hiện tại trừ FX YTD kỳ trước cùng năm.",
-      "cash_beginning_calculation": "Số dư đầu quý theo số cuối quý liền trước; số đầu năm theo báo cáo YTD lưu riêng.",
-      "cash_ending_calculation": "Theo dòng 70 báo cáo nguồn; Q3/2025 đối chiếu thêm dòng tiền và tương đương tiền Bảng cân đối kế toán.",
+      "investing_cash_flow_calculation": "Q4 standalone = FY2025 CFI from VietstockFinance IDC Q4/2025 report minus 9M/2025 CFI from VietstockFinance IDC Q3/2025 report, same original reported basis.",
+      "net_cash_change_calculation": "Q4 standalone = FY2025 line 50 minus 9M/2025 line 50.",
+      "foreign_exchange_effect_calculation": "Q4 standalone FX = FY2025 FX on page 14 (62,830,651 VND) minus 9M/2025 FX on IDC Q3 page 14 (65,368,055 VND), resulting in -2,537,404 VND.",
+      "cash_beginning_calculation": "Q4 opening cash equals reported cash at 30 September 2025 (Q3 closing) 791,686,559,919 VND.",
+      "cash_ending_calculation": "Reported cash and cash equivalents at 31 December 2025 from B01/B03, 553,052,678,239 VND.",
       "cashflow_source_reconciliation": {
         "source_policy": "Only VietstockFinance document catalog and directly linked consolidated BCTC.",
         "source_index_url": "https://finance.vietstock.vn/IDC/tai-tai-lieu.htm?doctype=1",
         "original_period_source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%204/IDC_Baocaotaichinh_Q4_2025_Hopnhat.zip",
         "selected_cashflow_source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%204/IDC_Baocaotaichinh_Q4_2025_Hopnhat.zip",
-        "selected_cashflow_source_period": "2025-Q4 current report",
+        "selected_cashflow_source_period": "FY2025 current-period report; Q4 standalone = FY2025 YTD minus 9M/2025 same-original-basis comparative",
         "selected_cashflow_source_archive_file": "reports/raw/IDC/auto-idc-20261021/5ff8f3ce069a369e.zip.extracted.json",
         "selected_cashflow_source_pages": "sidecar pages 13-14; printed report pages 8-9",
-        "selected_cashflow_source_basis": "FY2025 current-period report column",
-        "source_statement_period_basis": "YTD source statement normalized to standalone quarter using current YTD minus prior same-year YTD",
+        "selected_cashflow_source_basis": "Original reported FY2025 basis; Q4 normalized from FY2025 YTD less original 9M/2025 Q3 YTD.",
+        "source_statement_period_basis": "Q4 standalone = FY2025 YTD from IDC Q4/2025 report minus 9M/2025 YTD from original IDC Q3/2025 report. No later restated basis is mixed.",
         "unit": "display values in million VND; raw source values retained in VND",
         "relative_tolerance_percent": 0.01,
         "selected_values_not_adjusted_for_tolerance": true,
         "no_balancing_plug": true,
-        "visual_review": "archived_OCR_text_reconciled_visual_review_pending",
+        "visual_review": "PASS: PDF pages 8-14 rendered at 180 DPI and directly inspected.",
         "selected_values_raw_vnd": {
           "ytd": {
             "cfo": 3913940809873,
             "cfi": -7009893958684,
             "cff": 1460905190082,
             "net_cash_change": -1635047958729,
-            "fx": 91523594,
+            "fx": 62830651,
             "cash_beginning": 2188037806317,
-            "cash_ending": 553052678239
+            "cash_ending": 553052678239,
+            "capital_expenditure": -3103468210215,
+            "dividends_paid": -1300232590297
           },
           "quarter": {
             "cfo": 970200007993,
             "cfi": -2329374796016,
             "cff": 1120543443747,
             "net_cash_change": -238631344276,
-            "fx": 26155539,
+            "fx": -2537404,
             "cash_beginning": 791686559919,
-            "cash_ending": 553052678239
+            "cash_ending": 553052678239,
+            "capital_expenditure": -1300428928495,
+            "dividends_paid": -654131953577
           }
         },
         "calculations": {
           "quarter_flow_sum_residual_raw_vnd": 0,
           "ytd_flow_sum_residual_raw_vnd": 0,
-          "quarter_cash_bridge_residual_raw_vnd": -28692943,
-          "ytd_cash_bridge_residual_raw_vnd": -28692943,
+          "quarter_cash_bridge_residual_raw_vnd": 0,
+          "ytd_cash_bridge_residual_raw_vnd": 0,
           "quarter_flow_components_relative_difference_percent": 0,
           "ytd_flow_components_relative_difference_percent": 0,
-          "quarter_cash_bridge_relative_difference_percent": 0.005187833923728041,
-          "ytd_cash_bridge_relative_difference_percent": 0.005187833923728041,
+          "quarter_cash_bridge_relative_difference_percent": 0,
+          "ytd_cash_bridge_relative_difference_percent": 0,
           "quarter_flows_are_ytd_delta": true,
+          "quarter_cash_beginning_matches_previous_close": true,
           "rounding_method": "Subtract exact raw VND YTD values first, then round display values to nearest million VND"
         },
         "quarter_flow_components_within_tolerance": true,
@@ -4829,8 +4876,8 @@
           "fx": 0
         },
         "quarter_cash_beginning_matches_previous_close": true,
-        "quarter_bridge_status": "PASS_WITHIN_TOLERANCE",
-        "ytd_bridge_status": "PASS_WITHIN_TOLERANCE",
+        "quarter_bridge_status": "PASS",
+        "ytd_bridge_status": "PASS",
         "source_revision": {
           "prior_snapshot_values": {
             "operating_cash_flow": 836453742,
@@ -4839,9 +4886,29 @@
             "financing_cash_flow_ytd": 371657217,
             "cashflow_period_basis": "quarterly_reported"
           },
-          "reason": "Dùng nguồn/comparative VietstockFinance được chọn, không điều chỉnh số để ép khớp."
+          "reason": "Corrected FY2025 FX from 91,523,594 (prior-year comparative-column value misread by OCR) to 62,830,651 VND, confirmed on rendered PDF page 14. FY2025 and Q4 standalone cash bridges now exact."
         },
-        "status": "NEEDS_MANUAL_REVIEW_SOURCE_VISUAL_PENDING"
+        "status": "PASS_ORIGINAL_BASIS_VISUALLY_REVIEWED_WITH_INTEREST_SUBLINE_EXCEPTION",
+        "visual_audit": {
+          "workflowRunId": 41693037890,
+          "artifactId": 13257699370,
+          "renderDpi": 180,
+          "pdfPages": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14
+          ],
+          "ytdFlowResidualRawVnd": 0,
+          "ytdCashBridgeResidualRawVnd": 0,
+          "quarterFlowResidualRawVnd": 0,
+          "quarterCashBridgeResidualRawVnd": 0,
+          "fxVisualConfirmationVnd": 62830651,
+          "previousYearComparativeFxVnd": 91523594
+        }
       },
       "financial_line_items_value_corrections": {
         "admin_expense": {
@@ -4926,13 +4993,15 @@
         },
         "foreign_exchange_effect": {
           "previous_value": 26,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "new_value": -3,
+          "source_value_vnd": -2537404,
+          "reason": "Recomputed Q4 standalone FX from visually checked B03 page 14: FY2025 62,830,651 minus 9M/2025 65,368,055 = -2,537,404 VND."
         },
         "foreign_exchange_effect_ytd": {
           "previous_value": 92,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "new_value": 63,
+          "source_value_vnd": 62830651,
+          "reason": "B03 page 14 visually confirms current FY2025 FX 62,830,651 VND; 91,523,594 VND belongs to FY2024 comparative column."
         },
         "gross_profit": {
           "previous_value": 706975,
@@ -5050,9 +5119,16 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "short_term_investments": {
-          "previous_value": 6807015,
-          "new_value": 909607,
-          "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+          "previous_value": 909607,
+          "new_value": 6807015,
+          "source_value_vnd": 6807014517859,
+          "reason": "Visually confirmed B01 row 120; corrected old OCR/parser candidate to source-reported short-term investments."
+        },
+        "interest_expense": {
+          "previous_value": null,
+          "new_value": 43891,
+          "source_value_vnd": -43891490863,
+          "reason": "Visually confirmed B02 row 23 on PDF page 12. Retain the printed source value despite a reported parent/subline inconsistency: the subline exceeds row 22 total finance expenses by 1,419,263,765 VND. This value is not used to derive operating profit or any aggregate."
         }
       },
       "cashflow_enrichment_preservation": {
@@ -5064,7 +5140,7 @@
       "other_income": 10213,
       "other_expense": 13897,
       "other_profit": -3685,
-      "income_statement_source_review_status": "source_text_reconciled_pending_visual_review",
+      "income_statement_source_review_status": "source_text_reconciled_visual_reviewed_with_reported_interest_expense_exception",
       "income_statement_source_pages": {
         "pdf_pages": [
           12
@@ -5108,7 +5184,9 @@
         "net_profit_attributable": 449103567116,
         "nci_profit": 90891554122,
         "eps": 1183,
-        "income_tax_deferred_source_raw_vnd": 23353093110
+        "income_tax_deferred_source_raw_vnd": 23353093110,
+        "interest_expense": -43891490863,
+        "interest_expense_vs_financial_expense_excess_vnd": 1419263765
       },
       "income_statement_source_checks": {
         "gross_profit_residual_vnd": 0,
@@ -5116,9 +5194,10 @@
         "other_profit_residual_vnd": 0,
         "pretax_profit_residual_vnd": 0,
         "net_profit_residual_vnd": 0,
-        "parent_nci_residual_vnd": 0
+        "parent_nci_residual_vnd": 0,
+        "interest_expense_excess_vs_financial_expense_vnd": 1419263765
       },
-      "balance_sheet_source_review_status": "source_text_reconciled_pending_visual_review",
+      "balance_sheet_source_review_status": "source_text_reconciled_visual_reviewed",
       "balance_sheet_source_pages": {
         "pdf_pages": [
           8,
@@ -5152,9 +5231,16 @@
       "balance_sheet_source_checks": {
         "balance_sheet_residual_vnd": 0,
         "current_noncurrent_assets_residual_vnd": 0,
-        "current_long_liabilities_residual_vnd": 0
+        "current_long_liabilities_residual_vnd": 0,
+        "row440_residual_vnd": 0
       },
-      "income_tax_deferred_source_raw_vnd": 23353093110
+      "income_tax_deferred_source_raw_vnd": 23353093110,
+      "capital_expenditure": -1300429,
+      "capital_expenditure_ytd": -3103468,
+      "dividends_paid": -654132,
+      "dividends_paid_ytd": -1300233,
+      "cashflow_original_source_review_status": "source_text_reconciled_visual_reviewed",
+      "processedAt": "2026-11-04T01:20:00+07:00"
     },
     {
       "symbol": "IDC",
