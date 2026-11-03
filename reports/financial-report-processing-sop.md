@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.23
+- Phiên bản: 1.24
 - Ngày ban hành: 03/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -688,6 +688,17 @@ Nguồn chỉ dùng VietstockFinance và các tệp liên kết tại danh mục
 - Existing top-level Q4/2024 cashflow remains on the selected FY2025 comparative basis already stored in `cashflow_source_reconciliation`; this selected basis is not overwritten. Original FY2024 B03 sidecar values and residuals are preserved separately in `source_validation.original_q4_2024_cashflow_ytd_raw_vnd` and `original_cashflow_issue`.
 - Status: B01/B02 source-text PASS, original B03 PENDING due material OCR/source-text inconsistency; visual review all statements PENDING. Data commit `fcfd329c7790da1c72b2bb5cf7a4c77d5aa75760`.
 - Theo thứ tự kỳ, tiếp tục **IDC Q1/2025** từ archive `reports/raw/IDC/auto-idc-20261021/5b3809b3492cb8ac.pdf`. Không làm lại Q1–Q4/2024 core text extraction; giữ các ngoại lệ Q1/2024 selling expense và Q4/2024 original B03.
+
+### 10.13 IDC Q1/2025 — B01/B02/B03 gốc đã đối chiếu, visual pending
+
+- Nguồn: VietstockFinance document ID **503692**, PDF hợp nhất `https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%201/IDC_Baocaotaichinh_Q1_2025_Hopnhat.pdf`; archive `reports/raw/IDC/auto-idc-20261021/5b3809b3492cb8ac.pdf`; sidecar `.pdf.extracted.json`; 62 trang. Đã đọc sidecar pages 9–14: B01 printed pages 4–6 (sidecar p9–11), B02 printed p7 (sidecar p12), B03 printed p8–9 (sidecar p13–14). Không visual verified.
+- B01: current assets **8.117.308.377.501 VND**, non-current assets **11.293.159.720.202**, total assets **19.410.468.097.703**; current liabilities **5.348.738.935.759**, long-term liabilities **6.932.096.358.950**, total liabilities **12.280.835.294.709**, equity **7.129.632.802.994**. Tất cả phương trình tài sản/ngắn+dài hạn/nợ/vốn residual 0.
+- B02 riêng Q1: revenue **1.793.484.296.130 VND**, COGS **1.242.093.459.547**, gross profit **551.390.836.583**, financial income **65.100.177.990**, financial expense **39.020.337.473**, interest expense **36.064.081.688**, share profit associates **360.482.572**, selling expense **28.332.542.856**, admin expense **73.940.266.707**, operating profit **475.558.350.109**, other income **48.854.110.556**, other expense **3.703.813.460**, other profit **45.150.297.096**, PBT **520.708.647.205**, current tax **108.547.172.018**, deferred tax income **4.823.069.417** (normalized tax expense **-4.823.069.417**), total tax **103.724.102.601**, PAT **416.984.544.604**, parent PAT **343.278.910.627**, NCI **73.705.633.977**, EPS **1.040**. All row bridges and parent/NCI allocation residual 0.
+- B03 Q1/2025: CFO **593.194.330.719 VND**, CFI **-745.138.695.014**, CFF **256.704.039.546**, net cash change **104.759.675.251**, opening cash **2.188.037.806.317**, FX **2.753.952**, closing cash **2.292.800.235.520**. Flow/cash bridge residuals 0; closing cash equals B01 cash and equivalents.
+- Cross-period: Q1/2025 B01 comparative opening 31/12/2024 shows total assets **18.800.160.505.704 VND**, liabilities **11.592.512.353.814**, equity **7.207.648.151.890**. Compared with original Q4/2024 B01: assets **+624.848.471**, liabilities **+1.389.873.956**, equity **-765.025.485 VND**. Retain both bases; no overwrite of Q4 source. Q1 B03 opening cash is **2.188.037.806.317 VND**, which is **1.000.991 VND** below Q4 original B01 closing cash **2.188.038.807.308** (relative difference **0,00004575%**); within the 0,01% tolerance, both source values retained unchanged.
+- Q1/2025 comparative P&L column for Q1/2024 differs materially from original Q1/2024 report values; do not use the comparative to overwrite the original Q1/2024 record.
+- Status: B01/B02/B03 source-text PASS, all residuals 0; only cross-period cash opening difference within tolerance, and direct visual review pending. Data commit `089b64d44e884dd6ff31ae3650a1fc41f93eb3b9`.
+- Next: **IDC Q2/2025**, archive `reports/raw/IDC/auto-idc-20261021/48616c2bb9d17c99.zip`. Do not repeat IDC Q1/2025 text extraction or completed 2024 core statements.
 
 ## 11. Giới hạn thao tác
 
