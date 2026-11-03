@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.11
+- Phiên bản: 1.12
 - Ngày ban hành: 03/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -363,6 +363,32 @@ Status: `verified_manual_visual_reconciliation`, B01/B02/B03 PASS, no open core/
 
 #### Resume
 Continue to **GEG Q2/2024**. Its existing Q2 record has B03 selected from the later Q2/2025 comparative while original Q2/2024 source sidecar is archived; inspect original source before changing values. Preserve prior/current comparative differences as separate evidence and do not force balance.
+
+### 10.9 GEG Q2/2024 — original VietstockFinance source reconciled; image review pending
+
+- Nguồn chính: VietstockFinance document ID **471941**, BCTC hợp nhất Q2/2024; URL `https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%202/GEG_Baocaotaichinh_Q2_2024_Hopnhat.pdf`; archive `reports/raw/GEG/auto-geg-20261021/55c5b7c66cb1a05b.pdf`; sidecar `.pdf.extracted.json`; 41 trang.
+- Sidecar gốc lưu text B01 trang in 1–2 (sidecar pages 3–4), B02 trang in 3 (sidecar page 5), B03 trang in 4–5 (sidecar pages 6–7). PDF gốc trực tiếp không mở được qua web PDF reader trong phiên này; do đó **visual review vẫn PENDING** và không đánh dấu `manually_visual_reviewed=true`.
+- B01 raw VND:
+  - Tài sản ngắn hạn **1.806.189.691.416** + tài sản dài hạn **14.257.515.053.426** = tổng tài sản **16.063.704.744.842**.
+  - Nợ ngắn hạn **1.563.146.348.902** + nợ dài hạn **8.630.255.956.975** = tổng nợ **10.193.402.305.877**.
+  - Vốn chủ **5.870.302.438.965**; tổng nợ + vốn chủ = tổng tài sản **16.063.704.744.842**.
+  - Tiền và tương đương tiền **580.960.136.162 VND**. Các phương trình B01 đều residual **0 VND**.
+- B02 quý riêng Q2:
+  - Doanh thu **487.632.741.698** − giá vốn **275.644.401.105** = lợi nhuận gộp **211.988.340.593 VND**.
+  - Doanh thu tài chính **9.116.502.070**; chi phí tài chính **168.916.588.684**; lãi vay **163.438.254.030**; lãi/lỗ công ty liên kết **-2.098.990.934**; chi phí bán hàng **-135.147.589** (giữ nguyên dấu âm in trên báo cáo); chi phí quản lý **28.784.114.212**; lợi nhuận thuần hoạt động **21.440.296.422**.
+  - Thu nhập khác **1.197.591.199** − chi phí khác **1.335.917.189** = lỗ khác **-138.325.990**; PBT **21.301.970.432**.
+  - Thuế hiện hành **15.977.874.103** + thuế hoãn lại **4.097.192.500** = tổng thuế **20.075.066.603**; PAT hợp nhất **1.226.903.829 VND**.
+  - PAT công ty mẹ **21.460.036.310** + NCI **-20.233.132.481** = PAT hợp nhất **1.226.903.829 VND**; EPS **52**. Các cầu nối B02 residual **0 VND**.
+- B03 original Q2 report H1 YTD raw VND:
+  - CFO **495.388.370.938**; CFI **12.532.140.011**; CFF **-156.094.358.264**; net cash change **351.826.152.685**.
+  - FX **28.894.528**; opening cash **229.105.088.949**; closing cash **580.960.136.162**. Flow sum và cash bridge residual đều **0 VND**.
+  - Q1/2024 original B03 (document ID 460145) is the same-year baseline: CFO **134.488.003.107**, CFI **11.861.771.247**, CFF **-160.548.389.615**, net change **-14.198.615.261**, FX **24.507.971**, opening cash **229.105.088.949**, closing cash **214.930.981.659**.
+  - Standalone Q2 = original H1 YTD less original Q1 YTD: CFO **360.900.367.831**, CFI **670.368.764**, CFF **4.454.031.351**, net cash change **366.024.767.946**, FX **4.386.557**, opening cash **214.930.981.659**, closing cash **580.960.136.162**. All Q2 standalone flow and cash bridge residuals **0 VND**. Capex H1 YTD **-2.739.497.026** less Q1 capex **-4.743.605.709** gives Q2 **+2.004.108.683 VND**.
+  - B03 row36 current H1 value is a dash; dividends paid remains `null`, not imputed.
+- Important source-basis correction: the prior Q2/2024 cashflow fields used H1/2024 comparative values from the later Q2/2025 report. Those later comparative YTD values were CFO **542.515.588.853**, CFI **4.654.341.202**, CFF **-195.358.003.939**, net **351.811.926.116**, FX **43.121.097 VND**. They differ materially from the Q2/2024 original report in CFO/CFI/CFF and by **14.226.569 VND** between net change and FX, while beginning/ending cash match. The original Q2/2024 report is now canonical for Q2/2024; later comparative values remain stored as superseded audit evidence and are not deleted.
+- ROA **0,0305%**, ROE **0,0834%**, computed using consolidated quarter PAT divided by average opening/closing assets or equity × 4 × 100.
+- Data commit: `27c237713c4cdb847ef4544201fb5e4806bcf033`.
+- Status: **source-text reconciled; visual review pending**. All arithmetic checks on B01/B02/B03 pass at raw VND precision. Do not repeat core extraction or reselect comparative cashflow source; proceed with GEG **Q3/2024** as requested, while retaining Q2's visual-review marker.
 
 ## 11. Giới hạn thao tác
 
