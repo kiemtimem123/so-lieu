@@ -1634,9 +1634,9 @@
       "report_type": "BCTC hợp nhất GAS 2025-Q4 (phát hiện tự động qua VietstockFinance; chờ trích xuất)",
       "source_pages": "BCTC hợp nhất: 1, 2, 3, 4 (trang in); PDF pages 4, 5, 6, 7.",
       "quarter_profit_basis": "Chỉ lưu số liệu khi cột phát sinh riêng của quý được trích xuất và cân đối hợp lệ.",
-      "verification_status": "manual_review_required_pending_extraction",
+      "verification_status": "pending_b01_liabilities_equity_and_visual_review",
       "source_validation": {
-        "reviewed_at": "2026-10-30T18:20:00+07:00",
+        "reviewed_at": "2026-11-03",
         "single_source_policy": "Chỉ danh mục VietstockFinance và tệp do danh mục đó liên kết.",
         "source_catalog_url": "https://finance.vietstock.vn/GAS/tai-tai-lieu.htm?doctype=1",
         "source_document_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/GAS_Baocaotaichinh_Q4_2025_Hopnhat.pdf",
@@ -1741,7 +1741,34 @@
           "financing_cash_flow_ytd": -3352162410986,
           "capital_expenditure_ytd": -2330869042369
         },
-        "cashflow_source_note": "OCR văn bản nhận diện được các dòng CFO, CFF và chi mua sắm TSCĐ; chưa đọc đủ CFI, net cash change và closing cash. Cần rà soát ảnh PDF trực quan."
+        "cashflow_source_note": "OCR văn bản nhận diện được các dòng CFO, CFF và chi mua sắm TSCĐ; chưa đọc đủ CFI, net cash change và closing cash. Cần rà soát ảnh PDF trực quan.",
+        "cross_period_opening_comparative": {
+          "sourceDocumentId": "543696",
+          "sourceDocumentUrl": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/GAS_Baocaotaichinh_Q1_2026_Hopnhat.pdf",
+          "archiveFile": "reports/raw/GAS/auto-gas-20261021/853ad22dfe045d24.pdf",
+          "sourceScope": "Consolidated",
+          "pdfPages": [
+            4,
+            5
+          ],
+          "printedPages": [
+            1,
+            2
+          ],
+          "opening2025RawVnd": {
+            "totalAssets": 93568198109790,
+            "equity": 67653389117997,
+            "currentLiabilities": 20573719383413
+          },
+          "comparisonToOriginalQ4RawVnd": {
+            "totalAssets": 36686243114,
+            "equity": null,
+            "totalLiabilities": null
+          },
+          "conclusion": "Q1/2026 B01 opening comparative gives 31/12/2025 total assets and total equity, but its total liabilities line is not legible in the OCR. The comparative total assets differs from the Q4/2025 original report by 36,686,243,114 VND; record both bases. Do not derive total liabilities from either balance equation or fill the missing Q4 original value."
+        },
+        "cross_period_opening_comparative_status": "PENDING_REPRESENTATION_DIFFERENCE",
+        "visual_review_status": "PENDING: original Q4/2025 PDF images unavailable in current retrieval; OCR text only; no image review claimed."
       },
       "published_at": "2026-02-03",
       "source_archive_file": "reports/raw/GAS/auto-gas-20261021/d93ac1474c125a66.pdf",
@@ -1764,8 +1791,8 @@
         "eps"
       ],
       "core_financial_extraction_status": "manual_review_required_pending_extraction",
-      "core_financial_extraction_note": "Q4/2025: kết quả kinh doanh khớp các cầu nối doanh thu−giá vốn, LNTT và thuế. Tổng tài sản và tài sản ngắn hạn đọc được; nợ/vốn chủ sở hữu và LCTT OCR không đủ rõ nên giữ trống, không ép cân đối.",
-      "verification_status_note": "Đã khôi phục các dòng nguồn có thể xác nhận; còn thiếu/không khớp một phần bảng cân đối hoặc lưu chuyển tiền tệ, giữ trạng thái rà soát thủ công.",
+      "core_financial_extraction_note": "Q4/2025: kết quả kinh doanh khớp các cầu nối doanh thu−giá vốn, LNTT và thuế. Tổng tài sản và tài sản ngắn hạn đọc được; nợ/vốn chủ sở hữu và LCTT OCR không đủ rõ nên giữ trống, không ép cân đối. Q1/2026 B01 opening comparative cross-check added; it differs from original Q4/2025 total assets by 36,686,243,114 VND and shows opening equity 67,653,389,117,997 VND. No override or back-calculated liabilities.",
+      "verification_status_note": "Q4/2025 B02 profit bridge and total revenue/expense checks remain source-text reconciled. B01 total assets is readable; liabilities/equity are not fully readable. Q1/2026 opening comparative shows total equity 67,653,389,117,997 VND and total assets 93,568,198,109,790 VND, but total liabilities OCR remains unclear and comparative assets differ from original Q4 by 36,686,243,114 VND. Preserve both bases; no backfill. B03 detailed cashflow remains partial. Original PDF visual review pending.",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "4be95133e3c94f591f68ffa827e76cbc50584d9911ff046468998d390480c27a",
       "core_financial_extraction_evidence_attempt_count": 1,
@@ -1911,7 +1938,15 @@
         "operating_cash_flow",
         "capital_expenditure"
       ],
-      "retained_earnings": 11212452.052193
+      "retained_earnings": 11212452.052193,
+      "financial_statement_checks": {
+        "total_assets_original_q4_vnd": 93531511866676,
+        "total_assets_q1_2026_opening_comparative_vnd": 93568198109790,
+        "difference_q1_opening_vs_q4_original_vnd": 36686243114,
+        "total_liabilities_status": "PENDING: original Q4 row300 not readable in OCR; later Q1/2026 comparative row300 also not legible.",
+        "equity_status": "PENDING: Q4 original B01 row400 not clearly extracted; Q1/2026 opening comparative row400 reads 67,653,389,117,997 VND but must be retained as later comparative basis only.",
+        "no_balancing_plug": true
+      }
     },
     {
       "symbol": "GAS",
