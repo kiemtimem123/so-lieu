@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.31
+- Phiên bản: 1.32
 - Ngày ban hành: 04/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -796,3 +796,10 @@ Nguồn chỉ dùng VietstockFinance và các tệp liên kết tại danh mục
 - Không thêm nguồn thứ ba, không dùng tìm kiếm web ngoài hai nguồn đã được người dùng duyệt.
 - Không tự tạo dữ liệu, không suy diễn số thiếu, không thay đổi quy trình chỉ để làm cho một kỳ được PASS.
 - Mọi cập nhật data/checkpoint phải có commit và lưu SHA commit; xác minh lại nội dung sau khi ghi.
+
+
+### 10.18A Note 41 visual amendment — IDC Q2/2026 cash basis
+
+- Note 41 PDF page 66 (printed page 61), rendered 180 DPI, shows cash equivalents 31/12/2025 previously stated **474.491.428.405 VND** + adjustment **890.796.892 VND** = As-restated **475.382.225.297 VND**; cash **78.561.249.834 VND** remains unchanged. This exactly explains the opening cash difference between original Q4/2025 and H1/2026 restated comparative.
+- The Q2 standalone cash bridge still has residual **-890.796.892 VND (0,1463%)**, above 0,01%, because the Q1/2026 values available in the repository are as-published, not restated on the same basis. Mark it as a documented cross-period restatement exception. Do not modify Q1 data, CFO/CFI/CFF, net cash movement, or insert a balancing plug. Only close when the same-basis comparative is directly documented.
+- Note 41 evidence: run **41697391168**, artifact **13262111894**, PDF page 66, image SHA-256 `72a16c5383e506eafd84a10e41c2e9f604fac5b261869f5832371e80b8276d4e`; report `reports/analysis/IDC-Q2-2026-visual-review.md`.
