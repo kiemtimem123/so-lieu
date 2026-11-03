@@ -5607,7 +5607,7 @@
       "quarter_profit_basis": "Dùng cột phát sinh riêng Quý 1 năm 2024; không dùng số so sánh.",
       "verification_status": "pending_visual_review_and_operating_profit_detail_reconciliation",
       "source_validation": {
-        "reviewed_at": "2026-11-03T23:36:00+07:00",
+        "reviewed_at": "2026-11-03T23:39:00+07:00",
         "single_source_policy": "Chỉ danh mục VietstockFinance và tệp do danh mục đó liên kết.",
         "source_catalog_url": "https://finance.vietstock.vn/IDC/tai-tai-lieu.htm?doctype=1",
         "source_document_url": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%201/IDC_Baocaotaichinh_Q1_2024_Hopnhat.pdf",
@@ -5710,7 +5710,7 @@
         "source_archive_file": "reports/raw/IDC/auto-idc-20261021/44694a289f32bd8c.pdf",
         "extraction_sidecar": "reports/raw/IDC/auto-idc-20261021/44694a289f32bd8c.pdf.extracted.json",
         "source_text_reconciled": true,
-        "source_visual_status": "PENDING: direct VietstockFinance PDF open returned Internal Error; WiData IDC documents page is not accessible in current retrieval. No screenshot review claimed.",
+        "source_visual_status": "PENDING: original Q1/2024 PDF and later Q1/2025 PDF are both not directly renderable in current retrieval; sidecar text only.",
         "source_primary_pages": {
           "b01_pdf_pages": [
             9,
@@ -5796,7 +5796,64 @@
             "reason": "Dùng nguồn/comparative VietstockFinance được chọn, không điều chỉnh số để ép khớp."
           },
           "status": "PASS_SOURCE_TEXT_RECONCILED_VISUAL_PENDING"
-        }
+        },
+        "subsequent_q1_2025_comparative_crosscheck": {
+          "sourceDocumentId": "503692",
+          "sourceUrl": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%201/IDC_Baocaotaichinh_Q1_2025_Hopnhat.pdf",
+          "sourceArchiveFile": "reports/raw/IDC/auto-idc-20261021/5b3809b3492cb8ac.pdf",
+          "sourceScope": "Consolidated",
+          "sourceUnit": "VND",
+          "comparativePeriod": "Q1/2024 comparative column in subsequent Q1/2025 report",
+          "valuesRawVnd": {
+            "revenue": 2467056536161,
+            "costOfGoodsSold": 1368769156854,
+            "grossProfit": 1098287379307,
+            "financialIncome": 30956011616,
+            "financialExpense": -34736078687,
+            "interestExpense": -34575846071,
+            "shareOfProfitInAssociates": 80805520,
+            "sellingExpense": -41894251738,
+            "adminExpense": -51089217428,
+            "operatingProfit": 1001604648590,
+            "otherIncome": 1822336145,
+            "otherExpense": -4092556626,
+            "otherProfit": -2270220481,
+            "pretaxProfit": 999334428109,
+            "incomeTaxCurrent": -211205688538,
+            "incomeTaxDeferred": 9045683826,
+            "netProfit": 797174423397,
+            "parentProfit": 695138495107,
+            "nciProfit": 102035928290,
+            "eps": 2095
+          },
+          "checks": {
+            "revenueGrossProfitResidualVnd": 0,
+            "operatingProfitBridgeResidualVnd": 0,
+            "otherProfitResidualVnd": 0,
+            "pretaxProfitResidualVnd": 0,
+            "netProfitResidualVnd": 0,
+            "parentNciResidualVnd": 0
+          },
+          "comparisonVersusOriginalQ1_2024Values": {
+            "financialIncomeDifferenceVnd": 4328071067,
+            "financialExpenseDifferenceVnd": 19112319566,
+            "sellingExpenseDifferenceVnd": 0,
+            "adminExpenseDifferenceVnd": -6965912717,
+            "operatingProfitDifferenceVnd": 792478183095,
+            "otherIncomeDifferenceVnd": -4092317383,
+            "otherExpenseDifferenceVnd": -2761603865,
+            "otherProfitDifferenceVnd": -6853921248,
+            "pretaxProfitDifferenceVnd": 785624261847,
+            "taxCurrentDifferenceVnd": -249695618228,
+            "taxDeferredDifferenceVnd": 9032954934,
+            "netProfitDifferenceVnd": 621966915717,
+            "parentProfitDifferenceVnd": 547352339468,
+            "nciProfitDifferenceVnd": 74614576249,
+            "epsDifference": -11
+          },
+          "conclusion": "Later Q1/2025 comparative values for Q1/2024 differ materially from the Q1/2024 original B02 source text but are internally reconciled. Keep both source bases separately; do not overwrite original Q1/2024 current-period values. This later comparative is a follow-up cross-check/re-presentation candidate and does not constitute visual confirmation of the original report."
+        },
+        "subsequent_comparative_status": "PENDING_REPRESENTATION_OR_RESTATEMENT_RECONCILIATION"
       },
       "published_at": "2024-05-20",
       "source_archive_file": "reports/raw/IDC/auto-idc-20261021/44694a289f32bd8c.pdf",
@@ -5915,7 +5972,7 @@
       "financial_line_items_schema_updated_at": "2026-10-30T16:17:31+00:00",
       "financial_line_items_source": "reports/raw/IDC/auto-idc-20261021/44694a289f32bd8c.pdf",
       "financial_line_items_updated_at": "2026-11-03T23:36:00+07:00",
-      "financial_line_items_note": "IDC Q1/2024: direct PDF and WiData pages could not be accessed for screenshot review. B01/B02/B03 source text values and cashflow retained. EPS current Q1=2,106 VND (old 431 belongs to comparative Q1/2023). B02 selling expense row25 OCR candidate 41.894bn does not reconcile operating profit; keep null; no back-solve.",
+      "financial_line_items_note": "IDC Q1/2024: direct PDF and WiData pages could not be accessed for screenshot review. B01/B02/B03 source text values and cashflow retained. EPS current Q1=2,106 VND (old 431 belongs to comparative Q1/2023). B02 selling expense row25 OCR candidate 41.894bn does not reconcile operating profit; keep null; no back-solve. Cross-check from VietstockFinance Q1/2025 comparative confirms a different, internally reconciled Q1/2024 P&L basis. Preserve the later comparative separately; do not replace original Q1/2024 current-period source values.",
       "financial_line_items_prior_values": {
         "admin_expense": 51089,
         "cash_and_equivalents": null,
@@ -6464,8 +6521,9 @@
       },
       "financial_statement_checks": {
         "operating_profit_bridge_residual_vnd": 776003705179,
-        "operating_profit_bridge_status": "PENDING_SELLING_EXPENSE_OCR_CANDIDATE",
-        "operating_profit_bridge_note": "B02 formula row30 = row20 + (row21-row22) + row24 - (row25+row26). OCR candidate row25 selling expense 41,894,251,738 VND and admin 44,123,304,711 do not reproduce reported operating profit 209,126,465,495; residual 776,003,705,179 VND. Do not back-solve row25; set selling_expense null."
+        "operating_profit_bridge_status": "PENDING_SOURCE_OCR_VS_SUBSEQUENT_COMPARATIVE",
+        "operating_profit_bridge_note": "B02 formula row30 = row20 + (row21-row22) + row24 - (row25+row26). OCR candidate row25 selling expense 41,894,251,738 VND and admin 44,123,304,711 do not reproduce reported operating profit 209,126,465,495; residual 776,003,705,179 VND. Do not back-solve row25; set selling_expense null.",
+        "later_q1_2025_comparative_operating_profit_bridge_residual_vnd": 0
       },
       "financial_line_items_visual_review": {
         "status": "source_text_reconciled_visual_pending_operating_profit_detail",
@@ -6530,6 +6588,20 @@
           "closing_cash_vnd": 1108047375757,
           "flow_sum_residual_vnd": 0,
           "cash_bridge_residual_vnd": 0
+        },
+        "subsequent_q1_2025_comparative_crosscheck": {
+          "source_document_id": "503692",
+          "financial_income_vnd": 30956011616,
+          "financial_expense_vnd": -34736078687,
+          "selling_expense_vnd": -41894251738,
+          "admin_expense_vnd": -51089217428,
+          "operating_profit_vnd": 1001604648590,
+          "pretax_profit_vnd": 999334428109,
+          "net_profit_vnd": 797174423397,
+          "parent_profit_vnd": 695138495107,
+          "nci_profit_vnd": 102035928290,
+          "status": "TEXT_ONLY_LATER_COMPARATIVE_DIFFERENT_FROM_ORIGINAL_PERIOD",
+          "note": "Comparative Q1/2024 column in Q1/2025 report is internally reconciled but materially differs from original Q1/2024 report values; retain separately, do not overwrite."
         }
       },
       "financial_line_items_rejected_values_history": {
