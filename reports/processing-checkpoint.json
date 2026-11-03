@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-03T01:35:00+07:00",
+  "updatedAt": "2026-11-03T04:00:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "Primary source: VietstockFinance document catalog and linked report PDFs. Secondary source: WiData ticker documents tab, used only when the primary source lacks the period or its document link is inaccessible. No third source without user approval.",
   "periodStart": "2024-Q1",
@@ -45,12 +45,12 @@
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "VDS",
-    "status": "VDS_Q4_2024_B01_PAGE1_PARTIAL_VISUAL_REVIEW",
+    "status": "VDS_Q4_2024_SOP_V1_PUBLISHED_B01_PAGE1_PARTIAL",
     "completeForAutomation": false,
     "manualReviewRemaining": true,
     "processedAt": "2026-11-03T03:05:00+07:00",
     "period": "2024-Q4",
-    "periodStatus": "User-supplied original B01 page 1 crop verified; corrected loans row 114 to 2,746,146,081,901 VND. Continue Q4 only; other B01 pages, B02 row29 column and B03 visual review remain pending.",
+    "periodStatus": "SOP v1.0 đã được công bố. Tiếp tục VDS Q4/2024: B01 trang in 1 xác minh một phần; B01 trang còn lại, B02 dòng 29 và B03 còn pending. Không chuyển Q1/2025.",
     "periodCount": 10,
     "reviewedPeriods": [
       "2024-Q1",
@@ -101,7 +101,9 @@
       "q4_2024_b01_page1": "PARTIAL PASS: user screenshot confirms current assets 6,096,485,409,864 VND; cash and cash equivalents 1,207,137,419,234 VND; loans 2,746,146,081,901 VND. Broker lending asset corrected from previous value 2,146,146.081901 million VND.",
       "q4_2024_b01_remaining": "PENDING direct visual review of the remaining balance sheet pages.",
       "q4_2024_b02_row29": "PENDING quarter/comparative column assignment for 25,000,000 VND.",
-      "q4_2024_b03": "Raw YTD source text and arithmetic reconcile, but direct visual review of the original B03 remains pending."
+      "q4_2024_b03": "Raw YTD source text and arithmetic reconcile, but direct visual review of the original B03 remains pending.",
+      "sop_v1": "PUBLISHED: reports/financial-report-processing-sop.md; primary VietstockFinance, secondary WiData, no third source without user approval.",
+      "q4_2024_resume": "PENDING: continue at VDS 2024-Q4; B01 remaining pages, B02 row29 column and B03 visual evidence remain outstanding."
     },
     "reviewedStatements": [
       "B01-CTCK/HN",
@@ -143,7 +145,11 @@
     "crossCheckSourceReportUrl": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/VDS_Baocaotaichinh_Q4_2025_Hopnhat.pdf",
     "partiallyVisuallyReviewedPeriods": [
       "2024-Q4 B01 printed page 1"
-    ]
+    ],
+    "processingSopVersion": "1.0",
+    "processingSopPath": "reports/financial-report-processing-sop.md",
+    "processingSopCommit": "b0d2a6e04fa7026ee6ae60c84a5e4918cfd4787c",
+    "sourceHierarchyVersion": "1.0"
   },
   "symbolStates": {
     "MBB": {
@@ -4166,12 +4172,18 @@
     "latestIdcCorrectionCommit": "51918bc138a5e737434dfded5c418dbd7f22e97f",
     "latestKbcCorrectionCommit": "7c2e3bbfb9c2dbafe43378f1db5850bb2cf4ca0b",
     "activeSymbol": "VIX",
-    "period": "2024-Q3",
+    "period": "2024-Q4",
     "completedWork": [
       "VIX Q2/2024 visually verified from VietstockFinance doc 468963; raw-VND B01/B02/B03b reconciliations passed; standalone cashflows audit-only; data commit 2a830d3389a92e0ca942a4de2ea26057fa9c2eba; render artifact 13146176706",
       "VIX Q3/2024 visually verified from VietstockFinance doc481505; raw-VND B01/B02/B03b and 9M cumulative reconciliations passed; standalone cashflows audit-only; data commit 0831440958aa1b8b320d4107f878704a314e519b; render artifact 13148335964."
     ],
-    "resumePoint": "Continue VIX Q4/2024; do not reprocess Q1/Q2/Q3 2024 or other visually verified periods."
+    "resumePoint": "Continue VIX Q4/2024; do not reprocess Q1/Q2/Q3 2024 or other visually verified periods.",
+    "symbol": "VDS",
+    "status": "pending_manual_source_visual_review",
+    "sopVersion": "1.0",
+    "sopPath": "reports/financial-report-processing-sop.md",
+    "sopCommit": "b0d2a6e04fa7026ee6ae60c84a5e4918cfd4787c",
+    "nextAction": "Inspect remaining B01 pages, B02 row29 with column headers visible, and Q4 B03. If primary PDF unavailable, use WiData only as approved secondary. Do not advance to 2025-Q1."
   },
   "lastCrossTickerAudit": {
     "checkedAt": "2026-10-30T15:17:40.419Z",
@@ -4805,7 +4817,8 @@
       "issues": [
         "Only a cropped portion of original B01 printed page 1 has been visually reviewed; remaining B01 pages and B02/B03 need direct visual evidence.",
         "B02 row 29 candidate 25,000,000 VND still has ambiguous quarter/comparative column assignment. Do not assign until a clear source-page image is available.",
-        "WiData documents page was attempted but unavailable in the current retrieval environment; no WiData values were copied."
+        "WiData documents page was attempted but unavailable in the current retrieval environment; no WiData values were copied.",
+        "Apply reports/financial-report-processing-sop.md v1.0 for remaining verification; do not close Q4 until B01 remaining pages, B02 row29 column assignment, and B03 visual review pass."
       ],
       "validations": {
         "balance_sheet": "PASS source text plus Q4/2025 comparative: total assets 6,394,987,747,825 = liabilities 3,587,377,224,142 + equity 2,807,610,523,683; residual 0. The original Q4/2024 extracted row 440 OCR was misread by 900,000,000 VND; later VietstockFinance comparative and balance equation confirm the correct value.",
@@ -4844,21 +4857,47 @@
         "117": "65,402,452,012 VND — financial asset receivables",
         "111.1": "632,137,419,234 VND — cash",
         "111.2": "575,000,000,000 VND — cash equivalents"
-      }
+      },
+      "periodComplete": false,
+      "processingSopVersion": "1.0"
     }
   },
-  "sourceHierarchy": [
-    {
+  "sourceHierarchy": {
+    "0": {
       "priority": 1,
       "name": "VietstockFinance",
       "urlPattern": "https://finance.vietstock.vn/{ticker}/tai-tai-lieu.htm?doctype=1",
       "rule": "Primary report source."
     },
-    {
+    "1": {
       "priority": 2,
       "name": "WiData",
       "urlPattern": "https://widata.vn/{ticker}?tab=documents",
       "rule": "Fallback only when primary source lacks or cannot provide the report."
-    }
-  ]
+    },
+    "version": "1.0",
+    "primary": {
+      "name": "VietstockFinance",
+      "indexPattern": "https://finance.vietstock.vn/{TICKER}/tai-tai-lieu.htm?doctype=1",
+      "rule": "Ưu tiên 1; chỉ sử dụng PDF liên kết trực tiếp từ danh mục của đúng mã."
+    },
+    "secondary": {
+      "name": "WiData",
+      "urlPattern": "https://widata.vn/{TICKER}?tab=documents",
+      "rule": "Ưu tiên 2; chỉ đối chiếu/bổ sung khi nguồn 1 thiếu, không truy xuất được hoặc không trích xuất rõ; phải ghi provenance riêng."
+    },
+    "tertiary": {
+      "allowed": false,
+      "rule": "Không sử dụng nguồn thứ ba nếu chưa được người dùng chấp thuận rõ ràng."
+    },
+    "conflictResolution": "Không tự động chọn số giữa hai nguồn. Kiểm tra đúng mã/kỳ/phạm vi/đơn vị/cột/phiên bản; lưu cả hai provenance; nếu không phân xử được thì PENDING."
+  },
+  "processingSop": {
+    "version": "1.0",
+    "path": "reports/financial-report-processing-sop.md",
+    "commit": "b0d2a6e04fa7026ee6ae60c84a5e4918cfd4787c",
+    "status": "published",
+    "effectiveDate": "2026-11-03",
+    "scope": "Áp dụng chung cho các mã chứng khoán; không sửa code/schema/pipeline."
+  }
 }
