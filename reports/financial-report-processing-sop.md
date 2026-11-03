@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.18
+- Phiên bản: 1.19
 - Ngày ban hành: 03/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -570,6 +570,42 @@ Continue to **GEG Q2/2024**. Its existing Q2 record has B03 selected from the la
 - Data commit: `4fd6282fbaf785879018cfe645611c59a7cf23e2`.
 - Status: `verified_manual_visual_reconciliation`; B01/B02/B03 PASS, all raw-VND residuals zero. GEG Q4/2025 complete; do not reload/re-extract/re-review unless new contradiction.
 - Kỳ tiếp theo: **GEG Q1/2026**. Preserve historical GEG holds (Q2/Q3 2024 visual, Q1/2025 opening comparative delta, Q2/2025 6,000 VND cash-component residual within tolerance, Q2/2026 cash-basis exception) separately.
+
+### 10.22 GEG Q1/2026 — original VietstockFinance B01/B02/B03 visually verified; complete within cash-bridge tolerance
+
+- Nguồn: VietstockFinance document ID **544855**, BCTC hợp nhất Q1/2026; URL `https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/GEG_Baocaotaichinh_Q1_2026_Hopnhat.pdf`; archive `reports/raw/GEG/auto-geg-20261021/d8dade2f27045243.pdf`; sidecar `.pdf.extracted.json`; PDF 82 trang.
+- Đã xem trực tiếp ảnh gốc: B01 trang in 1–2, B02 trang in 3, B03 trang in 4–5. Evidence refs: `turn499291view0` đến `turn499291view4`.
+- Phạm vi hợp nhất; đơn vị VND. Q1 là kỳ độc lập và cũng là YTD Q1.
+
+#### B01 — raw VND; all principal balances and subtotals exact
+- Tài sản ngắn hạn **1.954.801.640.627** + tài sản dài hạn **13.180.264.763.883** = tổng tài sản **15.135.066.404.510**.
+- Nợ ngắn hạn **745.118.568.386** + nợ dài hạn **7.628.887.919.678** = tổng nợ **8.374.006.488.064**.
+- Vốn chủ **6.761.059.916.446**; tổng nợ + vốn = tổng tài sản, residual **0 VND**.
+- Tiền và tương đương tiền **105.856.793.049** = tiền **46.625.510.309** + tương đương tiền **59.231.282.740**, residual **0**.
+- Các cấu phần tài sản ngắn hạn đã đọc: đầu tư ngắn hạn **310.507.676.704**; phải thu ngắn hạn **1.419.494.957.548**; hàng tồn kho **53.383.397.796**; tài sản ngắn hạn khác **65.558.815.530**. Cộng các dòng này với tiền/tiền tương đương khớp tổng tài sản ngắn hạn, residual **0**.
+- Tài sản dài hạn: phải thu dài hạn **43.282.198.696**; TSCĐ **12.306.921.915.949**; XDCB dở dang **739.628.606.009**; đầu tư tài chính dài hạn **58.230.571.801**; tài sản dài hạn khác **32.201.471.428**. Cộng khớp tổng dài hạn, residual **0**.
+- Vốn chủ: vốn góp **4.148.043.710.000**; thặng dư **14.234.077.513**; quỹ đầu tư phát triển **96.180.413.885**; lợi nhuận chưa phân phối **912.599.944.288**; NCI equity **1.590.001.770.760**. Cộng khớp vốn chủ, residual **0**.
+
+#### B02 — raw VND; corrected OCR financial income
+- Doanh thu **767.379.199.934**; giá vốn **280.414.635.779**; lợi nhuận gộp **486.964.564.155**; residual doanh thu−giá vốn−lợi nhuận gộp **0**.
+- Doanh thu tài chính **3.976.415.409**; chi phí tài chính **165.243.270.859**; chi phí lãi vay **165.232.291.642**; lợi nhuận công ty liên kết **618.707.130**; chi phí quản lý **41.100.578.261**. Mẫu B02 năm 2026 không trình bày một dòng bán hàng riêng; không tự tạo dòng/giá trị, giữ field đó null.
+- Lợi nhuận thuần hoạt động **285.215.837.574**; thu nhập khác **1.521.784.785**; chi phí khác **322.343.359**; lợi nhuận khác **1.199.441.426**; PBT **286.415.279.000**.
+- Thuế hiện hành **23.323.328.690**; thuế hoãn lại **-562.023.086**; tổng thuế **22.761.305.604**; PAT **263.653.973.396**; parent PAT **206.675.501.563**; NCI **56.978.471.833**; EPS cơ bản **577**, EPS suy giảm **550**.
+- Lỗi OCR: doanh thu tài chính bị đọc **3.076.415.409 VND**; ảnh B02 row5 và cầu lợi nhuận hoạt động xác nhận là **3.976.415.409 VND**, sửa tăng **900.000.000 VND**. Sau sửa, cầu lợi nhuận hoạt động residual **0**.
+- Cầu lợi nhuận khác, PBT, thuế, PAT và parent+NCI=PAT đều residual **0 VND**.
+
+#### B03 — Q1 current YTD, residual cash bridge 900 VND retained
+- CFO **213.327.143.465 VND**; CFI **-26.739.175.041**; CFF **-167.121.630.611**; net cash change **19.466.337.813**. Tổng ba dòng tiền = net change, residual **0 VND**.
+- Tiền đầu kỳ **86.364.663.248**; tỷ giá **25.791.088**; tiền cuối kỳ **105.856.793.049**. Cầu tiền đầu + biến động + tỷ giá còn dư **+900 VND** theo số in; relative difference **0,0000008502%** (<0,01%).
+- Không điều chỉnh số in, không tạo plug. Lưu residual 900 VND như sai số OCR/làm tròn nhỏ được phép theo SOP. Tiền cuối B03 khớp tổng tiền & tương đương tiền trên B01 chính xác.
+- Chi mua sắm TSCĐ **-74.740.950.202 VND**; cổ tức đã trả **-28.499.200 VND**.
+
+#### Ratios, comparative delta, status
+- ROA **6,9736%**, ROE **15,9082%**, theo PAT quý / bình quân assets hoặc equity đầu-cuối kỳ × 4 × 100.
+- Cột comparative đầu kỳ trong B01 Q1/2026 so với closing B01 Q4/2025: tổng tài sản khớp chính xác. Nợ comparative **8.613.176.045.875 VND** thấp hơn closing Q4 original **120.000 VND**, vốn comparative **6.497.711.985.827 VND** cao hơn closing Q4 original **120.000 VND**. Tổng nguồn vốn không đổi. Ghi nhận khác biệt comparative nhỏ riêng, không ghi đè hai kỳ.
+- Data commit: `0512bb8ad9a48d92872fbb3590f57a5c3c28ebca`.
+- Status: `verified_manual_visual_reconciliation_with_cash_bridge_rounding_residual`; B01/B02 PASS, B03 flow PASS và cash bridge PASS_WITHIN_TOLERANCE (900 VND). Không có plug.
+- Kỳ tiếp theo: **GEG Q2/2026**. Không xử lý lại Q4/2025 hoặc các kỳ đã đóng; bảo lưu Q2/Q3 2024 visual holds, Q1/2025 comparative delta, Q2/2025 6.000 VND cash component delta và Q2/2026 historical quarter-opening cash-basis note (nếu còn phù hợp kỳ).
 
 ## 11. Giới hạn thao tác
 
