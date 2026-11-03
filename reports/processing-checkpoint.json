@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-03T15:45:00+07:00",
+  "updatedAt": "2026-11-03T16:18:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "Priority 1: VietstockFinance public document catalog and directly linked report PDFs. Priority 2: WiData document tab for the same ticker, only to compare/supplement when source 1 lacks the report or extraction is unclear/unavailable. No third source without explicit user approval.",
   "periodStart": "2024-Q1",
@@ -40,43 +40,59 @@
     "VCI"
   ],
   "lastCompletedSymbol": "VCI",
-  "activeSymbol": "GAS",
-  "resumeSymbolHint": "GAS",
+  "activeSymbol": "PLX",
+  "resumeSymbolHint": "PLX",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "GAS",
-    "status": "GAS_Q4_2025_PNL_TEXT_PASS_B01_AND_CASHFLOW_PENDING_CONTINUE_Q1_2026",
+    "status": "GAS_Q1_2026_PNL_SOURCE_TEXT_PASS_B01_B03_PENDING_CONTINUE_PLX",
     "completeForAutomation": false,
     "manualReviewRemaining": true,
-    "processedAt": "2026-11-03T15:45:00+07:00",
-    "period": "2025-Q4",
-    "periodStatus": "B02 source text revenue/expense/PBT/tax/PAT/parent/NCI exact; B01 assets readable but total liabilities/equity unclear; B03 only CFO/CFF/capex YTD readable. Q1/2026 opening comparative assets/equity recorded separately; assets differ by 36,686,243,114 VND. Continue Q1/2026.",
+    "processedAt": "2026-11-03T16:18:00+07:00",
+    "period": "2026-Q1",
+    "periodStatus": "B02 core profit/tax/parent-NCI bridges pass; operating detail residual 334,961,244 VND remains unattributed. B01 total assets/liabilities/equity unclear; row310 current liabilities partial. B03 CFI/opening cash/FX legible; CFF candidate held, CFO/net/closing null. Continue to PLX.",
     "periodCount": 10,
-    "sourceReportUrl": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/GAS_Baocaotaichinh_Q4_2025_Hopnhat.pdf",
+    "sourceReportUrl": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/GAS_Baocaotaichinh_Q1_2026_Hopnhat.pdf",
     "sourceIndexUrl": "https://finance.vietstock.vn/GAS/tai-tai-lieu.htm?doctype=1",
-    "sourceDocumentId": "531505",
-    "sourceArchiveFile": "reports/raw/GAS/auto-gas-20261021/d93ac1474c125a66.pdf",
-    "dataCommit": "2104638b013abe3cdd3d6adc793adcf0df4f6b02",
+    "sourceDocumentId": "543696",
+    "sourceArchiveFile": "reports/raw/GAS/auto-gas-20261021/853ad22dfe045d24.pdf",
+    "dataCommit": "b7588eaf2143156577e604153289411605eb6606",
     "normalizationStandardVersion": "3.4",
     "validation": {
-      "balanceSheet": "PENDING B01 liabilities/equity not reliably read.",
-      "profit": "PASS PBT-tax=PAT; parent+NCI=PAT; revenue/gross profit bridges exact.",
-      "cashflow": "PENDING CFO/CFF/capex only partially read; CFI/net/closing cash null.",
-      "comparative": "PENDING later Q1/2026 opening re-presentation differs in total assets by 36.686bn VND; preserve separately.",
-      "visual": "PENDING direct PDF page images unavailable."
+      "pAndL": "PASS main reported totals; detailed operating components residual 334,961,244 VND (0.00892%), keep PENDING.",
+      "b01": "PENDING totals; row310 current liabilities partial source text only.",
+      "b03": "PENDING CFI/opening/FX stored; CFF candidate only; CFO/net/closing null.",
+      "visual": "PENDING direct image review."
     },
-    "nextPeriod": "2026-Q1",
-    "nextTicker": "GAS",
-    "periodComplete": false,
+    "reviewedStatements": [
+      "B02-CTCK/HN"
+    ],
+    "reviewedPrintedPages": [
+      3
+    ],
+    "pendingVisualPeriods": [
+      "2026-Q1"
+    ],
+    "pendingCorePeriods": [
+      "2026-Q1"
+    ],
+    "pendingDetailPeriods": [
+      "2026-Q1"
+    ],
     "doNotRepeatPnlTextExtraction": true,
-    "sopVersion": "1.6",
-    "sopPath": "reports/financial-report-processing-sop.md",
-    "sopCommit": "655d65cd40ff227047257f8432e9cbcddd9c50d6",
+    "nextPeriod": "2025-Q1",
+    "nextTicker": "PLX",
+    "periodComplete": false,
+    "processingSopVersion": "1.7",
+    "processingSopPath": "reports/financial-report-processing-sop.md",
+    "processingSopCommit": "644bd532cd9179cbf3d50f5c3d7f84777c64b864",
+    "sourceHierarchyVersion": "1.0",
+    "sourceDocumentPageCount": 76,
+    "sourceDocumentScope": "Consolidated",
     "pendingExceptions": [
-      "GAS Q4/2024 total liabilities row300 OCR truncated; remain null.",
-      "GAS Q4/2025 total liabilities/equity OCR unclear; retain null.",
-      "GAS Q4/2025 later Q1/2026 opening comparative total assets differs by 36,686,243,114 VND; comparative equity 67,653,389,117,997 VND, not used as overwrite.",
-      "GAS Q4/2025 B03 CFI/net/closing cash PENDING."
+      "GAS Q4/2024 total liabilities null (OCR row300 truncated).",
+      "GAS Q4/2025 total liabilities/equity null; later Q1/2026 comparative separately recorded; B03 CFI/net/closing null.",
+      "GAS Q1/2026 B01 totals null; row310 current liabilities partial; B03 CFI/opening/FX only; B02 operating detail residual 334,961,244 VND."
     ]
   },
   "symbolStates": {
@@ -1589,7 +1605,7 @@
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-11-03T15:45:00+07:00",
+      "updatedAt": "2026-11-03T16:18:00+07:00",
       "snapshotFetchedAt": "2026-10-23T18:00:37+00:00",
       "sourceReconciledPeriods": [
         "2024-Q1",
@@ -1635,9 +1651,12 @@
           "GAS Q4/2024: WiData secondary source attempted but unavailable; no values imported. Direct original PDF visual review also unavailable due content length.",
           "Q4/2025: B02 total revenue, total expenses, profit/tax/PAT and parent/NCI are sourced and reconcile exactly. B01 total assets readable, liabilities/equity still unresolved in OCR.",
           "Q4/2025: B03 CFO YTD 13,378,374.377362m and CFF YTD -3,352,162.410986m, capex YTD -2,330,869.042369m source text found; CFI, net change, closing cash remain null.",
-          "Q1/2026 B01 opening comparative: total assets 93,568,198,109,790 and equity 67,653,389,117,997 are OCR-readable, but total assets differs from Q4/2025 original by 36,686,243,114; keep both bases."
+          "Q1/2026 B01 opening comparative: total assets 93,568,198,109,790 and equity 67,653,389,117,997 are OCR-readable, but total assets differs from Q4/2025 original by 36,686,243,114; keep both bases.",
+          "Q1/2026: B02 source text main totals and PAT/parent/NCI bridges pass exactly; operating profit detailed line composition has 334,961,244 VND residual (0.00892%), not assigned.",
+          "Q1/2026: B01 row310 current liabilities 16,867,209,085,764 VND partially extracted; B01 total assets/equity/total liabilities remain null; comparative opening values preserved separately.",
+          "Q1/2026: B03 CFI 509,484,606,752; opening cash5,567,998,965,715; FX367,185,405; candidate CFF314,542,385,295 not promoted due incomplete bridge; CFO/net/closing null."
         ],
-        "remaining": "Continue to GAS Q1/2026. Carry Q4/2024 row300 liability, Q4/2025 liabilities/equity, Q1/2026 B01 totals and CFO/CFF/net cash gaps as separate PENDING issues."
+        "remaining": "GAS terminal manual exceptions retained: Q4/2024 row300 liabilities; Q4/2025 liabilities/equity and B03 CFI/net/closing; Q1/2026 B01 totals/B03 bridge plus small operating detail residual. Continue to PLX per queue."
       },
       "detailSourceReconciledPeriods": [
         "2025-Q4",
@@ -3151,6 +3170,19 @@
         "reports/financial-report-processing-sop.md"
       ],
       "note": "Q4 B02 source text reconciled; B01 liabilities/equity and B03 rows pending; Q1/2026 comparative assets/equity logged separately."
+    },
+    {
+      "symbol": "GAS",
+      "period": "2026-Q1",
+      "status": "pnl_text_pass_b01_b03_pending_continue_plx",
+      "processedAt": "2026-11-03T16:18:00+07:00",
+      "commit": "b7588eaf2143156577e604153289411605eb6606",
+      "changedPaths": [
+        "data/financials-GAS.json",
+        "reports/processing-checkpoint.json",
+        "reports/financial-report-processing-sop.md"
+      ],
+      "note": "Q1 B02 bridges exact except an unidentified 334.96m VND line; B01 totals pending; B03 partial. Next active ticker PLX."
     }
   ],
   "currentRun": {
@@ -4083,9 +4115,9 @@
       }
     ]
   },
-  "nextSymbolHint": "GAS",
+  "nextSymbolHint": "PLX",
   "lastSessionCheckpoint": {
-    "savedAt": "2026-11-03T08:45:00Z",
+    "savedAt": "2026-11-03T09:18:00Z",
     "branch": "main",
     "latestWorkflowFixCommit": "b1daa9b933e4e02efe96769b02745dc176c734c6",
     "lastCompletedWork": [
@@ -4204,7 +4236,7 @@
     "latestIdcCorrectionCommit": "51918bc138a5e737434dfded5c418dbd7f22e97f",
     "latestKbcCorrectionCommit": "7c2e3bbfb9c2dbafe43378f1db5850bb2cf4ca0b",
     "activeSymbol": "VIX",
-    "period": "2026-Q1",
+    "period": "2025-Q1",
     "completedWork": [
       "VIX Q2/2024 visually verified from VietstockFinance doc 468963; raw-VND B01/B02/B03b reconciliations passed; standalone cashflows audit-only; data commit 2a830d3389a92e0ca942a4de2ea26057fa9c2eba; render artifact 13146176706",
       "VIX Q3/2024 visually verified from VietstockFinance doc481505; raw-VND B01/B02/B03b and 9M cumulative reconciliations passed; standalone cashflows audit-only; data commit 0831440958aa1b8b320d4107f878704a314e519b; render artifact 13148335964.",
@@ -4212,18 +4244,19 @@
       "VDS Q3/2025: original VietstockFinance document 523128 visually reviewed B01/B02/B03. Balance, profit/tax/PAT, parent/NCI Q3 quarter, expense detail (row23.3 AFS loss 45.714m), and cashflows all exact. Revenue row1.8 candidate not reconciled, retained null. Q3 YTD less Q3 quarter confirms Q2 H1 allocation and isolates Q1 original mismatch. Data commit 9aff12e4dda7c4e2b83c2652e432d93307e07070; SOP v1.3 02aca85d2e2e783e640340052a870dad4f4a1cf8.",
       "VDS Q4/2025 source text reconciled; B01/B02/B03 core totals and cashflow YTD/standalone exact vs Q3 YTD; direct visual review inaccessible, detailed expenses pending. Data commit 4019e204adc2a4c2a18a74d5252436c1fa4cce88; SOP v1.4 6c58020dfa37291fa176cdd7ee3a5698b365b84a.",
       "GAS Q4/2024: source text P&L bridge PASS; total assets/equity retained. Total liabilities row300 OCR truncated -> null; B03 unreadable. Q1/2025 opening comparative differs and stored separately. WiData unavailable. Data commit a996f3fa119e9ecc98ac29c35f66bbc1c0cb790c; SOP v1.5 0885178879a91fe5aba8bdf720b4ba4fd090668c.",
-      "GAS Q4/2025: B02 source text totals/bridges exact, B01 liabilities/equity and B03 incomplete. Q1/2026 opening comparative total assets/equity saved separately; Q4 vs Q1 comparative assets delta +36.686bn VND. Data commit 2104638b013abe3cdd3d6adc793adcf0df4f6b02; SOP v1.6 655d65cd40ff227047257f8432e9cbcddd9c50d6."
+      "GAS Q4/2025: B02 source text totals/bridges exact, B01 liabilities/equity and B03 incomplete. Q1/2026 opening comparative total assets/equity saved separately; Q4 vs Q1 comparative assets delta +36.686bn VND. Data commit 2104638b013abe3cdd3d6adc793adcf0df4f6b02; SOP v1.6 655d65cd40ff227047257f8432e9cbcddd9c50d6.",
+      "GAS Q1/2026: B02 source text core bridge PASS; row310 current liabilities partial, B01 totals pending; B03 CFI/opening/FX present, CFF candidate held, CFO/net/closing null. B02 component residual 334.961m VND (0.00892%), no plug. Data commit b7588eaf2143156577e604153289411605eb6606; SOP v1.7 644bd532cd9179cbf3d50f5c3d7f84777c64b864."
     ],
-    "resumePoint": "GAS Q1/2026 B01/B03; Q4/2024 and Q4/2025 missing values held PENDING.",
-    "symbol": "GAS",
+    "resumePoint": "PLX 2025-Q1 cashflow opening cash cross-year discrepancy >0.01%.",
+    "symbol": "PLX",
     "status": "active_manual_exception_review",
-    "sopVersion": "1.6",
+    "sopVersion": "1.7",
     "sopPath": "reports/financial-report-processing-sop.md",
-    "sopCommit": "655d65cd40ff227047257f8432e9cbcddd9c50d6",
-    "nextAction": "Continue GAS Q1/2026 B01 and B03 manual review; existing P&L source text is already reconciled and must not be re-extracted.",
+    "sopCommit": "644bd532cd9179cbf3d50f5c3d7f84777c64b864",
+    "nextAction": "Start PLX Q1/2025 manual cash-basis reconciliation using stored VietstockFinance source; preserve GAS Q4/2024/Q4/2025/Q1/2026 exceptions.",
     "periodComplete": false,
-    "dataCommit": "2104638b013abe3cdd3d6adc793adcf0df4f6b02",
-    "checkpointNextAction": "Continue at GAS Q1/2026; do not rerun Q4/2025 B02."
+    "dataCommit": "b7588eaf2143156577e604153289411605eb6606",
+    "checkpointNextAction": "Continue PLX Q1/2025; no reprocessing GAS source text already reconciled."
   },
   "lastCrossTickerAudit": {
     "checkedAt": "2026-10-30T15:17:40.419Z",
@@ -4241,8 +4274,9 @@
     "codeFix": "scripts/validate-financials.mjs now reports chronological first/last periods from sorted unique period keys instead of relying on insertion order."
   },
   "nextActions": [
-    "GAS: continue Q1/2026. Preserve the existing P&L source values; inspect B01 and B03 source text for missing totals/rows, and do not force balance.",
-    "After Q1/2026, review remaining GAS manual holds or proceed PLX per queue; carry Q4/2024 and Q4/2025 pending fields separately."
+    "PLX: continue 2025-Q1 manual review of the cross-year opening-cash residual above 0.01%; use stored VietstockFinance report/source metadata. Keep source values unchanged and record bridge difference.",
+    "PLX: then continue 2026-Q1 cross-year opening-cash residual and 2026-Q2 unreadable cashflow/visual review; no blanket OCR rerun.",
+    "Carry GAS Q4/2024 liabilities, Q4/2025 liabilities/equity/cashflow, and Q1/2026 B01/B03 and operating detail pending; do not reprocess cleared P&L."
   ],
   "lastUiUpdate": {
     "updatedAt": "2026-10-30T18:35:00+07:00",
@@ -4596,19 +4630,20 @@
     {
       "symbol": "GAS",
       "order": 5,
-      "status": "active_manual_exception_review",
+      "status": "in_progress_manual_exception_review",
       "periodCount": 10,
       "periodRange": "2024-Q1..2026-Q2",
-      "reason": "GAS through Q4/2025: Q4/2024 B01 row300 total liabilities OCR truncated; Q4/2025 B02 core PASS but B01 liabilities/equity and B03 CFI/net/closing cash pending; Q1/2026 next in sequence.",
-      "nextStep": "Continue GAS Q1/2026 B01 and B03 manual review from archive; retain all uncertain totals/flows as null. After that evaluate PLX per processing order."
+      "reason": "GAS through Q1/2026 inspected. Core P&L bridges pass except a small 334,961,244 VND unassigned operating component; B01 totals/B03 flows remain PENDING for Q4/2024, Q4/2025, Q1/2026. No full visual review due PDF rendering constraints.",
+      "nextStep": "Continue PLX as next ticker; retain GAS exceptions. Do not repeat already source-reconciled GAS B02 text."
     },
     {
       "symbol": "PLX",
       "order": 6,
-      "status": "queued_visual_and_cashflow_hold",
+      "status": "active_manual_exception_review",
       "periodCount": 10,
       "periodRange": "2024-Q1..2026-Q2",
-      "reason": "Opening-cash residuals above 0.01%, Q2/2026 cashflow unreadable and visual review pending."
+      "reason": "Next ticker after GAS: cross-year opening cash residuals above 0.01% in Q1/2025 and Q1/2026, Q2/2026 cashflow unreadable, and visual review pending. One period at a time.",
+      "nextStep": "Start PLX 2025-Q1 from its archived consolidated VietstockFinance report. Reconcile opening cash vs previous-year closing cash, preserve original values and delta; then Q1/2026 and Q2/2026."
     },
     {
       "symbol": "GEG",
@@ -5311,9 +5346,9 @@
     }
   ],
   "processingSop": {
-    "version": "1.6",
+    "version": "1.7",
     "path": "reports/financial-report-processing-sop.md",
-    "commit": "655d65cd40ff227047257f8432e9cbcddd9c50d6",
+    "commit": "644bd532cd9179cbf3d50f5c3d7f84777c64b864",
     "status": "published",
     "effectiveDate": "2026-11-03"
   },
@@ -5472,6 +5507,80 @@
       "periodComplete": false,
       "dataCommit": "2104638b013abe3cdd3d6adc793adcf0df4f6b02",
       "processedAt": "2026-11-03T15:45:00+07:00"
+    },
+    "2026-Q1": {
+      "status": "pending_b01_totals_and_cashflow_bridge",
+      "documentId": "543696",
+      "sourcePriority": 1,
+      "sourceIndexUrl": "https://finance.vietstock.vn/GAS/tai-tai-lieu.htm?doctype=1",
+      "sourceDocumentUrl": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/GAS_Baocaotaichinh_Q1_2026_Hopnhat.pdf",
+      "sourceArchiveFile": "reports/raw/GAS/auto-gas-20261021/853ad22dfe045d24.pdf",
+      "extractionSidecar": "reports/raw/GAS/auto-gas-20261021/853ad22dfe045d24.pdf.extracted.json",
+      "sourceScope": "Consolidated",
+      "sourceUnit": "VND",
+      "sourcePageCount": 76,
+      "doNotRepeatPnlTextExtraction": true,
+      "doNotRepeatCorePnlExtraction": true,
+      "visualReviewStatus": "PENDING direct PDF image review; current retrieval used stored source text/OCR only.",
+      "validations": {
+        "revenueGrossProfit": "PASS revenue 38,019,609,031,268 - COGS 33,511,417,706,493 = gross profit 4,508,191,324,775 VND; residual 0.",
+        "operatingProfit": "PENDING identified components leave 334,961,244 VND (0.00892%) unexplained versus source operating profit 3,754,223,754,396 VND. No row value assigned, no plug.",
+        "pretax": "PASS operating profit 3,754,223,754,396 + other income 862,001,024 - other expense 402,099,569 = PBT 3,754,683,655,851 VND; residual 0.",
+        "taxPat": "PASS PBT 3,754,683,655,851 - total tax 760,568,383,274 = PAT 2,994,115,272,577 VND; residual 0.",
+        "parentNci": "PASS parent PAT 2,944,603,136,328 + NCI 49,512,136,249 = PAT; residual 0.",
+        "b01": "PENDING total assets/current total assets/equity source lines clipped or misaligned. Row310 current liabilities text 16,867,209,085,764 VND retained as partial. Opening comparative 2025 values kept separately.",
+        "cashflow": "PENDING: CFI 509,484,606,752 VND, opening cash 5,567,998,965,715 VND, FX effect 367,185,405 VND readable. Candidate CFF row40 314,542,385,295 VND held in metadata only; CFO/net cash change/closing cash null.",
+        "visual": "PENDING original PDF page images unavailable."
+      },
+      "rawSourceValuesVnd": {
+        "revenue": 38019609031268,
+        "costOfGoodsSold": 33511417706493,
+        "grossProfit": 4508191324775,
+        "financialIncome": 384755468683,
+        "financialExpense": 118408271484,
+        "interestExpense": 53307964713,
+        "sellingExpense": 623721077879,
+        "adminExpense": 396928650943,
+        "operatingProfit": 3754223754396,
+        "otherIncome": 862001024,
+        "otherExpense": 402099569,
+        "pretaxProfit": 3754683655851,
+        "currentTax": 764142169569,
+        "deferredTax": -3573786295,
+        "incomeTax": 760568383274,
+        "netProfit": 2994115272577,
+        "parentProfit": 2944603136328,
+        "nciProfit": 49512136249,
+        "eps": 1177,
+        "currentLiabilities": 16867209085764,
+        "cfi": 509484606752,
+        "openingCash": 5567998965715,
+        "fxEffect": 367185405
+      },
+      "openingComparative2025": {
+        "totalAssets": 93568198109790,
+        "totalEquity": 67653389117997,
+        "currentLiabilities": 20573719383413,
+        "conclusion": "Comparative basis only; not assigned to current Q1/2026 fields and not used to back-calculate total liabilities."
+      },
+      "candidateNotPromoted": {
+        "cfo": null,
+        "cff": 314542385295,
+        "netCashChange": null,
+        "closingCash": null
+      },
+      "issues": [
+        "B01 current row270 total assets and row400 equity/current source total not sufficiently legible; total assets/total liabilities/equity remain null.",
+        "B01 row310 current liabilities 16,867,209,085,764 VND is partial source text; visual confirmation pending.",
+        "B02 operating profit composition lacks an identified component of 334,961,244 VND (0.00892%); keep residual, no plug.",
+        "B03 CFO/CFF/net movement/closing cash incomplete; CFF 314,542,385,295 VND is a candidate only and is not promoted.",
+        "Direct PDF image review pending."
+      ],
+      "nextTicker": "PLX",
+      "nextPeriod": "2025-Q1",
+      "periodComplete": false,
+      "dataCommit": "b7588eaf2143156577e604153289411605eb6606",
+      "processedAt": "2026-11-03T16:18:00+07:00"
     }
   }
 }
