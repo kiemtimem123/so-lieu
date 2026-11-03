@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.21
+- Phiên bản: 1.22
 - Ngày ban hành: 03/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -667,6 +667,18 @@ Nguồn chỉ dùng VietstockFinance và các tệp liên kết tại danh mục
 #### Resume point
 - The user's requested save point is **IDC Q2/2024 complete source-text reconciliation**. Q1/2024's selling-expense exception remains open, but does not block continuing.
 - Next: **IDC Q3/2024**, archive `reports/raw/IDC/auto-idc-20261021/ba6b182fb273799c.zip`. Do not repeat Q1/Q2 core extraction; continue source-text validation and specifically inspect cashflow reclassification and outstanding detail fields.
+### 10.11 IDC Q3/2024 — B01/B02/B03 gốc đã đối chiếu, visual pending
+
+- Nguồn: VietstockFinance document ID **483651**, BCTC hợp nhất; ZIP `https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%203/IDC_Baocaotaichinh_Q3_2024_Hopnhat.zip`; archive `reports/raw/IDC/auto-idc-20261021/ba6b182fb273799c.zip`; sidecar `.zip.extracted.json`; member báo cáo hợp nhất `1_idc_2024_11_1_1f04f63_1028tctbtc_29102024_cbtt_bctc_hop_nhat_signed.pdf` (63 trang).
+- Đã đọc text/OCR sidecar trang 8–14: B01 trang in 3–6 (sidecar p8–11), B02 trang in 7 (p12), B03 trang in 8–9 (p13–14). Không có ảnh trực quan; giữ visual review PENDING.
+- B01 tại 30/9/2024: current assets **6.744.296.361.521 VND**, non-current assets **11.390.620.067.429**, total assets **18.134.916.428.950**; current liabilities **4.602.455.824.878**, long-term liabilities **6.841.753.870.894**, total liabilities **11.444.209.695.772**, equity **6.690.706.733.178**. Asset composition, liabilities composition and asset = liabilities + equity all residual 0.
+- B02 riêng Q3: revenue **2.275.529.728.208 VND**, COGS **1.482.208.258.233**, gross profit **793.321.469.975**, financial income **44.433.707.502**, financial expense **34.399.178.354**, share of profit associates **197.452.841**, selling expense **27.442.146.367**, admin expense **61.006.782.583**, operating profit **715.104.523.014**, other income **3.389.615.048**, other expense **1.847.402.659**, other profit **1.542.212.389**, PBT **716.646.735.403**, current tax **153.565.492.375**, deferred tax benefit **11.263.775.631** (normalized to tax expense **-11.263.775.631**), total tax **142.301.716.744**, PAT **574.345.018.659**, parent PAT **511.013.714.299**, NCI **63.331.304.360**, EPS **1.549**. Gross profit, operating profit, other profit, PBT, tax, PAT and parent/NCI bridges exact.
+- B03 original 9M YTD raw VND: CFO **3.581.088.955.857**, CFI **-1.308.653.005.272**, CFF **-2.318.597.493.209**, net cash change **-46.161.542.624**, opening cash **1.333.592.588.129**, FX **168.562.373**, closing cash **1.287.599.607.878**. H1 original Q2/2024 YTD baseline (document 471540): CFO **2.296.007.290.628**, CFI **-724.113.031.201**, CFF **-1.895.302.679.995**, net change **-323.408.420.568**, FX **233.255.231**, closing cash **1.010.417.422.792**.
+- Standalone Q3 = 9M YTD minus H1 YTD: CFO **1.285.081.665.229 VND**, CFI **-584.539.974.071**, CFF **-423.294.813.214**, net cash change **277.246.877.944**, FX **-64.692.858**, opening cash **1.010.417.422.792**, closing cash **1.287.599.607.878**. Original 9M and standalone flow/cash bridge residuals all 0; opening equals prior Q2 close.
+- The dataset retains the Q3/2025 later comparative cashflow basis at top level. Original Q3/2024 source values are stored separately in `source_validation.original_q3_2024_cashflow_ytd_raw_vnd` and `cashflow_source_reconciliation.original_q3_2024_report_comparison`; do not overwrite selected top-level fields or re-run the prior reclassification decision.
+- Q3 status: source-text B01/B02/B03 bridges PASS; direct visual review PENDING; Q1 selling-expense detail exception continues separately. Data commit `893ce88fcfe6d0ba471d489379ef735c0722e582`.
+- Resume at **IDC Q4/2024** using archive `reports/raw/IDC/auto-idc-20261021/00983465c42328c1.zip`. Do not repeat Q1–Q3 core source-text extraction.
+
 ## 11. Giới hạn thao tác
 
 - Không sửa code, schema, pipeline, dashboard hoặc logic tự động trong công việc nhập liệu BCTC nếu chưa có yêu cầu riêng.
