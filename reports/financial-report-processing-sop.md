@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.17
+- Phiên bản: 1.18
 - Ngày ban hành: 03/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -534,6 +534,42 @@ Continue to **GEG Q2/2024**. Its existing Q2 record has B03 selected from the la
 - Data commit: `a69ced9560a3afc29c27a8d993c727b15147f0d5`.
 - Trạng thái: `verified_manual_visual_reconciliation`, B01/B02/B03 PASS, không còn ngoại lệ lõi/chi tiết cho Q3/2025. Các ngoại lệ khác của GEG (Q2/Q3/2024 visual, Q1/2025 opening comparative delta, Q2/2025 cash-components residual 6.000 VND) được giữ riêng, không ảnh hưởng trạng thái Q3.
 - Tiếp theo: **GEG Q4/2025**. Không trích xuất hoặc xem lại Q1/Q2/2025 và các kỳ 2024 đã hoàn tất.
+
+### 10.21 GEG Q4/2025 — original VietstockFinance B01/B02/B03 visually verified; complete
+
+- Nguồn: VietstockFinance document ID **529632**, BCTC hợp nhất Q4/2025; URL `https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/GEG_Baocaotaichinh_Q4_2025_Hopnhat.pdf`; archive `reports/raw/GEG/auto-geg-20261021/a5dc3fd9e734420f.pdf`; sidecar `.pdf.extracted.json`; PDF 84 trang.
+- Đã xem trực tiếp ảnh PDF gốc: B01 trang in 1–2, B02 trang in 3, B03 trang in 4–5. Evidence refs: `turn162727view0`, `turn162727view1`, `turn140584view0`, `turn162727view2`, `turn162727view3`.
+- Phạm vi hợp nhất, đơn vị VND. Không lấy các cột comparative 2024/YTD thay cho cột Quý IV/2025.
+
+#### B01 — raw VND, residuals 0
+- Tài sản ngắn hạn **1.793.332.240.030** + tài sản dài hạn **13.317.555.791.672** = tổng tài sản **15.110.888.031.702**.
+- Nợ ngắn hạn **884.097.585.558** + nợ dài hạn **7.729.078.580.317** = tổng nợ **8.613.176.165.875**.
+- Vốn chủ **6.497.711.865.827**; tổng nợ + vốn = tổng tài sản **15.110.888.031.702**, residual **0 VND**.
+- Tiền và tương đương tiền **86.364.663.248** = tiền **46.702.358.323** + tương đương tiền **39.662.304.925**, residual **0 VND**.
+- Chi tiết tài sản đã đọc: đầu tư ngắn hạn **335.162.676.704**; phải thu ngắn hạn **1.279.925.753.264**; hàng tồn kho **46.144.766.536**; TSCĐ **12.506.295.684.512**; XDCB dở dang **666.224.607.122**; đầu tư tài chính dài hạn **57.611.864.671**; tài sản dài hạn khác **33.100.995.517**.
+- Vốn chủ: vốn góp **4.148.043.710.000**; thặng dư **14.462.886.313**; quỹ đầu tư phát triển **96.180.413.885**; lợi nhuận chưa phân phối **705.958.826.235**; NCI equity **1.533.066.029.394**.
+
+#### B02 — cột riêng Q4/2025, raw VND
+- Doanh thu **590.444.253.989**; giá vốn **297.744.769.538**; lợi nhuận gộp **292.699.484.451**; cầu doanh thu − giá vốn = lợi nhuận gộp residual **0 VND**.
+- Lỗi OCR đã sửa: COGS cũ **297.744.169.538 VND** thiếu **600.000 VND**. Ảnh B02 row3 xác nhận **297.744.769.538 VND**; sau sửa, phép tính khớp chính xác.
+- Doanh thu tài chính **7.405.857.236**; chi phí tài chính **129.223.283.175**; chi phí lãi vay **128.720.727.251**; lãi từ công ty liên kết **201.824.614**.
+- Chi phí bán hàng row25 hiện tại là dấu gạch ngang: giữ `null`; không gán 0 và không sao chép số comparative năm 2024. Chi phí quản lý doanh nghiệp row26 **80.029.939.227**.
+- Lợi nhuận thuần hoạt động **91.053.943.899**; thu nhập khác **558.911.923**; chi phí khác **1.060.644.068**; lỗ khác **-501.732.145**; PBT **90.552.211.754**.
+- Thuế hiện hành **-5.791.447.756** (benefit); thuế hoãn lại **288.594.688**; tổng thuế **-5.502.853.068**; PAT **96.055.064.822**; parent PAT **83.445.048.823**; NCI **12.610.015.999**; EPS cơ bản **111**, EPS suy giảm **570**.
+- Các cầu nối lợi nhuận hoạt động, lợi nhuận khác, PBT, thuế, PAT và parent+NCI=PAT đều residual **0 VND**.
+
+#### B03 — FY2025 YTD và quý IV riêng
+- FY2025 YTD raw VND: CFO **932.884.327.033**; CFI **1.921.143.888**; CFF **-1.012.240.268.026**; biến động tiền thuần **-77.434.797.105**; tiền đầu năm **163.717.707.072**; tỷ giá **81.753.281**; tiền cuối năm **86.364.663.248**.
+- Original 9M/2025 baseline từ GEG Q3/2025 VietstockFinance doc **523528**: CFO **856.209.015.015**; CFI **244.031.897.120**; CFF **-857.979.656.903**; net **242.261.255.232**; FX **74.334.749**; opening **163.717.707.072**; closing **406.053.297.053**; capex **-120.055.037.058**; dividends **-346.534.500 VND**.
+- Q4 standalone = FY2025 YTD trừ original 9M/2025 YTD: CFO **76.675.312.018**; CFI **-242.110.753.232**; CFF **-154.260.611.123**; net cash change **-319.696.052.337**; FX **7.418.532**; opening cash **406.053.297.053**; closing cash **86.364.663.248**.
+- Capex Q4 **-288.511.522.757 VND** = FY2025 YTD **-408.566.559.815** less 9M **-120.055.037.058**. Dividends Q4 **-76.484.415.200 VND** = FY2025 YTD **-76.830.949.700** less 9M **-346.534.500**. Negative signs retained.
+- YTD and Q4 flow sums, cash bridges, FX and YTD-to-quarter delta residuals all **0 VND**; B01 cash/equivalents equals B03 ending cash exactly.
+
+#### Ratios and status
+- ROA **2,5312%**, ROE **5,8790%**, using PAT Q4 / average opening-closing assets or equity × 4 × 100. Average total assets **15.179.420,0412605 triệu VND**; average equity **6.535.450,975076 triệu VND**.
+- Data commit: `4fd6282fbaf785879018cfe645611c59a7cf23e2`.
+- Status: `verified_manual_visual_reconciliation`; B01/B02/B03 PASS, all raw-VND residuals zero. GEG Q4/2025 complete; do not reload/re-extract/re-review unless new contradiction.
+- Kỳ tiếp theo: **GEG Q1/2026**. Preserve historical GEG holds (Q2/Q3 2024 visual, Q1/2025 opening comparative delta, Q2/2025 6,000 VND cash-component residual within tolerance, Q2/2026 cash-basis exception) separately.
 
 ## 11. Giới hạn thao tác
 
