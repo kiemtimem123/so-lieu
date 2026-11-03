@@ -14,11 +14,11 @@ on:
       period:
         description: "Report period label"
         required: true
-        default: "2025-Q4"
+        default: "2026-Q1"
       pdf_path:
         description: "Path to the PDF already archived in reports/raw"
         required: true
-        default: "reports/raw/IDC/auto-idc-20261021/5ff8f3ce069a369e.zip"
+        default: "reports/raw/IDC/auto-idc-20261021/229a1ff9af9d3e1b.pdf"
       pages:
         description: "Comma-separated 1-based PDF pages, or all"
         required: true
@@ -44,7 +44,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           sparse-checkout: |
-            ${{ github.event.inputs.pdf_path || 'reports/raw/IDC/auto-idc-20261021/5ff8f3ce069a369e.zip' }}
+            ${{ github.event.inputs.pdf_path || 'reports/raw/IDC/auto-idc-20261021/229a1ff9af9d3e1b.pdf' }}
           sparse-checkout-cone-mode: false
           lfs: false
 
@@ -59,11 +59,11 @@ jobs:
       - name: Render source pages and contact sheets
         env:
           TARGET_SYMBOL: ${{ github.event.inputs.symbol || 'IDC' }}
-          TARGET_PERIOD: ${{ github.event.inputs.period || '2025-Q4' }}
-          PDF_PATH: ${{ github.event.inputs.pdf_path || 'reports/raw/IDC/auto-idc-20261021/5ff8f3ce069a369e.zip' }}
+          TARGET_PERIOD: ${{ github.event.inputs.period || '2026-Q1' }}
+          PDF_PATH: ${{ github.event.inputs.pdf_path || 'reports/raw/IDC/auto-idc-20261021/229a1ff9af9d3e1b.pdf' }}
           PAGE_LIST: ${{ github.event.inputs.pages || '8,9,10,11,12,13,14' }}
           RENDER_DPI: ${{ github.event.inputs.dpi || '180' }}
-          PDF_MEMBER: ${{ github.event.inputs.pdf_member || '1_idc_2026_1_29_0d3041b_en_financialstatementshn_q4_2025hn_s.pdf' }}
+          PDF_MEMBER: ${{ github.event.inputs.pdf_member || '' }}
         run: |
           python - <<'PY'
           import os, zipfile
@@ -138,7 +138,7 @@ jobs:
         id: upload
         uses: actions/upload-artifact@v4
         with:
-          name: vietstock-source-review-${{ github.event.inputs.symbol || 'IDC' }}-${{ github.event.inputs.period || '2025-Q4' }}
+          name: vietstock-source-review-${{ github.event.inputs.symbol || 'IDC' }}-${{ github.event.inputs.period || '2026-Q1' }}
           path: source-review/
           if-no-files-found: error
           retention-days: 14
@@ -147,10 +147,10 @@ jobs:
         uses: actions/github-script@v7
         env:
           ARTIFACT_ID: ${{ steps.upload.outputs.artifact-id }}
-          SOURCE_PDF: ${{ github.event.inputs.pdf_path || 'reports/raw/IDC/auto-idc-20261021/5ff8f3ce069a369e.zip' }}
+          SOURCE_PDF: ${{ github.event.inputs.pdf_path || 'reports/raw/IDC/auto-idc-20261021/229a1ff9af9d3e1b.pdf' }}
           TARGET_SYMBOL: ${{ github.event.inputs.symbol || 'IDC' }}
-          TARGET_PERIOD: ${{ github.event.inputs.period || '2025-Q4' }}
-          PDF_MEMBER: ${{ github.event.inputs.pdf_member || '1_idc_2026_1_29_0d3041b_en_financialstatementshn_q4_2025hn_s.pdf' }}
+          TARGET_PERIOD: ${{ github.event.inputs.period || '2026-Q1' }}
+          PDF_MEMBER: ${{ github.event.inputs.pdf_member || '' }}
         with:
           script: |
             const sourceDir = process.env.SOURCE_PDF.includes("/") ? process.env.SOURCE_PDF.slice(0, process.env.SOURCE_PDF.lastIndexOf("/")) : `reports/raw/${process.env.TARGET_SYMBOL}`;
