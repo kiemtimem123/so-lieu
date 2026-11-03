@@ -338,18 +338,18 @@
       "net_profit": 2052338.999441,
       "net_profit_attributable": 2044102.438055,
       "revenue": 34960846.410089,
-      "roa": null,
-      "roe": null,
+      "roa": 9.45,
+      "roe": 13.54,
       "unit": "triệu VND",
       "ratio_unit": "%/năm (tính từ lợi nhuận quý khi đủ dữ liệu bình quân đầu/cuối kỳ)",
       "source_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%204/GAS_Baocaotaichinh_Q4_2024_Hopnhat.pdf",
       "source_index_url": "https://finance.vietstock.vn/GAS/tai-tai-lieu.htm?doctype=1",
       "report_type": "BCTC hợp nhất GAS 2024-Q4 (phát hiện tự động qua VietstockFinance; chờ trích xuất)",
-      "source_pages": "Chưa trích xuất được đủ chỉ tiêu; xem PDF/ZIP trong đường dẫn VietstockFinance.",
+      "source_pages": "B01 printed pages 1–2 (sidecar PDF pages 4–5); B02 printed page 5; B03 printed pages 6–7. Source image render still pending.",
       "quarter_profit_basis": "Chỉ lưu số liệu khi cột phát sinh riêng của quý được trích xuất và cân đối hợp lệ.",
-      "verification_status": "auto_extracted_pending_visual_review",
+      "verification_status": "pending_b01_total_liabilities_visual_review",
       "source_validation": {
-        "reviewed_at": "2026-10-30T16:35:00+07:00",
+        "reviewed_at": "2026-11-03",
         "single_source_policy": "Chỉ danh mục VietstockFinance và tệp do danh mục đó liên kết.",
         "source_catalog_url": "https://finance.vietstock.vn/GAS/tai-tai-lieu.htm?doctype=1",
         "source_document_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%204/GAS_Baocaotaichinh_Q4_2024_Hopnhat.pdf",
@@ -376,12 +376,14 @@
         "core_source_raw_vnd": {
           "total_assets": 81893564503501,
           "equity": 61570995265636,
-          "revenue": 34960846410089,
           "pretax_profit": 2558297020087,
-          "net_profit": 2052338999441,
-          "net_profit_attributable": 2044102438055,
           "income_tax_current": 498141880056,
           "income_tax_deferred": 7816140590,
+          "income_tax": 505958020646,
+          "net_profit": 2052338999441,
+          "net_profit_attributable": 2044102438055,
+          "non_controlling_interest_profit": 8236561386,
+          "revenue": 34960846410089,
           "financial_income": 419753041491,
           "financial_expense": 140949317288,
           "interest_expense": 5722032723,
@@ -391,7 +393,54 @@
         },
         "core_manual_review": "Cần kiểm tra ảnh PDF vì OCR có một số dòng/tiêu đề bị méo; chỉ dùng các dòng có thể nhận diện rõ và không tự cân đối phần còn thiếu.",
         "raw_vnd_fields_quarantined": true,
-        "raw_vnd_fields_quarantined_at": "2026-10-30T18:00:00+07:00"
+        "raw_vnd_fields_quarantined_at": "2026-10-30T18:00:00+07:00",
+        "source_archive_file": "reports/raw/GAS/auto-gas-20261021/7fa3b1653ff606d1.pdf",
+        "extraction_sidecar": "reports/raw/GAS/auto-gas-20261021/7fa3b1653ff606d1.pdf.extracted.json",
+        "source_scope": "Consolidated",
+        "source_unit": "VND",
+        "source_visual_status": "PENDING: source PDF open returned content-length-too-large; container download unsuccessful. No image review claimed.",
+        "source_text_pages": {
+          "b01_pdf_pages": [
+            4,
+            5
+          ],
+          "b01_printed_pages": [
+            1,
+            2
+          ],
+          "b02_pdf_pages": [
+            6
+          ],
+          "b02_printed_pages": [
+            5
+          ],
+          "b03_pdf_pages": [
+            7
+          ],
+          "b03_printed_pages": [
+            6
+          ]
+        },
+        "b01_total_liabilities_ocr_status": "PENDING_ROW300_TRUNCATED",
+        "q1_2025_opening_comparative_crosscheck": {
+          "source_document_id": "504411",
+          "source_url": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%201/GAS_Baocaotaichinh_Q1_2025_Hopnhat.pdf",
+          "archive_file": "reports/raw/GAS/auto-gas-20261021/b86f8fa9f2673195.pdf",
+          "source_scope": "Consolidated",
+          "page": "B01 printed page 2, Q1/2025 current closing column and 2024 beginning comparative column.",
+          "opening_2024_vnd": {
+            "total_assets": 81854881408158,
+            "total_liabilities": 20283886142528,
+            "equity": 61570995265630
+          },
+          "difference_vs_original_q4_2024_vnd": {
+            "total_assets": -38683095343,
+            "total_liabilities_candidate_from_q4_total_assets_equity": 38683095337,
+            "equity": -6
+          },
+          "conclusion": "Q1/2025 beginning comparative differs from the Q4/2024 original report by about VND 38.683bn in total assets/liabilities and VND 6 in equity. This is recorded as a later comparative re-presentation/basis difference; it is not used to overwrite or fill Q4/2024 row300."
+        },
+        "visual_review": "PENDING source PDF images unavailable; continue using source text only for now."
       },
       "published_at": "2025-01-25",
       "source_archive_file": "reports/raw/GAS/auto-gas-20261021/7fa3b1653ff606d1.pdf",
@@ -422,15 +471,18 @@
         "equity",
         "revenue",
         "pretax_profit",
-        "net_profit_attributable"
+        "net_profit_attributable",
+        "non_controlling_interest_profit",
+        "income_tax_current",
+        "income_tax_deferred"
       ],
-      "core_financial_extraction_status": "auto_extracted_pending_visual_review",
-      "core_financial_extraction_note": "Khôi phục các dòng đọc rõ từ PDF hợp nhất Q4/2024: tổng tài sản, vốn chủ sở hữu, doanh thu, LNTT, LNST, lợi nhuận cổ đông mẹ, thuế hiện hành/hoãn lại và các chi phí tài chính/bán hàng/quản lý. Dòng tổng nợ phải trả và một số dòng tài sản/chi tiết bị OCR cắt/méo nên giữ trống, không suy ngược để ép cân đối.",
-      "verification_status_note": "Đã hiệu chỉnh từ OCR văn bản PDF hợp nhất VietstockFinance; vẫn chờ đối chiếu trực quan từng trang PDF trước khi coi là xác minh cuối cùng.",
+      "core_financial_extraction_status": "source_text_reconciled_total_liabilities_pending",
+      "core_financial_extraction_note": "Q4/2024: total assets, equity, P&L, tax, parent/NCI, EPS read from VietstockFinance source text; total liabilities OCR truncated on B01 row300, remains null. Q1/2025 opening comparative differs, possibly due re-presentation; retain as separate evidence and do not back-fill the Q4 field.",
+      "verification_status_note": "Đã kiểm tra text sidecar của BCTC hợp nhất VietstockFinance Q4/2024. B01 page 5 OCR cắt cụt dòng tổng nợ (row300) nên total_liabilities vẫn null. Không suy ngược từ tổng tài sản-vốn. Q1/2025 B01 opening comparative trên cùng nguồn trình bày lại các số tổng tài sản/nợ/vốn, ghi nhận ở provenance riêng; không ghi đè Q4/2024.",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "6424ac5af6f3cb368f568990857b020451fab57a8e726a1de1937bb734f97b37",
       "core_financial_extraction_evidence_attempt_count": 1,
-      "financial_line_items_status": "auto_extracted_pending_visual_review",
+      "financial_line_items_status": "pending_visual_review",
       "financial_line_items_extracted_fields": [
         "admin_expense",
         "cash_beginning",
@@ -446,7 +498,7 @@
         "cash_beginning_reported_ytd"
       ],
       "financial_line_items_source": "reports/raw/GAS/auto-gas-20261021/7fa3b1653ff606d1.pdf",
-      "financial_line_items_updated_at": "2026-10-30T15:58:42+00:00",
+      "financial_line_items_updated_at": "2026-11-03T15:09:00+07:00",
       "financial_line_items_note": "Các giá trị OCR VND thô đã được chuyển đúng sang triệu VND cho những dòng nguồn đọc rõ. Dòng tổng nợ và các chỉ tiêu lưu chuyển tiền tệ chưa đọc đủ tin cậy, đã loại khỏi hiển thị và lưu giá trị cũ để kiểm tra. Một số chỉ tiêu bị giữ trống vì không vượt qua kiểm tra cân đối kế toán hoặc đối chiếu chéo; xem danh sách trường bị loại. Trích xuất từ văn bản PDF/ZIP đã lưu; cần đối chiếu trực quan với báo cáo gốc. Các giá trị OCR còn lưu nguyên VND (>1 tỷ) đã được gỡ khỏi trường hiển thị và lưu vào prior_values để tránh hiển thị sai đơn vị.",
       "financial_line_items_prior_values": {
         "short_term_receivables": 19103765849857,
@@ -461,7 +513,7 @@
       },
       "financial_line_items_rejected_values": {},
       "core_financial_extraction_manual_terminal": false,
-      "core_financial_extraction_updated_at": "2026-10-30T16:35:00+07:00",
+      "core_financial_extraction_updated_at": "2026-11-03T15:09:00+07:00",
       "financial_line_items_schema_version": "2026-10-27-other-statements-source-fields-v12",
       "financial_line_items_schema_updated_at": "2026-10-30T15:58:37+00:00",
       "core_financial_extraction_stable_evidence_count": 7,
@@ -533,7 +585,54 @@
       "financing_cash_flow_calculation": "current YTD minus previous quarter YTD",
       "cash_beginning_reported_ytd": 5668895.214949,
       "cash_beginning_calculation": "Số dư tiền đầu quý bằng tiền cuối quý liền trước.",
-      "income_tax_deferred": 7816.14059
+      "income_tax_deferred": 7816.14059,
+      "non_controlling_interest_profit": 8236.561386,
+      "roa_formula": "Quarter profit after tax / average opening and closing total assets × 4 × 100",
+      "roe_formula": "Quarter profit after tax / average opening and closing equity × 4 × 100",
+      "average_total_assets": 86874580.2287035,
+      "average_equity": 60613925.363721,
+      "profit_source_basis": "Q4 standalone column in original Q4/2024 B02; source-text profit/tax/parent/NCI bridge exact.",
+      "financial_statement_raw_vnd": {
+        "total_assets": 81893564503501,
+        "equity": 61570995265636,
+        "pretax_profit": 2558297020087,
+        "income_tax_current": 498141880056,
+        "income_tax_deferred": 7816140590,
+        "income_tax": 505958020646,
+        "net_profit": 2052338999441,
+        "net_profit_attributable": 2044102438055,
+        "non_controlling_interest_profit": 8236561386,
+        "revenue": 34960846410089,
+        "financial_income": 419753041491,
+        "financial_expense": 140949317288,
+        "interest_expense": 5722032723,
+        "selling_expense": 668833753996,
+        "admin_expense": 1097693949210,
+        "eps": 408,
+        "total_liabilities": null,
+        "total_liabilities_ocr_excerpt": "B01 row300 OCR: '300 | 2032256923781' (truncated at end); no complete raw value available from this OCR line.",
+        "total_assets_reported_vnd": 81893564503501,
+        "total_equity_reported_vnd": 61570995265636
+      },
+      "financial_statement_checks": {
+        "pbt_tax_pat_residual_vnd": 0,
+        "parent_nci_pat_residual_vnd": 0,
+        "total_liabilities_status": "PENDING OCR row300 truncated; no back-calculation used."
+      },
+      "source_cross_period_reconciliation": {
+        "later_q1_2025_opening_comparative": {
+          "total_assets": 81854881408158,
+          "total_liabilities": 20283886142528,
+          "equity": 61570995265630
+        },
+        "difference_vs_q4_original": {
+          "total_assets": -38683095343,
+          "total_liabilities_candidate_from_q4_total_assets_equity": 38683095337,
+          "equity": -6
+        },
+        "status": "PENDING_RESTATEMENT_RECONCILIATION",
+        "note": "Q1/2025 B01 opening comparative may reflect a later re-presentation of the 31/12/2024 position. Keep both source bases separately."
+      }
     },
     {
       "symbol": "GAS",
