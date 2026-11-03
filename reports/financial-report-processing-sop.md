@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.16
+- Phiên bản: 1.17
 - Ngày ban hành: 03/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -364,7 +364,7 @@ Status: `verified_manual_visual_reconciliation`, B01/B02/B03 PASS, no open core/
 #### Resume
 Continue to **GEG Q2/2024**. Its existing Q2 record has B03 selected from the later Q2/2025 comparative while original Q2/2024 source sidecar is archived; inspect original source before changing values. Preserve prior/current comparative differences as separate evidence and do not force balance.
 
-### 10.9 GEG Q2/2024 — original VietstockFinance source reconciled; image review pending
+### 10.15 GEG Q2/2024 — original VietstockFinance source reconciled; image review pending
 
 - Nguồn chính: VietstockFinance document ID **471941**, BCTC hợp nhất Q2/2024; URL `https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%202/GEG_Baocaotaichinh_Q2_2024_Hopnhat.pdf`; archive `reports/raw/GEG/auto-geg-20261021/55c5b7c66cb1a05b.pdf`; sidecar `.pdf.extracted.json`; 41 trang.
 - Sidecar gốc lưu text B01 trang in 1–2 (sidecar pages 3–4), B02 trang in 3 (sidecar page 5), B03 trang in 4–5 (sidecar pages 6–7). PDF gốc trực tiếp không mở được qua web PDF reader trong phiên này; do đó **visual review vẫn PENDING** và không đánh dấu `manually_visual_reviewed=true`.
@@ -390,7 +390,7 @@ Continue to **GEG Q2/2024**. Its existing Q2 record has B03 selected from the la
 - Data commit: `27c237713c4cdb847ef4544201fb5e4806bcf033`.
 - Status: **source-text reconciled; visual review pending**. All arithmetic checks on B01/B02/B03 pass at raw VND precision. Do not repeat core extraction or reselect comparative cashflow source; proceed with GEG **Q3/2024** as requested, while retaining Q2's visual-review marker.
 
-### 10.10 GEG Q3/2024 — original source text reconciled; visual pending
+### 10.16 GEG Q3/2024 — original source text reconciled; visual pending
 
 - Nguồn: VietstockFinance document ID **483862**, báo cáo hợp nhất Q3/2024; URL `https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%203/GEG_Baocaotaichinh_Q3_2024_Hopnhat.pdf`; archive `reports/raw/GEG/auto-geg-20261021/92f6d2a0ac2dccae.pdf`; sidecar `.pdf.extracted.json`; 41 trang.
 - Sidecar nguồn lưu B01 trang in 1–2 (sidecar pages 3–4), B02 trang in 3 (page 5), B03 trang in 4–5 (pages 6–7). PDF ảnh không mở được qua web PDF reader trong phiên; không đánh dấu visual verified.
@@ -405,7 +405,7 @@ Continue to **GEG Q2/2024**. Its existing Q2 record has B03 selected from the la
 - Data commit: `9ca3f8f8cbae3810400872d5f34dad02f002fdd2`.
 - Status: source text reconciled, visual review pending. Continue GEG **Q4/2024**; do not repeat Q1/Q2/Q3 core extraction or reselect B03 source basis. Preserve Q2/Q3 visual-pending markers and Q3's 90 VND PBT/tax/PAT residual.
 
-### 10.11 GEG Q4/2024 — original PDF B01/B02/B03 visually verified
+### 10.17 GEG Q4/2024 — original PDF B01/B02/B03 visually verified
 
 - Nguồn: VietstockFinance document ID **490218**, BCTC hợp nhất; PDF `https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%204/GEG_Baocaotaichinh_Q4_2024_Hopnhat.pdf`; archive `reports/raw/GEG/auto-geg-20261021/cfe0d5be553d8698.pdf`; sidecar `reports/raw/GEG/auto-geg-20261021/a5dc3fd9e734420f.pdf.extracted.json`. PDF reader reports 81 pages. The consolidated portion starts after the separate statements; original consolidated report pages were visually inspected at PDF indices 42–46.
 - B01 printed page 1 (PDF index 42): current assets **1.381.711.542.204 VND**, non-current assets **13.790.652.181.814 VND**, total assets **15.172.363.724.018 VND**. Cash and equivalents **163.717.707.072 VND**, including cash **99.909.204.892** and equivalents **63.808.502.180**.
@@ -432,7 +432,7 @@ Continue to **GEG Q2/2024**. Its existing Q2 record has B03 selected from the la
 - Data commit Q4/2024: `f31c70a6e8052c3be901c94d297ccddec31fdf0a`.
 - Status: `verified_manual_visual_reconciliation`, period complete. Continue GEG **Q1/2025**. Do not repeat extraction or visual review for Q1–Q4/2024.
 
-### 10.12 GEG Q1/2025 — original B01/B02/B03 visually verified; tax/admin OCR corrected
+### 10.18 GEG Q1/2025 — original B01/B02/B03 visually verified; tax/admin OCR corrected
 
 - Nguồn: VietstockFinance document ID **504494**, BCTC hợp nhất Q1/2025; PDF `https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%201/GEG_Baocaotaichinh_Q1_2025_Hopnhat.pdf`; archive `reports/raw/GEG/auto-geg-20261021/cc8daa6c76e9f381.pdf`; sidecar `.pdf.extracted.json`; 83 trang.
 - Đã xem trực tiếp PDF indices 6–10: B01 printed pages 1–2 (indices 6–7), B02 printed page 3 (index 8), B03 printed pages 4–5 (indices 9–10).
@@ -459,7 +459,7 @@ Continue to **GEG Q2/2024**. Its existing Q2 record has B03 selected from the la
 - Data commit Q1/2025: `1b278c047e80d0ba3965cac57e468f77e742df70`.
 - Status: `verified_manual_visual_reconciliation`. Q1/2025 is complete. Continue GEG **Q2/2025**; do not repeat any Q1–Q4/2024 or Q1/2025 core extraction/visual review. Carry the B01 opening-balance difference as a separate cross-period pending item.
 
-### 10.13 GEG Q2/2025 — original B01/B02/B03 visually verified; source-sidecar path corrected
+### 10.19 GEG Q2/2025 — original B01/B02/B03 visually verified; source-sidecar path corrected
 
 - Nguồn: VietstockFinance document ID **513346**, BCTC hợp nhất Q2/2025; URL `https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%202/GEG_Baocaotaichinh_Q2_2025_Hopnhat.pdf`; PDF 85 trang; archive `reports/raw/GEG/auto-geg-20261021/4a525617c885ff3f.pdf`; đúng sidecar gốc `reports/raw/GEG/auto-geg-20261021/4a525617c885ff3f.pdf.extracted.json`.
 - Đã xem trực tiếp ảnh PDF:
@@ -500,6 +500,40 @@ Continue to **GEG Q2/2024**. Its existing Q2 record has B03 selected from the la
 - Sidecar path correction: the previous data record's `financial_line_items_source` mistakenly referenced `reports/raw/GEG/auto-geg-20261021/e5c84e9cb42b1698.pdf.extracted.json`, which is the **Q2/2026 comparative report**, not the original Q2/2025 report. It is corrected to `4a525617c885ff3f.pdf.extracted.json`. The 2026 comparative remains audit-only; no Q2/2025 current-period data should be populated from it.
 - Data commit: `6f46accce8df3d5b621e4ab4cf46df37cfa9b7c0`.
 - Status: `verified_manual_visual_reconciliation`; Q2/2025 complete. Continue GEG **Q3/2025**. Do not repeat Q1/2024–Q1/2025 core extraction; carry Q2/Q3/2024 visual-pending and Q1/2025 opening-balance presentation difference separately.
+
+### 10.20 GEG Q3/2025 — original VietstockFinance B01/B02/B03 visually verified and corrected
+
+- Nguồn: VietstockFinance document ID **523528**, BCTC hợp nhất Q3/2025; URL `https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%203/GEG_Baocaotaichinh_Q3_2025_Hopnhat.pdf`; archive `reports/raw/GEG/auto-geg-20261021/770d2246aaa4f701.pdf`; sidecar `.pdf.extracted.json`; PDF 83 trang.
+- Đã xem trực tiếp ảnh PDF gốc: B01 trang in 1–2 (PDF pages 5–6), B02 trang in 3 (PDF page 7), B03 trang in 4–5 (PDF pages 8–9). Evidence refs: `turn168010view0` đến `turn168010view4`.
+- Đơn vị báo cáo là **VND**, phạm vi **hợp nhất**. Không dùng số comparative của năm trước thay số hiện tại.
+
+#### B01 — raw VND; residuals 0
+- Tài sản ngắn hạn **1.975.118.527.567** + tài sản dài hạn **13.272.833.523.252** = tổng tài sản **15.247.952.050.819**.
+- Nợ ngắn hạn **950.488.102.304** + nợ dài hạn **7.724.273.864.190** = tổng nợ **8.674.761.966.494**.
+- Vốn chủ sở hữu **6.573.190.084.325**; nợ + vốn chủ = tổng tài sản **15.247.952.050.819**, residual **0 VND**.
+- Tiền và tương đương tiền **406.053.297.053** gồm tiền **95.553.297.053** + tương đương tiền **310.500.000.000**, khớp chính xác.
+- Dòng tài sản khác đã đọc: đầu tư ngắn hạn **378.500.000.000**; phải thu ngắn hạn **1.099.569.520.475**; hàng tồn kho **62.960.131.810**; tài sản cố định **12.701.094.168.860**; xây dựng cơ bản dở dang **381.389.541.012**; đầu tư tài chính dài hạn **54.283.512.223**; retained earnings **666.486.918.225 VND**.
+
+#### B02 — raw VND; toàn bộ cầu nối 0
+- Doanh thu thuần **671.328.091.438** − giá vốn **348.638.552.595** = lợi nhuận gộp **322.689.538.843**.
+- Doanh thu tài chính **7.288.526.236**; chi phí tài chính **194.351.138.463**; trong đó lãi vay **193.441.309.636**; lãi công ty liên kết **625.069.998**.
+- Chi phí bán hàng row25 là dấu gạch ngang: giữ **null**, không gán 0 và không lặp nhầm chi phí quản lý. Chi phí quản lý row26 **37.895.058.681**.
+- Lợi nhuận thuần hoạt động **98.356.937.933**; thu nhập khác **616.491.042**; chi phí khác **247.139.597**; lợi nhuận khác **369.351.445**; PBT **98.726.289.378**.
+- Thuế hiện hành **18.340.054.977**; thuế hoãn lại **323.314.089**; tổng thuế **18.663.369.066**; PAT hợp nhất **80.062.920.312**; parent PAT **74.645.813.663**; NCI **5.417.106.649**; EPS cơ bản/suy giảm **198**.
+- Cầu nối doanh thu−giá vốn=gross profit; gross profit + finance income − finance expense + associates − selling − admin = operating profit; other income−other expense=other profit; operating + other=PBT; current+deferred tax=total tax; PBT−tax=PAT; parent+NCI=PAT. Tất cả residual **0 VND**.
+- Lỗi OCR/cột đã sửa: trước đó financial expense bị để 0; đúng theo B02 row22 là **194.351.138.463 VND**. Trước đó selling expense bị gán nhầm bằng admin expense; row25 hiện tại là dấu gạch ngang, giữ `null`. Admin expense đúng là **37.895.058.681 VND**.
+
+#### B03 — 9M YTD và quý III riêng; residuals 0
+- 9M YTD: CFO **856.209.015.015**; CFI **244.031.897.120**; CFF **-857.979.656.903**; net cash change **242.261.255.232**; opening cash **163.717.707.072**; FX **74.334.749**; closing cash **406.053.297.053 VND**.
+- H1/2025 baseline dùng báo cáo Q2/2025 gốc document **513346**, không dùng comparative của Q2/2026: CFO **555.421.075.993**; CFI **476.067.298.075**; CFF **-721.712.954.268**; net cash **309.775.419.800**; FX **56.223.158**; cash closing **473.549.350.030**; capex **-16.668.892.827**; dividends **-296.857.300 VND**.
+- Q3 standalone = 9M YTD trừ original H1 YTD: CFO **300.787.939.022**; CFI **-232.035.400.955**; CFF **-136.266.702.635**; net cash change **-67.514.164.568**; FX **18.111.591**; opening cash **473.549.350.030**; closing cash **406.053.297.053 VND**.
+- Capex Q3 **-103.386.144.231 VND** = 9M capex **-120.055.037.058** less H1 **-16.668.892.827**. Dividends Q3 **-49.677.200 VND** = 9M row36 **-346.534.500** less H1 **-296.857.300**. Giữ dấu âm theo báo cáo.
+- YTD and Q3 flow sums, cash bridges, FX and subtraction residuals all **0 VND**. B01 cash total equals B03 ending cash exactly.
+
+- ROA **2,10%**, ROE **4,90%**, dùng PAT quý riêng / bình quân số đầu-cuối kỳ × 4 × 100; average total assets **15.216.707,723674 triệu VND**, average equity **6.535.019,1132555 triệu VND**.
+- Data commit: `a69ced9560a3afc29c27a8d993c727b15147f0d5`.
+- Trạng thái: `verified_manual_visual_reconciliation`, B01/B02/B03 PASS, không còn ngoại lệ lõi/chi tiết cho Q3/2025. Các ngoại lệ khác của GEG (Q2/Q3/2024 visual, Q1/2025 opening comparative delta, Q2/2025 cash-components residual 6.000 VND) được giữ riêng, không ảnh hưởng trạng thái Q3.
+- Tiếp theo: **GEG Q4/2025**. Không trích xuất hoặc xem lại Q1/Q2/2025 và các kỳ 2024 đã hoàn tất.
 
 ## 11. Giới hạn thao tác
 
