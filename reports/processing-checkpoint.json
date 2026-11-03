@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-04T00:55:00+07:00",
+  "updatedAt": "2026-11-04T00:56:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "Priority 1: VietstockFinance public document catalog and directly linked report PDFs. Priority 2: WiData document tab for the same ticker, only to compare/supplement when source 1 lacks the report or extraction is unclear/unavailable. No third source without explicit user approval.",
   "periodStart": "2024-Q1",
@@ -45,10 +45,10 @@
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "IDC",
-    "status": "IDC_Q3_2025_DIRECT_PDF_TEXT_AUDIT_CASHFLOW_SAME_BASIS_CORRECTED_VISUAL_PENDING",
+    "status": "IDC_Q3_2025_DIRECT_PDF_TEXT_AUDIT_SAME_BASIS_CASHFLOW_CORRECTED_VISUAL_PENDING",
     "completeForAutomation": true,
     "manualReviewRemaining": true,
-    "processedAt": "2026-11-04T00:55:00+07:00",
+    "processedAt": "2026-11-04T00:56:00+07:00",
     "period": "2025-Q3",
     "periodStatus": "Đã mở trực tiếp PDF tiếng Anh VietstockFinance (text-indexed). B01/B02 values and arithmetic verified. Row 440 differs from total assets by 71,700 VND (0.0000003367%, within 0.01% tolerance); leave source values unchanged. B03 standalone Q3 corrected to same-original-basis Q3 9M less original Q2/2025 H1: CFO 1,541,531,404,357; CFI -2,242,302,344,954; CFF 629,179,666,426; net -71,591,274,171; cash bridge exact. Later Q2/2026 As-restated H1 comparative retained separately (classification shift 525,837,250,014 VND CFO/CFI). PDF not downloaded; screenshot renderer rejected file size 15,499,375 bytes, so page-image review remains PENDING.",
     "periodCount": 10,
@@ -57,10 +57,10 @@
     "sourcePdfUrl": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%203/IDC_Baocaotaichinh_Q3_2025_Hopnhat/4_idc_2025_10_30_de24c2b_en_financialstatementshn_q3_2025hn_s.pdf",
     "sourceDocumentId": "523494",
     "sourceArchiveFile": "reports/raw/IDC/auto-idc-20261021/04ff7104fec1b3fd.zip",
-    "dataCommit": "0f0af81b290888b2bd681743e664dfa902837119",
+    "dataCommit": "c8b224fb543bb777ad38ebeccbe720b0695ec578",
     "normalizationStandardVersion": "3.4",
     "validation": {
-      "balanceSheet": "PASS_WITHIN_0.01_PERCENT_ROW440_DELTA_71700_VND",
+      "balanceSheet": "PASS_COMPONENTS_ROW440_TEXT_UNREADABLE_IMAGE_PENDING",
       "incomeStatement": "PASS",
       "cashFlow": "PASS_ORIGINAL_SAME_BASIS",
       "visual": "PENDING_PDF_IMAGE_RENDER_LIMIT"
@@ -74,12 +74,28 @@
     "sourceDocumentPageCount": 64,
     "sourceDocumentScope": "Consolidated",
     "pendingExceptions": [
-      "Direct PDF page-image review of IDC Q3/2025 remains pending because screenshot renderer rejected 15,499,375-byte PDF; PDF text layer was accessible without download.",
+      "Direct page-image review IDC Q3/2025 B01/B02/B03 still pending; PDF text page 11 row 440 is corrupted/unreadable.",
       "IDC Q2/2025 direct page-image review remains pending.",
       "IDC Q1/2024 selling-expense detail unresolved.",
       "IDC Q4/2024 original B03 source OCR inconsistency remains pending."
     ],
-    "cashflowBasisCorrectionCommit": "0f0af81b290888b2bd681743e664dfa902837119"
+    "cashflowBasisCorrectionCommit": "0f0af81b290888b2bd681743e664dfa902837119",
+    "row440Audit": {
+      "status": "UNREADABLE_IN_PDF_TEXT_LAYER",
+      "reportedNumber": null,
+      "differenceVnd": null,
+      "balanceEquationResidualVnd": 0,
+      "note": "Do not use previously noted 71,700 VND difference; that value was based on corrupted text-layer token. Sum of independently extracted liabilities and equity equals total assets exactly."
+    },
+    "cashflowStandaloneRawVnd": {
+      "cfo": 1541531404357,
+      "cfi": -2242302344954,
+      "cff": 629179666426,
+      "net": -71591274171,
+      "fx": 23900983,
+      "cashOpening": 863253933107,
+      "cashClosing": 791686559919
+    }
   },
   "symbolStates": {
     "MBB": {
@@ -1783,16 +1799,16 @@
           "Q2/2025: original B03 H1 YTD and Q2 standalone cashflow bridges all exact. The chosen Q2/2026 As-restated comparative basis also reconciles, preserving 525.837bn VND CFO-to-CFI classification reallocation with net cash unchanged.",
           "Q2/2025: top-level cashflow basis remains selected As-restated Note 41; original Q2 B03 source stored separately."
         ],
-        "remaining": "IDC Q3/2025 B01/B02/B03 text audit completed from direct PDF link; same-basis Q3 cash-flow calculation corrected and committed. Do not repeat core text extraction. Only visual review remains for Q3 plus earlier recorded Q2/2025 and IDC Q1/2024/Q4/2024 exceptions.",
+        "remaining": "IDC Q3/2025 B01/B02/B03 text audit and same-basis cashflow correction committed. Do not repeat core text extraction. Only page-image review remains pending for Q3; row 440 must be read from actual image. Preserve earlier Q2/2025 and Q1/2024/Q4/2024 exceptions.",
         "q3_2025DirectPdfAudit": {
           "documentId": "523494",
           "sourcePdfUrl": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%203/IDC_Baocaotaichinh_Q3_2025_Hopnhat/4_idc_2025_10_30_de24c2b_en_financialstatementshn_q3_2025hn_s.pdf",
-          "dataCommit": "0f0af81b290888b2bd681743e664dfa902837119",
+          "dataCommit": "c8b224fb543bb777ad38ebeccbe720b0695ec578",
           "status": "B01_B02_B03_TEXT_AUDIT_PASS_VISUAL_PENDING",
-          "row440ReportedDifferenceVnd": 71700,
-          "row440DifferencePercent": 3.367299024372689e-7,
-          "tolerancePercent": 0.01,
-          "cashFlowStandaloneBasis": "Q3 9M minus original Q2/2025 H1, same original reported basis",
+          "row440TextStatus": "UNREADABLE_IN_PDF_TEXT_LAYER",
+          "row440ReportedDifferenceVnd": null,
+          "balanceEquationResidualVnd": 0,
+          "cashFlowStandaloneBasis": "Q3 9M less original Q2/2025 H1, same original reported basis",
           "cashFlowRawVnd": {
             "cfo": 1541531404357,
             "cfi": -2242302344954,
@@ -1803,8 +1819,8 @@
             "cashClosing": 791686559919
           },
           "quarterCashFlowBridgeResidualVnd": 0,
-          "restatedAlternative": "Q2/2026 As-restated H1 is preserved separately; do not mix it with un-restated Q3/2025 9M.",
-          "visualReview": "PENDING due screenshot renderer content-length limit; no page image checked."
+          "restatedAlternative": "Q2/2026 As-restated H1 remains separate metadata; never mix with un-restated Q3/2025 9M.",
+          "visualReview": "PENDING: direct web PDF fetch disabled / screenshot renderer could not render PDF; no page-image verification claim."
         }
       },
       "lastDetailSourceReconciliation": {
@@ -2282,16 +2298,6 @@
     }
   },
   "progressHistory": [
-    {
-      "symbol": "FPT",
-      "status": "automated_processing_complete",
-      "completeForAutomation": true,
-      "processedAt": "2026-11-01T08:58:23Z",
-      "workflowRunId": "41291013119",
-      "changedPaths": [
-        "data/financials-FPT.json"
-      ]
-    },
     {
       "symbol": "SHB",
       "status": "automated_processing_complete",
@@ -3048,6 +3054,17 @@
       "completeForAutomation": true,
       "processedAt": "2026-11-04T00:55:00+07:00",
       "dataCommit": "0f0af81b290888b2bd681743e664dfa902837119",
+      "changedPaths": [
+        "data/financials-IDC.json",
+        "reports/processing-checkpoint.json"
+      ]
+    },
+    {
+      "symbol": "IDC",
+      "status": "IDC_Q3_2025_DIRECT_PDF_TEXT_AUDIT_SAME_BASIS_CASHFLOW_CORRECTED_VISUAL_PENDING",
+      "completeForAutomation": true,
+      "processedAt": "2026-11-04T00:56:00+07:00",
+      "dataCommit": "c8b224fb543bb777ad38ebeccbe720b0695ec578",
       "changedPaths": [
         "data/financials-IDC.json",
         "reports/processing-checkpoint.json"
