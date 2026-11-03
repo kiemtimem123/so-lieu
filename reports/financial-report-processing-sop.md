@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.12
+- Phiên bản: 1.13
 - Ngày ban hành: 03/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -389,6 +389,21 @@ Continue to **GEG Q2/2024**. Its existing Q2 record has B03 selected from the la
 - ROA **0,0305%**, ROE **0,0834%**, computed using consolidated quarter PAT divided by average opening/closing assets or equity × 4 × 100.
 - Data commit: `27c237713c4cdb847ef4544201fb5e4806bcf033`.
 - Status: **source-text reconciled; visual review pending**. All arithmetic checks on B01/B02/B03 pass at raw VND precision. Do not repeat core extraction or reselect comparative cashflow source; proceed with GEG **Q3/2024** as requested, while retaining Q2's visual-review marker.
+
+### 10.10 GEG Q3/2024 — original source text reconciled; visual pending
+
+- Nguồn: VietstockFinance document ID **483862**, báo cáo hợp nhất Q3/2024; URL `https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%203/GEG_Baocaotaichinh_Q3_2024_Hopnhat.pdf`; archive `reports/raw/GEG/auto-geg-20261021/92f6d2a0ac2dccae.pdf`; sidecar `.pdf.extracted.json`; 41 trang.
+- Sidecar nguồn lưu B01 trang in 1–2 (sidecar pages 3–4), B02 trang in 3 (page 5), B03 trang in 4–5 (pages 6–7). PDF ảnh không mở được qua web PDF reader trong phiên; không đánh dấu visual verified.
+- B01 raw VND: current assets **2.059.775.715.054** + non-current assets **13.965.673.513.060** = total assets **16.025.449.228.114**; current liabilities **1.278.205.547.821** + long-term liabilities **8.924.999.693.534** = total liabilities **10.203.205.241.355**. Equity OCR row begins `ã.822.243.986.759`, first digit is blurred; value candidate **5.822.243.986.759 VND** matches assets less liabilities exactly. Keep the candidate and its source-basis note; do not claim independently visually confirmed.
+- B02 Q3 riêng: revenue **543.139.233.330** − COGS **305.803.618.965** = gross profit **237.335.614.365 VND**; financial income **10.192.254.821**; financial expense **230.597.066.787**; interest expense **224.016.050.556**; associate loss **-4.728.790.117**; selling expense cell is a dash (current quarter nil); admin expense **33.082.865.448**; operating loss **-20.880.853.166**; other income **2.301.079.814** − other expense **1.329.573.447** = other profit **971.506.367**; PBT **-19.909.346.709 VND**.
+- Tax current **13.175.931.414** + deferred **14.717.521.128** = total tax **27.893.452.542**; PAT **-47.802.799.341**; parent PAT **-27.338.001.098** + NCI **-20.464.798.243** = PAT exactly. PBT − tax differs from reported PAT by **90 VND** (relative **0,000000188%**); this is a tiny OCR/source rounding residual well below 0,01%. Keep the three printed values unchanged; do not insert a plug. EPS **-81**.
+- B03 original 9M YTD raw VND: CFO **759.517.327.189**; CFI **85.031.541.367**; CFF **-213.156.993.585**; net cash change **631.391.874.971**; FX **32.078.475**; opening cash **229.105.088.949**; closing cash **860.529.042.395**; capex YTD **-74.137.239.651**; dividends YTD **-39.812.400**.
+- Same-year baseline is now original Q2/2024 B03 document **471941**, not the later Q3/2025 comparative: H1 CFO **495.388.370.938**, CFI **12.532.140.011**, CFF **-156.094.358.264**, net change **351.826.152.685**, FX **28.894.528**, opening cash **229.105.088.949**, closing cash **580.960.136.162**, capex **-2.739.497.026**.
+- Standalone Q3 = original Q3 YTD less original Q2 H1 YTD: CFO **264.128.956.251**; CFI **72.499.401.356**; CFF **-57.062.635.321**; net cash change **279.565.722.286**; FX **3.183.947**; opening cash **580.960.136.162**; closing cash **860.529.042.395**; capex **-71.397.742.625**. B03 row36 Q3 YTD is **-39.812.400 VND** and Q2 H1 row36 is a dash; Q3 row36 value remains as printed in YTD, and standalone Q3 cash dividend amount follows the report's dash-as-no-payment basis.
+- YTD flow sum, YTD cash bridge, Q3 standalone flow sum and Q3 standalone cash bridge residuals are all **0 VND**. ROA **-1,1917%**, ROE **-3,2707%**, calculated from quarter consolidated PAT divided by average opening/closing assets or equity × 4 × 100.
+- Source-revision: earlier Q3 data used Q3/2025 comparative 9M/2024 for YTD cashflow and H1 basis. Original Q3/2024 B03 now canonical; same-year original Q2/2024 baseline also supersedes the Q2/2025 comparison. Preserve later comparative values as audit-only, not canonical.
+- Data commit: `9ca3f8f8cbae3810400872d5f34dad02f002fdd2`.
+- Status: source text reconciled, visual review pending. Continue GEG **Q4/2024**; do not repeat Q1/Q2/Q3 core extraction or reselect B03 source basis. Preserve Q2/Q3 visual-pending markers and Q3's 90 VND PBT/tax/PAT residual.
 
 ## 11. Giới hạn thao tác
 
