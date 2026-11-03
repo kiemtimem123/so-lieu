@@ -4015,7 +4015,7 @@
         "revenue_detail_component_reconciliation"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-23T11:36:43+00:00",
-      "financial_line_items_note": "B01/B02/B03 gốc đã xem ảnh. Revenue row20 và expense row40 là tổng báo cáo được xác minh. Expense components exact. Revenue detail line 1.8 has an OCR candidate but known-component residual 90,000,000 VND (0.01915%) exceeds 0.01%; keep the field null pending clearer source evidence.",
+      "financial_line_items_note": "B01/B02/B03 gốc đã xem ảnh. Revenue row20 và expense row40 là tổng báo cáo được xác minh. Expense components exact. Revenue detail line 1.8 has an OCR candidate but known-component residual 90,000,000 VND (0.01915%) exceeds 0.01%; keep the field null pending clearer source evidence. Expense row23.3 AFS fair-value assessment loss 45,714,000 VND was added to the verified expense components; total now matches row40 exactly. Revenue row1.8 remains null.",
       "cash_and_equivalents": 588252.269795,
       "fixed_assets": 64985.477513,
       "current_liabilities": 4522612.518725,
@@ -4116,7 +4116,8 @@
         "broker_other_operating_expense",
         "broker_securities_advisory_expense",
         "broker_net_operating_profit",
-        "non_controlling_interest_profit"
+        "non_controlling_interest_profit",
+        "broker_afs_loss"
       ],
       "financial_line_items_status": "pending_revenue_detail_component_reconciliation",
       "financial_line_items_schema_version": "2026-10-27-other-statements-source-fields-v12",
@@ -4442,7 +4443,8 @@
         "net_cash_change_ytd": -618885149439,
         "cash_beginning_reported_ytd": 1207137419234,
         "cash_ending_reported_ytd": 588252269795,
-        "capital_expenditure_ytd": -6744279065
+        "capital_expenditure_ytd": -6744279065,
+        "broker_afs_loss": 45714000
       },
       "financial_statement_checks": {
         "balance_equation_residual_vnd": 0,
@@ -4454,15 +4456,17 @@
         "revenue_identified_components_relative_difference_percent": 0.019151567940375997,
         "revenue_detail_candidate_vnd": 881819860,
         "revenue_detail_note": "OCR sidecar candidate for B02 row 1.8 does not reconcile the known components to row 20; do not assign until source-cell visual confirmation.",
-        "expense_detail_sum_vnd": 106283034769,
+        "expense_detail_sum_vnd": 106328748769,
         "expense_total_vnd": 106328748769,
-        "expense_detail_residual_vnd": -45714000,
+        "expense_detail_residual_vnd": 0,
         "profit_after_tax_residual_vnd": 0,
         "parent_nci_residual_vnd": 0,
         "ytd_cashflow_flow_residual_vnd": 0,
         "ytd_cash_bridge_residual_vnd": 0,
         "q3_standalone_cashflow_flow_residual_vnd": 0,
-        "q3_standalone_cash_bridge_residual_vnd": 0
+        "q3_standalone_cash_bridge_residual_vnd": 0,
+        "expense_detail_within_tolerance": true,
+        "expense_component_note": "Includes row 23.3 AFS fair-value assessment loss 45,714,000 VND; all current-quarter B02 expenses sum to row 40 exactly."
       },
       "profit_attribution_ytd_reconciliation": {
         "q3_2025_ytd_vnd": {
@@ -4561,11 +4565,13 @@
           "unresolved_row": "B02 row 1.8; OCR candidate 881,819,860 VND is incompatible with current known component total; kept null."
         },
         "expense_detail": {
-          "q3_current_components_sum_vnd": 106283034769,
+          "q3_current_components_sum_vnd": 106328748769,
           "q3_reported_total_vnd": 106328748769,
-          "residual_vnd": -45714000,
+          "residual_vnd": 0,
+          "row23_3_afs_fair_value_loss_vnd": 45714000,
           "row29_q3_current_vnd": 15200000,
-          "row29_9m_current_ytd_vnd": 15200000
+          "row29_9m_current_ytd_vnd": 15200000,
+          "status": "PASS"
         },
         "profit": {
           "pbt_vnd": 325846951359,
@@ -4591,7 +4597,8 @@
         },
         "all_core_checks_pass": true
       },
-      "pageLabel": "2025-Q3"
+      "pageLabel": "2025-Q3",
+      "broker_afs_loss": 45.714
     },
     {
       "symbol": "VDS",
