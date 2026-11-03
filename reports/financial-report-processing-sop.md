@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.13
+- Phiên bản: 1.14
 - Ngày ban hành: 03/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -404,6 +404,33 @@ Continue to **GEG Q2/2024**. Its existing Q2 record has B03 selected from the la
 - Source-revision: earlier Q3 data used Q3/2025 comparative 9M/2024 for YTD cashflow and H1 basis. Original Q3/2024 B03 now canonical; same-year original Q2/2024 baseline also supersedes the Q2/2025 comparison. Preserve later comparative values as audit-only, not canonical.
 - Data commit: `9ca3f8f8cbae3810400872d5f34dad02f002fdd2`.
 - Status: source text reconciled, visual review pending. Continue GEG **Q4/2024**; do not repeat Q1/Q2/Q3 core extraction or reselect B03 source basis. Preserve Q2/Q3 visual-pending markers and Q3's 90 VND PBT/tax/PAT residual.
+
+### 10.11 GEG Q4/2024 — original PDF B01/B02/B03 visually verified
+
+- Nguồn: VietstockFinance document ID **490218**, BCTC hợp nhất; PDF `https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%204/GEG_Baocaotaichinh_Q4_2024_Hopnhat.pdf`; archive `reports/raw/GEG/auto-geg-20261021/cfe0d5be553d8698.pdf`; sidecar `reports/raw/GEG/auto-geg-20261021/a5dc3fd9e734420f.pdf.extracted.json`. PDF reader reports 81 pages. The consolidated portion starts after the separate statements; original consolidated report pages were visually inspected at PDF indices 42–46.
+- B01 printed page 1 (PDF index 42): current assets **1.381.711.542.204 VND**, non-current assets **13.790.652.181.814 VND**, total assets **15.172.363.724.018 VND**. Cash and equivalents **163.717.707.072 VND**, including cash **99.909.204.892** and equivalents **63.808.502.180**.
+- B01 printed page 2 (PDF index 43): current liabilities **785.159.808.730 VND**, long-term liabilities **8.623.907.509.228 VND**, total liabilities **9.409.067.317.958 VND**; equity **5.763.296.406.060 VND**. Assets = current + non-current; liabilities = current + long-term; assets = liabilities + equity, all residual **0 VND**.
+- B02 printed page 3 (PDF index 44), Q4-only column:
+  - Revenue **555.327.531.103 VND**; COGS **349.563.904.310**; gross profit **205.763.626.793**.
+  - Financial income **9.347.533.906**; financial expenses **156.053.657.470**; including interest expense **156.555.108.658** (the source shows interest amount slightly greater due other negative finance cost line).
+  - Share of profit in associates **12.749.592.517**; selling expenses **25.000.000**; admin expenses **29.773.611.792**; operating profit **42.008.483.954**.
+  - Other income **1.497.146.411**; other expense **10.610.793**; other profit **1.486.535.618**; PBT **43.495.019.572**.
+  - Current income tax **14.850.552.832**; deferred income tax **16.271.720.547**; total income tax **31.122.273.379**; PAT **12.372.746.193**; parent PAT **31.038.790.590**; NCI **-18.666.044.397**; EPS **52**.
+  - Revenue−COGS=gross profit; gross profit plus finance/associate less selling/admin=operating profit; other income−other expense=other profit; operating+other=PBT; current+deferred tax=total tax; PBT−tax=PAT; parent+NCI=PAT. Every residual **0 VND**.
+- B03 printed page 4 (PDF index 45) and page 5 (PDF index 46), FY2024 YTD source:
+  - CFO **879.398.089.294 VND**; CFI **38.466.134.014**; CFF **-983.287.237.113**; net cash change **-65.423.013.805**.
+  - Opening cash **229.105.088.949**; FX **35.631.928**; closing cash **163.717.707.072**.
+  - Capex YTD **-121.558.921.796**; dividends paid YTD **-76.197.803.000**.
+- Original Q3/2024 B03 same-year baseline (VietstockFinance document **483862**) is CFO **759.517.327.189**, CFI **85.031.541.367**, CFF **-213.156.993.585**, net change **631.391.874.971**, FX **32.078.475**, opening cash **229.105.088.949**, closing cash **860.529.042.395**, capex **-74.137.239.651**, dividends **-39.812.400 VND**.
+- Standalone Q4 = original FY2024 YTD less original Q3/2024 9M YTD:
+  - CFO **119.880.762.105 VND**; CFI **-46.565.407.353**; CFF **-770.130.243.528**; net change **-696.814.888.776**; FX **3.553.453**.
+  - Opening cash **860.529.042.395**; closing cash **163.717.707.072**.
+  - Capex **-47.421.682.145**; dividends paid **-76.157.990.600 VND**.
+  - YTD and quarter flows, YTD/quarter cash bridge, and YTD subtraction residuals all **0 VND**. No balancing plug.
+- ROA **0,3173%**, ROE **0,8544%**, formula consolidated quarter PAT / average opening and closing assets or equity × 4 × 100.
+- Direct PDF screenshot evidence: B01 printed pages 1–2 `turn798051view1`, `turn798051view2`; B02 printed page 3 `turn798051view3`; B03 printed pages 4–5 `turn798051view4`, `turn798051view5`. Visual review is **PASS**.
+- Data commit Q4/2024: `f31c70a6e8052c3be901c94d297ccddec31fdf0a`.
+- Status: `verified_manual_visual_reconciliation`, period complete. Continue GEG **Q1/2025**. Do not repeat extraction or visual review for Q1–Q4/2024.
 
 ## 11. Giới hạn thao tác
 
