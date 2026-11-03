@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.25
+- Phiên bản: 1.26
 - Ngày ban hành: 03/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -159,18 +159,39 @@ Người dùng đã chỉ đạo **tiếp tục, không dừng toàn bộ tiến
 - Người dùng đã yêu cầu tiếp tục; vì vậy sau khi lưu Q4/2025 ở trạng thái PENDING, chuyển sang mã tiếp theo **GAS** để xử lý các kỳ terminal/manual review từ archive VietstockFinance. Không chạy lại OCR đại trà cho 10 kỳ GAS; xử lý từng ngoại lệ đã được ghi trong checkpoint.
 - Ưu tiên GAS Q4/2024 (thiếu tổng nợ), GAS Q4/2025 (thiếu tổng nợ/vốn), GAS Q1/2026 (thiếu tổng B01 và các dòng cashflow); các kỳ còn lại chỉ mở lại khi có lý do cụ thể.
 
-### 10.6 GAS Q4/2024 — total liabilities giữ PENDING, tiếp tục Q4/2025
+### 10.6 GAS Q4/2024 — B01/B02/B03 source-text reconciled; image review PENDING
 
-- Nguồn: VietstockFinance document ID **490581**, BCTC hợp nhất, đơn vị VND; PDF gốc `https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%204/GAS_Baocaotaichinh_Q4_2024_Hopnhat.pdf`; archive `reports/raw/GAS/auto-gas-20261021/7fa3b1653ff606d1.pdf`; sidecar `.pdf.extracted.json`; 75 trang.
-- PDF gốc không render được trong phiên do endpoint trả lỗi Content-Length quá lớn; không có trang ảnh B01 để kiểm tra trực quan. Chỉ dùng text/OCR sidecar; không đánh dấu visual verified.
-- B01 sidecar trang PDF 4–5 (trang in 1–2): tổng tài sản **81.893.564.503.501 VND**; vốn chủ **61.570.995.265.636 VND**. Dòng row300 “Nợ phải trả” OCR bị cắt sau chuỗi `2032256923781`, không có đủ chữ số để xác định số chính xác; `total_liabilities` giữ `null`. Không tính ngược từ tổng tài sản trừ vốn chủ.
-- B02 sidecar trang PDF 6 (trang in 5): doanh thu **34.960.846.410.089 VND**; PBT **2.558.297.020.087 VND**; thuế hiện hành **498.141.880.056 VND**; thuế hoãn lại **7.816.140.590 VND**; tổng thuế **505.958.020.646 VND**; PAT **2.052.338.999.441 VND**; parent PAT **2.044.102.438.055 VND**; NCI **8.236.561.386 VND**; EPS **408**. PBT−thuế=PAT và parent+NCI=PAT, residual 0.
-- Các trường chi phí tài chính **419.753.041.491 VND**, chi phí tài chính **140.949.317.288 VND**, lãi vay **5.722.032.723 VND**, chi phí bán hàng **668.833.753.996 VND**, chi phí quản lý **1.097.693.949.210 VND** đã được giữ theo OCR rõ trong sidecar; vẫn chờ visual review.
-- B03 sidecar page 7 (trang in 6) OCR quá méo, các cấu phần CFO/CFI/CFF không đủ tin cậy; giữ null.
-- Cross-check được phép từ VietstockFinance Q1/2025 document ID **504411**, B01 printed page 2, cột đầu năm 31/12/2024: total assets **81.854.881.408.158 VND**, total liabilities **20.283.886.142.528 VND**, equity **61.570.995.265.630 VND**. Đây là số comparative được trình bày trong báo cáo sau, không giống số gốc Q4/2024: tổng tài sản khác **-38.683.095.343 VND**, vốn chủ khác **-6 VND**; vì vậy không tự động ghi đè Q4/2024 hoặc dùng cột comparative để lấp total liabilities Q4. Ghi nhận đây là khác biệt comparative/re-presentation chờ giải thích.
-- Đã thử nguồn phụ được duyệt WiData `https://widata.vn/GAS?tab=documents`, nhưng trang không truy cập được qua bộ đọc hiện tại; không sao chép giá trị WiData.
-- Trạng thái Q4/2024: B02 profit bridge PASS; B01 total assets/equity có source text; total liabilities PENDING do row300 truncated; visual B01/B02/B03 PENDING; cashflow components PENDING. Data commit `a996f3fa119e9ecc98ac29c35f66bbc1c0cb790c`.
-- Theo chỉ đạo tiếp tục của người dùng, không dừng tiến độ tại Q4/2024. Kỳ tiếp theo: **GAS Q4/2025**, tiếp tục kiểm tra nợ/vốn từ báo cáo gốc và sidecar; bảo toàn ngoại lệ Q4/2024.
+- Nguồn chính: VietstockFinance document ID **490581**, báo cáo tài chính hợp nhất năm 2024, đơn vị VND. Tệp PDF gốc: `https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%204/GAS_Baocaotaichinh_Q4_2024_Hopnhat.pdf`; archive `reports/raw/GAS/auto-gas-20261021/7fa3b1653ff606d1.pdf`; sidecar `.pdf.extracted.json`; 75 trang.
+- Nội dung bảng trong PDF gốc đã truy xuất được qua text extraction. Công cụ chụp ảnh trang PDF đã thử trên các trang B01/B02/B03 nhưng bị lỗi giới hạn kích thước (PDF 13.553.614 bytes); vì vậy **chưa visual verified**. Không ghi nhận đã xem ảnh. Không sử dụng nguồn dữ liệu thứ ba; các giá trị dưới đây lấy từ chính PDF VietstockFinance document 490581.
+- **B01 — Bảng cân đối kế toán hợp nhất (trang in 1–2):**
+  - Tổng tài sản **81.893.564.503.501 VND**.
+  - Tổng nợ phải trả row300 **20.322.569.237.871 VND**. Row300 đã đọc được trực tiếp từ bảng gốc, không suy ngược.
+  - Nợ ngắn hạn row310 **14.581.511.125.671 VND**; nợ dài hạn row330 **5.741.058.112.200 VND**; cộng đúng tổng nợ, residual **0**.
+  - Vốn chủ sở hữu row400 **61.570.995.265.630 VND**; tổng nợ + vốn chủ sở hữu bằng tổng tài sản, residual **0**.
+  - Tài sản ngắn hạn **57.295.844.201.420 VND**; tài sản dài hạn **24.597.720.302.081 VND**; cộng đúng tổng tài sản, residual **0**.
+  - Tiền và tương đương tiền **5.649.483.431.468 VND** (tiền **1.248.083.431.468**, tương đương tiền **4.401.400.000.000**); retained earnings **9.553.019.715.422 VND**; NCI equity **1.323.213.381.181 VND**.
+- **B02 — Kết quả kinh doanh hợp nhất, Quý IV cột Năm nay (trang in 3):**
+  - Doanh thu bán hàng/cung cấp dịch vụ row01 **24.960.846.410.089 VND**; giảm trừ row02 **15.729.073.724 VND**; doanh thu thuần row10 **24.945.117.336.365 VND**. Residual row01 − row02 − row10 = **0**. Giá vốn **20.900.958.213.404 VND**; lợi nhuận gộp **4.044.159.122.961 VND**; gross-profit residual **0**.
+  - Doanh thu tài chính **419.753.041.491 VND**; chi phí tài chính **140.949.317.288 VND**, trong đó lãi vay **57.220.327.243 VND**; phần lãi công ty liên doanh/liên kết **12.623.872.062 VND**; chi phí bán hàng **668.833.753.996 VND**; chi phí quản lý **1.097.693.949.210 VND**; lợi nhuận hoạt động **2.569.059.016.020 VND**.
+  - Thu nhập khác **1.712.505.229 VND**; chi phí khác **12.474.501.162 VND**; lỗ khác **-10.761.995.933 VND**; PBT **2.558.297.020.087 VND**.
+  - Thuế hiện hành **498.141.880.056 VND**; thuế hoãn lại **7.816.140.590 VND**; tổng chi phí thuế **505.958.020.646 VND**; PAT **2.052.338.999.441 VND**; parent PAT **2.044.102.438.055 VND**; NCI PAT **8.236.561.386 VND**. PBT − tổng thuế = PAT và parent + NCI = PAT, residual đều **0**.
+  - EPS row70 **852 VND/cổ phiếu**. Số OCR cũ 408 là đọc nhầm cột, đã sửa.
+  - Trường `revenue` trong snapshot chuẩn là **doanh thu thuần row10 = 24.945.117.336.365 VND** (24.945.117,336365 triệu VND), không phải doanh thu gộp row01. Giá trị OCR cũ 34.960.846.410.089 VND cũng sai; doanh thu gộp đúng row01 là 24.960.846.410.089 VND.
+- **B03 — Lưu chuyển tiền tệ hợp nhất, FY2024 YTD (trang in 4):**
+  - CFO **8.705.303.886.462 VND**; CFI **7.978.721.478.066 VND**; CFF **-16.711.006.239.817 VND**; biến động tiền thuần **-26.980.875.289 VND**. CFO + CFI + CFF = net change, residual **0**.
+  - Tiền tồn đầu năm **5.668.895.214.949 VND**; ảnh hưởng tỷ giá FY **+7.569.091.808 VND**; tiền tồn cuối năm **5.649.483.431.468 VND**. Opening + net change + FX = closing, residual **0**.
+  - Chi mua sắm TSCĐ row21 **-1.821.623.230.975 VND**; cổ tức/lợi nhuận đã trả row36 **-13.971.054.206.100 VND**.
+- **Q4 riêng — phương pháp và kết quả:** Lấy FY2024 YTD trong B03 gốc Q4 trừ 9M/2024 YTD trong B03 gốc Q3 VietstockFinance document `483862`, cùng phạm vi hợp nhất:
+  - CFO **+1.344.415.959.226 VND**.
+  - CFI **+5.520.432.980.286 VND**.
+  - CFF **-13.303.960.768.096 VND**.
+  - Net cash change **-6.439.111.828.584 VND**; CFO + CFI + CFF = net change, residual **0**.
+  - Opening cash Q4 lấy closing cash Q3 **10.851.522.950.436 VND**; closing cash Q4 **5.649.483.431.468 VND**.
+  - Capex Q4 **-568.193.423.765 VND**; dividends paid Q4 **-12.971.054.206.100 VND**.
+  - Q3 B03 row61 ảnh hưởng tỷ giá YTD không đọc được trong sidecar đã lưu. Vì vậy để `foreign_exchange_effect=null` cho Q4 riêng. Chênh lệch cầu nối tiền trước FX là **-1.237.072.309.616 VND** (số FX cần để khớp sẽ là +1.237.072.309.616 VND), chỉ lưu là residual chẩn đoán, **không** gán làm số nguồn, không plug. FX YTD FY2024 vẫn lưu chính xác **+7.569.091.808 VND**.
+- **ROA/ROE:** ROA **9,45%**, ROE **13,54%**, theo PAT quý IV / bình quân tài sản hoặc vốn chủ đầu kỳ-cuối kỳ × 4 × 100.
+- **So sánh với comparative Q1/2025:** B01 đầu năm trong VietstockFinance Q1/2025 document 504411 ghi total assets **81.854.881.408.158 VND**, total liabilities **20.283.886.142.528 VND**, equity **61.570.995.265.630 VND**. So với Q4/2024 gốc: assets và liabilities cùng thấp hơn **38.683.095.343 VND**, equity trùng chính xác. Giữ nguyên cả hai cơ sở; chưa có căn cứ diễn giải lý do khác biệt, không ghi đè số gốc Q4.
+- Trạng thái kỳ: **SOURCE TEXT RECONCILED — VISUAL REVIEW PENDING**. Không chạy lại trích xuất lõi B01/B02/B03; chỉ mở lại khi có bằng chứng ảnh/nguồn mới. Data commit: `c86aa1c06944e8f2a7d218b560ec925e61e23c5d`.
 
 ### 10.7 GAS Q4/2025 — B02 PASS theo source text; B01 liability/equity và visual PENDING
 
