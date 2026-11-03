@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.22
+- Phiên bản: 1.23
 - Ngày ban hành: 03/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -678,6 +678,16 @@ Nguồn chỉ dùng VietstockFinance và các tệp liên kết tại danh mục
 - The dataset retains the Q3/2025 later comparative cashflow basis at top level. Original Q3/2024 source values are stored separately in `source_validation.original_q3_2024_cashflow_ytd_raw_vnd` and `cashflow_source_reconciliation.original_q3_2024_report_comparison`; do not overwrite selected top-level fields or re-run the prior reclassification decision.
 - Q3 status: source-text B01/B02/B03 bridges PASS; direct visual review PENDING; Q1 selling-expense detail exception continues separately. Data commit `893ce88fcfe6d0ba471d489379ef735c0722e582`.
 - Resume at **IDC Q4/2024** using archive `reports/raw/IDC/auto-idc-20261021/00983465c42328c1.zip`. Do not repeat Q1–Q3 core source-text extraction.
+
+### 10.12 IDC Q4/2024 — B01/B02 PASS, B03 gốc PENDING
+
+- Nguồn: VietstockFinance document ID **490209**, BCTC hợp nhất; ZIP `https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%204/IDC_Baocaotaichinh_Q4_2024_Hopnhat.zip`; archive `reports/raw/IDC/auto-idc-20261021/00983465c42328c1.zip`; sidecar `.zip.extracted.json`; 4 PDF members, 65 pages for each financial statement PDF. Đã kiểm tra cả member tiếng Anh `3_idc_2025_1_24_c3431d7_en_financialstatementshn_q4_2024.pdf` và tiếng Việt `4_idc_2025_1_24_f1a5641_vi_baocaotaichinhhn_q4_2024.pdf`, sidecar pages 8–14. Chưa xem ảnh trực quan.
+- B01: current assets **7.422.043.183.221 VND**, non-current assets **11.377.492.474.012**, total assets **18.799.535.657.233**; current liabilities **4.531.970.587.537**, long-term liabilities **7.059.151.892.321**, total liabilities **11.591.122.479.858**, equity **7.208.413.177.375**. Tổng tài sản = nợ + vốn, tài sản ngắn + dài hạn và nợ ngắn + dài hạn; residual 0.
+- B02 riêng Q4: revenue **1.955.334.917.901 VND**, COGS **1.319.550.083.434**, gross profit **635.784.834.467**, financial income **53.145.593.297**, financial expense **31.858.246.989**, interest expense **31.068.071.520**, share profit associates **-101.265.684**, selling expense **26.189.134.459**, admin expense **99.181.504.269**, operating profit **531.600.276.363**, other income **13.300.388.998**, other expense **5.260.441.516**, other profit **8.039.947.482**, PBT **539.640.223.845**, current tax **99.494.321.537**, deferred tax expense **2.417.678.111**, total tax **101.911.999.648**, PAT **437.728.224.197**, parent PAT **357.719.490.841**, NCI **80.008.733.356**, EPS **1.084**. Gross, operating, other profit, PBT, tax, PAT and parent/NCI checks all residual 0. Note: exact total tax is 101,911,999,648 VND; one million VND less than the earlier mistaken manual arithmetic candidate, now corrected in data.
+- B03 source text OCR current-year FY2024 candidate values: CFO **3.884.016.207.794 VND**, CFI **-1.274.480.840.372**, CFF **-1.377.656.623.723**, reported net cash change **246.158.916.275**, opening cash **1.333.592.588.129**, FX **238.428.862**, closing cash **2.188.038.807.308**. These do **not** reconcile: CFO+CFI+CFF minus net change residual **985.719.827.424 VND**; cash bridge residual **-608.048.874.042 VND**. The same flow residual carries into diagnostic standalone Q4 deltas (FY2024 YTD less Q3/2024 YTD): CFO **302.927.251.937**, CFI **34.172.164.900**, CFF **940.940.869.486**, net **292.320.458.899**, FX **69.866.489**, opening **1.287.599.607.878**, closing **2.188.038.807.308**. Those derived figures are diagnostic only; do not promote to canonical quarter or insert a plug.
+- Existing top-level Q4/2024 cashflow remains on the selected FY2025 comparative basis already stored in `cashflow_source_reconciliation`; this selected basis is not overwritten. Original FY2024 B03 sidecar values and residuals are preserved separately in `source_validation.original_q4_2024_cashflow_ytd_raw_vnd` and `original_cashflow_issue`.
+- Status: B01/B02 source-text PASS, original B03 PENDING due material OCR/source-text inconsistency; visual review all statements PENDING. Data commit `fcfd329c7790da1c72b2bb5cf7a4c77d5aa75760`.
+- Theo thứ tự kỳ, tiếp tục **IDC Q1/2025** từ archive `reports/raw/IDC/auto-idc-20261021/5b3809b3492cb8ac.pdf`. Không làm lại Q1–Q4/2024 core text extraction; giữ các ngoại lệ Q1/2024 selling expense và Q4/2024 original B03.
 
 ## 11. Giới hạn thao tác
 
