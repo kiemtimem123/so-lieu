@@ -2423,9 +2423,9 @@
       "report_type": "BCTC hợp nhất IDC 2025-Q2 (phát hiện tự động qua VietstockFinance; chờ trích xuất)",
       "source_pages": "BCTC hợp nhất IDC Q2/2025: bảng cân đối kế toán sidecar OCR trang 8–11, KQKD trang 12, lưu chuyển tiền tệ trang 13–14. Tổng tài sản 19.606.417.044.848 VND; nợ phải trả 12.150.945.318.805 VND; vốn chủ sở hữu 7.455.471.726.043 VND. KQKD riêng quý II: doanh thu thuần 1.763.197.891.011 VND; giá vốn 1.218.680.135.812 VND; lợi nhuận gộp 544.517.755.199 VND; LNTT 519.324.437.238 VND; thuế hiện hành 102.821.214.554 VND; chi phí thuế hoãn lại 539.315.464 VND; LNST 415.963.907.220 VND; LNST cổ đông mẹ 297.573.101.125 VND; EPS 902 đồng. Lưu chuyển tiền tệ là lũy kế 6 tháng; số quý II tính bằng YTD Q2 trừ Q1, gồm CFO 809.015 triệu, CFI -1.693.078 triệu, CFF -545.522 triệu, biến động tiền thuần -1.429.585 triệu, capex -746.582 triệu, FX +38,7 triệu. Đơn vị lưu triệu VND, làm tròn đến triệu. Chưa xác minh trực quan ảnh PDF.",
       "quarter_profit_basis": "Dùng cột phát sinh riêng Quý II năm 2025 cho KQKD; dòng tiền tính bằng chênh lệch báo cáo lũy kế 6 tháng trừ Q1.",
-      "verification_status": "auto_extracted_pending_visual_review",
+      "verification_status": "source_text_reconciled_pending_visual_review",
       "source_validation": {
-        "reviewed_at": "2026-10-25",
+        "reviewed_at": "2026-11-04T00:02:00+07:00",
         "single_source_policy": "Chỉ danh mục VietstockFinance và tệp do danh mục đó liên kết.",
         "source_catalog_url": "https://finance.vietstock.vn/IDC/tai-tai-lieu.htm?doctype=1",
         "source_document_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%202/IDC_Baocaotaichinh_Q2_2025_Hopnhat.zip",
@@ -2495,12 +2495,14 @@
           "other_profit": 28039625547,
           "pretax_profit": 519324437238,
           "income_tax_current": -102821214554,
-          "income_tax_deferred": 639315464,
+          "income_tax_deferred": -539315464,
           "net_profit": 415963907220,
           "net_profit_attributable": 297573101125,
           "nci_profit": 118390806095,
           "eps": 902,
-          "income_tax_deferred_source_raw_vnd": -639315464
+          "income_tax_deferred_source_raw_vnd": -539315464,
+          "income_tax_deferred_expense_normalized": 539315464,
+          "income_tax_total_expense": 103360530018
         },
         "core_source_checks": {
           "balance_sheet_residual_vnd": 0,
@@ -2510,10 +2512,130 @@
           "operating_profit_residual_vnd": 0,
           "other_profit_residual_vnd": 0,
           "pretax_profit_residual_vnd": 0,
-          "net_profit_residual_vnd": -100000000,
-          "parent_nci_residual_vnd": 0
+          "net_profit_residual_vnd": 0,
+          "parent_nci_residual_vnd": 0,
+          "tax_pat_residual_vnd": 0
         },
-        "source_scope": "VietstockFinance consolidated report"
+        "source_scope": "Consolidated",
+        "source_archive_file": "reports/raw/IDC/auto-idc-20261021/48616c2bb9d17c99.zip",
+        "extraction_sidecar": "reports/raw/IDC/auto-idc-20261021/48616c2bb9d17c99.zip.extracted.json",
+        "source_unit": "VND",
+        "source_members": {
+          "vietnameseFinancialStatement": "4_idc_2025_7_30_caaaf64_vi_baocaotaichinhhn_q2_2025_s.pdf",
+          "englishFinancialStatement": "1_idc_2025_7_30_2e1316b_en_financialstatementshn_q2_2025_s.pdf"
+        },
+        "source_report_page_count": 63,
+        "source_text_reviewed_pages": [
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14
+        ],
+        "visual_review_status": "PENDING direct PDF page image review.",
+        "englishMemberResolution": {
+          "sourceDocumentId": "514037",
+          "sidecarPage": 12,
+          "printedPage": 7,
+          "deferredTaxIncomeRawVnd": -539315464,
+          "normalizedDeferredTaxExpenseVnd": 539315464,
+          "formerVietnameseOCRCandidateVnd": -639315464,
+          "correctionDeltaVnd": 100000000,
+          "nciQuarterRawVnd": 118390806095,
+          "formerVietnameseOCRCandidateNciVnd": 118350806095,
+          "correctionDeltaNciVnd": 40000000,
+          "status": "RESOLVED_BY_ENGLISH_MEMBER_IN_SAME_VIETSTOCKFINANCE_ZIP",
+          "note": "The English B02 member disambiguates Vietnamese OCR; tax/PAT and parent/NCI now reconcile exactly."
+        },
+        "financial_statement_raw_vnd": {
+          "currentAssets": 7811294674643,
+          "nonCurrentAssets": 11795122370205,
+          "totalAssets": 19606417044848,
+          "currentLiabilities": 3669554755411,
+          "longTermLiabilities": 8481390563394,
+          "totalLiabilities": 12150945318805,
+          "equity": 7455471726043,
+          "revenue": 1763197891011,
+          "costOfGoodsSold": -1218680135812,
+          "grossProfit": 544517755199,
+          "financialIncome": 62954887826,
+          "financialExpense": -29939147355,
+          "interestExpense": -28604086345,
+          "shareOfProfitInAssociates": -343427723,
+          "sellingExpense": -21450520742,
+          "adminExpense": -64454735514,
+          "operatingProfit": 491284811691,
+          "otherIncome": 29086228155,
+          "otherExpense": -1046602608,
+          "otherProfit": 28039625547,
+          "pretaxProfit": 519324437238,
+          "currentTax": -102821214554,
+          "deferredTaxRaw": -539315464,
+          "deferredTaxExpenseNormalized": 539315464,
+          "totalTaxExpenseNormalized": 103360530018,
+          "netProfit": 415963907220,
+          "parentProfit": 297573101125,
+          "nciProfit": 118390806095,
+          "eps": 902
+        },
+        "original_q2_2025_cashflow_ytd_raw_vnd": {
+          "cfo": 1402209397523,
+          "cfi": -2438216817714,
+          "cff": -288817920091,
+          "net": -1324825340282,
+          "fx": 41467072,
+          "opening": 2188037806317,
+          "closing": 863253933107,
+          "capex": -909344214214,
+          "dividendsPaid": -588587063470
+        },
+        "original_q1_2025_cashflow_ytd_raw_vnd": {
+          "cfo": 593194330719,
+          "cfi": -745138695014,
+          "cff": 256704039546,
+          "net": 104759675251,
+          "fx": 2753952,
+          "opening": 2188037806317,
+          "closing": 2292800235520,
+          "capex": -162762056703,
+          "dividendsPaid": -20305690000
+        },
+        "original_q2_2025_cashflow_standalone_raw_vnd": {
+          "cfo": 809015066804,
+          "cfi": -1693078122700,
+          "cff": -545521959637,
+          "net": -1429585015533,
+          "fx": 38713120,
+          "opening": 2292800235520,
+          "closing": 863253933107,
+          "capex": -746582157511,
+          "dividendsPaid": -568281373470
+        },
+        "original_q2_2025_cashflow_checks": {
+          "ytdFlowResidualVnd": 0,
+          "ytdCashBridgeResidualVnd": 0,
+          "standaloneFlowResidualVnd": 0,
+          "standaloneCashBridgeResidualVnd": 0
+        },
+        "h1B02Reconciliation": {
+          "sourceH1RawVnd": {
+            "pbt": 1040033084443,
+            "currentTax": -211368386572,
+            "deferredIncome": 4283753953,
+            "pat": 832948451824,
+            "parent": 640852011752
+          },
+          "checks": {
+            "tax": 0,
+            "q2Pat": 0,
+            "q2Parent": 0,
+            "q2Nci": 0
+          },
+          "impliedH1NciFromPatLessParentVnd": 192096440072,
+          "note": "H1 NCI OCR token is incomplete; implied H1 NCI from reported PAT minus parent is retained as derived metadata only. Difference from original Q1 NCI equals current Q2 NCI."
+        }
       },
       "published_at": "2025-07-30",
       "source_archive_file": "reports/raw/IDC/auto-idc-20261021/48616c2bb9d17c99.zip",
@@ -2571,7 +2693,7 @@
       ],
       "core_financial_extraction_status": "auto_extracted_pending_visual_review",
       "core_financial_extraction_note": "Khôi phục số liệu lõi và chi tiết từ BCTC hợp nhất VietstockFinance, đúng kỳ phát sinh quý. Các trường raw VND, trang PDF và phép kiểm tra được lưu kèm; không thay đổi dòng tiền đã được đối chiếu trước đây.",
-      "verification_status_note": "Khôi phục từ BCTC hợp nhất VietstockFinance; phép cân đối và cầu nối lợi nhuận đã kiểm tra bằng VND gốc. Chờ đối chiếu ảnh PDF trực quan.",
+      "verification_status_note": "Q2/2025 B01/B02 source text reconciled. English member in same VietstockFinance ZIP resolves Vietnamese OCR: deferred tax income row17 is (539,315,464) VND and NCI row20 is 118,390,806,095 VND. PBT/tax/PAT and parent/NCI residuals zero. Original B03 and Q2/2026 As-restated B03 bases both reconcile; top-level remains on selected As-restated basis. Visual review pending.",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "72ba617e2be9f04f3431e581be2e405eb95ee419761482f8fef5e27c6ff1c436",
       "core_financial_extraction_evidence_attempt_count": 1,
@@ -2593,7 +2715,7 @@
         "revenue_gross_profit_equation_check"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-23T19:50:43+00:00",
-      "financial_line_items_note": "Các dòng bảng cân đối và KQKD đã khôi phục từ trang nguồn; chỉ tiêu chi phí lãi vay Q4/2025 bị loại do OCR không khớp tổng chi phí tài chính. Chờ kiểm tra ảnh PDF. Cầu nối thuế Q2/2025 lệch 100 triệu VND (0,024% LNST), vượt ngưỡng 0,01%; giữ nguyên các dòng nguồn, không ép khớp.",
+      "financial_line_items_note": "IDC Q2/2025 B01/B02 source text reconciled from English and Vietnamese members in same VietstockFinance ZIP. English member corrects row17 deferred tax income to (539,315,464) VND (normalized +539,315,464 tax expense) and row20 NCI to 118,390,806,095 VND. B02 tax/PAT and parent/NCI residuals zero. Original B03 and later As-restated Q2/2026 comparative B03 both reconcile; selected top-level cashflow remains on As-restated basis. Visual review pending.",
       "non_current_assets": 11795122,
       "fixed_assets": 3035411,
       "current_liabilities": 3669555,
@@ -2738,7 +2860,7 @@
         }
       },
       "income_tax": 103361,
-      "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
+      "income_tax_calculation": "Source B02: current tax expense 102,821,214,554 VND + normalized deferred tax expense 539,315,464 VND = total tax expense 103,360,530,018 VND; PBT - tax = PAT.",
       "current_assets": 7811295,
       "cash_and_equivalents": 863254,
       "short_term_investments": 4019331,
@@ -2749,7 +2871,7 @@
       "financial_expense": 29939,
       "selling_expense": 21451,
       "income_tax_current": 102821,
-      "income_tax_deferred": 639,
+      "income_tax_deferred": 539,
       "eps": 902,
       "net_cash_change_ytd": -1324825,
       "capital_expenditure_ytd": -909344,
@@ -2862,7 +2984,81 @@
           },
           "reason": "Chọn comparative H1/2025 'As restated - Note 41' từ Q2/2026; CFO giảm và CFI tăng cùng 525.837.250.014 VND, không đổi net cash."
         },
-        "status": "NEEDS_MANUAL_REVIEW_SOURCE_RECLASSIFICATION_AND_VISUAL_PENDING"
+        "status": "NEEDS_MANUAL_REVIEW_SOURCE_RECLASSIFICATION_AND_VISUAL_PENDING",
+        "original_q2_2025_report_comparison": {
+          "sourceDocumentId": "514037",
+          "originalSourceUrl": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%202/IDC_Baocaotaichinh_Q2_2025_Hopnhat.zip",
+          "archiveFile": "reports/raw/IDC/auto-idc-20261021/48616c2bb9d17c99.zip",
+          "sourceArchiveMember": "4_idc_2025_7_30_caaaf64_vi_baocaotaichinhhn_q2_2025_s.pdf",
+          "originalYtdRawVnd": {
+            "cfo": 1402209397523,
+            "cfi": -2438216817714,
+            "cff": -288817920091,
+            "net": -1324825340282,
+            "fx": 41467072,
+            "opening": 2188037806317,
+            "closing": 863253933107,
+            "capex": -909344214214,
+            "dividendsPaid": -588587063470
+          },
+          "originalQ1YtdRawVnd": {
+            "cfo": 593194330719,
+            "cfi": -745138695014,
+            "cff": 256704039546,
+            "net": 104759675251,
+            "fx": 2753952,
+            "opening": 2188037806317,
+            "closing": 2292800235520,
+            "capex": -162762056703,
+            "dividendsPaid": -20305690000
+          },
+          "originalStandaloneQ2RawVnd": {
+            "cfo": 809015066804,
+            "cfi": -1693078122700,
+            "cff": -545521959637,
+            "net": -1429585015533,
+            "fx": 38713120,
+            "opening": 2292800235520,
+            "closing": 863253933107,
+            "capex": -746582157511,
+            "dividendsPaid": -568281373470
+          },
+          "checks": {
+            "ytdFlowResidualVnd": 0,
+            "ytdCashBridgeResidualVnd": 0,
+            "standaloneFlowResidualVnd": 0,
+            "standaloneCashBridgeResidualVnd": 0
+          },
+          "selectedRestatedBasis": {
+            "ytdRawVnd": {
+              "cfo": 876372147509,
+              "cfi": -1912379567700,
+              "cff": -288817920091,
+              "net": -1324825340282,
+              "fx": 41467072,
+              "opening": 2188037806317,
+              "closing": 863253933107
+            },
+            "standaloneRawVnd": {
+              "cfo": 283177816790,
+              "cfi": -1167240872686,
+              "cff": -545521959637,
+              "net": -1429585015533,
+              "fx": 38713120,
+              "opening": 2292800235520,
+              "closing": 863253933107
+            }
+          },
+          "reclassificationDeltaVnd": {
+            "cfo": -525837250014,
+            "cfi": 525837250014,
+            "cff": 0,
+            "net": 0,
+            "fx": 0
+          },
+          "status": "PASS_BOTH_SOURCE_BASES_RECONCILED",
+          "note": "Original Q2/2025 report and later Q2/2026 As-restated H1/2025 comparative both reconcile. Later comparative reclassifies 525,837,250,014 VND from CFO to CFI; net cash unchanged. Keep top-level As-restated basis, original source separate."
+        }
       },
       "financial_line_items_value_corrections": {
         "capital_expenditure": {
@@ -2941,9 +3137,9 @@
           "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
         },
         "income_tax_deferred": {
-          "previous_value": 539,
-          "new_value": null,
-          "reason": "Withheld during parser migration because the corrected extraction could not confidently re-identify this line in the archived VietstockFinance report."
+          "previous_value": 639,
+          "new_value": 539.315464,
+          "reason": "English B02 member in same VietstockFinance ZIP reads row17 (539,315,464) VND; Vietnamese OCR misread 639,315,464."
         },
         "inventory": {
           "previous_value": 1326634,
@@ -3059,6 +3255,11 @@
           "previous_value": 41,
           "new_value": 0,
           "reason": "Re-extracted previously stored OCR field from the archived VietstockFinance report using corrected note-reference and first-period-dash handling."
+        },
+        "non_controlling_interest_profit": {
+          "previous_value": 118350.806095,
+          "new_value": 118390.806095,
+          "reason": "English B02 member in same VietstockFinance ZIP reads current-quarter NCI 118,390,806,095 VND; Vietnamese OCR misread 118,350,806,095."
         }
       },
       "cashflow_enrichment_preservation": {
@@ -3110,20 +3311,24 @@
         "other_profit": 28039625547,
         "pretax_profit": 519324437238,
         "income_tax_current": -102821214554,
-        "income_tax_deferred": 639315464,
+        "income_tax_deferred": -539315464,
         "net_profit": 415963907220,
         "net_profit_attributable": 297573101125,
         "nci_profit": 118390806095,
         "eps": 902,
-        "income_tax_deferred_source_raw_vnd": -639315464
+        "income_tax_deferred_source_raw_vnd": -639315464,
+        "income_tax_deferred_expense_normalized": 539315464,
+        "income_tax_total_expense": 103360530018
       },
       "income_statement_source_checks": {
         "gross_profit_residual_vnd": 0,
         "operating_profit_residual_vnd": 0,
         "other_profit_residual_vnd": 0,
         "pretax_profit_residual_vnd": 0,
-        "net_profit_residual_vnd": -100000000,
-        "parent_nci_residual_vnd": 0
+        "net_profit_residual_vnd": 0,
+        "parent_nci_residual_vnd": 0,
+        "tax_component_residual_vnd": 0,
+        "status": "PASS_B02_SOURCE_TEXT_RECONCILED"
       },
       "balance_sheet_source_review_status": "source_text_reconciled_pending_visual_review",
       "balance_sheet_source_pages": {
@@ -3161,7 +3366,76 @@
         "current_noncurrent_assets_residual_vnd": 0,
         "current_long_liabilities_residual_vnd": 0
       },
-      "income_tax_deferred_source_raw_vnd": -639315464
+      "income_tax_deferred_source_raw_vnd": -539315464,
+      "non_controlling_interest_profit": 118391,
+      "income_tax_deferred_calculation": "B02 line title 'Deferred tax income', value (539,315,464) VND; normalized to +539,315,464 VND deferred tax expense.",
+      "financial_statement_raw_vnd": {
+        "currentAssets": 7811294674643,
+        "nonCurrentAssets": 11795122370205,
+        "totalAssets": 19606417044848,
+        "currentLiabilities": 3669554755411,
+        "longTermLiabilities": 8481390563394,
+        "totalLiabilities": 12150945318805,
+        "equity": 7455471726043,
+        "revenue": 1763197891011,
+        "costOfGoodsSold": -1218680135812,
+        "grossProfit": 544517755199,
+        "financialIncome": 62954887826,
+        "financialExpense": -29939147355,
+        "interestExpense": -28604086345,
+        "shareOfProfitInAssociates": -343427723,
+        "sellingExpense": -21450520742,
+        "adminExpense": -64454735514,
+        "operatingProfit": 491284811691,
+        "otherIncome": 29086228155,
+        "otherExpense": -1046602608,
+        "otherProfit": 28039625547,
+        "pretaxProfit": 519324437238,
+        "currentTax": -102821214554,
+        "deferredTaxRaw": -539315464,
+        "deferredTaxExpenseNormalized": 539315464,
+        "totalTaxExpenseNormalized": 103360530018,
+        "netProfit": 415963907220,
+        "parentProfit": 297573101125,
+        "nciProfit": 118390806095,
+        "eps": 902
+      },
+      "financial_statement_checks": {
+        "balance_sheet_residual_vnd": 0,
+        "asset_composition_residual_vnd": 0,
+        "liabilities_composition_residual_vnd": 0,
+        "gross_profit_residual_vnd": 0,
+        "operating_profit_residual_vnd": 0,
+        "other_profit_residual_vnd": 0,
+        "pretax_profit_residual_vnd": 0,
+        "tax_component_residual_vnd": 0,
+        "net_profit_residual_vnd": 0,
+        "parent_nci_residual_vnd": 0,
+        "original_cashflow_ytd_flow_residual_vnd": 0,
+        "original_cashflow_ytd_bridge_residual_vnd": 0,
+        "original_cashflow_standalone_flow_residual_vnd": 0,
+        "original_cashflow_standalone_bridge_residual_vnd": 0
+      },
+      "financial_line_items_visual_review": {
+        "status": "source_text_reconciled_pending_visual_review",
+        "sourceDocumentId": "514037",
+        "reviewedSidecarPages": [
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14
+        ],
+        "b02EnglishCorrection": {
+          "deferredTaxIncomeRawVnd": -539315464,
+          "normalizedDeferredTaxExpenseVnd": 539315464,
+          "nciQuarterRawVnd": 118390806095,
+          "taxPatResidualVnd": 0,
+          "parentNciResidualVnd": 0
+        }
+      }
     },
     {
       "symbol": "IDC",
