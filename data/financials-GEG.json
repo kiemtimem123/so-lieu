@@ -5843,7 +5843,7 @@
       "report_type": "BCTC hợp nhất GEG 2026-Q2 — đã đối chiếu văn bản nguồn VietstockFinance; visual review pending",
       "source_pages": "B01 trang in 1–2; B02 trang in 3; B03 trang in 4–5 (sidecar text; ảnh trực tiếp chưa truy cập được).",
       "quarter_profit_basis": "Chỉ lưu số liệu khi cột phát sinh riêng của quý được trích xuất và cân đối hợp lệ.",
-      "verification_status": "pending_visual_review_and_q2_cash_opening_basis_reconciliation",
+      "verification_status": "pending_other_income_detail_and_q2_cash_opening_basis",
       "source_validation": {
         "reviewed_at": "2026-10-25T15:27:00Z",
         "single_source_policy": "Chỉ danh mục VietstockFinance và tệp do danh mục đó liên kết.",
@@ -5911,13 +5911,16 @@
           "capital_expenditure_ytd": -653270670725
         },
         "detail_checks": {
-          "other_profit_bridge_residual_vnd": 0,
+          "other_profit_bridge_residual_vnd": 100000000,
           "pretax_profit_bridge_residual_vnd": 0,
           "tax_bridge_residual_vnd": 0,
           "parent_plus_nci_minus_net_profit_vnd": 0,
           "cashflow_ytd_bridge_residual_vnd": 0,
           "capex_ytd_source_vnd": -653270670725,
-          "capex_prior_ytd_vnd": -74740950202
+          "capex_prior_ytd_vnd": -74740950202,
+          "other_profit_bridge_status": "PENDING_OCR_CONFLICT",
+          "other_income_candidate_vnd": 445937969,
+          "other_income_displayed": null
         },
         "detail_previous_values": {
           "share_of_profit_in_associates": null,
@@ -5985,7 +5988,7 @@
       ],
       "core_financial_extraction_status": "source_text_reconciled_visual_pending",
       "core_financial_extraction_note": "GEG Q2/2026 VietstockFinance document 555452. Sidecar source text confirms B01 totals and subtotals, B02 P&L/tax/PAT/parent-NCI, B03 H1 YTD flows and H1 cash bridge. Original PDF open failed, WiData unavailable, so no direct visual confirmation; cash-basis remains PENDING.",
-      "verification_status_note": "Đã đối chiếu sidecar từ PDF gốc VietstockFinance doc 555452. B01/B02/B03 text có các cầu nối nội bộ khớp; B01/B02 chưa visual verified vì endpoint PDF không mở được qua bộ đọc. B03 YTD flow sum/cash bridge khớp; cash opening YTD 74,942,444,345 VND khác Q1 close 105,856,793,049 VND, nên standalone Q2 cash bridge còn residual -11,422,219,803 VND (10.2213%); cash_beginning quý riêng để null, không plug.",
+      "verification_status_note": "Đã đối chiếu sidecar từ PDF gốc VietstockFinance doc 555452. B01/B02/B03 text có các cầu nối nội bộ khớp; B01/B02 chưa visual verified vì endpoint PDF không mở được qua bộ đọc. B03 YTD flow sum/cash bridge khớp; cash opening YTD 74,942,444,345 VND khác Q1 close 105,856,793,049 VND, nên standalone Q2 cash bridge còn residual -11,422,219,803 VND (10.2213%); cash_beginning quý riêng để null, không plug. B02 row31 other income OCR candidate 445,937,969 VND does not reconcile with row32 other expense and row40 other loss (100m residual), so displayed other_income is null until original image is available.",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "c9f0fdd53a03f555c93808734ded258ef685712a265db004500aafc0483fad29",
       "core_financial_extraction_evidence_attempt_count": 0,
@@ -6000,9 +6003,11 @@
         6
       ],
       "core_financial_extraction_updated_at": "2026-11-03T23:10:00+07:00",
-      "financial_line_items_rejected_fields": [],
+      "financial_line_items_rejected_fields": [
+        "other_income_ocr_candidate_conflict"
+      ],
       "financial_line_items_rejected_updated_at": "2026-10-23T21:08:25+00:00",
-      "financial_line_items_note": "GEG Q2/2026 sidecar text inspected from VietstockFinance doc 555452; direct PDF image review and WiData secondary page unavailable via current retrieval. B01/B02 and H1 YTD B03 arithmetic reconciles. Corrected EPS basic/diluted 22/21 and dividends YTD/standalone. Q2 standalone cash flows derived from same-year H1 less Q1 YTD. Cash basis issue remains: H1 opening 74,942.444345m differs from Q1 close 105,856.793049m by -30,914.348704m; standalone bridge residual -11,422.219803m (10.2213%). Do not assign quarter opening cash or plug.",
+      "financial_line_items_note": "GEG Q2/2026 sidecar text inspected from VietstockFinance doc 555452; direct PDF image review and WiData secondary page unavailable via current retrieval. B01/B02 and H1 YTD B03 arithmetic reconciles. Corrected EPS basic/diluted 22/21 and dividends YTD/standalone. Q2 standalone cash flows derived from same-year H1 less Q1 YTD. Cash basis issue remains: H1 opening 74,942.444345m differs from Q1 close 105,856.793049m by -30,914.348704m; standalone bridge residual -11,422.219803m (10.2213%). Do not assign quarter opening cash or plug. The B02 other-income OCR candidate is quarantined (445,937,969 VND) because it yields a 100,000,000 VND residual against reported other loss; no replacement inferred. Q2 cash opening-basis exception remains pending.",
       "current_assets": 1795327.105425,
       "cash_and_equivalents": 100327.178533,
       "short_term_investments": 399347.389553,
@@ -6086,7 +6091,7 @@
         "development_fund",
         "non_controlling_interest_equity"
       ],
-      "financial_line_items_status": "source_text_reconciled_visual_pending_cash_basis_exception",
+      "financial_line_items_status": "source_text_reconciled_visual_pending_other_income_and_cash_basis_exceptions",
       "financial_line_items_schema_version": "2026-10-27-other-statements-source-fields-v12",
       "financial_line_items_schema_updated_at": "2026-10-30T01:22:02+00:00",
       "financial_line_items_source": "reports/raw/GEG/auto-geg-20261021/e5c84e9cb42b1698.pdf.extracted.json",
@@ -6122,7 +6127,12 @@
         "current_liabilities": 1073913,
         "long_term_liabilities": 7656721
       },
-      "financial_line_items_rejected_values": {},
+      "financial_line_items_rejected_values": {
+        "other_income": {
+          "candidate_vnd": 445937969,
+          "reason": "PENDING OCR conflict: candidate gives 100,000,000 VND residual against reported other profit. Not published as verified."
+        }
+      },
       "income_tax": 10416.711695,
       "income_tax_calculation": "Lợi nhuận trước thuế - lợi nhuận sau thuế; chỉ dùng khi hai tổng lợi nhuận của cùng kỳ đã có.",
       "income_tax_current": 10500.368887,
@@ -6277,6 +6287,11 @@
           "previous_value": -2431,
           "new_value": -42.5642,
           "reason": "Q2 standalone dividends = H1 YTD -71,063,400 less Q1 YTD -28,499,200 = -42,564,200 VND."
+        },
+        "other_income": {
+          "previous_value": 445.937969,
+          "new_value": null,
+          "reason": "OCR candidate 445,937,969 VND does not reconcile with row32 other expense 440,059,055 and row40 other loss -94,121,086; retain candidate in raw metadata; visual confirmation pending."
         }
       },
       "cashflow_balance_bridge_recovery": {
@@ -6327,7 +6342,7 @@
         "balance_sheet_residual_vnd": -1000000
       },
       "share_of_profit_in_associates": 904.922295,
-      "other_income": 445.937969,
+      "other_income": null,
       "other_expense": 440.059055,
       "other_profit": -94.121086,
       "non_controlling_interest_profit": -20027.980405,
@@ -6401,7 +6416,9 @@
         "foreign_exchange_effect_ytd": 13217270,
         "cash_ending_reported_ytd": 100327178533,
         "capital_expenditure_ytd": -653270670725,
-        "dividends_paid_ytd": -71063400
+        "dividends_paid_ytd": -71063400,
+        "other_income_candidate_vnd": 445937969,
+        "other_income_candidate_status": "PENDING_OCR_COLUMN_OR_DIGIT_VERIFICATION"
       },
       "financial_statement_checks": {
         "balance_sheet_residual_vnd": 0,
@@ -6425,7 +6442,9 @@
         "cashflow_q2_standalone_cash_bridge_residual_vnd": 11422219803,
         "cashflow_q2_standalone_cash_bridge_relative_difference_percent": 11.384970623132753,
         "cashflow_q2_standalone_capex_residual_vnd": 0,
-        "cashflow_q2_standalone_dividends_residual_vnd": 0
+        "cashflow_q2_standalone_dividends_residual_vnd": 0,
+        "other_profit_bridge_status": "PENDING_OCR_CONFLICT",
+        "other_profit_bridge_note": "OCR candidate other income 445,937,969 VND - other expense 440,059,055 VND does not equal reported other loss -94,121,086 VND; residual 100,000,000 VND. Do not use candidate as verified; displayed other_income=null pending original image."
       },
       "financial_line_items_visual_review": {
         "status": "source_text_reconciled_visual_pending",
@@ -6469,7 +6488,15 @@
           "standalone_q2_cash_bridge_relative_difference_percent": 11.384970623132753,
           "conclusion": "Do not invent a Q2 standalone opening cash amount; retain null and keep the cash bridge PENDING."
         },
-        "all_text_bridges_pass_except_standalone_cash_opening_basis": true
+        "all_text_bridges_pass_except_standalone_cash_opening_basis": true,
+        "other_profit_bridge": {
+          "reported_other_income_candidate_vnd": 445937969,
+          "other_expense_vnd": 440059055,
+          "reported_other_profit_vnd": -94121086,
+          "residual_vnd": 100000000,
+          "status": "PENDING",
+          "explanation": "Sidecar OCR candidate fails arithmetic by 100,000,000 VND; PDF image review unavailable, so quarantine the candidate rather than substitute an inferred 345,937,969 VND."
+        }
       },
       "core_financial_extraction_calculations": {
         "total_liabilities": "Directly read total liabilities row300 from B01; not back-calculated.",
