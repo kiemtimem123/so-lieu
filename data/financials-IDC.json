@@ -3640,9 +3640,28 @@
             "flowSumResidualVnd": 0,
             "cashBridgeResidualVnd": 0
           },
-          "cashFlowStandaloneQuarterBasis": "Q3 YTD from Q3/2025 PDF less H1/2025 As-restated comparative from VietstockFinance Q2/2026; preserve as-restated basis already recorded in snapshot",
-          "visualReview": "PENDING",
-          "visualReviewLimitation": "PDF response was 15,499,375 bytes; screenshot renderer returned content-length-too-large. No visual completion claim."
+          "cashFlowStandaloneQuarterBasis": "Q3 standalone from original Q3 2025 report YTD less original H1/2025 from Q2/2025 report document 514037, same presentation basis; later As-restated H1 comparator not mixed into top-level.",
+          "visualReview": "PENDING: screenshot/page-image renderer rejected source PDF due 15,499,375-byte content length; PDF text layer was opened directly without downloading.",
+          "visualReviewLimitation": "PDF response was 15,499,375 bytes; screenshot renderer returned content-length-too-large. No visual completion claim.",
+          "cashFlowStandaloneRawVnd": {
+            "cfo": 1541531404357,
+            "cfi": -2242302344954,
+            "cff": 629179666426,
+            "net": -71591274171,
+            "fx": 23900983,
+            "opening": 863253933107,
+            "closing": 791686559919,
+            "capex": -893695067506,
+            "dividends": -57513573250
+          },
+          "cashFlowChecks": {
+            "ytdFlow": 0,
+            "ytdCash": 0,
+            "h1Flow": 0,
+            "h1Cash": 0,
+            "qFlow": 0,
+            "qCash": 0
+          }
         }
       },
       "published_at": "2025-10-30",
@@ -3701,7 +3720,7 @@
       ],
       "core_financial_extraction_status": "auto_extracted_pending_visual_review",
       "core_financial_extraction_note": "Khôi phục số liệu lõi và chi tiết từ BCTC hợp nhất VietstockFinance, đúng kỳ phát sinh quý. Các trường raw VND, trang PDF và phép kiểm tra được lưu kèm; không thay đổi dòng tiền đã được đối chiếu trước đây.",
-      "verification_status_note": "B01/B02/B03 text source audited against the English PDF member in VietstockFinance document 523494. All core statement arithmetic reconciles; reported B01 row 440 differs from row 270 by 71,700 VND (<0.01% tolerance), recorded without a balancing plug or source-value rewrite. Direct page-image review remains pending.",
+      "verification_status_note": "B01/B02/B03 text source audited against the English PDF member in VietstockFinance document 523494. All core statement arithmetic reconciles; reported B01 row 440 differs from row 270 by 71,700 VND (<0.01% tolerance), recorded without a balancing plug or source-value rewrite. Direct page-image review remains pending. B03 quarter basis corrected after direct PDF review: same-original-basis Q3 9M minus original Q2/2025 H1; later As-restated H1 stays separate. Exact quarter/YTD flow and cash bridge residuals are 0 VND.",
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "c59e1a62089f3056c83ed014069c7be0307188c84f7905f16213c771b46ff037",
       "core_financial_extraction_evidence_attempt_count": 0,
@@ -3851,8 +3870,8 @@
         "cost_of_goods_sold_gross_profit_equation_check"
       ],
       "financial_line_items_rejected_updated_at": "2026-10-24T20:35:41+00:00",
-      "operating_cash_flow": 2067369,
-      "investing_cash_flow": -2768140,
+      "operating_cash_flow": 1541531,
+      "investing_cash_flow": -2242302,
       "financing_cash_flow": 629180,
       "net_cash_change": -71591,
       "foreign_exchange_effect": 24,
@@ -3865,29 +3884,29 @@
       "foreign_exchange_effect_ytd": 65,
       "cash_beginning_reported_ytd": 2188038,
       "cash_ending_reported_ytd": 791687,
-      "cashflow_period_basis": "quarterly_normalized_from_ytd",
-      "operating_cash_flow_calculation": "Quý riêng = YTD quý hiện tại trừ YTD quý liền trước cùng năm.",
-      "investing_cash_flow_calculation": "Quý riêng = YTD quý hiện tại trừ YTD quý liền trước cùng năm.",
-      "financing_cash_flow_calculation": "Quý riêng = YTD quý hiện tại trừ YTD quý liền trước cùng năm.",
-      "net_cash_change_calculation": "Quý riêng = dòng 50 YTD hiện tại trừ dòng 50 YTD kỳ trước cùng năm.",
-      "foreign_exchange_effect_calculation": "Ảnh hưởng tỷ giá quý riêng = FX YTD hiện tại trừ FX YTD kỳ trước cùng năm.",
-      "cash_beginning_calculation": "Số dư đầu quý theo số cuối quý liền trước; số đầu năm theo báo cáo YTD lưu riêng.",
-      "cash_ending_calculation": "Theo dòng 70 báo cáo nguồn; Q3/2025 đối chiếu thêm dòng tiền và tương đương tiền Bảng cân đối kế toán.",
+      "cashflow_period_basis": "quarterly_normalized_from_ytd_same_original_basis",
+      "operating_cash_flow_calculation": "Q3 standalone = 9M/2025 CFO from IDC Q3/2025 report minus H1/2025 CFO from original IDC Q2/2025 consolidated report, both on the original reported classification basis.",
+      "investing_cash_flow_calculation": "Q3 standalone = 9M/2025 CFI from IDC Q3/2025 report minus H1/2025 CFI from original IDC Q2/2025 consolidated report, both on the original reported classification basis.",
+      "financing_cash_flow_calculation": "Q3 standalone = 9M/2025 CFF from IDC Q3/2025 report minus H1/2025 CFF from original IDC Q2/2025 consolidated report.",
+      "net_cash_change_calculation": "Q3 standalone = 9M/2025 line 50 minus H1/2025 line 50.",
+      "foreign_exchange_effect_calculation": "Q3 standalone = 9M/2025 exchange effect minus original H1/2025 exchange effect.",
+      "cash_beginning_calculation": "Cash at Q3 opening = closing cash at 30 June 2025 in the original Q2/2025 consolidated report.",
+      "cash_ending_calculation": "Reported 30 September 2025 cash and cash equivalents in IDC Q3/2025 B01/B03.",
       "cashflow_source_reconciliation": {
         "source_policy": "Only VietstockFinance document catalog and directly linked consolidated BCTC.",
         "source_index_url": "https://finance.vietstock.vn/IDC/tai-tai-lieu.htm?doctype=1",
         "original_period_source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%203/IDC_Baocaotaichinh_Q3_2025_Hopnhat.zip",
         "selected_cashflow_source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%203/IDC_Baocaotaichinh_Q3_2025_Hopnhat.zip",
-        "selected_cashflow_source_period": "2025-Q3 current report",
+        "selected_cashflow_source_period": "2025-Q3 9M current report less original 2025-Q2 H1 current report",
         "selected_cashflow_source_archive_file": "reports/raw/IDC/auto-idc-20261021/04ff7104fec1b3fd.zip.extracted.json",
         "selected_cashflow_source_pages": "sidecar pages 13-14; printed report pages 8-9; balance sheet page 8",
-        "selected_cashflow_source_basis": "9M/2025 current-period report column; ending cash is supported by the balance sheet",
-        "source_statement_period_basis": "YTD source statement normalized to standalone quarter using current YTD minus prior same-year YTD",
+        "selected_cashflow_source_basis": "Original reported basis, consistent across Q3/2025 9M and Q2/2025 H1 statements",
+        "source_statement_period_basis": "Q3 standalone = Q3 2025 YTD minus same-basis original Q2 2025 H1 YTD; do not subtract the later Q2/2026 As-restated H1 comparative from the un-restated Q3 2025 9M report.",
         "unit": "display values in million VND; raw source values retained in VND",
         "relative_tolerance_percent": 0.01,
         "selected_values_not_adjusted_for_tolerance": true,
         "no_balancing_plug": true,
-        "visual_review": "archived_OCR_text_reconciled_visual_review_pending",
+        "visual_review": "PENDING_PDF_PAGE_IMAGE_RENDER_LIMIT",
         "selected_values_raw_vnd": {
           "ytd": {
             "cfo": 2943740801880,
@@ -3899,13 +3918,15 @@
             "cash_ending": 791686559919
           },
           "quarter": {
-            "cfo": 2067368654371,
-            "cfi": -2768139594968,
+            "cfo": 1541531404357,
+            "cfi": -2242302344954,
             "cff": 629179666426,
             "net_cash_change": -71591274171,
             "fx": 23900983,
             "cash_beginning": 863253933107,
-            "cash_ending": 791686559919
+            "cash_ending": 791686559919,
+            "capital_expenditure": -893695067506,
+            "dividends_paid": -57513573250
           }
         },
         "calculations": {
@@ -3913,12 +3934,11 @@
           "ytd_flow_sum_residual_raw_vnd": 0,
           "quarter_cash_bridge_residual_raw_vnd": 0,
           "ytd_cash_bridge_residual_raw_vnd": 0,
-          "quarter_flow_components_relative_difference_percent": 0,
-          "ytd_flow_components_relative_difference_percent": 0,
-          "quarter_cash_bridge_relative_difference_percent": 0,
-          "ytd_cash_bridge_relative_difference_percent": 0,
           "quarter_flows_are_ytd_delta": true,
-          "rounding_method": "Subtract exact raw VND YTD values first, then round display values to nearest million VND"
+          "quarter_comparator_basis": "original",
+          "later_restated_basis_stored_separately": true,
+          "no_balancing_plug": true,
+          "rounding_method": "Subtract exact raw VND first, round display values to nearest million VND"
         },
         "quarter_flow_components_within_tolerance": true,
         "ytd_flow_components_within_tolerance": true,
@@ -3932,20 +3952,49 @@
           "fx": 0
         },
         "quarter_cash_beginning_matches_previous_close": true,
-        "quarter_bridge_status": "PASS_WITHIN_TOLERANCE",
-        "ytd_bridge_status": "PASS_WITHIN_TOLERANCE",
+        "quarter_bridge_status": "PASS",
+        "ytd_bridge_status": "PASS",
         "source_revision": {
           "prior_snapshot_values": {},
           "reason": "Dùng nguồn/comparative VietstockFinance được chọn, không điều chỉnh số để ép khớp."
         },
-        "status": "NEEDS_MANUAL_REVIEW_SOURCE_VISUAL_PENDING",
+        "status": "PASS_ORIGINAL_BASIS_VISUAL_PENDING",
         "direct_pdf_text_audit": {
           "url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%203/IDC_Baocaotaichinh_Q3_2025_Hopnhat/4_idc_2025_10_30_de24c2b_en_financialstatementshn_q3_2025hn_s.pdf",
           "pages": "PDF 13–14 / printed pages 8–9",
           "ytdFlowAndCashBridge": "PASS",
           "visualReview": "PENDING",
           "quarterDerivation": "Q3 standalone = Q3 9M YTD less H1/2025 As-restated comparative from Q2/2026 VietstockFinance report; exact raw VND values retained."
-        }
+        },
+        "original_period_comparator": {
+          "source_document_id": "514037",
+          "source_url": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%202/IDC_Baocaotaichinh_Q2_2025_Hopnhat.zip",
+          "archive_file": "reports/raw/IDC/auto-idc-20261021/48616c2bb9d17c99.zip",
+          "original_h1_raw_vnd": {
+            "cfo": 1402209397523,
+            "cfi": -2438216817714,
+            "cff": -288817920091,
+            "net": -1324825340282,
+            "fx": 41467072,
+            "opening": 2188037806317,
+            "closing": 863253933107,
+            "capex": -909344214214,
+            "dividends": -588587063470
+          },
+          "selected_h1_restated_alternative_raw_vnd": {
+            "cfo": 876372147509,
+            "cfi": -1912379567700,
+            "cff": -288817920091,
+            "net": -1324825340282,
+            "fx": 41467072,
+            "opening": 2188037806317,
+            "closing": 863253933107
+          },
+          "restatement_delta_cfo_vnd": -525837250014,
+          "restatement_delta_cfi_vnd": 525837250014,
+          "restatement_delta_net_vnd": 0
+        },
+        "basis_correction_note": "Earlier mixed Q3 2025 original 9M with H1 2025 As-restated from Q2 2026. Corrected top-level Q3 standalone fields to same-original-basis Q3 YTD less original Q2/2025 H1. Preserve later restated H1 basis separately."
       },
       "financial_line_items_value_corrections": {
         "cash_and_equivalents": {
@@ -4264,7 +4313,11 @@
         "current_noncurrent_assets_residual_vnd": 0,
         "current_long_liabilities_residual_vnd": 0
       },
-      "income_tax_deferred_source_raw_vnd": 28267841672
+      "income_tax_deferred_source_raw_vnd": 28267841672,
+      "capital_expenditure": -893695,
+      "capital_expenditure_ytd": -1803039,
+      "dividends_paid": -57514,
+      "dividends_paid_ytd": -646101
     },
     {
       "symbol": "IDC",
