@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.5
+- Phiên bản: 1.6
 - Ngày ban hành: 03/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -172,6 +172,23 @@ Người dùng đã chỉ đạo **tiếp tục, không dừng toàn bộ tiến
 - Trạng thái Q4/2024: B02 profit bridge PASS; B01 total assets/equity có source text; total liabilities PENDING do row300 truncated; visual B01/B02/B03 PENDING; cashflow components PENDING. Data commit `a996f3fa119e9ecc98ac29c35f66bbc1c0cb790c`.
 - Theo chỉ đạo tiếp tục của người dùng, không dừng tiến độ tại Q4/2024. Kỳ tiếp theo: **GAS Q4/2025**, tiếp tục kiểm tra nợ/vốn từ báo cáo gốc và sidecar; bảo toàn ngoại lệ Q4/2024.
 
+### 10.7 GAS Q4/2025 — B02 PASS theo source text; B01 liability/equity và visual PENDING
+
+- Nguồn: VietstockFinance document ID **531505**, PDF hợp nhất `https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/GAS_Baocaotaichinh_Q4_2025_Hopnhat.pdf`; archive `reports/raw/GAS/auto-gas-20261021/d93ac1474c125a66.pdf`; sidecar `.pdf.extracted.json`; 76 trang.
+- PDF gốc chưa render được ảnh; B01/B02/B03 hiện chỉ đối chiếu text/OCR sidecar. Không gắn cờ visual verified.
+- B01 trang in 1 (sidecar page 4): total assets **93.531.511.866.676 VND**; current assets **69.861.417.011.215 VND**. B01 trang in 2 (sidecar page 5) OCR được các cấu phần tài sản/nợ/vốn nhưng dòng tổng nợ row300 và tổng vốn row400 bị lệch nhãn/cột; không thể xác định dứt khoát. `total_liabilities=null`, `equity=null`. Không suy ngược từ tổng tài sản hoặc tổng nguồn vốn.
+- B02 source text Q4 riêng: revenue **43.683.070.609.001 VND**, COGS **39.890.266.518.331**, gross profit **3.792.804.090.670**, financial income **428.311.439.319**, financial expense **82.785.588.700**, associate profit **19.038.436.670**, selling expense **630.754.891.701**, admin expense **1.763.015.602.591**, operating profit **1.763.597.883.667**, other income **16.961.158.939**, other expense **37.586.153.493**, PBT **1.742.972.889.113**, current tax **360.741.782.309**, deferred tax **-5.198.868.677**, total tax **355.542.913.632**, PAT **1.387.429.975.481**, parent PAT **1.361.084.899.485**, NCI **26.345.075.996**, EPS **435**. Profit/tax/attribution and revenue/COGS bridges exact.
+- B03 source text: FY2025 YTD CFO **13.378.374.377.362 VND**, CFF **-3.352.162.410.986 VND**, capex YTD **-2.330.869.042.369 VND**. CFI, net cash change and closing cash not read sufficiently; remain null. CFO/CFF standalone Q4 only if the Q3 baseline has been source-backed and the YTD fields are preserved; never fill CFI/net cash/closing cash by plug.
+- Q1/2026 VietstockFinance document ID **543696** B01 opening comparative (sidecar page 4–5) gives 31/12/2025 total assets **93.568.198.109.790 VND** and total equity **67.653.389.117.997 VND**. This comparative total assets differs from original Q4/2025 source by **36.686.243.114 VND**. Q1/2026 comparative liabilities are not legible. Preserve as subsequent comparative evidence; do not overwrite Q4/2025 values or use it to back-calculate total liabilities.
+- Data commit after recording the comparative: `2104638b013abe3cdd3d6adc793adcf0df4f6b02`.
+- Status: Q4/2025 P&L/source-text checks PASS; B01 liabilities/equity PENDING; B03 CFI/net change/closing cash PENDING; all visual review PENDING. The user directed continuing, so proceed to **GAS Q1/2026**.
+
+### 10.8 GAS Q1/2026 — continue B01 and B03 exception review
+- Nguồn: VietstockFinance document ID **543696**, PDF hợp nhất `https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/GAS_Baocaotaichinh_Q1_2026_Hopnhat.pdf`; archive `reports/raw/GAS/auto-gas-20261021/853ad22dfe045d24.pdf`; sidecar `.pdf.extracted.json`.
+- B02 source text is already reconciled: revenue **38.019.609.031.268 VND**, COGS **33.511.417.706.493**, gross profit **4.508.191.324.775**, financial income **384.755.468.683**, financial expense **118.408.271.484**, interest expense **53.307.964.713**, selling expense **623.721.077.879**, admin expense **396.928.650.943**, operating profit **3.754.223.754.396**, other income **862.001.024**, other expense **402.099.569**, PBT **3.754.683.655.851**, current tax **764.142.169.569**, deferred tax **-3.573.786.295**, total tax **760.568.383.274**, PAT **2.994.115.272.577**, parent PAT **2.944.603.136.328**, NCI **49.512.136.249**. Keep the P&L fields already source-backed; do not re-extract unless a discrepancy appears.
+- B01 sidecar pages 4–5 have unreadable/misaligned current and comparative totals; previous parser explicitly held total assets/liabilities/equity as null because total asset and total source did not reconcile. Do not infer/force them.
+- B03 source text page 4 gives CFI **509.484.606.752 VND**, opening cash **5.567.998.965.715 VND**, FX effect **367.185.405 VND**. CFO/CFF/net cash movement remain null because OCR does not give a trustworthy bridge. Do not infer other flow lines from cash balance.
+- Current status: P&L source text PASS; B01/remaining B03 PENDING; visual review PENDING. Continue source-only text analysis and store only clear rows; no forced balance.
 ## 11. Giới hạn thao tác
 
 - Không sửa code, schema, pipeline, dashboard hoặc logic tự động trong công việc nhập liệu BCTC nếu chưa có yêu cầu riêng.
