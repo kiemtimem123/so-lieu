@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.15
+- Phiên bản: 1.16
 - Ngày ban hành: 03/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -458,6 +458,48 @@ Continue to **GEG Q2/2024**. Its existing Q2 record has B03 selected from the la
 - Direct screenshot evidence: B01 printed p1–2 `turn501875view0`, `turn501875view1`; B02 printed p3 `turn501875view2`; B03 printed p4–5 `turn501875view3`, `turn501875view4`. All three statements visual PASS.
 - Data commit Q1/2025: `1b278c047e80d0ba3965cac57e468f77e742df70`.
 - Status: `verified_manual_visual_reconciliation`. Q1/2025 is complete. Continue GEG **Q2/2025**; do not repeat any Q1–Q4/2024 or Q1/2025 core extraction/visual review. Carry the B01 opening-balance difference as a separate cross-period pending item.
+
+### 10.13 GEG Q2/2025 — original B01/B02/B03 visually verified; source-sidecar path corrected
+
+- Nguồn: VietstockFinance document ID **513346**, BCTC hợp nhất Q2/2025; URL `https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%202/GEG_Baocaotaichinh_Q2_2025_Hopnhat.pdf`; PDF 85 trang; archive `reports/raw/GEG/auto-geg-20261021/4a525617c885ff3f.pdf`; đúng sidecar gốc `reports/raw/GEG/auto-geg-20261021/4a525617c885ff3f.pdf.extracted.json`.
+- Đã xem trực tiếp ảnh PDF:
+  - B01 printed p1, PDF index 6; B01 printed p2, index 7.
+  - B02 printed p3, index 8.
+  - B03 printed p4–5, indices 9–10.
+  - Evidence refs: `turn571822view0`–`turn571822view4`; cả B01/B02/B03 visual PASS.
+- B01 raw VND:
+  - Current assets **1.751.807.765.411**; non-current assets **13.433.655.631.118**; total assets **15.185.463.396.529**.
+  - Current liabilities **689.069.127.083**; long-term liabilities **7.999.546.127.260**; total liabilities **8.688.615.254.343**.
+  - Equity **6.496.848.142.186**; assets = liabilities + equity; current/noncurrent and current/long-term liability subtotals all residual **0 VND**.
+  - Cash **75.431.231.865**; equivalents **398.118.112.165**; reported cash and equivalents total **473.549.350.030 VND**. Sum of the two components is **6.000 VND lower** than the reported total (relative **0,000001267%**). Keep all three source values unchanged; no plug.
+  - Other B01 detail values: short-term investments **236.500.000.000**; short-term receivables **914.018.215.370**; inventories **105.104.270.467**; fixed assets **12.897.652.730.850**; retained earnings **595.533.639.319 VND**.
+- B02 current quarter Q2/2025 values, raw VND:
+  - Revenue **624.339.137.173**; COGS **351.447.828.104**; gross profit **272.891.309.069**.
+  - Financial income **119.441.275.360**; financial expenses **172.262.962.873**; interest expense **158.452.550.000**; share of profit in associates **709.366.343**.
+  - Selling expense current-quarter cell is a dash; store **0**. Admin expense **37.254.702.429**; operating profit **183.524.285.470**.
+  - Other income **1.058.716.373**; other expense **491.643.016**; other profit **567.073.357**; PBT **184.091.358.827**.
+  - Current tax **28.569.111.623**; deferred tax **-2.192.612.235**; total tax **26.376.499.388**; PAT **157.714.859.439**; parent PAT **165.820.759.376**; NCI **-8.105.899.937**; basic and diluted EPS **356 VND**.
+  - Revenue−COGS=gross profit; gross profit + finance income − finance expense + associates − selling − admin = operating profit; other income−other expense=other profit; operating + other=PBT; current+deferred=total tax; PBT−tax=PAT; parent+NCI=PAT. All residuals **0 VND**.
+- Important OCR column corrections from the original B02 screenshot:
+  - Current Q2 financial expense is **172.262.962.873 VND**; interest expense **158.452.550.000 VND**. The previous extracted **163.438.254.030 VND** for interest expense belongs to Q2/2024 comparative, not Q2/2025.
+  - Current Q2 admin expense is **37.254.702.429 VND**.
+  - Current Q2 other expense is **491.643.016 VND**, not **401.643.016**.
+  - Current Q2 selling expense is a dash; **-135.147.589 VND** is in the Q2/2024 comparative column and is not assigned to Q2/2025.
+  - PAT/current tax/deferred tax/parent/NCI all taken from the Q2/2025 current-quarter column; not mixed with H1 YTD.
+- B03 H1/2025 original YTD raw VND:
+  - CFO **555.421.075.993**; CFI **476.067.298.075**; CFF **-721.712.954.268**; net cash change **309.775.419.800**.
+  - Opening cash **163.717.707.072**; FX **56.223.158**; closing cash **473.549.350.030**.
+  - Capex YTD **-16.668.892.827**; dividends paid YTD **-296.857.300 VND**.
+- Same-year original Q1/2025 B03 baseline, document **504494**: CFO **62.310.535.515**; CFI **76.527.759.434**; CFF **-127.159.459.528**; net **11.678.835.421**; FX **3.490.065**; opening cash **163.717.707.072**; closing cash **175.400.032.558**; capex **-1.199.715.023**; dividends **-221.374.400 VND**.
+- Standalone Q2 = original H1 YTD less original Q1 YTD:
+  - CFO **493.110.540.478 VND**; CFI **399.539.538.641**; CFF **-594.553.494.740**; net cash change **298.096.584.379**; FX **52.733.093**.
+  - Opening cash **175.400.032.558**; closing cash **473.549.350.030**.
+  - Capex **-15.469.177.804**; dividends paid **-75.482.900 VND**.
+  - H1 and Q2 standalone flow sums, cash bridges and Q1/YTD subtraction residuals all **0 VND**.
+- ROA **4,0842%**, ROE **9,8005%**, using consolidated quarter PAT / average opening and closing assets/equity × 4 × 100.
+- Sidecar path correction: the previous data record's `financial_line_items_source` mistakenly referenced `reports/raw/GEG/auto-geg-20261021/e5c84e9cb42b1698.pdf.extracted.json`, which is the **Q2/2026 comparative report**, not the original Q2/2025 report. It is corrected to `4a525617c885ff3f.pdf.extracted.json`. The 2026 comparative remains audit-only; no Q2/2025 current-period data should be populated from it.
+- Data commit: `6f46accce8df3d5b621e4ab4cf46df37cfa9b7c0`.
+- Status: `verified_manual_visual_reconciliation`; Q2/2025 complete. Continue GEG **Q3/2025**. Do not repeat Q1/2024–Q1/2025 core extraction; carry Q2/Q3/2024 visual-pending and Q1/2025 opening-balance presentation difference separately.
 
 ## 11. Giới hạn thao tác
 
