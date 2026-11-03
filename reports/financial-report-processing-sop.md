@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.3
+- Phiên bản: 1.4
 - Ngày ban hành: 03/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -119,37 +119,45 @@ Mỗi mã/kỳ cần lưu:
 - data commit và checkpoint commit gần nhất.
 - cờ doNotRepeatCoreExtraction chỉ bật khi dữ liệu cốt lõi đã trích đầy đủ; cờ này không có nghĩa là visual review đã xong.
 
-## 10. Áp dụng cho trạng thái VDS hiện tại
+## 10. Trạng thái hiện tại: VDS đã qua Q4/2025, tiếp tục GAS
 
-Mã đang hoạt động: **VDS**. Q1–Q4/2024 và Q1/2025 đã COMPLETE và có checkpoint. Q2/2025 đã xem trực tiếp B01/B02/B03, các tổng quý và dòng tiền đã PASS nhưng vẫn có một ngoại lệ phân bổ LNST mẹ/NCI giữa Q1 gốc và H1 YTD chưa được giải thích. Theo chỉ đạo tiếp tục của người dùng, đã tiếp tục xử lý Q3/2025 và chuyển tiếp Q4/2025; không được xóa/ẩn các ngoại lệ đang chờ. Từng kỳ và từng phạm vi phải lưu riêng.
+Người dùng đã chỉ đạo **tiếp tục, không dừng toàn bộ tiến độ vì các ngoại lệ PENDING**. Do đó, ghi nhận từng ngoại lệ riêng và tiếp tục sang kỳ/mã kế tiếp; không đổi trạng thái PENDING thành PASS, không đưa số chưa xác minh vào chuỗi được gắn verified, và không sửa các giá trị nguồn đã lưu.
 
-### 10.1 Q1–Q4/2024 và Q1/2025
-- Các kỳ Q1–Q4/2024 đã đóng; không trích xuất lại hoặc xem lại ảnh nếu không có mâu thuẫn mới.
-- Q1/2025: VietstockFinance document ID 504544, PDF hợp nhất gốc, B01 PDF trang 6–8 (trang in 1–3), B02 PDF trang 11–13 (trang in 6–8), B03 PDF trang 14–16 (trang in 9–11). Tất cả kiểm tra cốt lõi PASS. Data commit `1ed4ef951122aa1b2060d0b795462c2be9521345`. Không lặp lại trích xuất lõi/visual review.
+### 10.1 VDS Q1–Q4/2024 và Q1/2025
+- Q1–Q4/2024 đã đóng; không trích xuất lại hoặc xem lại ảnh nếu không có mâu thuẫn mới.
+- Q1/2025: VietstockFinance document ID 504544, PDF hợp nhất gốc, B01 PDF trang 6–8 (trang in 1–3), B02 PDF trang 11–13 (trang in 6–8), B03 PDF trang 14–16 (trang in 9–11). Các kiểm tra cốt lõi PASS. Data commit `1ed4ef951122aa1b2060d0b795462c2be9521345`. Không lặp lại trích xuất lõi/visual review.
 
-### 10.2 Q2/2025 — giữ ngoại lệ phân bổ LNST mẹ/NCI
-- Nguồn: VietstockFinance document ID **513947**, báo cáo hợp nhất, đơn vị VND; PDF gốc lưu tại `reports/raw/VDS/auto-vds-20261021/69d4862950596830.pdf`. B01/B02/B03 đã xem trực tiếp.
-- B01: tổng tài sản **6.856.334.146.952 VND** = tổng nợ **4.022.130.711.905 VND** + vốn chủ **2.834.203.435.047 VND**.
-- B02 quý riêng: doanh thu hoạt động **180.998.605.171 VND**; chi phí hoạt động **160.666.996.283 VND**; PBT **-17.442.687.286 VND**; thuế **-6.248.781.619 VND**; PAT **-11.193.905.667 VND**; parent PAT **-9.900.252.664 VND**; NCI **-1.293.653.003 VND**; EPS **-41**.
+### 10.2 VDS Q2/2025 — ngoại lệ phân bổ LNST mẹ/NCI được giữ riêng
+- Nguồn VietstockFinance document ID **513947**, báo cáo hợp nhất, đơn vị VND; PDF gốc lưu `reports/raw/VDS/auto-vds-20261021/69d4862950596830.pdf`. B01/B02/B03 đã xem trực tiếp.
+- Q2 riêng: doanh thu **180.998.605.171 VND**; chi phí hoạt động **160.666.996.283 VND**; PBT **-17.442.687.286 VND**; thuế **-6.248.781.619 VND**; PAT **-11.193.905.667 VND**; parent PAT **-9.900.252.664 VND**; NCI **-1.293.653.003 VND**; EPS **-41**.
 - B03 H1 YTD gốc: CFO **423.813.880.703 VND**; CFI **-766.006.221.613 VND**; CFF **424.400.000.000 VND**; net change **82.207.659.090 VND**; opening cash **1.207.137.419.234 VND**; closing cash **1.289.345.078.324 VND**. Q2 riêng sau khi trừ Q1 YTD: CFO **977.015.279.251 VND**; CFI **-844.021.190.816 VND**; CFF **492.600.000.000 VND**; net change **625.594.088.435 VND**; cash bridge exact.
-- Ngoại lệ: Q2 H1 YTD row201 parent **8.071.151.977 VND**, row203 NCI **-252.715.388 VND**, PAT **7.818.436.589 VND**. Trừ Q2 riêng ra Q1 implied parent **17.971.404.641 VND**, NCI **1.040.937.615 VND**. So với Q1 PDF gốc parent **19.089.097.924 VND**, NCI **-76.755.668 VND**, có chênh phân bổ **1.117.693.283 VND** từ parent sang NCI; PAT không đổi.
-- Không ghi đè số Q1 gốc hoặc Q2 gốc; không dùng tolerance 0,01% cho chênh lệch phân loại này, không tạo balancing plug. Q2 vẫn được gắn exception `PENDING_UNEXPLAINED_CROSS_PERIOD_REALLOCATION`.
+- Ngoại lệ: Q2 H1 YTD parent **8.071.151.977 VND**, NCI **-252.715.388 VND**, PAT **7.818.436.589 VND**. Trừ Q2 riêng ra Q1 implied parent **17.971.404.641 VND**, NCI **1.040.937.615 VND**. So với Q1 PDF gốc parent **19.089.097.924 VND**, NCI **-76.755.668 VND**, chênh phân bổ **1.117.693.283 VND** từ parent sang NCI; PAT không đổi.
+- Q3/2025 9M YTD trừ Q3 riêng xác nhận chính xác Q2 H1 allocation. Ngoại lệ chỉ còn Q1 original B02 so với H1 basis; không sửa Q1 gốc, không tạo plug.
 
-### 10.3 Q3/2025 — B01/B02/B03 đã xem ảnh, một dòng doanh thu còn PENDING
-- Nguồn: VietstockFinance document ID **523128**, PDF hợp nhất `https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%203/VDS_Baocaotaichinh_Q3_2025_Hopnhat.pdf`, lưu tại `reports/raw/VDS/auto-vds-20261021/bd7db8914d33e414.pdf`; 50 trang. Đã xem B01 trang in 1–3 (PDF page index 5–7), B02 trang in 6–8 (index 11–13), B03 trang in 9–11 (index 14–16).
-- B01: tổng tài sản **7.732.966.527.561 VND** = nợ **4.578.708.861.227 VND** + vốn chủ **3.154.257.666.334 VND**; tài sản ngắn hạn **6.530.500.802.868 VND** + dài hạn **1.202.465.724.693 VND**; nợ ngắn hạn **4.522.612.518.725 VND** + dài hạn **56.096.342.502 VND**. Residual các phương trình đều bằng 0.
-- B02 quý riêng: doanh thu hoạt động **469.935.413.540 VND**; chi phí hoạt động **106.328.748.769 VND**; PBT **325.846.951.359 VND**; thuế **61.589.855.072 VND**; PAT **264.257.096.287 VND**; parent PAT **261.233.437.741 VND**; NCI **3.023.658.546 VND**; EPS **960**. PBT−thuế=PAT và parent+NCI=PAT đều exact.
-- Chi phí hoạt động: sau khi bổ sung đúng B02 row23.3 lỗ đánh giá tài sản AFS **45.714.000 VND**, các cấu phần chi phí khớp row40 **106.328.748.769 VND** chính xác. Row29 Q3 hiện tại **15.200.000 VND**, 9M YTD hiện tại **15.200.000 VND**.
-- Doanh thu: row20 **469.935.413.540 VND** đã xác minh. OCR row1.8 có candidate **881.819.860 VND** nhưng không cộng khớp với các cấu phần doanh thu đã nhận diện; known-component residual **90.000.000 VND (0,01915%)** nếu để row1.8 null. Không nhập candidate và không tự điền số; giữ `broker_advisory_revenue=null`, kỳ vẫn có trạng thái pending đối với detail row1.8.
-- B03 9M YTD: CFO **-790.384.880.004 VND**, CFI **-864.912.269.435 VND**, CFF **1.036.412.000.000 VND**, net change **-618.885.149.439 VND**, opening cash **1.207.137.419.234 VND**, closing cash **588.252.269.795 VND**. Q3 riêng = 9M YTD trừ H1 YTD từ Q2 gốc: CFO **-1.214.198.760.707 VND**, CFI **-98.906.047.822 VND**, CFF **612.012.000.000 VND**, net change **-701.092.808.529 VND**, opening cash **1.289.345.078.324 VND**, closing cash **588.252.269.795 VND**. Flow/cash bridge residuals bằng 0.
-- ROA **14,49%**, ROE **35,30%**, theo công thức PAT quý riêng / bình quân số đầu-cuối kỳ × 4 × 100.
-- Q3 B02 9M YTD trừ Q3 riêng cho ra H1 parent **8.071.151.977 VND**, NCI **-252.715.388 VND**, PAT **7.818.436.589 VND**; khớp Q2 H1 YTD chính xác. Vì vậy ngoại lệ phân bổ chỉ còn là Q1 PDF gốc riêng lẻ so với H1 basis được xác nhận từ Q2/Q3; tiếp tục lưu nguyên, không sửa Q1.
-- Data commit Q3 trước khi sửa chi phí row23.3: `ab5657afaa2cdb1ac81ff13184f346f3a1c66753`; commit sửa row23.3: `9aff12e4dda7c4e2b83c2652e432d93307e07070`.
+### 10.3 VDS Q3/2025 — core PASS, chi tiết doanh thu còn PENDING
+- Nguồn VietstockFinance document ID **523128**, PDF hợp nhất `https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%203/VDS_Baocaotaichinh_Q3_2025_Hopnhat.pdf`, lưu tại `reports/raw/VDS/auto-vds-20261021/bd7db8914d33e414.pdf` (50 trang).
+- B01 trang in 1–3; B02 trang in 6–8; B03 trang in 9–11 đã được xem trực tiếp.
+- B01 tổng tài sản **7.732.966.527.561 VND** = nợ **4.578.708.861.227 VND** + vốn chủ **3.154.257.666.334 VND**; current assets **6.530.500.802.868 VND** + non-current **1.202.465.724.693 VND**.
+- B02: revenue row20 **469.935.413.540 VND**; expense row40 **106.328.748.769 VND**; PBT **325.846.951.359 VND**; tax **61.589.855.072 VND**; PAT **264.257.096.287 VND**; parent **261.233.437.741 VND**; NCI **3.023.658.546 VND**; EPS **960**. Expense row23.3 AFS fair-value loss **45.714.000 VND** đã bổ sung; expense detail sum exact.
+- Revenue row 1.8 candidate OCR **881.819.860 VND** không khớp tổng khi ghép với các cấu phần còn lại. Nếu để null, known components còn thiếu **90.000.000 VND**, residual **0,01915%** > 0,01%. Vì vậy giữ `broker_advisory_revenue=null`; không gán OCR candidate, không plug.
+- B03 9M YTD: CFO **-790.384.880.004 VND**; CFI **-864.912.269.435 VND**; CFF **1.036.412.000.000 VND**; net change **-618.885.149.439 VND**; opening **1.207.137.419.234 VND**, closing **588.252.269.795 VND**. Q3 riêng: CFO **-1.214.198.760.707 VND**, CFI **-98.906.047.822 VND**, CFF **612.012.000.000 VND**, net change **-701.092.808.529 VND**; opening **1.289.345.078.324 VND**, closing **588.252.269.795 VND**. Flow and cash bridge exact.
+- Q3 YTD less Q3 quarter confirms Q2 H1 parent/NCI/PAT exactly. Q1 original allocation difference remains a separate PENDING issue. Data commit `9aff12e4dda7c4e2b83c2652e432d93307e07070`.
 
-### 10.4 Quy tắc tiếp tục khi người dùng yêu cầu không dừng
-- Pending exception phải giữ nguyên status, amount, source pages, prior/current values và reason; không được đánh dấu PASS hoặc bỏ qua trong dashboard/charts.
-- Người dùng đã chỉ đạo tiếp tục; do đó có thể chuyển sang xử lý kỳ tiếp theo trong cùng mã, đồng thời giữ lại các kỳ PENDING riêng. Không được merge các số chưa giải quyết vào một chuỗi đã xác minh.
-- Kỳ tiếp tục: **VDS Q4/2025**. Q1–Q4/2024, Q1/2025 không được xử lý lại; Q2/2025 không được trích xuất/xem ảnh lại; Q3/2025 chỉ còn row1.8 revenue detail chưa xác minh.
+### 10.4 VDS Q4/2025 — số lõi/text bridge đã đối chiếu, visual và expense detail còn PENDING
+- Nguồn: VietstockFinance document ID **530626**, PDF hợp nhất, công bố **30/01/2026**; PDF gốc `https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%204/VDS_Baocaotaichinh_Q4_2025_Hopnhat.pdf`, archive `reports/raw/VDS/auto-vds-20261021/d2252c9c1aaafbaf.pdf`, sidecar `.pdf.extracted.json`; 50 trang.
+- Lưu ý: endpoint PDF gốc và bản archive không render được ảnh trong phiên xử lý; đã dùng text/OCR sidecar và cross-check với Q3/2025 YTD. **Không đánh dấu đã visual verified.**
+- B01 raw VND: total assets **8.121.452.969.623** = current assets **6.925.802.937.636** + noncurrent **1.195.650.031.987**; liabilities **5.022.323.459.557** = current **4.998.480.395.596** + long-term **23.843.063.961**; equity **3.099.129.510.066**. Assets = liabilities + equity; residuals 0.
+- B02 Q4 riêng: revenue row20 **221.975.460.374 VND**; total operating expenses row40 **162.390.566.550 VND**; PBT **15.744.157.121 VND**; income tax **5.651.950.112 VND**; PAT **10.092.207.009 VND**; parent PAT **13.821.476.572 VND**; NCI **-3.729.269.563 VND**; EPS **51**.
+- Các tổng B02 trên khớp chính xác khi tính từ FY2025 YTD trừ 9M/2025 YTD trong báo cáo Q3: revenue **221.975.460.374**, expenses **162.390.566.550**, PBT **15.744.157.121**, tax **5.651.950.112**, PAT **10.092.207.009**, parent **13.821.476.572**, NCI **-3.729.269.563**; residuals 0. Revenue identifiable components current Q4 sum đúng row20 khi row 1.8 current Q4 để null; các giá trị 642.692.824 và 881.819.860 trong OCR là các cột comparative/YTD, không gán vào current Q4.
+- Expense components chưa đủ rõ trong OCR: row24, row29, row30, row23.3 còn PENDING. Không sử dụng phần chênh tổng để tự điền. Total expenses vẫn được lưu theo row40 gốc; các detail field không chắc giữ null.
+- B03 FY2025 YTD raw VND: CFO **-850.325.354.079**; CFI **-824.472.465.903**; CFF **1.464.636.000.000**; net change **-210.161.819.982**; opening cash **1.207.137.419.234**; closing cash **996.975.599.252**. Q4 riêng = FY2025 YTD less Q3 YTD: CFO **-59.940.474.075**; CFI **40.439.803.532**; CFF **428.224.000.000**; net change **408.723.329.457**; opening **588.252.269.795**; closing **996.975.599.252**. Flow and cash bridge residuals 0. B03 row 76 blank → dividends paid null. FX bridge blank → null.
+- ROA **0,51%**, ROE **1,29%**, theo PAT quý riêng / bình quân đầu-cuối kỳ × 4 × 100.
+- Data commit `4019e204adc2a4c2a18a74d5252436c1fa4cce88`; status `pending_visual_source_review_and_expense_detail`.
+
+### 10.5 Quy tắc tiếp tục
+- Các PENDING Q2/2025 parent/NCI, Q3/2025 row1.8 và Q4/2025 visual/expense details được giữ nguyên, có số liệu/nguồn/trạng thái riêng. Không dùng chúng làm số verified/complete.
+- Người dùng đã yêu cầu tiếp tục; vì vậy sau khi lưu Q4/2025 ở trạng thái PENDING, chuyển sang mã tiếp theo **GAS** để xử lý các kỳ terminal/manual review từ archive VietstockFinance. Không chạy lại OCR đại trà cho 10 kỳ GAS; xử lý từng ngoại lệ đã được ghi trong checkpoint.
+- Ưu tiên GAS Q4/2024 (thiếu tổng nợ), GAS Q4/2025 (thiếu tổng nợ/vốn), GAS Q1/2026 (thiếu tổng B01 và các dòng cashflow); các kỳ còn lại chỉ mở lại khi có lý do cụ thể.
 
 ## 11. Giới hạn thao tác
 
