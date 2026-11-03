@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-04T01:08:00+07:00",
+  "updatedAt": "2026-11-04T01:24:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "Priority 1: VietstockFinance public document catalog and directly linked report PDFs. Priority 2: WiData document tab for the same ticker, only to compare/supplement when source 1 lacks the report or extraction is unclear/unavailable. No third source without explicit user approval.",
   "periodStart": "2024-Q1",
@@ -45,36 +45,37 @@
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "IDC",
-    "status": "IDC_Q3_2025_DIRECT_PDF_VISUAL_REVIEW_COMPLETE",
+    "status": "IDC_Q4_2025_DIRECT_PDF_VISUAL_REVIEW_COMPLETE_FX_CORRECTED",
     "completeForAutomation": true,
     "manualReviewRemaining": true,
-    "processedAt": "2026-11-04T01:08:00+07:00",
-    "period": "2025-Q3",
-    "periodStatus": "IDC Q3/2025 B01/B02/B03 đã được kiểm tra trực quan từ 7 ảnh PDF trang 8–14, render 180 DPI từ đúng PDF tiếng Anh trong VietstockFinance document 523494. B01 tài sản/nợ/vốn khớp 0 VND; dòng 440 bị con dấu che một phần nên không transcribe riêng. B02 cột quý III và toàn bộ cầu nối thuế/PAT/mẹ-NCI khớp 0. B03 Q3 riêng tính từ 9M Q3/2025 trừ H1 gốc Q2/2025 cùng basis; flow và cash bridges 0 VND. Không chạy OCR lại. Kỳ đã hoàn tất; tiếp theo IDC Q4/2025. Các ngoại lệ của những kỳ cũ vẫn còn trong danh sách review.",
+    "processedAt": "2026-11-04T01:24:00+07:00",
+    "period": "2025-Q4",
+    "periodStatus": "IDC Q4/2025 B01/B02/B03 visually reviewed from exact English consolidated PDF member, pages 8–14 at 180 DPI. B01 row 440 = 23,201,490,679,523 VND; asset/liability/equity equations residual 0. B02 Q4-only values and aggregate bridges pass; visible interest expense subline 43,891,490,863 VND exceeds total finance expenses 42,472,227,098 VND by 1,419,263,765 VND. Retain as a source-reported inconsistency, do not alter aggregate lines. B01 row 120 short-term investments corrected to 6,807,014,517,859 VND. B03 page14 confirms FY2025 FX 62,830,651 VND, not prior-year comparative 91,523,594; YTD and Q4 standalone cash bridges now exact. Period complete; next IDC Q1/2026.",
     "periodCount": 10,
     "sourceIndexUrl": "https://finance.vietstock.vn/IDC/tai-tai-lieu.htm?doctype=1",
-    "sourceReportUrl": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%203/IDC_Baocaotaichinh_Q3_2025_Hopnhat.zip",
+    "sourceReportUrl": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%204/IDC_Baocaotaichinh_Q4_2025_Hopnhat.zip",
     "sourcePdfUrl": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%203/IDC_Baocaotaichinh_Q3_2025_Hopnhat/4_idc_2025_10_30_de24c2b_en_financialstatementshn_q3_2025hn_s.pdf",
-    "sourceDocumentId": "523494",
-    "sourceArchiveFile": "reports/raw/IDC/auto-idc-20261021/04ff7104fec1b3fd.zip",
-    "dataCommit": "e91771b408d175231b3eb57efcb146d475cc52ce",
+    "sourceDocumentId": "529902",
+    "sourceArchiveFile": "reports/raw/IDC/auto-idc-20261021/5ff8f3ce069a369e.zip",
+    "dataCommit": "c9a45a3606f209e12df00856f97e8c12eaed27dc",
     "normalizationStandardVersion": "3.4",
     "validation": {
-      "balanceSheet": "PASS_ZERO_RESIDUAL_ROW440_PARTLY_OBSCURED_BY_SEAL",
-      "incomeStatement": "PASS_ZERO_RESIDUALS",
+      "balanceSheet": "PASS_ZERO_RESIDUAL",
+      "incomeStatement": "PASS_AGGREGATE_BRIDGES_WITH_REPORTED_INTEREST_SUBLINE_EXCEPTION",
       "cashFlow": "PASS_ORIGINAL_SAME_BASIS_ZERO_RESIDUALS",
       "visual": "PASS_PDF_PAGES_8_TO_14"
     },
     "doNotRepeatCoreTextExtraction": true,
     "nextTicker": "IDC",
-    "nextPeriod": "2025-Q4",
+    "nextPeriod": "2026-Q1",
     "periodComplete": true,
-    "processingSopVersion": "1.27",
+    "processingSopVersion": "1.29",
     "processingSopPath": "reports/financial-report-processing-sop.md",
-    "sourceDocumentPageCount": 64,
+    "sourceDocumentPageCount": 67,
     "sourceDocumentScope": "Consolidated",
     "pendingExceptions": [
-      "IDC Q2/2025 direct page-image review remains pending.",
+      "IDC Q4/2025 published B02 interest-expense subline exceeds total finance expense by 1,419,263,765 VND; retained exactly as source-reported, do not derive aggregates from it.",
+      "Visual review pending for IDC 2024-Q1 through 2024-Q4, 2025-Q1, 2025-Q2 and 2026-Q1 through 2026-Q2.",
       "IDC Q1/2024 selling-expense detail unresolved.",
       "IDC Q4/2024 original B03 source OCR inconsistency remains pending."
     ],
@@ -90,20 +91,20 @@
       "note": "Page 11 image seal partially overlays row 440. Do not transcribe an obstructed source amount; row 300 + row 400 equals row 270 exactly."
     },
     "cashflowStandaloneRawVnd": {
-      "cfo": 1541531404357,
-      "cfi": -2242302344954,
-      "cff": 629179666426,
-      "net": -71591274171,
-      "fx": 23900983,
-      "cashOpening": 863253933107,
-      "cashClosing": 791686559919,
-      "capex": -893695067506,
-      "dividendsPaid": -57513573250
+      "cfo": 970200007993,
+      "cfi": -2329374796016,
+      "cff": 1120543443747,
+      "net": -238631344276,
+      "fx": -2537404,
+      "cashOpening": 791686559919,
+      "cashClosing": 553052678239,
+      "capex": -1300428928495,
+      "dividendsPaid": -654131953577
     },
     "visualReviewDataCommit": "e91771b408d175231b3eb57efcb146d475cc52ce",
-    "visualReviewWorkflowRunId": 41690820936,
-    "visualReviewArtifactId": 13257427801,
-    "visualReviewArtifactName": "vietstock-source-review-IDC-2025-Q3",
+    "visualReviewWorkflowRunId": 41693037890,
+    "visualReviewArtifactId": 13257699370,
+    "visualReviewArtifactName": "vietstock-source-review-IDC-2025-Q4",
     "visualReviewPages": [
       8,
       9,
@@ -115,11 +116,19 @@
     ],
     "visualReviewDpi": 180,
     "processingSopCommit": "aae7894b9f851bd9af1fd3bd44e5399f0ed2698d",
-    "visualReviewNotePath": "reports/analysis/IDC-Q3-2025-visual-review.md",
+    "visualReviewNotePath": "reports/analysis/IDC-Q4-2025-visual-review.md",
     "visualReviewNoteCommit": "375bfa7abc1d30b8ff470d3c9e913c2afc58f5f4",
     "visualAudit": {
-      "runId": 41690820936,
-      "artifactId": 13257427801,
+      "documentId": "529902",
+      "archive": "reports/raw/IDC/auto-idc-20261021/5ff8f3ce069a369e.zip",
+      "pdfMember": "1_idc_2026_1_29_0d3041b_en_financialstatementshn_q4_2025hn_s.pdf",
+      "dataCommit": "c9a45a3606f209e12df00856f97e8c12eaed27dc",
+      "sopCommit": "eae452a2be0f17db46a1272e9274a24a30b702d6",
+      "visualNoteCommit": "64e5bea38e61f77841ee6865128dd47be4b06fda",
+      "workflowCommit": "fd26323d14c0b2a5d835e029f584a31f4585ebee",
+      "workflowRunId": 41693037890,
+      "artifactId": 13257699370,
+      "artifactName": "vietstock-source-review-IDC-2025-Q4",
       "renderDpi": 180,
       "pdfPages": [
         8,
@@ -130,10 +139,37 @@
         13,
         14
       ],
-      "artifactSha256": "8cb8bdc1153cbe20798090ae24e9513db67e91a2f42ffba02f657fa4151dcbb1",
-      "status": "SUCCESS_AND_VISUALLY_REVIEWED",
-      "row440": "PARTLY_OBSCURED_BY_SEAL; balance equation residual 0 VND"
-    }
+      "status": "B01_B02_B03_VISUAL_PASS_WITH_INTEREST_EXPENSE_SOURCE_EXCEPTION",
+      "balanceResidualVnd": 0,
+      "interestExpenseReportedVnd": -43891490863,
+      "financialExpenseReportedVnd": -42472227098,
+      "interestExpenseExceedsParentByVnd": 1419263765,
+      "fxYtdCorrectedVnd": 62830651,
+      "fxPreviousYearComparativeVnd": 91523594,
+      "q4StandaloneRawVnd": {
+        "cfo": 970200007993,
+        "cfi": -2329374796016,
+        "cff": 1120543443747,
+        "net": -238631344276,
+        "fx": -2537404,
+        "cashOpening": 791686559919,
+        "cashClosing": 553052678239,
+        "capex": -1300428928495,
+        "dividendsPaid": -654131953577
+      },
+      "bridgeResidualsRawVnd": {
+        "ytdFlow": 0,
+        "ytdCash": 0,
+        "q4Flow": 0,
+        "q4Cash": 0,
+        "q4OpeningVsQ3Close": 0
+      },
+      "visualReview": "PASS: PDF pages 8–14 rendered and inspected at 180 DPI; Q4 row 440 legible and exact."
+    },
+    "sourcePdfMember": "1_idc_2026_1_29_0d3041b_en_financialstatementshn_q4_2025hn_s.pdf",
+    "sopCommit": "eae452a2be0f17db46a1272e9274a24a30b702d6",
+    "visualNoteCommit": "64e5bea38e61f77841ee6865128dd47be4b06fda",
+    "workflowCommit": "fd26323d14c0b2a5d835e029f584a31f4585ebee"
   },
   "symbolStates": {
     "MBB": {
@@ -1775,7 +1811,7 @@
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-11-04T01:08:00+07:00",
+      "updatedAt": "2026-11-04T01:24:00+07:00",
       "snapshotFetchedAt": "2026-10-25T23:45:00Z",
       "sourceReconciledPeriods": [
         "2024-Q1",
@@ -1837,7 +1873,7 @@
           "Q2/2025: original B03 H1 YTD and Q2 standalone cashflow bridges all exact. The chosen Q2/2026 As-restated comparative basis also reconciles, preserving 525.837bn VND CFO-to-CFI classification reallocation with net cash unchanged.",
           "Q2/2025: top-level cashflow basis remains selected As-restated Note 41; original Q2 B03 source stored separately."
         ],
-        "remaining": "IDC Q3/2025 is complete and visually reviewed. Next report is IDC Q4/2025. Earlier exceptions remain: Q2/2025 visual review, Q1/2024 selling-expense detail, Q4/2024 original B03 OCR inconsistency. Do not repeat IDC Q3/2025 extraction or visual review unless a contradiction is found.",
+        "remaining": "IDC Q4/2025 complete and visually reviewed. Continue IDC Q1/2026, then Q2/2026. After reaching latest available quarter, return to oldest visual/detail exceptions in chronological order: IDC 2024-Q1 through Q4, 2025-Q1/Q2. Q1/2024 selling expense and Q4/2024 B03 remain unresolved; Q4/2025 interest subline is source-reported inconsistency retained as disclosed, not an extraction gap.",
         "q3_2025DirectPdfAudit": {
           "documentId": "523494",
           "sourcePdfUrl": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%203/IDC_Baocaotaichinh_Q3_2025_Hopnhat/4_idc_2025_10_30_de24c2b_en_financialstatementshn_q3_2025hn_s.pdf",
@@ -1874,6 +1910,54 @@
           "quarterCashFlowBridgeResidualVnd": 0,
           "restatedAlternative": "Q2/2026 As-restated H1 remains separate metadata; never mix with un-restated Q3/2025 9M.",
           "visualReview": "PASS: pages 8-14 rendered and inspected at 180 DPI; page 11 row 440 partly obscured by stamp, independent B/S equation residual 0."
+        },
+        "q4_2025DirectPdfAudit": {
+          "documentId": "529902",
+          "archive": "reports/raw/IDC/auto-idc-20261021/5ff8f3ce069a369e.zip",
+          "pdfMember": "1_idc_2026_1_29_0d3041b_en_financialstatementshn_q4_2025hn_s.pdf",
+          "dataCommit": "c9a45a3606f209e12df00856f97e8c12eaed27dc",
+          "sopCommit": "eae452a2be0f17db46a1272e9274a24a30b702d6",
+          "visualNoteCommit": "64e5bea38e61f77841ee6865128dd47be4b06fda",
+          "workflowCommit": "fd26323d14c0b2a5d835e029f584a31f4585ebee",
+          "workflowRunId": 41693037890,
+          "artifactId": 13257699370,
+          "artifactName": "vietstock-source-review-IDC-2025-Q4",
+          "renderDpi": 180,
+          "pdfPages": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14
+          ],
+          "status": "B01_B02_B03_VISUAL_PASS_WITH_INTEREST_EXPENSE_SOURCE_EXCEPTION",
+          "balanceResidualVnd": 0,
+          "interestExpenseReportedVnd": -43891490863,
+          "financialExpenseReportedVnd": -42472227098,
+          "interestExpenseExceedsParentByVnd": 1419263765,
+          "fxYtdCorrectedVnd": 62830651,
+          "fxPreviousYearComparativeVnd": 91523594,
+          "q4StandaloneRawVnd": {
+            "cfo": 970200007993,
+            "cfi": -2329374796016,
+            "cff": 1120543443747,
+            "net": -238631344276,
+            "fx": -2537404,
+            "cashOpening": 791686559919,
+            "cashClosing": 553052678239,
+            "capex": -1300428928495,
+            "dividendsPaid": -654131953577
+          },
+          "bridgeResidualsRawVnd": {
+            "ytdFlow": 0,
+            "ytdCash": 0,
+            "q4Flow": 0,
+            "q4Cash": 0,
+            "q4OpeningVsQ3Close": 0
+          },
+          "visualReview": "PASS: PDF pages 8–14 rendered and inspected at 180 DPI; Q4 row 440 legible and exact."
         }
       },
       "lastDetailSourceReconciliation": {
@@ -1905,14 +1989,15 @@
       "lastManualReviewPeriod": "2025-Q3",
       "lastManualReviewStatus": "source_text_audited_visual_pending_cashflow_same_basis_corrected",
       "visuallyReviewedPeriods": [
-        "2025-Q3"
+        "2025-Q3",
+        "2025-Q4"
       ],
       "lastVisualReview": {
         "symbol": "IDC",
-        "period": "2025-Q3",
-        "reviewedAt": "2026-11-04T01:08:00+07:00",
-        "workflowRunId": 41690820936,
-        "artifactId": 13257427801,
+        "period": "2025-Q4",
+        "reviewedAt": "2026-11-04T01:24:00+07:00",
+        "workflowRunId": 41693037890,
+        "artifactId": 13257699370,
         "renderDpi": 180,
         "pdfPages": [
           8,
@@ -1923,10 +2008,10 @@
           13,
           14
         ],
-        "status": "PASS_WITH_ROW440_PARTIALLY_OBSCURED_BY_SEAL",
-        "dataCommit": "e91771b408d175231b3eb57efcb146d475cc52ce",
-        "sopCommit": "aae7894b9f851bd9af1fd3bd44e5399f0ed2698d",
-        "visualNoteCommit": "375bfa7abc1d30b8ff470d3c9e913c2afc58f5f4"
+        "status": "PASS_WITH_REPORTED_INTEREST_EXPENSE_SOURCE_EXCEPTION",
+        "dataCommit": "c9a45a3606f209e12df00856f97e8c12eaed27dc",
+        "sopCommit": "eae452a2be0f17db46a1272e9274a24a30b702d6",
+        "visualNoteCommit": "64e5bea38e61f77841ee6865128dd47be4b06fda"
       }
     },
     "KBC": {
@@ -2375,16 +2460,6 @@
     }
   },
   "progressHistory": [
-    {
-      "symbol": "VCI",
-      "period": "2024-Q1",
-      "status": "manually_verified_source_reconciled",
-      "processedAt": "2026-11-01T16:05:00+07:00",
-      "dataCommit": "804734b6457eeab0b77b48bef7fb0728a50e3f78",
-      "sourceArchive": "reports/raw/VCI/auto-vci-20261021/bcc25fca52409b54.pdf",
-      "normalizationStandardVersion": "2.8",
-      "next": "VCI 2024-Q2"
-    },
     {
       "symbol": "VCI",
       "period": "2024-Q2",
@@ -3151,6 +3226,23 @@
         "data/financials-IDC.json",
         "reports/financial-report-processing-sop.md",
         "reports/analysis/IDC-Q3-2025-visual-review.md",
+        "reports/processing-checkpoint.json"
+      ]
+    },
+    {
+      "symbol": "IDC",
+      "status": "IDC_Q4_2025_DIRECT_PDF_VISUAL_REVIEW_COMPLETE_FX_CORRECTED",
+      "completeForAutomation": true,
+      "processedAt": "2026-11-04T01:24:00+07:00",
+      "dataCommit": "c9a45a3606f209e12df00856f97e8c12eaed27dc",
+      "sopCommit": "eae452a2be0f17db46a1272e9274a24a30b702d6",
+      "visualNoteCommit": "64e5bea38e61f77841ee6865128dd47be4b06fda",
+      "workflowRunId": 41693037890,
+      "artifactId": 13257699370,
+      "changedPaths": [
+        "data/financials-IDC.json",
+        "reports/financial-report-processing-sop.md",
+        "reports/analysis/IDC-Q4-2025-visual-review.md",
         "reports/processing-checkpoint.json"
       ]
     }
@@ -6970,5 +7062,17 @@
     "periodComplete": false,
     "nextAction": "No further B01/B02/B03 text extraction for Q4/2024. Image review only if an accessible page image/source becomes available; standalone FX remains null. Preserve active global ticker IDC Q3/2025."
   },
-  "pendingVisualPeriods": []
+  "pendingVisualPeriods": [
+    "2024-Q1",
+    "2024-Q2",
+    "2024-Q3",
+    "2024-Q4",
+    "2025-Q1",
+    "2025-Q2",
+    "2026-Q1",
+    "2026-Q2"
+  ],
+  "pendingCashflowPeriods": [
+    "2024-Q4"
+  ]
 }
