@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.10
+- Phiên bản: 1.11
 - Ngày ban hành: 03/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -324,6 +324,45 @@ Data commit: `2820b036e70ca84e15ca6cd6d03b66a4aba448d5`.
 - B03 source sidecar PDF page indices 5–6 (trang in 6–7) mất hầu hết bảng dòng tiền, không có cấu phần đáng tin cậy để nhập. Tiền đầu kỳ **10.034.406.335.760 VND** khớp số cuối Q1/2026; tiền cuối kỳ **6.323.957 triệu VND** chỉ đọc từ B01. Giữ CFO/CFI/CFF/net cash/FX ở null; tuyệt đối không dùng tiền đầu-cuối để suy ra các dòng lưu chuyển.
 - Endpoint PDF gốc dung lượng khoảng 15,9 MB chưa mở được bằng bộ đọc hiện có; vì thế visual review B03 PENDING. WiData không được dùng để bổ sung nếu chưa cần thiết theo quy tắc nguồn đã xác lập.
 - Trạng thái: B03 `NEEDS_MANUAL_REVIEW_CASHFLOW_OCR_INCOMPLETE`; no balancing plug. Người dùng đã chỉ đạo tiếp tục nên giữ Q2/2026 pending và chuyển tới mã kế tiếp theo checkpoint.
+
+### 10.14 GEG Q1/2024 — trực quan hóa và đóng kỳ gốc
+
+Nguồn: VietstockFinance document ID **460145**, BCTC hợp nhất Q1/2024:
+`https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%201/GEG_Baocaotaichinh_Q1_2024_Hopnhat.pdf`
+Archive: `reports/raw/GEG/auto-geg-20261021/51f06da4fc1935f2.pdf`; sidecar `.pdf.extracted.json`.
+
+Đã xem trực tiếp ảnh PDF gốc:
+- B01 printed pages 1–2 (PDF page indices 2–3).
+- B02 printed page 3 (PDF page index 4).
+- B03 printed pages 4–5 (PDF page indices 5–6).
+Evidence refs: `turn265283view0`, `turn346148view1`, `turn346148view2`, `turn346148view0`, `turn347739view0`.
+
+#### B01 — raw VND, residuals 0
+- Total assets **16.152.857.699.551 VND** = current assets **1.690.854.386.569** + non-current assets **14.462.003.312.982**.
+- Total liabilities **10.259.620.128.232 VND** = current liabilities **1.692.725.940.150** + long-term liabilities **8.566.894.188.082**.
+- Equity **5.893.237.571.319 VND**; liabilities + equity = total assets exactly.
+- Cash/equivalents closing **214.930.981.659 VND**; cash **93.225.403.279**, cash equivalents **121.705.578.380**. Opening B01 cash/equivalents **229.105.088.949 VND**.
+
+#### B02 — raw VND, all bridges 0
+- Revenue **739.214.916.619**; COGS **321.118.871.630**; gross profit **418.096.044.989**.
+- Financial income **9.379.344.534**; financial expense **245.541.068.704**; interest expense **241.715.610.003**; share of profit associates **-554.693.467**; selling expense **135.147.589**; admin expense **43.849.062.574**; operating profit **137.395.417.189**.
+- Other income **547.221.018**; other expense **1.299.685.240**; other result **-752.464.222**; PBT **136.642.952.967**.
+- Current tax **11.367.030.590**; deferred tax **-1.000.617.024**; total tax **10.366.413.566**; PAT **126.276.539.401**; parent PAT **89.662.202.743**; NCI **36.614.336.658**; EPS **262**.
+- Revenue−COGS=gross profit; operating-profit bridge; other profit; PBT; tax; PAT and parent+NCI bridges all exact.
+
+#### B03 — original source corrected for adjacent-year OCR column
+- CFO **134.488.003.107 VND**; CFI **11.861.771.247**; CFF **-160.548.389.615**; net cash change **-14.198.615.261**.
+- Opening cash **229.105.088.949**; FX effect **24.507.971**; closing cash **214.930.981.659**.
+- Flow sum and opening + net change + FX = closing residuals are both **0 VND**.
+- Capex **-4.743.605.709 VND**; dividends paid **-4.706.100 VND**.
+- Direct visual check of B03 printed page 5 establishes the two cash columns: 2024 closing row70 is **214.930.981.659 VND**; **321.665.888.215 VND** is the 2023 comparative figure in the adjacent column. Prior OCR had copied the comparative number into current-period closing and caused a false residual; corrected current-period record uses the 2024 value. Dividends row36 is **-4.706.100 VND** (not prior OCR candidate -1,024 million VND); source negative sign retained.
+- This source is sufficient; the previous Q1/2025 comparative cashflow record remains provenance history only, not the selected primary basis.
+
+Data commit: `4e05d9bf8d280f827d0d40e7b24573110f974e78`.
+Status: `verified_manual_visual_reconciliation`, B01/B02/B03 PASS, no open core/detail exception for GEG Q1/2024. Do not re-extract or re-review this period unless a future contradiction occurs.
+
+#### Resume
+Continue to **GEG Q2/2024**. Its existing Q2 record has B03 selected from the later Q2/2025 comparative while original Q2/2024 source sidecar is archived; inspect original source before changing values. Preserve prior/current comparative differences as separate evidence and do not force balance.
 
 ## 11. Giới hạn thao tác
 
