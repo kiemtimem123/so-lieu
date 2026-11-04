@@ -98,3 +98,30 @@ FY2025 flow and cash bridges, Q4 flow and cash bridges, and Q4 opening cash vs Q
 ## Status
 
 **B01/B02/B03 visual review: PASS**, with one disclosed B02 source inconsistency for interest expense. Cashflow FX OCR correction is applied and both YTD and standalone cash bridges now reconcile exactly. Do not repeat Q4 core extraction. Next period: **IDC Q1/2026**.
+
+
+## Cross-check B02 against FY2025 annual and 9M/2025 columns
+
+A final source-basis check was performed using the annual FY2025 column on PDF page 12 of the Q4/2025 report and the 9M/2025 current-year column on PDF page 12 of the Q3/2025 report. All additive Q4 standalone B02 lines are exactly the annual amount minus the 9M amount, with **0 VND residual**. This confirms that the Q4 row 22 and row 23 numbers are not an OCR column shift.
+
+| B02 item | FY2025 | 9M/2025 | Q4 derived (FY less 9M) | Q4 printed |
+|---|---:|---:|---:|---:|
+| Finance expenses | (145,565,294,159) | (103,093,067,061) | **(42,472,227,098)** | **(42,472,227,098)** |
+| In which: interest expense | (142,471,672,836) | (98,580,181,973) | **(43,891,490,863)** | **(43,891,490,863)** |
+
+The Q4 interest subline therefore matches both the directly rendered Q4 PDF and the independent annual-minus-9M calculation. However, it exceeds the Q4 parent finance-expense total by **1,419,263,765 VND**. The annual and 9M columns themselves have interest expense below their parent finance-expense totals; the inconsistency appears in the Q4 standalone column. All other additive Q4 B02 lines from revenue through PAT, parent and NCI reconcile exactly.
+
+Additional confirmed Q4 standalone items from annual less 9M:
+- Gross revenue: **2,160,206,044,440 VND**
+- Revenue deductions: **-67,932,722 VND**
+- Net revenue: **2,160,138,111,718 VND**
+- Current tax: **-142,577,559,905 VND**
+- Deferred-tax income (source-signed): **+23,353,093,110 VND**
+- Total tax expense: **119,224,466,795 VND**
+- PAT: **539,995,121,238 VND**
+- Parent PAT: **449,103,567,116 VND**
+- NCI: **90,891,554,122 VND**
+
+**Conclusion:** no OCR or column-mapping error remains for the interest line. Preserve the visibly reported **(43,891,490,863 VND)** subline and the parent total **(42,472,227,098 VND)** unchanged. Mark this as a source-issued Q4 standalone statement inconsistency. Do not use the subline to recalculate financial expenses, operating profit or PAT, and do not add a balancing adjustment.
+
+The reconciliation is saved in `data/financials-IDC.json` under `income_statement_source_ytd_raw_vnd`, `source_validation.prior_9m_2025_b02_raw_vnd`, and `source_validation.q4_2025_annual_minus_9m_crosscheck`.
