@@ -14,8 +14,13 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:
-      - name: Checkout repository
+      - name: Checkout only the exact annual source archive
         uses: actions/checkout@v5
+        with:
+          sparse-checkout: |
+            reports/raw/VDS/auto-vds-20261021/a65994df991573d9.zip
+          sparse-checkout-cone-mode: false
+          lfs: false
 
       - name: Setup Python
         uses: actions/setup-python@v6
