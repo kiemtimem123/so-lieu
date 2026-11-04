@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-04T17:45:46.004Z",
+  "updatedAt": "2026-11-04T17:56:15.387Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "Priority 1: VietstockFinance public document catalog and directly linked report PDFs. Priority 2: WiData document tab for the same ticker, only to compare/supplement when source 1 lacks the report or extraction is unclear/unavailable. No third source without explicit user approval.",
   "periodStart": "2024-Q1",
@@ -5106,10 +5106,11 @@
       ],
       "issues": [
         "PENDING: Q1 and Q2 original B02 quarter parent/NCI figures do not add to Q2 H1 YTD parent/NCI total by 1,117,693,283 VND, while consolidated PAT adds exactly. Original Q1 parent=19,089,097,924; NCI=-76,755,668. Q2 parent=-9,900,252,664; NCI=-1,293,653,003. H1 YTD parent=8,071,151,977; NCI=-252,715,388. Implied Q1 after H1 less Q2: parent=17,971,404,641; NCI=1,040,937,615. Do not overwrite original values or insert a plug. WiData attempted but unavailable; no third source.",
-        "CLOSED PASS: FY2025 audited Note26 confirms 21,000,000,000 VND increase in ownership capital in subsidiary. Q3/2025 B04 directly reviewed (PDF page18/printed p13): NCI opening 48,488,925,445; current-year increase 22,785,197,412; closing 71,274,122,857. Q2 B04 close 47,250,464,312 to Q3 close increase 24,023,658,545 less Q3 standalone NCI PAT 3,023,658,546 = 20,999,999,999; -1 VND vs 21bn. Annual Note26 bridge residual 0. The B04 21bn movement is closed; B02 Q1/H1 allocation issue remains pending separately.",
         "A REMAINS PENDING: Q1/2026 B02 comparative reproduces Q1/2025 original parent/NCI; Q2/2026 B02 comparative reproduces Q2/2025 H1/YTD parent/NCI; Q3 YTD less Q3 standalone also equals H1. No Q1 restatement or parent/NCI bridge identified in official disclosures reviewed. Allocation difference remains 1,117,693,283 VND; preserve both source bases.",
         "CLASSIFIED, NOT A B02 ERROR: FY2025 AGM resolution 01/2026/BB-ĐHĐCĐ identifies NCI retained-earnings adjustment -1,944,072,150 VND, exactly matching Note26 realized and unrealized losses. Treat as equity/profit-distribution bridge, not as B02 NCI PAT.",
-        "B05 ownership-note pages Q1/Q2 visually compared: VDAM 100bn/58% and RVIF 70bn/85% are unchanged at 31-Mar and 30-Jun 2025. This weakens the simple Q2 ownership-percentage-change hypothesis; not a full intra-period transaction certificate and does not resolve B02 attribution."
+        "B05 ownership-note pages Q1/Q2 visually compared: VDAM 100bn/58% and RVIF 70bn/85% are unchanged at 31-Mar and 30-Jun 2025. This weakens the simple Q2 ownership-percentage-change hypothesis; not a full intra-period transaction certificate and does not resolve B02 attribution.",
+        "CLOSED PASS — exact investee identified: Q1/Q2 B05 shows VDAM capital 100bn at 58%; Q3/Q4 B05 shows VDAM capital 150bn at 58%; RVIF remains 70bn/85%. VDAM capital increase = 50bn; NCI 42% = 21bn, matching audited Note26. Q3 B04/B02 bridge has 1 VND residual, retained. External contributor identities/subscription documents are not shown.",
+        "A remains PENDING separately: B02 Q1 original parent/NCI vs H1 less Q2 current-quarter attribution difference 1,117,693,283 VND; the Q3 VDAM capital increase occurs after H1 and does not explain it."
       ],
       "validations": {
         "balance_sheet": "PASS raw VND; total assets = liabilities + equity; residual 0.",
@@ -5182,36 +5183,96 @@
           "Consolidated B03b row71 FY2025 reports total share issue/owner contribution cash inflow of 68bn; do not equate the entire amount with the 21bn NCI movement."
         ]
       },
-      "nextAction": "Inspect Q3/Q4 2025 B05 ownership and consolidation notes for the period when the 21bn NCI subsidiary capital increase occurred. Keep this separate from A; only close A with official source-level parent/NCI Q1-to-H1 bridge or restated Q1 B02.",
+      "nextAction": "Continue only the B02 Q1/H1 parent-NCI source allocation investigation; keep original Q1 and H1/YTD values. Do not advance to VDS Q2/2026 core audit or GAS until the user agrees to preserve A as PENDING or a source-level bridge/restated Q1 is found.",
       "nciCapitalIncrease21bn": {
-        "status": "CLOSED_PASS",
+        "status": "CLOSED_PASS_EXACT_INVESTEE_IDENTIFIED",
         "amountVnd": 21000000000,
-        "classification": "increase in ownership capital in subsidiary, benefiting NCI",
+        "investee": "CTCP Quản lý Quỹ Rồng Việt (VDAM)",
+        "investeeCapitalIncreaseVnd": 50000000000,
+        "ownershipBeforeAndAfter": {
+          "VDSPercent": 58,
+          "NciPercent": 42
+        },
+        "nciShareOfCapitalIncreaseVnd": 21000000000,
+        "parentShareImpliedFromOwnershipPercentVnd": 29000000000,
         "timing": "Q3 2025",
-        "timingCrossCheck": {
+        "ownershipDisclosure": {
+          "q1_2025": {
+            "pdfPage": 21,
+            "printedPage": 16,
+            "VDAMCapitalVnd": 100000000000,
+            "VDSOwnershipPercent": 58,
+            "RVIFCapitalVnd": 70000000000,
+            "RVIFOwnershipPercent": 85
+          },
+          "q2_2025": {
+            "pdfPage": 22,
+            "printedPage": 16,
+            "VDAMCapitalVnd": 100000000000,
+            "VDSOwnershipPercent": 58,
+            "RVIFCapitalVnd": 70000000000,
+            "RVIFOwnershipPercent": 85
+          },
+          "q3_2025": {
+            "pdfPage": 21,
+            "printedPage": 16,
+            "VDAMCapitalVnd": 150000000000,
+            "VDSOwnershipPercent": 58,
+            "RVIFCapitalVnd": 70000000000,
+            "RVIFOwnershipPercent": 85
+          },
+          "q4_2025": {
+            "pdfPage": 21,
+            "printedPage": 16,
+            "VDAMCapitalVnd": 150000000000,
+            "VDSOwnershipPercent": 58,
+            "RVIFCapitalVnd": 70000000000,
+            "RVIFOwnershipPercent": 85
+          }
+        },
+        "q3B04B02CrossCheck": {
           "q2B04ClosingNciVnd": 47250464312,
-          "q3B04OpeningNciVnd": 48488925445,
-          "q3B04CurrentYearIncreaseNciVnd": 22785197412,
           "q3B04ClosingNciVnd": 71274122857,
-          "q3StandaloneNciProfitVnd": 3023658546,
-          "q3ClosingLessQ2ClosingVnd": 24023658545,
-          "residualAfterQ3NciProfitVnd": 20999999999,
-          "residualVsAudited21bnVnd": -1
+          "q3NciEquityIncreaseVnd": 24023658545,
+          "q3StandaloneNciPatVnd": 3023658546,
+          "residualAfterQ3PatVnd": 20999999999,
+          "residualVs42PercentOfVdamCapitalIncreaseVnd": -1
         },
         "annualNote26RollforwardResidualVnd": 0,
-        "auditNote": "reports/analysis/VDS-FY2025-audited-NCI-21bn-reconciliation.md",
-        "auditNoteCommit": "c7d5a6843056cad04751213eec451d05180059c4",
-        "q3B04Artifact": {
-          "workflowRunId": 41858315839,
-          "artifactId": 13339205504,
-          "renderedPdfPage": 18,
-          "printedPage": 13
+        "sourceDocuments": {
+          "Q1": "VietstockFinance document 504544",
+          "Q2": "VietstockFinance document 513947",
+          "Q3": "VietstockFinance document 523128",
+          "Q4": "VietstockFinance document 530626",
+          "auditedFY2025": "VDS_Baocaotaichinh_2025_Kiemtoan_Hopnhat.pdf"
         },
-        "exactInvesteeAndContributorIdentified": false,
-        "note": "Q3 B04 confirms timing with a -1 VND residual (<0.01%); do not assign specific subsidiary or investor."
+        "q3q4VisualArtifacts": {
+          "q3": {
+            "workflowRunId": 41881072688,
+            "artifactId": 13348677962,
+            "artifactName": "vds-q3-q4-2025-ownership-note-review",
+            "sourcePdfSha256": "bd7db8914d33e4144845c01aca837597b2986183d20a690f6fbcbbc855c5e6d5",
+            "renderDpi": 300,
+            "pdfPage": 21,
+            "printedPage": 16
+          },
+          "q4": {
+            "workflowRunId": 41881158938,
+            "artifactId": 13348792588,
+            "artifactName": "vds-q3-q4-2025-ownership-note-review",
+            "sourcePdfSha256": "d2252c9c1aaafbaffa8395c96fffd5b2063aa8b3da881047ee3e74270691e9e2",
+            "renderDpi": 300,
+            "pdfPage": 21,
+            "printedPage": 16
+          }
+        },
+        "VDAMLatestBusinessRegistrationAmendmentDate": "2025-09-29",
+        "contributorIdentitiesDisclosed": false,
+        "legalSubscriptionDossierDisclosed": false,
+        "note": "Exact investee VDAM identified. Capital increases by 50bn in Q3 while VDS ownership remains 58%; NCI 42% equals 21bn. 1 VND B04/B02 bridge residual retained; no adjustment. The B02 Q1/H1 allocation exception is independent."
       },
       "auditNote": "reports/analysis/VDS-Q2-2025-parent-NCI-followup.md",
-      "auditNoteLatestCommit": "aadfa368103656734cb1294ec66ff425de23e979",
+      "auditNoteLatestCommit": "99b582829dde97b29d492fd3602a7aedb99dd2bb",
       "subsequentComparativeChecks": {
         "status": "VERIFIED_PERSISTENT_SOURCE_ALLOCATION_BASIS",
         "q1_2026_comparative": {
@@ -5308,7 +5369,7 @@
         "10"
       ],
       "annualAuditNote": "reports/analysis/VDS-FY2025-audited-NCI-21bn-reconciliation.md",
-      "annualAuditNoteLatestCommit": "19d13059d628b0a8de649d1430cd7f7bcfafb42f",
+      "annualAuditNoteLatestCommit": "a2d9796c5f1ee59cbb0681a7fefe1bd32d584eb6",
       "nciRetainedEarningsAdjustment1944072150": {
         "status": "CLASSIFIED_BY_FY2025_AGM_PROFIT_DISTRIBUTION_RESOLUTION",
         "amountVnd": -1944072150,
@@ -5372,7 +5433,25 @@
           "ownershipPercent": false
         },
         "interpretation": "The reporting-date note pages show the same subsidiaries/member fund, capital and VDS ownership. This weakens a simple Q2 ownership-percentage-change hypothesis, but does not exclude intra-period transactions or changes within fund interests not reflected on the summary page.",
-        "effectOnA": "No source-level B02 parent/NCI allocation bridge found; A remains PENDING 1,117,693,283 VND."
+        "effectOnA": "No source-level B02 parent/NCI allocation bridge found; A remains PENDING 1,117,693,283 VND.",
+        "q3q4": {
+          "status": "VDAM_CAPITAL_INCREASE_IDENTIFIED_IN_Q3",
+          "q3": {
+            "VDAMCapitalVnd": 150000000000,
+            "VDSOwnershipPercent": 58,
+            "RVIFCapitalVnd": 70000000000,
+            "RVIFOwnershipPercent": 85
+          },
+          "q4": {
+            "VDAMCapitalVnd": 150000000000,
+            "VDSOwnershipPercent": 58,
+            "RVIFCapitalVnd": 70000000000,
+            "RVIFOwnershipPercent": 85
+          },
+          "capitalIncreaseVnd": 50000000000,
+          "NciPercent": 42,
+          "NciShareVnd": 21000000000
+        }
       }
     },
     "2025-Q3": {
@@ -5482,7 +5561,8 @@
             "pat": 0
           },
           "note": "Q3 9M YTD less Q3 quarter exactly confirms Q2 H1 parent/NCI/PAT. The only mismatch remains Q1 original B02 standalone versus the H1 allocation basis. Preserve original Q1 values; no plug."
-        }
+        },
+        "B05 Q3/Q4 direct visual review identifies VDAM charter capital increase 100bn to150bn in Q3/2025; VDS ownership remains58%, NCI42%. The NCI share of +50bn is +21bn; exact external contributors not disclosed."
       ],
       "validations": {
         "balance_sheet": "PASS raw VND: total assets 7,732,966,527,561 = liabilities 4,578,708,861,227 + equity 3,154,257,666,334; residual 0.",
@@ -5502,7 +5582,8 @@
         "expenseDetail": "PASS: row23.3 included, all expense lines equal row40.",
         "profitTaxAttribution": "PASS within Q3 and 9M reported columns.",
         "nci_equity_q3_b04": "PASS visual B04 row9 opening + current-year increase = closing, residual 0.",
-        "nci_equity_vs_nci_pat": "B04/Note26 equity movements are not identical by definition to B02 NCI PAT; do not impose equality or insert a plug. Direct B04 Q3 row9 visual bridge is PASS."
+        "nci_equity_vs_nci_pat": "B04/Note26 equity movements are not identical by definition to B02 NCI PAT; do not impose equality or insert a plug. Direct B04 Q3 row9 visual bridge is PASS.",
+        "nci_capital_increase_vdam": "PASS: Q2 B05 VDAM capital100bn/58%; Q3 B05 VDAM capital150bn/58%; RVIF remains70bn/85%; +50bn VDAM capital ×42% NCI = +21bn audited Note26."
       },
       "profitAttributionCrossCheck": {
         "status": "PENDING_UNEXPLAINED_Q1_TO_H1_PARENT_NCI_ALLOCATION",
@@ -5780,7 +5861,49 @@
         },
         "conclusion": "Q1/2026 carries the original Q1/2025 split; Q2/2026 carries the original H1/2025 split; Q3/2025 YTD less Q3 standalone matches H1 exactly. The 1,117,693,283 VND parent/NCI allocation mismatch remains unexplained. Preserve both source columns, do not backsolve or overwrite data."
       },
-      "ownershipDisclosureCrossCheckPending": true
+      "ownershipDisclosureCrossCheckPending": true,
+      "ownershipDisclosureCrossCheck": {
+        "status": "PASS_VDAM_CAPITAL_150BN_RVIF_70BN",
+        "q3": {
+          "VDAMCapitalVnd": 150000000000,
+          "VDSOwnershipPercent": 58,
+          "RVIFCapitalVnd": 70000000000,
+          "RVIFOwnershipPercent": 85
+        },
+        "q4": {
+          "VDAMCapitalVnd": 150000000000,
+          "VDSOwnershipPercent": 58,
+          "RVIFCapitalVnd": 70000000000,
+          "RVIFOwnershipPercent": 85
+        },
+        "q1AndQ2": {
+          "VDAMCapitalVnd": 100000000000,
+          "VDSOwnershipPercent": 58,
+          "RVIFCapitalVnd": 70000000000,
+          "RVIFOwnershipPercent": 85
+        },
+        "VDAMCapitalIncreaseVnd": 50000000000,
+        "NciPercent": 42,
+        "nciShareOfIncreaseVnd": 21000000000,
+        "q3LatestBusinessRegistrationAmendmentDate": "2025-09-29",
+        "visualArtifacts": {
+          "q3": {
+            "runId": 41881072688,
+            "artifactId": 13348677962,
+            "pdfPage": 21,
+            "printedPage": 16,
+            "dpi": 300
+          },
+          "q4": {
+            "runId": 41881158938,
+            "artifactId": 13348792588,
+            "pdfPage": 21,
+            "printedPage": 16,
+            "dpi": 300
+          }
+        }
+      },
+      "nci21bnInvestee": "VDAM"
     },
     "2025-Q4": {
       "period": "2025-Q4",
@@ -5831,7 +5954,8 @@
         "cashFlowFY2025": "PASS_ZERO_FLOW_AND_CASH_BRIDGES",
         "cashFlowQ4Standalone": "PASS_ZERO_FLOW_AND_CASH_BRIDGES",
         "visual": "PASS_B01_B02_B03A_PDF_PAGES_6_TO_17",
-        "customerCashflow": "B03B_REVIEWED_SEPARATELY_NOT_MERGED_WITH_COMPANY"
+        "customerCashflow": "B03B_REVIEWED_SEPARATELY_NOT_MERGED_WITH_COMPANY",
+        "nci_capital_increase_vdam": "PASS year-end B05 confirms VDAM capital150bn/58%; RVIF70bn/85%, unchanged from Q3."
       },
       "sourceCorrections": {
         "htmAssetsCurrentVnd": 0,
@@ -5919,7 +6043,49 @@
       ],
       "sourceDocumentPageCount": 50,
       "visualReviewStatus": "PASS",
-      "validationSummary": "Balance sheet, Q4 and FY2025 P&L, FY2025 and Q4 standalone company cashflows all reconcile exactly at raw VND. Expense detail fully visually confirmed. Blank source lines preserved."
+      "validationSummary": "Balance sheet, Q4 and FY2025 P&L, FY2025 and Q4 standalone company cashflows all reconcile exactly at raw VND. Expense detail fully visually confirmed. Blank source lines preserved.",
+      "ownershipDisclosureCrossCheck": {
+        "status": "PASS_VDAM_CAPITAL_150BN_RVIF_70BN",
+        "q3": {
+          "VDAMCapitalVnd": 150000000000,
+          "VDSOwnershipPercent": 58,
+          "RVIFCapitalVnd": 70000000000,
+          "RVIFOwnershipPercent": 85
+        },
+        "q4": {
+          "VDAMCapitalVnd": 150000000000,
+          "VDSOwnershipPercent": 58,
+          "RVIFCapitalVnd": 70000000000,
+          "RVIFOwnershipPercent": 85
+        },
+        "q1AndQ2": {
+          "VDAMCapitalVnd": 100000000000,
+          "VDSOwnershipPercent": 58,
+          "RVIFCapitalVnd": 70000000000,
+          "RVIFOwnershipPercent": 85
+        },
+        "VDAMCapitalIncreaseVnd": 50000000000,
+        "NciPercent": 42,
+        "nciShareOfIncreaseVnd": 21000000000,
+        "q3LatestBusinessRegistrationAmendmentDate": "2025-09-29",
+        "visualArtifacts": {
+          "q3": {
+            "runId": 41881072688,
+            "artifactId": 13348677962,
+            "pdfPage": 21,
+            "printedPage": 16,
+            "dpi": 300
+          },
+          "q4": {
+            "runId": 41881158938,
+            "artifactId": 13348792588,
+            "pdfPage": 21,
+            "printedPage": 16,
+            "dpi": 300
+          }
+        }
+      },
+      "nci21bnInvestee": "VDAM"
     },
     "2026-Q1": {
       "period": "2026-Q1",
@@ -5992,9 +6158,9 @@
     }
   ],
   "processingSop": {
-    "version": "1.48",
+    "version": "1.49",
     "path": "reports/financial-report-processing-sop.md",
-    "commit": "3a74c34ced34f33572a9be5a0a4d71056eef613d",
+    "commit": "9c03c8d0fdda845dfb27f641b24a9830b0b30fb7",
     "status": "published",
     "effectiveDate": "2026-11-04"
   },
@@ -8484,7 +8650,7 @@
     }
   },
   "vdsAnnualAuditSupplement2025": {
-    "status": "NCI_21BN_Q3_CAPITAL_INCREASE_PASS; FY_NCI_RETAINED_EARNINGS_ADJUSTMENT_CLASSIFIED; B02_Q1_H1_ALLOCATION_PENDING",
+    "status": "VDAM_50BN_Q3_CAPITAL_INCREASE_IDENTIFIED_NCI_21BN_CLOSED; FY_NCI_RETAINED_EARNINGS_ADJUSTMENT_CLASSIFIED; B02_Q1_H1_ALLOCATION_PENDING",
     "sourceArchive": "reports/raw/VDS/auto-vds-20261021/a65994df991573d9.zip",
     "selectedPdfMember": "VDS_Baocaotaichinh_2025_Kiemtoan_Hopnhat.pdf",
     "pdfSha256": "9c4c4b64f9df79340c943283ffd4f448b20a26ffb4cfb06ef736793205d44c9c",
@@ -8495,7 +8661,7 @@
     "nciRollforwardResidualVnd": 0,
     "grossOwnershipIncreaseVnd": 21000000000,
     "yearEndNciVnd": 67544853295,
-    "investeeIdentified": false,
+    "investeeIdentified": true,
     "q3B04VisualArtifact": {
       "workflowRunId": 41858315839,
       "artifactId": 13339205504,
@@ -8525,6 +8691,21 @@
       "disclosureDate": "2026-04-17",
       "url": "https://static2.vietstock.vn/vietstock/2026/4/17/20260417___vds___bbh_va_nqdhdcd_thuong_nien_fy_2025.pdf",
       "classification": "consolidated retained-earnings/profit-distribution adjustment, not B02 NCI PAT"
+    },
+    "investee": "VDAM",
+    "VDAMCapitalIncreaseVnd": 50000000000,
+    "NciSharePercent": 42,
+    "NciShareOfCapitalIncreaseVnd": 21000000000,
+    "contributorIdentitiesDisclosed": false,
+    "q3q4VisualArtifacts": {
+      "q3": {
+        "workflowRunId": 41881072688,
+        "artifactId": 13348677962
+      },
+      "q4": {
+        "workflowRunId": 41881158938,
+        "artifactId": 13348792588
+      }
     }
   },
   "vdsProfitAttributionInvestigation": {
