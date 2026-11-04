@@ -1,5 +1,5 @@
 name: Render Vietstock source PDF pages for visual audit
-# Temporary audit target: VDS Q3/2025 B05 ownership and consolidation notes (original consolidated PDF doc 523128).
+# Current default render target: GAS 2024-Q4 consolidated PDF (VietstockFinance doc 490581).
 
 on:
   push:
@@ -15,15 +15,15 @@ on:
       period:
         description: "Report period label"
         required: true
-        default: "2025-Q3-OWNERSHIP"
+        default: "2025-Q2"
       pdf_path:
         description: "Path to the PDF already archived in reports/raw"
         required: true
-        default: "reports/raw/VDS/auto-vds-20261021/bd7db8914d33e414.pdf"
+        default: "reports/raw/VDS/auto-vds-20261021/69d4862950596830.pdf"
       pages:
         description: "Comma-separated 1-based PDF pages, or all"
         required: true
-        default: "20,21,22,23"
+        default: "19,20,21"
       dpi:
         description: "Render DPI"
         required: true
@@ -45,7 +45,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           sparse-checkout: |
-            ${{ github.event.inputs.pdf_path || 'reports/raw/VDS/auto-vds-20261021/bd7db8914d33e414.pdf' }}
+            ${{ github.event.inputs.pdf_path || 'reports/raw/VDS/auto-vds-20261021/69d4862950596830.pdf' }}
           sparse-checkout-cone-mode: false
           lfs: false
 
@@ -60,9 +60,9 @@ jobs:
       - name: Render source pages and contact sheets
         env:
           TARGET_SYMBOL: ${{ github.event.inputs.symbol || 'VDS' }}
-          TARGET_PERIOD: ${{ github.event.inputs.period || '2025-Q3-OWNERSHIP' }}
+          TARGET_PERIOD: ${{ github.event.inputs.period || '2025-Q2' }}
           PDF_PATH: ${{ github.event.inputs.pdf_path || 'reports/raw/VDS/auto-vds-20261021/69d4862950596830.pdf' }}
-          PAGE_LIST: ${{ github.event.inputs.pages || '20,21,22,23' }}
+          PAGE_LIST: ${{ github.event.inputs.pages || '19,20,21' }}
           RENDER_DPI: ${{ github.event.inputs.dpi || '300' }}
           PDF_MEMBER: ${{ github.event.inputs.pdf_member || '' }}
         run: |
