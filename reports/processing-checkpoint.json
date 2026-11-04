@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-04T19:45:00+07:00",
+  "updatedAt": "2026-11-04T20:24:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "Priority 1: VietstockFinance public document catalog and directly linked report PDFs. Priority 2: WiData document tab for the same ticker, only to compare/supplement when source 1 lacks the report or extraction is unclear/unavailable. No third source without explicit user approval.",
   "periodStart": "2024-Q1",
@@ -45,62 +45,63 @@
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "VDS",
-    "period": "2025-Q3",
-    "status": "VDS_Q3_2025_B02_300DPI_HTM_OCR_CORRECTED_REVENUE_DETAIL_PASS",
+    "period": "2026-Q1",
+    "status": "VDS_Q1_2026_B01_B02_B03_VISUAL_PASS",
     "completeForAutomation": true,
     "periodComplete": true,
     "manualReviewRemaining": true,
-    "processedAt": "2026-11-04T19:45:00+07:00",
+    "processedAt": "2026-11-04T20:24:00+07:00",
     "periodCount": 10,
-    "periodStatus": "VDS Q3/2025 B01/B02/B03 previously visually checked; supplemental B02 PDF pages11-13 inspected at300 DPI. HTM row1.2 Q3 current=11,491,178,083 VND, correcting OCR 11,401,178,083. Row1.8 Q3 current cell blank; 881,819,860 is YTD only and equals Q1+Q2 advisory revenue. The former 90m revenue residual is closed. Expense row23.3 AFS loss45,714,000 included; all revenue, expense, operating profit, PBT, tax, PAT, parent-NCI Q3 and 9M bridges residual0. Q3 is closed; next unresolved task Q2/2025 parent/NCI attribution remains pending.",
+    "periodStatus": "VDS Q1/2026 original VietstockFinance PDF document 543855 directly visually reviewed on B01 pages 6-8, B02 pages 11-13 and B03 pages 14-16. Raw VND balance, detailed revenue/expenses, PBT/tax/PAT/parent-NCI and cashflow YTD/cash bridge all residual 0. Q2/2025 parent/NCI exception remains unexplained after review of B04 PDF pages 19-20 and is preserved PENDING. Q2/2026 visual review remains next.",
     "sourceIndexUrl": "https://finance.vietstock.vn/VDS/tai-tai-lieu.htm?doctype=1",
-    "sourceDocumentId": "523128",
-    "sourceDocumentUrl": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%203/VDS_Baocaotaichinh_Q3_2025_Hopnhat.pdf",
-    "sourceArchiveFile": "reports/raw/VDS/auto-vds-20261021/bd7db8914d33e414.pdf",
+    "sourceDocumentId": "543855",
+    "sourceDocumentUrl": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/VDS_Baocaotaichinh_Q1_2026_Hopnhat.pdf",
+    "sourceArchiveFile": "reports/raw/VDS/auto-vds-20261021/2720dd850acfbd95.pdf",
     "sourceDocumentScope": "Consolidated",
     "sourceUnit": "VND",
-    "dataCommit": "8f22d161e6125211c1d102a79b8bc517d354d68e",
-    "auditNoteCommit": "e0dac2e50d26b34b65f6517872b461a78e639535",
-    "sopCommit": "f5c991c344a28b5a9a8ad1ec43c71199e2bea80f",
-    "rendererWorkflowCommit": "677fec29ac07957567d6e54854b688afeb834af0",
-    "visualReviewWorkflowRunId": 41825721924,
-    "visualReviewArtifactId": 13318947582,
-    "visualReviewPages": [
-      11,
-      12,
-      13
-    ],
-    "visualReviewDpi": 300,
+    "dataCommit": "a20cecd3fb726d6e379a925cac6abfa40e261690",
+    "auditNoteCommit": "9833b63b40418b2c2304252e62632de80818e913",
+    "auditNotePath": "reports/analysis/VDS-Q1-2026-visual-review.md",
     "processingSopVersion": "1.42",
-    "processingSopPath": "reports/financial-report-processing-sop.md",
-    "visualReviewNotePath": "reports/analysis/VDS-Q3-2025-300dpi-revenue-detail-correction.md",
     "validation": {
-      "balanceSheet": "PASS_ALREADY_VISUALLY_REVIEWED",
-      "incomeStatementQ3": "PASS_REVENUE_DETAIL_AND_EXPENSE_DETAIL_ZERO_RESIDUAL",
-      "incomeStatementYTD": "PASS_REVENUE_EXPENSE_AND_PROFIT_BRIDGES_ZERO_RESIDUAL",
-      "cashFlow": "PASS_ALREADY_VISUALLY_REVIEWED",
-      "visual": "PASS_B02_PAGES_11_TO_13_AT_300_DPI"
+      "balanceSheet": "PASS_ZERO_RESIDUAL",
+      "incomeStatementRevenueDetail": "PASS_ZERO_RESIDUAL",
+      "incomeStatementExpenseDetail": "PASS_ZERO_RESIDUAL",
+      "profitTaxParentNci": "PASS_ZERO_RESIDUAL",
+      "cashFlowYtdAndCashBridge": "PASS_ZERO_RESIDUAL",
+      "visual": "PASS_B01_B02_B03_PAGES_6_TO_16"
     },
     "doNotRepeatCoreTextExtraction": true,
     "doNotRepeatVisualReview": true,
     "nextTicker": "VDS",
-    "nextPeriod": "2025-Q2",
-    "nextTask": "REVIEW_AND_DOCUMENT_Q2_2025_PARENT_NCI_ALLOCATION_EXCEPTION",
+    "nextPeriod": "2026-Q2",
+    "nextTask": "DIRECT_VISUAL_AUDIT_VDS_Q2_2026",
     "pendingExceptions": [
-      "VDS Q2/2025 parent/NCI cross-period allocation 1,117,693,283 VND remains unexplained; later Q1/2026 and Q2/2026 comparisons repeat the same original quarter and H1 values. Do not backsolve or insert a plug.",
-      "VDS Q1/2026 and Q2/2026 direct PDF visual review pending."
+      "VDS Q2/2025 parent/NCI allocation shift 1,117,693,283 VND remains unexplained; B04 pages 19-20 aggregate equity movements do not resolve it. Preserve original values; no backsolve or plug.",
+      "VDS Q2/2026 direct PDF visual review pending; source archive reports/raw/VDS/auto-vds-20261021/6ca61e80d55ffaac.zip."
     ],
-    "visualAudit": {
-      "status": "PASS_SUPPLEMENTAL_300_DPI_B02",
-      "runId": 41825721924,
-      "artifactId": 13318947582,
-      "dpi": 300,
-      "pages": [
-        11,
-        12,
-        13
-      ]
-    }
+    "visualReviewPdfPages": [
+      5,
+      6,
+      7,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "visualReviewPrintedPages": [
+      1,
+      2,
+      3,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ]
   },
   "symbolStates": {
     "MBB": {
@@ -1439,7 +1440,7 @@
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 6,
-      "updatedAt": "2026-11-04T19:45:00+07:00",
+      "updatedAt": "2026-11-04T20:24:00+07:00",
       "snapshotFetchedAt": "2026-10-23T11:20:31+00:00",
       "sourceReconciledPeriods": [
         "2024-Q1",
@@ -1449,7 +1450,8 @@
         "2025-Q1",
         "2025-Q2",
         "2025-Q3",
-        "2025-Q4"
+        "2025-Q4",
+        "2026-Q1"
       ],
       "lastSourceReconciliation": {
         "periodRange": "2024-Q1 through 2026-Q2",
@@ -1481,14 +1483,13 @@
           "Q3/2025 supplemental B02 300 DPI review: HTM row1.2 corrected from OCR 11,401,178,083 to 11,491,178,083 VND; row1.8 current Q3 cell blank and 9M YTD 881,819,860 equals Q1+Q2. The earlier 90m revenue component residual is closed; B02 Q3/YTD revenue and expense components now reconcile exactly.",
           "Q3/2025 B02 high-resolution review confirmed row23.3 AFS valuation loss45,714,000 VND; row40 expense total106,328,748,769; all profit/tax/PAT/parent-NCI bridges residual0."
         ],
-        "remaining": "Only older financial allocation exception: VDS Q2/2025 parent/NCI reallocation 1,117,693,283 VND, confirmed but unexplained by subsequent Q1/2026 and Q2/2026 comparative columns. Preserve original values. Then perform visual reviews for VDS Q1/2026 and Q2/2026. Do not revisit Q3/Q4 2025.",
+        "remaining": "VDS Q2/2025 parent/NCI allocation 1,117,693,283 VND remains unexplained and PENDING. Q1/2026 original PDF B01/B02/B03 direct visual review is now PASS. Next direct visual review: VDS Q2/2026; do not repeat Q1/2026 or Q3/Q4 2025.",
         "detailCommit": "77b576e1794a57472b7e4185a02a385e85494764"
       },
       "pendingProfitAttributionPeriods": [
         "2025-Q2"
       ],
       "pendingVisualPeriods": [
-        "2026-Q1",
         "2026-Q2"
       ]
     },
@@ -4231,10 +4232,10 @@
     "codeFix": "scripts/validate-financials.mjs now reports chronological first/last periods from sorted unique period keys instead of relying on insertion order."
   },
   "nextActions": [
-    "VDS: Q2/2025 parent/NCI allocation difference 1,117,693,283 VND is confirmed by later Q1/2026 and Q2/2026 comparative B02 values but remains unexplained; inspect existing VietstockFinance notes/statements, do not change source quarter values.",
-    "VDS: Q3/2025 90m revenue residual is resolved as HTM OCR correction; Q3 row1.8 current blank and 9M 881,819,860 = Q1+Q2. Do not revisit.",
-    "VDS: Q4/2025 original PDF visual audit complete; HTM current-year blank vs 400bn comparative fixed; do not revisit.",
-    "VDS: after Q2/2025 allocation review, perform direct visual audits Q1/2026 and Q2/2026, then proceed GAS in manual queue order."
+    "VDS: Q2/2025 parent/NCI allocation difference 1,117,693,283 VND remains PENDING after reviewing original B04 pages 19-20; aggregate equity movement does not explain the attribution. Preserve printed values; no backsolve or plug.",
+    "VDS: Q1/2026 original VietstockFinance PDF document 543855 B01/B02/B03 direct visual audit PASS; do not reprocess.",
+    "VDS: perform direct visual audit of Q2/2026 consolidated VietstockFinance document 555653 from reports/raw/VDS/auto-vds-20261021/6ca61e80d55ffaac.zip. Do not run OCR again or overwrite source-backed fields.",
+    "After VDS Q2/2026 visual audit, proceed GAS in manual queue order; keep all unresolved exceptions individually recorded."
   ],
   "lastUiUpdate": {
     "updatedAt": "2026-10-30T18:35:00+07:00",
@@ -4587,10 +4588,9 @@
       ],
       "periodsRemaining": [
         "2025-Q2",
-        "2026-Q1",
         "2026-Q2"
       ],
-      "nextStep": "Resolve or document the Q2/2025 parent/NCI allocation exception using the original and subsequent VietstockFinance comparative statements; keep printed values unchanged absent a source correction. Afterward visually review VDS Q1/2026 and Q2/2026. Q3/Q4 2025 are closed and must not be re-extracted."
+      "nextStep": "Q2/2025 parent/NCI attribution remains PENDING after B04 pages 19-20 review. Q1/2026 visual review PASS. Next direct visual review Q2/2026; then proceed GAS. Q3/Q4 2025 and Q1/2026 are closed and must not be re-extracted."
     },
     {
       "symbol": "GAS",
@@ -5102,7 +5102,8 @@
         "turn367170view2"
       ],
       "issues": [
-        "PENDING: Q1 and Q2 original B02 quarter parent/NCI figures do not add to Q2 H1 YTD parent/NCI total by 1,117,693,283 VND, while consolidated PAT adds exactly. Original Q1 parent=19,089,097,924; NCI=-76,755,668. Q2 parent=-9,900,252,664; NCI=-1,293,653,003. H1 YTD parent=8,071,151,977; NCI=-252,715,388. Implied Q1 after H1 less Q2: parent=17,971,404,641; NCI=1,040,937,615. Do not overwrite original values or insert a plug. WiData attempted but unavailable; no third source."
+        "PENDING: Q1 and Q2 original B02 quarter parent/NCI figures do not add to Q2 H1 YTD parent/NCI total by 1,117,693,283 VND, while consolidated PAT adds exactly. Original Q1 parent=19,089,097,924; NCI=-76,755,668. Q2 parent=-9,900,252,664; NCI=-1,293,653,003. H1 YTD parent=8,071,151,977; NCI=-252,715,388. Implied Q1 after H1 less Q2: parent=17,971,404,641; NCI=1,040,937,615. Do not overwrite original values or insert a plug. WiData attempted but unavailable; no third source.",
+        "Supplemental PDF pages 19-21 (printed pages 13-15) directly reviewed; B04 aggregate equity movement and opening note do not disclose the quarter-specific parent/NCI reallocation. Existing 1,117,693,283 VND attribution exception remains PENDING; no source correction or plug."
       ],
       "validations": {
         "balance_sheet": "PASS raw VND; total assets = liabilities + equity; residual 0.",
@@ -5531,6 +5532,61 @@
       "sourceDocumentPageCount": 50,
       "visualReviewStatus": "PASS",
       "validationSummary": "Balance sheet, Q4 and FY2025 P&L, FY2025 and Q4 standalone company cashflows all reconcile exactly at raw VND. Expense detail fully visually confirmed. Blank source lines preserved."
+    },
+    "2026-Q1": {
+      "period": "2026-Q1",
+      "status": "verified_manual_visual_reconciliation",
+      "documentId": "543855",
+      "sourcePriority": 1,
+      "sourceScope": "Consolidated",
+      "sourceUnit": "VND",
+      "sourceIndexUrl": "https://finance.vietstock.vn/VDS/tai-tai-lieu.htm?doctype=1",
+      "sourceDocumentUrl": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/VDS_Baocaotaichinh_Q1_2026_Hopnhat.pdf",
+      "sourceArchiveFile": "reports/raw/VDS/auto-vds-20261021/2720dd850acfbd95.pdf",
+      "dataCommit": "a20cecd3fb726d6e379a925cac6abfa40e261690",
+      "auditNote": "reports/analysis/VDS-Q1-2026-visual-review.md",
+      "auditNoteCommit": "9833b63b40418b2c2304252e62632de80818e913",
+      "doNotRepeatCoreExtraction": true,
+      "doNotRepeatVisualReview": true,
+      "periodComplete": true,
+      "consolidatedSeriesEligible": true,
+      "verifiedStatements": [
+        "B01-CTCK/HN",
+        "B02-CTCK/HN",
+        "B03-CTCK/HN"
+      ],
+      "verifiedPdfPages": [
+        5,
+        6,
+        7,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "verifiedPrintedPages": [
+        1,
+        2,
+        3,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "validations": {
+        "balanceSheet": "PASS residual 0 VND",
+        "revenueDetail": "PASS residual 0 VND",
+        "expenseDetail": "PASS residual 0 VND",
+        "profitTaxParentNci": "PASS residual 0 VND",
+        "cashflow": "PASS flow and cash bridge residual 0 VND",
+        "visual": "PASS direct original PDF review"
+      },
+      "issues": [],
+      "nextPeriod": "2026-Q2"
     }
   },
   "sourceHierarchy": [
@@ -7838,7 +7894,9 @@
     "periodComplete": false,
     "nextAction": "No further B01/B02/B03 text extraction for Q4/2024. Image review only if an accessible page image/source becomes available; standalone FX remains null. Preserve active global ticker IDC Q3/2025."
   },
-  "pendingVisualPeriods": [],
+  "pendingVisualPeriods": [
+    "VDS:2026-Q2"
+  ],
   "pendingCashflowPeriods": [],
   "lastManualReviewPeriod": "2025-Q3",
   "lastManualReviewStatus": "VDS_Q3_2025_REVENUE_DETAIL_RESOLVED_HTM_OCR_CORRECTED",
