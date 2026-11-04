@@ -117,3 +117,11 @@ Q3/2025 YTD trừ Q3 current-quarter tiếp tục khớp chính xác với H1 YT
 - Nghị quyết sử dụng số điều chỉnh NCI này trong cầu nối xác định lợi nhuận chưa phân phối lũy kế hợp nhất cuối năm; đây là điều chỉnh ở tầng retained earnings/equity, không phải dòng NCI PAT của B02. Vì vậy không được áp đặt phép bằng giữa NCI equity movement và B02 NCI PAT.
 - Nguồn văn bản nghị quyết: `https://static2.vietstock.vn/vietstock/2026/4/17/20260417___vds___bbh_va_nqdhdcd_thuong_nien_fy_2025.pdf`, đoạn bảng phân phối lợi nhuận FY2025 (printed pages 14–15; PDF page index 14 trong tool view).
 - Kết luận: phần điều chỉnh NCI **1.944.072.150 VND đã có phân loại/định danh trong Nghị quyết ĐHĐCĐ**. Điều này giúp phân biệt rõ với câu hỏi B02 parent/NCI Q1/H1 vẫn còn PENDING **1.117.693.283 VND**.
+
+
+## 9. Đối chiếu phạm vi công ty con/quỹ tại 31/03 và 30/06/2025
+
+- B05 Q1/2025 (PDF page 21 / printed page 16) và B05 Q2/2025 (PDF page 22 / printed page 16) đã được render từ hai PDF HN gốc ở 300 DPI và kiểm tra trực tiếp.
+- Cả hai ngày báo cáo đều liệt kê VDAM với vốn điều lệ **100 tỷ VND**, tỷ lệ sở hữu VDS **58%**; RVIF với vốn quỹ **70 tỷ VND**, tỷ lệ sở hữu VDS **85%**.
+- Không thấy thay đổi được công bố về vốn ghi trên bảng hoặc tỷ lệ sở hữu giữa Q1 và Q2/2025. Đây không giải thích chênh lệch phân bổ B02; cũng không loại trừ giao dịch nội kỳ hoặc giao dịch không làm thay đổi tỷ lệ sở hữu.
+- Kết quả hình ảnh: workflow run **41879521045**, artifact **13349410378**. Biên bản so sánh chi tiết: `reports/analysis/VDS-Q2-2025-parent-NCI-followup.md`, commit **aadfa368103656734cb1294ec66ff425de23e979**.
