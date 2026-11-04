@@ -323,3 +323,8 @@ Do not silently decide that the Annual Report's 58% is a typographical error, ev
 - B04 arithmetic remains PASS; the transaction/classification bridge remains PENDING. The 2025 VDAM 50bn capital increase and NCI 21bn is a distinct closed case and is not affected by this RVIF ownership conflict.
 
 Next evidence needed to close the conflict: an image-verified Annual Report B05 page or official corrected Annual Report, plus any RVIF ownership/transaction documentation and the accounting bridge from the transaction to the B04 NCI movement.
+
+
+## 16. Verification of Annual Report B05 page image
+
+A temporary verification step was initiated to retrieve the exact Vietstock-hosted FY2025 Annual Report PDF and render the B05 page containing RVIF at 300 DPI. The purpose is to determine whether the audited Annual Report page image itself shows 58% or whether the extracted PDF table text is wrong. No new ownership conclusion is made until the original page image is reviewed.
