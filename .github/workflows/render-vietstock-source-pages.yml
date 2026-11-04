@@ -22,7 +22,7 @@ on:
       pages:
         description: "Comma-separated 1-based PDF pages, or all"
         required: true
-        default: "8,9,10,11,12,13,14"
+        default: "12,13,14"
       dpi:
         description: "Render DPI"
         required: true
@@ -61,9 +61,9 @@ jobs:
           TARGET_SYMBOL: ${{ github.event.inputs.symbol || 'IDC' }}
           TARGET_PERIOD: ${{ github.event.inputs.period || '2025-Q2' }}
           PDF_PATH: ${{ github.event.inputs.pdf_path || 'reports/raw/IDC/auto-idc-20261021/48616c2bb9d17c99.zip' }}
-          PAGE_LIST: ${{ github.event.inputs.pages || '8,9,10,11,12,13,14' }}
+          PAGE_LIST: ${{ github.event.inputs.pages || '12,13,14' }}
           RENDER_DPI: ${{ github.event.inputs.dpi || '180' }}
-          PDF_MEMBER: ${{ github.event.inputs.pdf_member || '1_idc_2025_7_30_2e1316b_en_financialstatementshn_q2_2025_s.pdf' }}
+          PDF_MEMBER: ${{ github.event.inputs.pdf_member || '4_idc_2025_7_30_caaaf64_vi_baocaotaichinhhn_q2_2025_s.pdf' }}
         run: |
           python - <<'PY'
           import os, zipfile
@@ -150,7 +150,7 @@ jobs:
           SOURCE_PDF: ${{ github.event.inputs.pdf_path || 'reports/raw/IDC/auto-idc-20261021/48616c2bb9d17c99.zip' }}
           TARGET_SYMBOL: ${{ github.event.inputs.symbol || 'IDC' }}
           TARGET_PERIOD: ${{ github.event.inputs.period || '2025-Q2' }}
-          PDF_MEMBER: ${{ github.event.inputs.pdf_member || '1_idc_2025_7_30_2e1316b_en_financialstatementshn_q2_2025_s.pdf' }}
+          PDF_MEMBER: ${{ github.event.inputs.pdf_member || '4_idc_2025_7_30_caaaf64_vi_baocaotaichinhhn_q2_2025_s.pdf' }}
         with:
           script: |
             const sourceDir = process.env.SOURCE_PDF.includes("/") ? process.env.SOURCE_PDF.slice(0, process.env.SOURCE_PDF.lastIndexOf("/")) : `reports/raw/${process.env.TARGET_SYMBOL}`;
