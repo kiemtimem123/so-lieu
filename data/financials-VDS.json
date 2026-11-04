@@ -6374,7 +6374,22 @@
       "broker_provision_expense": 77138.419416,
       "broker_net_operating_profit": -36035.615153,
       "income_tax_current": 7851.910907,
-      "income_tax_deferred": -14396.18016
+      "income_tax_deferred": -14396.18016,
+      "ownership_note_cross_check": {
+        "status": "VISUALLY_VERIFIED_RVIF_OWNERSHIP_95_PERCENT",
+        "source": "VietstockFinance B05 HN",
+        "pdfPage": 21,
+        "printedPage": 16,
+        "RVIFCapitalVnd": 70000000000,
+        "VDSOwnershipPercent": 95,
+        "VDAMCapitalVnd": 150000000000,
+        "VDAMOwnershipPercent": 58,
+        "Q4_2025_Comparative": {
+          "RVIFCapitalVnd": 70000000000,
+          "VDSOwnershipPercent": 85
+        }
+      },
+      "updatedAt": "2026-11-04T21:30:02.343Z"
     },
     {
       "symbol": "VDS",
@@ -6467,11 +6482,11 @@
       ],
       "core_financial_extraction_status": "source_visually_verified",
       "core_financial_extraction_updated_at": "2026-11-04T21:19:23.398Z",
-      "core_financial_extraction_note": "Core fields directly checked against original B01/B02 PDF pages at 300 DPI. No OCR rerun; raw VND values and reconciliation residuals are stored in source_visual_review.",
+      "core_financial_extraction_note": "Core fields directly checked against original B01/B02 PDF pages at 300 DPI. No OCR rerun; raw VND values and reconciliation residuals are stored in source_visual_review. B04/B05 follow-up: RVIF reported ownership increased from85% at FY2025 year-end to95% by Q1/2026, with 70bn fund capital unchanged; B04 NCI movement transaction bridge remains pending.",
       "verification_status_note": "B01/B02/B03, dòng tiền khách hàng và B04 đã được đọc trực tiếp từ PDF hợp nhất gốc, render 300 DPI. Các cầu nối chính khớp chính xác; biến động NCI giảm 11,038,190,794 VND trên B04 chưa có thuyết minh phân loại được xác nhận.",
       "financial_line_items_rejected_fields": [],
       "financial_line_items_rejected_updated_at": "2026-11-04T21:19:23.398Z",
-      "financial_line_items_note": "B01/B02/B03 values visually checked against original VietstockFinance PDF at 300 DPI. Asset/liability subtotals and tax totals reconcile exactly. Company cash flows and separate customer-trust flows preserved separately. Blank dividend/FX lines remain null.",
+      "financial_line_items_note": "B01/B02/B03 values visually checked against original VietstockFinance PDF at 300 DPI. Asset/liability subtotals and tax totals reconcile exactly. Company cash flows and separate customer-trust flows preserved separately. Blank dividend/FX lines remain null. B04/B05 direct visual follow-up: NCI decrease transaction bridge remains pending; RVIF ownership percentage was 85% at FY2025 year-end and95% at Q1/Q2 2026.",
       "cash_and_equivalents": 801617.758652,
       "fixed_assets": 49396.644981,
       "current_liabilities": 4888996.386336,
@@ -6870,7 +6885,7 @@
         "note": "Customer/brokerage trust flows and balances are a separate statement section; do not combine with company CFO/CFI/CFF or company cash equivalents."
       },
       "source_visual_review": {
-        "status": "PASS_B01_B02_B03_AND_B04_ARITHMETIC; NCI_MOVEMENT_CLASSIFICATION_PENDING",
+        "status": "PASS_B01_B02_B03_AND_B04_ARITHMETIC; PENDING_NCI_TRANSACTION_CLASSIFICATION",
         "renderDpi": 300,
         "sourceArchive": "reports/raw/VDS/auto-vds-20261021/6ca61e80d55ffaac.zip",
         "sourceArchiveSha256": "6ca61e80d55ffaac15c5524f96c927e7e57618c56f1b2cf09d0582109624fc1c",
@@ -7026,7 +7041,8 @@
               "assetsVsLiabilitiesAndEquity": 0
             },
             "pendingIssues": [
-              "B04 NCI decrease 11,038,190,794 VND is not explained by B04 main statement. H1 B02 NCI PAT is -4,523,794,527 VND; do not assume the difference is an error or infer its cause without detailed-note/transaction support."
+              "B04 H1 NCI decrease is 11,038,190,794 VND; B02 H1 NCI PAT is -4,523,794,527 VND. The difference is not explained by B04 main page.",
+              "B05 shows RVIF ownership rose from 85% at FY2025 year-end to 95% by Q1/2026, retained at Q2; this is a plausible ownership-change lead but not a completed transaction/value bridge."
             ]
           }
         },
@@ -7039,9 +7055,179 @@
           "dividend blank mapped null",
           "exact B01/B02/B03 values restored at million-VND precision"
         ],
-        "reviewedAt": "2026-11-04T21:19:23.398Z"
+        "reviewedAt": "2026-11-04T21:30:02.343Z"
       },
-      "updatedAt": "2026-11-04T21:19:23.398Z"
+      "updatedAt": "2026-11-04T21:30:02.343Z",
+      "nci_ownership_cross_period_review": {
+        "status": "VISUALLY_VERIFIED_RVIF_OWNERSHIP_85_TO_95; TRANSACTION_BRIDGE_PENDING",
+        "source_scope": "Consolidated HN",
+        "Q1_2026_B04": {
+          "nciOpeningVnd": 67544853295,
+          "nciDecreaseVnd": -7825738340,
+          "nciClosingVnd": 59719114955,
+          "pdfPage": 18,
+          "printedPage": 13
+        },
+        "Q2_2026_B04_H1": {
+          "nciOpeningVnd": 67544853295,
+          "nciDecreaseVnd": -11038190794,
+          "nciClosingVnd": 56506662501,
+          "pdfPage": 18,
+          "printedPage": 13
+        },
+        "Q2_incremental_B04_decrease_vnd": -3212452454,
+        "B02_NCI_PAT": {
+          "q1Vnd": -964596560,
+          "q2StandaloneVnd": -3417696282,
+          "h1YtdVnd": -4523794527
+        },
+        "B04_less_B02_NCI_PAT": {
+          "q1AdditionalDecreaseVnd": 6861141780,
+          "q2IncrementalDifferenceVnd": -205243828,
+          "h1AdditionalDecreaseVnd": 6514396267
+        },
+        "ownershipNote": {
+          "FY2025Q4": {
+            "RVIFCapitalVnd": 70000000000,
+            "VDSOwnershipPercent": 85,
+            "VDAMCapitalVnd": 150000000000,
+            "VDAMOwnershipPercent": 58
+          },
+          "Q1_2026": {
+            "RVIFCapitalVnd": 70000000000,
+            "VDSOwnershipPercent": 95,
+            "VDAMCapitalVnd": 150000000000,
+            "VDAMOwnershipPercent": 58,
+            "pdfPage": 21,
+            "printedPage": 16
+          },
+          "Q2_2026": {
+            "RVIFCapitalVnd": 70000000000,
+            "VDSOwnershipPercent": 95,
+            "VDAMCapitalVnd": 150000000000,
+            "VDAMOwnershipPercent": 58,
+            "pdfPages": [
+              21,
+              22
+            ],
+            "printedPages": [
+              16,
+              17
+            ]
+          }
+        },
+        "evidence": {
+          "q1VisualWorkflowRun": 41915850023,
+          "q1VisualArtifactId": 13364946839,
+          "q2NotesVisualWorkflowRun": 41915196166,
+          "q2NotesVisualArtifactId": 13363383855
+        },
+        "interpretation": "RVIF reported VDS ownership increased from 85% at FY2025 year-end to 95% by Q1/2026, while fund capital remained 70bn VND. This is directionally consistent with Q1 NCI reduction, but no transaction instrument, effective date, consideration, NAV/carrying-value bridge or complete B04 reconciliation has been verified.",
+        "restrictions": [
+          "Do not equate 10% of stated RVIF capital (7bn VND) to B04 NCI reduction.",
+          "Do not claim RVIF transfer fully explains B04 decrease or B02 allocation difference.",
+          "Keep B04 NCI transaction bridge pending.",
+          "Keep Q1/H1 2026 B02 parent/NCI allocation difference 141,501,685 VND as a separate pending exception."
+        ]
+      },
+      "profit_attribution_comparative_2026": {
+        "status": "PENDING_SOURCE_LEVEL_ALLOCATION_DIFFERENCE",
+        "q1Original": {
+          "parentPatVnd": -28526203886,
+          "nciPatVnd": -964596560,
+          "totalPatVnd": -29490800446
+        },
+        "h1Ytd": {
+          "parentPatVnd": 8131939292,
+          "nciPatVnd": -4523794527,
+          "totalPatVnd": 3608144765
+        },
+        "q2Standalone": {
+          "parentPatVnd": 36516641493,
+          "nciPatVnd": -3417696282,
+          "totalPatVnd": 33098945211
+        },
+        "q1ImpliedFromH1LessQ2": {
+          "parentPatVnd": -28384702201,
+          "nciPatVnd": -1106098245,
+          "totalPatVnd": -29490800446
+        },
+        "allocationDifferenceVnd": 141501685,
+        "totalPatResidualVnd": 0,
+        "direction": "Original Q1 parent PAT is 141,501,685 VND more negative; original Q1 NCI PAT is 141,501,685 VND less negative than implied from H1 less Q2."
+      },
+      "ownership_note_cross_check": {
+        "status": "VISUALLY_VERIFIED_RVIF_OWNERSHIP_85_TO_95; TRANSACTION_BRIDGE_PENDING",
+        "source_scope": "Consolidated HN",
+        "Q1_2026_B04": {
+          "nciOpeningVnd": 67544853295,
+          "nciDecreaseVnd": -7825738340,
+          "nciClosingVnd": 59719114955,
+          "pdfPage": 18,
+          "printedPage": 13
+        },
+        "Q2_2026_B04_H1": {
+          "nciOpeningVnd": 67544853295,
+          "nciDecreaseVnd": -11038190794,
+          "nciClosingVnd": 56506662501,
+          "pdfPage": 18,
+          "printedPage": 13
+        },
+        "Q2_incremental_B04_decrease_vnd": -3212452454,
+        "B02_NCI_PAT": {
+          "q1Vnd": -964596560,
+          "q2StandaloneVnd": -3417696282,
+          "h1YtdVnd": -4523794527
+        },
+        "B04_less_B02_NCI_PAT": {
+          "q1AdditionalDecreaseVnd": 6861141780,
+          "q2IncrementalDifferenceVnd": -205243828,
+          "h1AdditionalDecreaseVnd": 6514396267
+        },
+        "ownershipNote": {
+          "FY2025Q4": {
+            "RVIFCapitalVnd": 70000000000,
+            "VDSOwnershipPercent": 85,
+            "VDAMCapitalVnd": 150000000000,
+            "VDAMOwnershipPercent": 58
+          },
+          "Q1_2026": {
+            "RVIFCapitalVnd": 70000000000,
+            "VDSOwnershipPercent": 95,
+            "VDAMCapitalVnd": 150000000000,
+            "VDAMOwnershipPercent": 58,
+            "pdfPage": 21,
+            "printedPage": 16
+          },
+          "Q2_2026": {
+            "RVIFCapitalVnd": 70000000000,
+            "VDSOwnershipPercent": 95,
+            "VDAMCapitalVnd": 150000000000,
+            "VDAMOwnershipPercent": 58,
+            "pdfPages": [
+              21,
+              22
+            ],
+            "printedPages": [
+              16,
+              17
+            ]
+          }
+        },
+        "evidence": {
+          "q1VisualWorkflowRun": 41915850023,
+          "q1VisualArtifactId": 13364946839,
+          "q2NotesVisualWorkflowRun": 41915196166,
+          "q2NotesVisualArtifactId": 13363383855
+        },
+        "interpretation": "RVIF reported VDS ownership increased from 85% at FY2025 year-end to 95% by Q1/2026, while fund capital remained 70bn VND. This is directionally consistent with Q1 NCI reduction, but no transaction instrument, effective date, consideration, NAV/carrying-value bridge or complete B04 reconciliation has been verified.",
+        "restrictions": [
+          "Do not equate 10% of stated RVIF capital (7bn VND) to B04 NCI reduction.",
+          "Do not claim RVIF transfer fully explains B04 decrease or B02 allocation difference.",
+          "Keep B04 NCI transaction bridge pending.",
+          "Keep Q1/H1 2026 B02 parent/NCI allocation difference 141,501,685 VND as a separate pending exception."
+        ]
+      }
     },
     {
       "symbol": "VDS",
@@ -8116,6 +8302,6 @@
   "bootstrap_status": "complete_needs_manual_review",
   "bootstrap_completed_at": "2026-10-23T13:04:35+00:00",
   "bootstrap_completion_note": "Các kỳ báo cáo có thể tự trích xuất đã được lưu; một số kỳ còn cần đối chiếu thủ công.",
-  "processedAt": "2026-11-04T21:19:23.398Z",
-  "note": " Cash-flow normalization 2026-10-29: all ten periods rebuilt from consolidated VietstockFinance statement final lines. The 2024-Q2 later comparative reclassification of CFI/CFF by VND 13 billion, with net movement unchanged, is retained as a connected manual-review exception; no balancing plug. Arithmetic residuals within 0.01% are accepted with metadata. Direct PDF page-image review remains pending.\nVDS 2026-Q2 B01/B02/B03, customer trust cashflows and B04 directly visually reviewed at 300 DPI; corrected EPS, financial income, blank selling expense, blank dividend/FX, and populated parent/NCI PAT. See item.source_visual_review."
+  "processedAt": "2026-11-04T21:30:02.343Z",
+  "note": " Cash-flow normalization 2026-10-29: all ten periods rebuilt from consolidated VietstockFinance statement final lines. The 2024-Q2 later comparative reclassification of CFI/CFF by VND 13 billion, with net movement unchanged, is retained as a connected manual-review exception; no balancing plug. Arithmetic residuals within 0.01% are accepted with metadata. Direct PDF page-image review remains pending.\nVDS 2026-Q2 B01/B02/B03, customer trust cashflows and B04 directly visually reviewed at 300 DPI; corrected EPS, financial income, blank selling expense, blank dividend/FX, and populated parent/NCI PAT. See item.source_visual_review.\nVDS Q1/Q2 2026 ownership comparison: B05 RVIF reported VDS ownership 85% at FY2025 Q4, 95% at Q1 and Q2 2026; B04 H1 NCI decrease bridge remains PENDING. Source-level B02 Q1/H1 2026 allocation difference 141,501,685 VND kept separate."
 }
