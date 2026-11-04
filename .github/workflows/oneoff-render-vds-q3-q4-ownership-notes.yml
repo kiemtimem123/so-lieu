@@ -1,0 +1,84 @@
+name: One-off render VDS Q3 Q4 2025 ownership notes
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/oneoff-render-vds-q3-q4-ownership-notes.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact Q3 and Q4 source PDFs
+        uses: actions/checkout@v5
+        with:
+          sparse-checkout: |
+            reports/raw/VDS/auto-vds-20261021/bd7db8914d33e414.pdf
+            reports/raw/VDS/auto-vds-20261021/d2252c9c1aaafbaf.pdf
+          sparse-checkout-cone-mode: false
+          lfs: false
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install PDF rendering dependencies
+        run: python -m pip install --disable-pip-version-check pymupdf pillow
+      - name: Render exact Q3 and Q4 B05 source pages
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          import fitz
+          from PIL import Image, ImageOps, ImageDraw
+          specs=[
+            ("Q3-2025","reports/raw/VDS/auto-vds-20261021/bd7db8914d33e414.pdf"),
+            ("Q4-2025","reports/raw/VDS/auto-vds-20261021/d2252c9c1aaafbaf.pdf")
+          ]
+          pages=[20,21,22,23]
+          out=Path("source-review/VDS-Q3-Q4-2025-ownership")
+          out.mkdir(parents=True,exist_ok=True)
+          manifests=[]
+          for label,pdfpath in specs:
+              src=Path(pdfpath)
+              if not src.is_file(): raise SystemExit(f"Source not checked out: {src}")
+              data=src.read_bytes()
+              doc=fitz.open(src)
+              sub=out/label
+              sub.mkdir(parents=True,exist_ok=True)
+              tiles=[]
+              for pno in pages:
+                  if pno<1 or pno>len(doc): raise SystemExit(f"{label}: missing PDF page {pno}")
+                  page=doc[pno-1]
+                  pix=page.get_pixmap(matrix=fitz.Matrix(300/72,300/72),alpha=False)
+                  im=Image.frombytes("RGB",[pix.width,pix.height],pix.samples)
+                  im.save(sub/f"page-{pno:02d}.jpg","JPEG",quality=92,optimize=True)
+                  thumb=im.copy(); thumb.thumbnail((650,920))
+                  tiles.append((pno,ImageOps.expand(thumb,border=2,fill="black")))
+              cw=max(im.width for _,im in tiles); ch=max(im.height for _,im in tiles)+40
+              sheet=Image.new("RGB",(cw,ch*len(tiles)),"white")
+              draw=ImageDraw.Draw(sheet)
+              for i,(pno,im) in enumerate(tiles):
+                  y=i*ch
+                  draw.text((10,y+5),f"{label} — PDF page {pno}",fill="black")
+                  sheet.paste(im,(0,y+34))
+              sheet.save(sub/"contact.jpg","JPEG",quality=92,optimize=True)
+              manifests.append({
+                "period":label,"sourcePdf":pdfpath,
+                "sha256":hashlib.sha256(data).hexdigest(),
+                "pageCount":len(doc),"renderDpi":300,"renderedPdfPages":pages
+              })
+          (out/"manifest.json").write_text(json.dumps(manifests,ensure_ascii=False,indent=2),encoding="utf-8")
+          print(json.dumps(manifests,ensure_ascii=False))
+          PY
+      - name: Upload Q3 Q4 B05 images
+        uses: actions/upload-artifact@v4
+        with:
+          name: vds-q3-q4-2025-ownership-note-review
+          path: source-review/VDS-Q3-Q4-2025-ownership/
+          if-no-files-found: error
+          retention-days: 2
