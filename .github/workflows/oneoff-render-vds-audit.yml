@@ -1,0 +1,100 @@
+name: One-off render VDS audited FY2025 source pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/oneoff-render-vds-audit.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install PDF image dependencies
+        run: python -m pip install --disable-pip-version-check pymupdf pillow
+
+      - name: Render exact annual audited consolidated PDF
+        run: |
+          python - <<'PY'
+          import hashlib, io, json, zipfile
+          from pathlib import Path
+          import fitz
+          from PIL import Image, ImageOps, ImageDraw
+
+          archive_path = Path("reports/raw/VDS/auto-vds-20261021/a65994df991573d9.zip")
+          requested = "VDS_Baocaotaichinh_2025_Kiemtoan_Hopnhat.pdf"
+          with zipfile.ZipFile(archive_path) as z:
+              members = [n for n in z.namelist() if n.lower().endswith(".pdf")]
+              matches = [n for n in members if Path(n).name == requested]
+              if len(matches) != 1:
+                  raise SystemExit(f"Expected exactly one {requested}; found {matches}; members={members}")
+              pdf_bytes = z.read(matches[0])
+
+          doc = fitz.open(stream=pdf_bytes, filetype="pdf")
+          out = Path("source-review/VDS-2025-audited-HN")
+          pages_dir = out / "pages"
+          sheets_dir = out / "contact-sheets"
+          pages_dir.mkdir(parents=True, exist_ok=True)
+          sheets_dir.mkdir(parents=True, exist_ok=True)
+
+          dpi = 150
+          scale = dpi / 72
+          thumbs = []
+          rendered = []
+          for pno in range(len(doc)):
+              page = doc[pno]
+              pix = page.get_pixmap(matrix=fitz.Matrix(scale, scale), alpha=False)
+              im = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+              page_path = pages_dir / f"page-{pno+1:02d}.jpg"
+              im.save(page_path, "JPEG", quality=86, optimize=True)
+              rendered.append({"page": pno+1, "width": im.width, "height": im.height, "file": str(page_path)})
+              thumb = im.copy()
+              thumb.thumbnail((520, 740))
+              thumbs.append((pno+1, ImageOps.expand(thumb, border=2, fill="black")))
+
+          for start in range(0, len(thumbs), 6):
+              group = thumbs[start:start+6]
+              cols, rows = 3, 2
+              cell_w = max(x.width for _,x in group)
+              cell_h = max(x.height for _,x in group) + 32
+              sheet = Image.new("RGB", (cols*cell_w, rows*cell_h), "white")
+              draw = ImageDraw.Draw(sheet)
+              for ix,(pno,im) in enumerate(group):
+                  x=(ix%cols)*cell_w
+                  y=(ix//cols)*cell_h
+                  draw.text((x+8,y+7), f"PDF page {pno}", fill="black")
+                  sheet.paste(im,(x,y+28))
+              sheet.save(sheets_dir / f"contact-{start+1:02d}-{group[-1][0]:02d}.jpg", "JPEG", quality=90, optimize=True)
+
+          manifest = {
+              "source_archive": str(archive_path),
+              "selected_member": matches[0],
+              "archive_members": members,
+              "pdf_sha256": hashlib.sha256(pdf_bytes).hexdigest(),
+              "pdf_pages": len(doc),
+              "render_dpi": dpi,
+              "rendered_pages": rendered,
+          }
+          (out / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+          print(json.dumps({k:v for k,v in manifest.items() if k != "rendered_pages"}, ensure_ascii=False))
+          PY
+
+      - name: Upload page images and contact sheets
+        uses: actions/upload-artifact@v4
+        with:
+          name: vds-2025-audited-hn-full-render
+          path: source-review/VDS-2025-audited-HN/
+          if-no-files-found: error
+          retention-days: 2
