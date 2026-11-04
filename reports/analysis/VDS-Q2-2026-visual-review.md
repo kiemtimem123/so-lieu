@@ -231,3 +231,38 @@ Keep the original Q1 and H1/YTD values as separately published. Do not backsolve
 - B05: **PASS as reported ownership data**; RVIF moved from 85% at FY2025 year-end to 95% by Q1/2026. The nature/value of the transaction and bridge to B04 remain pending.
 - B02 Q1/H1 2026 attribution: **PENDING 141,501,685 VND**; preserve source columns.
 - B02 Q1/H1 2025 attribution: separate PENDING **1,117,693,283 VND**; no overwrite.
+
+
+## 13. Further note pages 31–50 — no disclosed NCI transaction bridge located
+
+The correct Q2/2026 consolidated PDF member was rendered at 300 DPI for PDF pages **31–50**:
+- VietstockFinance document **555653**; source ZIP `reports/raw/VDS/auto-vds-20261021/6ca61e80d55ffaac.zip`.
+- Workflow run **41917120909**, artifact **13364129604**, rendered pages 31–50. This artifact used the exact Q2 HN PDF member `VDS_Baocaotaichinh_Q2_2026_Hopnhat.pdf`.
+- A prior page-31–50 render run **41916876255**, artifact **13364847422**, is excluded: the workflow fallback pointed to the Q1/2026 PDF, so it is not Q2 evidence.
+
+Findings from the correct Q2 pages:
+1. **Note 10 — long-term other investments** (PDF page 36 / printed page 31) includes the row “Quỹ Đầu tư Thịnh vượng Rồng Việt (RVIF)”:
+   - 30-Jun-2026: **47,854,800,000 VND**.
+   - 1-Jan-2026: **49,497,795,000 VND**.
+   - Decrease: **1,642,995,000 VND**.
+   
+   This is a reported carrying amount within the “other long-term investments” table. The note pages do not state that this movement is the consideration for the 10-percentage-point change in the RVIF ownership ratio; do not equate the 1.643bn decrease to the B04 NCI reduction or use it as a balancing amount.
+
+2. **Note 21.3 — equity** (PDF page 41 / printed page 36) reports:
+   - NCI at 1-Jan-2026: **67,544,853,295 VND**.
+   - NCI at 30-Jun-2026: **56,506,662,501 VND**.
+   - This repeats the B04 balance movement; no additional transaction breakdown is provided on the note page.
+   - The same note shows total equity 3,099,129,510,066 VND opening and 3,014,475,115,103 VND closing, matching B01/B04. Retained earnings total 358,592,121,913 VND opening and 363,368,457,472 VND closing; realized/unrealized components are presented separately.
+
+3. **Note 31 — related parties** (PDF page 49 / printed page 44) lists the counterparties and material transactions disclosed there. RVIF is not identified as a counterparty in the listed material related-party transactions. This is not a complete certificate that no ownership transfer occurred; it only describes the related-party table disclosed on that page.
+
+4. **Note 33 — events after the reporting period** (PDF page 50 / printed page 45) states that there were no material events after the reporting date requiring adjustment or disclosure. This does not identify the RVIF ownership transaction during H1/2026.
+
+5. **Note 30 — supplementary information for changes in equity** (PDF page 48 / printed page 43) explains other comprehensive income/equity changes related to financial-asset revaluation; it does not contain a quantified NCI ownership transaction bridge.
+
+Conclusion after reviewing B05 and all note pages 19–50:
+- RVIF's disclosed ownership ratio is **85% at FY2025 year-end** and **95% at Q1 and Q2/2026**; fund capital is 70bn VND throughout.
+- B04 H1 NCI decrease is **11,038,190,794 VND**. B02 H1 NCI loss is **4,523,794,527 VND**. The residual is **6,514,396,267 VND** and remains unexplained.
+- Note 10 RVIF investment carrying amount decreases by **1,642,995,000 VND**, but the note does not tie this to the 10-percentage-point change or B04.
+- No contract, transaction date, consideration, NAV/carrying-value bridge, or quantified acquisition/transfer schedule was identified in the reviewed B05/Notes 19–50.
+- **NCI transaction explanation remains PENDING.** Retain the RVIF ownership change and Note 10 movement as two independent source-supported clues; do not infer the amount, date, instrument or counterparty from them.
