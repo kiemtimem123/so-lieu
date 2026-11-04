@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.39
+- Phiên bản: 1.40
 - Ngày ban hành: 04/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -867,6 +867,32 @@ Nguồn chỉ dùng VietstockFinance và các tệp liên kết tại danh mục
 - B03 original report H1/YTD raw VND: CFO **1.402.209.397.523**, CFI **-2.438.216.817.714**, CFF **-288.817.920.091**, net **-1.324.825.340.282**, FX **41.467.072**, opening cash **2.188.037.806.317**, closing **863.253.933.107**, CAPEX **-909.344.214.214**, dividends **-588.587.063.470**. Original Q2 standalone (H1 less Q1) raw VND: CFO **809.015.066.804**, CFI **-1.693.078.122.700**, CFF **-545.521.959.637**, net **-1.429.585.015.533**, FX **38.713.120**, opening **2.292.800.235.520**, close **863.253.933.107**, CAPEX **-746.582.157.511**, dividends **-568.281.373.470**. Both original H1/Q2 standalone flow and cash bridges residual 0.
 - The top-level selected B03 basis remains the later Q2/2026 `As restated - Note 41` H1/2025 comparative: CFO **876.372.147.509**, CFI **-1.912.379.567.700**, CFF **-288.817.920.091**, net/FX/cash unchanged. It reclassifies **525.837.250.014 VND** from CFO to CFI (CFO delta -525,837,250,014; CFI +525,837,250,014). Selected H1 and Q2 standalone flows/cash bridges also residual 0. Preserve the selected basis top-level and the original Q2/2025 basis separately; do not blend them.
 - Data commit **`def9868f713b16ae2955174d1689190df2d5af93`**; visual audit note `reports/analysis/IDC-Q2-2025-visual-review.md`, commit **`28278e9c85e51cbb55029e6dbcae35c18f0f0d06`**. Status: **B01/B02/B03 PASS**; H1 additive B02 reconciles; original and As-restated B03 bases each pass. Do not re-extract Q2/2025.
+
+### 10.22 IDC Q4/2025 — close interest-subline investigation via FY2025 minus 9M/2025
+
+- Cross-check two direct VietstockFinance reports already visually reviewed: Q4/2025 report document ID **529902**, PDF page 12, workflow run **41693037890**, artifact **13257699370**; and Q3/2025 report, PDF page 12, workflow run **41690820936**, artifact **13257427801**.
+- FY2025 annual B02 current-year column:
+  - Finance expenses **-145.565.294.159 VND**
+  - Interest expense subline **-142.471.672.836 VND**
+- 9M/2025 B02 current-year column:
+  - Finance expenses **-103.093.067.061 VND**
+  - Interest expense subline **-98.580.181.973 VND**
+- FY2025 annual less 9M/2025 equals Q4 standalone exactly:
+  - Finance expenses **-42.472.227.098 VND**
+  - Interest expense subline **-43.891.490.863 VND**
+- The Q4 interest subline therefore matches the Q4 printed current-quarter column and the independently calculated FY-minus-9M value exactly; it is not OCR or quarter/YTD column mixing. It nevertheless exceeds the Q4 parent finance-expense amount by **1.419.263.765 VND**. The annual and 9M parent/subline rows are individually consistent, so the mismatch is specifically within the Q4 published quarter column.
+- All other additive B02 rows for Q4 (gross revenue, deductions, net revenue, COGS, gross profit, finance income, associates, selling, admin, operating profit, other income/expense/profit, PBT, current tax, deferred-tax income, PAT, parent and NCI) also match annual minus 9M with 0 VND residual.
+- **Decision:** classify as an issuer-reported Q4 row inconsistency, not an extraction defect. Retain both printed numbers as-is and do not use interest subline to recalculate totals/profit. No balancing plug. Q4 extraction/visual review is complete; exception remains disclosed in the UI/audit note.
+- Data cross-check commit **`519135f7869e62589970e3599bdd695211c735eb`**; audit note amendment commit **`c81d94b699e06315e67f647b4bde11f3c193a4ec`**; report `reports/analysis/IDC-Q4-2025-visual-review.md`.
+
+### 10.23 IDC Q2/2026 — close Note 41 investigation as a documented opening-balance restatement exception
+
+- Q2/2026 B03 current H1/YTD starts with reported cash and cash equivalents **553.943.475.131 VND** and closes **608.684.579.632 VND**; H1 CFO/CFI/CFF/net/FX bridge residual is **0 VND**.
+- Note 41 on Q2/2026 consolidated report PDF page **66** (printed page 61), directly rendered at 180 DPI, says 31/12/2025 cash equivalents previously stated **474.491.428.405 VND**, adjustment **+890.796.892 VND**, as-restated **475.382.225.297 VND**; cash **78.561.249.834 VND** unchanged. Combined cash and cash equivalents are therefore restated from **553.052.678.239** to **553.943.475.131 VND**.
+- Q1/2026 source as originally issued closes at **800.729.495.703 VND**. Q2 standalone flows derived as H1/2026 YTD less Q1/2026 as-published produce CFO **-202.543.174.911**, CFI **480.833.384.534**, CFF **-471.228.735.423**, net **-192.938.525.800**, FX **2.812.837 VND**, opening cash **800.729.495.703**, closing **608.684.579.632 VND**. Flow-component bridge residual = 0, but the cash bridge residual remains **-890.796.892 VND** (relative to reported closing cash **0,1463%**), above the **0,01%** acceptance tolerance.
+- Note 41 exactly explains why the H1/2026 opening cash is higher by 890.796.892 than original Q4/2025 close. It does **not** provide a same-basis restated Q1/2026 closing balance or Q1 cashflow. The exact same-basis Q2 standalone cash bridge therefore cannot be reconstructed from the currently available issued statements without assuming an unreported restatement.
+- **Decision:** close the document search/visual investigation as complete with a documented opening-balance restatement exception. Preserve Q1/2026 as-published figures, Q2/2026 H1 values, and the derived Q2 standalone flows separately. Keep residual **-890.796.892 VND (0,1463%)** visible; do not alter cash flows or insert a balancing plug. Do not call this a cashflow PASS within tolerance. The remaining status is a known, source-explained presentation-basis exception, not an OCR gap.
+- Evidence: Q2/2026 B03 visual workflow run **41695506922**, artifact **13261640367**; Note 41 re-render run **41697391168**, artifact **13262111894**, page 66 image SHA-256 `72a16c5383e506eafd84a10e41c2e9f604fac5b261869f5832371e80b8276d4e`. Audit note `reports/analysis/IDC-Q2-2026-visual-review.md`.
 
 ## 11. Giới hạn thao tác
 
