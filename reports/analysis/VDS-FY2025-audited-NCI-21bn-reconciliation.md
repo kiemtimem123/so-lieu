@@ -88,3 +88,23 @@ Q3/2025 YTD trừ Q3 current-quarter tiếp tục khớp chính xác với H1 YT
 - Vì vậy, khi kết hợp với Note 26 kiểm toán FY2025, bằng chứng định vị khoản tăng vốn 21 tỷ ở **Q3/2025** rất mạnh: Note 26 ghi “Tăng phần vốn sở hữu ở công ty con” 21 tỷ; B04 Q3 cho thấy phần tăng NCI ngoài lợi nhuận trong riêng Q3 là 20.999.999.999 VND. Không tự ý đổi giá trị nguồn hay chỉnh 1 VND.
 - B04 FY2025 Note 26/B04 cuối năm vẫn khớp chính xác toàn năm: +21 tỷ vốn ở công ty con, lỗ đã thực hiện -1.396.298.463, lỗ chưa thực hiện -547.773.687; NCI cuối năm 67.544.853.295 VND.
 - Đây xác nhận **hồ sơ B (vốn NCI 21 tỷ): PASS** và thời điểm phát sinh có thể xác định ở Q3/2025. Nó **không giải thích hồ sơ A**: sai khác phân bổ B02 Q1 gốc so với H1 trừ Q2 vẫn 1.117.693.283 VND.
+
+
+## 7. Đối chiếu các cột so sánh kỳ sau và giới hạn hồ sơ A
+
+### 7.1. B02 Q1/2026 so sánh Q1/2025
+- VietstockFinance document **543855**, B02 PDF page **13** / printed page **8**, giữ số Q1/2025 comparative: PAT **19.012.342.256 VND**, parent **19.089.097.924 VND**, NCI **-76.755.668 VND**.
+- Các giá trị trùng B02 Q1/2025 gốc; không phải số Q1 implied từ H1 less Q2.
+
+### 7.2. B02 Q2/2026 so sánh H1/2025
+- VietstockFinance document **555653**, PDF member `VDS_Baocaotaichinh_Q2_2026_Hopnhat.pdf` trong `reports/raw/VDS/auto-vds-20261021/6ca61e80d55ffaac.zip`; B02 PDF page **13** / printed page **8**, trực tiếp kiểm tra ảnh 300 DPI.
+- Cột H1/2025 comparative vẫn giữ PAT **7.818.436.589 VND**, parent **8.071.151.977 VND**, NCI **-252.715.388 VND**, giống Q2/2025 H1/YTD. Render workflow run **41878236428**, artifact **13347787384**, SHA-256 PDF member `cf4351deb1e3c184ba11ff18f8c81ce15cc41e37070830f666dd48b33a7e471d`.
+
+### 7.3. Hồ sơ công bố/giải trình Q1 và Q2/2025
+- VDS công bố Q1/2025 gồm BCTC hợp nhất và công văn giải trình biến động LNST Q1/2025 so với Q1/2024; công văn số **387/2025/CV-TCKT**, ngày **29/04/2025**, tập trung PBT, thuế và LNST tổng hợp, không phải bảng cầu nối parent/NCI. Trang công bố: `https://www.vdsc.com.vn/quan-he-co-dong/cong-bo-thong-tin/rong-viet-cong-bo-bao-cao-tai-chinh-hop-nhat-quy-1-2025-va-giai-trinh-chenh-lech-loi-nhuan-i880`.
+- VDS công bố Q2/2025 gồm BCTC hợp nhất và công văn giải trình LNST Q2/2025 so với Q2/2024; trang công bố: `https://www.vdsc.com.vn/en/investor-relations/disclosures/vdsc-discloses-the-consolidated-financial-statements-2q2025-and-explanation-of-profit-differences-i912?groupId=1`. Nội dung công bố được rà không nêu điều chỉnh phân bổ parent/NCI của Q1 hoặc cầu nối Q1/H1.
+
+### 7.4. Kết luận cập nhật
+- **Hồ sơ B – vốn NCI 21 tỷ:** PASS/CLOSED; Note 26 kiểm toán và Q3 B04 xác nhận tăng phần vốn sở hữu ở công ty con trong Q3/2025.
+- **Hồ sơ A – phân bổ B02 Q1/H1:** vẫn PENDING. Q1/2026 comparative giữ số Q1 original, Q2/2026 comparative giữ số H1/YTD, Q3/2025 YTD less Q3 standalone khớp H1. Không tìm thấy trong các công bố/giải trình đã rà một báo cáo Q1 restated hoặc bảng giải thích phân bổ parent/NCI.
+- Giữ nguyên Q1 original và Q2 H1/YTD original; số Q1 tính từ H1 less Q2 chỉ là phép đối chiếu, không phải số Q1 đã công bố. Không sửa `data/financials-VDS.json`.
