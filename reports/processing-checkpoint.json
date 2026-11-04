@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-04T20:24:00+07:00",
+  "updatedAt": "2026-11-04T15:21:08.811Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "Priority 1: VietstockFinance public document catalog and directly linked report PDFs. Priority 2: WiData document tab for the same ticker, only to compare/supplement when source 1 lacks the report or extraction is unclear/unavailable. No third source without explicit user approval.",
   "periodStart": "2024-Q1",
@@ -5106,7 +5106,7 @@
       ],
       "issues": [
         "PENDING: Q1 and Q2 original B02 quarter parent/NCI figures do not add to Q2 H1 YTD parent/NCI total by 1,117,693,283 VND, while consolidated PAT adds exactly. Original Q1 parent=19,089,097,924; NCI=-76,755,668. Q2 parent=-9,900,252,664; NCI=-1,293,653,003. H1 YTD parent=8,071,151,977; NCI=-252,715,388. Implied Q1 after H1 less Q2: parent=17,971,404,641; NCI=1,040,937,615. Do not overwrite original values or insert a plug. WiData attempted but unavailable; no third source.",
-        "Supplemental PDF pages 19-21 (printed pages 13-15) directly reviewed; B04 aggregate equity movement and opening note do not disclose the quarter-specific parent/NCI reallocation. Existing 1,117,693,283 VND attribution exception remains PENDING; no source correction or plug."
+        "FY2025 audited HN Note26 (PDF page60 / printed p55) confirms gross +21,000,000,000 VND increase in ownership capital at a subsidiary. Full-year NCI rollforward reconciles exactly: opening 48,488,925,445 + 21,000,000,000 - 1,396,298,463 realized loss - 547,773,687 unrealized loss = closing 67,544,853,295. FY B04 net increase = 19,055,927,850; residual 0. This closes the FY B04 21bn movement question, not the separate B02 Q1/H1 parent/NCI attribution exception."
       ],
       "validations": {
         "balance_sheet": "PASS raw VND; total assets = liabilities + equity; residual 0.",
@@ -5118,13 +5118,65 @@
         "cashflow_ytd": "PASS original Q2 H1 YTD CFO/CFI/CFF and cash bridge; residuals 0.",
         "cashflow_standalone": "PASS Q2 standalone derived from original Q2 YTD minus Q1 YTD; flow and cash bridge residuals 0.",
         "visual": "PASS original PDF B01/B02/B03 direct image review.",
-        "secondary_source": "WiData attempted but unavailable (DisabledError); no values copied."
+        "secondary_source": "WiData attempted but unavailable (DisabledError); no values copied.",
+        "nci_equity_rollforward_fy2025": "PASS audited Note26 and annual B04 reconcile exactly: gross subsidiary ownership-capital increase 21,000,000,000 VND, realized NCI loss -1,396,298,463, unrealized NCI loss -547,773,687, net increase 19,055,927,850, ending NCI 67,544,853,295; residual 0.",
+        "nci_21bn_classification": "PASS: audited Note26 describes the 21bn as 'Tăng phần vốn sở hữu ở công ty con'; not parent-company charter capital. Note does not identify the investee/legal mechanism/investor."
       },
       "nextPeriod": "2025-Q2",
       "nextTicker": "VDS",
       "periodComplete": false,
       "dataCommit": "f3e867ed828280d95c6fbe163c97eb5be36a4884",
-      "processedAt": "2026-11-03T13:10:00+07:00"
+      "processedAt": "2026-11-03T13:10:00+07:00",
+      "annualAuditSupplement": {
+        "sourceArchive": "reports/raw/VDS/auto-vds-20261021/a65994df991573d9.zip",
+        "selectedPdfMember": "VDS_Baocaotaichinh_2025_Kiemtoan_Hopnhat.pdf",
+        "excludedPdfMember": "ISC_Baocaotaichinh_2025_Kiemtoan_Hopnhat.pdf",
+        "pdfSha256": "9c4c4b64f9df79340c943283ffd4f448b20a26ffb4cfb06ef736793205d44c9c",
+        "pdfPageCount": 83,
+        "renderedAtDpi": 150,
+        "workflowRunId": 41854400509,
+        "artifactId": 13336881442,
+        "auditNote": "reports/analysis/VDS-FY2025-audited-NCI-21bn-reconciliation.md",
+        "auditNoteCommit": "fc831882e689fa6b41e3d93f844a21d9f9182312",
+        "nciRollforward": {
+          "openingNciVnd": 48488925445,
+          "increaseOwnershipInSubsidiaryVnd": 21000000000,
+          "realizedLossVnd": -1396298463,
+          "unrealizedLossVnd": -547773687,
+          "closingNciVnd": 67544853295,
+          "netIncreaseVnd": 19055927850,
+          "residualVnd": 0,
+          "notePdfPage": 60,
+          "notePrintedPage": 55,
+          "annualB04PdfPages": [
+            24,
+            25
+          ],
+          "annualB04PrintedPages": [
+            19,
+            20
+          ]
+        },
+        "unitDisclosure": {
+          "notePdfPage": 28,
+          "notePrintedPage": 23,
+          "VDAM": {
+            "directOwnershipPercent": 58,
+            "indirectOwnershipPercent": 0
+          },
+          "RVIF": {
+            "directOwnershipPercent": 85,
+            "indirectOwnershipPercent": 2.9
+          },
+          "identifiedInvesteeFor21bn": false
+        },
+        "limitations": [
+          "Audited Note26 does not name the specific subsidiary/member fund receiving the 21bn.",
+          "Audited Note26 does not name the external contributor or specify whether the legal form was a fresh share issue, capital contribution, transfer, or other ownership transaction.",
+          "Consolidated B03b row71 FY2025 reports total share issue/owner contribution cash inflow of 68bn; do not equate the entire amount with the 21bn NCI movement."
+        ]
+      },
+      "nextAction": "Resolve only the still-PENDING B02 Q1 original vs H1/YTD parent/NCI attribution gap 1,117,693,283 VND. Do not reopen Q1/Q2 core extraction or alter data values. The FY2025 audited NCI 21bn and annual B04 rollforward are closed as PASS."
     },
     "2025-Q3": {
       "status": "source_text_reconciled_visual_reviewed",
@@ -5607,9 +5659,9 @@
     }
   ],
   "processingSop": {
-    "version": "1.42",
+    "version": "1.44",
     "path": "reports/financial-report-processing-sop.md",
-    "commit": "c14abcd03c5c115effcd25ebedda77b3999f378e",
+    "commit": "ab31e1f2ff8017601fd303036411a8b902c5f53d",
     "status": "published",
     "effectiveDate": "2026-11-04"
   },
@@ -8097,5 +8149,19 @@
       },
       "visualReview": "PASS: PDF pages 8–14 rendered and inspected at 180 DPI; Q4 row 440 legible and exact."
     }
+  },
+  "vdsAnnualAuditSupplement2025": {
+    "status": "NCI_FY_ROLLFORWARD_PASS_B02_Q1_H1_ATTRIBUTION_PENDING",
+    "sourceArchive": "reports/raw/VDS/auto-vds-20261021/a65994df991573d9.zip",
+    "selectedPdfMember": "VDS_Baocaotaichinh_2025_Kiemtoan_Hopnhat.pdf",
+    "pdfSha256": "9c4c4b64f9df79340c943283ffd4f448b20a26ffb4cfb06ef736793205d44c9c",
+    "workflowRunId": 41854400509,
+    "artifactId": 13336881442,
+    "auditNote": "reports/analysis/VDS-FY2025-audited-NCI-21bn-reconciliation.md",
+    "auditNoteCommit": "fc831882e689fa6b41e3d93f844a21d9f9182312",
+    "nciRollforwardResidualVnd": 0,
+    "grossOwnershipIncreaseVnd": 21000000000,
+    "yearEndNciVnd": 67544853295,
+    "investeeIdentified": false
   }
 }
