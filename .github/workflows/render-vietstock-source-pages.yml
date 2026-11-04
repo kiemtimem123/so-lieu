@@ -31,7 +31,7 @@ on:
       pdf_member:
         description: "Exact PDF filename inside ZIP; leave blank to auto-select the company-parent member"
         required: false
-        default: ""
+        default: "VDS_Baocaotaichinh_Q2_2026_Hopnhat.pdf"
 
 permissions:
   contents: write
@@ -61,7 +61,7 @@ jobs:
         env:
           TARGET_SYMBOL: ${{ github.event.inputs.symbol || 'VDS' }}
           TARGET_PERIOD: ${{ github.event.inputs.period || '2026-Q2' }}
-          PDF_PATH: ${{ github.event.inputs.pdf_path || 'reports/raw/VDS/auto-vds-20261021/69d4862950596830.pdf' }}
+          PDF_PATH: ${{ github.event.inputs.pdf_path || 'reports/raw/VDS/auto-vds-20261021/6ca61e80d55ffaac.zip' }}
           PAGE_LIST: ${{ github.event.inputs.pages || '6,7,8,11,12,13,14,15,16,17,18' }}
           RENDER_DPI: ${{ github.event.inputs.dpi || '300' }}
           PDF_MEMBER: ${{ github.event.inputs.pdf_member || 'VDS_Baocaotaichinh_Q2_2026_Hopnhat.pdf' }}
