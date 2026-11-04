@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-04T17:57:35.381Z",
+  "updatedAt": "2026-11-04T17:58:37.566Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "Priority 1: VietstockFinance public document catalog and directly linked report PDFs. Priority 2: WiData document tab for the same ticker, only to compare/supplement when source 1 lacks the report or extraction is unclear/unavailable. No third source without explicit user approval.",
   "periodStart": "2024-Q1",
@@ -4677,7 +4677,7 @@
     "VCI",
     "IDC"
   ],
-  "manualReviewQueueUpdatedAt": "2026-11-04T14:00:00+07:00",
+  "manualReviewQueueUpdatedAt": "2026-11-04T17:58:37.566Z",
   "vixPeriodProgress": {
     "2024-Q4": {
       "status": "completed_verified_separate",
@@ -5505,7 +5505,8 @@
           "NciPercent": 42,
           "NciShareVnd": 21000000000
         }
-      }
+      },
+      "investigationStatus": "A_REVIEW_EXHAUSTED_PRESERVE_PENDING; B_CLOSED_PASS_VDAM_21BN"
     },
     "2025-Q3": {
       "status": "source_text_reconciled_visual_reviewed",
@@ -6182,6 +6183,84 @@
       },
       "issues": [],
       "nextPeriod": "2026-Q2"
+    },
+    "2026-Q2": {
+      "period": "2026-Q2",
+      "status": "pending_direct_visual_review",
+      "documentId": "555653",
+      "sourcePriority": 1,
+      "sourceIndexUrl": "https://finance.vietstock.vn/VDS/tai-tai-lieu.htm?doctype=1",
+      "sourceDocumentUrl": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/VDS_Baocaotaichinh_Q2_2026_Hopnhat.zip?ver=ae447b46",
+      "sourceArchiveFile": "reports/raw/VDS/auto-vds-20261021/6ca61e80d55ffaac.zip",
+      "selectedPdfMember": "VDS_Baocaotaichinh_Q2_2026_Hopnhat.pdf",
+      "sourceScope": "Consolidated",
+      "sourceUnit": "VND",
+      "sourceDocumentPageCount": 50,
+      "doNotRepeatCoreExtraction": true,
+      "doNotRepeatOCR": true,
+      "doNotRepeatDataSnapshotLoad": true,
+      "extractedSnapshotStatus": "auto_extracted_pending_visual_review",
+      "sourceFieldsAlreadyExtracted": true,
+      "visualReviewPlan": {
+        "renderDpi": 300,
+        "B01": {
+          "pdfPages": [
+            6,
+            7,
+            8
+          ],
+          "printedPages": [
+            1,
+            2,
+            3
+          ]
+        },
+        "B02": {
+          "pdfPages": [
+            11,
+            12,
+            13
+          ],
+          "printedPages": [
+            6,
+            7,
+            8
+          ]
+        },
+        "B03": {
+          "pdfPages": [
+            14,
+            15,
+            16
+          ],
+          "printedPages": [
+            9,
+            10,
+            11
+          ]
+        },
+        "customerTrustCashflow": {
+          "pdfPages": [
+            17
+          ],
+          "printedPages": [
+            12
+          ],
+          "keepSeparateFromCompanyCashflow": true
+        },
+        "B04": {
+          "pdfPages": [
+            18
+          ],
+          "printedPages": [
+            13
+          ]
+        }
+      },
+      "visualReviewStatus": "IN_PROGRESS",
+      "noDataOverwriteBeforeVisualPass": true,
+      "separatePendingExceptionFrom2025Q2": "B02 parent/NCI Q1/H1 2025 allocation difference remains pending and is not part of Q2/2026 visual audit.",
+      "openedFromCheckpointAt": "2026-11-05"
     }
   },
   "sourceHierarchy": [
@@ -8836,6 +8915,8 @@
     },
     "investigationComplete": true,
     "pendingReason": "No Q1 restated B02 or official parent/NCI allocation bridge found; Q1/Q2 2025 B05 ownership was unchanged; Q3 capital increase at VDAM occurs after H1 and is unrelated to the Q1/H1 allocation mismatch.",
-    "nextPeriodTask": "VDS 2026-Q2 direct visual audit; keep 2025-Q2 allocation exception PENDING separately."
+    "nextPeriodTask": "VDS 2026-Q2 direct visual audit; keep 2025-Q2 allocation exception PENDING separately.",
+    "allowContinueWithPending": true,
+    "nextAction": "Continue VDS Q2/2026 direct visual review; retain 2025-Q2 allocation mismatch PENDING without modifying source data."
   }
 }
