@@ -125,3 +125,10 @@ Note 41 visual evidence:
 - Workflow run: https://github.com/kiemtimem123/so-lieu/actions/runs/41697391168
 - Artifact ID: `13262111894`, name `vietstock-source-review-IDC-2026-Q2`, pages 60–67 at 180 DPI.
 - Page 66 image SHA-256: `72a16c5383e506eafd84a10e41c2e9f604fac5b261869f5832371e80b8276d4e`.
+
+
+## Final closure of the Note 41 source-basis investigation
+
+The Note 41 document/image check is complete. The reported opening-balance adjustment is exactly **+890,796,892 VND**. The same-basis restated Q1/2026 closing cash / Q1 cashflow statement is not present in the currently archived VietstockFinance report set, so the Q2 standalone bridge cannot be brought within 0.01% without assuming an undisclosed re-presentation.
+
+**Final treatment:** close source retrieval and visual review as complete; preserve the Q2 standalone cash bridge residual **-890,796,892 VND (0.1463%)** as a disclosed cross-period opening-balance restatement exception. H1/2026 YTD B03 remains fully reconciled; Q2 quarter flow components remain reconciled; do not change Q1/Q2 raw values or add a balancing plug. This is not a PASS within tolerance and is not an OCR gap.
