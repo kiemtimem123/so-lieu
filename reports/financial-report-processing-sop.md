@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.48
+- Phiên bản: 1.49
 - Ngày ban hành: 04/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -1028,3 +1028,19 @@ Nguồn chỉ dùng VietstockFinance và các tệp liên kết tại danh mục
 - Limitation: two reporting-date disclosures do not rule out intra-period subscriptions/transfers that did not change ending percentages or transactions within fund/member interests not separately shown on this summary page. Do not treat as a definitive no-transaction certificate.
 - **A remains PENDING 1.117.693.283 VND.** This disclosure does not provide the parent/NCI profit allocation bridge. Keep original Q1/H1 source values.
 - Audit note: `reports/analysis/VDS-Q2-2025-parent-NCI-followup.md`, commit **aadfa368103656734cb1294ec66ff425de23e979**; FY2025 audit note commit **19d13059d628b0a8de649d1430cd7f7bcfafb42f**.
+
+
+### 10.33 VDS Q3/2025 — VDAM tăng vốn điều lệ 50 tỷ, phần NCI tương ứng 21 tỷ
+
+- Visual review B05-CTCK/HN original source at 300 DPI:
+  - Q1/2025 PDF page21 / printed p16: VDAM charter capital 100bn, VDS ownership58%; RVIF fund capital70bn, VDS ownership85%.
+  - Q2/2025 PDF page22 / printed p16: unchanged 100bn/58%; RVIF70bn/85%.
+  - Q3/2025 PDF page21 / printed p16: VDAM charter capital **150bn**, VDS ownership58%; RVIF70bn/85%.
+  - Q4/2025 PDF page21 / printed p16: VDAM remains **150bn**, VDS ownership58%; RVIF70bn/85%.
+- VDAM capital therefore increased by **50bn VND** from Q2 to Q3/2025. With VDS ownership unchanged at 58%, NCI holds the remaining 42%; **42% × 50bn = 21bn VND**, exactly matching audited FY2025 Note26 “Tăng phần vốn sở hữu ở công ty con” and the B04 Q3 NCI movement after Q3 PAT (1 VND rounding residual).
+- Q3/Q4 VDAM description reports the latest enterprise registration amendment on **29/09/2025**. Do not assert that this is the exact payment/subscription date absent the amendment dossier.
+- This identifies the investee as **CTCP Quản lý Quỹ Rồng Việt (VDAM)**. It is not RVIF and is not VDS parent charter capital. The reviewed B05 and Note26 do not identify the external shareholders individually or reproduce the subscription/paid-in capital dossier.
+- **B status: PASS/CLOSED at the reported-disclosure level.** NCI 21bn is the outside ownership share of VDAM’s 50bn capital increase. Keep the -1 VND bridge residual as metadata; no adjustment.
+- **A status remains PENDING**: B02 Q1 original vs H1/YTD less Q2 allocation delta **1.117.693.283 VND** is independent of the Q3 VDAM capital increase.
+- Q3/Q4 render workflow runs **41881072688**, **41881158938**; artifacts **13348677962**, **13348792588**. SHA-256 Q3 `bd7db8914d33e4144845c01aca837597b2986183d20a690f6fbcbbc855c5e6d5`; Q4 `d2252c9c1aaafbaffa8395c96fffd5b2063aa8b3da881047ee3e74270691e9e2`.
+- Audit notes: `reports/analysis/VDS-Q2-2025-parent-NCI-followup.md` commit **99b582829dde97b29d492fd3602a7aedb99dd2bb**; `reports/analysis/VDS-FY2025-audited-NCI-21bn-reconciliation.md` commit **a2d9796c5f1ee59cbb0681a7fefe1bd32d584eb6**.
