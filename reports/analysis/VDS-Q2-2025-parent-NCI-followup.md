@@ -69,3 +69,17 @@ So với lỗ sau thuế lũy kế phân bổ cho NCI trên B02 là **252,715,38
 - **B04:** số dư đầu kỳ NCI + các biến động vốn trong kỳ = số dư cuối kỳ; không giả định biến động B04 chính là NCI PAT, cũng không dùng B04 tổng hợp để tự giải thích phân bổ B02.
 
 Một cầu nối đạt PASS không thay thế cầu nối còn lại. Nếu một trong hai thiếu thuyết minh giao dịch chi tiết, giữ ngoại lệ PENDING.
+
+
+## 7. Bổ sung sau khi kiểm tra BCTC hợp nhất kiểm toán FY2025
+
+Phần kết luận cũ tại mục 3 về việc chưa xác định bản chất biến động B04 được **cập nhật** bằng bằng chứng năm kiểm toán:
+- Note 26 BCTC hợp nhất kiểm toán FY2025 (PDF page 60 / printed page 55) xác nhận “Tăng phần vốn sở hữu ở công ty con” **21.000.000.000 VND**.
+- Cầu nối NCI từ đầu đến cuối năm đã PASS: 48.488.925.445 + 21.000.000.000 - 1.396.298.463 - 547.773.687 = 67.544.853.295 VND.
+- B04 FY2025 ghi tăng ròng NCI **19.055.927.850 VND**, đúng bằng 21 tỷ trừ hai khoản lỗ trong Note 26.
+- Vì vậy, câu hỏi “khoản tăng 21 tỷ là gì?” đã có lời giải ở cấp độ thuyết minh: tăng phần vốn/quyền lợi NCI tại đơn vị con được hợp nhất, phù hợp với nghiệp vụ tăng vốn/góp vốn từ phía sở hữu không kiểm soát. Note 26 không nêu pháp nhân cụ thể, nhà đầu tư hoặc hồ sơ pháp lý; không gán chắc cho VDAM hay RVIF.
+- B04 H1 vẫn là số dư 47.250.464.312 VND; sự tăng vốn 21 tỷ không nằm trong B04 đến 30/06/2025. Không xác định chính xác quý phát sinh nếu thiếu B04 kỳ sau.
+- Ngoại lệ B02 parent/NCI **1.117.693.283 VND** chưa được giải thích và tiếp tục PENDING. Không dùng khoản tăng vốn 21 tỷ để đóng hồ sơ A.
+- Hồ sơ kiểm toán chi tiết: `reports/analysis/VDS-FY2025-audited-NCI-21bn-reconciliation.md`, commit `fc831882e689fa6b41e3d93f844a21d9f9182312`.
+
+Không sửa `data/financials-VDS.json`; Q2/2025 vẫn chưa hoàn thành do ngoại lệ B02 còn mở.
