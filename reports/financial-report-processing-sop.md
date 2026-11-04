@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.44
+- Phiên bản: 1.45
 - Ngày ban hành: 04/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -980,3 +980,14 @@ Nguồn chỉ dùng VietstockFinance và các tệp liên kết tại danh mục
 - **A remains PENDING:** the original Q1 B02 parent/NCI figures still differ from Q1 implied by Q2 H1 less Q2 standalone by **1.117.693.283 VND**. The FY2025 audited note does not provide a Q1 restated B02 or bridge explaining that allocation change. Preserve Q1 source values; no backsolve or balancing plug.
 - Do not alter `data/financials-VDS.json`. Do not mix RI with HN. Q2/2025 period stays incomplete until the B02 attribution exception is resolved.
 - Detailed audit note: `reports/analysis/VDS-FY2025-audited-NCI-21bn-reconciliation.md`, commit **fc831882e689fa6b41e3d93f844a21d9f9182312**.
+
+
+### 10.29 VDS Q3/2025 B04 — định vị khoản tăng vốn NCI 21 tỷ
+
+- Direct image review of original VietstockFinance Q3/2025 consolidated PDF document **523128**, PDF page **18** / printed page **13** (B04), source archive `reports/raw/VDS/auto-vds-20261021/bd7db8914d33e414.pdf`. Render artifact workflow **41858315839**, artifact **13339205504**.
+- B04 row 9 shows NCI opening **48.488.925.445 VND**, current-year increase **22.785.197.412 VND**, current-year decrease blank, ending **71.274.122.857 VND**. The opening-plus-increase balance bridge residual is **0**.
+- Q2/2025 B04 direct visual page 19 / printed page 13 shows opening **48.488.925.445**, decrease **1.238.461.133**, closing **47.250.464.312 VND**.
+- Q3 B04 close minus Q2 B04 close = **24.023.658.545 VND**. Subtract Q3 standalone B02 NCI PAT **3.023.658.546 VND** = **20.999.999.999 VND**, residual **-1 VND** vs FY2025 audited Note26 gross increase **21.000.000.000 VND**. Preserve this 1 VND residual; do not adjust source values. It is below the SOP 0.01% tolerance.
+- Combined with audited FY2025 Note26 (“Tăng phần vốn sở hữu ở công ty con”) and annual NCI rollforward, classify the 21bn gross capital increase as **Q3/2025 subsidiary ownership-capital increase benefiting NCI**. Exact subsidiary/investor/legal instrument is not named by the reviewed Note26; do not assign VDAM/RVIF without source evidence.
+- **B04 21bn question: PASS/CLOSED.** **B02 Q1/H1 attribution issue remains PENDING** at 1.117.693.283 VND. Never conflate the two.
+- Audit note: `reports/analysis/VDS-FY2025-audited-NCI-21bn-reconciliation.md`; commits `c7d5a6843056cad04751213eec451d05180059c4` and Q2 follow-up addendum `c47ac8880c3ccf01fafa7844861a8b5d2d5a2973`.
