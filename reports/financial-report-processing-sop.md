@@ -932,3 +932,26 @@ Nguồn chỉ dùng VietstockFinance và các tệp liên kết tại danh mục
 - Note 41 PDF page 66 (printed page 61), rendered 180 DPI, shows cash equivalents 31/12/2025 previously stated **474.491.428.405 VND** + adjustment **890.796.892 VND** = As-restated **475.382.225.297 VND**; cash **78.561.249.834 VND** remains unchanged. This exactly explains the opening cash difference between original Q4/2025 and H1/2026 restated comparative.
 - The Q2 standalone cash bridge still has residual **-890.796.892 VND (0,1463%)**, above 0,01%, because the Q1/2026 values available in the repository are as-published, not restated on the same basis. Mark it as a documented cross-period restatement exception. Do not modify Q1 data, CFO/CFI/CFF, net cash movement, or insert a balancing plug. Only close when the same-basis comparative is directly documented.
 - Note 41 evidence: run **41697391168**, artifact **13262111894**, PDF page 66, image SHA-256 `72a16c5383e506eafd84a10e41c2e9f604fac5b261869f5832371e80b8276d4e`; report `reports/analysis/IDC-Q2-2026-visual-review.md`.
+
+
+### 10.26 VDS Q2/2025 attribution investigation and Q1/2026 visual audit — 04/11/2026
+
+#### Q2/2025 parent/NCI — remains PENDING
+- Original VietstockFinance Q2/2025 consolidated PDF document **513947** was additionally inspected at PDF pages **19–21** (printed pages 13–15): B04 statement of changes in equity pages 19–20 and the first notes page 21.
+- B04 shows aggregate consolidated equity movements; these pages do not disclose a quarter-specific parent/NCI attribution bridge capable of explaining the **1,117,693,283 VND** shift between original Q1/2025 B02 parent/NCI and H1/2025 YTD allocation.
+- Preserve original Q1 and Q2 printed parent/NCI values and the H1 YTD values. Q3/2025 YTD less Q3 standalone continues to reproduce Q2 H1 allocation exactly. Do not backsolve, insert a plug, overwrite source values, or mark the exception PASS.
+- Audit note: `reports/analysis/VDS-Q1-2026-visual-review.md` (contains the Q2/2025 investigation result).
+
+#### Q1/2026 — original PDF B01/B02/B03 visual PASS
+- Source: VietstockFinance document **543855**, consolidated Q1/2026; PDF `https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%201/VDS_Baocaotaichinh_Q1_2026_Hopnhat.pdf`; archive `reports/raw/VDS/auto-vds-20261021/2720dd850acfbd95.pdf`.
+- Directly reviewed PDF pages **6–8** (B01 printed pages 1–3), **11–13** (B02 printed pages 6–8), and **14–16** (B03 printed pages 9–11).
+- B01 raw VND: assets **7,868,505,982,599** = current **6,417,238,249,041** + non-current **1,451,267,733,558**; liabilities **4,839,432,932,978** = current **4,831,645,599,511** + long-term **7,787,333,467**; equity **3,029,073,049,621**. All composition and balance residuals **0**.
+- B02 raw VND: revenue **202,757,306,990**; operating expenses **190,545,800,755**; operating result **-36,035,615,153**; other result **545,454**; PBT **-36,035,069,699**; current tax **7,851,910,907**; deferred tax benefit **-14,396,180,160**; total tax **-6,544,269,253**; PAT **-29,490,800,446**; parent **-28,526,203,886**; NCI **-964,596,560**; EPS **-105**. Revenue and expense details each reconcile exactly to their totals; PBT-tax=PAT and parent+NCI=PAT residuals 0. Row1.8 current Q1 cell is blank; do not use the prior-year comparative 832,001,623.
+- B03 raw VND: CFO **248,423,817,918**; CFI **-270,538,392,551**; CFF **-116,700,000,000**; net change **-138,814,574,633**; opening cash **996,975,599,252**; closing cash **858,161,024,619**. Flow sum and cash bridge residuals **0**. FX lines 102/104 blank; keep null. Customer trust-money flow remains separate from company cashflow.
+- ROA **-1.4755%**, ROE **-3.8498%**, using quarterly PAT / average opening-closing assets or equity × 4 × 100.
+- Data snapshot commit `a20cecd3fb726d6e379a925cac6abfa40e261690`; checkpoint commit `40bca1f9798cead5820ecf9a25ac2f39584f2a78`; audit note `reports/analysis/VDS-Q1-2026-visual-review.md`, commit `9833b63b40418b2c2304252e62632de80818e913`.
+- Status `verified_manual_visual_reconciliation`. Do not re-extract or repeat visual review for Q1/2026.
+
+#### Resume
+- VDS Q2/2025 parent/NCI allocation remains a documented PENDING exception.
+- Next direct visual task: **VDS Q2/2026**, VietstockFinance document **555653**, archived ZIP `reports/raw/VDS/auto-vds-20261021/6ca61e80d55ffaac.zip`. Do not run OCR again or change already source-backed values. After VDS Q2/2026 visual audit, proceed GAS in manual queue order.
