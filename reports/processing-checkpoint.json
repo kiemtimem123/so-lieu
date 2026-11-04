@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-04T13:45:00+07:00",
+  "updatedAt": "2026-11-04T14:00:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "Priority 1: VietstockFinance public document catalog and directly linked report PDFs. Priority 2: WiData document tab for the same ticker, only to compare/supplement when source 1 lacks the report or extraction is unclear/unavailable. No third source without explicit user approval.",
   "periodStart": "2024-Q1",
@@ -1329,28 +1329,20 @@
       ]
     },
     "VIX": {
-      "status": "in_progress_manual_review",
-      "completeForAutomation": false,
-      "manualReviewRemaining": true,
+      "status": "completed_verified_separate",
+      "completeForAutomation": true,
+      "manualReviewRemaining": false,
       "periodCount": 11,
       "firstQuarter": "2024-Q1",
       "lastQuarter": "2026-Q3",
-      "pendingCorePeriods": [
-        "2024-Q4",
-        "2025-Q1",
-        "2025-Q2"
-      ],
-      "terminalManualReviewPeriods": [
-        "2024-Q4",
-        "2025-Q1",
-        "2025-Q2"
-      ],
+      "pendingCorePeriods": [],
+      "terminalManualReviewPeriods": [],
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
-      "statementPagesPending": true,
+      "statementPagesPending": false,
       "skipUnconfirmedAutomation": true,
       "skipUnconfirmedReason": "VIX Q1/Q2/Q3 2024 and Q3/Q4 2025 plus Q1/Q2/Q3 2026 visually verified as standalone and reconciled. Three historical periods Q4/2024 and Q1/Q2/2025 remain pending. Standalone cashflows stay outside consolidated fields.",
-      "updatedAt": "2026-11-02T14:17:29.544Z",
+      "updatedAt": "2026-11-04T14:00:00+07:00",
       "sourceArchivesChecked": 6,
       "sourceScopeReview": {
         "status": "manual_scope_review_in_progress",
@@ -1392,7 +1384,8 @@
           "scope": "separate Company statements",
           "scopeEvidence": "B01/B02/B03b; pages5–6 RIÊNG; page15 identifies Company; page17 Note2.4 says VND."
         }
-      }
+      },
+      "lastManualQueueReconciliation": "The final three historical entries Q4/2024, Q1/2025 and Q2/2025 were already verified in vixPeriodProgress; the manual-review queue was stale and is now closed."
     },
     "SSI": {
       "status": "automated_processing_complete",
@@ -3073,6 +3066,18 @@
       "q4NoteCommit": "ced9f25798fd115ed92519beb161fa1156c6d9e4",
       "q2NoteCommit": "15b890bbe46e23ae3e1f3a48b65217ad287d4c3d",
       "change": "Close IDC source/visual work through Q2/2026; retain two documented source exceptions; next manual queue VIX Q4/2024."
+    },
+    {
+      "symbol": "VIX",
+      "period": "2024-Q4..2026-Q3",
+      "status": "VIX_ALL_11_STORED_PERIODS_VISUAL_REVIEW_COMPLETE_SEPARATE_SCOPE",
+      "completeForAutomation": true,
+      "manualReviewRemaining": false,
+      "processedAt": "2026-11-04T14:00:00+07:00",
+      "changedPaths": [
+        "reports/processing-checkpoint.json"
+      ],
+      "note": "No PDF or financial values reprocessed; stale manual-review queue synchronized from existing per-period verified records."
     }
   ],
   "currentRun": {
@@ -4463,45 +4468,50 @@
     {
       "symbol": "VIX",
       "order": 3,
-      "status": "active_blocking",
+      "status": "completed_verified_separate",
       "periodCount": 11,
       "periodRange": "2024-Q1..2026-Q3",
-      "reason": "VIX Q1/Q2/Q3 2024 and Q3/Q4 2025 plus Q1/Q2/Q3 2026 are visually verified standalone and reconciled; standalone cashflows remain out of consolidated charts. Three historical periods Q4/2024 and Q1/Q2/2025 remain pending.",
-      "nextStep": "Continue VIX Q4/2024 from its saved VietstockFinance archive, then Q1/2025 and Q2/2025. Process one period at a time and do not re-extract completed periods.",
+      "reason": "All 11 stored VIX periods Q1/2024–Q3/2026 have separate-company scope verified and direct source visual review recorded. The previously listed Q4/2024, Q1/2025 and Q2/2025 are already completed in vixPeriodProgress; the queue entry was stale.",
+      "nextStep": "Completed. Do not reload/reprocess these periods unless a newer VietstockFinance source, explicit correction or regression failure occurs.",
       "reviewedPeriods": [
-        "2025-Q4",
-        "2025-Q3",
-        "2026-Q1",
-        "2026-Q2",
-        "2026-Q3",
         "2024-Q1",
         "2024-Q2",
-        "2024-Q3"
-      ],
-      "periodsRemaining": [
+        "2024-Q3",
         "2024-Q4",
         "2025-Q1",
-        "2025-Q2"
-      ],
-      "visuallyReviewedPeriods": [
-        "2025-Q4",
+        "2025-Q2",
         "2025-Q3",
+        "2025-Q4",
         "2026-Q1",
         "2026-Q2",
-        "2026-Q3",
+        "2026-Q3"
+      ],
+      "periodsRemaining": [],
+      "visuallyReviewedPeriods": [
         "2024-Q1",
         "2024-Q2",
-        "2024-Q3"
+        "2024-Q3",
+        "2024-Q4",
+        "2025-Q1",
+        "2025-Q2",
+        "2025-Q3",
+        "2025-Q4",
+        "2026-Q1",
+        "2026-Q2",
+        "2026-Q3"
       ],
       "sourceScopeConfirmedPeriods": [
-        "2025-Q4",
-        "2025-Q3",
-        "2026-Q1",
-        "2026-Q2",
-        "2026-Q3",
         "2024-Q1",
         "2024-Q2",
-        "2024-Q3"
+        "2024-Q3",
+        "2024-Q4",
+        "2025-Q1",
+        "2025-Q2",
+        "2025-Q3",
+        "2025-Q4",
+        "2026-Q1",
+        "2026-Q2",
+        "2026-Q3"
       ]
     },
     {
@@ -4618,7 +4628,7 @@
     "VCI",
     "IDC"
   ],
-  "manualReviewQueueUpdatedAt": "2026-11-04T13:45:00+07:00",
+  "manualReviewQueueUpdatedAt": "2026-11-04T14:00:00+07:00",
   "vixPeriodProgress": {
     "2024-Q4": {
       "status": "completed_verified_separate",
