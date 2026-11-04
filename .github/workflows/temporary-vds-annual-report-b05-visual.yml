@@ -1,0 +1,75 @@
+name: Temporary VDS FY2025 Annual Report B05 visual verification
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "reports/analysis/VDS-Q2-2026-visual-review.md"
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install PDF renderer
+        run: python -m pip install --disable-pip-version-check pymupdf pillow
+      - name: Download and render exact Vietstock-hosted Annual Report PDF
+        run: |
+          set -euo pipefail
+          URL="https://static2.vietstock.vn/vietstock/2026/3/20/20260320___vds___bao_cao_thuong_nien_nam_2025.pdf"
+          mkdir -p annual-report-review
+          curl -fL --retry 3 --retry-delay 2 "$URL" -o annual-report-review/VDS-Annual-Report-2025.pdf
+          python - <<'PY'
+          import fitz, hashlib, json
+          from pathlib import Path
+          from PIL import Image
+          path=Path("annual-report-review/VDS-Annual-Report-2025.pdf")
+          data=path.read_bytes()
+          doc=fitz.open(path)
+          terms=("Quỹ Đầu tư Rồng Việt","Tỷ lệ sở hữu trực tiếp","RVIF")
+          matches=[]
+          for i,page in enumerate(doc):
+              text=page.get_text("text")
+              if "Quỹ Đầu tư Rồng Việt" in text or ("RVIF" in text and "Tỷ lệ sở hữu" in text):
+                  matches.append({
+                    "pdfPageZeroBased":i,
+                    "pdfPageOneBased":i+1,
+                    "text":text[:12000]
+                  })
+          if not matches:
+              raise SystemExit("No B05 RVIF page found in downloaded PDF")
+          rendered=[]
+          for item in matches:
+              i=item["pdfPageZeroBased"]
+              page=doc[i]
+              pix=page.get_pixmap(matrix=fitz.Matrix(300/72,300/72),alpha=False)
+              im=Image.frombytes("RGB",[pix.width,pix.height],pix.samples)
+              dest=Path("annual-report-review")/f"B05-page-{i+1:03d}.jpg"
+              im.save(dest,"JPEG",quality=94,optimize=True)
+              rendered.append(str(dest))
+          manifest={
+            "sourceUrl":"https://static2.vietstock.vn/vietstock/2026/3/20/20260320___vds___bao_cao_thuong_nien_nam_2025.pdf",
+            "pdfSha256":hashlib.sha256(data).hexdigest(),
+            "pdfPageCount":len(doc),
+            "matchedPages":matches,
+            "renderDpi":300,
+            "renderedImages":rendered,
+            "purpose":"Verify whether audited FY2025 Annual Report B05 image itself says RVIF ownership 58% or whether only text extraction is wrong."
+          }
+          (Path("annual-report-review")/"manifest.json").write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding="utf-8")
+          print(json.dumps(manifest,ensure_ascii=False,indent=2))
+          PY
+      - name: Upload Annual Report B05 page images
+        uses: actions/upload-artifact@v4
+        with:
+          name: vds-annual-report-2025-b05-visual
+          path: annual-report-review/
+          if-no-files-found: error
+          retention-days: 7
