@@ -27,7 +27,7 @@ jobs:
           python-version: "3.12"
       - name: Install PDF dependencies
         run: python -m pip install --disable-pip-version-check pymupdf pillow
-      - name: Render first 12 pages of exact ISC member
+      - name: Render English Note 1, Note 10 and Note 26 pages
         run: |
           python - <<'PY'
           import zipfile, json, hashlib
@@ -45,7 +45,8 @@ jobs:
           out=Path("source-review/VDS-ISC-FY2025")
           out.mkdir(parents=True,exist_ok=True)
           pages=[]
-          for pno in range(min(12,len(doc))):
+          for pno in [27,49,59]:
+              if pno >= len(doc): raise SystemExit(f"Missing requested PDF page {pno+1}")
               page=doc[pno]
               pix=page.get_pixmap(matrix=fitz.Matrix(2,2),alpha=False)
               im=Image.frombytes("RGB",[pix.width,pix.height],pix.samples)
@@ -54,7 +55,7 @@ jobs:
               thumb=im.copy(); thumb.thumbnail((620,880))
               pages.append((pno+1,ImageOps.expand(thumb,border=2,fill="black")))
           cols=3; cellw=max(im.width for _,im in pages); cellh=max(im.height for _,im in pages)+35
-          sheet=Image.new("RGB",(cols*cellw,4*cellh),"white")
+          sheet=Image.new("RGB",(cols*cellw,1*cellh),"white")
           draw=ImageDraw.Draw(sheet)
           for i,(n,im) in enumerate(pages):
               x=(i%cols)*cellw; y=(i//cols)*cellh
@@ -64,7 +65,7 @@ jobs:
           (out/"manifest.json").write_text(json.dumps({
             "archive":str(archive),"selectedMember":selected[0],
             "pdfSha256":hashlib.sha256(data).hexdigest(),
-            "pdfPageCount":len(doc),"renderedPages":list(range(1,min(12,len(doc))+1))
+            "pdfPageCount":len(doc),"renderedPages":[28,50,60]
           },ensure_ascii=False,indent=2),encoding="utf-8")
           print("member",selected[0],"pages",len(doc),"sha256",hashlib.sha256(data).hexdigest())
           PY
