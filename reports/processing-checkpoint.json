@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-04T02:10:00+07:00",
+  "updatedAt": "2026-11-04T09:30:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "Priority 1: VietstockFinance public document catalog and directly linked report PDFs. Priority 2: WiData document tab for the same ticker, only to compare/supplement when source 1 lacks the report or extraction is unclear/unavailable. No third source without explicit user approval.",
   "periodStart": "2024-Q1",
@@ -45,66 +45,70 @@
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "IDC",
-    "period": "2026-Q2",
-    "status": "IDC_Q2_2026_VISUAL_REVIEW_COMPLETE_NOTE41_RESTATEMENT_EXPLAINED_CASH_BRIDGE_EXCEPTION_RETAINED",
+    "period": "2024-Q1",
+    "status": "IDC_Q1_2024_VISUAL_REVIEW_COMPLETE_COLUMN_MAPPING_CORRECTED",
     "completeForAutomation": true,
     "manualReviewRemaining": true,
     "periodComplete": true,
-    "processedAt": "2026-11-04T02:10:00+07:00",
+    "processedAt": "2026-11-04T09:30:00+07:00",
     "periodCount": 10,
-    "periodStatus": "B01/B02 Q2-only and B03 H1 YTD visually verified. Q2 standalone derived by subtracting Q1/2026; flow components reconcile but cash bridge is -890,796,892 VND (0.1463%), above 0.01%. Note41 PDF page66 visually confirms +890,796,892 VND prior-year cash-equivalent restatement at 31-Dec-2025; explains basis but doesn't justify a plug or false standalone cash-flow PASS. Period complete for source/visual work with a disclosed cash-basis exception. Next historical visual review: IDC 2024-Q1.",
+    "periodStatus": "B01/B02/B03 original consolidated VietstockFinance PDF visually reviewed pages 9–15 at 180 DPI. B01 total assets 17,386,392,291,350 = liabilities 10,894,297,173,971 + equity 6,492,095,117,379. B02 current Q1/2024 column now consistently mapped: selling 41,894,251,738; admin 51,089,217,428; operating profit 1,001,604,648,590; finance expense 34,736,078,687; interest 34,575,846,071; PBT 999,334,428,109; tax 202,160,004,712; PAT 797,174,423,397; parent 695,138,495,107; NCI 102,035,928,290; EPS 2,106. The former 776bn residual was a current/comparative column mix, not a source inconsistency. B03 CFO 951,312,310,814; CFI -154,748,226,063; CFF -1,022,256,653,200; net -225,692,568,449; FX 147,356,077; opening 1,333,592,588,129; closing 1,108,047,375,757; CAPEX -206,983,772,973; dividends -538,942,833,000. All bridges residual 0 VND. Q1/2024 complete; next IDC Q2/2024.",
     "sourceIndexUrl": "https://finance.vietstock.vn/IDC/tai-tai-lieu.htm?doctype=1",
-    "sourceReportUrl": "https://static2.vietstock.vn/data/HNX/2026/BCTC/VN/QUY%202/IDC_Baocaotaichinh_Q2_2026_Hopnhat.zip?ver=fec9e0e5",
-    "sourceDocumentId": "556340",
-    "sourceArchiveFile": "reports/raw/IDC/auto-idc-20261021/5e5637e71fa303a7.zip",
-    "sourcePdfMember": "2_idc_2026_7_31_a5004ca_en_financialstatementshn_q2_2026_s.pdf",
+    "sourceDocumentUrl": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%201/IDC_Baocaotaichinh_Q1_2024_Hopnhat.pdf",
+    "sourceDocumentId": "462783",
+    "sourceArchiveFile": "reports/raw/IDC/auto-idc-20261021/44694a289f32bd8c.pdf",
     "sourceDocumentScope": "Consolidated",
-    "dataCommit": "15ab2b62a772618ad10d6907a52f2ed121d4994a",
-    "visualNoteCommit": "ed41513b61f9bfbf7c4cd145dfecbae29fde9613",
-    "sopCommit": "10d234fe130f15ecd1201e78305f061617b91113",
-    "metadataCommit": "fd3c12023e641193a8eba7919402c71491e2b716",
-    "visualReviewWorkflowRunId": 41695506922,
-    "visualReviewArtifactId": 13261640367,
-    "note41WorkflowRunId": 41697391168,
-    "note41ArtifactId": 13262111894,
+    "sourceUnit": "VND",
+    "dataCommit": "d583bc324608f22309a9db8a047719af431b8703",
+    "visualNoteCommit": "989486e261c103174df2f269ce9f65ef8041c39d",
+    "sopCommit": "3598b288861190e007690d09b966d5612d72ae99",
+    "workflowCommit": "034fad4028b2aa6d42214dbc783720aa5e0e7eca",
+    "visualReviewWorkflowRunId": 41698364477,
+    "visualReviewArtifactId": 13262217679,
+    "visualReviewArtifactName": "vietstock-source-review-IDC-2024-Q1",
     "visualReviewPages": [
-      8,
       9,
       10,
       11,
       12,
       13,
-      14
+      14,
+      15
     ],
     "visualReviewDpi": 180,
-    "processingSopVersion": "1.32",
+    "processingSopVersion": "1.33",
     "processingSopPath": "reports/financial-report-processing-sop.md",
-    "visualReviewNotePath": "reports/analysis/IDC-Q2-2026-visual-review.md",
+    "visualReviewNotePath": "reports/analysis/IDC-Q1-2024-visual-review.md",
     "validation": {
       "balanceSheet": "PASS_ZERO_RESIDUAL",
-      "incomeStatement": "PASS_ZERO_RESIDUALS_Q2_ONLY",
-      "cashFlowYtd": "PASS_ZERO_RESIDUALS",
-      "cashFlowQ2Standalone": "NEEDS_MANUAL_REVIEW_CROSS_PERIOD_CASH_BASIS_0_1463_PERCENT",
-      "visual": "PASS_PDF_PAGES_8_TO_14_AND_NOTE41_PAGE66"
+      "incomeStatement": "PASS_ZERO_RESIDUALS_COLUMN_MAPPING_CORRECTED",
+      "cashFlow": "PASS_ZERO_RESIDUALS",
+      "visual": "PASS_B01_B02_B03_PDF_PAGES_9_TO_15"
     },
     "doNotRepeatCoreTextExtraction": true,
     "nextTicker": "IDC",
-    "nextPeriod": "2024-Q1",
+    "nextPeriod": "2024-Q2",
     "pendingExceptions": [
-      "IDC Q2/2026 standalone cash bridge: Note41 page66 confirms prior-year cash-equivalent restatement +890,796,892 VND, but Q2-only residual remains 0.1463% >0.01%; no plug.",
-      "Visual review pending IDC 2024-Q1, 2024-Q2, 2024-Q3, 2024-Q4, 2025-Q1, 2025-Q2.",
-      "IDC Q1/2024 selling-expense detail unresolved.",
-      "IDC Q4/2024 original B03 OCR inconsistency remains pending.",
-      "IDC Q4/2025 B02 interest-expense subline exceeds total finance expenses by 1,419,263,765 VND; preserve source anomaly."
+      "IDC Q2/2024 through Q4/2024 direct PDF visual review remains pending; Q4/2024 original B03 reconciliation is a separate unresolved exception.",
+      "IDC Q2/2025 direct visual review remains pending; B02 tax bridge is already flagged above 0.01% and should not be adjusted without source evidence.",
+      "IDC Q2/2026 standalone cash bridge is explained by Note 41 prior-year cash-equivalent restatement +890,796,892 VND but residual remains 0.1463% >0.01%; no balancing plug.",
+      "IDC Q4/2025 interest-expense subline exceeds total finance expenses by 1,419,263,765 VND; retained as source-reported exception."
     ],
     "visualAudit": {
-      "status": "VISUAL_REVIEW_COMPLETE_WITH_DOCUMENTED_CASH_BASIS_EXCEPTION",
-      "runId": 41695506922,
-      "artifactId": 13261640367,
-      "note41RunId": 41697391168,
-      "note41ArtifactId": 13262111894,
-      "note41PdfPage": 66,
-      "adjustmentVnd": 890796892
+      "status": "PASS_B01_B02_B03_VISUALLY_REVIEWED",
+      "workflowRunId": 41698364477,
+      "artifactId": 13262217679,
+      "artifactSha256": "f335e18d8c2894b33bcf3c7593fbc98950434e42937233f528b0217baa7c7da9",
+      "renderDpi": 180,
+      "pdfPages": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
     }
   },
   "symbolStates": {
@@ -1739,7 +1743,6 @@
       "pendingCorePeriods": [],
       "terminalManualReviewPeriods": [],
       "pendingDetailPeriods": [
-        "2024-Q1",
         "2024-Q4"
       ],
       "staleDetailSchemaPeriods": [],
@@ -1747,7 +1750,7 @@
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-11-04T01:24:00+07:00",
+      "updatedAt": "2026-11-04T09:30:00+07:00",
       "snapshotFetchedAt": "2026-10-25T23:45:00Z",
       "sourceReconciledPeriods": [
         "2024-Q1",
@@ -1807,9 +1810,10 @@
           "Q1/2025: B01 opening 31/12/2024 comparative differs from original Q4/2024; both bases kept separately.",
           "Q2/2025: English financial statement member in the same VietstockFinance ZIP resolved Vietnamese OCR errors in deferred tax and NCI; B02 PBT/tax/PAT and parent/NCI now exact.",
           "Q2/2025: original B03 H1 YTD and Q2 standalone cashflow bridges all exact. The chosen Q2/2026 As-restated comparative basis also reconciles, preserving 525.837bn VND CFO-to-CFI classification reallocation with net cash unchanged.",
-          "Q2/2025: top-level cashflow basis remains selected As-restated Note 41; original Q2 B03 source stored separately."
+          "Q2/2025: top-level cashflow basis remains selected As-restated Note 41; original Q2 B03 source stored separately.",
+          "IDC Q1/2024 B01/B02/B03 direct visual review complete. Current/comparative column mapping corrected; selling expense 41,894,251,738 and admin 51,089,217,428 confirm operating profit 1,001,604,648,590. All bridges 0 VND."
         ],
-        "remaining": "IDC Q4/2025 complete and visually reviewed. Continue IDC Q1/2026, then Q2/2026. After reaching latest available quarter, return to oldest visual/detail exceptions in chronological order: IDC 2024-Q1 through Q4, 2025-Q1/Q2. Q1/2024 selling expense and Q4/2024 B03 remain unresolved; Q4/2025 interest subline is source-reported inconsistency retained as disclosed, not an extraction gap.",
+        "remaining": "Continue oldest pending visual review: IDC Q2/2024, then Q3/2024, Q4/2024, Q1/2025, Q2/2025. Q4/2024 B03 reconciliation remains a separate unresolved cashflow issue.",
         "q3_2025DirectPdfAudit": {
           "documentId": "523494",
           "sourcePdfUrl": "https://static2.vietstock.vn/data/HNX/2025/BCTC/VN/QUY%203/IDC_Baocaotaichinh_Q3_2025_Hopnhat/4_idc_2025_10_30_de24c2b_en_financialstatementshn_q3_2025hn_s.pdf",
@@ -1925,29 +1929,27 @@
       "lastManualReviewPeriod": "2025-Q3",
       "lastManualReviewStatus": "source_text_audited_visual_pending_cashflow_same_basis_corrected",
       "visuallyReviewedPeriods": [
+        "2024-Q1",
         "2025-Q3",
         "2025-Q4"
       ],
       "lastVisualReview": {
         "symbol": "IDC",
-        "period": "2025-Q4",
-        "reviewedAt": "2026-11-04T01:24:00+07:00",
-        "workflowRunId": 41693037890,
-        "artifactId": 13257699370,
+        "period": "2024-Q1",
+        "reviewedAt": "2026-11-04T09:30:00+07:00",
+        "workflowRunId": 41698364477,
+        "artifactId": 13262217679,
         "renderDpi": 180,
         "pdfPages": [
-          8,
           9,
           10,
           11,
           12,
           13,
-          14
+          14,
+          15
         ],
-        "status": "PASS_WITH_REPORTED_INTEREST_EXPENSE_SOURCE_EXCEPTION",
-        "dataCommit": "c9a45a3606f209e12df00856f97e8c12eaed27dc",
-        "sopCommit": "eae452a2be0f17db46a1272e9274a24a30b702d6",
-        "visualNoteCommit": "64e5bea38e61f77841ee6865128dd47be4b06fda"
+        "status": "PASS"
       }
     },
     "KBC": {
@@ -2396,31 +2398,6 @@
     }
   },
   "progressHistory": [
-    {
-      "symbol": "VCI",
-      "period": "2024-Q3",
-      "status": "manually_verified_source_reconciled",
-      "processedAt": "2026-11-01T18:42:00+07:00",
-      "dataCommit": "cd6e23dcba7dea8129a09f4ae09e781e86c937bf",
-      "sourceArchive": "reports/raw/VCI/auto-vci-20261021/8357dc73d66e476d.pdf",
-      "sourceScope": "separate",
-      "normalizationStandardVersion": "3.0",
-      "renderWorkflowRunId": 41293598061,
-      "renderArtifactId": 13078006783,
-      "visualPages": [
-        4,
-        5,
-        6,
-        9,
-        10,
-        11,
-        12,
-        13,
-        18
-      ],
-      "finding": "B01/B02/PBT/tax/PAT exact; B03 YTD and Q3 standalone cash-flow sums/bridges exact; customer cashflow excluded.",
-      "next": "VCI 2024-Q4"
-    },
     {
       "symbol": "VCI",
       "period": "2024-Q4",
@@ -3183,6 +3160,25 @@
         "reports/processing-checkpoint.json",
         "reports/financial-report-processing-sop.md",
         "reports/analysis/IDC-Q2-2026-visual-review.md"
+      ]
+    },
+    {
+      "symbol": "IDC",
+      "period": "2024-Q1",
+      "status": "IDC_Q1_2024_VISUAL_REVIEW_COMPLETE_COLUMN_MAPPING_CORRECTED",
+      "completeForAutomation": true,
+      "manualReviewRemaining": true,
+      "processedAt": "2026-11-04T09:30:00+07:00",
+      "dataCommit": "d583bc324608f22309a9db8a047719af431b8703",
+      "sopCommit": "3598b288861190e007690d09b966d5612d72ae99",
+      "visualNoteCommit": "989486e261c103174df2f269ce9f65ef8041c39d",
+      "workflowRunId": 41698364477,
+      "artifactId": 13262217679,
+      "changedPaths": [
+        "data/financials-IDC.json",
+        "reports/financial-report-processing-sop.md",
+        "reports/analysis/IDC-Q1-2024-visual-review.md",
+        "reports/processing-checkpoint.json"
       ]
     }
   ],
@@ -6721,24 +6717,83 @@
   },
   "idcPeriodProgress": {
     "2024-Q1": {
-      "status": "pending_visual_review_and_operating_profit_detail_reconciliation",
+      "period": "2024-Q1",
+      "status": "source_text_reconciled_visual_reviewed",
       "documentId": "462783",
       "sourceIndexUrl": "https://finance.vietstock.vn/IDC/tai-tai-lieu.htm?doctype=1",
       "sourceDocumentUrl": "https://static2.vietstock.vn/data/HNX/2024/BCTC/VN/QUY%201/IDC_Baocaotaichinh_Q1_2024_Hopnhat.pdf",
       "sourceArchiveFile": "reports/raw/IDC/auto-idc-20261021/44694a289f32bd8c.pdf",
-      "extractionSidecar": "reports/raw/IDC/auto-idc-20261021/44694a289f32bd8c.pdf.extracted.json",
       "sourceScope": "Consolidated",
       "sourceUnit": "VND",
-      "doNotRepeatCoreExtraction": true,
-      "doNotRepeatB01B03Extraction": true,
-      "pendingException": "B02 selling-expense OCR candidate 41,894,251,738 VND does not reconcile operating profit; residual 776,003,705,179 VND. Keep selling_expense null. Later Q1/2025 comparative differs materially; keep separately.",
+      "dataCommit": "d583bc324608f22309a9db8a047719af431b8703",
+      "visualNoteCommit": "989486e261c103174df2f269ce9f65ef8041c39d",
+      "sopCommit": "3598b288861190e007690d09b966d5612d72ae99",
+      "rendererWorkflowCommit": "034fad4028b2aa6d42214dbc783720aa5e0e7eca",
+      "workflowRunId": 41698364477,
+      "artifactId": 13262217679,
+      "artifactName": "vietstock-source-review-IDC-2024-Q1",
+      "artifactSha256": "f335e18d8c2894b33bcf3c7593fbc98950434e42937233f528b0217baa7c7da9",
+      "renderDpi": 180,
+      "reviewedPages": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "periodComplete": true,
+      "completeForAutomation": true,
+      "manualReviewRemaining": false,
       "validations": {
-        "balanceSheet": "PASS raw VND residual 0; assets 17,386,392,291,350 = liabilities 10,894,297,173,971 + equity 6,492,095,117,379.",
-        "profit": "PASS gross profit, PBT, tax, PAT and parent/NCI. Operating profit components PENDING due selling-expense OCR conflict.",
-        "cashflow": "PASS original Q1 CFO 951,312,310,814; CFI -154,748,226,063; CFF -1,022,256,653,200; net -225,692,568,449; beginning cash 1,333,592,588,129; FX 147,356,077; closing 1,108,047,375,757; bridges exact.",
-        "visual": "PENDING direct PDF image unavailable."
+        "balanceSheet": "PASS_ZERO_RESIDUAL",
+        "incomeStatement": "PASS_ZERO_RESIDUALS_COLUMN_MAPPING_CORRECTED",
+        "cashFlow": "PASS_ZERO_RESIDUALS",
+        "visual": "PASS_B01_B02_B03_PDF_PAGES_9_TO_15"
       },
-      "periodComplete": false
+      "sourceCorrections": {
+        "sellingExpenseVnd": 41894251738,
+        "adminExpenseVnd": 51089217428,
+        "operatingProfitVnd": 1001604648590,
+        "interestExpenseVnd": 34575846071,
+        "currentTaxExpenseVnd": 211205688538,
+        "deferredTaxIncomeVnd": 9045683826,
+        "netProfitVnd": 797174423397,
+        "parentNetProfitVnd": 695138495107,
+        "nciVnd": 102035928290,
+        "epsOriginalReport": 2106,
+        "epsLaterQ1_2025Comparative": 2095
+      },
+      "cashflowRawVnd": {
+        "cfo": 951312310814,
+        "cfi": -154748226063,
+        "cff": -1022256653200,
+        "netCashChange": -225692568449,
+        "fx": 147356077,
+        "cashOpening": 1333592588129,
+        "cashClosing": 1108047375757,
+        "capex": -206983772973,
+        "dividendsPaid": -538942833000
+      },
+      "bridgeResidualsRawVnd": {
+        "currentAssetComposition": 0,
+        "assets": 0,
+        "liabilities": 0,
+        "balance": 0,
+        "grossProfit": 0,
+        "operatingProfit": 0,
+        "otherProfit": 0,
+        "pretax": 0,
+        "tax": 0,
+        "pat": 0,
+        "parentNci": 0,
+        "cashFlow": 0,
+        "cashBridge": 0
+      },
+      "noBalancingPlug": true,
+      "doNotRepeatCoreExtraction": true,
+      "note": "Visual review corrected prior current-vs-comparative Q1/2023 OCR mix. All B01/B02/B03 balances exact. EPS 2,106 from original Q1/2024 is preserved separately from later Q1/2025 comparative EPS 2,095."
     },
     "2024-Q2": {
       "status": "source_text_reconciled_pending_visual_review",
@@ -7111,7 +7166,6 @@
     "nextAction": "No further B01/B02/B03 text extraction for Q4/2024. Image review only if an accessible page image/source becomes available; standalone FX remains null. Preserve active global ticker IDC Q3/2025."
   },
   "pendingVisualPeriods": [
-    "2024-Q1",
     "2024-Q2",
     "2024-Q3",
     "2024-Q4",
@@ -7121,5 +7175,34 @@
   "pendingCashflowPeriods": [
     "2024-Q4",
     "2026-Q2"
-  ]
+  ],
+  "lastManualReviewPeriod": "2024-Q1",
+  "lastManualReviewStatus": "source_text_reconciled_visual_reviewed_all_bridges_zero",
+  "visuallyReviewedPeriods": [
+    "2024-Q1"
+  ],
+  "lastVisualReview": {
+    "symbol": "IDC",
+    "period": "2024-Q1",
+    "reviewedAt": "2026-11-04T09:30:00+07:00",
+    "workflowRunId": 41698364477,
+    "artifactId": 13262217679,
+    "renderDpi": 180,
+    "pdfPages": [
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "status": "PASS_B01_B02_B03_VISUALLY_REVIEWED",
+    "dataCommit": "d583bc324608f22309a9db8a047719af431b8703",
+    "sopCommit": "3598b288861190e007690d09b966d5612d72ae99",
+    "visualNoteCommit": "989486e261c103174df2f269ce9f65ef8041c39d"
+  },
+  "lastDetailSourceReconciliation": {
+    "remaining": "IDC Q1/2024 B01/B02 details and B03 cashflow visually confirmed; selling expense conflict resolved by correct Q1/2024 column. EPS top-level corrected to 2,106; later Q1/2025 comparative EPS 2,095 preserved separately. Next IDC Q2/2024; do not reread Q1."
+  }
 }
