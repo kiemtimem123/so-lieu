@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.38
+- Phiên bản: 1.39
 - Ngày ban hành: 04/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -855,7 +855,8 @@ Nguồn chỉ dùng VietstockFinance và các tệp liên kết tại danh mục
 ### 10.21 IDC Q2/2025 — B01/B02/B03 visual PASS; gross revenue and deferred-tax sign reconciliation
 
 - Nguồn VietstockFinance document ID **514037**, BCTC hợp nhất IDC Q2/2025; ZIP `reports/raw/IDC/auto-idc-20261021/48616c2bb9d17c99.zip`; PDF tiếng Anh `1_idc_2025_7_30_2e1316b_en_financialstatementshn_q2_2025_s.pdf`; PDF tiếng Việt cùng ZIP `4_idc_2025_7_30_caaaf64_vi_baocaotaichinhhn_q2_2025_s.pdf`.
-- Render trực tiếp PDF tiếng Anh pages **8–14**, 180 DPI: B01 8–11, B02 12, B03 13–14. Workflow run **41784357124**, artifact **13300477616**, SHA-256 `0a3f8eecc5f54dade12b9dde4247f26064676c0937b6a898f5f08c3274567829`.
+- Render trực tiếp PDF tiếng Anh pages **8–14**, 180 DPI:
+- Artifact metadata was re-run after aligning the workflow's final metadata step to the exact English PDF member; source member: `1_idc_2025_7_30_2e1316b_en_financialstatementshn_q2_2025_s.pdf`; workflow commit `8ebe474bbfec62626f5dfb1579358ba3304b9aa6`. B01 8–11, B02 12, B03 13–14. Workflow run **41785493079**, artifact **13300243829**, SHA-256 `0ad98aa0727f3c9954d35701ff120222c2264278e284f40351b71055db9b8b5e`.
 - B01 30/06/2025 raw VND: current assets **7.811.294.674.643**, cash **863.253.933.107**, short-term investments **4.019.330.803.621**, receivables **1.559.600.303.738**, inventory **1.326.633.847.347**, other current assets **42.475.786.830**, non-current assets **11.795.122.370.205**, fixed assets **3.035.410.975.751**, total assets **19.606.417.044.848**, current liabilities **3.669.554.755.411**, long-term liabilities **8.481.390.563.394**, total liabilities **12.150.945.318.805**, equity **7.455.471.726.043**, retained earnings **1.603.390.908.975**. Row 440 equals row 270; all B01 composition and balance residuals 0.
 - **Gross revenue rule:** extract B02 row 01 and row 02 independently; row 10 is net revenue. Q2/2025 row01 **1.763.197.891.011 VND**, row02 is dash = **0**, row10 **1.763.197.891.011 VND**. The H1/2025 third column row01/row10 is **3.556.682.187.141 VND**. These match Q1 gross revenue + Q2 gross revenue exactly. Do not use the Q2/2024 comparative column or H1 column as Q2-only values.
 - B02 Q2/2025 raw signed VND: gross revenue **1.763.197.891.011**, deductions **0**, net revenue **1.763.197.891.011**, COGS **-1.218.680.135.812**, gross profit **544.517.755.199**, finance income **62.954.887.826**, finance expense **-29.939.147.355**, interest **-28.604.086.345**, associates **-343.427.723**, selling **-21.450.520.742**, admin **-64.454.735.514**, operating profit **491.284.811.691**, other income **29.086.228.155**, other expense **-1.046.602.608**, other profit **28.039.625.547**, PBT **519.324.437.238**, current tax **-102.821.214.554**, deferred-tax row 52 **-539.315.464**, PAT **415.963.907.220**, parent PAT **297.573.101.125**, NCI **118.390.806.095**, EPS basic/diluted **902/902**. All B02 aggregate bridges residual 0.
