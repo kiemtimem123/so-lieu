@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.45
+- Phiên bản: 1.46
 - Ngày ban hành: 04/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -991,3 +991,14 @@ Nguồn chỉ dùng VietstockFinance và các tệp liên kết tại danh mục
 - Combined with audited FY2025 Note26 (“Tăng phần vốn sở hữu ở công ty con”) and annual NCI rollforward, classify the 21bn gross capital increase as **Q3/2025 subsidiary ownership-capital increase benefiting NCI**. Exact subsidiary/investor/legal instrument is not named by the reviewed Note26; do not assign VDAM/RVIF without source evidence.
 - **B04 21bn question: PASS/CLOSED.** **B02 Q1/H1 attribution issue remains PENDING** at 1.117.693.283 VND. Never conflate the two.
 - Audit note: `reports/analysis/VDS-FY2025-audited-NCI-21bn-reconciliation.md`; commits `c7d5a6843056cad04751213eec451d05180059c4` and Q2 follow-up addendum `c47ac8880c3ccf01fafa7844861a8b5d2d5a2973`.
+
+
+### 10.30 VDS Q1/H1 2025 — hồi cứu B02 comparative, giữ PENDING khi không có cầu nối source
+
+- Q1/2026 consolidated B02, VietstockFinance document **543855**, PDF page **13** / printed page **8**, retains Q1/2025 comparative PAT **19.012.342.256 VND**, parent **19.089.097.924 VND**, NCI **-76.755.668 VND** — identical to original Q1/2025 B02.
+- Q2/2026 consolidated B02, VietstockFinance document **555653**, PDF page **13** / printed page **8**, direct visual check at **300 DPI**, retains H1/2025 comparative PAT **7.818.436.589 VND**, parent **8.071.151.977 VND**, NCI **-252.715.388 VND** — identical to original Q2/2025 H1/YTD. Selected member `VDS_Baocaotaichinh_Q2_2026_Hopnhat.pdf`; source SHA-256 `cf4351deb1e3c184ba11ff18f8c81ce15cc41e37070830f666dd48b33a7e471d`; workflow run **41878236428**, artifact **13347787384**.
+- Q3/2025 YTD less Q3 standalone B02 also reproduces the Q2 H1/YTD allocation exactly. The three bases therefore coexist in filed comparatives: Q1 original remains Q1 original; H1/YTD remains the later H1 basis. Do not use the H1 implied Q1 as an official quarter value.
+- Reviewed VDS Q1/2025 disclosure (document/file disclosure **i880**) includes consolidated Q1 BCTC and explanation of total PAT change versus Q1/2024 (letter **387/2025/CV-TCKT**, 29/04/2025); Q2/2025 consolidated disclosure (**i912**) includes Q2 HN BCTC and explanation of total PAT change versus Q2/2024. These filings are not a parent/NCI allocation bridge and do not state a Q1 restatement.
+- **A remains PENDING**: original Q1 parent/NCI versus Q1 implied by H1 less Q2 differs by **1.117.693.283 VND**, while consolidated PAT reconciles exactly. No source-supported restatement/bridge has been found in the Q1, Q2, Q3, FY2025 audited, Q1/2026 comparative or Q2/2026 comparative documents reviewed. Keep Q1 original and Q2 H1/YTD original; no plug, no overwrite, no adjustment to `data/financials-VDS.json`.
+- Keep B04/Note26 NCI equity movements conceptually separate from B02 NCI PAT. The Note26 rows “lỗ/lãi đã thực hiện” and “lỗ chưa thực hiện” and the B04 equity rollforward are not required to equal the B02 NCI PAT line; a raw difference between these different statement concepts is not by itself a validator failure. Do not create a balancing item. The **21bn capital increase** remains separately **PASS/CLOSED** through audited Note26 and Q3 B04.
+- Detailed record: `reports/analysis/VDS-Q2-2025-parent-NCI-followup.md` (comparative cross-check addendum), commit **159c4f0335aa1c56c083347b37efa15446627b02**; audited NCI note `reports/analysis/VDS-FY2025-audited-NCI-21bn-reconciliation.md`, commit **50daa2c0ba04d24b7e6f4eb1dcfa38289a5ae2ff**.
