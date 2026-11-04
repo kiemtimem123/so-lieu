@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.46
+- Phiên bản: 1.47
 - Ngày ban hành: 04/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -1002,3 +1002,14 @@ Nguồn chỉ dùng VietstockFinance và các tệp liên kết tại danh mục
 - **A remains PENDING**: original Q1 parent/NCI versus Q1 implied by H1 less Q2 differs by **1.117.693.283 VND**, while consolidated PAT reconciles exactly. No source-supported restatement/bridge has been found in the Q1, Q2, Q3, FY2025 audited, Q1/2026 comparative or Q2/2026 comparative documents reviewed. Keep Q1 original and Q2 H1/YTD original; no plug, no overwrite, no adjustment to `data/financials-VDS.json`.
 - Keep B04/Note26 NCI equity movements conceptually separate from B02 NCI PAT. The Note26 rows “lỗ/lãi đã thực hiện” and “lỗ chưa thực hiện” and the B04 equity rollforward are not required to equal the B02 NCI PAT line; a raw difference between these different statement concepts is not by itself a validator failure. Do not create a balancing item. The **21bn capital increase** remains separately **PASS/CLOSED** through audited Note26 and Q3 B04.
 - Detailed record: `reports/analysis/VDS-Q2-2025-parent-NCI-followup.md` (comparative cross-check addendum), commit **159c4f0335aa1c56c083347b37efa15446627b02**; audited NCI note `reports/analysis/VDS-FY2025-audited-NCI-21bn-reconciliation.md`, commit **50daa2c0ba04d24b7e6f4eb1dcfa38289a5ae2ff**.
+
+
+### 10.31 VDS FY2025 — phân loại điều chỉnh retained earnings NCI 1.944 tỷ bằng Nghị quyết ĐHĐCĐ
+
+- Nghị quyết ĐHĐCĐ thường niên FY2025 số **01/2026/BB-ĐHĐCĐ**, ngày **16/04/2026**, được công bố **17/04/2026**, approved audited FY2025 separate and consolidated financial statements and profit distribution.
+- Bảng phân phối lợi nhuận FY2025 ghi dòng **“Điều chỉnh Lợi ích cổ đông không kiểm soát” -1.944.072.150 VND** trong các khoản điều chỉnh để tính cumulative consolidated retained earnings.
+- Giá trị khớp chính xác Note26 audited FY2025: realized loss **-1.396.298.463** + unrealized loss **-547.773.687** = **-1.944.072.150 VND**.
+- Classify this as an **NCI retained-earnings/equity adjustment** in the profit-distribution bridge. It is not the same metric as B02 NCI PAT; no equality test between these rows. Do not make a balancing plug.
+- This closes the classification question for the Note26 -1.944bn adjustment, but it does **not** explain B02 Q1 vs H1 parent/NCI allocation difference **1.117.693.283 VND**. Keep A PENDING.
+- Official AGM disclosure PDF: `https://static2.vietstock.vn/vietstock/2026/4/17/20260417___vds___bbh_va_nqdhdcd_thuong_nien_fy_2025.pdf`.
+- Audit trail: `reports/analysis/VDS-FY2025-audited-NCI-21bn-reconciliation.md`, commit **a32edac805393896a8c133985f97c502e192199d**; Q2/2025 follow-up, commit **4df22474ac41bc38bd31ab495520a90db98a1cf0**.
