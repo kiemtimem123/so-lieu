@@ -27,14 +27,14 @@ jobs:
           python-version: "3.12"
       - name: Install PDF dependencies
         run: python -m pip install --disable-pip-version-check pymupdf pillow
-      - name: Render English Note 1, Note 10 and Note 26 pages
+      - name: Render exact VDS Q3 2025 B04 page
         run: |
           python - <<'PY'
           import zipfile, json, hashlib
           from pathlib import Path
           import fitz
           from PIL import Image, ImageOps, ImageDraw
-          archive=Path("reports/raw/VDS/auto-vds-20261021/a65994df991573d9.zip")
+          archive=Path("reports/raw/VDS/auto-vds-20261021/bd7db8914d33e414.pdf")
           member="ISC_Baocaotaichinh_2025_Kiemtoan_Hopnhat.pdf"
           with zipfile.ZipFile(archive) as z:
               names=[n for n in z.namelist() if n.lower().endswith(".pdf")]
@@ -45,7 +45,7 @@ jobs:
           out=Path("source-review/VDS-ISC-FY2025")
           out.mkdir(parents=True,exist_ok=True)
           pages=[]
-          for pno in [27,49,59]:
+          for pno in [17]:
               if pno >= len(doc): raise SystemExit(f"Missing requested PDF page {pno+1}")
               page=doc[pno]
               pix=page.get_pixmap(matrix=fitz.Matrix(2,2),alpha=False)
