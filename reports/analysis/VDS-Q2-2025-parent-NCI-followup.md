@@ -123,16 +123,28 @@ Số Q1 suy ra từ H1 less Q2 vẫn chỉ là phép đối chiếu:
 
 Chênh lệch phân bổ so với Q1 original vẫn **1.117.693.283 VND**. Không thay thế Q1 original bằng số suy ra; không thêm balancing plug; không sửa `data/financials-VDS.json`. Hồ sơ A tiếp tục **PENDING — source-level allocation inconsistency not explained**.
 
-### 9.4. Tách riêng residual B04/NCI equity so với B02 NCI PAT
+### 9.4. Không đồng nhất biến động vốn NCI B04/Note 26 với NCI PAT B02
 
-Không được đồng nhất dòng biến động vốn NCI ở B04/Note 26 với riêng chỉ tiêu NCI PAT trên B02. Năm 2025:
+B04 và Note 26 là bảng biến động vốn chủ sở hữu/lợi ích NCI; B02 là báo cáo kết quả hoạt động, trong đó NCI PAT là phần lợi nhuận sau thuế phân bổ cho NCI. Đây là hai lớp chỉ tiêu khác nhau; không được mặc định biến động số dư NCI phải bằng NCI PAT nếu còn có vốn góp và các thay đổi lợi nhuận đã thực hiện/chưa thực hiện trong vốn chủ sở hữu.
+
+Các con số năm 2025 để tham chiếu:
 - B02 FY2025 NCI PAT: **-958.326.405 VND**.
-- Note 26 kiểm toán FY2025 có hai dòng lỗ thực hiện và chưa thực hiện: **-1.396.298.463** và **-547.773.687 VND**, tổng **-1.944.072.150 VND**.
-- Chênh lệch giữa tổng hai dòng Note 26 và B02 NCI PAT là **985.745.745 VND**; cùng độ lớn với residual giữa H1 B04 NCI movement và H1 B02 NCI PAT. Báo cáo hiện kiểm tra chưa cung cấp cầu nối chi tiết đủ để khẳng định bản chất phân loại của residual này.
+- Note 26 kiểm toán FY2025 trình bày hai thành phần biến động NCI: lỗ đã thực hiện **-1.396.298.463 VND** và lỗ chưa thực hiện **-547.773.687 VND**.
+- Tổng hai dòng Note 26 là **-1.944.072.150 VND**, khác B02 NCI PAT **985.745.745 VND**. Chênh lệch này cũng xuất hiện khi so B04 NCI movement H1 với B02 H1 NCI PAT.
+- Không có cơ sở để coi phép trừ này tự thân là lỗi dữ liệu hoặc yêu cầu nó phải bằng 0. Note 26/B04 có bảng biến động vốn NCI riêng; B02 ghi nhận NCI PAT riêng. Giữ chênh lệch trong ghi chú phân loại, không thêm plug, không tạo cờ lỗi số liệu chỉ vì hai chỉ tiêu khác nhau.
 
 Do đó:
 - **Câu hỏi nguồn gốc khoản vốn 21 tỷ ở NCI:** đã xác nhận riêng (Note 26: tăng phần vốn sở hữu ở công ty con; Q3 B04 định vị phát sinh Q3, residual 1 VND).
-- **Câu hỏi phân bổ lợi nhuận B02 Q1/H1:** vẫn PENDING 1.117.693.283 VND.
-- **Câu hỏi cầu nối B04/Note 26 NCI equity với B02 NCI PAT:** lưu riêng PENDING 985.745.745 VND; không gộp với 1.117.693.283 VND.
+- **Câu hỏi phân bổ lợi nhuận B02 Q1/H1:** vẫn PENDING **1.117.693.283 VND**.
+- Không coi **985.745.745 VND** là một lỗi hoặc ngoại lệ độc lập nếu chưa có quy tắc/khoản mục nguồn nào yêu cầu B04/Note 26 NCI equity change phải bằng B02 NCI PAT.
 
 Không dùng report Q1/Q2 comparative năm sau để sửa dữ liệu gốc; chúng chỉ chứng minh VDS tiếp tục mang hai cơ sở báo cáo khác nhau vào cột so sánh.
+
+
+## 10. Đối chiếu công văn giải trình Q1/Q2/2025 và kết luận giới hạn hồ sơ A
+
+- Công bố chính thức Q1/2025 của VDS nêu hai tài liệu đi kèm là BCTC hợp nhất Q1/2025 và công văn giải trình biến động LNST Q1/2025 **so với Q1/2024**. Công văn số **387/2025/CV-TCKT** ngày **29/04/2025** giải trình các chỉ tiêu lợi nhuận trước thuế, chi phí thuế và LNST tổng hợp; phần nội dung công bố không phải bảng cầu nối thay đổi phân bổ parent/NCI. Nguồn công bố: VDSC disclosure page Q1/2025; PDF công văn được lập chỉ cho biến động LNST so với cùng kỳ.
+- Công bố chính thức Q2/2025 của VDS nêu BCTC hợp nhất Q2/2025 và công văn giải trình LNST Q2/2025 **so với Q2/2024**. Nội dung công bố được rà thấy không mô tả điều chỉnh lại phân bổ parent/NCI của Q1 hoặc cầu nối Q1 original sang H1 YTD.
+- Q1/2026 B02 comparative giữ nguyên phân bổ Q1/2025 original; Q2/2026 B02 comparative giữ nguyên phân bổ H1/2025 YTD. Q3/2025 YTD less Q3 standalone tiếp tục đúng H1/YTD basis. Các tài liệu kỳ sau do đó không cho thấy một bản Q1 restated được đưa vào cột so sánh.
+- Kết luận A: **PENDING — source-level allocation inconsistency remains unexplained**. Chênh lệch **1.117.693.283 VND** chỉ là khác biệt phân bổ giữa Q1 original và Q1 implied from H1 less Q2; PAT hợp nhất vẫn khớp tuyệt đối. Không chọn một cơ sở thay thế, không ghi phép trừ là số Q1 đã công bố và không sửa `data/financials-VDS.json`.
+- Để đóng A cần tài liệu điều chỉnh/đính chính Q1, công văn giải thích phân bổ NCI, hoặc bảng tính hợp nhất có thể hiện phân bổ parent/NCI cho Q1 và H1 trên cùng basis. Chỉ giải trình tăng/giảm tổng LNST so với cùng kỳ không đủ.
