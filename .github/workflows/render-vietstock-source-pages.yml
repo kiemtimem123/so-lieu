@@ -23,7 +23,7 @@ on:
       pages:
         description: "Comma-separated 1-based PDF pages, or all"
         required: true
-        default: "18"
+        default: "19,20,21"
       dpi:
         description: "Render DPI"
         required: true
@@ -62,7 +62,7 @@ jobs:
           TARGET_SYMBOL: ${{ github.event.inputs.symbol || 'VDS' }}
           TARGET_PERIOD: ${{ github.event.inputs.period || '2025-Q2' }}
           PDF_PATH: ${{ github.event.inputs.pdf_path || 'reports/raw/VDS/auto-vds-20261021/69d4862950596830.pdf' }}
-          PAGE_LIST: ${{ github.event.inputs.pages || '18' }}
+          PAGE_LIST: ${{ github.event.inputs.pages || '19,20,21' }}
           RENDER_DPI: ${{ github.event.inputs.dpi || '300' }}
           PDF_MEMBER: ${{ github.event.inputs.pdf_member || '' }}
         run: |
