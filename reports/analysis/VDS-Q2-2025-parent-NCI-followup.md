@@ -162,3 +162,17 @@ Không dùng report Q1/Q2 comparative năm sau để sửa dữ liệu gốc; ch
 - Nghị quyết này **không giải thích** chênh lệch phân bổ B02 Q1/H1 **1.117.693.283 VND**. Hồ sơ A vẫn PENDING.
 - Nguồn gốc vốn NCI 21 tỷ và thời điểm Q3/2025 vẫn là hồ sơ riêng đã đóng PASS; không gộp khoản điều chỉnh NCI -1.944 tỷ này vào vốn góp 21 tỷ.
 - Nguồn chính thức: tệp nghị quyết/biên bản ĐHĐCĐ được lưu tại Vietstock `https://static2.vietstock.vn/vietstock/2026/4/17/20260417___vds___bbh_va_nqdhdcd_thuong_nien_fy_2025.pdf`; các dòng đối chiếu trong trích xuất văn bản gồm nội dung phê duyệt phân phối lợi nhuận FY2025 và dòng Adjustment of Non-controlling Interests.
+
+
+## 12. So sánh trực tiếp thuyết minh B05 về công ty con/quỹ thành viên tại Q1 và Q2/2025
+
+- Đã render và đọc trực tiếp ảnh PDF gốc ở 300 DPI:
+  - Q1/2025 HN, PDF page **21**, printed page **16**, source `reports/raw/VDS/auto-vds-20261021/a2d499f8fc79f469.pdf`.
+  - Q2/2025 HN, PDF page **22**, printed page **16**, source `reports/raw/VDS/auto-vds-20261021/69d4862950596830.pdf`.
+  - Workflow run **41879521045**, artifact **13349410378**, `vds-q1-q2-2025-ownership-note-review`.
+- Tại 31/03/2025 và 30/06/2025, cả hai báo cáo cùng liệt kê:
+  - Công ty con CTCP Quản lý Quỹ Rồng Việt (VDAM): vốn điều lệ **100.000.000.000 VND**, tỷ lệ sở hữu VDS **58%**.
+  - Quỹ thành viên Quỹ Đầu tư Rồng Việt (RVIF): vốn quỹ **70.000.000.000 VND**, tỷ lệ sở hữu VDS **85%**.
+- Không thấy thay đổi được công bố về tên đơn vị, vốn ghi trong bảng, hay tỷ lệ sở hữu giữa ngày 31/03 và 30/06/2025. Điều này làm yếu giả thuyết rằng chênh lệch phân bổ B02 Q1/H1 phát sinh đơn thuần do thay đổi tỷ lệ sở hữu/đơn vị hợp nhất trong Q2.
+- Giới hạn: so sánh hai ngày báo cáo không loại trừ giao dịch nội kỳ, giao dịch vốn chưa làm thay đổi tỷ lệ sở hữu, hoặc biến động giữa các thành viên/quỹ không được phản ánh ở dòng vốn/tỷ lệ cuối kỳ trong bảng này. Không dùng kết quả này để đóng A.
+- Hồ sơ A vẫn **PENDING 1.117.693.283 VND**. Cần tiếp tục kiểm tra B05 Q3/Q4/2025 và thuyết minh biến động sở hữu; tuy nhiên, chỉ tài liệu thể hiện cầu nối phân bổ parent/NCI Q1 sang H1 mới đủ đóng ngoại lệ B02.
