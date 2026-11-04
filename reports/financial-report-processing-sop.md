@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.42
+- Phiên bản: 1.43
 - Ngày ban hành: 04/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -955,3 +955,15 @@ Nguồn chỉ dùng VietstockFinance và các tệp liên kết tại danh mục
 #### Resume
 - VDS Q2/2025 parent/NCI allocation remains a documented PENDING exception.
 - Next direct visual task: **VDS Q2/2026**, VietstockFinance document **555653**, archived ZIP `reports/raw/VDS/auto-vds-20261021/6ca61e80d55ffaac.zip`. Do not run OCR again or change already source-backed values. After VDS Q2/2026 visual audit, proceed GAS in manual queue order.
+
+
+### 10.27 VDS Q2/2025 HN — tách kiểm định B02 attribution khỏi B04 NCI equity movement
+
+- Bản PDF hợp nhất VietstockFinance document **513947** được đối chiếu trực tiếp lại từ tệp người dùng cung cấp và URL PDF gốc; SHA-256 tệp cung cấp `69d48629505968301d1ed8b3635b68183c585d643bc71c500cc230922459095d`. B02 PDF pages **12–14**, B04 pages **19–20**, B05 notes pages **21–50**.
+- B02 xác nhận Q2 PAT **-11.193.905.667 VND** = parent **-9.900.252.664** + NCI **-1.293.653.003**; H1 PAT **7.818.436.589 VND** = parent **8.071.151.977** + NCI **-252.715.388**. B02 current-quarter and YTD totals each reconcile exactly.
+- Q1 implied from H1 less Q2 is parent **17.971.404.641 VND** and NCI **1.040.937.615 VND**. Compared with the original Q1 B02 parent **19.089.097.924** and NCI **-76.755.668**, the attribution differs by **1.117.693.283 VND**, while total PAT is unchanged. Preserve Q1 original and H1/YTD source values; do not substitute a derived Q1 value.
+- B04 row9 shows NCI equity opening **48.488.925.445 VND**, in-period decrease **1.238.461.133 VND**, and closing **47.250.464.312 VND**. Compared with H1 NCI PAT **-252.715.388 VND**, the additional decrease is **985.745.745 VND**. B04 provides only an aggregate movement, not the nature of the transaction or a quarter-specific profit-attribution bridge.
+- B05 identifies VDAM (58% holding) and RVIF (85% holding), and describes the general presentation of NCI, but the inspected notes do not break down the B04 movement or explain the B02 Q1/H1 attribution change. The post-period 08/07/2025 issuance of 24.3m parent shares is not evidence for the B02 allocation at 30/06/2025.
+- **Mandatory procedure:** test (a) B02 parent PAT + NCI PAT = consolidated PAT and Q1 original vs H1 YTD less Q2, and (b) B04 opening NCI equity + separately disclosed increases/decreases = closing NCI equity. These are distinct checks. Do not assume B04 movement equals NCI PAT, or use an aggregate B04 movement to explain B02 attribution without a supporting transaction note.
+- Both outstanding items remain **PENDING**: B02 attribution delta **1.117.693.283 VND**; B04 NCI equity movement beyond reported H1 NCI loss **985.745.745 VND**. They must not be conflated or plugged.
+- Detailed evidence: `reports/analysis/VDS-Q2-2025-parent-NCI-followup.md`, commit **111941a876dd03029c4a5a2aa35de66351a72cf6**. Do not change `data/financials-VDS.json` based on this review.
