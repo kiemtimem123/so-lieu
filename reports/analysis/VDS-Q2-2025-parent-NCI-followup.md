@@ -92,3 +92,47 @@ Không sửa `data/financials-VDS.json`; Q2/2025 vẫn chưa hoàn thành do ngo
 - Do đó hồ sơ B đã **PASS** ở cấp độ phân loại và định vị thời điểm: khoản tăng 21 tỷ là vốn/quyền lợi NCI tại công ty con, phát sinh trong Q3/2025 theo đối chiếu B04 Q2→Q3 và B02 Q3; cầu nối năm kiểm toán khớp tuyệt đối. Không có tên công ty con/nhà đầu tư trong Note 26 nên không gán cụ thể.
 - Khoản -1 VND trên đối chiếu Q3 là residual số học được giữ lại, không sửa số nguồn. Nó nằm trong ngưỡng 0,01%.
 - Hồ sơ A tiếp tục **PENDING**: Q1 parent/NCI gốc khác Q1 hàm ý từ H1 trừ Q2 **1.117.693.283 VND**. Không dùng nghiệp vụ vốn 21 tỷ Q3 làm lời giải cho phân bổ lợi nhuận Q1/H1.
+
+
+## 9. Kiểm tra hồi cứu cột so sánh Q1/2026 và H1/2026 — chưa có bản sửa phân bổ Q1/H1
+
+### 9.1. Q1/2026 so sánh Q1/2025
+
+- BCTC hợp nhất Q1/2026 VietstockFinance document **543855**, B02 PDF page **13** / printed page **8**, đã được kiểm tra trực quan trong đợt audit Q1/2026.
+- Cột so sánh Q1/2025 vẫn giữ: PAT hợp nhất **19.012.342.256 VND**; phân bổ cho chủ sở hữu **19.089.097.924 VND**; NCI **-76.755.668 VND**. Đây trùng hoàn toàn Q1/2025 original B02 và Q1/2025 B04.
+- Không thấy Q1/2025 được trình bày lại trong cột so sánh quý I năm sau.
+
+### 9.2. Q2/2026 so sánh H1/2025
+
+- BCTC hợp nhất Q2/2026 VietstockFinance document **555653**, PDF page **13** / printed page **8**, B02, được render và trực tiếp kiểm tra ảnh gốc ở **300 DPI**; workflow run **41878236428**, artifact **13347787384**, member `VDS_Baocaotaichinh_Q2_2026_Hopnhat.pdf` trong archive `reports/raw/VDS/auto-vds-20261021/6ca61e80d55ffaac.zip`.
+- Cột H1/2025 so sánh vẫn giữ: PAT hợp nhất **7.818.436.589 VND**; parent **8.071.151.977 VND**; NCI **-252.715.388 VND**. Giá trị đúng như Q2/2025 original H1/YTD.
+- Như vậy H1 basis cũng được mang sang kỳ so sánh năm sau, không thấy Q2/2025 H1 được trình bày lại.
+
+### 9.3. Kết luận kiểm định A
+
+Các báo cáo kỳ sau đang duy trì đồng thời:
+- Q1/2025 original (Q1/2026 comparative): parent **19.089.097.924**, NCI **-76.755.668**.
+- H1/2025 original (Q2/2026 comparative): parent **8.071.151.977**, NCI **-252.715.388**.
+
+Q3/2025 YTD less Q3/2025 standalone cũng khớp chính xác H1/2025 nêu trên. Vì vậy, sai khác không phải lỗi đọc nhầm trang/OCR trong lần kiểm tra hiện tại; đây là **inconsistency đã tồn tại trong các cột phân bổ lợi nhuận được công bố**, và các báo cáo so sánh Q1/2026, Q2/2026 không cho thấy VDS đã phát hành số Q1 điều chỉnh để giải quyết nó.
+
+Số Q1 suy ra từ H1 less Q2 vẫn chỉ là phép đối chiếu:
+- Parent **17.971.404.641 VND**.
+- NCI **1.040.937.615 VND**.
+- Total PAT **19.012.342.256 VND**.
+
+Chênh lệch phân bổ so với Q1 original vẫn **1.117.693.283 VND**. Không thay thế Q1 original bằng số suy ra; không thêm balancing plug; không sửa `data/financials-VDS.json`. Hồ sơ A tiếp tục **PENDING — source-level allocation inconsistency not explained**.
+
+### 9.4. Tách riêng residual B04/NCI equity so với B02 NCI PAT
+
+Không được đồng nhất dòng biến động vốn NCI ở B04/Note 26 với riêng chỉ tiêu NCI PAT trên B02. Năm 2025:
+- B02 FY2025 NCI PAT: **-958.326.405 VND**.
+- Note 26 kiểm toán FY2025 có hai dòng lỗ thực hiện và chưa thực hiện: **-1.396.298.463** và **-547.773.687 VND**, tổng **-1.944.072.150 VND**.
+- Chênh lệch giữa tổng hai dòng Note 26 và B02 NCI PAT là **985.745.745 VND**; cùng độ lớn với residual giữa H1 B04 NCI movement và H1 B02 NCI PAT. Báo cáo hiện kiểm tra chưa cung cấp cầu nối chi tiết đủ để khẳng định bản chất phân loại của residual này.
+
+Do đó:
+- **Câu hỏi nguồn gốc khoản vốn 21 tỷ ở NCI:** đã xác nhận riêng (Note 26: tăng phần vốn sở hữu ở công ty con; Q3 B04 định vị phát sinh Q3, residual 1 VND).
+- **Câu hỏi phân bổ lợi nhuận B02 Q1/H1:** vẫn PENDING 1.117.693.283 VND.
+- **Câu hỏi cầu nối B04/Note 26 NCI equity với B02 NCI PAT:** lưu riêng PENDING 985.745.745 VND; không gộp với 1.117.693.283 VND.
+
+Không dùng report Q1/Q2 comparative năm sau để sửa dữ liệu gốc; chúng chỉ chứng minh VDS tiếp tục mang hai cơ sở báo cáo khác nhau vào cột so sánh.
