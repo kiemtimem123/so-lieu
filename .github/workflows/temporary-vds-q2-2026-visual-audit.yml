@@ -1,0 +1,100 @@
+name: Temporary VDS Q2 2026 consolidated visual audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "reports/processing-checkpoint.json"
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout exact Q2 2026 Vietstock archive and checkpoint
+        uses: actions/checkout@v5
+        with:
+          sparse-checkout: |
+            reports/raw/VDS/auto-vds-20261021/6ca61e80d55ffaac.zip
+            reports/processing-checkpoint.json
+          sparse-checkout-cone-mode: false
+          lfs: false
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install PDF rendering dependencies
+        run: python -m pip install --disable-pip-version-check pymupdf pillow
+      - name: Render exact consolidated Q2 2026 B01 B02 B03 B04 pages
+        run: |
+          python - <<'PY'
+          import hashlib, json, zipfile
+          from pathlib import Path
+          import fitz
+          from PIL import Image, ImageOps, ImageDraw
+          archive=Path("reports/raw/VDS/auto-vds-20261021/6ca61e80d55ffaac.zip")
+          member="VDS_Baocaotaichinh_Q2_2026_Hopnhat.pdf"
+          archive_bytes=archive.read_bytes()
+          with zipfile.ZipFile(archive) as z:
+              names=[n for n in z.namelist() if n.lower().endswith(".pdf")]
+              matches=[n for n in names if Path(n).name==member]
+              if len(matches)!=1:
+                  raise SystemExit(f"Expected exactly one {member}; matches={matches}; members={names}")
+              pdf_bytes=z.read(matches[0])
+          doc=fitz.open(stream=pdf_bytes,filetype="pdf")
+          pages=[6,7,8,11,12,13,14,15,16,17,18]
+          if any(p<1 or p>len(doc) for p in pages):
+              raise SystemExit(f"PDF has {len(doc)} pages; requested {pages}")
+          out=Path("source-review/VDS-2026-Q2-HN-visual")
+          pages_dir=out/"pages"
+          sheets_dir=out/"contact-sheets"
+          pages_dir.mkdir(parents=True,exist_ok=True)
+          sheets_dir.mkdir(parents=True,exist_ok=True)
+          dpi=300
+          rendered=[]
+          for pno in pages:
+              page=doc[pno-1]
+              pix=page.get_pixmap(matrix=fitz.Matrix(dpi/72, dpi/72),alpha=False)
+              im=Image.frombytes("RGB",[pix.width,pix.height],pix.samples)
+              dest=pages_dir/f"page-{pno:02d}.jpg"
+              im.save(dest,"JPEG",quality=92,optimize=True)
+              thumb=im.copy(); thumb.thumbnail((780,1080))
+              rendered.append((pno,ImageOps.expand(thumb,border=2,fill="black")))
+          for start in range(0,len(rendered),3):
+              group=rendered[start:start+3]
+              cw=max(im.width for _,im in group)
+              ch=max(im.height for _,im in group)+40
+              sheet=Image.new("RGB",(cw,ch*len(group)),"white")
+              draw=ImageDraw.Draw(sheet)
+              for i,(pno,im) in enumerate(group):
+                  y=i*ch
+                  draw.text((10,y+5),f"VDS Q2/2026 HN — PDF page {pno}",fill="black")
+                  sheet.paste(im,(0,y+34))
+              sheet.save(sheets_dir/f"contact-{group[0][0]:02d}-{group[-1][0]:02d}.jpg","JPEG",quality=90,optimize=True)
+          manifest={
+            "symbol":"VDS","period":"2026-Q2","scope":"consolidated HN",
+            "sourceArchive":str(archive),
+            "sourceArchiveSha256":hashlib.sha256(archive_bytes).hexdigest(),
+            "selectedPdfMember":matches[0],
+            "sourcePdfSha256":hashlib.sha256(pdf_bytes).hexdigest(),
+            "archiveMembers":names,"pdfPageCount":len(doc),
+            "renderDpi":dpi,"renderedPdfPages":pages,
+            "statementMap":{
+              "B01":[6,7,8],"B02":[11,12,13],
+              "B03":[14,15,16],"customerTrustCashflow":[17],"B04":[18]
+            },
+            "checkpointFile":"reports/processing-checkpoint.json"
+          }
+          (out/"manifest.json").write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding="utf-8")
+          print(json.dumps(manifest,ensure_ascii=False,indent=2))
+          PY
+      - name: Upload direct visual evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: vds-q2-2026-hn-visual-audit
+          path: source-review/VDS-2026-Q2-HN-visual/
+          if-no-files-found: error
+          retention-days: 2
