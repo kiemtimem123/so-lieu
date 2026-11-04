@@ -291,3 +291,35 @@ Interpretation limit:
 - Do not treat the 47.8548bn carrying value as the NAV of the fund, the price paid for the 10% stake, or the balance-sheet amount derecognized from NCI.
 
 This provides a further cross-reference for the pending RVIF ownership-change investigation, but **does not close** the B04 NCI bridge. The supported conclusion remains: reported ownership moved from 85% at FY2025 year-end to 95% by Q1/2026; the amount and accounting mechanics of the transfer remain undisclosed in the reviewed pages.
+
+
+## 15. Conflict in FY2025 Annual Report B05 — RVIF ownership percentage not yet resolved
+
+A new primary-document contradiction was found and must be kept explicit:
+
+| Source | Report date | RVIF capital | VDS ownership shown | Evidence mode |
+|---|---|---:|---:|---|
+| VDS Annual Report 2024, B05 / fund disclosure | 31-Dec-2024 | 70bn VND | **85%** | Vietstock-hosted official annual-report text |
+| Q4/2025 HN B05 | 31-Dec-2025 | 70bn VND | **85%** | Direct image, PDF page 21 / printed page 16, 300 DPI |
+| VDS Annual Report 2025, audited HN B05 text | 31-Dec-2025 | 70bn VND | **58%** | Extracted PDF table text; screenshot could not be fetched (cache miss), so not visually confirmed |
+| Q1/2026 HN B05 | 31-Mar-2026 | 70bn VND | **95%** | Direct image, PDF page 21 / printed page 16, 300 DPI |
+| Q2/2026 HN B05 | 30-Jun-2026 | 70bn VND | **95%** | Direct image, PDF page 22 / printed page 17, 300 DPI |
+
+The FY2025 Annual Report PDF is the Vietstock-hosted file:
+`https://static2.vietstock.vn/vietstock/2026/3/20/20260320___vds___bao_cao_thuong_nien_nam_2025.pdf`.
+The extracted B05 table says VDAM direct ownership 58% and RVIF direct ownership 58%; it also says RVIF license amendment date 10-May-2024. PDF text lines 11319–11345 identify the entities, the 58% table entries and fund license date. The PDF screenshot service returned a cache miss for the attempted page screenshots, so the 58% entry is recorded as **text-extracted, not image-verified**. The report's management section separately states VDAM ownership 58%, RVIF NAV 93bn VND at FY2025 year-end; it does not independently state RVIF ownership percentage in that narrative.
+
+By contrast, the Q4/2025 interim consolidated B05 image directly reviewed from the original VietstockFinance PDF clearly shows RVIF ownership **85%**. Q1/Q2 2026 B05 images directly show **95%**. The 2024 Annual Report also disclosed 85%. These are incompatible at the 31-Dec-2025 reporting date.
+
+Do not silently decide that the Annual Report's 58% is a typographical error, even though it repeats VDAM's 58% in the adjacent B05 row and is inconsistent with the Q4/2025 interim B05. Equally, do not accept the 58% as correct without resolving the Q4 B05 contradiction. There is no verified correction/erratum identified in the documents reviewed.
+
+### Revised conclusion for the RVIF/NCI hypothesis
+
+- The previously described sequence “85% at FY2025 year-end → 95% by Q1/2026” is **not confirmed across all primary documents**.
+- The supported finding is: Q4/2025 interim B05 image shows 85%; FY2025 Annual Report audited B05 text extraction shows 58% (not visually checked); Q1/Q2 2026 B05 images show 95%.
+- Therefore, the exact change in RVIF ownership percentage, its effective date and the proportion of the H1/2026 NCI reduction attributable to that change remain **PENDING**.
+- Do not use 10% of RVIF capital (7bn VND), 42% of NAV, Note10 carrying values, or the 6.861bn/6.514bn B04/B02 residuals as an inferred transfer consideration or plug.
+- Note10 “other long-term investments” amounts remain separate carrying-value observations: opening FY2026 **49,497,795,000 VND**, Q1 **49,198,275,000 VND**, Q2 **47,854,800,000 VND**. These changes do not identify the ownership transaction or equal the B04 NCI movement.
+- B04 arithmetic remains PASS; the transaction/classification bridge remains PENDING. The 2025 VDAM 50bn capital increase and NCI 21bn is a distinct closed case and is not affected by this RVIF ownership conflict.
+
+Next evidence needed to close the conflict: an image-verified Annual Report B05 page or official corrected Annual Report, plus any RVIF ownership/transaction documentation and the accounting bridge from the transaction to the B04 NCI movement.
