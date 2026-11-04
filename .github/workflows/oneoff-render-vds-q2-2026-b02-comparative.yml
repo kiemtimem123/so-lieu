@@ -1,0 +1,78 @@
+name: One-off render VDS Q2 2026 B02 comparative pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/oneoff-render-vds-q2-2026-b02-comparative.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact Q2 2026 archive only
+        uses: actions/checkout@v5
+        with:
+          sparse-checkout: |
+            reports/raw/VDS/auto-vds-20261021/6ca61e80d55ffaac.zip
+          sparse-checkout-cone-mode: false
+          lfs: false
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install PDF rendering dependencies
+        run: python -m pip install --disable-pip-version-check pymupdf pillow
+      - name: Render Q2 2026 consolidated B02 pages 12-13
+        run: |
+          python - <<'PY'
+          import zipfile, hashlib, json
+          from pathlib import Path
+          import fitz
+          from PIL import Image, ImageOps, ImageDraw
+          archive=Path("reports/raw/VDS/auto-vds-20261021/6ca61e80d55ffaac.zip")
+          member="VDS_Baocaotaichinh_Q2_2026_Hopnhat.pdf"
+          with zipfile.ZipFile(archive) as z:
+              matches=[n for n in z.namelist() if Path(n).name==member]
+              if len(matches)!=1: raise SystemExit(f"Expected exact member, got {matches}")
+              data=z.read(matches[0])
+          doc=fitz.open(stream=data,filetype="pdf")
+          pages=[12,13]
+          if any(p<1 or p>len(doc) for p in pages): raise SystemExit(f"Out of range: {pages}, pages={len(doc)}")
+          out=Path("source-review/VDS-Q2-2026-B02-comparative")
+          out.mkdir(parents=True,exist_ok=True)
+          rendered=[]
+          for pno in pages:
+              page=doc[pno-1]
+              pix=page.get_pixmap(matrix=fitz.Matrix(300/72,300/72),alpha=False)
+              im=Image.frombytes("RGB",[pix.width,pix.height],pix.samples)
+              fn=out/f"page-{pno:02d}.jpg"
+              im.save(fn,"JPEG",quality=92,optimize=True)
+              thumb=im.copy(); thumb.thumbnail((900,1250))
+              rendered.append((pno,ImageOps.expand(thumb,border=2,fill="black")))
+          cw=max(im.width for _,im in rendered); ch=max(im.height for _,im in rendered)+40
+          sheet=Image.new("RGB",(cw,ch*len(rendered)),"white")
+          draw=ImageDraw.Draw(sheet)
+          for i,(pno,im) in enumerate(rendered):
+              y=i*ch; draw.text((8,y+5),f"Q2 2026 consolidated B02 — PDF page {pno}",fill="black")
+              sheet.paste(im,(0,y+34))
+          sheet.save(out/"contact-12-13.jpg","JPEG",quality=92,optimize=True)
+          (out/"manifest.json").write_text(json.dumps({
+            "sourceArchive":str(archive),"selectedPdfMember":matches[0],
+            "pdfSha256":hashlib.sha256(data).hexdigest(),
+            "pdfPageCount":len(doc),"renderDpi":300,"renderedPdfPages":pages,
+            "purpose":"Visual verification of Q2/2026 prior-year H1/2025 B02 comparative parent/NCI figures"
+          },ensure_ascii=False,indent=2),encoding="utf-8")
+          print("Rendered exact source member",matches[0],"pages",pages,"pdf pages",len(doc),"sha256",hashlib.sha256(data).hexdigest())
+          PY
+      - name: Upload comparative review images
+        uses: actions/upload-artifact@v4
+        with:
+          name: vds-q2-2026-b02-comparative-review
+          path: source-review/VDS-Q2-2026-B02-comparative/
+          if-no-files-found: error
+          retention-days: 2
