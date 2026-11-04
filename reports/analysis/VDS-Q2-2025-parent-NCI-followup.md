@@ -148,3 +148,17 @@ Không dùng report Q1/Q2 comparative năm sau để sửa dữ liệu gốc; ch
 - Q1/2026 B02 comparative giữ nguyên phân bổ Q1/2025 original; Q2/2026 B02 comparative giữ nguyên phân bổ H1/2025 YTD. Q3/2025 YTD less Q3 standalone tiếp tục đúng H1/YTD basis. Các tài liệu kỳ sau do đó không cho thấy một bản Q1 restated được đưa vào cột so sánh.
 - Kết luận A: **PENDING — source-level allocation inconsistency remains unexplained**. Chênh lệch **1.117.693.283 VND** chỉ là khác biệt phân bổ giữa Q1 original và Q1 implied from H1 less Q2; PAT hợp nhất vẫn khớp tuyệt đối. Không chọn một cơ sở thay thế, không ghi phép trừ là số Q1 đã công bố và không sửa `data/financials-VDS.json`.
 - Để đóng A cần tài liệu điều chỉnh/đính chính Q1, công văn giải thích phân bổ NCI, hoặc bảng tính hợp nhất có thể hiện phân bổ parent/NCI cho Q1 và H1 trên cùng basis. Chỉ giải trình tăng/giảm tổng LNST so với cùng kỳ không đủ.
+
+
+## 11. Đối chiếu nghị quyết phân phối lợi nhuận FY2025 — xác định khoản điều chỉnh NCI 1.944 tỷ
+
+- Nghị quyết ĐHĐCĐ thường niên năm tài chính 2025, số **01/2026/BB-ĐHĐCĐ**, ngày **16/04/2026**, được công bố ngày **17/04/2026**, thông qua BCTC riêng và hợp nhất FY2025 đã được EY kiểm toán, đồng thời thông qua phương án phân phối lợi nhuận FY2025.
+- Tại bảng “Phân phối lợi nhuận năm 2025”, phần các khoản mục đã thực hiện/điều chỉnh trong năm, có dòng riêng **“Điều chỉnh Lợi ích cổ đông không kiểm soát” = -1.944.072.150 VND**.
+- Số này khớp tuyệt đối với tổng hai thành phần của Note 26 BCTC hợp nhất kiểm toán FY2025:
+  - Lỗ đã thực hiện: **-1.396.298.463 VND**.
+  - Lỗ chưa thực hiện: **-547.773.687 VND**.
+  - Tổng: **-1.944.072.150 VND**.
+- Đây là bằng chứng bổ sung rằng khoản -1.944 tỷ là **điều chỉnh lợi ích NCI trong cầu nối lợi nhuận chưa phân phối hợp nhất**, được trình bày riêng trong phương án phân phối lợi nhuận và được ĐHĐCĐ thông qua. Không được đem khoản này so trực tiếp rồi yêu cầu nó bằng B02 NCI PAT; hai dòng nằm ở hai lớp báo cáo khác nhau.
+- Nghị quyết này **không giải thích** chênh lệch phân bổ B02 Q1/H1 **1.117.693.283 VND**. Hồ sơ A vẫn PENDING.
+- Nguồn gốc vốn NCI 21 tỷ và thời điểm Q3/2025 vẫn là hồ sơ riêng đã đóng PASS; không gộp khoản điều chỉnh NCI -1.944 tỷ này vào vốn góp 21 tỷ.
+- Nguồn chính thức: tệp nghị quyết/biên bản ĐHĐCĐ được lưu tại Vietstock `https://static2.vietstock.vn/vietstock/2026/4/17/20260417___vds___bbh_va_nqdhdcd_thuong_nien_fy_2025.pdf`; các dòng đối chiếu trong trích xuất văn bản gồm nội dung phê duyệt phân phối lợi nhuận FY2025 và dòng Adjustment of Non-controlling Interests.
