@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-04T17:39:57.693Z",
+  "updatedAt": "2026-11-04T17:45:46.004Z",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "Priority 1: VietstockFinance public document catalog and directly linked report PDFs. Priority 2: WiData document tab for the same ticker, only to compare/supplement when source 1 lacks the report or extraction is unclear/unavailable. No third source without explicit user approval.",
   "periodStart": "2024-Q1",
@@ -5108,7 +5108,8 @@
         "PENDING: Q1 and Q2 original B02 quarter parent/NCI figures do not add to Q2 H1 YTD parent/NCI total by 1,117,693,283 VND, while consolidated PAT adds exactly. Original Q1 parent=19,089,097,924; NCI=-76,755,668. Q2 parent=-9,900,252,664; NCI=-1,293,653,003. H1 YTD parent=8,071,151,977; NCI=-252,715,388. Implied Q1 after H1 less Q2: parent=17,971,404,641; NCI=1,040,937,615. Do not overwrite original values or insert a plug. WiData attempted but unavailable; no third source.",
         "CLOSED PASS: FY2025 audited Note26 confirms 21,000,000,000 VND increase in ownership capital in subsidiary. Q3/2025 B04 directly reviewed (PDF page18/printed p13): NCI opening 48,488,925,445; current-year increase 22,785,197,412; closing 71,274,122,857. Q2 B04 close 47,250,464,312 to Q3 close increase 24,023,658,545 less Q3 standalone NCI PAT 3,023,658,546 = 20,999,999,999; -1 VND vs 21bn. Annual Note26 bridge residual 0. The B04 21bn movement is closed; B02 Q1/H1 allocation issue remains pending separately.",
         "A REMAINS PENDING: Q1/2026 B02 comparative reproduces Q1/2025 original parent/NCI; Q2/2026 B02 comparative reproduces Q2/2025 H1/YTD parent/NCI; Q3 YTD less Q3 standalone also equals H1. No Q1 restatement or parent/NCI bridge identified in official disclosures reviewed. Allocation difference remains 1,117,693,283 VND; preserve both source bases.",
-        "CLASSIFIED, NOT A B02 ERROR: FY2025 AGM resolution 01/2026/BB-ĐHĐCĐ identifies NCI retained-earnings adjustment -1,944,072,150 VND, exactly matching Note26 realized and unrealized losses. Treat as equity/profit-distribution bridge, not as B02 NCI PAT."
+        "CLASSIFIED, NOT A B02 ERROR: FY2025 AGM resolution 01/2026/BB-ĐHĐCĐ identifies NCI retained-earnings adjustment -1,944,072,150 VND, exactly matching Note26 realized and unrealized losses. Treat as equity/profit-distribution bridge, not as B02 NCI PAT.",
+        "B05 ownership-note pages Q1/Q2 visually compared: VDAM 100bn/58% and RVIF 70bn/85% are unchanged at 31-Mar and 30-Jun 2025. This weakens the simple Q2 ownership-percentage-change hypothesis; not a full intra-period transaction certificate and does not resolve B02 attribution."
       ],
       "validations": {
         "balance_sheet": "PASS raw VND; total assets = liabilities + equity; residual 0.",
@@ -5181,7 +5182,7 @@
           "Consolidated B03b row71 FY2025 reports total share issue/owner contribution cash inflow of 68bn; do not equate the entire amount with the 21bn NCI movement."
         ]
       },
-      "nextAction": "A remains PENDING at 1,117,693,283 VND. Continue searching only for an authoritative Q1/2025 B02 restatement/parent-NCI bridge or consolidation schedule; do not change original Q1 or H1 source values. The 21bn Q3 subsidiary capital increase and -1.944bn FY NCI retained-earnings adjustment are both separately classified.",
+      "nextAction": "Inspect Q3/Q4 2025 B05 ownership and consolidation notes for the period when the 21bn NCI subsidiary capital increase occurred. Keep this separate from A; only close A with official source-level parent/NCI Q1-to-H1 bridge or restated Q1 B02.",
       "nciCapitalIncrease21bn": {
         "status": "CLOSED_PASS",
         "amountVnd": 21000000000,
@@ -5210,7 +5211,7 @@
         "note": "Q3 B04 confirms timing with a -1 VND residual (<0.01%); do not assign specific subsidiary or investor."
       },
       "auditNote": "reports/analysis/VDS-Q2-2025-parent-NCI-followup.md",
-      "auditNoteLatestCommit": "4df22474ac41bc38bd31ab495520a90db98a1cf0",
+      "auditNoteLatestCommit": "aadfa368103656734cb1294ec66ff425de23e979",
       "subsequentComparativeChecks": {
         "status": "VERIFIED_PERSISTENT_SOURCE_ALLOCATION_BASIS",
         "q1_2026_comparative": {
@@ -5307,7 +5308,7 @@
         "10"
       ],
       "annualAuditNote": "reports/analysis/VDS-FY2025-audited-NCI-21bn-reconciliation.md",
-      "annualAuditNoteLatestCommit": "a32edac805393896a8c133985f97c502e192199d",
+      "annualAuditNoteLatestCommit": "19d13059d628b0a8de649d1430cd7f7bcfafb42f",
       "nciRetainedEarningsAdjustment1944072150": {
         "status": "CLASSIFIED_BY_FY2025_AGM_PROFIT_DISTRIBUTION_RESOLUTION",
         "amountVnd": -1944072150,
@@ -5331,6 +5332,47 @@
         },
         "classification": "adjustment of non-controlling interests in the consolidated retained-earnings/profit-distribution bridge; distinct from B02 NCI PAT",
         "note": "Do not impose equality between B04/Note26 equity movement and B02 NCI PAT, and do not insert a balancing plug. This does not resolve the separate B02 Q1/H1 allocation difference of 1,117,693,283 VND."
+      },
+      "ownershipDisclosureCrossCheck": {
+        "status": "NO_REPORTED_CHANGE_BETWEEN_Q1_AND_Q2_2025",
+        "sourceScope": "Consolidated HN",
+        "renderArtifact": {
+          "workflowRunId": 41879521045,
+          "artifactId": 13349410378,
+          "artifactName": "vds-q1-q2-2025-ownership-note-review",
+          "renderDpi": 300
+        },
+        "q1": {
+          "sourceArchive": "reports/raw/VDS/auto-vds-20261021/a2d499f8fc79f469.pdf",
+          "pdfPage": 21,
+          "printedPage": 16,
+          "reportDate": "2025-03-31"
+        },
+        "q2": {
+          "sourceArchive": "reports/raw/VDS/auto-vds-20261021/69d4862950596830.pdf",
+          "pdfPage": 22,
+          "printedPage": 16,
+          "reportDate": "2025-06-30"
+        },
+        "disclosures": {
+          "VDAM": {
+            "name": "CTCP Quản lý Quỹ Rồng Việt",
+            "capitalVnd": 100000000000,
+            "ownershipPercent": 58
+          },
+          "RVIF": {
+            "name": "Quỹ Đầu tư Rồng Việt",
+            "fundCapitalVnd": 70000000000,
+            "ownershipPercent": 85
+          }
+        },
+        "reportedChanges": {
+          "entities": false,
+          "capital": false,
+          "ownershipPercent": false
+        },
+        "interpretation": "The reporting-date note pages show the same subsidiaries/member fund, capital and VDS ownership. This weakens a simple Q2 ownership-percentage-change hypothesis, but does not exclude intra-period transactions or changes within fund interests not reflected on the summary page.",
+        "effectOnA": "No source-level B02 parent/NCI allocation bridge found; A remains PENDING 1,117,693,283 VND."
       }
     },
     "2025-Q3": {
@@ -5737,7 +5779,8 @@
           "limitation": "Only the official disclosures and reports identified/reviewed above; absence of a found notice is not proof that no other document exists."
         },
         "conclusion": "Q1/2026 carries the original Q1/2025 split; Q2/2026 carries the original H1/2025 split; Q3/2025 YTD less Q3 standalone matches H1 exactly. The 1,117,693,283 VND parent/NCI allocation mismatch remains unexplained. Preserve both source columns, do not backsolve or overwrite data."
-      }
+      },
+      "ownershipDisclosureCrossCheckPending": true
     },
     "2025-Q4": {
       "period": "2025-Q4",
@@ -5949,9 +5992,9 @@
     }
   ],
   "processingSop": {
-    "version": "1.47",
+    "version": "1.48",
     "path": "reports/financial-report-processing-sop.md",
-    "commit": "153efe0d92c643312ce292d817f741c1ca23b781",
+    "commit": "3a74c34ced34f33572a9be5a0a4d71056eef613d",
     "status": "published",
     "effectiveDate": "2026-11-04"
   },
@@ -8549,6 +8592,25 @@
       },
       "distinctFromB02NciPat": true,
       "resolutionNo": "01/2026/BB-ĐHĐCĐ"
+    },
+    "ownershipCrossCheck": {
+      "status": "NO_REPORTED_CHANGE_Q1_TO_Q2",
+      "VDAM": {
+        "capitalVnd": 100000000000,
+        "ownershipPercent": 58
+      },
+      "RVIF": {
+        "fundCapitalVnd": 70000000000,
+        "ownershipPercent": 85
+      },
+      "evidence": {
+        "workflowRunId": 41879521045,
+        "artifactId": 13349410378,
+        "renderDpi": 300
+      },
+      "interpretation": "Does not support simple ownership-percentage-change cause; intra-period transactions remain possible.",
+      "allocationDifferenceVnd": 1117693283,
+      "remainsPending": true
     }
   }
 }
