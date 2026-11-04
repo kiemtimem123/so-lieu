@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.47
+- Phiên bản: 1.48
 - Ngày ban hành: 04/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -1013,3 +1013,18 @@ Nguồn chỉ dùng VietstockFinance và các tệp liên kết tại danh mục
 - This closes the classification question for the Note26 -1.944bn adjustment, but it does **not** explain B02 Q1 vs H1 parent/NCI allocation difference **1.117.693.283 VND**. Keep A PENDING.
 - Official AGM disclosure PDF: `https://static2.vietstock.vn/vietstock/2026/4/17/20260417___vds___bbh_va_nqdhdcd_thuong_nien_fy_2025.pdf`.
 - Audit trail: `reports/analysis/VDS-FY2025-audited-NCI-21bn-reconciliation.md`, commit **a32edac805393896a8c133985f97c502e192199d**; Q2/2025 follow-up, commit **4df22474ac41bc38bd31ab495520a90db98a1cf0**.
+
+
+### 10.32 VDS Q1/Q2/2025 — đối chiếu B05 ownership note trước khi giả thuyết thay đổi NCI
+
+- Direct visual check of original consolidated B05 note pages:
+  - Q1/2025 PDF page **21** / printed page **16**.
+  - Q2/2025 PDF page **22** / printed page **16**.
+  - Both rendered at **300 DPI**, workflow run **41879521045**, artifact **13349410378**.
+- Both reporting dates disclose the same:
+  - VDAM subsidiary: charter capital **100bn VND**, VDS ownership **58%**.
+  - RVIF member fund: fund capital **70bn VND**, VDS ownership **85%**.
+- No reported change in named investee, stated capital, or VDS ownership percentage between 31-Mar-2025 and 30-Jun-2025. This weakens a hypothesis that the Q1/H1 B02 allocation difference resulted simply from a Q2 ownership-percentage change.
+- Limitation: two reporting-date disclosures do not rule out intra-period subscriptions/transfers that did not change ending percentages or transactions within fund/member interests not separately shown on this summary page. Do not treat as a definitive no-transaction certificate.
+- **A remains PENDING 1.117.693.283 VND.** This disclosure does not provide the parent/NCI profit allocation bridge. Keep original Q1/H1 source values.
+- Audit note: `reports/analysis/VDS-Q2-2025-parent-NCI-followup.md`, commit **aadfa368103656734cb1294ec66ff425de23e979**; FY2025 audit note commit **19d13059d628b0a8de649d1430cd7f7bcfafb42f**.
