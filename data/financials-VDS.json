@@ -2986,7 +2986,7 @@
           "turn367170view2"
         ],
         "prior_period_attribution_exception": {
-          "status": "PENDING_UNEXPLAINED_CROSS_PERIOD_REALLOCATION",
+          "status": "PENDING_UNEXPLAINED_CROSS_PERIOD_REALLOCATION_SUBSEQUENT_COMPARATIVES_CONFIRM_VALUES",
           "description": "The original Q1/2025 B02 quarter column and Q2/2025 B02 Q2 quarter column do not add to the Q2 report's H1 YTD parent/NCI allocation, although consolidated PAT adds exactly. Preserve each printed source value; do not rewrite Q1 or insert a plug.",
           "q1_original_report_values_vnd": {
             "parent": 19089097924,
@@ -3020,14 +3020,47 @@
             "url": "https://widata.vn/VDS?tab=documents",
             "status": "not_accessible_in_current_retrieval",
             "note": "The approved secondary document page returned DisabledError; no WiData values were copied."
-          }
+          },
+          "subsequent_confirmation": "Q1/2026 report comparative column repeats original Q1/2025 values parent 19,089,097,924; NCI -76,755,668; PAT 19,012,342,256. Q2/2026 report comparative Q2/2025 repeats parent -9,900,252,664; NCI -1,293,653,003; PAT -11,193,905,667; its H1/2025 YTD repeats parent 8,071,151,977; NCI -252,715,388; PAT 7,818,436,589. The 1,117,693,283 VND parent-to-NCI bridge difference therefore persists in later official comparisons; no accompanying note or source explanation was identified in the B02 checks. Preserve all printed source values and keep pending."
         },
         "secondary_source_attempt": {
           "source": "WiData",
           "url": "https://widata.vn/VDS?tab=documents",
           "status": "unavailable",
           "note": "DisabledError in current retrieval; no values copied."
-        }
+        },
+        "subsequent_report_crosschecks": [
+          {
+            "period": "2025-Q1 comparative in 2026-Q1 report",
+            "documentId": "543855",
+            "sourcePdf": "reports/raw/VDS/auto-vds-20261021/2720dd850acfbd95.pdf",
+            "b02PdfPage": 13,
+            "valuesVnd": {
+              "parent": 19089097924,
+              "nci": -76755668,
+              "pat": 19012342256
+            },
+            "confirmsOriginalQ12025": true
+          },
+          {
+            "period": "2025-Q2 comparative and H1/2025 cumulative in 2026-Q2 report",
+            "documentId": "555653",
+            "sourcePdf": "reports/raw/VDS/auto-vds-20261021/6ca61e80d55ffaac.zip",
+            "member": "VDS_Baocaotaichinh_Q2_2026_Hopnhat.pdf",
+            "b02PdfPage": 13,
+            "q2QuarterValuesVnd": {
+              "parent": -9900252664,
+              "nci": -1293653003,
+              "pat": -11193905667
+            },
+            "h1YtdValuesVnd": {
+              "parent": 8071151977,
+              "nci": -252715388,
+              "pat": 7818436589
+            },
+            "confirmsOriginalQ22025AndH1": true
+          }
+        ]
       },
       "published_at": "2025-07-30",
       "source_archive_file": "reports/raw/VDS/auto-vds-20261021/69d4862950596830.pdf",
@@ -3708,7 +3741,8 @@
         "pending_cross_period_attribution": true
       },
       "core_financial_extraction_manual_terminal": false,
-      "pageLabel": "2025-Q2"
+      "pageLabel": "2025-Q2",
+      "periodComplete": false
     },
     {
       "symbol": "VDS",
