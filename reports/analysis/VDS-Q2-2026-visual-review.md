@@ -266,3 +266,28 @@ Conclusion after reviewing B05 and all note pages 19–50:
 - Note 10 RVIF investment carrying amount decreases by **1,642,995,000 VND**, but the note does not tie this to the 10-percentage-point change or B04.
 - No contract, transaction date, consideration, NAV/carrying-value bridge, or quantified acquisition/transfer schedule was identified in the reviewed B05/Notes 19–50.
 - **NCI transaction explanation remains PENDING.** Retain the RVIF ownership change and Note 10 movement as two independent source-supported clues; do not infer the amount, date, instrument or counterparty from them.
+
+
+## 14. Note 10 RVIF carrying value — additional clue, not transaction consideration
+
+The same Note 10 table, “Đầu tư dài hạn khác”, was directly reviewed in the Q1/2026 and Q2/2026 consolidated reports:
+
+| Period-end | Reported RVIF investment amount | Change from previous point |
+|---|---:|---:|
+| 31-Dec-2025 (opening balance shown in Q1/Q2) | 49,497,795,000 VND | |
+| 31-Mar-2026 (Q1 Note 10) | 49,198,275,000 VND | (299,520,000) VND |
+| 30-Jun-2026 (Q2 Note 10) | 47,854,800,000 VND | (1,343,475,000) VND |
+
+Source pages:
+- Q1/2026: PDF page **36** / printed page **31**, original PDF `reports/raw/VDS/auto-vds-20261021/2720dd850acfbd95.pdf`; 300-DPI render run **41917726858**, artifact **13365821105**.
+- Q2/2026: PDF page **36** / printed page **31**, original selected HN PDF inside `reports/raw/VDS/auto-vds-20261021/6ca61e80d55ffaac.zip`; 300-DPI render run **41917120909**, artifact **13364129604**.
+
+The amount is presented within “other long-term investments” as “Quỹ Đầu tư Thịnh vượng Rồng Việt (RVIF)”. The Q2 table also contains other investments that were no longer present at period end, so this table is a carrying-value schedule and not a statement of the fund's full NAV or a transaction agreement.
+
+Interpretation limit:
+- The reported RVIF investment amount declines by **299,520,000 VND** in Q1 and a further **1,343,475,000 VND** in Q2.
+- These changes do not equal the 10-percentage-point ownership increase, the B04 NCI movement, or the B04-less-B02 residual.
+- The note does not say whether the changes represent fair-value movements, transfers, redemptions, capital contributions, or another carrying-value event specific to the ownership change.
+- Do not treat the 47.8548bn carrying value as the NAV of the fund, the price paid for the 10% stake, or the balance-sheet amount derecognized from NCI.
+
+This provides a further cross-reference for the pending RVIF ownership-change investigation, but **does not close** the B04 NCI bridge. The supported conclusion remains: reported ownership moved from 85% at FY2025 year-end to 95% by Q1/2026; the amount and accounting mechanics of the transfer remain undisclosed in the reviewed pages.
