@@ -125,3 +125,8 @@ Additional confirmed Q4 standalone items from annual less 9M:
 **Conclusion:** no OCR or column-mapping error remains for the interest line. Preserve the visibly reported **(43,891,490,863 VND)** subline and the parent total **(42,472,227,098 VND)** unchanged. Mark this as a source-issued Q4 standalone statement inconsistency. Do not use the subline to recalculate financial expenses, operating profit or PAT, and do not add a balancing adjustment.
 
 The reconciliation is saved in `data/financials-IDC.json` under `income_statement_source_ytd_raw_vnd`, `source_validation.prior_9m_2025_b02_raw_vnd`, and `source_validation.q4_2025_annual_minus_9m_crosscheck`.
+
+
+## Cross-check final disposition
+
+The FY2025 annual-minus-9M/2025 check confirms every additive Q4/2025 B02 line, including interest expense **(43,891,490,863 VND)** and parent finance expense **(42,472,227,098 VND)**. Both values also match the rendered Q4 current-quarter column. Thus the gap **1,419,263,765 VND** is confirmed as an issuer-reported inconsistency in the Q4 statement, not a parser, OCR, or period-column defect. Keep the values unchanged and carry the source exception in the financial-report UI.
