@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.36
+- Phiên bản: 1.37
 - Ngày ban hành: 04/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -840,6 +840,17 @@ Nguồn chỉ dùng VietstockFinance và các tệp liên kết tại danh mục
 - Q4 standalone original B03 = FY less original Q3 9M: CFO **302.927.251.937**, CFI **34.172.164.900**, CFF **563.269.916.104**, net **900.369.332.941**, FX **69.866.489**, opening **1.287.599.607.878**, closing **2.188.038.807.308**, CAPEX **-35.785.240.271**, dividends paid **-109.152.135.500**. Both annual and Q4-only flow/cash bridges and opening cash cross-check residuals are 0.
 - **Preserve selected FY2025 comparative cashflow:** do not overwrite top-level cashflow already selected from Q4/2025 comparative. That selected basis has FY cash close **2.188.037.806.317 VND**, 1.000.991 VND below original 2024 B01/B03 close; the selected Q4 cash bridge residual **28.692.943 VND (0.001311%)** remains within 0.01%. Store the original FY/Q4 source values separately in `cashflow_source_reconciliation.original_q4_2024_report_comparison`; no plug or source-basis mixing.
 - Data commit **`86374af52be897b231a2be860b0166443832fb87`**; B02 annual gross-revenue/deduction close fields also recorded in snapshot commit **`780b780ef69f204995ed59746623ca619201c1e4`**. Visual note `reports/analysis/IDC-Q4-2024-visual-review.md`. Status: Q4/2024 B01/B02/B03 PASS, original English/Vietnamese B03 cross-check pass, all 22 annual additive B02 lines and all original B03 bridges residual 0. Next oldest pending visual period: **IDC Q1/2025**. Do not re-extract Q4/2024.
+
+### 10.23 IDC Q1/2025 — B01/B02/B03 visual PASS; preserve cross-period source differences within tolerance
+
+- Source: VietstockFinance document ID **503692**, consolidated IDC Q1/2025; PDF `reports/raw/IDC/auto-idc-20261021/5b3809b3492cb8ac.pdf`.
+- Render PDF pages **8–14** at **180 DPI**: B01 pages 8–11, B02 page 12, B03 pages 13–14. Workflow run **41765539834**, artifact **13293060604**, digest `sha256:7a97a4b270ee16431ca5cb28adccc399e4cf8cb734ed86ce51e1d847473f86de`.
+- B01 raw VND: current assets **8.117.308.377.501**, cash **2.292.800.235.520**, short-term investments **2.908.284.765.037**, short-term receivables **1.530.965.913.962**, inventory **1.352.143.659.083**, other current assets **33.113.803.899**, non-current assets **11.293.159.720.202**, fixed assets **3.077.279.920.064**, total assets **19.410.468.097.703**, current liabilities **5.348.738.935.759**, long-term liabilities **6.932.096.358.950**, total liabilities **12.280.835.294.709**, equity **7.129.632.802.994**, retained earnings **1.326.003.016.864**. Row 440 equals row 270; all B01 composition/balance equations residual 0.
+- B02 first column Q1/2025 raw VND: net revenue **1.793.484.296.130**, COGS **1.242.093.459.547**, gross profit **551.390.836.583**, financial income **65.100.177.990**, financial expense **39.020.337.473**, interest **36.064.081.688**, associates profit **360.482.572**, selling **28.332.542.856**, admin **73.940.266.707**, operating profit **475.558.350.109**, other income **48.854.110.556**, other expense **3.703.813.460**, other profit **45.150.297.096**, PBT **520.708.647.205**, current tax expense **108.547.172.018**, deferred-tax income **4.823.069.417**, total tax **103.724.102.601**, PAT **416.984.544.604**, parent **343.278.910.627**, NCI **73.705.633.977**, EPS basic/diluted **1.040/1.040**. All B02 bridges residual 0.
+- **B03 Q1/2025** raw VND: CFO **593.194.330.719**, CFI **-745.138.695.014**, CFF **256.704.039.546**, net cash **104.759.675.251**, FX **2.753.952**, opening **2.188.037.806.317**, closing **2.292.800.235.520**, CAPEX row 21 **-162.762.056.703**, dividends row 36 **-20.305.690.000**. Q1 is YTD; flow and cash bridges residual 0.
+- **Cross-period cash opening control:** Q1/2025 B03 opening **2.188.037.806.317 VND** differs from original Q4/2024 B01 closing **2.188.038.807.308 VND** by **-1.000.991 VND (0,00004575%)**, within 0.01%. Preserve both source values; do not force equality. Q1/2025 B01 comparative 31/12/2024 also differs from original Q4/2024 B01 comparative; retain each report's own B01 figures separately.
+- **Comparative EPS rule:** Q1/2025 B02 comparison column shows Q1/2024 EPS **2.095**, while original Q1/2024 report EPS is **2.106**. Keep each EPS attached to its source/report basis; do not overwrite the original Q1/2024 period.
+- Data commit **`2acc7a0d0a5bca325c64a562399c6d221e0a4331`**; visual note `reports/analysis/IDC-Q1-2025-visual-review.md`, commit **`2684b8fb23ffe27a5a51c5a8e23b2d42df55838f`**. Status B01/B02/B03 visual PASS. Next chronological visual period: **IDC Q2/2025**. Do not re-extract Q1/2025 core values.
 
 ## 11. Giới hạn thao tác
 
