@@ -108,3 +108,12 @@ Q3/2025 YTD trừ Q3 current-quarter tiếp tục khớp chính xác với H1 YT
 - **Hồ sơ B – vốn NCI 21 tỷ:** PASS/CLOSED; Note 26 kiểm toán và Q3 B04 xác nhận tăng phần vốn sở hữu ở công ty con trong Q3/2025.
 - **Hồ sơ A – phân bổ B02 Q1/H1:** vẫn PENDING. Q1/2026 comparative giữ số Q1 original, Q2/2026 comparative giữ số H1/YTD, Q3/2025 YTD less Q3 standalone khớp H1. Không tìm thấy trong các công bố/giải trình đã rà một báo cáo Q1 restated hoặc bảng giải thích phân bổ parent/NCI.
 - Giữ nguyên Q1 original và Q2 H1/YTD original; số Q1 tính từ H1 less Q2 chỉ là phép đối chiếu, không phải số Q1 đã công bố. Không sửa `data/financials-VDS.json`.
+
+
+## 8. Đối chiếu thêm Nghị quyết ĐHĐCĐ FY2025 về điều chỉnh lợi ích NCI
+
+- Nghị quyết ĐHĐCĐ thường niên FY2025 số **01/2026/BB-ĐHĐCĐ**, ngày **16/04/2026**, được công bố ngày **17/04/2026**, tại bảng phân phối lợi nhuận FY2025 ghi riêng dòng **“Điều chỉnh Lợi ích cổ đông không kiểm soát” = -1.944.072.150 VND**.
+- Giá trị này khớp tuyệt đối tổng hai dòng Note 26: lỗ đã thực hiện **-1.396.298.463 VND** + lỗ chưa thực hiện **-547.773.687 VND** = **-1.944.072.150 VND**.
+- Nghị quyết sử dụng số điều chỉnh NCI này trong cầu nối xác định lợi nhuận chưa phân phối lũy kế hợp nhất cuối năm; đây là điều chỉnh ở tầng retained earnings/equity, không phải dòng NCI PAT của B02. Vì vậy không được áp đặt phép bằng giữa NCI equity movement và B02 NCI PAT.
+- Nguồn văn bản nghị quyết: `https://static2.vietstock.vn/vietstock/2026/4/17/20260417___vds___bbh_va_nqdhdcd_thuong_nien_fy_2025.pdf`, đoạn bảng phân phối lợi nhuận FY2025 (printed pages 14–15; PDF page index 14 trong tool view).
+- Kết luận: phần điều chỉnh NCI **1.944.072.150 VND đã có phân loại/định danh trong Nghị quyết ĐHĐCĐ**. Điều này giúp phân biệt rõ với câu hỏi B02 parent/NCI Q1/H1 vẫn còn PENDING **1.117.693.283 VND**.
