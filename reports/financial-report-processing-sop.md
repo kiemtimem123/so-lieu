@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.41
+- Phiên bản: 1.42
 - Ngày ban hành: 04/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -906,6 +906,18 @@ Nguồn chỉ dùng VietstockFinance và các tệp liên kết tại danh mục
 - Q4 standalone = FY2025 YTD minus original 9M/2025 YTD: CFO **-59,940,474,075**; CFI **40,439,803,532**; CFF **428,224,000,000**; net **408,723,329,457**; FX **0** (blank source row); opening **588,252,269,795**; closing **996,975,599,252**; CAPEX **-3,650,969,550**; dividends blank. Q4 flow/cash bridges and opening-vs-Q3-close residuals all 0.
 - B03b on PDF pages 16–17 is customer brokerage/trust-money cashflow. Do not merge customer money flows with company B03a CFO/CFI/CFF.
 - Snapshot data commit **`6075d73bef1d571058966bed27b74849ef1f6f30`**; audit note `reports/analysis/VDS-Q4-2025-visual-review.md`, commit **`dbc258ce18ca555f4ad53f90ea9c26cf4618eb7a`**. Status: **B01/B02/B03a visual PASS**, all equations residual 0. Q4/2025 is closed; do not reload/re-OCR it. Next older open exceptions: VDS Q2/2025 parent/NCI attribution and Q3/2025 B02 row1.8 revenue detail; preserve both as pending and do not backsolve.
+
+### 10.25 VDS Q3/2025 — B02 300 DPI resolves 90m revenue residual as HTM OCR error
+
+- Nguồn VietstockFinance document **523128**, BCTC hợp nhất VDS Q3/2025; PDF `reports/raw/VDS/auto-vds-20261021/bd7db8914d33e414.pdf`.
+- B02 supplemental render: PDF pages **11–13** at **300 DPI**, workflow run **41825721924**, artifact **13318947582**, SHA-256 `d1fa36877d114892b63b343deae17481d4f12ba721e7e7ef98fb89113fb04da0`. Image hashes: page11 `d900ac7498a24a46bebd08e49975f8042e03ed6630ccfe98530331d3c3c8fa46`; page12 `414df94a0865e472486244f991da8fa698f66160b9388f9e4ae42543f6118aff`; page13 `44a632b6f1c5a986feb5fab511c9ec428cd0f2e7358509f0ededfc4ce23e9930`.
+- **Root cause of the prior 90m residual:** B02 row1.2 current quarter HTM income is **11,491,178,083 VND**, not the old OCR value **11,401,178,083 VND**. The wrong OCR digit understated HTM by 90m and created a false row20 detail residual.
+- Row1.8 advisory revenue in the **Q3 current-quarter column is blank**. The value **881,819,860 VND** belongs to the 9M/YTD column and equals Q1 advisory **832,001,623** + Q2 advisory **49,818,237**. Keep Q3 row1.8 null; never move YTD to standalone quarter.
+- Q3 current revenue components: FVTPL **259,287,392,878**, HTM **11,491,178,083**, lending **108,048,129,231**, AFS **5,155,965,000**, brokerage **81,425,970,141**, row1.8 blank, custody **1,960,643,491**, financial advisory **1,754,090,910**, other income **812,043,806**. Row20 total **469,935,413,540**; component residual **0 VND**.
+- Q3 expense details: row21 FVTPL **-29,733,185,559** (negative as printed); row23.3 AFS loss **45,714,000**; row24 provisions **66,940,600,625**; row26 self-trading **1,282,302,835**; row27 brokerage **55,091,767,129**; row29 securities advisory **15,200,000**; row30 custody **2,236,805,580**; row31 financial advisory **4,182,481,667**; row32 other services **6,267,062,492**. Row40 total **106,328,748,769**; signed component residual **0 VND**. Row61 selling expense and row72 other expense are blank.
+- Q3 row50 financial income **19,292,895,989** (FX gain **77,177** and interest/dividend income **19,292,818,812**); row60 financial expense **9,560,904,110** (FX loss **250,000,000**, interest **9,310,904,110**); row62 admin expense **47,492,454,241**; row70 operating profit **325,846,202,409**; other income/result **748,950**; PBT **325,846,951,359**; current tax **26,295,285,720**; deferred tax **35,294,569,352**; total tax **61,589,855,072**; PAT **264,257,096,287**; parent **261,233,437,741**; NCI **3,023,658,546**; EPS **960**. All B02 bridges residual 0.
+- 9M/2025 B02 row20 revenue **819,858,909,744**; row40 expenses **379,630,030,213**; operating profit **331,035,265,945**; PBT **331,048,115,091**; tax **58,972,582,215**; PAT **272,075,532,876**; parent **269,304,589,718**; NCI **2,770,943,158**; EPS YTD **990**. The 9M HTM **27,460,602,740** exactly equals Q1 **4,734,246,576** + Q2 **11,235,178,081** + Q3 **11,491,178,083**. The 9M row1.8 advisory **881,819,860** equals Q1+Q2 and therefore Q3 current remains blank.
+- Data commit **`8f22d161e6125211c1d102a79b8bc517d354d68e`**; supplemental audit note `reports/analysis/VDS-Q3-2025-300dpi-revenue-detail-correction.md`, commit **`e0dac2e50d26b34b65f6517872b461a78e639535`**. Status: Q3/2025 B02 revenue and expense detail PASS; the earlier 90m residual is closed as an OCR HTM correction. Do not re-extract the period.
 
 ## 11. Giới hạn thao tác
 
