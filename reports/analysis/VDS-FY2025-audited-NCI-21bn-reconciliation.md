@@ -125,3 +125,38 @@ Q3/2025 YTD trừ Q3 current-quarter tiếp tục khớp chính xác với H1 YT
 - Cả hai ngày báo cáo đều liệt kê VDAM với vốn điều lệ **100 tỷ VND**, tỷ lệ sở hữu VDS **58%**; RVIF với vốn quỹ **70 tỷ VND**, tỷ lệ sở hữu VDS **85%**.
 - Không thấy thay đổi được công bố về vốn ghi trên bảng hoặc tỷ lệ sở hữu giữa Q1 và Q2/2025. Đây không giải thích chênh lệch phân bổ B02; cũng không loại trừ giao dịch nội kỳ hoặc giao dịch không làm thay đổi tỷ lệ sở hữu.
 - Kết quả hình ảnh: workflow run **41879521045**, artifact **13349410378**. Biên bản so sánh chi tiết: `reports/analysis/VDS-Q2-2025-parent-NCI-followup.md`, commit **aadfa368103656734cb1294ec66ff425de23e979**.
+
+
+## 10. Xác định đơn vị con nhận phần vốn tăng 21 tỷ — VDAM
+
+### Bằng chứng B05 bốn kỳ
+B05-CTCK/HN tại các ngày báo cáo cho thấy:
+
+| Kỳ | Vốn VDAM | Tỷ lệ VDS | Vốn RVIF | Tỷ lệ VDS |
+|---|---:|---:|---:|---:|
+| Q1/2025 | 100 tỷ | 58% | 70 tỷ | 85% |
+| Q2/2025 | 100 tỷ | 58% | 70 tỷ | 85% |
+| Q3/2025 | **150 tỷ** | 58% | 70 tỷ | 85% |
+| Q4/2025 | **150 tỷ** | 58% | 70 tỷ | 85% |
+
+Q3/Q4 B05 trực tiếp được render ở 300 DPI từ PDF gốc; PDF page 21 / printed page 16 là trang thể hiện bảng công ty con và quỹ thành viên. VDAM ở Q3/Q4 ghi vốn điều lệ 150 tỷ; RVIF vẫn 70 tỷ. Phần mô tả đăng ký doanh nghiệp VDAM có ghi giấy phép thay đổi gần nhất ngày **29/09/2025**, nhưng không có hồ sơ thay đổi chi tiết trong trang thuyết minh để xác định ngày nộp tiền cụ thể.
+
+### Cầu nối 50 tỷ vốn VDAM
+- Vốn VDAM tăng **50.000.000.000 VND** từ Q2 sang Q3/2025.
+- Tỷ lệ VDS sở hữu vẫn **58%**; tỷ lệ lợi ích cổ đông không kiểm soát là **42%**.
+- **42% × 50.000.000.000 = 21.000.000.000 VND**, khớp chính xác Note 26 “Tăng phần vốn sở hữu ở công ty con” và B04 NCI rollforward kiểm toán.
+- RVIF không thay đổi vốn quỹ hoặc tỷ lệ VDS sở hữu trong các kỳ đã kiểm tra; do đó bằng chứng định vị khoản tăng 21 tỷ vào **VDAM**, không phải RVIF.
+
+### Giới hạn
+Note 26/B05 không nêu danh tính từng cổ đông ngoài, số cổ phần phát hành hay giấy tờ thanh toán chi tiết. Có thể xác định phần vốn thuộc NCI tương ứng 21 tỷ theo tỷ lệ 42%, nhưng không gán tên nhà đầu tư hoặc hình thức pháp lý chi tiết ngoài những gì bảng vốn/Note26 công bố.
+
+### Kết luận hồ sơ B/A
+- **B — PASS/CLOSED:** VDAM tăng vốn điều lệ từ 100 lên 150 tỷ trong Q3/2025; VDS duy trì 58%; NCI 42% tương ứng 21 tỷ.
+- **A — PENDING:** phân bổ lợi nhuận B02 Q1/H1 vẫn lệch **1.117.693.283 VND**, không liên quan trực tiếp đến giao dịch vốn VDAM Q3 vì giao dịch phát sinh sau kỳ H1.
+- Không chỉnh `data/financials-VDS.json`; giữ nguyên số gốc và giới hạn nguồn.
+
+Q3/Q4 visual evidence:
+- Q3 VietstockFinance document **523128**, PDF page 21 / printed page 16, SHA-256 `bd7db8914d33e4144845c01aca837597b2986183d20a690f6fbcbbc855c5e6d5`.
+- Q4 VietstockFinance document **530626**, PDF page 21 / printed page 16, SHA-256 `d2252c9c1aaafbaffa8395c96fffd5b2063aa8b3da881047ee3e74270691e9e2`.
+- Render workflow runs **41881072688**, **41881158938**; artifacts **13348677962**, **13348792588**.
+- Follow-up audit note: `reports/analysis/VDS-Q2-2025-parent-NCI-followup.md`, commit **99b582829dde97b29d492fd3602a7aedb99dd2bb**.
