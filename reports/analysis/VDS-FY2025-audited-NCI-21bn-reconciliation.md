@@ -77,3 +77,14 @@ Q3/2025 YTD trừ Q3 current-quarter tiếp tục khớp chính xác với H1 YT
 - **B — cầu nối biến động vốn NCI toàn FY2025: PASS.** Khoản tăng 21 tỷ đã được thuyết minh và toàn bộ rollforward B04 cuối năm khớp 0.
 - **A — phân bổ lợi nhuận B02 giữa Q1 gốc và H1/YTD: PENDING.** Không thay số Q1, không backsolve vào dữ liệu chính, không thêm balancing plug.
 - Không sửa `data/financials-VDS.json` và không gộp số liệu RI vào HN.
+
+
+## 6. Xác nhận thêm bằng ảnh B04 Q3/2025 và định vị thời điểm tăng vốn
+
+- B04 Q3/2025, VietstockFinance document **523128**, PDF page **18** / printed page **13**, đã được render trực tiếp từ PDF gốc ở 300 DPI? Không: artifact này là render 150 DPI; kiểm tra lại ảnh gốc PDF page 18 đã xoay đúng chiều. Artifact workflow run **41858315839**, artifact **13339205504**, file `page-18.jpg`.
+- B04 row 9 “Lợi ích cổ đông không kiểm soát”, cột năm nay: số dư đầu năm **48.488.925.445 VND**; tăng trong kỳ **22.785.197.412 VND**; không có số giảm hiện hành; số dư cuối 30/09/2025 **71.274.122.857 VND**. Phép cộng B04 khớp chính xác.
+- B04 Q2/2025 PDF page **19** / printed page **13** đã được kiểm tra ảnh 300 DPI trước đó: NCI đầu năm **48.488.925.445 VND**, giảm trong kỳ **1.238.461.133 VND**, cuối 30/06/2025 **47.250.464.312 VND**; không có khoản tăng hiện hành.
+- Q3 B02 standalone ghi NCI PAT **3.023.658.546 VND**; Q3 B04 closing less Q2 closing = **24.023.658.545 VND**. Phần khác lợi nhuận = **20.999.999.999 VND**, chênh **-1 VND** so với khoản tăng 21 tỷ trong Note 26 FY2025. Sai khác 1 VND nhỏ hơn ngưỡng 0,01%, được ghi nhận là residual chứ không thêm plug.
+- Vì vậy, khi kết hợp với Note 26 kiểm toán FY2025, bằng chứng định vị khoản tăng vốn 21 tỷ ở **Q3/2025** rất mạnh: Note 26 ghi “Tăng phần vốn sở hữu ở công ty con” 21 tỷ; B04 Q3 cho thấy phần tăng NCI ngoài lợi nhuận trong riêng Q3 là 20.999.999.999 VND. Không tự ý đổi giá trị nguồn hay chỉnh 1 VND.
+- B04 FY2025 Note 26/B04 cuối năm vẫn khớp chính xác toàn năm: +21 tỷ vốn ở công ty con, lỗ đã thực hiện -1.396.298.463, lỗ chưa thực hiện -547.773.687; NCI cuối năm 67.544.853.295 VND.
+- Đây xác nhận **hồ sơ B (vốn NCI 21 tỷ): PASS** và thời điểm phát sinh có thể xác định ở Q3/2025. Nó **không giải thích hồ sơ A**: sai khác phân bổ B02 Q1 gốc so với H1 trừ Q2 vẫn 1.117.693.283 VND.
