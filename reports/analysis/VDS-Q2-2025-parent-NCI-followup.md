@@ -83,3 +83,12 @@ Phần kết luận cũ tại mục 3 về việc chưa xác định bản chấ
 - Hồ sơ kiểm toán chi tiết: `reports/analysis/VDS-FY2025-audited-NCI-21bn-reconciliation.md`, commit `fc831882e689fa6b41e3d93f844a21d9f9182312`.
 
 Không sửa `data/financials-VDS.json`; Q2/2025 vẫn chưa hoàn thành do ngoại lệ B02 còn mở.
+
+
+## 8. Kết quả rà soát B04 Q3/2025 sau khi có BCTC hợp nhất kiểm toán FY2025
+
+- Ảnh B04 Q3/2025 PDF page 18 / printed page 13 được kiểm tra trực tiếp; row 9 NCI: đầu năm 48.488.925.445 VND, tăng lũy kế 22.785.197.412 VND, cuối 30/09/2025 là 71.274.122.857 VND.
+- Đối chiếu Q2 B04 cuối 30/06 là 47.250.464.312 VND, Q3 B02 NCI PAT riêng quý là 3.023.658.546 VND: phần tăng ngoài PAT trong Q3 = 71.274.122.857 - 47.250.464.312 - 3.023.658.546 = **20.999.999.999 VND**, residual -1 VND so với Note 26 FY2025 “Tăng phần vốn sở hữu ở công ty con” 21.000.000.000 VND.
+- Do đó hồ sơ B đã **PASS** ở cấp độ phân loại và định vị thời điểm: khoản tăng 21 tỷ là vốn/quyền lợi NCI tại công ty con, phát sinh trong Q3/2025 theo đối chiếu B04 Q2→Q3 và B02 Q3; cầu nối năm kiểm toán khớp tuyệt đối. Không có tên công ty con/nhà đầu tư trong Note 26 nên không gán cụ thể.
+- Khoản -1 VND trên đối chiếu Q3 là residual số học được giữ lại, không sửa số nguồn. Nó nằm trong ngưỡng 0,01%.
+- Hồ sơ A tiếp tục **PENDING**: Q1 parent/NCI gốc khác Q1 hàm ý từ H1 trừ Q2 **1.117.693.283 VND**. Không dùng nghiệp vụ vốn 21 tỷ Q3 làm lời giải cho phân bổ lợi nhuận Q1/H1.
