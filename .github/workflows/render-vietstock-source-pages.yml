@@ -1,5 +1,5 @@
 name: Render Vietstock source PDF pages for visual audit
-# Temporary visual audit target: VDS Q2/2026 consolidated HN, VietstockFinance doc 555653.
+# Temporary visual audit target: VDS Q1/2026 B04 and B05 ownership notes, VietstockFinance doc 543855.
 
 on:
   push:
@@ -15,15 +15,15 @@ on:
       period:
         description: "Report period label"
         required: true
-        default: "2026-Q2"
+        default: "2026-Q1-OWNERSHIP"
       pdf_path:
         description: "Path to the PDF already archived in reports/raw"
         required: true
-        default: "reports/raw/VDS/auto-vds-20261021/6ca61e80d55ffaac.zip"
+        default: "reports/raw/VDS/auto-vds-20261021/2720dd850acfbd95.pdf"
       pages:
         description: "Comma-separated 1-based PDF pages, or all"
         required: true
-        default: "19,20,21,22,23,24,25,26,27,28,29,30"
+        default: "18,20,21,22"
       dpi:
         description: "Render DPI"
         required: true
@@ -31,7 +31,7 @@ on:
       pdf_member:
         description: "Exact PDF filename inside ZIP; leave blank to auto-select the company-parent member"
         required: false
-        default: "VDS_Baocaotaichinh_Q2_2026_Hopnhat.pdf"
+        default: ""
 
 permissions:
   contents: write
@@ -45,7 +45,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           sparse-checkout: |
-            ${{ github.event.inputs.pdf_path || 'reports/raw/VDS/auto-vds-20261021/6ca61e80d55ffaac.zip' }}
+            ${{ github.event.inputs.pdf_path || 'reports/raw/VDS/auto-vds-20261021/2720dd850acfbd95.pdf' }}
           sparse-checkout-cone-mode: false
           lfs: false
 
@@ -60,11 +60,11 @@ jobs:
       - name: Render source pages and contact sheets
         env:
           TARGET_SYMBOL: ${{ github.event.inputs.symbol || 'VDS' }}
-          TARGET_PERIOD: ${{ github.event.inputs.period || '2026-Q2' }}
+          TARGET_PERIOD: ${{ github.event.inputs.period || '2026-Q1-OWNERSHIP' }}
           PDF_PATH: ${{ github.event.inputs.pdf_path || 'reports/raw/VDS/auto-vds-20261021/6ca61e80d55ffaac.zip' }}
-          PAGE_LIST: ${{ github.event.inputs.pages || '19,20,21,22,23,24,25,26,27,28,29,30' }}
+          PAGE_LIST: ${{ github.event.inputs.pages || '18,20,21,22' }}
           RENDER_DPI: ${{ github.event.inputs.dpi || '300' }}
-          PDF_MEMBER: ${{ github.event.inputs.pdf_member || 'VDS_Baocaotaichinh_Q2_2026_Hopnhat.pdf' }}
+          PDF_MEMBER: ${{ github.event.inputs.pdf_member ||  }}
         run: |
           python - <<'PY'
           import os, zipfile
