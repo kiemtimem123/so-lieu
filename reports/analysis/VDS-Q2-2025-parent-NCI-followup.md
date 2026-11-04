@@ -176,3 +176,8 @@ Không dùng report Q1/Q2 comparative năm sau để sửa dữ liệu gốc; ch
 - Không thấy thay đổi được công bố về tên đơn vị, vốn ghi trong bảng, hay tỷ lệ sở hữu giữa ngày 31/03 và 30/06/2025. Điều này làm yếu giả thuyết rằng chênh lệch phân bổ B02 Q1/H1 phát sinh đơn thuần do thay đổi tỷ lệ sở hữu/đơn vị hợp nhất trong Q2.
 - Giới hạn: so sánh hai ngày báo cáo không loại trừ giao dịch nội kỳ, giao dịch vốn chưa làm thay đổi tỷ lệ sở hữu, hoặc biến động giữa các thành viên/quỹ không được phản ánh ở dòng vốn/tỷ lệ cuối kỳ trong bảng này. Không dùng kết quả này để đóng A.
 - Hồ sơ A vẫn **PENDING 1.117.693.283 VND**. Cần tiếp tục kiểm tra B05 Q3/Q4/2025 và thuyết minh biến động sở hữu; tuy nhiên, chỉ tài liệu thể hiện cầu nối phân bổ parent/NCI Q1 sang H1 mới đủ đóng ngoại lệ B02.
+
+
+## 13. Lệnh kiểm tra bổ sung — Q3/Q4 B05 ownership notes
+
+Đang kiểm tra trực tiếp B05 của hai báo cáo hợp nhất Q3/2025 và Q4/2025 để xem thuyết minh công ty con/quỹ thành viên có ghi nhận thay đổi vốn, tỷ lệ sở hữu, hoặc thông tin nhận vốn trong giai đoạn phát sinh khoản tăng NCI 21 tỷ ở Q3 hay không. Chỉ kết luận theo trang PDF gốc sau khi ảnh kết xuất được kiểm tra; chưa ghi nhận kết quả Q3/Q4 tại thời điểm tạo mục này.
