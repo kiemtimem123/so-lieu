@@ -1,6 +1,6 @@
 # SOP xử lý báo cáo tài chính doanh nghiệp niêm yết
 
-- Phiên bản: 1.43
+- Phiên bản: 1.44
 - Ngày ban hành: 04/11/2026
 - Phạm vi: thu thập, đối chiếu, trích xuất, chuẩn hóa, kiểm định và checkpoint dữ liệu BCTC theo mã chứng khoán và kỳ báo cáo.
 - Nguyên tắc ưu tiên: đúng nguồn, đúng kỳ, đúng phạm vi hợp nhất/riêng lẻ, giữ dấu và đơn vị gốc, truy vết được mọi giá trị.
@@ -967,3 +967,16 @@ Nguồn chỉ dùng VietstockFinance và các tệp liên kết tại danh mục
 - **Mandatory procedure:** test (a) B02 parent PAT + NCI PAT = consolidated PAT and Q1 original vs H1 YTD less Q2, and (b) B04 opening NCI equity + separately disclosed increases/decreases = closing NCI equity. These are distinct checks. Do not assume B04 movement equals NCI PAT, or use an aggregate B04 movement to explain B02 attribution without a supporting transaction note.
 - Both outstanding items remain **PENDING**: B02 attribution delta **1.117.693.283 VND**; B04 NCI equity movement beyond reported H1 NCI loss **985.745.745 VND**. They must not be conflated or plugged.
 - Detailed evidence: `reports/analysis/VDS-Q2-2025-parent-NCI-followup.md`, commit **111941a876dd03029c4a5a2aa35de66351a72cf6**. Do not change `data/financials-VDS.json` based on this review.
+
+
+### 10.28 VDS FY2025 audited HN — xác minh khoản tăng NCI 21 tỷ và tách khỏi B02 attribution
+
+- Đã trực tiếp render/đọc đúng PDF thành viên `VDS_Baocaotaichinh_2025_Kiemtoan_Hopnhat.pdf` trong archive `reports/raw/VDS/auto-vds-20261021/a65994df991573d9.zip`; không nhầm với `ISC_Baocaotaichinh_2025_Kiemtoan_Hopnhat.pdf`. PDF SHA-256 `9c4c4b64f9df79340c943283ffd4f448b20a26ffb4cfb06ef736793205d44c9c`, 83 trang.
+- Note 26, PDF page 60 / printed page 55, ghi NCI đầu năm **48.488.925.445 VND**, “Tăng phần vốn sở hữu ở công ty con” **21.000.000.000 VND**, lỗ đã thực hiện **-1.396.298.463 VND**, lỗ chưa thực hiện **-547.773.687 VND**, NCI cuối năm **67.544.853.295 VND**. Rollforward residual **0**.
+- B04 FY, PDF pages 24–25 / printed pages 19–20, row 9 NCI shows net increase for 2025 **19.055.927.850 VND** and ending NCI **67.544.853.295 VND**. It matches gross contribution +21bn less the two NCI loss components exactly.
+- Original Q2/2025 HN B04 PDF page 19 / printed page 13 shows NCI opening **48.488.925.445 VND**, 30-Jun-2025 closing **47.250.464.312 VND**, and H1 decrease **1.238.461.133 VND**; no current-year increase in the H1 column. Thus the 21bn gross increase is after the half-year point; do not assign it to a specific quarter without quarter-specific proof.
+- Note 1, PDF page 28 / printed page 23 lists VDAM (58% direct/0% indirect) and RVIF (85% direct/2.9% indirect). Note 10, PDF page 50 / printed page 45, reports RVIF long-term investment **49.497.795.000 VND** at year-end and no opening balance. B03b, PDF page 21 / printed page 16, row 71 reports consolidated proceeds from share issuance/owner contributions **68.000.000.000 VND** for FY2025. These are corroborative context only: the inspected Note 26 does not identify which unit received the 21bn, who contributed, the exact instrument, or whether it was new issue versus another ownership transaction. Do not allocate the 21bn to VDAM/RVIF or equate the whole 68bn B03b with the 21bn.
+- **B04 FY2025 NCI rollforward: PASS.** The question “why did NCI increase by 21bn?” is answered at the level of the audited note: an increase in ownership capital in a subsidiary, consistent with an outside-investor ownership/capital increase. Exact legal entity/investor/mechanism remains unreported in the inspected note.
+- **A remains PENDING:** the original Q1 B02 parent/NCI figures still differ from Q1 implied by Q2 H1 less Q2 standalone by **1.117.693.283 VND**. The FY2025 audited note does not provide a Q1 restated B02 or bridge explaining that allocation change. Preserve Q1 source values; no backsolve or balancing plug.
+- Do not alter `data/financials-VDS.json`. Do not mix RI with HN. Q2/2025 period stays incomplete until the B02 attribution exception is resolved.
+- Detailed audit note: `reports/analysis/VDS-FY2025-audited-NCI-21bn-reconciliation.md`, commit **fc831882e689fa6b41e3d93f844a21d9f9182312**.
