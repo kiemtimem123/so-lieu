@@ -148,7 +148,7 @@ The RVIF change from 85% to 95% is directionally consistent with a transfer of p
 Q1/2026 original B02 and Q2/2026 H1/YTD less Q2 standalone have the same total PAT but differ in parent/NCI allocation:
 - Q1 original: parent **(28,526,203,886)**; NCI **(964,596,560)**; total **(29,490,800,446)**.
 - Q1 implied by H1 less Q2: parent **(28,384,702,201)**; NCI **(1,106,098,245)**; total **(29,490,800,446)**.
-- Allocation difference: **141,501,685 VND** (parent higher and NCI lower in the Q1 original than the implied split); total PAT residual 0.
+- Allocation difference: **141,501,685 VND** in opposite directions: Q1 original parent PAT is **141,501,685 VND lower (more negative)** than implied; Q1 original NCI PAT is **141,501,685 VND higher (less negative)** than implied. Total PAT residual 0.
 
 Preserve original Q1 and H1/YTD source columns; no backsolve, no plug, no overwrite. This 2026 allocation difference is distinct from the 2025 Q1/H1 difference of 1,117,693,283 VND.
 
@@ -164,3 +164,70 @@ The Q2/2026 snapshot was updated at million-VND precision from the PDF images:
 - B03 company cashflow fields set to exact values; customer trust cashflows stored in a separate audit object.
 
 No raw-source values were altered. No balancing plug was inserted. Snapshot file: `data/financials-VDS.json`; data commit **2f7cb0216fb9b356c1c54e4d51bd0cd3a045a18f**.
+
+
+## 11. Q1/Q2 2026 NCI movements and RVIF ownership change — classification remains PENDING
+
+### 11.1. Direct B04 comparison
+
+The Q1/2026 consolidated report (VietstockFinance document **543855**, B04 PDF page 18 / printed page 13) and Q2/2026 consolidated report (document **555653**, B04 PDF page 18 / printed page 13) show:
+
+| B04 NCI line | Q1/2026 | H1/2026 cumulative | Q2 increment |
+|---|---:|---:|---:|
+| Opening NCI at 1-Jan-2026 | 67,544,853,295 | 67,544,853,295 | |
+| Decrease in reporting period | (7,825,738,340) | (11,038,190,794) | (3,212,452,454) |
+| Closing NCI | 59,719,114,955 | 56,506,662,501 | |
+
+All three B04 movements reconcile arithmetically to the stated closing balances. Q2 increment is H1 cumulative decrease less Q1 decrease; no plug is inserted.
+
+B02 NCI profit/(loss) allocations:
+- Q1/2026 standalone: **(964,596,560 VND)**.
+- Q2/2026 standalone: **(3,417,696,282 VND)**.
+- H1/2026 YTD: **(4,523,794,527 VND)**.
+
+Comparison of the B04 movement and B02 NCI PAT leaves:
+- Q1: B04 NCI decrease less Q1 NCI PAT = **6,861,141,780 VND** additional NCI decrease outside the B02 NCI PAT line.
+- Q2 increment: B04 decrease less Q2 NCI PAT = **(205,243,828 VND)**, meaning Q2 B04 decrease is 205,243,828 VND smaller than the Q2 NCI loss.
+- H1 cumulative: B04 decrease less H1 NCI PAT = **6,514,396,267 VND**.
+
+These are cross-statement differences, not automatic arithmetic errors. A transaction/equity bridge is still required before classifying them.
+
+### 11.2. B05 ownership comparison — RVIF 85% to 95%
+
+Direct visual B05 comparison:
+- Q4/2025 (31-Dec-2025): RVIF fund capital **70bn VND**, VDS ownership **85%**.
+- Q1/2026 (31-Mar-2026), PDF page 21 / printed page 16: RVIF fund capital **70bn VND**, VDS ownership **95%**. Q1 visual render workflow run **41915850023**, artifact **13364946839**.
+- Q2/2026 (30-Jun-2026), PDF page 22 / printed page 17: RVIF fund capital **70bn VND**, VDS ownership **95%**. Q2 visual render workflow run **41915196166**, artifact **13363383855**.
+- VDAM remained **150bn VND / 58%** from Q4/2025 through Q2/2026; the RVIF ownership percentage is the ownership note that changed.
+
+Thus the reported RVIF ownership percentage increased by 10 percentage points sometime after 31-Dec-2025 and no later than 31-Mar-2026. This aligns directionally with a reduction in NCI reported in Q1/2026, but the reviewed B04/B05 pages do not disclose the acquisition/transfer agreement, consideration, exact effective date, fund NAV/carrying-value adjustment, or other complete transaction bridge.
+
+Do not multiply the 10 percentage points by the 70bn stated fund capital and treat the 7bn arithmetic result as the amount recorded in B04. Stated fund capital is not established by these pages as the carrying value/NAV of the transferred interest. The B04 NCI reduction of 7,825,738,340 VND and the post-B02 Q1 difference of 6,861,141,780 VND are therefore not yet reconciled to the ownership change.
+
+**Classification: PENDING — probable ownership-change lead, not a source-supported amount reconciliation.** Keep this separate from the FY2025 VDAM capital increase/NCI 21bn, which is closed PASS.
+
+### 11.3. Separate B02 Q1/H1 2026 allocation inconsistency
+
+Q1/2026 original B02:
+- Parent PAT **(28,526,203,886 VND)**.
+- NCI PAT **(964,596,560 VND)**.
+- Total PAT **(29,490,800,446 VND)**.
+
+Q1 implied by H1 YTD less Q2 standalone:
+- Parent PAT **(28,384,702,201 VND)**.
+- NCI PAT **(1,106,098,245 VND)**.
+- Total PAT **(29,490,800,446 VND)**.
+
+The split differs by **141,501,685 VND** in opposite directions: original Q1 parent is 141,501,685 VND more negative; original Q1 NCI is 141,501,685 VND less negative. Consolidated PAT agrees exactly.
+
+Keep the original Q1 and H1/YTD values as separately published. Do not backsolve, insert a plug, or claim the RVIF percentage movement explains this exact 141.5m difference without a transaction schedule. This is a second, independent PENDING allocation issue, distinct from the 2025 difference of 1,117,693,283 VND.
+
+## 12. Audit status
+
+- B01: **PASS** — assets, liabilities, equity and subtotals reconcile exactly.
+- B02: **PASS** — revenue/expense detail, tax bridge, PAT and parent/NCI bridge reconcile for both Q2 standalone and H1 YTD; corrected EPS/financial income/selling-expense mapping.
+- B03: **PASS** — company cashflows and cash bridge reconcile exactly; customer trust cashflows are separately reconciled and are not mixed with company cash.
+- B04: **PASS arithmetic; PENDING transaction classification** for H1 NCI decrease 11,038,190,794 VND.
+- B05: **PASS as reported ownership data**; RVIF moved from 85% at FY2025 year-end to 95% by Q1/2026. The nature/value of the transaction and bridge to B04 remain pending.
+- B02 Q1/H1 2026 attribution: **PENDING 141,501,685 VND**; preserve source columns.
+- B02 Q1/H1 2025 attribution: separate PENDING **1,117,693,283 VND**; no overwrite.
