@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-05T20:00:00+07:00",
+  "updatedAt": "2026-11-05T20:12:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "Priority 1: VietstockFinance public document catalog and directly linked report PDFs. Priority 2: WiData document tab for the same ticker, only to compare/supplement when source 1 lacks the report or extraction is unclear/unavailable. No third source without explicit user approval.",
   "periodStart": "2024-Q1",
@@ -44,23 +44,23 @@
   "resumeSymbolHint": "GAS",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
-    "symbol": "VDS",
-    "period": "2026-Q2",
-    "status": "VDS_Q2_2026_B01_B02_B03_VISUAL_PASS_B04_ARITHMETIC_PASS",
+    "symbol": "GAS",
+    "period": "2024-Q4",
+    "status": "GAS_Q4_2024_B01_B02_B03_VISUAL_PASS",
     "completeForAutomation": true,
     "periodComplete": true,
     "manualReviewRemaining": true,
-    "processedAt": "2026-11-05T20:00:00+07:00",
+    "processedAt": "2026-11-05T20:12:00+07:00",
     "periodCount": 10,
-    "periodStatus": "VDS Q2/2026 consolidated VietstockFinance document 555653 was directly source-verified and visually reviewed. B01/B02/B03 pass with zero arithmetic residuals; B04 arithmetic pass. Q1/H1 2026 parent-NCI allocation difference 141,501,685 VND and the B04 NCI transaction classification remain documented source-level exceptions; no backsolve or plug.",
-    "sourceIndexUrl": "https://finance.vietstock.vn/VDS/tai-tai-lieu.htm?doctype=1",
-    "sourceDocumentId": "555653",
-    "sourceDocumentUrl": "https://static2.vietstock.vn/data/HOSE/2026/BCTC/VN/QUY%202/VDS_Baocaotaichinh_Q2_2026_Hopnhat.pdf",
-    "sourceArchiveFile": "reports/raw/VDS/auto-vds-20261021/6ca61e80d55ffaac.zip",
+    "periodStatus": "GAS Q4/2024 VietstockFinance document 490581 was visually reviewed from the original rendered PDF pages 4-7. B01/B02/B03 annual values and arithmetic pass. Q4 standalone CFO/CFI/CFF/net are source-derived and reconcile; standalone FX remains null because the Q3 cumulative FX source line is not independently readable. No plug.",
+    "sourceIndexUrl": "https://finance.vietstock.vn/GAS/tai-tai-lieu.htm?doctype=1",
+    "sourceDocumentId": "490581",
+    "sourceDocumentUrl": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%204/GAS_Baocaotaichinh_Q4_2024_Hopnhat.pdf",
+    "sourceArchiveFile": "reports/raw/GAS/auto-gas-20261021/7fa3b1653ff606d1.pdf",
     "sourceDocumentScope": "Consolidated",
     "sourceUnit": "VND",
-    "dataCommit": "3c34ac78856f27f1cb1e9b841136141718bd088c",
-    "auditNotePath": "reports/analysis/VDS-Q2-2026-visual-review.md",
+    "dataCommit": "5f54b657fd2fe06838331248cf04ebbefe64f500",
+    "auditNotePath": "reports/analysis/GAS-Q4-2024-visual-review.md",
     "processingSopVersion": "1.42",
     "validation": {
       "balanceSheet": "PASS_ZERO_RESIDUAL",
@@ -68,70 +68,31 @@
       "incomeStatementExpenseDetail": "PASS_ZERO_RESIDUAL",
       "profitTaxParentNci": "PASS_ZERO_RESIDUAL",
       "cashFlowYtdAndCashBridge": "PASS_ZERO_RESIDUAL",
-      "visual": "PASS_B01_B02_B03_B04_AND_NOTES_REVIEWED"
+      "visual": "PASS_B01_B02_B03_PAGES_4_TO_7"
     },
     "doNotRepeatCoreTextExtraction": true,
     "doNotRepeatVisualReview": true,
     "nextTicker": "GAS",
-    "nextPeriod": "2024-Q4",
-    "nextTask": "RESUME_GAS_Q4_2024",
+    "nextPeriod": "2025-Q4",
+    "nextTask": "RESUME_GAS_Q4_2025_MANUAL_REVIEW",
     "pendingExceptions": [
-      "VDS Q2/2025 parent/NCI allocation shift 1,117,693,283 VND remains unexplained; preserve original source values, no backsolve or plug.",
-      "VDS Q1/H1 2026 parent/NCI allocation difference 141,501,685 VND remains unexplained; preserve original Q1 source values, no backsolve or plug.",
-      "VDS Q1/Q2 2026 B04 NCI transaction classification remains undocumented; RVIF ownership data and Note 10 carrying-value changes are clues only and must not be used as balancing amounts."
+      "GAS Q4/2024 standalone foreign_exchange_effect remains null because the retained Q3/2024 cumulative FX line is not independently readable; do not infer or plug.",
+      "GAS Q4/2025 remains terminal/manual review for unresolved B01 liabilities/equity and partial B03 cashflow fields.",
+      "GAS Q1/2026 remains terminal/manual review for unresolved B01/B03 fields and the documented 334,961,244 VND operating-profit detail residual."
     ],
     "visualReviewPdfPages": [
+      4,
+      5,
       6,
-      7,
-      8,
-      11,
-      12,
-      13,
-      14,
-      15,
-      16,
-      17,
-      18,
-      19,
-      20,
-      21,
-      22,
-      23,
-      24,
-      25,
-      26,
-      27,
-      28,
-      29,
-      30
+      7
     ],
     "visualReviewPrintedPages": [
       1,
       2,
       3,
-      6,
-      7,
-      8,
-      9,
-      10,
-      11,
-      12,
-      13,
-      14,
-      15,
-      16,
-      17,
-      18,
-      19,
-      20,
-      21,
-      22,
-      23,
-      24,
-      25,
-      26
+      4
     ],
-    "sopCommit": "c14abcd03c5c115effcd25ebedda77b3999f378e"
+    "sopCommit": "44a61df10649bce7e2949354cc439139e078ae29"
   },
   "symbolStates": {
     "MBB": {
@@ -1622,7 +1583,7 @@
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-11-04T19:52:00+07:00",
+      "updatedAt": "2026-11-05T20:12:00+07:00",
       "snapshotFetchedAt": "2026-10-23T18:00:37+00:00",
       "sourceReconciledPeriods": [
         "2024-Q1",
@@ -1647,12 +1608,13 @@
       ],
       "lastSourceReconciliation": {
         "periodRange": "2024-Q1 through 2026-Q2",
-        "status": "source_text_reconciled_pending_visual_review_with_manual_exceptions",
+        "status": "source_text_reconciled_with_Q4_2024_visual_pass_and_terminal_manual_exceptions",
         "correctionCommits": [
           "a5591d3c71a33c16c73f93ac6106202e42d6fa61",
           "989403e07de9c3df4839cec0dbeba475d0ed7ce3",
           "2bdbff5d88ee63ce3508b93a235d873d5d6029ae",
-          "0fcf5e111db72ea41812874afac80c910d938bb5"
+          "0fcf5e111db72ea41812874afac80c910d938bb5",
+          "5f54b657fd2fe06838331248cf04ebbefe64f500"
         ],
         "findings": [
           "Q3/2024: khôi phục bảng CĐKT/KQKD và LCTT lũy kế; cân đối tài sản, thuế/LNST và cầu nối dòng tiền khớp.",
@@ -1680,7 +1642,7 @@
           "GAS Q4/2024: Q4 standalone CFO/CFI/CFF/net derived from FY YTD less original 9M YTD source; sum residual zero. Q3 FX row61 unreadable, so standalone Q4 FX is null and residual before FX is diagnostic only.",
           "GAS Q4/2024: Q1/2025 opening comparative assets/liabilities both lower than original Q4 by 38,683,095,343 VND; equity matches exactly. Preserve separately, no overwrite."
         ],
-        "remaining": "GAS Q4/2024 text extraction is complete; visual page review remains pending due PDF size and standalone FX row61 cannot be independently split without the Q3 row61 source value. Do not repeat B01/B02/B03 text extraction. Continue current cross-ticker queue (IDC Q3/2025) while preserving GAS Q4/2025 and Q1/2026 manual holds."
+        "remaining": "GAS Q4/2024 visual review is closed; standalone Q4 FX remains null because Q3 cumulative FX is not independently readable. Next: GAS Q4/2025 manual review; do not repeat Q4/2024 core extraction or visual review."
       },
       "detailSourceReconciledPeriods": [
         "2025-Q4",
@@ -1697,7 +1659,11 @@
           "Q4/2025 standalone CFO 829,207.541688m and CFF -2,447,363.676194m derived exactly by Q4 YTD minus 9M YTD. Keep CFI, net change and opening/closing cash null."
         ],
         "remaining": "Q4/2025 CFI/net cash/opening/closing remain PENDING; Q1/2026 CFO/CFF/net/closing remain PENDING. Keep source image review pending for GAS original Q4/2024, Q4/2025 and Q1/2026."
-      }
+      },
+      "pendingVisualPeriods": [
+        "2025-Q4",
+        "2026-Q1"
+      ]
     },
     "PLX": {
       "status": "terminal_needs_manual_review",
@@ -8592,14 +8558,18 @@
   "gasLastProgress": {
     "symbol": "GAS",
     "period": "2024-Q4",
-    "status": "GAS_Q4_2024_SOURCE_TEXT_RECONCILED_VISUAL_PENDING",
-    "processedAt": "2026-11-04T19:52:00+07:00",
-    "dataCommit": "c86aa1c06944e8f2a7d218b560ec925e61e23c5d",
+    "status": "GAS_Q4_2024_B01_B02_B03_VISUAL_PASS",
+    "processedAt": "2026-11-05T20:12:00+07:00",
+    "dataCommit": "5f54b657fd2fe06838331248cf04ebbefe64f500",
+    "auditNoteCommit": "24bc72cb3b0116342a19d976e0bea7f21f67e504",
     "sopCommit": "44a61df10649bce7e2949354cc439139e078ae29",
-    "periodComplete": false,
-    "nextAction": "No further B01/B02/B03 text extraction for Q4/2024. Image review only if an accessible page image/source becomes available; standalone FX remains null. Preserve active global ticker IDC Q3/2025."
+    "periodComplete": true,
+    "nextAction": "Resume GAS Q4/2025 manual review. Do not reread Q4/2024. Q4 standalone FX remains null because Q3 cumulative FX is not independently source-readable."
   },
-  "pendingVisualPeriods": [],
+  "pendingVisualPeriods": [
+    "GAS:2025-Q4",
+    "GAS:2026-Q1"
+  ],
   "pendingCashflowPeriods": [],
   "lastManualReviewPeriod": "2025-Q3",
   "lastManualReviewStatus": "VDS_Q3_2025_REVENUE_DETAIL_RESOLVED_HTM_OCR_CORRECTED",
