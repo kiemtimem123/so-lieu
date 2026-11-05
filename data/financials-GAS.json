@@ -344,10 +344,10 @@
       "ratio_unit": "%/năm (tính từ lợi nhuận quý khi đủ dữ liệu bình quân đầu/cuối kỳ)",
       "source_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%204/GAS_Baocaotaichinh_Q4_2024_Hopnhat.pdf",
       "source_index_url": "https://finance.vietstock.vn/GAS/tai-tai-lieu.htm?doctype=1",
-      "report_type": "BCTC hợp nhất GAS Q4/2024 – B01/B02/B03 đã đối chiếu text gốc; visual review pending",
+      "report_type": "BCTC hợp nhất GAS Q4/2024 – B01/B02/B03 source reconciled and visually verified",
       "source_pages": "B01 trang in 1–2; B02 trang in 3; B03 trang in 4. Text extraction verified; PDF screenshots still pending due file size.",
       "quarter_profit_basis": "B02 Q4 current column; B03 standalone Q4 calculated from FY2024 YTD minus source-backed 9M/2024 YTD.",
-      "verification_status": "source_text_reconciled_pending_visual_review",
+      "verification_status": "source_text_and_visual_reconciled_with_terminal_fx_exception",
       "source_validation": {
         "reviewed_at": "2026-11-04T19:40:00+07:00",
         "single_source_policy": "Chỉ danh mục VietstockFinance và tệp do danh mục đó liên kết.",
@@ -355,8 +355,8 @@
         "source_document_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%204/GAS_Baocaotaichinh_Q4_2024_Hopnhat.pdf",
         "listing_title": "Báo cáo tài chính Hợp nhất quý 4 năm 2024  | BCTC Hợp nhất quý 4 năm 2024  | https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY 4/GAS_Baocaotaichinh_Q4_2024_Hopnhat.pdf",
         "document_id": "490581",
-        "manually_visual_reviewed": false,
-        "extraction_deferred_for_short_batch": true,
+        "manually_visual_reviewed": true,
+        "extraction_deferred_for_short_batch": false,
         "automatic_extraction_exhausted": false,
         "core_source_text_reconciled": true,
         "core_source_pages": {
@@ -423,14 +423,14 @@
           "capital_expenditure_ytd": -1821623230975,
           "dividends_paid_ytd": -13971054206100
         },
-        "core_manual_review": "Cần kiểm tra ảnh PDF vì OCR có một số dòng/tiêu đề bị méo; chỉ dùng các dòng có thể nhận diện rõ và không tự cân đối phần còn thiếu.",
+        "core_manual_review": "Visual review complete. Keep Q4 standalone foreign_exchange_effect null; do not infer Q3/Q4 FX or plug the standalone cash bridge.",
         "raw_vnd_fields_quarantined": true,
         "raw_vnd_fields_quarantined_at": "2026-10-30T18:00:00+07:00",
         "source_archive_file": "reports/raw/GAS/auto-gas-20261021/7fa3b1653ff606d1.pdf",
         "extraction_sidecar": "reports/raw/GAS/auto-gas-20261021/7fa3b1653ff606d1.pdf.extracted.json",
         "source_scope": "Consolidated",
         "source_unit": "VND",
-        "source_visual_status": "PENDING: PDF text was successfully retrieved from the VietstockFinance-linked original document; screenshot attempts failed because the original PDF is 13.55 MB and exceeded the screenshot fetch limit. No visual review claimed.",
+        "source_visual_status": "PASS: original VietstockFinance PDF pages 4-7 visually reviewed from saved render artifact; annual B01/B02/B03 values confirmed. Q4 standalone FX remains null because Q3 cumulative FX source line is not independently readable.",
         "source_text_pages": {
           "b01_pdf_pages": [
             4,
@@ -495,7 +495,24 @@
             "printed_page": 4
           }
         },
-        "source_redirect_note": "Web parser resolved the exact VietstockFinance-linked PDF to its public PDF CDN copy; it is the same source document/document ID 490581, not an alternate data provider."
+        "source_redirect_note": "Web parser resolved the exact VietstockFinance-linked PDF to its public PDF CDN copy; it is the same source document/document ID 490581, not an alternate data provider.",
+        "visual_reviewed_pages": [
+          4,
+          5,
+          6,
+          7
+        ],
+        "visual_artifact": {
+          "workflowRunId": 41787662520,
+          "artifactId": 13301557596,
+          "artifactName": "vietstock-source-review-GAS-2024-Q4",
+          "renderedPdfPages": [
+            4,
+            5,
+            6,
+            7
+          ]
+        }
       },
       "published_at": "2025-01-25",
       "source_archive_file": "reports/raw/GAS/auto-gas-20261021/7fa3b1653ff606d1.pdf",
@@ -538,7 +555,7 @@
       "core_financial_extraction_parser_version": "2026-10-23-ngan-vnd-unit-v2-statement-rows",
       "core_financial_extraction_evidence_fingerprint": "6424ac5af6f3cb368f568990857b020451fab57a8e726a1de1937bb734f97b37",
       "core_financial_extraction_evidence_attempt_count": 1,
-      "financial_line_items_status": "source_text_reconciled_pending_visual_review",
+      "financial_line_items_status": "source_text_and_visual_reconciled",
       "financial_line_items_extracted_fields": [
         "admin_expense",
         "cash_beginning",
@@ -600,7 +617,7 @@
       ],
       "financial_line_items_source": "reports/raw/GAS/auto-gas-20261021/7fa3b1653ff606d1.pdf",
       "financial_line_items_updated_at": "2026-11-04T19:40:00+07:00",
-      "financial_line_items_note": "B01/B02/B03 values are normalized by dividing VND by 1,000,000. Quarterly CFO/CFI/CFF/net and capex/dividends are derived as FY2024 YTD minus original 9M/2024 YTD from the Q3 VietstockFinance consolidated report. Annual FX row61 is sourced; Q3 YTD FX row61 was not legible in the saved Q3 sidecar, so standalone Q4 FX remains null. The calculated residual before FX is stored separately, not plugged.",
+      "financial_line_items_note": "B01/B02/B03 annual source values are visually verified from original VietstockFinance PDF pages 4–7. Q4 standalone CFO/CFI/CFF/net/capex/dividends remain derived from FY2024 YTD less original 9M source. Standalone FX remains null by policy because the Q3 cumulative FX source line is not independently readable; no inferred value or balancing plug.",
       "financial_line_items_prior_values": {
         "short_term_receivables": 19103765849857,
         "non_current_assets": 34928300,
@@ -814,17 +831,25 @@
       "foreign_exchange_effect": null,
       "source_validation_status": "source_text_reconciled_pending_visual_review",
       "financial_statement_visual_review": {
-        "status": "source_text_verified_visual_pending",
+        "status": "PASS_B01_B02_B03_WITH_TERMINAL_Q4_FX_EXCEPTION",
         "source_document_id": "490581",
         "source_url": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/QUY%204/GAS_Baocaotaichinh_Q4_2024_Hopnhat.pdf",
-        "screenshot_attempts": [
-          "B01 PDF pages 4 and 5",
-          "B02 PDF page 6",
-          "B03 PDF page 7"
-        ],
-        "screenshot_status": "FAILED_CONTENT_LENGTH_TOO_LARGE",
         "reviewed_from_source_text": true,
-        "visual_verified": false
+        "visual_verified": true,
+        "reviewed_pdf_pages": [
+          4,
+          5,
+          6,
+          7
+        ],
+        "rendered_at_workflow_run": 41787662520,
+        "artifact_id": 13301557596,
+        "notes": [
+          "B01 assets/liabilities/equity equation residual 0.",
+          "B02 net revenue, PBT, PAT, parent/NCI and EPS visually confirmed.",
+          "B03 annual/YTD flow sum and cash bridge residual 0.",
+          "Q4 standalone FX remains null because Q3 cumulative FX source line is not independently readable; no plug."
+        ]
       },
       "cashflow_source_reconciliation": {
         "status": "SOURCE_TEXT_RECONCILED_STANDALONE_Q4_DERIVED",
@@ -881,7 +906,7 @@
         "tolerance_percent": 0.01,
         "no_balancing_plug": true
       },
-      "pages_verified": false,
+      "pages_verified": true,
       "financial_line_items_value_corrections": {
         "total_liabilities": {
           "previous_value": null,
@@ -917,7 +942,8 @@
           },
           "reason": "Derived Q4 standalone from FY2024 YTD less original 9M/2024 YTD B03 values in Q3 report; all three flow components and net cash change reconcile exactly."
         }
-      }
+      },
+      "visual_review": true
     },
     {
       "symbol": "GAS",
@@ -3609,5 +3635,5 @@
   "bootstrap_status": "complete_needs_manual_review",
   "bootstrap_completed_at": "2026-10-23T18:24:16+00:00",
   "bootstrap_completion_note": "Các kỳ báo cáo có thể tự trích xuất đã được lưu; một số kỳ còn cần đối chiếu thủ công.",
-  "processedAt": "2026-10-30T16:16:15+00:00"
+  "processedAt": "2026-11-05T20:10:00+07:00"
 }
