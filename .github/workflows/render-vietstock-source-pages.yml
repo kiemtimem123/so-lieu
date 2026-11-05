@@ -15,15 +15,15 @@ on:
       period:
         description: "Report period label"
         required: true
-        default: "2026-Q1-RECLASSIFIED-CASH-BASIS"
+        default: "2025-Q1-CORE-STATEMENTS-REMAINING"
       pdf_path:
         description: "Path to the PDF already archived in reports/raw"
         required: true
-        default: "reports/raw/PLX/auto-plx-20261021/158547073d7cd10f.pdf"
+        default: "reports/raw/PLX/auto-plx-20261021/8ebe33f1a2757507.pdf"
       pages:
         description: "Comma-separated 1-based PDF pages, or all"
         required: true
-        default: "2,3,4,5,6,7,20"
+        default: "3,4,5,6,7,8"
       dpi:
         description: "Render DPI"
         required: true
@@ -45,7 +45,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           sparse-checkout: |
-            ${{ github.event.inputs.pdf_path || 'reports/raw/PLX/auto-plx-20261021/158547073d7cd10f.pdf' }}
+            ${{ github.event.inputs.pdf_path || 'reports/raw/PLX/auto-plx-20261021/8ebe33f1a2757507.pdf' }}
           sparse-checkout-cone-mode: false
           lfs: false
 
@@ -60,9 +60,9 @@ jobs:
       - name: Render source pages and contact sheets
         env:
           TARGET_SYMBOL: ${{ github.event.inputs.symbol || 'PLX' }}
-          TARGET_PERIOD: ${{ github.event.inputs.period || '2026-Q1-RECLASSIFIED-CASH-BASIS' }}
+          TARGET_PERIOD: ${{ github.event.inputs.period || '2025-Q1-CORE-STATEMENTS-REMAINING' }}
           PDF_PATH: ${{ github.event.inputs.pdf_path || 'reports/raw/PLX/auto-plx-20261021/158547073d7cd10f.pdf' }}
-          PAGE_LIST: ${{ github.event.inputs.pages || '2,3,4,5,6,7,20' }}
+          PAGE_LIST: ${{ github.event.inputs.pages || '3,4,5,6,7,8' }}
           RENDER_DPI: ${{ github.event.inputs.dpi || '300' }}
           PDF_MEMBER: ${{ github.event.inputs.pdf_member || '' }}
         run: |
