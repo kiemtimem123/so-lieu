@@ -61,7 +61,7 @@ jobs:
         env:
           TARGET_SYMBOL: ${{ github.event.inputs.symbol || 'PLX' }}
           TARGET_PERIOD: ${{ github.event.inputs.period || '2024-Q1-FULL-STATEMENTS' }}
-          PDF_PATH: ${{ github.event.inputs.pdf_path || 'reports/raw/PLX/auto-plx-20261021/925339daf7038fe2.pdf' }}
+          PDF_PATH: ${{ github.event.inputs.pdf_path || 'reports/raw/PLX/auto-plx-20261021/033a25ed1a5af4ce.pdf' }}
           PAGE_LIST: ${{ github.event.inputs.pages || '2,3,4,5,6,7,8,9,10' }}
           RENDER_DPI: ${{ github.event.inputs.dpi || '300' }}
           PDF_MEMBER: ${{ github.event.inputs.pdf_member || '' }}
@@ -139,7 +139,7 @@ jobs:
         id: upload
         uses: actions/upload-artifact@v4
         with:
-          name: vietstock-source-review-${{ github.event.inputs.symbol || 'PLX' }}-${{ github.event.inputs.period || '2026-Q2-B03-CASHFLOW' }}
+          name: vietstock-source-review-${{ github.event.inputs.symbol || 'PLX' }}-${{ github.event.inputs.period || '2024-Q1-FULL-STATEMENTS' }}
           path: source-review/
           if-no-files-found: error
           retention-days: 14
@@ -148,9 +148,9 @@ jobs:
         uses: actions/github-script@v7
         env:
           ARTIFACT_ID: ${{ steps.upload.outputs.artifact-id }}
-          SOURCE_PDF: ${{ github.event.inputs.pdf_path || 'reports/raw/PLX/auto-plx-20261021/925339daf7038fe2.pdf' }}
+          SOURCE_PDF: ${{ github.event.inputs.pdf_path || 'reports/raw/PLX/auto-plx-20261021/033a25ed1a5af4ce.pdf' }}
           TARGET_SYMBOL: ${{ github.event.inputs.symbol || 'PLX' }}
-          TARGET_PERIOD: ${{ github.event.inputs.period || '2026-Q2-B03-CASHFLOW' }}
+          TARGET_PERIOD: ${{ github.event.inputs.period || '2024-Q1-FULL-STATEMENTS' }}
           PDF_MEMBER: ${{ github.event.inputs.pdf_member || '' }}
         with:
           script: |
