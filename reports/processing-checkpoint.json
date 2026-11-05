@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-05T20:12:00+07:00",
+  "updatedAt": "2026-11-05T20:18:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "Priority 1: VietstockFinance public document catalog and directly linked report PDFs. Priority 2: WiData document tab for the same ticker, only to compare/supplement when source 1 lacks the report or extraction is unclear/unavailable. No third source without explicit user approval.",
   "periodStart": "2024-Q1",
@@ -39,9 +39,9 @@
     "GAS",
     "VCI"
   ],
-  "lastCompletedSymbol": "VDS",
-  "activeSymbol": "GAS",
-  "resumeSymbolHint": "GAS",
+  "lastCompletedSymbol": "GAS",
+  "activeSymbol": "PLX",
+  "resumeSymbolHint": "PLX",
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "GAS",
@@ -1565,7 +1565,7 @@
       "snapshotFetchedAt": "2026-10-23T16:14:01+00:00"
     },
     "GAS": {
-      "status": "terminal_needs_manual_review",
+      "status": "completed_with_documented_terminal_exceptions",
       "completeForAutomation": true,
       "manualReviewRemaining": true,
       "periodCount": 10,
@@ -1583,7 +1583,7 @@
       "skipUnconfirmedAutomation": false,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-11-05T20:12:00+07:00",
+      "updatedAt": "2026-11-05T20:18:00+07:00",
       "snapshotFetchedAt": "2026-10-23T18:00:37+00:00",
       "sourceReconciledPeriods": [
         "2024-Q1",
@@ -1608,7 +1608,7 @@
       ],
       "lastSourceReconciliation": {
         "periodRange": "2024-Q1 through 2026-Q2",
-        "status": "source_text_reconciled_with_Q4_2024_visual_pass_and_terminal_manual_exceptions",
+        "status": "all_10_periods_source_reconciled; Q4_2024_visual_closed; remaining_issues_terminal_manual",
         "correctionCommits": [
           "a5591d3c71a33c16c73f93ac6106202e42d6fa61",
           "989403e07de9c3df4839cec0dbeba475d0ed7ce3",
@@ -1642,7 +1642,7 @@
           "GAS Q4/2024: Q4 standalone CFO/CFI/CFF/net derived from FY YTD less original 9M YTD source; sum residual zero. Q3 FX row61 unreadable, so standalone Q4 FX is null and residual before FX is diagnostic only.",
           "GAS Q4/2024: Q1/2025 opening comparative assets/liabilities both lower than original Q4 by 38,683,095,343 VND; equity matches exactly. Preserve separately, no overwrite."
         ],
-        "remaining": "GAS Q4/2024 visual review is closed; standalone Q4 FX remains null because Q3 cumulative FX is not independently readable. Next: GAS Q4/2025 manual review; do not repeat Q4/2024 core extraction or visual review."
+        "remaining": "GAS has no pending core extraction. Q4/2024 visual review is closed; standalone FX remains null due unreadable Q3 cumulative FX source. Q4/2025 and Q1/2026 retain only documented source/OCR exceptions. Do not reprocess without new source evidence."
       },
       "detailSourceReconciledPeriods": [
         "2025-Q4",
@@ -8559,16 +8559,17 @@
     "symbol": "GAS",
     "period": "2024-Q4",
     "status": "GAS_Q4_2024_B01_B02_B03_VISUAL_PASS",
-    "processedAt": "2026-11-05T20:12:00+07:00",
+    "processedAt": "2026-11-05T20:18:00+07:00",
     "dataCommit": "5f54b657fd2fe06838331248cf04ebbefe64f500",
     "auditNoteCommit": "24bc72cb3b0116342a19d976e0bea7f21f67e504",
     "sopCommit": "44a61df10649bce7e2949354cc439139e078ae29",
     "periodComplete": true,
-    "nextAction": "Resume GAS Q4/2025 manual review. Do not reread Q4/2024. Q4 standalone FX remains null because Q3 cumulative FX is not independently source-readable."
+    "nextAction": "GAS ticker closed for automation with documented terminal exceptions. Resume PLX; do not reprocess GAS unless new official source evidence appears."
   },
   "pendingVisualPeriods": [
-    "GAS:2025-Q4",
-    "GAS:2026-Q1"
+    "PLX:2025-Q1",
+    "PLX:2026-Q1",
+    "PLX:2026-Q2"
   ],
   "pendingCashflowPeriods": [],
   "lastManualReviewPeriod": "2025-Q3",
