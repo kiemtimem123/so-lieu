@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-06T10:08:00+07:00",
+  "updatedAt": "2026-11-06T10:42:00+07:00",
   "processingMode": "one stock ticker at a time; one report per workflow run",
   "sourcePolicy": "Priority 1: VietstockFinance public document catalog and directly linked report PDFs. Priority 2: WiData document tab for the same ticker, only to compare/supplement when source 1 lacks the report or extraction is unclear/unavailable. No third source without explicit user approval.",
   "periodStart": "2024-Q1",
@@ -45,52 +45,62 @@
   "resumeRule": "To resume safely, dispatch ocr-financial-reports.yml with symbol blank. It scans persisted snapshots and extraction sidecars in registry order. Do not delete data/financials-*.json or reports/raw/.",
   "lastProgress": {
     "symbol": "PLX",
-    "period": "2024-FY-AUDITED",
-    "status": "PLX_AUDITED_FY2024_B01_B02_B03_VISUAL_PASS_Q3_EXCEPTION_RETAINED",
+    "period": "2025-Q2",
+    "status": "PLX_Q2_2025_B01_B02_B03_VISUAL_PASS_WITH_TWO_PENDING_EXCEPTIONS",
     "completeForAutomation": true,
     "periodComplete": true,
     "manualReviewRemaining": true,
-    "processedAt": "2026-11-06T10:08:00+07:00",
+    "processedAt": "2026-11-06T10:42:00+07:00",
     "periodCount": 10,
-    "periodStatus": "Separately audited FY2024 consolidated report was visually verified from original VietstockFinance pages 6-14 at 300 DPI (workflow 42146996317 / artifact 13470502114). B01/B02/B03 arithmetic all residual 0 VND. Audited cash close 14,933,068,792,315 VND matches Q1/2025 opening; preserve Q4 interim close 15,062,135,832,746 VND separately. Audited B02 differs from Q4 interim and does not provide a detailed bridge resolving Q3/2024 standalone vs 9M discrepancy; leave Q3 as terminal PENDING.",
+    "periodStatus": "VietstockFinance document 514768, original consolidated PDF pages 2-7 visually reviewed at 300 DPI. B01/B02/B03 source values and main arithmetic bridges pass; H1 and Q2 standalone cashflow residuals are 0 VND. H1 B02 vs Q1+Q2 has equal offsetting 711,102,062 VND other-income/other-expense differences; the separate NCI equity movement lacks a B04/Notes transaction bridge. Both are PENDING, not plugged. Q2 snapshot raw VND and million-VND display values updated.",
     "sourceIndexUrl": "https://finance.vietstock.vn/PLX/tai-tai-lieu.htm?doctype=1",
-    "sourceDocumentId": "FY2024-AUDITED",
-    "sourceDocumentUrl": "https://static2.vietstock.vn/data/HOSE/2024/BCTC/VN/...",
-    "sourceArchiveFile": "reports/raw/PLX/auto-plx-20261021/a264af3ddb771f63.pdf",
-    "sourceDocumentScope": "Consolidated audited",
+    "sourceDocumentId": "514768",
+    "sourceDocumentUrl": "https://static2.vietstock.vn/data/HOSE/2025/BCTC/VN/QUY%202/PLX_Baocaotaichinh_Q2_2025_Hopnhat.pdf",
+    "sourceArchiveFile": "reports/raw/PLX/auto-plx-20261021/90195e13c974fbad.pdf",
+    "sourceDocumentScope": "Consolidated",
     "sourceUnit": "VND",
-    "dataCommit": "21087b663ae269d94f2c2b8408ffdf88aa66f36e",
-    "auditNotePath": "reports/analysis/PLX-FY2024-audited-visual-review.md",
-    "auditNoteCommit": "c757279cb93ba1dc7bcc1e3a611992cd1e53fa6f",
+    "dataCommit": "ba4e4a29796c5321bb0d1aead0d5283241d665b0",
+    "visualWorkflowRunId": 42147883316,
+    "visualArtifactId": 13471345462,
+    "visualPages": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "renderDpi": 300,
+    "auditNotePath": "reports/analysis/PLX-Q2-2025-visual-review.md",
+    "auditNoteCommit": "eeb31f4248d1570a4a20f5ee5862b04fe86737e6",
     "processingSopVersion": "1.42",
     "validation": {
-      "balanceSheet": "PASS_ZERO_RESIDUAL",
-      "incomeStatement": "PASS_ZERO_RESIDUAL",
-      "profitTaxParentNci": "PASS_ZERO_RESIDUAL",
-      "cashFlowAndCashBridge": "PASS_ZERO_RESIDUAL",
-      "q1_2025Opening": "PASS_MATCHES_AUDITED_FY_CASH_CLOSE",
-      "q3_2024B02QuarterToYtd": "TERMINAL_PENDING_NO_SOURCE_BRIDGE",
-      "visual": "PASS_B01_B02_B03_PAGES_6_TO_14"
+      "b01": "PASS_ZERO_RESIDUAL",
+      "b02Q2": "PASS_ZERO_RESIDUAL",
+      "b02H1": "PASS_ZERO_RESIDUAL",
+      "b02Q1PlusQ2VsH1": "PENDING_OFFSETTING_OTHER_INCOME_EXPENSE_711102062_VND; OTHER_RESULT_EXACT",
+      "b02ParentNci": "PASS_Q2_AND_H1",
+      "b03H1": "PASS_ZERO_FLOW_AND_CASH_BRIDGES",
+      "b03Q2Standalone": "PASS_ZERO_FLOW_AND_CASH_BRIDGES",
+      "b04Nci": "PENDING_NO_SEPARATE_B04_OR_NOTE_TRANSACTION_BRIDGE",
+      "visual": "PASS_B01_B02_B03_PAGES_2_TO_7"
     },
     "doNotRepeatCoreTextExtraction": true,
     "doNotRepeatVisualReview": true,
     "nextTicker": "PLX",
-    "nextPeriod": "2025-Q2",
-    "nextTask": "FULL_DIRECT_VISUAL_REVIEW_PLX_Q2_2025_B01_B02_B03",
+    "nextPeriod": "2025-Q3",
+    "nextTask": "FULL_DIRECT_VISUAL_REVIEW_PLX_Q3_2025_B01_B02_B03",
     "pendingExceptions": [
-      "PLX Q3/2024 B02 quarter-vs-YTD discrepancy remains terminal PENDING; Q4 interim and audited FY2024 cross-checks did not disclose an authoritative bridge. Preserve all source bases; no backsolve or overwrite.",
-      "PLX Q4/2024 interim vs audited FY2024 values remain separate reporting bases. Audited basis is the Q1/2025 opening basis; do not overwrite Q4 interim."
+      "PLX Q2/2025 H1 B02 vs Q1+Q2: other income and other expenses each differ by 711,102,062 VND in opposite directions; other result is unchanged. No cause established; preserve all reported columns.",
+      "PLX Q2/2025 NCI equity moved from 3,285,111,765,231 to 3,160,555,849,966 VND while H1 NCI PAT is 161,942,094,219 VND. Separate B04 and transaction-level Notes bridge not present; implied non-PAT movement -286,498,009,484 VND is not attributed."
     ],
     "visualReviewPdfPages": [
+      2,
+      3,
+      4,
+      5,
       6,
-      7,
-      8,
-      9,
-      10,
-      11,
-      12,
-      13,
-      14
+      7
     ],
     "sopCommit": "44a61df10649bce7e2949354cc439139e078ae29"
   },
@@ -1666,19 +1676,19 @@
       ]
     },
     "PLX": {
-      "status": "active_processing_2025_periods_with_2024_q3_terminal_exception",
+      "status": "active_processing_2025_q3_with_terminal_manual_exceptions",
       "completeForAutomation": true,
       "manualReviewRemaining": true,
       "periodCount": 10,
       "firstQuarter": "2024-Q1",
       "lastQuarter": "2026-Q2",
       "pendingCorePeriods": [
-        "2025-Q2",
         "2025-Q3",
         "2025-Q4"
       ],
       "terminalManualReviewPeriods": [
-        "2024-Q3"
+        "2024-Q3",
+        "2025-Q2"
       ],
       "pendingDetailPeriods": [],
       "staleDetailSchemaPeriods": [],
@@ -1686,30 +1696,28 @@
       "skipUnconfirmedAutomation": true,
       "skipUnconfirmedReason": null,
       "sourceArchivesChecked": 10,
-      "updatedAt": "2026-11-06T10:08:00+07:00",
+      "updatedAt": "2026-11-06T10:42:00+07:00",
       "snapshotFetchedAt": "2026-10-25T21:25:00Z",
       "note": "Quarter/YTD flow sums, FX-aware bridges, and quarter-to-YTD delta tests pass within <=0.01% for 9 complete periods. Terminal manual review remains for two cross-year cash-basis discrepancies >0.01%, source visual review, and unreadable Q2/2026 cash-flow OCR. Source amounts preserved with no balancing plugs.",
       "skipUnconfirmedThroughPeriod": "2026-Q2",
       "manualReviewReason": "OCR workflow #3023 đã chạy nhưng kiểm định snapshot tạm thời báo thiếu pretax_profit/net_profit tại PLX 2025-Q2. Bản snapshot đã commit vẫn giữ hai số 1,637,976 và 1,368,319 triệu VND; không có bằng chứng cho phép ghi đè. Các ngoại lệ dòng tiền PLX đã được ghi nhận riêng (Q1/2025, Q1/2026 lệch số dư đầu kỳ >0.01%, Q2/2026 OCR không đọc được). Tạm dừng tự động, giữ nguyên dữ liệu và chuyển các điểm này sang rà soát PDF thủ công.",
       "lastSourceReconciliation": {
         "periodRange": "PLX 2024-Q1 through 2026-Q2",
-        "status": "2024_Q1_Q2_Q4_VISUAL_PASS; FY2024_AUDITED_VISUAL_PASS; 2024_Q3_TERMINAL_B02_PENDING; 2025_Q1_VISUAL_PASS; 2025_Q2_TO_Q4_VISUAL_PENDING; 2026_Q1_Q2_VISUAL_PASS",
+        "status": "Q2_2025_VISUAL_CORE_PASS; 2024_Q3_AND_2025_Q2_HAVE_DOCUMENTED_MANUAL_EXCEPTIONS; Q3_Q4_2025_VISUAL_PENDING",
         "correctionCommits": [
-          "ef37d87182a7afd0fc0544bb1b6c1b45bb74b55e",
-          "1c57e9ce655553c37107f2697abd4fa77c9ce722",
           "ebae7ca7744e18cee83e3ff667d7e5e743fe42ea",
           "c2f6d5ab2c97ea04a022397f8c83cfc98922b9bc",
-          "9ac562e0fb12f023b5f7dd080e2b8cd569ab20d2",
-          "21087b663ae269d94f2c2b8408ffdf88aa66f36e"
+          "21087b663ae269d94f2c2b8408ffdf88aa66f36e",
+          "ba4e4a29796c5321bb0d1aead0d5283241d665b0"
         ],
         "findings": [
-          "2024-Q1 and Q2 full visual review complete; do not reread.",
-          "2024-Q3 full visual review complete; B02 current-quarter vs H1-to-9M still unresolved >0.01%. Q4 interim corroborates 9M column, and audited FY2024 does not disclose an explanatory bridge. Retain as terminal manual exception.",
-          "2024-Q4 interim full visual review complete; audited FY2024 report separately reviewed and recorded. Never overwrite interim quarterly values with audited annual values.",
-          "2025-Q1 full visual review and cash opening basis are complete; audited FY2024 cash close matches Q1 opening exactly.",
-          "2026-Q1 and Q2 full visual reviews complete; correct legacy status flags in their records during next data reconciliation but do not repeat source reading."
+          "2024 Q1/Q2/Q4 and FY2024 audited report visual reviews closed; Q3/2024 B02 quarter-vs-YTD remains terminal PENDING.",
+          "2025 Q1 full visual review and audited FY opening cash basis complete.",
+          "2025 Q2 B01/B02/B03 full visual review complete, with exact primary balance/profit/cashflow bridges.",
+          "Q2/2025 retains two separate source exceptions: offsetting other income/expense cross-period difference 711,102,062 VND; B04/NCI transaction bridge not disclosed.",
+          "2026 Q1/Q2 previously visually reviewed; do not reread."
         ],
-        "remaining": "Continue sequentially at PLX 2025-Q2. Render and visually inspect B01 pages 2-4, B02 page 5, B03 pages 6-7 and relevant cash note. Then PLX 2025-Q3, Q4. No move to GEG until PLX core periods are closed or terminally classified."
+        "remaining": "Continue at PLX Q3/2025. Review original PDF pages 2-7; correct source values and close the period or document source-level terminal exceptions, then proceed to Q4/2025. Do not move to GEG until Q3/Q4 2025 work is closed."
       },
       "sourceReconciledPeriods": [
         "2024-Q1",
@@ -1724,12 +1732,10 @@
         "2026-Q2"
       ],
       "pendingVisualPeriods": [
-        "2025-Q2",
         "2025-Q3",
         "2025-Q4"
       ],
       "pendingCashflowPeriods": [
-        "2025-Q2",
         "2025-Q3",
         "2025-Q4"
       ]
@@ -6784,6 +6790,22 @@
       "auditedCashCloseVnd": 14933068792315,
       "interimCashCloseVnd": 15062135832746,
       "keepSeparate": true
+    },
+    "2025-Q2": {
+      "status": "complete_for_automation_with_two_terminal_manual_exceptions",
+      "documentId": "514768",
+      "dataCommit": "ba4e4a29796c5321bb0d1aead0d5283241d665b0",
+      "auditNotePath": "reports/analysis/PLX-Q2-2025-visual-review.md",
+      "auditNoteCommit": "eeb31f4248d1570a4a20f5ee5862b04fe86737e6",
+      "visualWorkflowRunId": 42147883316,
+      "visualArtifactId": 13471345462,
+      "periodComplete": true,
+      "doNotRepeatCoreExtraction": true,
+      "doNotRepeatVisualReview": true,
+      "exceptions": [
+        "B02 equal offsetting other income/expense difference 711,102,062 VND; other result exact.",
+        "No B04/NCI transaction bridge in source; keep PENDING."
+      ]
     }
   },
   "gegPeriodProgress": {
@@ -8634,12 +8656,10 @@
     "nextAction": "GAS ticker closed for automation with documented terminal exceptions. Resume PLX; do not reprocess GAS unless new official source evidence appears."
   },
   "pendingVisualPeriods": [
-    "PLX:2025-Q2",
     "PLX:2025-Q3",
     "PLX:2025-Q4"
   ],
   "pendingCashflowPeriods": [
-    "PLX:2025-Q2",
     "PLX:2025-Q3",
     "PLX:2025-Q4"
   ],
